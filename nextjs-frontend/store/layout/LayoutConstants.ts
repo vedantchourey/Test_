@@ -1,0 +1,13 @@
+export const desktopBasicComponentHeight = 45;
+export const mobileBasicComponentHeight = desktopBasicComponentHeight;
+export const normalFontSize = 16;
+export const largeFontSize = 18;
+export const extraLargeFontSize = 24;
+export const normalLineHeight = 2;
+export const normalBorderRadius = 5;
+export const normalScreenBodyHorizontalPadding = 48;
+export const mobileScreenBodyHorizontalPadding = 10;
+export const desktopDrawerWidth = 100;
+export const headerAppBarHeight = 50;
+export const bodyMarginBelowHeader = 16;
+export const verticalMarginBetweenFormComponents = 10;
