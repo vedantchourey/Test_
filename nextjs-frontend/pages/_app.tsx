@@ -1,12 +1,12 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import store from '../store/Store';
+import reduxStore from '../store/redux-store';
 import { Provider } from 'react-redux';
 
 function MyApp({Component, pageProps}: AppProps) {
 
   return (
-    <Provider store={store}>
+    <Provider store={reduxStore}>
       <Component {...pageProps} />
     </Provider>
   )

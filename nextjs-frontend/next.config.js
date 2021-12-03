@@ -8,7 +8,7 @@ const cognitoDomain = process.env.NOOB_COGNITO_DOMAIN || 'https://test-nooby.aut
 const imageBasePath = process.env.NOOB_ASSETS_BASE || 'http://localhost:8080/';
 
 /**
- * @type {import('./utils/IFrontendConfig.ts').IFrontendConfig}
+ * @type {import('./utils/i-frontend-config.ts').IFrontendConfig}
  **/
 const frontendConfig = {
   baseAppUrl: baseAppUrl,

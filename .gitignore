@@ -2,3 +2,7 @@
 **/[Oo]bj/*
 **/[Bb]in/*
 *sln.DotSettings.user
+# Supabase
+**/supabase
+# Node
+**/node_modules

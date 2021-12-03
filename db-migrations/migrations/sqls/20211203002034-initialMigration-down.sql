@@ -1,0 +1,11 @@
+drop table tournaments;
+drop table states;
+drop table countries;
+drop table game_maps;
+drop table game_match_best_ofs;
+drop table game_match_formats;
+drop table game_platforms;
+drop table games;
+drop table match_best_ofs;
+drop table match_formats;
+drop table platforms;
