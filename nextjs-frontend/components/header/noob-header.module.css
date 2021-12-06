@@ -1,5 +1,4 @@
 .appHeader {
-  height: 100px;
   padding: 30px;
   flex-grow: 1;
   background: rgba(76, 175, 80, 0);
@@ -8,6 +7,12 @@
 }
 
 .topMenu {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+}
+
+.bottomMenu {
   display: flex;
   flex-direction: row;
   flex-grow: 1;
@@ -30,3 +35,4 @@
   column-gap: 20px;
   vertical-align: center;
 }
+
