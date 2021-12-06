@@ -1,0 +1,30 @@
+import { createTheme } from '@mui/material/styles';
+
+const noobTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#6932F9',
+      dark: '#160c30',
+    },
+    secondary: {
+      main: '#F08743',
+      light: '#f09633',
+    },
+    background: {
+      default: '#08001C',
+      paper: '#11003F',
+    },
+    text: {
+      primary: '#ffffff',
+      secondary: '#b5b5b5',
+    },
+    action: {},
+    error: {
+      main: 'rgba(255, 0, 0, 0.1)',
+    },
+    divider: '#B39DDB',
+  },
+});
+
+export default noobTheme;
