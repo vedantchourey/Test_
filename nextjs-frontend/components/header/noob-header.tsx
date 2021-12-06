@@ -28,7 +28,9 @@ export default function NoobHeader() {
           </div>
         </div>
         <div className={styles.bottomMenu}>
+          <div className={styles.bottomMenuLeftGroup}>
 
+          </div>
         </div>
       </AppBar>
     </nav>
