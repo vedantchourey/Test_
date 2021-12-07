@@ -1,22 +1,16 @@
 .appHeader {
-  padding: 30px;
   flex-grow: 1;
   background: rgba(76, 175, 80, 0);
   display: flex;
   flex-direction: column;
+  row-gap: 15px;
 }
 
 .topMenu {
+  margin: 30px 70px 0 70px;
   display: flex;
   flex-direction: row;
   flex-grow: 1;
-}
-
-.bottomMenu {
-  display: flex;
-  flex-direction: row;
-  flex-grow: 1;
-  background: rgba(11, 11, 17, 0.5);
 }
 
 .topLeftMenuGroup {
@@ -35,5 +29,32 @@
   justify-content: flex-end;
   column-gap: 20px;
   vertical-align: center;
+}
+
+.bottomMenu {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  background: rgba(11, 11, 17, 0.5);
+}
+
+.bottomMenuLeftGroup {
+  margin-left: 70px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  column-gap: 20px;
+  vertical-align: center;
+}
+
+.bottomMenuRightGroup {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  column-gap: 20px;
+  vertical-align: center;
+  margin-right: 70px
 }
 
