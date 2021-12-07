@@ -12,8 +12,16 @@ export default function NoobDesktopHeader() {
   const {pathname} = router;
 
   function buttonStyle(expectedPaths: string[]): React.CSSProperties {
-    if (expectedPaths.indexOf(pathname) !== -1) return {color: 'white'};
-    return {color: theme.palette.primary.main};
+    if (expectedPaths.indexOf(pathname) === -1) return {color: 'white', fontWeight: 700};
+    return {color: theme.palette.primary.main, fontWeight: 700};
+  }
+
+  async function gotoRegisterPage() {
+    await router.push('/auth/register')
+  }
+
+  async function gotoHomePage() {
+    await router.push('/')
   }
 
   return (
@@ -29,7 +37,7 @@ export default function NoobDesktopHeader() {
           </Button>
         </div>
         <div className={styles.topRightMenuGroup}>
-          <Button variant="outlined" style={{textTransform: 'none', color: 'white'}}>
+          <Button variant="outlined" style={{textTransform: 'none', color: 'white'}} onClick={gotoRegisterPage}>
             Register
           </Button>
           <Typography style={{alignSelf: 'center'}}>OR</Typography>
@@ -40,7 +48,7 @@ export default function NoobDesktopHeader() {
       </div>
       <div className={styles.bottomMenu}>
         <div className={styles.bottomMenuLeftGroup}>
-          <Button variant="text" style={buttonStyle(['/'])}>Home</Button>
+          <Button variant="text" style={buttonStyle(['/'])} onClick={gotoHomePage}>Home</Button>
           <Button variant="text" style={buttonStyle(['/tournaments'])}>Tournaments</Button>
           <Button variant="text" style={buttonStyle(['/leaderboards'])}>Leaderboards</Button>
           <Button variant="text" style={buttonStyle(['/about-us'])}>About Us</Button>

@@ -25,6 +25,9 @@ const noobTheme = createTheme({
     },
     divider: '#B39DDB',
   },
+  typography: {
+    fontFamily: 'Inter',
+  }
 });
 
 export default noobTheme;

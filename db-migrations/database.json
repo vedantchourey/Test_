@@ -10,12 +10,22 @@
   },
   "cloud": {
     "driver": "pg",
-    "user":  { "ENV" : "DB_USER" },
-    "password": { "ENV" : "DB_PASSWORD" },
-    "host": { "ENV" : "DB_HOST" },
-    "database": { "ENV" : "DB_DATABASE" },
+    "user": {
+      "ENV": "DB_USER"
+    },
+    "password": {
+      "ENV": "DB_PASSWORD"
+    },
+    "host": {
+      "ENV": "DB_HOST"
+    },
+    "database": {
+      "ENV": "DB_DATABASE"
+    },
     "port": "5432",
-    "ssl": true,
+    "ssl": {
+      "rejectUnauthorized": false
+    },
     "schema": "public"
   }
 }

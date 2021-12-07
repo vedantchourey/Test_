@@ -6,3 +6,8 @@
 **/supabase
 # Node
 **/node_modules
+
+# Supabase
+**/supabase/.branches
+**/supabase/.temp
+**/supabase/.env
