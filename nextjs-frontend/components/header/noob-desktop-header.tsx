@@ -1,4 +1,4 @@
-import styles from './noob-header.module.css';
+import styles from './noob-desktop-header.module.css';
 import Image from 'next/image';
 import { AppBar, Button, Typography, useTheme } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
