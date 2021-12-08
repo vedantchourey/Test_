@@ -13,7 +13,7 @@ const noobTheme = createTheme({
     },
     background: {
       default: '#08001C',
-      paper: '#11003F',
+      paper: '#160C30',
     },
     text: {
       primary: '#ffffff',

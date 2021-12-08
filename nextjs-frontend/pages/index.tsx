@@ -8,7 +8,7 @@ import homeModule from '../styles/common.module.css';
 const Home: NextPage = () => {
   const theme = useTheme();
   return (
-    <div style={{backgroundColor: theme.palette.background.paper}}>
+    <div style={{backgroundColor: theme.palette.background.default}}>
       <Head>
         <title>Home</title>
         <meta name="description" content="Noob storm home page"/>

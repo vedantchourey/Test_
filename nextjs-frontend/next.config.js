@@ -62,5 +62,12 @@ module.exports = {
   reactStrictMode: true,
   publicRuntimeConfig: {
     frontendConfig
-  }
+  },
+  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ['@svgr/webpack', 'url-loader'],
+    })
+    return config
+  },
 }
