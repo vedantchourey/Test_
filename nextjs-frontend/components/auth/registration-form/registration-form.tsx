@@ -1,14 +1,14 @@
 import styles from './registration-form.module.css';
-import { Autocomplete, Button, FormControlLabel, TextField, Typography } from '@mui/material';
+import { Autocomplete, Button, Checkbox, FormControlLabel, TextField, Typography } from '@mui/material';
 import { DesktopDatePicker } from '@mui/lab';
 import { useState } from 'react';
 import { DateTime } from 'luxon';
-import { CheckBox } from '@mui/icons-material';
 import Link from 'next/link'
 import commonStyles from '../../../styles/common.module.css';
 import GoogleIcon from '@mui/icons-material/Google';
 import AppleIcon from '@mui/icons-material/Apple';
 import FacebookIcon from '@mui/icons-material/Facebook';
+
 
 const cities: { label: string }[] = [
   {label: 'Delhi'}
@@ -16,6 +16,7 @@ const cities: { label: string }[] = [
 
 export default function RegistrationForm() {
   const [value, setValue] = useState<DateTime | null>(DateTime.now());
+  const [agreeTNC, setAgreeTNC] = useState(false);
 
   return (
     <div className={styles.container}>
@@ -47,7 +48,7 @@ export default function RegistrationForm() {
         />
       </div>
       <div className={styles.inputRow}>
-        <FormControlLabel control={<CheckBox id="agreeToTNC"/>}
+        <FormControlLabel control={<Checkbox id="agreeToTNC" value={agreeTNC}  onChange={setAgreeTNC} />}
                           className={styles.inputRowItem}
                           label={<Typography className={commonStyles.whiteText}>I certify I am over 18 and agree to the <Link href="/terms-and-conditions">Terms and Conditions!</Link></Typography>}
         />
