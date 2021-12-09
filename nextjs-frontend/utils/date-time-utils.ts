@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 
 type TimePart = { hour: number, minute: number };
 
-const parseDateTime = (iso: string) => {
+export const parseDateTime = (iso: string) => {
   const dateTime = DateTime.fromISO(iso, {setZone: true});
   if (dateTime.zoneName !== 'UTC') throw new Error('Time zone is not UTC!');
   return dateTime;
@@ -45,4 +45,9 @@ export const getTimeAsLocal = (iso: string): TimePart | undefined => {
   if (iso == null) return undefined;
   const {hour, minute} = parseDateTime(iso).toLocal();
   return {hour, minute}
+}
+
+export const toISOString = (datetime: DateTime | undefined) => {
+  if (datetime == null) return undefined;
+  return datetime.toUTC().toISO();
 }
