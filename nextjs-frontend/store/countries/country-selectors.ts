@@ -6,7 +6,8 @@ export const countryStatesFetchStatus = (rootState: RootState) => rootState.coun
 
 // memoized selectors
 const allStates = (x: RootState) => x.countries.states;
-const countryId = (x: RootState, countryId: number) => countryId;
-export const countryAllStatesSelector = createSelector([allStates, countryId], (states: StateResponse[], countryId: number) => {
+const countryId = (x: RootState, countryId: number | undefined) => countryId;
+export const countryAllStatesSelector = createSelector([allStates, countryId], (states: StateResponse[], countryId: number | undefined) => {
+  if (countryId == null) return [];
   return states.filter(x => x.countryId === countryId);
 });

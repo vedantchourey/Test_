@@ -47,7 +47,7 @@ export const getTimeAsLocal = (iso: string): TimePart | undefined => {
   return {hour, minute}
 }
 
-export const toISOString = (datetime: DateTime | undefined) => {
+export const toISOString = (datetime: DateTime | undefined | null) => {
   if (datetime == null) return undefined;
   return datetime.toUTC().toISO();
 }

@@ -38,20 +38,6 @@ const frontendConfig = {
       searchStatesUrl: `${baseApiUrl}/noob-service/countries/{id}/states`
     },
   },
-  aws: {
-    region: 'ap-south-1',
-    cognito: {
-      userPoolId: cognitoUserPoolId,
-      appClientId: cognitoAppClientId,
-      region: 'ap-south-1',
-      hostedUiDomain: cognitoDomain,
-      redirectSignOutUrl: `${baseAppUrl}/auth-logout-redirect-callback`,
-      redirectSignInUrl: `${baseAppUrl}/auth-redirect-callback`,
-      isAdvancedSecurityDataCollectionRequired: false,
-      responseType: 'code',
-      scope: ['phone', 'email', 'profile', 'openid'],
-    }
-  },
   assets: {
     imageBasePath: imageBasePath
   }

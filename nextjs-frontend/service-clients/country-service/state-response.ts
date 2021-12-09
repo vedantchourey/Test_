@@ -1,8 +1,6 @@
-export class StateResponse {
-
-  constructor(public readonly id: number,
-              public readonly isoCode: string,
-              public readonly displayName: string,
-              public readonly countryId: number) {
-  }
+export interface StateResponse {
+  id: number;
+  isoCode: string;
+  displayName: string;
+  countryId: number;
 }

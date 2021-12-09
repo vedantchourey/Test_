@@ -26,20 +26,6 @@ export interface IFrontendConfig {
       searchStatesUrl: string;
     }
   },
-  aws: {
-    region: string;
-    cognito: {
-      userPoolId: string;
-      appClientId: string;
-      region: string;
-      hostedUiDomain: string;
-      scope: string[];
-      redirectSignInUrl: string;
-      redirectSignOutUrl: string;
-      responseType: 'code' | 'token';
-      isAdvancedSecurityDataCollectionRequired: boolean;
-    }
-  }
   assets: {
     imageBasePath: string
   }

@@ -15,7 +15,7 @@ export interface SignupRequest {
   lastName: string;
   dateOfBirth: string;
   countryId: number;
-  cityId: number;
+  stateId: number;
   agreeToTnc: boolean;
 }
 

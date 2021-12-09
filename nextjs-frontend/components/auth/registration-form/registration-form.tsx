@@ -1,5 +1,5 @@
 import styles from './registration-form.module.css';
-import { Autocomplete, Button, Checkbox, FormControlLabel, TextField, Typography } from '@mui/material';
+import { Button, Checkbox, FormControl, FormControlLabel, FormHelperText, TextField, Typography } from '@mui/material';
 import { DesktopDatePicker } from '@mui/lab';
 import { ChangeEvent, useState } from 'react';
 import { DateTime } from 'luxon';
@@ -10,14 +10,13 @@ import AppleIcon from '@mui/icons-material/Apple';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import { SignupRequest } from '../../../services/supabase-service';
 import { parseDateTime, toISOString } from '../../../utils/date-time-utils';
-
-
-const cities: { label: string }[] = [
-  {label: 'Delhi'}
-];
+import StateDropDown from '../../drop-downs/state-drop-down/state-drop-down';
+import { validateSignUp } from './validator';
+import { ValidationResult } from '../../../utils/validation/validation-types';
+import { getErrorForProp, isThereAnyError, propsHasError } from '../../../models/validator';
 
 export default function RegistrationForm() {
-
+  const [errors, setErrors] = useState<ValidationResult<SignupRequest>>({});
   const [request, setRequest] = useState<Partial<SignupRequest>>({
     email: '',
     password: '',
@@ -34,6 +33,13 @@ export default function RegistrationForm() {
   };
 
   const dateOfBirth = request.dateOfBirth == null ? null : parseDateTime(request.dateOfBirth);
+  const hasErrors = isThereAnyError(errors);
+
+  async function signUp() {
+    const validationResults = await validateSignUp(request);
+    setErrors(validationResults);
+    if (isThereAnyError(validationResults)) return;
+  }
 
   return (
     <div className={styles.container}>
@@ -46,6 +52,8 @@ export default function RegistrationForm() {
                    variant="filled"
                    className={styles.inputRowItem}
                    value={request.username}
+                   error={propsHasError(errors, 'username')}
+                   helperText={getErrorForProp(errors, 'username')}
                    onChange={event => setRequest({...request, username: event.target.value})}
         />
       </div>
@@ -55,6 +63,8 @@ export default function RegistrationForm() {
                    variant="filled"
                    className={styles.inputRowItem}
                    value={request.firstName}
+                   error={propsHasError(errors, 'firstName')}
+                   helperText={getErrorForProp(errors, 'firstName')}
                    onChange={event => setRequest({...request, firstName: event.target.value})}
         />
         <TextField id="lastName"
@@ -62,6 +72,8 @@ export default function RegistrationForm() {
                    variant="filled"
                    className={styles.inputRowItem}
                    value={request.lastName}
+                   error={propsHasError(errors, 'lastName')}
+                   helperText={getErrorForProp(errors, 'lastName')}
                    onChange={event => setRequest({...request, lastName: event.target.value})}
         />
       </div>
@@ -70,7 +82,12 @@ export default function RegistrationForm() {
                            className={styles.inputRowItem}
                            value={dateOfBirth}
                            onChange={(value: DateTime | null) => setRequest({...request, dateOfBirth: toISOString(value)})}
-                           renderInput={(params) => <TextField {...params} variant="filled"/>}
+                           renderInput={(params) =>
+                             <TextField {...params}
+                                        variant="filled"
+                                        error={propsHasError(errors, 'dateOfBirth')}
+                                        helperText={getErrorForProp(errors, 'dateOfBirth')}/>
+                           }
         />
         <TextField id="password"
                    label="Password"
@@ -78,25 +95,32 @@ export default function RegistrationForm() {
                    type="password"
                    className={styles.inputRowItem}
                    value={request.password}
+                   error={propsHasError(errors, 'password')}
+                   helperText={getErrorForProp(errors, 'password')}
                    onChange={event => setRequest({...request, password: event.target.value})}
         />
       </div>
       <div className={styles.inputRow}>
-        <Autocomplete disablePortal
-                      id="city"
-                      options={cities}
-                      className={styles.inputRowItem}
-                      renderInput={(params) => <TextField {...params} label="City" variant="filled" className={styles.inputRowItem}/>}
+        <StateDropDown value={request.stateId}
+                       onChange={id => setRequest({...request, stateId: id})}
+                       countryId={1}
+                       autoCompleteClassName={styles.inputRowItem}
+                       inputClassName={styles.inputRowItem}
+                       error={propsHasError(errors, 'stateId')}
+                       helperText={getErrorForProp(errors, 'stateId')}
         />
       </div>
       <div className={styles.inputRow}>
-        <FormControlLabel control={<Checkbox id="agreeToTNC" value={request.agreeToTnc} onChange={handleTncChange}/>}
-                          className={styles.inputRowItem}
-                          label={<Typography className={commonStyles.whiteText}>I certify I am over 18 and agree to the <Link href="/terms-and-conditions">Terms and Conditions!</Link></Typography>}
-        />
+        <FormControl>
+          <FormControlLabel control={<Checkbox id="agreeToTNC" value={request.agreeToTnc} onChange={handleTncChange}/>}
+                            className={styles.inputRowItem}
+                            label={<Typography className={commonStyles.whiteText}>I certify I am over 18 and agree to the <Link href="/terms-and-conditions">Terms and Conditions!</Link></Typography>}
+          />
+          <FormHelperText style={{display: propsHasError(errors, 'agreeToTnc') ? '' : 'none'}} error={true}>{getErrorForProp(errors, 'agreeToTnc')}</FormHelperText>
+        </FormControl>
       </div>
       <div className={styles.inputRow}>
-        <Button className={styles.actionButton}><Typography>Sign up Today</Typography></Button>
+        <Button className={styles.actionButton} onClick={signUp}><Typography>Sign up Today</Typography></Button>
       </div>
       <div className={styles.inputRow}>
         <Typography style={{color: 'white', fontWeight: '900'}}>OR SIGN UP WITH</Typography>

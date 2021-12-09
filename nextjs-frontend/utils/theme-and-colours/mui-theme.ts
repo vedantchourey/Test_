@@ -21,7 +21,7 @@ const noobTheme = createTheme({
     },
     action: {},
     error: {
-      main: 'rgba(255, 0, 0, 0.1)',
+      main: 'rgba(255, 0, 0, 0.62)',
     },
     divider: '#B39DDB',
   },
