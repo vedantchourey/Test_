@@ -15,6 +15,7 @@
     "@mui/material": "^5.2.2",
     "@reduxjs/toolkit": "^1.6.2",
     "@supabase/supabase-js": "^1.28.2",
+    "knex": "^0.95.14",
     "lodash": "^4.17.21",
     "luxon": "^2.1.1",
     "next": "12.0.4",

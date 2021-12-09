@@ -1,13 +1,13 @@
 import {TournamentRequest} from './tournament-request';
 import {get, post} from '../fetch-api-wrapper';
-import config from '../../utils/config';
+import frontEndConfig from '../../utils/config/front-end-config';
 import {TournamentResponse} from './tournament-response';
 import {PageResponse} from '../page-response';
 import {TournamentPageRequest} from './tournament-page-request';
 import UrlBuilder from '../../utils/url-builder';
 
 export async function saveDraftTournament(request: TournamentRequest): Promise<TournamentResponse> {
-  const response = await post(config.noobStormServices.tournament.createDraftUrl, request);
+  const response = await post(frontEndConfig.noobStormServices.tournament.createDraftUrl, request);
   const json = await response.json();
   if (!response.ok) throw new Error(JSON.stringify(json));
   return json.data;
@@ -15,7 +15,7 @@ export async function saveDraftTournament(request: TournamentRequest): Promise<T
 
 export async function editTournament(request: TournamentRequest): Promise<TournamentResponse> {
   if (request.id == null) throw new Error('to update tournament must have an id');
-  const baseUrl = config.noobStormServices.tournament.editUrl;
+  const baseUrl = frontEndConfig.noobStormServices.tournament.editUrl;
   const url = new UrlBuilder(baseUrl).addRouteParam('id', request.id)
                                      .build()
   const response = await post(url, request);
@@ -25,7 +25,7 @@ export async function editTournament(request: TournamentRequest): Promise<Tourna
 }
 
 export async function searchTournaments(request: TournamentPageRequest): Promise<PageResponse<TournamentResponse>> {
-  const url = new UrlBuilder(config.noobStormServices.tournament.searchUrl)
+  const url = new UrlBuilder(frontEndConfig.noobStormServices.tournament.searchUrl)
     .addQueryParam('itemsPerPage', request.itemsPerPage)
     .addQueryParam('pageNumber', request.pageNumber)
     .addQueryParam('onlyShowMyTournaments', request.onlyShowMyTournaments)
@@ -41,7 +41,7 @@ export async function searchTournaments(request: TournamentPageRequest): Promise
 }
 
 export async function getTournamentById(id: number): Promise<TournamentResponse> {
-  const url = new UrlBuilder(config.noobStormServices.tournament.getByIdUrl)
+  const url = new UrlBuilder(frontEndConfig.noobStormServices.tournament.getByIdUrl)
     .addRouteParam('id', id)
     .build();
   const response = await get(url);
@@ -51,7 +51,7 @@ export async function getTournamentById(id: number): Promise<TournamentResponse>
 }
 
 export async function openToPublic(id: number): Promise<TournamentResponse> {
-  const url = new UrlBuilder(config.noobStormServices.tournament.openToPublicUrl)
+  const url = new UrlBuilder(frontEndConfig.noobStormServices.tournament.openToPublicUrl)
     .addRouteParam('id', id)
     .build();
   const response = await post(url, {});

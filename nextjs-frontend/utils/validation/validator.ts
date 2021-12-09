@@ -1,5 +1,5 @@
 export type ValidationResult<Type> = {
-  [Property in keyof Type]: string | undefined;
+  [Property in keyof Partial<Type>]: string | undefined;
 };
 
 

@@ -2,13 +2,9 @@
 
 const baseAppUrl = process.env.NOOB_BASE_APP_URL || 'http://localhost:19006';
 const baseApiUrl = process.env.NOOB_BASE_API_URL || 'http://localhost:5000';
-const cognitoUserPoolId = process.env.NOOB_COGNITO_USER_POOL || 'ap-south-1_zrZFYDMXd';
-const cognitoAppClientId = process.env.NOOB_COGNITO_APP_CLIENT_ID || '3ov60p2vm8ivvi99dhr7mq8vp8';
-const cognitoDomain = process.env.NOOB_COGNITO_DOMAIN || 'https://test-nooby.auth.ap-south-1.amazoncognito.com';
-const imageBasePath = process.env.NOOB_ASSETS_BASE || 'http://localhost:8080/';
 
 /**
- * @type {import('./utils/i-frontend-config.ts').IFrontendConfig}
+ * @type {import('./utils/config/i-frontend-config.ts').IFrontendConfig}
  **/
 const frontendConfig = {
   baseAppUrl: baseAppUrl,
@@ -38,10 +34,20 @@ const frontendConfig = {
       searchStatesUrl: `${baseApiUrl}/noob-service/countries/{id}/states`
     },
   },
-  assets: {
-    imageBasePath: imageBasePath
-  }
 }
+
+
+/**
+ * @type {import('./utils/config/i-backend-config').IBackendConfig}
+ **/
+const backendConfig = {
+  databaseName: process.env.NOOB_DATA_BASE_NAME || 'postgres',
+  dbHost: process.env.NOOB_DATA_BASE_HOST || 'localhost',
+  dbPort: process.env.NOOB_DATA_BASE_PORT || 54322,
+  dbUser: process.env.NOOB_DATA_BASE_USER || 'postgres',
+  dbPassword: process.env.NOOB_DATA_BASE_PASSWORD || 'postgres'
+}
+
 
 /** @type {import('next').NextConfig} */
 module.exports = {
@@ -49,7 +55,10 @@ module.exports = {
   publicRuntimeConfig: {
     frontendConfig
   },
-  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+  serverRuntimeConfig: {
+    backendConfig
+  },
+  webpack: (config, {buildId, dev, isServer, defaultLoaders, webpack}) => {
     config.module.rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack', 'url-loader'],

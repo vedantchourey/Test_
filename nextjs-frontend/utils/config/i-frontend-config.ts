@@ -25,8 +25,5 @@ export interface IFrontendConfig {
       searchUrl: string;
       searchStatesUrl: string;
     }
-  },
-  assets: {
-    imageBasePath: string
   }
 }

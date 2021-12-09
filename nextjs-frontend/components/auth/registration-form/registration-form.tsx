@@ -8,12 +8,11 @@ import commonStyles from '../../../styles/common.module.css';
 import GoogleIcon from '@mui/icons-material/Google';
 import AppleIcon from '@mui/icons-material/Apple';
 import FacebookIcon from '@mui/icons-material/Facebook';
-import { SignupRequest } from '../../../services/supabase-service';
 import { parseDateTime, toISOString } from '../../../utils/date-time-utils';
 import StateDropDown from '../../drop-downs/state-drop-down/state-drop-down';
 import { validateSignUp } from './validator';
-import { ValidationResult } from '../../../utils/validation/validation-types';
-import { getErrorForProp, isThereAnyError, propsHasError } from '../../../models/validator';
+import { getErrorForProp, isThereAnyError, propsHasError, ValidationResult } from '../../../utils/validation/validator';
+import { SignupRequest } from '../../../services/backend-services/auth-service/signup/signup-contracts';
 
 export default function RegistrationForm() {
   const [errors, setErrors] = useState<ValidationResult<SignupRequest>>({});

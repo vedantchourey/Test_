@@ -1,4 +1,4 @@
-import {Validator} from '../validator';
+import {Validator} from '../../utils/validation/validator';
 import {PartialTournament} from './tournament';
 import {TournamentTypeCode} from './tournament-type';
 import {GameResponse} from '../../service-clients/games-service/game-response';

@@ -1,8 +1,9 @@
 import validator from 'validator';
 import { DateTime } from 'luxon';
-import { parseDateTime } from '../../../utils/date-time-utils';
-import { ValidationResult } from '../../../utils/validation/validator';
-import { SignupRequest } from '../../../services/backend-services/auth-service/signup/signup-contracts';
+import { SignupRequest } from './signup-contracts';
+import { parseDateTime } from '../../../../utils/date-time-utils';
+import { ValidationResult } from '../../../../utils/validation/validator';
+
 
 function validateStateId(details: Partial<SignupRequest>) {
   if (details.stateId == null) return 'Is required';
