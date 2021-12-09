@@ -1,10 +1,10 @@
 import { createClient } from '@supabase/supabase-js'
-import { SignupRequest } from '../backend-services/auth-service/signup/signup';
+import frontEndConfig from '../../utils/config/front-end-config';
+import { SignupRequest } from '../backend-services/auth-service/signup/signup-contracts';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:54321';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiJ9.ZopqoUt20nEV9cklpv9e3yw3PVyZLmKs5qLD6nGL1SI';
+const {apiUrl, anonKey} = frontEndConfig.supabase;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export const supabase = createClient(apiUrl, anonKey)
 
 export const signUp = async (request: SignupRequest) => {
   const {password, phone, email, provider, ...others} = request;

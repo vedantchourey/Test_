@@ -1,6 +1,6 @@
 import { StateResponse } from '../../../service-clients/country-service/state-response';
 import { useAppDispatch, useAppSelector } from '../../../store/redux-store';
-import { countryAllStatesSelector, countryStatesFetchStatus } from '../../../store/countries/country-selectors';
+import { countryAllStatesSelector, statesFetchStatus } from '../../../store/countries/country-selectors';
 import { useEffect, useState } from 'react';
 import { fetchCountryStatesThunk } from '../../../store/countries/country-slice';
 import { Autocomplete, TextField } from '@mui/material';
@@ -18,7 +18,7 @@ interface Props {
 export default function StateDropDown(props: Props) {
   const {countryId, value, onChange, autoCompleteClassName, inputClassName, error, helperText} = props;
   const appDispatch = useAppDispatch();
-  const stateFetchStatus = useAppSelector(countryStatesFetchStatus);
+  const stateFetchStatus = useAppSelector(statesFetchStatus);
   const states = useAppSelector(x => countryAllStatesSelector(x, countryId));
   const [selectedState, setSelectedState] = useState<StateResponse | null>();
 

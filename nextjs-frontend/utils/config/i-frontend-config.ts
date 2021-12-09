@@ -1,5 +1,9 @@
 export interface IFrontendConfig {
   baseAppUrl: string;
+  supabase: {
+    apiUrl: string;
+    anonKey: string;
+  };
   noobStormServices: {
     games: {
       searchUrl: string;

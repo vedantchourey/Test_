@@ -2,6 +2,13 @@
 
 const baseAppUrl = process.env.NOOB_BASE_APP_URL || 'http://localhost:19006';
 const baseApiUrl = process.env.NOOB_BASE_API_URL || 'http://localhost:5000';
+const databaseName = process.env.NOOB_DATA_BASE_NAME || 'postgres';
+const dbHost = process.env.NOOB_DATA_BASE_HOST || 'localhost';
+const dbPort = process.env.NOOB_DATA_BASE_PORT || 54322;
+const dbUser = process.env.NOOB_DATA_BASE_USER || 'postgres';
+const dbPassword = process.env.NOOB_DATA_BASE_PASSWORD || 'postgres';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:54321';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiJ9.ZopqoUt20nEV9cklpv9e3yw3PVyZLmKs5qLD6nGL1SI';
 
 /**
  * @type {import('./utils/config/i-frontend-config.ts').IFrontendConfig}
@@ -34,6 +41,10 @@ const frontendConfig = {
       searchStatesUrl: `${baseApiUrl}/noob-service/countries/{id}/states`
     },
   },
+  supabase: {
+    anonKey: supabaseAnonKey,
+    apiUrl: supabaseUrl
+  }
 }
 
 
@@ -41,11 +52,17 @@ const frontendConfig = {
  * @type {import('./utils/config/i-backend-config').IBackendConfig}
  **/
 const backendConfig = {
-  databaseName: process.env.NOOB_DATA_BASE_NAME || 'postgres',
-  dbHost: process.env.NOOB_DATA_BASE_HOST || 'localhost',
-  dbPort: process.env.NOOB_DATA_BASE_PORT || 54322,
-  dbUser: process.env.NOOB_DATA_BASE_USER || 'postgres',
-  dbPassword: process.env.NOOB_DATA_BASE_PASSWORD || 'postgres'
+  db: {
+    databaseName: databaseName,
+    dbHost: dbHost,
+    dbPort: dbPort,
+    dbUser: dbUser,
+    dbPassword: dbPassword
+  },
+  supabase: {
+    anonKey: supabaseAnonKey,
+    apiUrl: supabaseUrl
+  }
 }
 
 
