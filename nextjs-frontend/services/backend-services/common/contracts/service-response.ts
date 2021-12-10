@@ -1,7 +1,9 @@
-import { ErrorResponse } from './error-response';
 import { ValidationResult } from '../../../../utils/validation/validator';
+import { ApiError } from '@supabase/gotrue-js';
 
-export interface ServiceResponse<T> {
-  data?: T;
-  errors?: ErrorResponse[] | ValidationResult<T>;
+export type NoobServiceErrors<T> = { apiError: ApiError } | ValidationResult<T>;
+
+export interface ServiceResponse<TRequest, TResponse> {
+  data?: TResponse;
+  errors?: NoobServiceErrors<TRequest>;
 }

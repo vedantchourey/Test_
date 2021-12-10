@@ -3,15 +3,22 @@ import { DateTime } from 'luxon';
 import { SignupRequest } from './signup-contracts';
 import { parseDateTime } from '../../../../utils/date-time-utils';
 import { ValidationResult } from '../../../../utils/validation/validator';
+import { searchStatesById } from '../../database/repositories/public/state-repository';
+import { searchCountriesById } from '../../database/repositories/public/country-repository';
+import { countUsersByEmail, countUsersByUserName } from '../../database/repositories/auth/users-repository';
 
 
 function validateStateId(details: Partial<SignupRequest>) {
   if (details.stateId == null) return 'Is required';
+  if (details.countryId == null) return;
+  if (searchStatesById(details.stateId, details.countryId).length === 0) return 'Invalid state';
 }
 
 function validateCountry(details: Partial<SignupRequest>) {
   if (details.countryId == null) return 'Is required';
+  if (searchCountriesById(details.countryId).length === 0) return 'Invalid country';
 }
+
 
 function validateDOB(details: Partial<SignupRequest>) {
   if (details.dateOfBirth == null) return 'Is required';
@@ -22,7 +29,7 @@ function validateDOB(details: Partial<SignupRequest>) {
 function validateEmail(details: Partial<SignupRequest>) {
   if (details.email == null) return 'Is required';
   if (!validator.isEmail(details.email)) return 'Invalid email';
-  // TODO handle existing user
+  if (countUsersByEmail(details.email) > 0) return 'Not available';
 }
 
 function validateFirstName(details: Partial<SignupRequest>) {
@@ -51,17 +58,18 @@ function validatePhoneNumber(details: Partial<SignupRequest>) {
 function validateUserName(details: Partial<SignupRequest>) {
   if (details.username == null) return 'Is required';
   if (!validator.isAlphanumeric(details.username)) return 'Only A-Za-z1-9 allowed';
+  if (countUsersByUserName(details.username) > 0) return 'Not available';
 }
 
 function validateTnc(details: Partial<SignupRequest>) {
-  if (!details.agreeToTnc) return 'You have to agree to the the terms and conditions';
+  if (!details.agreeToTnc) return 'Agreement to terms and conditions required';
 }
 
 export async function validateSignUp(obj: Partial<SignupRequest>): Promise<ValidationResult<SignupRequest>> {
   return <ValidationResult<SignupRequest>>{
     stateId: validateStateId(obj),
     password: validatePassword(obj),
-    phone: validatePhoneNumber(obj),
+    // phone: validatePhoneNumber(obj),
     lastName: validateLastName(obj),
     email: validateEmail(obj),
     firstName: validateFirstName(obj),

@@ -13,6 +13,12 @@ import StateDropDown from '../../drop-downs/state-drop-down/state-drop-down';
 import { validateSignUp } from './validator';
 import { getErrorForProp, isThereAnyError, propsHasError, ValidationResult } from '../../../utils/validation/validator';
 import { SignupRequest } from '../../../services/backend-services/auth-service/signup/signup-contracts';
+import { signUp } from '../../../services/front-end-services/auth/auth';
+
+
+interface Props {
+  onSignUpSuccess: (userId: string) => void;
+}
 
 export default function RegistrationForm() {
   const [errors, setErrors] = useState<ValidationResult<SignupRequest>>({});
@@ -34,10 +40,14 @@ export default function RegistrationForm() {
   const dateOfBirth = request.dateOfBirth == null ? null : parseDateTime(request.dateOfBirth);
   const hasErrors = isThereAnyError(errors);
 
-  async function signUp() {
+  async function onClickSignUp() {
     const validationResults = await validateSignUp(request);
     setErrors(validationResults);
     if (isThereAnyError(validationResults)) return;
+    const response = await signUp(request as SignupRequest);
+    if (!response.isError) {
+      response.userId
+    }
   }
 
   return (
@@ -54,6 +64,26 @@ export default function RegistrationForm() {
                    error={propsHasError(errors, 'username')}
                    helperText={getErrorForProp(errors, 'username')}
                    onChange={event => setRequest({...request, username: event.target.value})}
+        />
+      </div>
+      <div className={styles.inputRow}>
+        <TextField id="email"
+                   label="Email"
+                   variant="filled"
+                   className={styles.inputRowItem}
+                   value={request.email}
+                   error={propsHasError(errors, 'email')}
+                   helperText={getErrorForProp(errors, 'email')}
+                   onChange={event => setRequest({...request, email: event.target.value})}
+        />
+        <TextField id="mobile"
+                   label="Mobile"
+                   variant="filled"
+                   className={styles.inputRowItem}
+                   value={request.phone}
+                   error={propsHasError(errors, 'phone')}
+                   helperText={getErrorForProp(errors, 'phone')}
+                   onChange={event => setRequest({...request, phone: event.target.value})}
         />
       </div>
       <div className={styles.inputRow}>
@@ -84,6 +114,7 @@ export default function RegistrationForm() {
                            renderInput={(params) =>
                              <TextField {...params}
                                         variant="filled"
+                                        className={styles.inputRowItem}
                                         error={propsHasError(errors, 'dateOfBirth')}
                                         helperText={getErrorForProp(errors, 'dateOfBirth')}/>
                            }
@@ -119,7 +150,7 @@ export default function RegistrationForm() {
         </FormControl>
       </div>
       <div className={styles.inputRow}>
-        <Button className={styles.actionButton} onClick={signUp}><Typography>Sign up Today</Typography></Button>
+        <Button className={styles.actionButton} onClick={onClickSignUp}><Typography>Sign up Today</Typography></Button>
       </div>
       <div className={styles.inputRow}>
         <Typography style={{color: 'white', fontWeight: '900'}}>OR SIGN UP WITH</Typography>

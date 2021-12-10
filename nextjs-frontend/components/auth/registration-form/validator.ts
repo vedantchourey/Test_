@@ -39,7 +39,7 @@ function validateLastName(details: Partial<SignupRequest>) {
 function validatePassword(details: Partial<SignupRequest>) {
   if (details.password == null) return 'Is required';
   const options = {minLength: 8, minLowercase: 1, minNumbers: 1, minSymbols: 1, minUppercase: 1};
-  if (!validator.isStrongPassword(details.password, options)) return 'Required min length 10 and at least 1 lower case, upper case, number and special char';
+  if (!validator.isStrongPassword(details.password, options)) return 'Required min length 8 and at least 1 lower case, upper case, number and special char';
 }
 
 function validatePhoneNumber(details: Partial<SignupRequest>) {
@@ -53,14 +53,14 @@ function validateUserName(details: Partial<SignupRequest>) {
 }
 
 function validateTnc(details: Partial<SignupRequest>) {
-  if (!details.agreeToTnc) return 'You have to agree to the the terms and conditions';
+  if (!details.agreeToTnc) return 'Agreement to terms and conditions required';
 }
 
 export async function validateSignUp(obj: Partial<SignupRequest>): Promise<ValidationResult<SignupRequest>> {
   return <ValidationResult<SignupRequest>>{
     stateId: validateStateId(obj),
     password: validatePassword(obj),
-    phone: validatePhoneNumber(obj),
+    // phone: validatePhoneNumber(obj),
     lastName: validateLastName(obj),
     email: validateEmail(obj),
     firstName: validateFirstName(obj),

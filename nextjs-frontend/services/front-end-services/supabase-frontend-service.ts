@@ -4,16 +4,5 @@ import { SignupRequest } from '../backend-services/auth-service/signup/signup-co
 
 const {apiUrl, anonKey} = frontEndConfig.supabase;
 
-export const supabase = createClient(apiUrl, anonKey)
+export const frontendSupabase = createClient(apiUrl, anonKey)
 
-export const signUp = async (request: SignupRequest) => {
-  const {password, phone, email, provider, ...others} = request;
-  await supabase.auth.signUp({
-    password: password,
-    phone: phone,
-    email: email,
-    provider: provider
-  }, {
-    data: others
-  });
-}

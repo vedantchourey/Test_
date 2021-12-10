@@ -14,4 +14,5 @@ export interface SignupRequest {
 
 
 export interface SignupResponse {
+  userId: string | undefined;
 }

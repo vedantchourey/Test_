@@ -1,8 +1,10 @@
 import backendConfig from '../../../utils/config/backend-config';
 
-const {databaseName, dbUser, dbPort, dbHost, dbPassword} = backendConfig;
+const {databaseName, dbUser, dbPort, dbHost, dbPassword} = backendConfig.db;
 
-const knex = require('knex')({
+const knexModule = require('knex');
+
+export const knex = knexModule({
   client: 'pg',
   connection: {
     host: dbHost,
@@ -14,4 +16,5 @@ const knex = require('knex')({
 });
 
 
-export default knex;
+
+
