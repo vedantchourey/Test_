@@ -26,7 +26,7 @@ export default function RegisterSuccess() {
         </div>
         <Container maxWidth="md" className={styles.registrationFormContainer}>
           <div className={commonStyles.simpleMessageContent} style={{backgroundColor: theme.palette.background.paper}}>
-            <Icon className={commonStyles.whiteText}><ErrorOutlineIcon/></Icon><Typography className={commonStyles.whiteText}>Please confirm activation email and then sign in!</Typography>
+            <Icon className={commonStyles.whiteText}><ErrorOutlineIcon/></Icon><Typography className={commonStyles.whiteText}>Signed up successfully! Please confirm activation email and sign in.</Typography>
           </div>
         </Container>
       </main>
