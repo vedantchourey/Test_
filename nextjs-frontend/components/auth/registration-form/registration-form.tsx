@@ -17,10 +17,11 @@ import { signUp } from '../../../services/front-end-services/auth/auth';
 
 
 interface Props {
-  onSignUpSuccess: (userId: string) => void;
+  onSignUpSuccess: (userId: string | undefined) => void;
 }
 
-export default function RegistrationForm() {
+export default function RegistrationForm(props: Props) {
+  const {onSignUpSuccess} = props;
   const [errors, setErrors] = useState<ValidationResult<SignupRequest>>({});
   const [request, setRequest] = useState<Partial<SignupRequest>>({
     email: '',
@@ -38,7 +39,6 @@ export default function RegistrationForm() {
   };
 
   const dateOfBirth = request.dateOfBirth == null ? null : parseDateTime(request.dateOfBirth);
-  const hasErrors = isThereAnyError(errors);
 
   async function onClickSignUp() {
     const validationResults = await validateSignUp(request);
@@ -46,7 +46,7 @@ export default function RegistrationForm() {
     if (isThereAnyError(validationResults)) return;
     const response = await signUp(request as SignupRequest);
     if (!response.isError) {
-      response.userId
+      onSignUpSuccess(response.userId);
     }
   }
 
