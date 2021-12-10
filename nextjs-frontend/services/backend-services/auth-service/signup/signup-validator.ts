@@ -26,10 +26,10 @@ function validateDOB(details: Partial<SignupRequest>) {
   if (DateTime.now().diff(dob, 'years').years < 18) return 'Must be 18 years min';
 }
 
-function validateEmail(details: Partial<SignupRequest>) {
+async function validateEmail(details: Partial<SignupRequest>) {
   if (details.email == null) return 'Is required';
   if (!validator.isEmail(details.email)) return 'Invalid email';
-  if (countUsersByEmail(details.email) > 0) return 'Not available';
+  if ((await countUsersByEmail(details.email)) !== 0) return 'Not available';
 }
 
 function validateFirstName(details: Partial<SignupRequest>) {
@@ -55,10 +55,10 @@ function validatePhoneNumber(details: Partial<SignupRequest>) {
   if (!validator.isMobilePhone(details.phone, "en-IN")) return 'Invalid mobile number';
 }
 
-function validateUserName(details: Partial<SignupRequest>) {
+async function validateUserName(details: Partial<SignupRequest>) {
   if (details.username == null) return 'Is required';
   if (!validator.isAlphanumeric(details.username)) return 'Only A-Za-z1-9 allowed';
-  if (countUsersByUserName(details.username) > 0) return 'Not available';
+  if ((await countUsersByUserName(details.username)) !== 0) return 'Not available';
 }
 
 function validateTnc(details: Partial<SignupRequest>) {
@@ -71,11 +71,11 @@ export async function validateSignUp(obj: Partial<SignupRequest>): Promise<Valid
     password: validatePassword(obj),
     // phone: validatePhoneNumber(obj),
     lastName: validateLastName(obj),
-    email: validateEmail(obj),
+    email: await validateEmail(obj),
     firstName: validateFirstName(obj),
     countryId: validateCountry(obj),
     dateOfBirth: validateDOB(obj),
-    username: validateUserName(obj),
+    username: await validateUserName(obj),
     agreeToTnc: validateTnc(obj)
   }
 }
