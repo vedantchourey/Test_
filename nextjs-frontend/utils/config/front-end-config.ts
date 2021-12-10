@@ -1,9 +1,9 @@
 import { IFrontendConfig } from './i-frontend-config';
 
-const baseAppUrl = process.env.NOOB_BASE_APP_URL || 'http://localhost:19006';
-const baseApiUrl = process.env.NOOB_BASE_API_URL || 'http://localhost:5000';
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:54321';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiJ9.ZopqoUt20nEV9cklpv9e3yw3PVyZLmKs5qLD6nGL1SI';
+const baseAppUrl = process.env.NEXT_PUBLIC_NOOB_BASE_APP_URL || 'http://localhost:19006';
+const baseApiUrl = process.env.NEXT_PUBLIC_NOOB_BASE_API_URL || 'http://localhost:5000';
+const supabaseUrl = process.env.NEXT_PUBLIC_NOOB_SUPABASE_URL || 'http://localhost:54321';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_NOOB_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiJ9.ZopqoUt20nEV9cklpv9e3yw3PVyZLmKs5qLD6nGL1SI';
 
 const frontendConfig: IFrontendConfig = {
   baseAppUrl: baseAppUrl,

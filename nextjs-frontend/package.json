@@ -6,7 +6,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "env TS_NODE_PROJECT=\"tsconfig.testing.json\" cross-env NODE_ENV=test mocha --require ts-node/register ./test/**/*.spec.ts"
+    "test": "env NODE_ENV='test' TS_NODE_PROJECT='tsconfig.testing.json'  mocha --require ts-node/register ./test/**/*.spec.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.7.0",
@@ -40,7 +40,7 @@
     "@types/uuid": "^8.3.3",
     "@types/validator": "^13.7.0",
     "chai": "^4.3.4",
-    "cross-env": "^7.0.3",
+    "dotenv": "^10.0.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.6",
     "eslint": "7",
