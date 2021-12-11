@@ -7,6 +7,7 @@ import noobTheme from '../utils/theme-and-colours/mui-theme';
 import LayoutChangeDetector from '../components/utils/layout-change-detector';
 import AdapterLuxonFns from '@mui/lab/AdapterLuxon';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { LoadingIndicator } from '../components/utils/loading-indicator';
 
 function MyApp({Component, pageProps}: AppProps) {
   return (
@@ -14,6 +15,7 @@ function MyApp({Component, pageProps}: AppProps) {
       <Provider store={reduxStore}>
         <LocalizationProvider dateAdapter={AdapterLuxonFns}>
           <LayoutChangeDetector/>
+          <LoadingIndicator/>
           <Component {...pageProps} />
         </LocalizationProvider>
       </Provider>

@@ -14,7 +14,8 @@ import { validateSignUp } from './validator';
 import { getErrorForProp, isThereAnyError, propsHasError, ValidationResult } from '../../../utils/validation/validator';
 import { SignupRequest } from '../../../services/backend-services/auth-service/signup/signup-contracts';
 import { signUp } from '../../../services/front-end-services/auth/auth';
-
+import { useAppDispatch } from '../../../store/redux-store';
+import { setIsLoading } from '../../../store/screen-animations/screen-animation-slice';
 
 interface Props {
   onSignUpSuccess: (userId: string | undefined) => void;
@@ -22,6 +23,7 @@ interface Props {
 
 export default function RegistrationForm(props: Props) {
   const {onSignUpSuccess} = props;
+  const appDispatch = useAppDispatch();
   const [errors, setErrors] = useState<ValidationResult<SignupRequest>>({});
   const [request, setRequest] = useState<Partial<SignupRequest>>({
     email: '',
@@ -44,9 +46,16 @@ export default function RegistrationForm(props: Props) {
     const validationResults = await validateSignUp(request);
     setErrors(validationResults);
     if (isThereAnyError(validationResults)) return;
-    const response = await signUp(request as SignupRequest);
-    if (!response.isError) {
-      onSignUpSuccess(response.userId);
+    try {
+      appDispatch(setIsLoading(true));
+      const response = await signUp(request as SignupRequest);
+      if (!response.isError) {
+        onSignUpSuccess(response.userId);
+      } else {
+        setErrors(response.errors);
+      }
+    } finally {
+      appDispatch(setIsLoading(false));
     }
   }
 

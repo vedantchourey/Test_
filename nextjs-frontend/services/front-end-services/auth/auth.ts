@@ -1,16 +1,14 @@
 import { SignupRequest, SignupResponse } from '../../backend-services/auth-service/signup/signup-contracts';
 import { post } from '../../../service-clients/fetch-api-wrapper';
 import frontEndConfig from '../../../utils/config/front-end-config';
-import { NoobServiceErrors } from '../../backend-services/common/contracts/service-response';
+import { FetchResponse } from '../common-messages';
 
 const signupUrl = frontEndConfig.noobStormServices.auth.signup;
 
-export type FetchResponse<T> = { isError: true, errors: NoobServiceErrors<T> } | (T & { isError: false });
-
-export async function signUp(request: SignupRequest): Promise<FetchResponse<SignupResponse>> {
+export async function signUp(request: SignupRequest): Promise<FetchResponse<SignupRequest, SignupResponse>> {
   const response = await post(signupUrl, request);
   const body = await response.json();
   if (response.status === 200) return body.data;
-  if (response.status === 400) return {errors: body.errors, isError: true}
+  if (response.status === 400 && body.errors.apiError == null) return {errors: body.errors, isError: true}
   throw body;
 }

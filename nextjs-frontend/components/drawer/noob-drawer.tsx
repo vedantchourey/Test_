@@ -7,6 +7,7 @@ import FlashOnIcon from '@mui/icons-material/FlashOn';
 import DiscordIcon from '../icons/discord-icon';
 import TwitchIcon from '../icons/twitch-icon';
 import YoutubeIcon from '../icons/youtube-icon';
+import { useRouter } from 'next/router';
 
 interface Props {
   show: boolean;
@@ -16,13 +17,17 @@ interface Props {
 export default function NoobDrawer(props: Props) {
   const {show, onClose} = props;
   const theme = useTheme();
+  const router = useRouter();
 
   return (
     <Dialog open={show} onClose={onClose} fullScreen color="#08001C">
       <div className={styles.container}>
         <div className={styles.topMenuGroup}>
           <div className={styles.topMenuItemLeft}>
-            <Button variant="outlined" style={{textTransform: 'none', color: 'white'}}>
+            <Button variant="outlined"
+                    style={{textTransform: 'none', color: 'white'}}
+                    onClick={()=> router.push('/auth/register')}
+            >
               Register
             </Button>
             <Typography style={{alignSelf: 'center'}}>OR</Typography>
@@ -38,7 +43,7 @@ export default function NoobDrawer(props: Props) {
         </div>
         <Divider/>
         <div>
-          <ListItem><ListItemText primary="Home"/></ListItem>
+          <ListItem><ListItemText primary="Home" onClick={() => router.push('/')}/></ListItem>
           <ListItem><ListItemText primary="Leaderboards"/></ListItem>
           <ListItem><ListItemText primary="About Us"/></ListItem>
           <ListItem><ListItemText primary="Support"/></ListItem>
