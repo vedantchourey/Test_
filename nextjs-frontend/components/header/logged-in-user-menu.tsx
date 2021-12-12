@@ -72,9 +72,6 @@ export default function LoggedInUserMenu() {
                   MenuListProps={{
                     'aria-labelledby': 'basic-button',
                   }}
-                  style={{
-                    borderRadius: 0
-                  }}
       >
         <MenuItem onClick={handleClose}><ListItemIcon><PersonIcon fontSize="small"/></ListItemIcon><ListItemText>Account</ListItemText></MenuItem>
         <MenuItem onClick={handleClose}><ListItemIcon><DashboardIcon fontSize="small"/></ListItemIcon><ListItemText>Dashboard</ListItemText></MenuItem>

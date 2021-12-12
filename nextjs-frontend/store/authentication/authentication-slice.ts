@@ -14,7 +14,7 @@ const authenticationSlice = createSlice({
   name: 'authentication',
   initialState,
   reducers: {
-    setCheckStatus(state, action: PayloadAction<'idle' | 'loading' | 'success'>) {
+    setCheckLoginStatus(state, action: PayloadAction<'idle' | 'loading' | 'success'>) {
       state.checkStatus = action.payload;
     },
     setIsLoggedIn(state, action: PayloadAction<boolean>) {
@@ -29,6 +29,6 @@ const authenticationSlice = createSlice({
   }
 });
 
-export const {setCheckStatus, setIsLoggedIn, setIsUserRequestingLogin, setAuthScreen} = authenticationSlice.actions;
+export const {setCheckLoginStatus, setIsLoggedIn, setIsUserRequestingLogin, setAuthScreen} = authenticationSlice.actions;
 const authenticationSliceReducer = authenticationSlice.reducer;
 export default authenticationSliceReducer;

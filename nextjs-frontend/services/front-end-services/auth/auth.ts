@@ -5,6 +5,7 @@ import { NoobFetchResponse, SupabaseFetchResponse } from '../common-messages';
 import { SignInRequest } from './sign-in-request';
 import { frontendSupabase } from '../supabase-frontend-service';
 import { Session, User } from '@supabase/gotrue-js/src/lib/types';
+import { ApiError } from '@supabase/gotrue-js';
 
 const signupUrl = frontEndConfig.noobStormServices.auth.signup;
 
@@ -32,4 +33,8 @@ export async function signIn(request: SignInRequest): Promise<SupabaseFetchRespo
 
 export async function authenticatedUser(): Promise<User | null> {
   return frontendSupabase.auth.user()
+}
+
+export async function refreshSession(): Promise<{ data: Session | null; user: User | null; error: ApiError | null }> {
+  return frontendSupabase.auth.refreshSession();
 }

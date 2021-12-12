@@ -8,16 +8,26 @@ import { useAppSelector } from '../../store/redux-store';
 import { isDeviceTypeSelector } from '../../store/layout/layout-selectors';
 import { deviceTypes } from '../../store/layout/device-types';
 import { useRouter } from 'next/router';
+import { isLoggedInSelector } from '../../store/authentication/authentication-selectors';
+import { useEffect } from 'react';
 
 export default function Register() {
   const theme = useTheme();
   const router = useRouter();
   const isDesktop = useAppSelector(x => isDeviceTypeSelector(x, deviceTypes.desktop));
   const backgroundColor = isDesktop ? theme.palette.background.default : theme.palette.background.paper;
+  const isLoggedIn = useAppSelector(isLoggedInSelector);
 
   const onSignUpSuccess = async (userId: string | undefined) => {
     await router.push('/auth/register-success');
   }
+
+  useEffect(() => {
+    (async () => {
+      if (!isLoggedIn) return;
+      await router.push('/');
+    })();
+  }, [isLoggedIn]);
 
   return (
     <div style={{backgroundColor}}>
