@@ -14,6 +14,7 @@ export default function NoobMobileHeader() {
   const hideMenu = () => setShowMenu(false);
 
   function onSuccessfulLogin() {
+    setShowLoginModal(false);
   }
 
   function onLoginClick() {

@@ -1,12 +1,17 @@
-import { Button, Dialog, IconButton, styled, TextField, Typography } from '@mui/material';
+import { Button, Dialog, FormHelperText, IconButton, styled, TextField, Typography } from '@mui/material';
 import styles from './login-modal.module.css';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useState } from 'react';
-import { getErrorForProp, propsHasError, ValidationResult } from '../../../utils/validation/validator';
+import { getErrorForProp, isThereAnyError, propsHasError, ValidationResult } from '../../../utils/validation/validator';
 import Link from 'next/link';
-import { useAppSelector } from '../../../store/redux-store';
+import { useAppDispatch, useAppSelector } from '../../../store/redux-store';
 import { isDeviceTypeSelector } from '../../../store/layout/layout-selectors';
 import { deviceTypes } from '../../../store/layout/device-types';
+import validator from 'validator';
+import { SignInRequest } from '../../../services/front-end-services/auth/sign-in-request';
+import { signIn } from '../../../services/front-end-services/auth/auth';
+import { ApiError } from '@supabase/gotrue-js';
+import { setIsLoading } from '../../../store/screen-animations/screen-animation-slice';
 
 interface Props {
   show: boolean;
@@ -35,30 +40,69 @@ const CustomLoginDialog = styled(Dialog)<CustomLoginDialogProps>(({theme, top = 
   });
 });
 
-interface ICredentials {
-  email: string;
-  password: string;
+function validateEmail(details: SignInRequest) {
+  if (details.email == null) return 'Is required';
+  if (!validator.isEmail(details.email)) return 'Invalid email';
+}
+
+function validatePassword(details: SignInRequest) {
+  if (details.password == null) return 'Is required';
+}
+
+
+function validateCredentials(request: SignInRequest): ValidationResult<SignInRequest> {
+  return {
+    email: validateEmail(request),
+    password: validatePassword(request)
+  }
 }
 
 
 export default function LoginModal(props: Props) {
-  const {onSuccessfulLogin, onCancel, show, right=70, top=100} = props;
-  const [credentials, setCredentials] = useState<ICredentials>({email: '', password: ''});
-  const [errors, setErrors] = useState<ValidationResult<ICredentials>>({});
+  const {onSuccessfulLogin, onCancel, show, right = 70, top = 100} = props;
+  const [request, setRequest] = useState<SignInRequest>({email: '', password: ''});
+  const [errors, setErrors] = useState<ValidationResult<SignInRequest>>({});
+  const [loginError, setLoginError] = useState<ApiError | undefined>();
+  const appDispatch = useAppDispatch();
 
-  function onClickLogin() {
+  function resetData() {
+    setRequest({email: '', password: ''});
+    setErrors({});
+    setLoginError(undefined);
+  }
 
+  function onClose() {
+    resetData();
+    onCancel();
+  }
+
+  async function onClickLogin() {
+    const results = validateCredentials(request);
+    setErrors(results);
+    if (isThereAnyError(results)) return;
+    try {
+      appDispatch(setIsLoading(true));
+      const response = await signIn(request);
+      if (response.isError) {
+        setLoginError(response.error);
+      } else {
+        resetData();
+        onSuccessfulLogin();
+      }
+    } finally {
+      appDispatch(setIsLoading(false));
+    }
   }
 
   return (
-    <CustomLoginDialog open={show} onClose={onCancel} top={top} right={right} color="#08001C">
+    <CustomLoginDialog open={show} onClose={onClose} top={top} right={right} color="#08001C">
       <div className={styles.content}>
         <div className={styles.header}>
           <div className={styles.headerTitle}>
             <Typography>Sign In</Typography>
           </div>
           <div className={styles.headerButtons}>
-            <IconButton onClick={onCancel}>
+            <IconButton onClick={onClose}>
               <CancelIcon/>
             </IconButton>
           </div>
@@ -68,10 +112,10 @@ export default function LoginModal(props: Props) {
                      label="Email"
                      variant="filled"
                      className={styles.inputRowItem}
-                     value={credentials.email}
+                     value={request.email}
                      error={propsHasError(errors, 'email')}
                      helperText={getErrorForProp(errors, 'email')}
-                     onChange={event => setCredentials({...credentials, email: event.target.value})}
+                     onChange={event => setRequest({...request, email: event.target.value})}
           />
         </div>
         <div className={styles.row}>
@@ -80,11 +124,14 @@ export default function LoginModal(props: Props) {
                      variant="filled"
                      type="password"
                      className={styles.inputRowItem}
-                     value={credentials.password}
+                     value={request.password}
                      error={propsHasError(errors, 'password')}
                      helperText={getErrorForProp(errors, 'password')}
-                     onChange={event => setCredentials({...credentials, password: event.target.value})}
+                     onChange={event => setRequest({...request, password: event.target.value})}
           />
+        </div>
+        <div className={styles.row}>
+          <FormHelperText style={{display: loginError ? '' : 'none'}} error={true}>{loginError?.message}</FormHelperText>
         </div>
         <div className={styles.row}>
           <Typography><Link href="/forgot-password">Lost your password</Link></Typography>

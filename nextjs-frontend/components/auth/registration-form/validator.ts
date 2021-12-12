@@ -21,7 +21,6 @@ function validateDOB(details: Partial<SignupRequest>) {
 function validateEmail(details: Partial<SignupRequest>) {
   if (details.email == null) return 'Is required';
   if (!validator.isEmail(details.email)) return 'Invalid email';
-  // TODO handle existing user
 }
 
 function validateFirstName(details: Partial<SignupRequest>) {

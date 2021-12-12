@@ -20,6 +20,11 @@ export default function NoobDrawer(props: Props) {
   const theme = useTheme();
   const router = useRouter();
 
+  async function gotoPage(url: string) {
+    onClose();
+    await router.push(url);
+  }
+
   return (
     <Dialog open={show} onClose={onClose} fullScreen color="#08001C">
       <div className={styles.container}>
@@ -44,7 +49,7 @@ export default function NoobDrawer(props: Props) {
         </div>
         <Divider/>
         <div>
-          <ListItem><ListItemText primary="Home" onClick={() => router.push('/')}/></ListItem>
+          <ListItem><ListItemText primary="Home" onClick={() => gotoPage('/')}/></ListItem>
           <ListItem><ListItemText primary="Leaderboards"/></ListItem>
           <ListItem><ListItemText primary="About Us"/></ListItem>
           <ListItem><ListItemText primary="Support"/></ListItem>

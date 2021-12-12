@@ -34,6 +34,7 @@ export default function NoobDesktopHeader() {
   }
 
   function onSuccessfulLogin() {
+    setShowLoginModal(false);
   }
 
   function onShowLoginModal() {
