@@ -8,6 +8,7 @@ import LayoutChangeDetector from '../components/utils/layout-change-detector';
 import AdapterLuxonFns from '@mui/lab/AdapterLuxon';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { LoadingIndicator } from '../components/utils/loading-indicator';
+import AuthEventsHandler from '../components/auth/auth-events-handler';
 
 function MyApp({Component, pageProps}: AppProps) {
   return (
@@ -16,6 +17,7 @@ function MyApp({Component, pageProps}: AppProps) {
         <LocalizationProvider dateAdapter={AdapterLuxonFns}>
           <LayoutChangeDetector/>
           <LoadingIndicator/>
+          <AuthEventsHandler/>
           <Component {...pageProps} />
         </LocalizationProvider>
       </Provider>
