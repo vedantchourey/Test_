@@ -20,7 +20,7 @@ export default function AuthEventsHandler() {
       }
       appDispatch(setCheckStatus('success'));
     })();
-  }, [status]);
+  });
 
   return null;
 }

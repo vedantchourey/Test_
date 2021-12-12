@@ -1,6 +1,5 @@
 .container {
   height: 64px;
-  width: 320px;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -14,6 +13,13 @@
 }
 
 .userPic {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  flex-direction: row;
+}
+
+.userIcon {
   width: 64px;
   height: 64px;
 }

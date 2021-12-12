@@ -1,16 +1,25 @@
-import { CardMedia, Icon, IconButton, Typography } from "@mui/material";
+import { Divider, Icon, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Typography } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { authenticatedUser } from '../../services/front-end-services/auth/auth';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAppSelector } from '../../store/redux-store';
 import { isLoggedInSelector } from '../../store/authentication/authentication-selectors';
 import styles from './logged-in-user-menu.module.css';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+import PersonIcon from '@mui/icons-material/Person';
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import SettingsIcon from '@mui/icons-material/Settings';
+import WatchLaterIcon from '@mui/icons-material/WatchLater';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 export default function LoggedInUserMenu() {
 
   const [userName, setUserName] = useState('');
   const isLoggedIn = useAppSelector(isLoggedInSelector);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -23,25 +32,47 @@ export default function LoggedInUserMenu() {
     })()
   }, [isLoggedIn]);
 
+  function handleClose() {
+    setShowMenu(false);
+  }
+
+  function onDownArrowClick() {
+    setShowMenu(true);
+  }
+
   return (
-    <div className={styles.container}>
+    <div className={styles.container} ref={containerRef}>
       <div className={styles.userPic}>
-        <CardMedia
-          component="img"
-          sx={{width: 151}}
-          image="/static/images/cards/live-from-space.jpg"
-          alt="profile pic"
-        />
+        <Icon className={styles.userIcon}>
+          <PersonIcon className={styles.userIcon}/>
+        </Icon>
       </div>
       <div className={styles.columnGroup}>
         <Typography className={styles.username}>{userName}</Typography>
         <Typography className={styles.balance}><Icon fontSize="inherit"><CurrencyRupeeIcon fontSize="inherit"/></Icon>600</Typography>
       </div>
       <div className={styles.menuGroup}>
-        <IconButton aria-label="show user menu">
+        <IconButton aria-label="show user menu" onClick={onDownArrowClick}>
           <KeyboardArrowDownIcon/>
         </IconButton>
       </div>
+      <Menu id="basic-menu"
+            anchorEl={containerRef?.current}
+            open={showMenu}
+            onClose={handleClose}
+            MenuListProps={{
+              'aria-labelledby': 'basic-button',
+            }}
+      >
+        <MenuItem onClick={handleClose}><ListItemIcon><PersonIcon fontSize="small"/></ListItemIcon><ListItemText>Account</ListItemText></MenuItem>
+        <MenuItem onClick={handleClose}><ListItemIcon><DashboardIcon fontSize="small"/></ListItemIcon><ListItemText>Dashboard</ListItemText></MenuItem>
+        <MenuItem onClick={handleClose}><ListItemIcon><ShoppingBagIcon fontSize="small"/></ListItemIcon><ListItemText>Orders</ListItemText></MenuItem>
+        <MenuItem onClick={handleClose}><ListItemIcon><AccountBalanceWalletIcon fontSize="small"/></ListItemIcon><ListItemText>Wallet</ListItemText></MenuItem>
+        <MenuItem onClick={handleClose}><ListItemIcon><SettingsIcon fontSize="small"/></ListItemIcon><ListItemText>Profile Settings</ListItemText></MenuItem>
+        <MenuItem onClick={handleClose}><ListItemIcon><WatchLaterIcon fontSize="small"/></ListItemIcon><ListItemText>Active Tournaments</ListItemText></MenuItem>
+        <Divider/>
+        <MenuItem onClick={handleClose}><ListItemIcon><LogoutIcon fontSize="small"/></ListItemIcon><ListItemText>Logout</ListItemText></MenuItem>
+      </Menu>
     </div>
   );
 }
