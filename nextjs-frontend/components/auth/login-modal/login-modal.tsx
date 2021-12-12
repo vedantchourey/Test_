@@ -4,22 +4,36 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { useState } from 'react';
 import { getErrorForProp, propsHasError, ValidationResult } from '../../../utils/validation/validator';
 import Link from 'next/link';
+import { useAppSelector } from '../../../store/redux-store';
+import { isDeviceTypeSelector } from '../../../store/layout/layout-selectors';
+import { deviceTypes } from '../../../store/layout/device-types';
 
 interface Props {
   show: boolean;
   onCancel: () => void;
   onSuccessfulLogin: () => void;
+  top?: number;
+  right?: number;
 }
 
-const CustomLoginDialog = styled(Dialog)(({theme}) => ({
-  '& .MuiPaper-root': {
-    borderRadius: 0,
-    backgroundColor: '#160C30'
-  },
-  '& .MuiDialogActions-root': {
-    padding: theme.spacing(1),
-  },
-}));
+interface CustomLoginDialogProps {
+  top?: number;
+  right?: number;
+}
+
+const CustomLoginDialog = styled(Dialog)<CustomLoginDialogProps>(({theme, top = 100, right = 70}) => {
+  const isDesktop = useAppSelector(x => isDeviceTypeSelector(x, deviceTypes.desktop));
+  const positionStyle = !isDesktop ? {} : {position: 'absolute', top, right};
+
+  return ({
+    '& .MuiPaper-root': {
+      borderRadius: 0,
+      backgroundColor: '#160C30',
+      margin: 0,
+      ...positionStyle
+    }
+  });
+});
 
 interface ICredentials {
   email: string;
@@ -28,7 +42,7 @@ interface ICredentials {
 
 
 export default function LoginModal(props: Props) {
-  const {onSuccessfulLogin, onCancel, show} = props;
+  const {onSuccessfulLogin, onCancel, show, right=70, top=100} = props;
   const [credentials, setCredentials] = useState<ICredentials>({email: '', password: ''});
   const [errors, setErrors] = useState<ValidationResult<ICredentials>>({});
 
@@ -37,7 +51,7 @@ export default function LoginModal(props: Props) {
   }
 
   return (
-    <CustomLoginDialog open={show} onClose={onCancel} color="#08001C">
+    <CustomLoginDialog open={show} onClose={onCancel} top={top} right={right} color="#08001C">
       <div className={styles.content}>
         <div className={styles.header}>
           <div className={styles.headerTitle}>

@@ -4,15 +4,21 @@ import { AppBar, Button, Typography, useTheme } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
 import * as React from 'react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import LoginModal from '../auth/login-modal/login-modal';
+import { ComponentDimensions, createFromRef } from '../utils/component-dimensions';
+import { useAppSelector } from '../../store/redux-store';
+import { screenWidthSelector } from '../../store/layout/layout-selectors';
 
 export default function NoobDesktopHeader() {
   const theme = useTheme();
   const router = useRouter()
+  const loginButtonRef = useRef<any>();
+  const [loginButtonDimensions, setLoginButtonDimensions] = useState(new ComponentDimensions(0, 0, 0, 0, 0, 0, 0))
   const {pathname} = router;
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const screenWidth = useAppSelector(screenWidthSelector);
 
   function buttonStyle(expectedPaths: string[]): React.CSSProperties {
     if (expectedPaths.indexOf(pathname) === -1) return {color: 'white', fontWeight: 700};
@@ -28,6 +34,11 @@ export default function NoobDesktopHeader() {
   }
 
   function onSuccessfulLogin() {
+  }
+
+  function onShowLoginModal() {
+    setLoginButtonDimensions(createFromRef(loginButtonRef));
+    setShowLoginModal(true);
   }
 
   return (
@@ -48,7 +59,7 @@ export default function NoobDesktopHeader() {
               Register
             </Button>
             <Typography style={{alignSelf: 'center'}}>OR</Typography>
-            <Button variant="contained" style={{textTransform: 'none'}} onClick={() => setShowLoginModal(true)}>
+            <Button variant="contained" ref={loginButtonRef} style={{textTransform: 'none'}} onClick={onShowLoginModal}>
               Sign In
             </Button>
           </div>
@@ -69,6 +80,8 @@ export default function NoobDesktopHeader() {
       <LoginModal show={showLoginModal}
                   onSuccessfulLogin={onSuccessfulLogin}
                   onCancel={() => setShowLoginModal(false)}
+                  top={loginButtonDimensions.bottom + 10}
+                  right={screenWidth - loginButtonDimensions.right}
       />
     </>
 

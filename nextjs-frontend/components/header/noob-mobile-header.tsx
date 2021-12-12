@@ -5,12 +5,21 @@ import Image from 'next/image';
 import * as React from 'react';
 import { useState } from 'react';
 import NoobDrawer from '../drawer/noob-drawer';
+import LoginModal from '../auth/login-modal/login-modal';
 
 export default function NoobMobileHeader() {
   const [showMenu, setShowMenu] = useState(false);
-
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const toggleDrawer = () => setShowMenu(true);
   const hideMenu = () => setShowMenu(false);
+
+  function onSuccessfulLogin() {
+  }
+
+  function onLoginClick() {
+    setShowLoginModal(true)
+    hideMenu();
+  }
 
   return (
     <>
@@ -31,7 +40,14 @@ export default function NoobMobileHeader() {
           </div>
         </div>
       </AppBar>
-      <NoobDrawer show={showMenu} onClose={hideMenu}/>
+      <NoobDrawer show={showMenu}
+                  onClose={hideMenu}
+                  onLoginClick={onLoginClick}
+      />
+      <LoginModal show={showLoginModal}
+                  onCancel={() => setShowLoginModal(false)}
+                  onSuccessfulLogin={onSuccessfulLogin}
+      />
     </>
   );
 }

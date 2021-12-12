@@ -12,10 +12,11 @@ import { useRouter } from 'next/router';
 interface Props {
   show: boolean;
   onClose: () => void;
+  onLoginClick: () => void;
 }
 
 export default function NoobDrawer(props: Props) {
-  const {show, onClose} = props;
+  const {show, onClose, onLoginClick} = props;
   const theme = useTheme();
   const router = useRouter();
 
@@ -31,7 +32,7 @@ export default function NoobDrawer(props: Props) {
               Register
             </Button>
             <Typography style={{alignSelf: 'center'}}>OR</Typography>
-            <Button variant="contained" style={{textTransform: 'none'}}>
+            <Button variant="contained" style={{textTransform: 'none'}} onClick={onLoginClick}>
               Sign In
             </Button>
           </div>
