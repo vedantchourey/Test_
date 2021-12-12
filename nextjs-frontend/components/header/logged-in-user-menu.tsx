@@ -1,4 +1,4 @@
-import { Divider, Icon, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Typography } from "@mui/material";
+import { Divider, Icon, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, styled, Typography } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { authenticatedUser } from '../../services/front-end-services/auth/auth';
 import { useEffect, useRef, useState } from 'react';
@@ -13,6 +13,15 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import SettingsIcon from '@mui/icons-material/Settings';
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import LogoutIcon from '@mui/icons-material/Logout';
+
+
+const CustomMenu = styled(Menu)(({theme}) => {
+  return ({
+    '& .MuiPaper-root': {
+      borderRadius: 0
+    }
+  });
+});
 
 export default function LoggedInUserMenu() {
 
@@ -56,13 +65,16 @@ export default function LoggedInUserMenu() {
           <KeyboardArrowDownIcon/>
         </IconButton>
       </div>
-      <Menu id="basic-menu"
-            anchorEl={containerRef?.current}
-            open={showMenu}
-            onClose={handleClose}
-            MenuListProps={{
-              'aria-labelledby': 'basic-button',
-            }}
+      <CustomMenu id="basic-menu"
+                  anchorEl={containerRef?.current}
+                  open={showMenu}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                  }}
+                  style={{
+                    borderRadius: 0
+                  }}
       >
         <MenuItem onClick={handleClose}><ListItemIcon><PersonIcon fontSize="small"/></ListItemIcon><ListItemText>Account</ListItemText></MenuItem>
         <MenuItem onClick={handleClose}><ListItemIcon><DashboardIcon fontSize="small"/></ListItemIcon><ListItemText>Dashboard</ListItemText></MenuItem>
@@ -72,7 +84,7 @@ export default function LoggedInUserMenu() {
         <MenuItem onClick={handleClose}><ListItemIcon><WatchLaterIcon fontSize="small"/></ListItemIcon><ListItemText>Active Tournaments</ListItemText></MenuItem>
         <Divider/>
         <MenuItem onClick={handleClose}><ListItemIcon><LogoutIcon fontSize="small"/></ListItemIcon><ListItemText>Logout</ListItemText></MenuItem>
-      </Menu>
+      </CustomMenu>
     </div>
   );
 }

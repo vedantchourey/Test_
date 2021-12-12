@@ -12,6 +12,7 @@ import { SignInRequest } from '../../../services/front-end-services/auth/sign-in
 import { signIn } from '../../../services/front-end-services/auth/auth';
 import { ApiError } from '@supabase/gotrue-js';
 import { setIsLoading } from '../../../store/screen-animations/screen-animation-slice';
+import { setIsLoggedIn } from '../../../store/authentication/authentication-slice';
 
 interface Props {
   show: boolean;
@@ -57,7 +58,6 @@ function validateCredentials(request: SignInRequest): ValidationResult<SignInReq
   }
 }
 
-
 export default function LoginModal(props: Props) {
   const {onSuccessfulLogin, onCancel, show, right = 70, top = 100} = props;
   const [request, setRequest] = useState<SignInRequest>({email: '', password: ''});
@@ -87,6 +87,7 @@ export default function LoginModal(props: Props) {
         setLoginError(response.error);
       } else {
         resetData();
+        appDispatch(setIsLoggedIn(true));
         onSuccessfulLogin();
       }
     } finally {
