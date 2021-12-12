@@ -10,6 +10,8 @@ import LoginModal from '../auth/login-modal/login-modal';
 import { ComponentDimensions, createFromRef } from '../utils/component-dimensions';
 import { useAppSelector } from '../../store/redux-store';
 import { screenWidthSelector } from '../../store/layout/layout-selectors';
+import { isLoggedInSelector } from '../../store/authentication/authentication-selectors';
+import LoggedInUserMenu from './logged-in-user-menu';
 
 export default function NoobDesktopHeader() {
   const theme = useTheme();
@@ -19,6 +21,7 @@ export default function NoobDesktopHeader() {
   const {pathname} = router;
   const [showLoginModal, setShowLoginModal] = useState(false);
   const screenWidth = useAppSelector(screenWidthSelector);
+  const isLoggedIn = useAppSelector(isLoggedInSelector);
 
   function buttonStyle(expectedPaths: string[]): React.CSSProperties {
     if (expectedPaths.indexOf(pathname) === -1) return {color: 'white', fontWeight: 700};
@@ -47,7 +50,12 @@ export default function NoobDesktopHeader() {
       <AppBar position="fixed" className={styles.appHeader}>
         <div className={styles.topMenu}>
           <div className={styles.topLeftMenuGroup}>
-            <Image src="/images/noobstorm-logo.png" width={182} height={39} alt="noob storm logo"/>
+            <div className={styles.noobLogo}>
+              <Image src="/images/noobstorm-logo-small.png"
+                     width={130}
+                     height={28}
+                     alt="noob storm logo"/>
+            </div>
             <Button variant="text" startIcon={<ShoppingCartIcon/>} style={{textTransform: 'none'}}>
               Store
             </Button>
@@ -55,15 +63,23 @@ export default function NoobDesktopHeader() {
               Free Agency Market
             </Button>
           </div>
-          <div className={styles.topRightMenuGroup}>
-            <Button variant="outlined" style={{textTransform: 'none', color: 'white'}} onClick={gotoRegisterPage}>
-              Register
-            </Button>
-            <Typography style={{alignSelf: 'center'}}>OR</Typography>
-            <Button variant="contained" ref={loginButtonRef} style={{textTransform: 'none'}} onClick={onShowLoginModal}>
-              Sign In
-            </Button>
-          </div>
+          {
+            !isLoggedIn && <div className={styles.topRightMenuGroup}>
+              <Button variant="outlined" style={{textTransform: 'none', color: 'white'}} onClick={gotoRegisterPage}>
+                Register
+              </Button>
+              <Typography style={{alignSelf: 'center'}}>OR</Typography>
+              <Button variant="contained" ref={loginButtonRef} style={{textTransform: 'none'}} onClick={onShowLoginModal}>
+                Sign In
+              </Button>
+            </div>
+          }
+          {
+            isLoggedIn && <div className={styles.topRightMenuGroup}>
+              <LoggedInUserMenu/>
+            </div>
+          }
+
         </div>
         <div className={styles.bottomMenu}>
           <div className={styles.bottomMenuLeftGroup}>

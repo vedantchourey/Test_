@@ -1,0 +1,43 @@
+.container {
+  height: 64px;
+  width: 320px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  column-gap: 16px;
+  background-color: #160C30;
+}
+
+.columnGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.userPic {
+  width: 64px;
+  height: 64px;
+}
+
+.username {
+  margin-top: 8px;
+  justify-self: left;
+  font-size: 1rem;
+}
+
+.balance {
+  justify-self: left;
+  font-size: .7rem;
+  margin-top: 9px;
+  color: #F08743;
+}
+
+.menuGroup {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: flex-end;
+  margin-right: 8px;
+}
+
+
