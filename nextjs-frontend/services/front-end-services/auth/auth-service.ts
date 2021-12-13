@@ -38,3 +38,8 @@ export async function authenticatedUser(): Promise<User | null> {
 export async function refreshSession(): Promise<{ data: Session | null; user: User | null; error: ApiError | null }> {
   return frontendSupabase.auth.refreshSession();
 }
+
+
+export function signOut() {
+  return frontendSupabase.auth.signOut();
+}

@@ -2,7 +2,7 @@ import { authCheckStatusSelector } from '../../store/authentication/authenticati
 import { useAppDispatch, useAppSelector } from '../../store/redux-store';
 import { useEffect } from 'react';
 import { setCheckLoginStatus, setIsLoggedIn } from '../../store/authentication/authentication-slice';
-import { refreshSession } from '../../services/front-end-services/auth/auth';
+import { refreshSession } from '../../services/front-end-services/auth/auth-service';
 import { frontendSupabase } from '../../services/front-end-services/supabase-frontend-service';
 import { setIsLoading } from '../../store/screen-animations/screen-animation-slice';
 

@@ -1,6 +1,6 @@
 import { Divider, Icon, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, styled, Typography } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { authenticatedUser } from '../../services/front-end-services/auth/auth';
+import { authenticatedUser, signOut } from '../../services/front-end-services/auth/auth-service';
 import { useEffect, useRef, useState } from 'react';
 import { useAppSelector } from '../../store/redux-store';
 import { isLoggedInSelector } from '../../store/authentication/authentication-selectors';
@@ -49,6 +49,11 @@ export default function LoggedInUserMenu() {
     setShowMenu(true);
   }
 
+  async function handleSignOut() {
+    handleClose();
+    await signOut();
+  }
+
   return (
     <div className={styles.container} ref={containerRef}>
       <div className={styles.userPic}>
@@ -80,7 +85,7 @@ export default function LoggedInUserMenu() {
         <MenuItem onClick={handleClose}><ListItemIcon><SettingsIcon fontSize="small"/></ListItemIcon><ListItemText>Profile Settings</ListItemText></MenuItem>
         <MenuItem onClick={handleClose}><ListItemIcon><WatchLaterIcon fontSize="small"/></ListItemIcon><ListItemText>Active Tournaments</ListItemText></MenuItem>
         <Divider/>
-        <MenuItem onClick={handleClose}><ListItemIcon><LogoutIcon fontSize="small"/></ListItemIcon><ListItemText>Logout</ListItemText></MenuItem>
+        <MenuItem onClick={handleSignOut}><ListItemIcon><LogoutIcon fontSize="small"/></ListItemIcon><ListItemText>Logout</ListItemText></MenuItem>
       </CustomMenu>
     </div>
   );
