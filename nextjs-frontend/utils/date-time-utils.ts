@@ -51,3 +51,7 @@ export const toISOString = (datetime: DateTime | undefined | null) => {
   if (datetime == null) return undefined;
   return datetime.toUTC().toISO();
 }
+
+export const nowAsISOString = (): string => {
+  return toISOString(DateTime.now()) as string;
+}

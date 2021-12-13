@@ -1,4 +1,4 @@
-import { knex } from '../../knex';
+import { knex } from '../knex';
 
 export async function countUsersByEmail(email: string): Promise<number> {
   const result = await knex('auth.users').where({email: email}).count('id');

@@ -3,9 +3,9 @@ import { DateTime } from 'luxon';
 import { SignupRequest } from './signup-contracts';
 import { parseDateTime } from '../../../../utils/date-time-utils';
 import { ValidationResult } from '../../../../utils/validation/validator';
-import { searchStatesById } from '../../database/repositories/public/state-repository';
-import { searchCountriesById } from '../../database/repositories/public/country-repository';
-import { countUsersByEmail, countUsersByUserName } from '../../database/repositories/auth/users-repository';
+import { searchStatesById } from '../../database/repositories/state-repository';
+import { searchCountriesById } from '../../database/repositories/country-repository';
+import { countUsersByEmail, countUsersByUserName } from '../../database/repositories/users-repository';
 
 
 function validateStateId(details: Partial<SignupRequest>) {

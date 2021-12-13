@@ -1,15 +1,15 @@
 import { Container, Icon, Typography, useTheme } from '@mui/material';
 import Head from 'next/head';
-import NoobHeader from '../../components/header/noob-header';
-import styles from './auth.module.css';
-import commonStyles from '../../styles/common.module.css';
-import { useAppSelector } from '../../store/redux-store';
-import { isDeviceTypeSelector } from '../../store/layout/layout-selectors';
-import { deviceTypes } from '../../store/layout/device-types';
+import NoobHeader from '../components/header/noob-header';
+import styles from './register.module.css';
+import commonStyles from '../styles/common.module.css';
+import { useAppSelector } from '../store/redux-store';
+import { isDeviceTypeSelector } from '../store/layout/layout-selectors';
+import { deviceTypes } from '../store/layout/device-types';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { isLoggedInSelector } from '../../store/authentication/authentication-selectors';
+import { isLoggedInSelector } from '../store/authentication/authentication-selectors';
 
 export default function RegisterSuccess() {
   const theme = useTheme();

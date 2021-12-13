@@ -32,7 +32,7 @@ export default function NoobDrawer(props: Props) {
           <div className={styles.topMenuItemLeft}>
             <Button variant="outlined"
                     style={{textTransform: 'none', color: 'white'}}
-                    onClick={()=> router.push('/auth/register')}
+                    onClick={()=> router.push('/register')}
             >
               Register
             </Button>

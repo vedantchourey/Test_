@@ -13,6 +13,9 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import SettingsIcon from '@mui/icons-material/Settings';
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import LogoutIcon from '@mui/icons-material/Logout';
+import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
+import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
+import { useRouter } from 'next/router';
 
 
 const CustomMenu = styled(Menu)(({theme}) => {
@@ -25,10 +28,12 @@ const CustomMenu = styled(Menu)(({theme}) => {
 
 export default function LoggedInUserMenu() {
 
-  const [userName, setUserName] = useState('');
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const containerRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const [userName, setUserName] = useState('');
   const [showMenu, setShowMenu] = useState(false);
+
 
   useEffect(() => {
     (async () => {
@@ -54,39 +59,54 @@ export default function LoggedInUserMenu() {
     await signOut();
   }
 
+  async function handleAccountItem() {
+    handleClose();
+    await router.push('/account')
+  }
+
   return (
-    <div className={styles.container} ref={containerRef}>
-      <div className={styles.userPic}>
-        <Icon className={styles.userIcon}>
-          <PersonIcon className={styles.userIcon}/>
-        </Icon>
-      </div>
-      <div className={styles.columnGroup}>
-        <Typography className={styles.username}>{userName}</Typography>
-        <Typography className={styles.balance}><Icon fontSize="inherit"><CurrencyRupeeIcon fontSize="inherit"/></Icon>600</Typography>
-      </div>
-      <div className={styles.menuGroup}>
-        <IconButton aria-label="show user menu" onClick={onDownArrowClick}>
-          <KeyboardArrowDownIcon/>
+    <div className={styles.rightMenuGroup}>
+      <div className={styles.iconsGroup}>
+        <IconButton>
+          <ChatBubbleOutlineOutlinedIcon/>
+        </IconButton>
+        <IconButton>
+          <NotificationsOutlinedIcon/>
         </IconButton>
       </div>
-      <CustomMenu id="basic-menu"
-                  anchorEl={containerRef?.current}
-                  open={showMenu}
-                  onClose={handleClose}
-                  MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                  }}
-      >
-        <MenuItem onClick={handleClose}><ListItemIcon><PersonIcon fontSize="small"/></ListItemIcon><ListItemText>Account</ListItemText></MenuItem>
-        <MenuItem onClick={handleClose}><ListItemIcon><DashboardIcon fontSize="small"/></ListItemIcon><ListItemText>Dashboard</ListItemText></MenuItem>
-        <MenuItem onClick={handleClose}><ListItemIcon><ShoppingBagIcon fontSize="small"/></ListItemIcon><ListItemText>Orders</ListItemText></MenuItem>
-        <MenuItem onClick={handleClose}><ListItemIcon><AccountBalanceWalletIcon fontSize="small"/></ListItemIcon><ListItemText>Wallet</ListItemText></MenuItem>
-        <MenuItem onClick={handleClose}><ListItemIcon><SettingsIcon fontSize="small"/></ListItemIcon><ListItemText>Profile Settings</ListItemText></MenuItem>
-        <MenuItem onClick={handleClose}><ListItemIcon><WatchLaterIcon fontSize="small"/></ListItemIcon><ListItemText>Active Tournaments</ListItemText></MenuItem>
-        <Divider/>
-        <MenuItem onClick={handleSignOut}><ListItemIcon><LogoutIcon fontSize="small"/></ListItemIcon><ListItemText>Logout</ListItemText></MenuItem>
-      </CustomMenu>
+      <div className={styles.container} ref={containerRef}>
+        <div className={styles.userPic}>
+          <Icon className={styles.userIcon}>
+            <PersonIcon className={styles.userIcon}/>
+          </Icon>
+        </div>
+        <div className={styles.columnGroup}>
+          <Typography className={styles.username}>{userName}</Typography>
+          <Typography className={styles.balance}><Icon fontSize="inherit"><CurrencyRupeeIcon fontSize="inherit"/></Icon>600</Typography>
+        </div>
+        <div className={styles.menuGroup}>
+          <IconButton aria-label="show user menu" onClick={onDownArrowClick}>
+            <KeyboardArrowDownIcon/>
+          </IconButton>
+        </div>
+        <CustomMenu id="basic-menu"
+                    anchorEl={containerRef?.current}
+                    open={showMenu}
+                    onClose={handleClose}
+                    MenuListProps={{
+                      'aria-labelledby': 'basic-button',
+                    }}
+        >
+          <MenuItem onClick={handleAccountItem}><ListItemIcon><PersonIcon fontSize="small"/></ListItemIcon><ListItemText>Account</ListItemText></MenuItem>
+          <MenuItem onClick={handleClose}><ListItemIcon><DashboardIcon fontSize="small"/></ListItemIcon><ListItemText>Dashboard</ListItemText></MenuItem>
+          <MenuItem onClick={handleClose}><ListItemIcon><ShoppingBagIcon fontSize="small"/></ListItemIcon><ListItemText>Orders</ListItemText></MenuItem>
+          <MenuItem onClick={handleClose}><ListItemIcon><AccountBalanceWalletIcon fontSize="small"/></ListItemIcon><ListItemText>Wallet</ListItemText></MenuItem>
+          <MenuItem onClick={handleClose}><ListItemIcon><SettingsIcon fontSize="small"/></ListItemIcon><ListItemText>Profile Settings</ListItemText></MenuItem>
+          <MenuItem onClick={handleClose}><ListItemIcon><WatchLaterIcon fontSize="small"/></ListItemIcon><ListItemText>Active Tournaments</ListItemText></MenuItem>
+          <Divider/>
+          <MenuItem onClick={handleSignOut}><ListItemIcon><LogoutIcon fontSize="small"/></ListItemIcon><ListItemText>Logout</ListItemText></MenuItem>
+        </CustomMenu>
+      </div>
     </div>
   );
 }

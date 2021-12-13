@@ -1,14 +1,14 @@
 import { Container, Typography, useTheme } from '@mui/material';
 import Head from 'next/head';
-import NoobHeader from '../../components/header/noob-header';
-import styles from './auth.module.css';
-import commonStyles from '../../styles/common.module.css';
-import RegistrationForm from '../../components/auth/registration-form/registration-form';
-import { useAppSelector } from '../../store/redux-store';
-import { isDeviceTypeSelector } from '../../store/layout/layout-selectors';
-import { deviceTypes } from '../../store/layout/device-types';
+import NoobHeader from '../components/header/noob-header';
+import styles from './register.module.css';
+import commonStyles from '../styles/common.module.css';
+import RegistrationForm from '../components/auth/registration-form/registration-form';
+import { useAppSelector } from '../store/redux-store';
+import { isDeviceTypeSelector } from '../store/layout/layout-selectors';
+import { deviceTypes } from '../store/layout/device-types';
 import { useRouter } from 'next/router';
-import { isLoggedInSelector } from '../../store/authentication/authentication-selectors';
+import { isLoggedInSelector } from '../store/authentication/authentication-selectors';
 import { useEffect } from 'react';
 
 export default function Register() {
@@ -19,7 +19,7 @@ export default function Register() {
   const isLoggedIn = useAppSelector(isLoggedInSelector);
 
   const onSignUpSuccess = async (userId: string | undefined) => {
-    await router.push('/auth/register-success');
+    await router.push('/register-success');
   }
 
   useEffect(() => {

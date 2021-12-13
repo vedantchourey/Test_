@@ -29,7 +29,7 @@ export default function NoobDesktopHeader() {
   }
 
   async function gotoRegisterPage() {
-    await router.push('/auth/register')
+    await router.push('/register')
   }
 
   async function gotoHomePage() {

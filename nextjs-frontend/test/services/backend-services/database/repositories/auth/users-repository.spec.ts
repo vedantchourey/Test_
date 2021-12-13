@@ -1,4 +1,4 @@
-import { countUsersByEmail, countUsersByUserName } from '../../../../../../services/backend-services/database/repositories/auth/users-repository';
+import { countUsersByEmail, countUsersByUserName } from '../../../../../../services/backend-services/database/repositories/users-repository';
 import { expect } from 'chai';
 
 describe('users-repository', () => {

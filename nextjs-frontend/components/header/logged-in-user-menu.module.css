@@ -46,4 +46,17 @@
   margin-right: 8px;
 }
 
+.rightMenuGroup {
+  display: flex;
+  flex-direction: row;
+  column-gap: 20px;
+}
+
+.iconsGroup {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 23px;
+}
+
 
