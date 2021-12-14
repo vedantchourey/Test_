@@ -4,7 +4,6 @@ export function downloadImage(bucket: string, filename: string): Promise<{ data:
   return frontendSupabase.storage
                          .from(bucket)
                          .download(filename)
-
 }
 
 

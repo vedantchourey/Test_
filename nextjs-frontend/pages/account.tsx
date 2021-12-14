@@ -9,6 +9,7 @@ import { authCheckStatusSelector, isLoggedInSelector } from '../store/authentica
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import UserProfilePic from '../components/cards/user-profile-pic/user-profile-pic';
+import styles from './account.module.css';
 
 export default function Account() {
   const theme = useTheme();
@@ -36,7 +37,9 @@ export default function Account() {
       </Head>
       <NoobHeader/>
       <main className={commonStyles.main}>
-        <UserProfilePic/>
+        <div className={styles.container}>
+          <UserProfilePic/>
+        </div>
       </main>
     </div>
   )
