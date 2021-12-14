@@ -23,7 +23,7 @@ export default function RegisterSuccess() {
       if (!isLoggedIn) return;
       await router.push('/');
     })();
-  }, []);
+  }, [isLoggedIn]);
 
   return (
     <div style={{backgroundColor}}>
