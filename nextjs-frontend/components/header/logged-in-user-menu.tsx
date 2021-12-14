@@ -1,9 +1,9 @@
 import { Divider, Icon, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, styled, Typography } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { authenticatedUser, signOut } from '../../services/front-end-services/auth/auth-service';
-import { useEffect, useRef, useState } from 'react';
+import { signOut } from '../../services/front-end-services/auth/auth-service';
+import { useRef, useState } from 'react';
 import { useAppSelector } from '../../store/redux-store';
-import { isLoggedInSelector } from '../../store/authentication/authentication-selectors';
+import { userNameSelector } from '../../store/authentication/authentication-selectors';
 import styles from './logged-in-user-menu.module.css';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import PersonIcon from '@mui/icons-material/Person';
@@ -28,23 +28,10 @@ const CustomMenu = styled(Menu)(({theme}) => {
 
 export default function LoggedInUserMenu() {
 
-  const isLoggedIn = useAppSelector(isLoggedInSelector);
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const [userName, setUserName] = useState('');
   const [showMenu, setShowMenu] = useState(false);
-
-
-  useEffect(() => {
-    (async () => {
-      if (isLoggedIn) {
-        const user = await authenticatedUser();
-        setUserName(user?.user_metadata?.username || '');
-      } else {
-        setUserName('');
-      }
-    })()
-  }, [isLoggedIn]);
+  const username = useAppSelector(userNameSelector);
 
   function handleClose() {
     setShowMenu(false);
@@ -81,7 +68,7 @@ export default function LoggedInUserMenu() {
           </Icon>
         </div>
         <div className={styles.columnGroup}>
-          <Typography className={styles.username}>{userName}</Typography>
+          <Typography className={styles.username}>{username}</Typography>
           <Typography className={styles.balance}><Icon fontSize="inherit"><CurrencyRupeeIcon fontSize="inherit"/></Icon>600</Typography>
         </div>
         <div className={styles.menuGroup}>

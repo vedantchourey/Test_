@@ -6,6 +6,7 @@ import { SignInRequest } from './sign-in-request';
 import { frontendSupabase } from '../supabase-frontend-service';
 import { Session, User } from '@supabase/gotrue-js/src/lib/types';
 import { ApiError } from '@supabase/gotrue-js';
+import UserProfileResponse from './user-profile-response';
 
 const signupUrl = frontEndConfig.noobStormServices.auth.signup;
 
@@ -42,4 +43,11 @@ export async function refreshSession(): Promise<{ data: Session | null; user: Us
 
 export function signOut() {
   return frontendSupabase.auth.signOut();
+}
+
+
+export async function fetchUserProfile(): Promise<UserProfileResponse> {
+  const user = await authenticatedUser();
+  const profiles = await frontendSupabase.from('profiles').select('*').eq('id', user!.id).single();
+  return profiles.data as UserProfileResponse;
 }
