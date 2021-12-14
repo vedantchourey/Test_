@@ -36,6 +36,9 @@ const authenticationSlice = createSlice({
     },
     setAuthScreen(state, action: PayloadAction<AuthScreenType>) {
       state.authScreen = action.payload;
+    },
+    clearUserProfile(state) {
+      state.userProfile = undefined;
     }
   },
   extraReducers: builder => {
@@ -52,6 +55,6 @@ const authenticationSlice = createSlice({
   }
 });
 
-export const {setCheckLoginStatus, setIsLoggedIn, setIsUserRequestingLogin, setAuthScreen} = authenticationSlice.actions;
+export const {setCheckLoginStatus, setIsLoggedIn, clearUserProfile, setIsUserRequestingLogin, setAuthScreen} = authenticationSlice.actions;
 const authenticationSliceReducer = authenticationSlice.reducer;
 export default authenticationSliceReducer;

@@ -5,6 +5,7 @@ import { useAppSelector } from '../../../store/redux-store';
 import { userProfileSelector } from '../../../store/authentication/authentication-selectors';
 import styles from './user-profile-pic.module.css';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
+import { toLocalDDMMYYYY } from '../../../utils/date-time-utils';
 
 export default function UserProfilePic() {
 
@@ -63,7 +64,7 @@ export default function UserProfilePic() {
             <Typography className={styles.heading}>Joined</Typography>
           </div>
           <div className={styles.userDetailValue}>
-            <Typography className={styles.value}>{userProfile?.username}</Typography>
+            <Typography className={styles.value}>{toLocalDDMMYYYY(userProfile?.createdAt)}</Typography>
           </div>
         </div>
         <Divider className={styles.userDetailsRow}/>

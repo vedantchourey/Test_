@@ -92,7 +92,6 @@ export default function LoginModal(props: Props) {
         onSuccessfulLogin();
       }
     } finally {
-      appDispatch(setIsLoading(false));
       setIsBusy(false);
     }
   }
@@ -100,7 +99,7 @@ export default function LoginModal(props: Props) {
   const onClickLostPassword = async () => {
     await router.push('/forgot-password')
   };
-  
+
   return (
     <CustomLoginDialog open={show} onClose={onClose} top={top} right={right} color="#08001C">
       <div className={styles.content}>
