@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IAuthenticationState } from './i-authentication-state';
 import { AuthScreenType } from '../../models/noob-types';
-import { fetchUserProfile } from '../../services/front-end-services/auth/auth-service';
+import { fetchUserProfile } from '../../services/front-end-services/profile-service';
+import UserProfileResponse from '../../services/front-end-services/user-profile-response';
 
 const initialState: IAuthenticationState = {
   isAuthenticated: false,
@@ -17,6 +18,7 @@ const initialState: IAuthenticationState = {
 export const fetchUserProfileThunk = createAsyncThunk('authentication/userProfile', (arg, thunkAPI) => {
   return fetchUserProfile();
 });
+
 
 type isLoggedIn = { isLoggedIn: false, username: undefined } | { isLoggedIn: true, username: string }
 
@@ -39,6 +41,9 @@ const authenticationSlice = createSlice({
     },
     clearUserProfile(state) {
       state.userProfile = undefined;
+    },
+    setUserProfile(state, action: PayloadAction<UserProfileResponse | undefined>) {
+      state.userProfile = action.payload;
     }
   },
   extraReducers: builder => {
@@ -51,10 +56,10 @@ const authenticationSlice = createSlice({
     });
     builder.addCase(fetchUserProfileThunk.rejected, (state, action) => {
       state.profileFetchStatus = 'error';
-    })
+    });
   }
 });
 
-export const {setCheckLoginStatus, setIsLoggedIn, clearUserProfile, setIsUserRequestingLogin, setAuthScreen} = authenticationSlice.actions;
+export const {setCheckLoginStatus, setIsLoggedIn, clearUserProfile, setIsUserRequestingLogin, setAuthScreen, setUserProfile} = authenticationSlice.actions;
 const authenticationSliceReducer = authenticationSlice.reducer;
 export default authenticationSliceReducer;

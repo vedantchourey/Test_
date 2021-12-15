@@ -7,6 +7,9 @@ export interface IFrontendConfig {
   noobStormServices: {
     auth: {
       signup: string;
+    };
+    profile: {
+      profileImages: string;
     }
   }
 }

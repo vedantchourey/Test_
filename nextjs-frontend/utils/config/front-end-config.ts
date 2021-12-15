@@ -10,6 +10,9 @@ const frontendConfig: IFrontendConfig = {
   noobStormServices: {
     auth: {
       signup: `${baseApiUrl}/api/sign-up`
+    },
+    profile: {
+      profileImages: `${baseApiUrl}/api/profile-images`
     }
   },
   supabase: {

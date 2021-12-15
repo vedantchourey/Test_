@@ -8,14 +8,18 @@ export const get = (url: string) => {
   });
 };
 
-export const post = <TRequest>(url: string, payload: TRequest) => {
+function defaultHeaders() {
+  return {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json;charset=UTF-8'
+  };
+}
+
+export const post = <TRequest>(url: string, payload: TRequest, headers: { [key: string]: string } = {}) => {
   return fetch(url, {
     method: 'post',
     mode: 'cors',
     body: JSON.stringify(payload),
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type':'application/json;charset=UTF-8'
-    }
+    headers: {...defaultHeaders(), ...headers}
   });
 };

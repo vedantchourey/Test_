@@ -1,6 +1,6 @@
 import { Divider, Icon, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, styled, Typography } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { signOut } from '../../services/front-end-services/auth/auth-service';
+import { signOut } from '../../services/front-end-services/auth-service';
 import { useRef, useState } from 'react';
 import { useAppSelector } from '../../store/redux-store';
 import { userNameSelector } from '../../store/authentication/authentication-selectors';

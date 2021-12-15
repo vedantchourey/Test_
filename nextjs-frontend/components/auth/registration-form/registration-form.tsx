@@ -13,7 +13,7 @@ import StateDropDown from '../../drop-downs/state-drop-down/state-drop-down';
 import { validateSignUp } from './validator';
 import { getErrorForProp, isThereAnyError, propsHasError, ValidationResult } from '../../../utils/validation/validator';
 import { SignupRequest } from '../../../services/backend-services/auth-service/signup/signup-contracts';
-import { signUp } from '../../../services/front-end-services/auth/auth-service';
+import { signUp } from '../../../services/front-end-services/auth-service';
 import { useAppDispatch } from '../../../store/redux-store';
 import { setIsLoading } from '../../../store/screen-animations/screen-animation-slice';
 

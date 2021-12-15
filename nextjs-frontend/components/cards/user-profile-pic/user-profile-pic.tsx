@@ -8,6 +8,10 @@ import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternate
 import { toLocalDDMMYYYY } from '../../../utils/date-time-utils';
 import { setIsLoading } from '../../../store/screen-animations/screen-animation-slice';
 import { v4 } from 'uuid';
+import { updateProfileImages } from '../../../services/front-end-services/profile-service';
+import { setUserProfile } from '../../../store/authentication/authentication-slice';
+import { ProfileImageTypes } from '../../../services/backend-services/profile-service/profile-image-types';
+
 
 export default function UserProfilePic() {
   const [imageUrl, setImageUrl] = useState<string | undefined>();
@@ -40,7 +44,13 @@ export default function UserProfilePic() {
     try {
       const file = event.target.files[0];
       const fileName = generateFileName(file);
-      const uploadResult = await uploadImage('resources', `avatars/${fileName}`, file);
+      const fileUrl = `avatars/${fileName}`;
+      const uploadResult = await uploadImage('resources', fileUrl, file);
+      if (uploadResult.error == null) {
+        const response = await updateProfileImages({url: fileUrl, imageType: ProfileImageTypes.background});
+        if (!response.isError) appDispatch(setUserProfile(response));
+        if (response.isError) console.error(response);
+      }
     } finally {
       appDispatch(setIsLoading(false));
     }

@@ -1,6 +1,6 @@
 import { RootState } from '../redux-store';
 import { createSelector } from '@reduxjs/toolkit';
-import UserProfileResponse from '../../services/front-end-services/auth/user-profile-response';
+import UserProfileResponse from '../../services/front-end-services/user-profile-response';
 
 export const isLoggedInSelector = (rootState: RootState) => rootState.authentication.isAuthenticated;
 export const authCheckStatusSelector = (rootState: RootState) => rootState.authentication.checkStatus;

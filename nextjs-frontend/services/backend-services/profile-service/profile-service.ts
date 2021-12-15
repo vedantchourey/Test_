@@ -1,17 +1,9 @@
 import { ServiceResponse } from '../common/contracts/service-response';
-import UserProfileResponse from '../../front-end-services/auth/user-profile-response';
+import UserProfileResponse from '../../front-end-services/user-profile-response';
 import { getProfileById, updateAvatar, updateProfileBackground } from '../database/repositories/profiles-repository';
 import { PerRequestContext } from '../../../utils/api-middle-ware/api-handler-factory';
-
-export enum ProfileImageTypes {
-  avatar = 0,
-  background = 1
-}
-
-export interface UpdateProfileImageRequest {
-  imageType: ProfileImageTypes;
-  url: string;
-}
+import { ProfileImageTypes } from './profile-image-types';
+import { UpdateProfileImageRequest } from './update-profile-image-request';
 
 export async function updateProfileImage(request: UpdateProfileImageRequest, context: PerRequestContext): Promise<ServiceResponse<UpdateProfileImageRequest, UserProfileResponse>> {
   const userId = context!.user!.id;

@@ -1,5 +1,5 @@
 import { AuthScreenType, DataFetchStatus } from '../../models/noob-types';
-import UserProfileResponse from '../../services/front-end-services/auth/user-profile-response';
+import UserProfileResponse from '../../services/front-end-services/user-profile-response';
 
 export interface IAuthenticationState {
   isAuthenticated: boolean;
