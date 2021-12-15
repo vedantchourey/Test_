@@ -1,4 +1,4 @@
-export default interface UserProfileResponse {
+export interface Profile {
   id: string;
   username: string;
   firstName: string;
@@ -7,8 +7,8 @@ export default interface UserProfileResponse {
   countryId: number;
   stateId: number;
   agreeToTnc: boolean;
-  avatarUrl?: string;
   createdAt: string;
   updatedAt: string;
-  profileBackgroundImageUrl?: string;
+  avatarUrl?: string;
+  profileBackgroundImageUrl?: string
 }

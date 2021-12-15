@@ -1,1 +1,1 @@
-/* Replace with your SQL commands */
+drop policy "users can view their own profile." on profiles;

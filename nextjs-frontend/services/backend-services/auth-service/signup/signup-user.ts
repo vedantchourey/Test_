@@ -19,7 +19,7 @@ function mapToProfile(user: User, request: SignupRequest) {
   };
 }
 
-export default async function signupService(request: SignupRequest): Promise<ServiceResponse<SignupRequest, SignupResponse>> {
+export default async function signupUser(request: SignupRequest): Promise<ServiceResponse<SignupRequest, SignupResponse>> {
   const errors = await validateSignUp(request);
   if (isThereAnyError(errors)) return {errors: errors};
   const {password, phone, email, provider, ...others} = request;

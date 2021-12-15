@@ -1,0 +1,1 @@
+ALTER TABLE profiles add column "profileBackgroundImageUrl" text DEFAULT NULL;
