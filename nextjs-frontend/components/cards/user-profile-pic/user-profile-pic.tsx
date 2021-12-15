@@ -14,7 +14,8 @@ import { ProfileImageTypes } from '../../../services/backend-services/profile-se
 
 
 export default function UserProfilePic() {
-  const [imageUrl, setImageUrl] = useState<string | undefined>();
+  const [avatarUrl, setAvatarUrl] = useState<string | undefined>();
+  const [backgroundUrl, setBackgroundUrl] = useState<string | undefined>();
   const userProfile = useAppSelector(userProfileSelector);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const appDispatch = useAppDispatch();
@@ -25,7 +26,7 @@ export default function UserProfilePic() {
       const usersAvatar = await downloadImage('resources', userProfile?.avatarUrl);
       if (usersAvatar.data == null) return;
       const objectURL: string = URL.createObjectURL(usersAvatar.data);
-      setImageUrl(objectURL);
+      setAvatarUrl(objectURL);
     })();
   }, [userProfile]);
 
@@ -38,6 +39,13 @@ export default function UserProfilePic() {
     return `${userProfile!.id}${v4()}.${fileExt}`;
   }
 
+  async function updateUserProfile(fileUrl: string, file: File) {
+    const response = await updateProfileImages({url: fileUrl, imageType: ProfileImageTypes.background});
+    if (response.isError) return console.error(response);
+    appDispatch(setUserProfile(response));
+    setBackgroundUrl(URL.createObjectURL(file));
+  }
+
   async function onUploadBackground(event: ChangeEvent<HTMLInputElement>) {
     if (!event.target.files || event.target.files.length == 0) return;
     appDispatch(setIsLoading(true));
@@ -47,9 +55,7 @@ export default function UserProfilePic() {
       const fileUrl = `avatars/${fileName}`;
       const uploadResult = await uploadImage('resources', fileUrl, file);
       if (uploadResult.error == null) {
-        const response = await updateProfileImages({url: fileUrl, imageType: ProfileImageTypes.background});
-        if (!response.isError) appDispatch(setUserProfile(response));
-        if (response.isError) console.error(response);
+        await updateUserProfile(fileUrl, file);
       }
     } finally {
       appDispatch(setIsLoading(false));
@@ -62,7 +68,9 @@ export default function UserProfilePic() {
         <Fab color="primary" aria-label="edit" className={styles.editBackgroundButton} onClick={showUploadBackgroundPicker}>
           <AddPhotoAlternateOutlinedIcon/>
         </Fab>
-        {imageUrl || <img className={styles.imageBackground} src="/images/default-user-profile-background.jpg" alt="profile background"/>}
+        <img className={styles.imageBackground}
+             src={backgroundUrl || "/images/default-user-profile-background.jpg"}
+             alt="profile background"/>
       </div>
       <div className={styles.userDetailsContainer}>
         <div className={styles.userDetailsRow}>
