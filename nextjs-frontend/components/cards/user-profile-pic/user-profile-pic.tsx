@@ -30,6 +30,18 @@ export default function UserProfilePic() {
     })();
   }, [userProfile]);
 
+
+  useEffect(() => {
+    (async () => {
+      if (userProfile?.profileBackgroundImageUrl == null) return;
+      const usersBackground = await downloadImage('resources', userProfile?.profileBackgroundImageUrl);
+      if (usersBackground.data == null) return;
+      const objectURL: string = URL.createObjectURL(usersBackground.data);
+      setBackgroundUrl(objectURL);
+    })();
+
+  }, [userProfile])
+
   function showUploadBackgroundPicker() {
     fileInputRef.current?.click();
   }
