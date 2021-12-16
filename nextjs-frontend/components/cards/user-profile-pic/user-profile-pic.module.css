@@ -12,10 +12,36 @@
   right: 10px;
 }
 
-.userProfilePic {
-  position: absolute;
-  bottom: -78px;
-  right: 142px;
+
+@media screen and (min-width: 768px) {
+  .userProfilePic {
+    position: absolute;
+    bottom: -78px;
+    right: 142px;
+  }
+
+  .editAvatarButton {
+    position: absolute;
+    bottom: 10px;
+    right: 155px;
+    z-index: 1;
+  }
+
+}
+
+@media screen and (max-width: 768px) {
+  .userProfilePic {
+    position: absolute;
+    bottom: -78px;
+    right: calc((100% / 2) - 78px);
+  }
+
+  .editAvatarButton {
+    position: absolute;
+    bottom: 10px;
+    right: calc((100% / 2) - 70px);
+    z-index: 1;
+  }
 }
 
 .imageBackground {
