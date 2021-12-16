@@ -8,7 +8,7 @@ import { deviceTypes } from '../store/layout/device-types';
 import { authCheckStatusSelector, isLoggedInSelector } from '../store/authentication/authentication-selectors';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import UserProfilePic from '../components/cards/user-profile-pic/user-profile-pic';
+import UserProfileCard from '../components/cards/user-profile-card/user-profile-card';
 import styles from './account.module.css';
 
 export default function Account() {
@@ -38,7 +38,7 @@ export default function Account() {
       <NoobHeader/>
       <main className={commonStyles.main}>
         <div className={styles.container}>
-          <UserProfilePic/>
+          <UserProfileCard/>
         </div>
       </main>
     </div>

@@ -3,7 +3,7 @@ import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { downloadImage, uploadImage } from '../../../services/front-end-services/image-service';
 import { useAppDispatch, useAppSelector } from '../../../store/redux-store';
 import { userProfileSelector } from '../../../store/authentication/authentication-selectors';
-import styles from './user-profile-pic.module.css';
+import styles from './user-profile-card.module.css';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import { toLocalDDMMYYYY } from '../../../utils/date-time-utils';
 import { setIsLoading } from '../../../store/screen-animations/screen-animation-slice';
@@ -15,7 +15,7 @@ import { isDeviceTypeSelector } from '../../../store/layout/layout-selectors';
 import { deviceTypes } from '../../../store/layout/device-types';
 
 
-export default function UserProfilePic() {
+export default function UserProfileCard() {
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>();
   const [backgroundUrl, setBackgroundUrl] = useState<string | undefined>();
   const userProfile = useAppSelector(userProfileSelector);
