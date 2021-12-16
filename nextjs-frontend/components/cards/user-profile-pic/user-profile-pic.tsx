@@ -1,4 +1,4 @@
-import { Card, Divider, Fab, Typography } from '@mui/material';
+import { Avatar, Card, Divider, Fab, Typography } from '@mui/material';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { downloadImage, uploadImage } from '../../../services/front-end-services/image-service';
 import { useAppDispatch, useAppSelector } from '../../../store/redux-store';
@@ -80,9 +80,15 @@ export default function UserProfilePic() {
         <Fab color="primary" aria-label="edit" className={styles.editBackgroundButton} onClick={showUploadBackgroundPicker}>
           <AddPhotoAlternateOutlinedIcon/>
         </Fab>
-        <img className={styles.imageBackground}
-             src={backgroundUrl || "/images/default-user-profile-background.jpg"}
-             alt="profile background"/>
+        <Avatar alt="Remy Sharp"
+                sx={{width: 156, height: 156}}
+                className={styles.userProfilePic}
+                src="/images/default-user-profile-background.jpg" />
+        <div style={{overflow: 'hidden', flexGrow: 1}}>
+          <img className={styles.imageBackground}
+               src={backgroundUrl || "/images/default-user-profile-background.jpg"}
+               alt="profile background"/>
+        </div>
       </div>
       <div className={styles.userDetailsContainer}>
         <div className={styles.userDetailsRow}>
