@@ -1,15 +1,17 @@
-import { authCheckStatusSelector, userProfileFetchStatusSelector } from '../../store/authentication/authentication-selectors';
+import { authCheckStatusSelector, userProfileFetchStatusSelector, userProfileSelector } from '../../store/authentication/authentication-selectors';
 import { useAppDispatch, useAppSelector } from '../../store/redux-store';
 import { useEffect } from 'react';
-import { clearUserProfile, fetchUserProfileThunk, setCheckLoginStatus, setIsLoggedIn } from '../../store/authentication/authentication-slice';
+import { clearUserProfile, fetchUserProfileThunk, setAvatarBackgroundUrl, setAvatarUrl, setCheckLoginStatus, setIsLoggedIn } from '../../store/authentication/authentication-slice';
 import { refreshSession } from '../../services/front-end-services/auth-service';
 import { frontendSupabase } from '../../services/front-end-services/supabase-frontend-service';
 import { setIsLoading } from '../../store/screen-animations/screen-animation-slice';
+import { downloadImage } from '../../services/front-end-services/image-service';
 
 export default function AuthEventsHandler() {
   const status = useAppSelector(authCheckStatusSelector);
   const appDispatch = useAppDispatch();
   const profileFetchStatus = useAppSelector(userProfileFetchStatusSelector);
+  const userProfile = useAppSelector(userProfileSelector);
 
   useEffect(() => {
     (async () => {
@@ -49,6 +51,27 @@ export default function AuthEventsHandler() {
     });
     return () => subscription.data?.unsubscribe()
   }, [])
+
+  useEffect(() => {
+    (async () => {
+      if (userProfile?.avatarUrl == null) return;
+      const usersAvatar = await downloadImage('resources', userProfile?.avatarUrl);
+      if (usersAvatar.data == null) return;
+      const objectURL: string = URL.createObjectURL(usersAvatar.data);
+      appDispatch(setAvatarUrl(objectURL));
+    })();
+  }, [userProfile?.avatarUrl]);
+
+
+  useEffect(() => {
+    (async () => {
+      if (userProfile?.profileBackgroundImageUrl == null) return;
+      const usersBackground = await downloadImage('resources', userProfile?.profileBackgroundImageUrl);
+      if (usersBackground.data == null) return;
+      const objectURL: string = URL.createObjectURL(usersBackground.data);
+      appDispatch(setAvatarBackgroundUrl(objectURL));
+    })();
+  }, [userProfile?.profileBackgroundImageUrl])
 
   return null;
 }

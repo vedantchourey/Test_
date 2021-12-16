@@ -12,7 +12,9 @@ const initialState: IAuthenticationState = {
   authScreen: 'login',
   profileFetchStatus: 'idle',
   userProfile: undefined,
-  username: undefined
+  username: undefined,
+  avatarBackgroundUrl: undefined,
+  avatarUrl: undefined
 }
 
 export const fetchUserProfileThunk = createAsyncThunk('authentication/userProfile', (arg, thunkAPI) => {
@@ -44,6 +46,12 @@ const authenticationSlice = createSlice({
     },
     setUserProfile(state, action: PayloadAction<UserProfileResponse | undefined>) {
       state.userProfile = action.payload;
+    },
+    setAvatarUrl(state, action: PayloadAction<string | undefined>) {
+      state.avatarUrl = action.payload;
+    },
+    setAvatarBackgroundUrl(state, action: PayloadAction<string | undefined>) {
+      state.avatarBackgroundUrl = action.payload;
     }
   },
   extraReducers: builder => {
@@ -60,6 +68,6 @@ const authenticationSlice = createSlice({
   }
 });
 
-export const {setCheckLoginStatus, setIsLoggedIn, clearUserProfile, setIsUserRequestingLogin, setAuthScreen, setUserProfile} = authenticationSlice.actions;
+export const {setCheckLoginStatus, setIsLoggedIn, clearUserProfile, setAvatarBackgroundUrl, setAvatarUrl, setUserProfile} = authenticationSlice.actions;
 const authenticationSliceReducer = authenticationSlice.reducer;
 export default authenticationSliceReducer;

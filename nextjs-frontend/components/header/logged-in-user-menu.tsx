@@ -3,7 +3,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { signOut } from '../../services/front-end-services/auth-service';
 import { useRef, useState } from 'react';
 import { useAppSelector } from '../../store/redux-store';
-import { userNameSelector } from '../../store/authentication/authentication-selectors';
+import { avatarUrlSelector, userNameSelector, userProfileSelector } from '../../store/authentication/authentication-selectors';
 import styles from './logged-in-user-menu.module.css';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import PersonIcon from '@mui/icons-material/Person';
@@ -32,6 +32,8 @@ export default function LoggedInUserMenu() {
   const router = useRouter();
   const [showMenu, setShowMenu] = useState(false);
   const username = useAppSelector(userNameSelector);
+  const avatarUrl = useAppSelector(avatarUrlSelector);
+
 
   function handleClose() {
     setShowMenu(false);
@@ -51,6 +53,11 @@ export default function LoggedInUserMenu() {
     await router.push('/account')
   }
 
+  function getUserAvatar() {
+    if (avatarUrl == null) return (<Icon className={styles.userIcon}><PersonIcon className={styles.userIcon}/></Icon>);
+    return <img className={styles.userIcon} src={avatarUrl} alt="avatar"/>
+  }
+
   return (
     <div className={styles.rightMenuGroup}>
       <div className={styles.iconsGroup}>
@@ -63,9 +70,7 @@ export default function LoggedInUserMenu() {
       </div>
       <div className={styles.container} ref={containerRef}>
         <div className={styles.userPic}>
-          <Icon className={styles.userIcon}>
-            <PersonIcon className={styles.userIcon}/>
-          </Icon>
+          {getUserAvatar()}
         </div>
         <div className={styles.columnGroup}>
           <Typography className={styles.username}>{username}</Typography>

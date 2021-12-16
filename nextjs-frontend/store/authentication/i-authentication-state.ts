@@ -11,4 +11,6 @@ export interface IAuthenticationState {
   userProfile: UserProfileResponse | undefined;
   // temp cache from auth token
   username: string | undefined;
+  avatarUrl: string | undefined;
+  avatarBackgroundUrl: string | undefined;
 }

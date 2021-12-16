@@ -1,8 +1,8 @@
-import { Avatar, Card, Divider, Fab, Typography } from '@mui/material';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { downloadImage, uploadImage } from '../../../services/front-end-services/image-service';
+import { Avatar, Card, Divider, Fab, Typography, useTheme } from '@mui/material';
+import { ChangeEvent, useRef, useState } from 'react';
+import { uploadImage } from '../../../services/front-end-services/image-service';
 import { useAppDispatch, useAppSelector } from '../../../store/redux-store';
-import { userProfileSelector } from '../../../store/authentication/authentication-selectors';
+import { avatarBackgroundUrlSelector, avatarUrlSelector, userProfileSelector } from '../../../store/authentication/authentication-selectors';
 import styles from './user-profile-card.module.css';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import { toLocalDDMMYYYY } from '../../../utils/date-time-utils';
@@ -16,34 +16,14 @@ import { deviceTypes } from '../../../store/layout/device-types';
 
 
 export default function UserProfileCard() {
-  const [avatarUrl, setAvatarUrl] = useState<string | undefined>();
-  const [backgroundUrl, setBackgroundUrl] = useState<string | undefined>();
   const userProfile = useAppSelector(userProfileSelector);
   const backgroundInputRef = useRef<HTMLInputElement>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const appDispatch = useAppDispatch();
   const isDesktop = useAppSelector(x => isDeviceTypeSelector(x, deviceTypes.desktop));
-
-  useEffect(() => {
-    (async () => {
-      if (userProfile?.avatarUrl == null) return;
-      const usersAvatar = await downloadImage('resources', userProfile?.avatarUrl);
-      if (usersAvatar.data == null) return;
-      const objectURL: string = URL.createObjectURL(usersAvatar.data);
-      setAvatarUrl(objectURL);
-    })();
-  }, [userProfile]);
-
-
-  useEffect(() => {
-    (async () => {
-      if (userProfile?.profileBackgroundImageUrl == null) return;
-      const usersBackground = await downloadImage('resources', userProfile?.profileBackgroundImageUrl);
-      if (usersBackground.data == null) return;
-      const objectURL: string = URL.createObjectURL(usersBackground.data);
-      setBackgroundUrl(objectURL);
-    })();
-  }, [userProfile])
+  const avatarUrl = useAppSelector(avatarUrlSelector);
+  const avatarBackgroundUrl = useAppSelector(avatarBackgroundUrlSelector);
+  const theme = useTheme();
 
   function showUploadBackgroundPicker() {
     backgroundInputRef.current?.click();
@@ -58,11 +38,6 @@ export default function UserProfileCard() {
     const response = await updateProfileImages({url: fileUrl, imageType: imageType});
     if (response.isError) return console.error(response);
     appDispatch(setUserProfile(response));
-    if (imageType === ProfileImageTypes.avatar) {
-      setAvatarUrl(URL.createObjectURL(file));
-    } else {
-      setBackgroundUrl(URL.createObjectURL(file));
-    }
   }
 
   async function onUploadAvatar(event: ChangeEvent<HTMLInputElement>) {
@@ -92,8 +67,18 @@ export default function UserProfileCard() {
     avatarInputRef.current?.click();
   }
 
+  const backgroundColor = isDesktop ? theme.palette.background.paper : theme.palette.background.default;
+  const backgroundImage = isDesktop ? '' : 'none';
+
   return (
-    <Card sx={{maxWidth: 440, borderRadius: 0, display: 'flex', flexDirection: 'column', backgroundColor: isDesktop ? '#100626' : '#08001C'}}>
+    <Card sx={{
+      maxWidth: 440,
+      borderRadius: 0,
+      display: 'flex',
+      flexDirection: 'column',
+      backgroundColor: backgroundColor,
+      backgroundImage: backgroundImage
+    }}>
       <div className={styles.imageBackgroundContainer}>
         <Fab color="primary" aria-label="edit" size="small" className={styles.editBackgroundButton} onClick={showUploadBackgroundPicker}>
           <AddPhotoAlternateOutlinedIcon/>
@@ -107,7 +92,7 @@ export default function UserProfileCard() {
                 src={avatarUrl || "/images/default-user-profile-background.jpg"}/>
         <div style={{overflow: 'hidden', flexGrow: 1}}>
           <img className={styles.imageBackground}
-               src={backgroundUrl || "/images/default-user-profile-background.jpg"}
+               src={avatarBackgroundUrl || "/images/default-user-profile-background.jpg"}
                alt="profile background"/>
         </div>
       </div>

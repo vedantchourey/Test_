@@ -6,12 +6,15 @@ import * as React from 'react';
 import { useState } from 'react';
 import NoobDrawer from '../drawer/noob-drawer';
 import LoginModal from '../auth/login-modal/login-modal';
+import { useAppSelector } from '../../store/redux-store';
+import { isLoggedInSelector } from '../../store/authentication/authentication-selectors';
 
 export default function NoobMobileHeader() {
   const [showMenu, setShowMenu] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const toggleDrawer = () => setShowMenu(true);
   const hideMenu = () => setShowMenu(false);
+
 
   function onSuccessfulLogin() {
     setShowLoginModal(false);

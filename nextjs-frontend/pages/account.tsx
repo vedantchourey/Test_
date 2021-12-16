@@ -3,8 +3,6 @@ import NoobHeader from '../components/header/noob-header';
 import commonStyles from '../styles/common.module.css';
 import { useTheme } from '@mui/material';
 import { useAppSelector } from '../store/redux-store';
-import { isDeviceTypeSelector } from '../store/layout/layout-selectors';
-import { deviceTypes } from '../store/layout/device-types';
 import { authCheckStatusSelector, isLoggedInSelector } from '../store/authentication/authentication-selectors';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -14,8 +12,6 @@ import styles from './account.module.css';
 export default function Account() {
   const theme = useTheme();
   const router = useRouter();
-  const isDesktop = useAppSelector(x => isDeviceTypeSelector(x, deviceTypes.desktop));
-  const backgroundColor = isDesktop ? theme.palette.background.default : theme.palette.background.paper;
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const checkStatus = useAppSelector(authCheckStatusSelector);
 
@@ -29,7 +25,7 @@ export default function Account() {
 
 
   return (
-    <div style={{backgroundColor}}>
+    <div style={{backgroundColor: theme.palette.background.default}}>
       <Head>
         <title>Account</title>
         <meta name="description" content="Sign up to noob storm"/>
