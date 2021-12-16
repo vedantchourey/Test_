@@ -8,15 +8,8 @@ const profiles = (): Knex.QueryBuilder<Profile> => {
 };
 
 export async function createProfile(profile: Profile): Promise<Profile> {
-  const nowAsString = nowAsISOString();
-  const profileToCreate: Profile = {
-    ...profile,
-    createdAt: nowAsString,
-    updatedAt: nowAsString
-  };
-
-  await profiles().insert(profileToCreate)
-  return profileToCreate;
+  await profiles().insert(profile)
+  return profile;
 }
 
 export async function getProfileById(id: string): Promise<Profile | undefined> {
