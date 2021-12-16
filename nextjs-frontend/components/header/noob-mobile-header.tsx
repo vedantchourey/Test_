@@ -1,4 +1,4 @@
-import { AppBar, IconButton } from '@mui/material';
+import { AppBar, Avatar, Icon, IconButton } from '@mui/material';
 import styles from './noob-mobile-header.module.css';
 import MenuIcon from '@mui/icons-material/Menu';
 import Image from 'next/image';
@@ -7,14 +7,21 @@ import { useState } from 'react';
 import NoobDrawer from '../drawer/noob-drawer';
 import LoginModal from '../auth/login-modal/login-modal';
 import { useAppSelector } from '../../store/redux-store';
-import { isLoggedInSelector } from '../../store/authentication/authentication-selectors';
+import { avatarUrlSelector, isLoggedInSelector } from '../../store/authentication/authentication-selectors';
+import PersonIcon from '@mui/icons-material/Person';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
+import MilitaryTechOutlinedIcon from '@mui/icons-material/MilitaryTechOutlined';
+import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
+import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 
 export default function NoobMobileHeader() {
   const [showMenu, setShowMenu] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const toggleDrawer = () => setShowMenu(true);
   const hideMenu = () => setShowMenu(false);
-
+  const avatarUrl = useAppSelector(avatarUrlSelector);
+  const isLoggedIn = useAppSelector(isLoggedInSelector);
 
   function onSuccessfulLogin() {
     setShowLoginModal(false);
@@ -25,11 +32,20 @@ export default function NoobMobileHeader() {
     hideMenu();
   }
 
+  function avatar() {
+    if (avatarUrl == null) return (<Icon className={styles.userIcon}><PersonIcon className={styles.userIcon}/></Icon>);
+    return <Avatar alt="Remy Sharp"
+                   sx={{width: 40, height: 40}}
+                   className={styles.userProfilePic}
+                   src={avatarUrl}/>
+  }
+
   return (
     <>
       <AppBar position="fixed" className={styles.appBar}>
         <div className={styles.topHeader}>
           <div className={styles.appBarItem}>
+            {avatar()}
           </div>
           <div className={styles.appBarItemMiddle}>
             <Image src="/images/noobstorm-logo-small.png"
@@ -43,6 +59,24 @@ export default function NoobMobileHeader() {
             </IconButton>
           </div>
         </div>
+        {isLoggedIn && <div className={styles.bottomHeader}>
+          <IconButton className={styles.bottomHeaderIcons}>
+            <Icon><HomeOutlinedIcon/></Icon>
+          </IconButton>
+          <IconButton className={styles.bottomHeaderIcons}>
+            <Icon><EqualizerOutlinedIcon/></Icon>
+          </IconButton>
+          <IconButton className={styles.bottomHeaderIcons}>
+            <Icon><MilitaryTechOutlinedIcon/></Icon>
+          </IconButton>
+          <IconButton className={styles.bottomHeaderIcons}>
+            <Icon><NotificationsOutlinedIcon/></Icon>
+          </IconButton>
+          <IconButton className={styles.bottomHeaderIcons}>
+            <Icon><ChatBubbleOutlineOutlinedIcon/></Icon>
+          </IconButton>
+        </div>
+        }
       </AppBar>
       <NoobDrawer show={showMenu}
                   onClose={hideMenu}

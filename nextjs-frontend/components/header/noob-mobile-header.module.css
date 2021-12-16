@@ -1,6 +1,6 @@
 .appBar {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-grow: 1;
 }
 
@@ -9,6 +9,21 @@
   flex-direction: row;
   flex-grow: 1;
   flex-wrap: nowrap;
+  height: 40px;
+  margin: 16px;
+}
+
+.bottomHeader {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  flex-wrap: nowrap;
+  height: 40px;
+  margin: 0 16px 16px 16px;
+}
+
+.bottomHeaderIcons {
+  flex-grow: 1;
 }
 
 .appBarItem {
@@ -32,4 +47,10 @@
   flex-grow: 1;
   justify-content: flex-end;
   flex-basis: 0;
+}
+
+
+.userIcon {
+  height: 48px;
+  width: 48px;
 }
