@@ -32,6 +32,6 @@ export const widthByPercentageSelector = createSelector([screenWidthSelector, pe
 
 
 export const getAppHeaderHeightSelector = createSelector([mobileHeaderHeightSelector, desktopHeaderHeightSelector, windowSelector], (mobileHeight, desktopHeight, window) => {
-  if (deviceTypes.desktop(window)) return desktopHeight;
+  if (deviceTypes.desktop(window)) return desktopHeight + 20;
   return mobileHeight;
 });

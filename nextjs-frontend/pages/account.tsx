@@ -34,7 +34,7 @@ export default function Account() {
       </Head>
       <NoobHeader/>
       <main className={commonStyles.main}>
-        <div className={styles.container} style={{marginTop: appHeaderHeight + 20}}>
+        <div className={styles.container} style={{marginTop: appHeaderHeight}}>
           <UserProfileCard/>
         </div>
       </main>

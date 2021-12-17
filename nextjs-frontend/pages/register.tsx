@@ -39,7 +39,7 @@ export default function Register() {
       </Head>
       <NoobHeader/>
       <main className={commonStyles.main}>
-        <div className={styles.mainBanner} style={{marginTop: appHeaderHeight + 20}}>
+        <div className={styles.mainBanner} style={{marginTop: appHeaderHeight}}>
           <Typography className={styles.mainBannerText}>REGISTRATION</Typography>
         </div>
         <Container maxWidth="md" className={styles.registrationFormContainer}>
