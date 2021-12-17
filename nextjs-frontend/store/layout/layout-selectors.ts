@@ -1,5 +1,5 @@
 import { RootState } from '../redux-store';
-import { DeviceType } from './device-types';
+import { DeviceType, deviceTypes } from './device-types';
 
 import { createSelector } from '@reduxjs/toolkit';
 import { getByPercentage } from '../../utils/screen-measurement-utils';
@@ -7,6 +7,9 @@ import { getByPercentage } from '../../utils/screen-measurement-utils';
 export const layoutSelector = (state: RootState) => state.layout;
 export const screenHeightSelector = (state: RootState) => state.layout.window.height;
 export const screenWidthSelector = (state: RootState) => state.layout.window.width;
+export const desktopHeaderHeightSelector = (state: RootState) => state.layout.desktopHeaderHeight;
+export const mobileHeaderHeightSelector = (state: RootState) => state.layout.mobileHeaderHeight;
+
 
 //Memoized Selectors
 
@@ -25,4 +28,10 @@ export const heightByPercentageSelector = createSelector([screenHeightSelector, 
 
 export const widthByPercentageSelector = createSelector([screenWidthSelector, percentSelector], (screenWidth, percentage) => {
   return getByPercentage(screenWidth, percentage)
+});
+
+
+export const getAppHeaderHeightSelector = createSelector([mobileHeaderHeightSelector, desktopHeaderHeightSelector, windowSelector], (mobileHeight, desktopHeight, window) => {
+  if (deviceTypes.desktop(window)) return desktopHeight;
+  return mobileHeight;
 });

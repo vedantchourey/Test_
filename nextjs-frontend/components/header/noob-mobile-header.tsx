@@ -6,7 +6,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import NoobDrawer from '../drawer/noob-drawer';
 import LoginModal from '../auth/login-modal/login-modal';
-import { useAppSelector } from '../../store/redux-store';
+import { useAppDispatch, useAppSelector } from '../../store/redux-store';
 import { avatarUrlSelector, isLoggedInSelector } from '../../store/authentication/authentication-selectors';
 import PersonIcon from '@mui/icons-material/Person';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
@@ -14,6 +14,10 @@ import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
 import MilitaryTechOutlinedIcon from '@mui/icons-material/MilitaryTechOutlined';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
+import { signOut } from '../../services/front-end-services/auth-service';
+import { setMobileHeaderHeight } from '../../store/layout/layout-slice';
+import { mobileHeaderHeightSelector } from '../../store/layout/layout-selectors';
+
 
 export default function NoobMobileHeader() {
   const [showMenu, setShowMenu] = useState(false);
@@ -22,6 +26,8 @@ export default function NoobMobileHeader() {
   const hideMenu = () => setShowMenu(false);
   const avatarUrl = useAppSelector(avatarUrlSelector);
   const isLoggedIn = useAppSelector(isLoggedInSelector);
+  const appDispatch = useAppDispatch();
+  const currentHeight = useAppSelector(mobileHeaderHeightSelector);
 
   function onSuccessfulLogin() {
     setShowLoginModal(false);
@@ -40,9 +46,20 @@ export default function NoobMobileHeader() {
                    src={avatarUrl}/>
   }
 
+  async function onLogoutClick() {
+    hideMenu();
+    await signOut();
+  }
+
+  const updateMobileHeight = (element: HTMLDivElement | null) => {
+    if (!element?.clientHeight) return;
+    if (currentHeight == element?.clientHeight) return;
+    return appDispatch(setMobileHeaderHeight(element?.clientHeight || 0));
+  };
+
   return (
     <>
-      <AppBar position="fixed" className={styles.appBar}>
+      <AppBar position="fixed" className={styles.appBar} ref={updateMobileHeight}>
         <div className={styles.topHeader}>
           <div className={styles.appBarItem}>
             {avatar()}
@@ -81,6 +98,7 @@ export default function NoobMobileHeader() {
       <NoobDrawer show={showMenu}
                   onClose={hideMenu}
                   onLoginClick={onLoginClick}
+                  onLogoutClick={onLogoutClick}
       />
       <LoginModal show={showLoginModal}
                   onCancel={() => setShowLoginModal(false)}

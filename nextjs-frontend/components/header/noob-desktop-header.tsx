@@ -8,10 +8,11 @@ import { useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import LoginModal from '../auth/login-modal/login-modal';
 import { ComponentDimensions, createFromRef } from '../utils/component-dimensions';
-import { useAppSelector } from '../../store/redux-store';
-import { screenWidthSelector } from '../../store/layout/layout-selectors';
+import { useAppDispatch, useAppSelector } from '../../store/redux-store';
+import { desktopHeaderHeightSelector, screenWidthSelector } from '../../store/layout/layout-selectors';
 import { isLoggedInSelector } from '../../store/authentication/authentication-selectors';
 import LoggedInUserMenu from './logged-in-user-menu';
+import { setDesktopHeaderHeight } from '../../store/layout/layout-slice';
 
 export default function NoobDesktopHeader() {
   const theme = useTheme();
@@ -22,6 +23,15 @@ export default function NoobDesktopHeader() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const screenWidth = useAppSelector(screenWidthSelector);
   const isLoggedIn = useAppSelector(isLoggedInSelector);
+  const currentHeight = useAppSelector(desktopHeaderHeightSelector);
+
+  const appDispatch = useAppDispatch();
+
+  const updateDesktopHeight = (element: HTMLDivElement | null) => {
+    if (!element?.clientHeight) return;
+    if (currentHeight == element?.clientHeight) return;
+    return appDispatch(setDesktopHeaderHeight(element?.clientHeight || 0));
+  };
 
   function buttonStyle(expectedPaths: string[]): React.CSSProperties {
     if (expectedPaths.indexOf(pathname) === -1) return {color: 'white', fontWeight: 700};
@@ -47,7 +57,7 @@ export default function NoobDesktopHeader() {
 
   return (
     <>
-      <AppBar position="fixed" className={styles.appHeader}>
+      <AppBar position="fixed" className={styles.appHeader} ref={updateDesktopHeight}>
         <div className={styles.topMenu}>
           <div className={styles.topLeftMenuGroup}>
             <div className={styles.noobLogo}>

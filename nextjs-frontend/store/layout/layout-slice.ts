@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import ILayoutState from './i-layout-state';
 
 export function getScreenDimensions() {
@@ -12,7 +12,9 @@ export function getScreenDimensions() {
 }
 
 const initialState: ILayoutState = {
-  window: {width: 0, height: 0}
+  window: {width: 0, height: 0},
+  desktopHeaderHeight: 0,
+  mobileHeaderHeight: 0
 }
 
 const layoutSlice = createSlice({
@@ -24,11 +26,17 @@ const layoutSlice = createSlice({
       state.window.width = width;
       state.window.height = height;
     },
+    setDesktopHeaderHeight: (state, action: PayloadAction<number>) => {
+      state.desktopHeaderHeight = action.payload;
+    },
+    setMobileHeaderHeight: (state, action: PayloadAction<number>) => {
+      state.mobileHeaderHeight = action.payload;
+    }
   }
 });
 
 const layoutSliceReducer = layoutSlice.reducer;
 export default layoutSliceReducer;
-export const {updateScreenDimensions} = layoutSlice.actions;
+export const {updateScreenDimensions, setDesktopHeaderHeight, setMobileHeaderHeight} = layoutSlice.actions;
 
 

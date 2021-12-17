@@ -4,7 +4,7 @@ import NoobHeader from '../components/header/noob-header';
 import styles from './register.module.css';
 import commonStyles from '../styles/common.module.css';
 import { useAppSelector } from '../store/redux-store';
-import { isDeviceTypeSelector } from '../store/layout/layout-selectors';
+import { getAppHeaderHeightSelector, isDeviceTypeSelector } from '../store/layout/layout-selectors';
 import { deviceTypes } from '../store/layout/device-types';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { useEffect } from 'react';
@@ -17,6 +17,7 @@ export default function RegisterSuccess() {
   const backgroundColor = isDesktop ? theme.palette.background.default : theme.palette.background.paper;
   const router = useRouter();
   const isLoggedIn = useAppSelector(isLoggedInSelector);
+  const appHeaderHeight = useAppSelector(getAppHeaderHeightSelector);
 
   useEffect(() => {
     (async () => {
@@ -34,7 +35,7 @@ export default function RegisterSuccess() {
       </Head>
       <NoobHeader/>
       <main className={commonStyles.main}>
-        <div className={styles.mainBanner}>
+        <div className={styles.mainBanner} style={{marginTop: appHeaderHeight + 20}}>
           <Typography className={styles.mainBannerText}>ACTIVATION</Typography>
         </div>
         <Container maxWidth="md" className={styles.registrationFormContainer}>

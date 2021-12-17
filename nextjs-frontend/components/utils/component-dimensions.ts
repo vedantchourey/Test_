@@ -20,3 +20,9 @@ export function createFromRef(ref: MutableRefObject<any>) {
   return new ComponentDimensions(x, y, height, width, top, right, bottom);
 }
 
+export function getHeightFromRef(ref: MutableRefObject<any>): number {
+  return ref.current?.getBoundingClientRect()?.height || 0;
+}
+
+
+

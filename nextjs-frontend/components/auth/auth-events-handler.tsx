@@ -47,6 +47,8 @@ export default function AuthEventsHandler() {
       } else if (event === 'SIGNED_OUT') {
         appDispatch(setIsLoggedIn({isLoggedIn: false, username: undefined}));
         appDispatch(clearUserProfile());
+        appDispatch(setAvatarUrl(undefined));
+        appDispatch(setAvatarBackgroundUrl(undefined));
       }
     });
     return () => subscription.data?.unsubscribe()

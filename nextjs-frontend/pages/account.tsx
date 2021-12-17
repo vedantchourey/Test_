@@ -8,12 +8,14 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import UserProfileCard from '../components/cards/user-profile-card/user-profile-card';
 import styles from './account.module.css';
+import { getAppHeaderHeightSelector } from '../store/layout/layout-selectors';
 
 export default function Account() {
   const theme = useTheme();
   const router = useRouter();
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const checkStatus = useAppSelector(authCheckStatusSelector);
+  const appHeaderHeight = useAppSelector(getAppHeaderHeightSelector);
 
   useEffect(() => {
     (async () => {
@@ -22,7 +24,6 @@ export default function Account() {
       await router.push('/')
     })()
   });
-
 
   return (
     <div style={{backgroundColor: theme.palette.background.default}}>
@@ -33,7 +34,7 @@ export default function Account() {
       </Head>
       <NoobHeader/>
       <main className={commonStyles.main}>
-        <div className={styles.container}>
+        <div className={styles.container} style={{marginTop: appHeaderHeight + 20}}>
           <UserProfileCard/>
         </div>
       </main>

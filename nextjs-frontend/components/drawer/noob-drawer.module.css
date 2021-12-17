@@ -8,9 +8,8 @@
 
 .topMenuGroup {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: nowrap;
-  margin-bottom: 20px;
 }
 
 .topMenuItemLeft {
@@ -24,6 +23,7 @@
   display: flex;
   flex-grow: 1;
   justify-content: flex-end;
+  flex-basis: 0;
 }
 
 .bottomMenuGroup {
@@ -32,6 +32,12 @@
   flex-wrap: nowrap;
   margin: 20px 0 20px 0;
   column-gap: 20px;
+}
+
+.flexRowWrap {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .footerContainer {

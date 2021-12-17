@@ -5,7 +5,7 @@ import styles from './register.module.css';
 import commonStyles from '../styles/common.module.css';
 import RegistrationForm from '../components/auth/registration-form/registration-form';
 import { useAppSelector } from '../store/redux-store';
-import { isDeviceTypeSelector } from '../store/layout/layout-selectors';
+import { getAppHeaderHeightSelector, isDeviceTypeSelector } from '../store/layout/layout-selectors';
 import { deviceTypes } from '../store/layout/device-types';
 import { useRouter } from 'next/router';
 import { isLoggedInSelector } from '../store/authentication/authentication-selectors';
@@ -17,6 +17,7 @@ export default function Register() {
   const isDesktop = useAppSelector(x => isDeviceTypeSelector(x, deviceTypes.desktop));
   const backgroundColor = isDesktop ? theme.palette.background.default : theme.palette.background.paper;
   const isLoggedIn = useAppSelector(isLoggedInSelector);
+  const appHeaderHeight = useAppSelector(getAppHeaderHeightSelector);
 
   const onSignUpSuccess = async (userId: string | undefined) => {
     await router.push('/register-success');
@@ -38,7 +39,7 @@ export default function Register() {
       </Head>
       <NoobHeader/>
       <main className={commonStyles.main}>
-        <div className={styles.mainBanner}>
+        <div className={styles.mainBanner} style={{marginTop: appHeaderHeight + 20}}>
           <Typography className={styles.mainBannerText}>REGISTRATION</Typography>
         </div>
         <Container maxWidth="md" className={styles.registrationFormContainer}>

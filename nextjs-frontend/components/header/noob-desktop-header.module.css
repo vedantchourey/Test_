@@ -4,7 +4,6 @@
   display: flex;
   flex-direction: column;
   row-gap: 15px;
-  height: 140px;
 }
 
 .noobLogo {
