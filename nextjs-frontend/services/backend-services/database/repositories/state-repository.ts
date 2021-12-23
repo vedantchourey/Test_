@@ -1,7 +1,33 @@
-import { knex } from '../knex';
-import { StateResponse } from '../../../../service-clients/country-service/state-response';
+import { BaseRepository } from './base-repository';
+import { Knex } from 'knex';
 
-export function searchStatesById(id: number, countryId: number): StateResponse[] {
-  return knex('states').select('*')
-                       .where({id: id, countryId: countryId});
+interface IState {
+  id: number;
+  isoCode: string;
+  displayName: string;
+  countryId: number;
 }
+
+export class StateRepository extends BaseRepository<IState> {
+
+
+  constructor(transaction: Knex.Transaction) {
+    super(transaction, 'states');
+  }
+
+  getStateById(id: number, countryId: number): Promise<IState | undefined> {
+    return this.entities()
+               .select('id')
+               .select('countryId')
+               .select('displayName')
+               .select('countryId')
+               .where({id: id, countryId: countryId})
+               .first();
+  }
+}
+
+
+export const createStateRepository = (transaction: Knex.Transaction) => new StateRepository(transaction);
+
+
+

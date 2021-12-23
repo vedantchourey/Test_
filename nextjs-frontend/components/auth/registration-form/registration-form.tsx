@@ -164,17 +164,6 @@ export default function RegistrationForm(props: Props) {
       <div className={styles.inputRow}>
         <Typography style={{color: 'white', fontWeight: '900'}}>OR SIGN UP WITH</Typography>
       </div>
-      <div className={styles.socialMediaButtonGroup}>
-        <Button variant="outlined" className={styles.socialMediaButton} startIcon={<GoogleIcon/>}>
-          <Typography className={commonStyles.whiteText}>Google</Typography>
-        </Button>
-        <Button variant="outlined" className={styles.socialMediaButton} startIcon={<FacebookIcon/>}>
-          <Typography className={commonStyles.whiteText}>Facebook</Typography>
-        </Button>
-        <Button variant="outlined" className={styles.socialMediaButton} startIcon={<AppleIcon/>}>
-          <Typography className={commonStyles.whiteText}>Apple</Typography>
-        </Button>
-      </div>
     </div>
   )
 }

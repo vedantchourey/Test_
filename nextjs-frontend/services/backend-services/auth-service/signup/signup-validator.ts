@@ -3,22 +3,23 @@ import { DateTime } from 'luxon';
 import { SignupRequest } from './signup-contracts';
 import { parseDateTime } from '../../../../utils/date-time-utils';
 import { ValidationResult } from '../../../../utils/validation/validator';
-import { searchStatesById } from '../../database/repositories/state-repository';
-import { searchCountriesById } from '../../database/repositories/country-repository';
-import { countUsersByEmail, countUsersByUserName } from '../../database/repositories/users-repository';
+import { CountryRepository, createCountryRepository } from '../../database/repositories/country-repository';
+import { Knex } from 'knex';
+import { createStateRepository, StateRepository } from '../../database/repositories/state-repository';
+import { createUsersRepository, UsersRepository } from '../../database/repositories/users-repository';
+import { PerRequestContext } from '../../../../utils/api-middle-ware/api-middleware-typings';
 
 
-function validateStateId(details: Partial<SignupRequest>) {
+async function validateStateId(details: Partial<SignupRequest>, stateRepository: StateRepository) {
   if (details.stateId == null) return 'Is required';
   if (details.countryId == null) return;
-  if (searchStatesById(details.stateId, details.countryId).length === 0) return 'Invalid state';
+  if ((await stateRepository.getStateById(details.stateId, details.countryId)) != null) return 'Invalid state';
 }
 
-function validateCountry(details: Partial<SignupRequest>) {
+async function validateCountry(details: Partial<SignupRequest>, repository: CountryRepository) {
   if (details.countryId == null) return 'Is required';
-  if (searchCountriesById(details.countryId).length === 0) return 'Invalid country';
+  if ((await repository.getCountryById(details.countryId)) != null) return 'Invalid country';
 }
-
 
 function validateDOB(details: Partial<SignupRequest>) {
   if (details.dateOfBirth == null) return 'Is required';
@@ -26,10 +27,10 @@ function validateDOB(details: Partial<SignupRequest>) {
   if (DateTime.now().diff(dob, 'years').years < 18) return 'Must be 18 years min';
 }
 
-async function validateEmail(details: Partial<SignupRequest>) {
+async function validateEmail(details: Partial<SignupRequest>, usersRepository: UsersRepository) {
   if (details.email == null) return 'Is required';
   if (!validator.isEmail(details.email)) return 'Invalid email';
-  if ((await countUsersByEmail(details.email)) !== 0) return 'Not available';
+  if ((await usersRepository.countUsersByEmail(details.email)) !== 0) return 'Not available';
 }
 
 function validateFirstName(details: Partial<SignupRequest>) {
@@ -55,27 +56,32 @@ function validatePhoneNumber(details: Partial<SignupRequest>) {
   if (!validator.isMobilePhone(details.phone, "en-IN")) return 'Invalid mobile number';
 }
 
-async function validateUserName(details: Partial<SignupRequest>) {
+async function validateUserName(details: Partial<SignupRequest>, usersRepository: UsersRepository) {
   if (details.username == null) return 'Is required';
   if (!validator.isAlphanumeric(details.username)) return 'Only A-Za-z1-9 allowed';
-  if ((await countUsersByUserName(details.username)) !== 0) return 'Not available';
+  if ((await usersRepository.countUsersByUserName(details.username)) !== 0) return 'Not available';
 }
 
 function validateTnc(details: Partial<SignupRequest>) {
   if (!details.agreeToTnc) return 'Agreement to terms and conditions required';
 }
 
-export async function validateSignUp(obj: Partial<SignupRequest>): Promise<ValidationResult<SignupRequest>> {
+export async function validateSignUp(obj: Partial<SignupRequest>, context: PerRequestContext): Promise<ValidationResult<SignupRequest>> {
+  const transaction = context.transaction as Knex.Transaction;
+  const countryRepository = createCountryRepository(transaction);
+  const stateRepository = createStateRepository(transaction);
+  const usersRepository = createUsersRepository(transaction);
+
   return <ValidationResult<SignupRequest>>{
-    stateId: validateStateId(obj),
+    stateId: await validateStateId(obj, stateRepository),
     password: validatePassword(obj),
     // phone: validatePhoneNumber(obj),
     lastName: validateLastName(obj),
-    email: await validateEmail(obj),
+    email: await validateEmail(obj, usersRepository),
     firstName: validateFirstName(obj),
-    countryId: validateCountry(obj),
+    countryId: await validateCountry(obj, countryRepository),
     dateOfBirth: validateDOB(obj),
-    username: await validateUserName(obj),
+    username: await validateUserName(obj, usersRepository),
     agreeToTnc: validateTnc(obj)
   }
 }

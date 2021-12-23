@@ -3,6 +3,7 @@ import { IAuthenticationState } from './i-authentication-state';
 import { AuthScreenType } from '../../models/noob-types';
 import { fetchUserProfile } from '../../services/front-end-services/profile-service';
 import UserProfileResponse from '../../services/front-end-services/user-profile-response';
+import { NoobUserRole } from '../../utils/api-middle-ware/noob-user-role';
 
 const initialState: IAuthenticationState = {
   isAuthenticated: false,
@@ -14,7 +15,8 @@ const initialState: IAuthenticationState = {
   userProfile: undefined,
   username: undefined,
   avatarBackgroundUrl: undefined,
-  avatarUrl: undefined
+  avatarUrl: undefined,
+  userRoles: []
 }
 
 export const fetchUserProfileThunk = createAsyncThunk('authentication/userProfile', (arg, thunkAPI) => {
@@ -52,6 +54,9 @@ const authenticationSlice = createSlice({
     },
     setAvatarBackgroundUrl(state, action: PayloadAction<string | undefined>) {
       state.avatarBackgroundUrl = action.payload;
+    },
+    setUserRoles(state, action: PayloadAction<NoobUserRole[]>) {
+      state.userRoles = action.payload;
     }
   },
   extraReducers: builder => {
@@ -68,6 +73,6 @@ const authenticationSlice = createSlice({
   }
 });
 
-export const {setCheckLoginStatus, setIsLoggedIn, clearUserProfile, setAvatarBackgroundUrl, setAvatarUrl, setUserProfile} = authenticationSlice.actions;
+export const {setCheckLoginStatus, setIsLoggedIn, clearUserProfile, setAvatarBackgroundUrl, setAvatarUrl, setUserProfile, setUserRoles} = authenticationSlice.actions;
 const authenticationSliceReducer = authenticationSlice.reducer;
 export default authenticationSliceReducer;

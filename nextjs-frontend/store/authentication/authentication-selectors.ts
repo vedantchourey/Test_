@@ -8,6 +8,7 @@ export const userProfileSelector = (rootState: RootState) => rootState.authentic
 export const userProfileFetchStatusSelector = (rootState: RootState) => rootState.authentication.profileFetchStatus;
 export const avatarUrlSelector = (rootState:RootState) => rootState.authentication.avatarUrl;
 export const avatarBackgroundUrlSelector = (rootState:RootState) => rootState.authentication.avatarBackgroundUrl;
+export const userRolesSelector =  (rootState:RootState) => rootState.authentication.userRoles;
 
 // memoized
 const accessTokenUsernameSelector = (rootState: RootState) => rootState.authentication.username;

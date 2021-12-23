@@ -1,6 +1,29 @@
-import { knex } from '../knex';
-import { CountryResponse } from '../../../../service-clients/country-service/country-response';
+import { Knex } from 'knex';
+import { BaseRepository } from './base-repository';
 
-export function searchCountriesById(id: number): CountryResponse[] {
-  return knex('countries').select('*').where({id: id});
+interface ICountry {
+  id: number;
+  isoCode: string;
+  displayName: string;
 }
+
+export class CountryRepository extends BaseRepository<ICountry> {
+
+  constructor(transaction: Knex.Transaction) {
+    super(transaction, 'countries');
+  }
+
+  getCountryById(id: number): Promise<ICountry | undefined> {
+    return this.entities()
+               .select('id')
+               .select('displayName')
+               .select('isoCode')
+               .where({id: id})
+               .first();
+  }
+}
+
+export const createCountryRepository = (transaction: Knex.Transaction) => new CountryRepository(transaction);
+
+
+

@@ -3,9 +3,11 @@ import { SignupRequest, SignupResponse } from './signup-contracts';
 import { validateSignUp } from './signup-validator';
 import { isThereAnyError } from '../../../../utils/validation/validator';
 import { frontendSupabase } from '../../../front-end-services/supabase-frontend-service';
-import { createProfile } from '../../database/repositories/profiles-repository';
 import { User } from '@supabase/gotrue-js';
 import { nowAsISOString } from '../../../../utils/date-time-utils';
+import { createProfileRepository } from '../../database/repositories/profiles-repository';
+import { Knex } from 'knex';
+import { PerRequestContext } from '../../../../utils/api-middle-ware/api-middleware-typings';
 
 function mapToProfile(user: User, request: SignupRequest) {
   const nowAsString = nowAsISOString();
@@ -23,16 +25,15 @@ function mapToProfile(user: User, request: SignupRequest) {
   };
 }
 
-export default async function signupUser(request: SignupRequest): Promise<ServiceResponse<SignupRequest, SignupResponse>> {
-  const errors = await validateSignUp(request);
-  if (isThereAnyError(errors)) return {errors: errors};
+function mapRequiredParams(request: SignupRequest) {
   const {password, phone, email, provider, countryId, stateId, agreeToTnc, dateOfBirth, firstName, lastName, username} = request;
-  const result = await frontendSupabase.auth.signUp({
+  const signupParams = {
     password: password,
     phone: phone,
     email: email,
     provider: provider
-  }, {
+  };
+  const metaData = {
     data: {
       countryId,
       stateId,
@@ -42,9 +43,18 @@ export default async function signupUser(request: SignupRequest): Promise<Servic
       lastName,
       username
     }
-  });
+  };
+  return {signupParams, metaData};
+}
+
+export default async function signupUser(request: SignupRequest, context: PerRequestContext): Promise<ServiceResponse<SignupRequest, SignupResponse>> {
+  const errors = await validateSignUp(request, context);
+  if (isThereAnyError(errors)) return {errors: errors};
+  const {signupParams, metaData} = mapRequiredParams(request);
+  const result = await frontendSupabase.auth.signUp(signupParams, metaData);
   if (result.error) return {errors: {apiError: result.error}}
-  await createProfile(mapToProfile(result.user!, request))
+  const profilesRepository = createProfileRepository(context.transaction as Knex.Transaction);
+  await profilesRepository.createProfile(mapToProfile(result.user!, request))
   return {data: {userId: result.user?.id}};
 }
 
