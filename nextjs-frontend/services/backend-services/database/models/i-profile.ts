@@ -4,8 +4,8 @@ export interface IProfile {
   firstName: string;
   lastName: string;
   dateOfBirth: string;
-  countryId: number;
-  stateId: number;
+  countryId: string;
+  stateId: string;
   agreeToTnc: boolean;
   createdAt: string;
   updatedAt: string;

@@ -1,11 +1,11 @@
 import { BaseRepository } from './base-repository';
 import { Knex } from 'knex';
 
-interface IState {
-  id: number;
+export interface IState {
+  id: string;
   isoCode: string;
   displayName: string;
-  countryId: number;
+  countryId: string;
 }
 
 export class StateRepository extends BaseRepository<IState> {
@@ -15,7 +15,7 @@ export class StateRepository extends BaseRepository<IState> {
     super(transaction, 'states');
   }
 
-  getStateById(id: number, countryId: number): Promise<IState | undefined> {
+  getStateById(id: string, countryId: string): Promise<IState | undefined> {
     return this.entities()
                .select('id')
                .select('countryId')

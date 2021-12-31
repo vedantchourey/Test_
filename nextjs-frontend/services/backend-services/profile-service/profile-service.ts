@@ -1,5 +1,4 @@
 import { ServiceResponse } from '../common/contracts/service-response';
-import UserProfileResponse from '../../front-end-services/user-profile-response';
 import { ProfileImageTypes } from './profile-image-types';
 import { UpdateProfileImageRequest } from './update-profile-image-request';
 import { backendSupabase } from '../common/supabase-backend-client';
@@ -20,7 +19,7 @@ async function handleBackgroundImageUpdate(userId: string, request: UpdateProfil
   await backendSupabase.storage.from('resources').remove([userProfile.profileBackgroundImageUrl]);
 }
 
-export async function updateProfileImage(request: UpdateProfileImageRequest, context: PerRequestContext): Promise<ServiceResponse<UpdateProfileImageRequest, UserProfileResponse>> {
+export async function updateProfileImage(request: UpdateProfileImageRequest, context: PerRequestContext): Promise<ServiceResponse<UpdateProfileImageRequest, IProfile>> {
   const profilesRepository = createProfileRepository(context.transaction as Knex.Transaction);
   const userId = context!.user!.id;
   const userProfile = await profilesRepository.getProfileById(userId);

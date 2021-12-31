@@ -1,15 +1,14 @@
-import { AuthScreenType, DataFetchStatus } from '../../models/noob-types';
-import UserProfileResponse from '../../services/front-end-services/user-profile-response';
 import { NoobUserRole } from '../../utils/api-middle-ware/noob-user-role';
+import { DataFetchStatus } from '../../models/noob-types';
+import { IProfile } from '../../services/backend-services/database/models/i-profile';
 
 export interface IAuthenticationState {
   isAuthenticated: boolean;
   role: string | undefined;
   checkStatus: 'idle' | 'loading' | 'success';
   isUserRequestingLogin: boolean;
-  authScreen: AuthScreenType;
   profileFetchStatus: DataFetchStatus;
-  userProfile: UserProfileResponse | undefined;
+  userProfile: IProfile | undefined;
   // temp cache from auth token
   username: string | undefined;
   avatarUrl: string | undefined;

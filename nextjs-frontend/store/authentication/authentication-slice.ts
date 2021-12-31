@@ -1,16 +1,14 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IAuthenticationState } from './i-authentication-state';
-import { AuthScreenType } from '../../models/noob-types';
 import { fetchUserProfile } from '../../services/front-end-services/profile-service';
-import UserProfileResponse from '../../services/front-end-services/user-profile-response';
 import { NoobUserRole } from '../../utils/api-middle-ware/noob-user-role';
+import { IProfile } from '../../services/backend-services/database/models/i-profile';
 
 const initialState: IAuthenticationState = {
   isAuthenticated: false,
   role: undefined,
   checkStatus: 'idle',
   isUserRequestingLogin: false,
-  authScreen: 'login',
   profileFetchStatus: 'idle',
   userProfile: undefined,
   username: undefined,
@@ -40,13 +38,10 @@ const authenticationSlice = createSlice({
     setIsUserRequestingLogin(state, action: PayloadAction<boolean>) {
       state.isUserRequestingLogin = action.payload;
     },
-    setAuthScreen(state, action: PayloadAction<AuthScreenType>) {
-      state.authScreen = action.payload;
-    },
     clearUserProfile(state) {
       state.userProfile = undefined;
     },
-    setUserProfile(state, action: PayloadAction<UserProfileResponse | undefined>) {
+    setUserProfile(state, action: PayloadAction<IProfile | undefined>) {
       state.userProfile = action.payload;
     },
     setAvatarUrl(state, action: PayloadAction<string | undefined>) {

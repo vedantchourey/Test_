@@ -2,7 +2,7 @@ import { Knex } from 'knex';
 import { BaseRepository } from './base-repository';
 
 interface ICountry {
-  id: number;
+  id: string;
   isoCode: string;
   displayName: string;
 }
@@ -13,7 +13,7 @@ export class CountryRepository extends BaseRepository<ICountry> {
     super(transaction, 'countries');
   }
 
-  getCountryById(id: number): Promise<ICountry | undefined> {
+  getCountryById(id: string): Promise<ICountry | undefined> {
     return this.entities()
                .select('id')
                .select('displayName')

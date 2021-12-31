@@ -9,57 +9,61 @@ import { createStateRepository, StateRepository } from '../../database/repositor
 import { createUsersRepository, UsersRepository } from '../../database/repositories/users-repository';
 import { PerRequestContext } from '../../../../utils/api-middle-ware/api-middleware-typings';
 
+function isNullOrEmpty(value: string | undefined | null) {
+  if (value == null) return true;
+  return validator.isEmpty(value);
+}
 
 async function validateStateId(details: Partial<SignupRequest>, stateRepository: StateRepository) {
-  if (details.stateId == null) return 'Is required';
+  if (isNullOrEmpty(details.stateId)) return 'Is required';
   if (details.countryId == null) return;
-  if ((await stateRepository.getStateById(details.stateId, details.countryId)) != null) return 'Invalid state';
+  if ((await stateRepository.getStateById(details.stateId as string, details.countryId)) == null) return 'Invalid state';
 }
 
 async function validateCountry(details: Partial<SignupRequest>, repository: CountryRepository) {
-  if (details.countryId == null) return 'Is required';
-  if ((await repository.getCountryById(details.countryId)) != null) return 'Invalid country';
+  if (isNullOrEmpty(details.countryId)) return 'Is required';
+  if ((await repository.getCountryById(details.countryId as string)) == null) return 'Invalid country';
 }
 
 function validateDOB(details: Partial<SignupRequest>) {
-  if (details.dateOfBirth == null) return 'Is required';
-  const dob = parseDateTime(details.dateOfBirth);
+  if (isNullOrEmpty(details.dateOfBirth)) return 'Is required';
+  const dob = parseDateTime(details.dateOfBirth as string);
   if (DateTime.now().diff(dob, 'years').years < 18) return 'Must be 18 years min';
 }
 
 async function validateEmail(details: Partial<SignupRequest>, usersRepository: UsersRepository) {
-  if (details.email == null) return 'Is required';
-  if (!validator.isEmail(details.email)) return 'Invalid email';
-  if ((await usersRepository.countUsersByEmail(details.email)) !== 0) return 'Not available';
+  if (isNullOrEmpty(details.email)) return 'Is required';
+  if (!validator.isEmail(details.email as string)) return 'Invalid email';
+  if ((await usersRepository.countUsersByEmail(details.email as string)) !== 0) return 'Not available';
 }
 
 function validateFirstName(details: Partial<SignupRequest>) {
-  if (details.firstName == null) return 'Is required';
-  const parts = details.firstName.split(' ');
+  if (isNullOrEmpty(details.firstName)) return 'Is required';
+  const parts = (details.firstName as string).split(' ');
   if (parts.some(x => !validator.isAlpha(x))) return 'Can only contain A-Za-z';
 }
 
 function validateLastName(details: Partial<SignupRequest>) {
-  if (details.lastName == null) return 'Is required';
-  const parts = details.lastName.split(' ');
+  if (isNullOrEmpty(details.lastName)) return 'Is required';
+  const parts = (details.lastName as string).split(' ');
   if (parts.some(x => !validator.isAlpha(x))) return 'Can only contain A-Za-z';
 }
 
 function validatePassword(details: Partial<SignupRequest>) {
-  if (details.password == null) return 'Is required';
+  if (isNullOrEmpty(details.password)) return 'Is required';
   const options = {minLength: 8, minLowercase: 1, minNumbers: 1, minSymbols: 1, minUppercase: 1};
-  if (!validator.isStrongPassword(details.password, options)) return 'Required min length 10 and at least 1 lower case, upper case, number and special char';
+  if (!validator.isStrongPassword(details.password as string, options)) return 'Required min length 10 and at least 1 lower case, upper case, number and special char';
 }
 
 function validatePhoneNumber(details: Partial<SignupRequest>) {
-  if (details.phone == null) return 'Is required';
-  if (!validator.isMobilePhone(details.phone, "en-IN")) return 'Invalid mobile number';
+  if (isNullOrEmpty(details.phone)) return 'Is required';
+  if (!validator.isMobilePhone(details.phone as string, "en-IN")) return 'Invalid mobile number';
 }
 
 async function validateUserName(details: Partial<SignupRequest>, usersRepository: UsersRepository) {
-  if (details.username == null) return 'Is required';
-  if (!validator.isAlphanumeric(details.username)) return 'Only A-Za-z1-9 allowed';
-  if ((await usersRepository.countUsersByUserName(details.username)) !== 0) return 'Not available';
+  if (isNullOrEmpty(details.username)) return 'Is required';
+  if (!validator.isAlphanumeric(details.username as string)) return 'Only A-Za-z1-9 allowed';
+  if ((await usersRepository.countUsersByUserName(details.username as string)) !== 0) return 'Not available';
 }
 
 function validateTnc(details: Partial<SignupRequest>) {

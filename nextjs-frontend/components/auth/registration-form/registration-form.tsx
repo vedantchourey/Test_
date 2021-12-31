@@ -5,9 +5,6 @@ import { ChangeEvent, useState } from 'react';
 import { DateTime } from 'luxon';
 import Link from 'next/link'
 import commonStyles from '../../../styles/common.module.css';
-import GoogleIcon from '@mui/icons-material/Google';
-import AppleIcon from '@mui/icons-material/Apple';
-import FacebookIcon from '@mui/icons-material/Facebook';
 import { parseDateTime, toISOString } from '../../../utils/date-time-utils';
 import StateDropDown from '../../drop-downs/state-drop-down/state-drop-down';
 import { validateSignUp } from './validator';
@@ -33,7 +30,7 @@ export default function RegistrationForm(props: Props) {
     lastName: '',
     agreeToTnc: false,
     username: '',
-    countryId: 1,
+    countryId: '',
   });
 
   const handleTncChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -119,7 +116,9 @@ export default function RegistrationForm(props: Props) {
         <DesktopDatePicker label="Date of birth"
                            className={styles.inputRowItem}
                            value={dateOfBirth}
+                           mask={'__/__/____'}
                            onChange={(value: DateTime | null) => setRequest({...request, dateOfBirth: toISOString(value)})}
+                           inputFormat="dd/MM/yyyy"
                            renderInput={(params) =>
                              <TextField {...params}
                                         variant="filled"
@@ -141,8 +140,8 @@ export default function RegistrationForm(props: Props) {
       </div>
       <div className={styles.inputRow}>
         <StateDropDown value={request.stateId}
-                       onChange={id => setRequest({...request, stateId: id})}
-                       countryId={1}
+                       onChange={(id, state) => setRequest({...request, stateId: id, countryId: state?.countryId})}
+                       countryIsoCode="IND"
                        autoCompleteClassName={styles.inputRowItem}
                        inputClassName={styles.inputRowItem}
                        error={propsHasError(errors, 'stateId')}
