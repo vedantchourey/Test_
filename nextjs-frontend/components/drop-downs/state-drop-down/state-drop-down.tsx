@@ -1,14 +1,14 @@
-import { StateResponse } from '../../../service-clients/country-service/state-response';
 import { useAppDispatch, useAppSelector } from '../../../store/redux-store';
-import { countryAllStatesSelector } from '../../../store/countries/country-selectors';
+import { allStatesSelector } from '../../../store/countries/country-selectors';
 import { useEffect, useState } from 'react';
 import { fetchCountryStatesThunk } from '../../../store/countries/country-slice';
 import { Autocomplete, TextField } from '@mui/material';
+import { IState } from '../../../services/backend-services/database/repositories/state-repository';
 
 interface Props {
-  countryId?: number;
-  onChange?: (id?: number, state?: StateResponse | null) => void;
-  value?: number;
+  countryIsoCode?: string;
+  onChange?: (id?: string, state?: IState | null) => void;
+  value?: string;
   autoCompleteClassName?: string;
   inputClassName?: string;
   error?: boolean;
@@ -16,24 +16,25 @@ interface Props {
 }
 
 export default function StateDropDown(props: Props) {
-  const {countryId, value, onChange, autoCompleteClassName, inputClassName, error, helperText} = props;
+  const {countryIsoCode, value, onChange, autoCompleteClassName, inputClassName, error, helperText} = props;
   const appDispatch = useAppDispatch();
-  const states = useAppSelector(x => countryAllStatesSelector(x, countryId));
-  const [selectedState, setSelectedState] = useState<StateResponse | null>();
+  const states = useAppSelector(allStatesSelector);
+  const [selectedState, setSelectedState] = useState<IState | null>();
 
-  const statesCheck = [...states].sort(x => x.id).join();
+  const statesCheck = [...states].sort((x, y) => ('' + x.id).localeCompare(y.id)).join();
+
   useEffect(() => {
     const matchingState = states.filter(x => x.id === value)[0];
     if (matchingState?.id === selectedState?.id) return;
     setSelectedState(matchingState);
-  }, [countryId, statesCheck]);
+  }, [countryIsoCode, statesCheck]);
 
   useEffect(() => {
-    if (countryId == null) return;
-    appDispatch(fetchCountryStatesThunk(countryId))
-  }, [countryId]);
+    if (countryIsoCode == null) return;
+    appDispatch(fetchCountryStatesThunk(countryIsoCode))
+  }, [countryIsoCode]);
 
-  const onInputChange = (event: any, newValue: StateResponse | null) => {
+  const onInputChange = (event: any, newValue: IState | null) => {
     setSelectedState(newValue)
     onChange?.(newValue?.id, newValue);
   };

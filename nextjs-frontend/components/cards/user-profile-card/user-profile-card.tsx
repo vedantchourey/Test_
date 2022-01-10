@@ -1,8 +1,8 @@
 import { Avatar, Card, Divider, Fab, Typography, useTheme } from '@mui/material';
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useRef } from 'react';
 import { uploadImage } from '../../../services/front-end-services/image-service';
 import { useAppDispatch, useAppSelector } from '../../../store/redux-store';
-import { avatarBackgroundUrlSelector, avatarUrlSelector, userProfileSelector } from '../../../store/authentication/authentication-selectors';
+import { avatarBackgroundUrlSelector, avatarUrlSelector, isLoggedInSelector, userProfileSelector } from '../../../store/authentication/authentication-selectors';
 import styles from './user-profile-card.module.css';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import { toLocalDDMMYYYY } from '../../../utils/date-time-utils';
@@ -24,6 +24,7 @@ export default function UserProfileCard() {
   const avatarUrl = useAppSelector(avatarUrlSelector);
   const avatarBackgroundUrl = useAppSelector(avatarBackgroundUrlSelector);
   const theme = useTheme();
+  const isLoggedIn = useAppSelector(isLoggedInSelector);
 
   function showUploadBackgroundPicker() {
     backgroundInputRef.current?.click();
@@ -69,7 +70,7 @@ export default function UserProfileCard() {
 
   const backgroundColor = isDesktop ? theme.palette.background.paper : theme.palette.background.default;
   const backgroundImage = isDesktop ? '' : 'none';
-
+  if (!isLoggedIn) return (<></>);
   return (
     <Card sx={{
       maxWidth: 440,

@@ -1,11 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { PerRequestContext, RouteHandler } from './api-handler-factory';
 import { backendSupabase } from '../../services/backend-services/common/supabase-backend-client';
-
-type NoobRoles = 'authenticated' | 'noob-admin';
+import { NoobUserRole } from './noob-user-role';
+import { PerRequestContext, RouteHandler } from './api-middleware-typings';
 
 type Opts = {
-  allowedRoles: NoobRoles[];
+  allowedRoles: NoobUserRole[];
   allowAnonymous: boolean;
 }
 
@@ -26,7 +25,7 @@ export const authMiddleWare = (opts: Opts = defaultOPts): RouteHandler => {
     const bearerToken = authorization.replace('Bearer ', '');
     const {user} = await backendSupabase.auth.api.getUser(bearerToken);
     if (user == null) return throwError(res, 'Invalid token');
-    if (allowedRoles.indexOf(user.role as NoobRoles) === -1) return throwError(res, 'Invalid role');
+    if (allowedRoles.indexOf(user.role as NoobUserRole) === -1) return throwError(res, 'Invalid role');
     context.user = user;
   }
 }

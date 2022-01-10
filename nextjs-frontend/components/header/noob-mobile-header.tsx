@@ -17,6 +17,7 @@ import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutline
 import { signOut } from '../../services/front-end-services/auth-service';
 import { setMobileHeaderHeight } from '../../store/layout/layout-slice';
 import { mobileHeaderHeightSelector } from '../../store/layout/layout-selectors';
+import { useRouter } from 'next/router';
 
 
 export default function NoobMobileHeader() {
@@ -28,6 +29,7 @@ export default function NoobMobileHeader() {
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const appDispatch = useAppDispatch();
   const currentHeight = useAppSelector(mobileHeaderHeightSelector);
+  const router = useRouter();
 
   function onSuccessfulLogin() {
     setShowLoginModal(false);
@@ -37,6 +39,7 @@ export default function NoobMobileHeader() {
     setShowLoginModal(true)
     hideMenu();
   }
+
 
   function avatar() {
     if (avatarUrl == null) return (<Icon className={styles.userIcon}><PersonIcon className={styles.userIcon}/></Icon>);
@@ -77,7 +80,7 @@ export default function NoobMobileHeader() {
           </div>
         </div>
         {isLoggedIn && <div className={styles.bottomHeader}>
-          <IconButton className={styles.bottomHeaderIcons}>
+          <IconButton className={styles.bottomHeaderIcons} onClick={() => router.push('/')}>
             <Icon><HomeOutlinedIcon/></Icon>
           </IconButton>
           <IconButton className={styles.bottomHeaderIcons}>

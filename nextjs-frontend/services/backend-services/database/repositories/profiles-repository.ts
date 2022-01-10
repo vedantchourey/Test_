@@ -1,27 +1,46 @@
-import { knex } from '../knex';
 import { nowAsISOString } from '../../../../utils/date-time-utils';
-import { Profile } from '../models/profile';
+import { IProfile } from '../models/i-profile';
 import { Knex } from 'knex';
+import { BaseRepository } from './base-repository';
 
-const profiles = (): Knex.QueryBuilder<Profile> => {
-  return knex('profiles');
-};
+export class ProfilesRepository extends BaseRepository<IProfile> {
 
-export async function createProfile(profile: Profile): Promise<Profile> {
-  await profiles().insert(profile)
-  return profile;
+  constructor(transaction: Knex.Transaction) {
+    super(transaction, 'profiles');
+  }
+
+  async createProfile(profile: IProfile): Promise<IProfile> {
+    await this.entities().insert(profile)
+    return profile;
+  }
+
+  async getProfileById(id: string): Promise<IProfile | undefined> {
+    return this.entities()
+               .select('id')
+               .select('username')
+               .select('firstName')
+               .select('lastName')
+               .select('dateOfBirth')
+               .select('countryId')
+               .select('stateId')
+               .select('agreeToTnc')
+               .select('createdAt')
+               .select('updatedAt')
+               .select('avatarUrl')
+               .select('profileBackgroundImageUrl')
+               .where({id: id})
+               .first();
+  }
+
+
+  async updateAvatar(userId: string, url: string): Promise<number> {
+    return this.entities().update({avatarUrl: url, updatedAt: nowAsISOString()}).where({id: userId})
+  }
+
+  async updateProfileBackground(userId: string, url: string): Promise<number> {
+    return this.entities().update({profileBackgroundImageUrl: url, updatedAt: nowAsISOString()}).where({id: userId})
+  }
+
 }
 
-export async function getProfileById(id: string): Promise<Profile | undefined> {
-  const profiles = await knex('profiles').select('*').where({id: id});
-  return profiles[0];
-}
-
-
-export async function updateAvatar(userId: string, url: string) {
-  return profiles().update({avatarUrl: url, updatedAt: nowAsISOString()}).where({id: userId})
-}
-
-export async function updateProfileBackground(userId: string, url: string) {
-  return profiles().update({profileBackgroundImageUrl: url, updatedAt: nowAsISOString()}).where({id: userId})
-}
+export const createProfileRepository = (transaction: Knex.Transaction) => new ProfilesRepository(transaction);

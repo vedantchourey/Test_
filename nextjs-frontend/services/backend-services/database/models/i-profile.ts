@@ -1,14 +1,14 @@
-export default interface UserProfileResponse {
+export interface IProfile {
   id: string;
   username: string;
   firstName: string;
   lastName: string;
   dateOfBirth: string;
-  countryId: number;
-  stateId: number;
+  countryId: string;
+  stateId: string;
   agreeToTnc: boolean;
-  avatarUrl?: string;
   createdAt: string;
   updatedAt: string;
-  profileBackgroundImageUrl?: string;
+  avatarUrl?: string;
+  profileBackgroundImageUrl?: string
 }

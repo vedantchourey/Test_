@@ -1,7 +1,7 @@
 import { authCheckStatusSelector, userProfileFetchStatusSelector, userProfileSelector } from '../../store/authentication/authentication-selectors';
 import { useAppDispatch, useAppSelector } from '../../store/redux-store';
 import { useEffect } from 'react';
-import { clearUserProfile, fetchUserProfileThunk, setAvatarBackgroundUrl, setAvatarUrl, setCheckLoginStatus, setIsLoggedIn } from '../../store/authentication/authentication-slice';
+import { clearUserProfile, fetchUserProfileThunk, setAvatarBackgroundUrl, setAvatarUrl, setCheckLoginStatus, setIsLoggedIn, setUserRoles } from '../../store/authentication/authentication-slice';
 import { refreshSession } from '../../services/front-end-services/auth-service';
 import { frontendSupabase } from '../../services/front-end-services/supabase-frontend-service';
 import { setIsLoading } from '../../store/screen-animations/screen-animation-slice';
@@ -44,11 +44,14 @@ export default function AuthEventsHandler() {
         appDispatch(setIsLoggedIn({isLoggedIn: session?.user != null, username: session?.user?.user_metadata?.username}));
         appDispatch(fetchUserProfileThunk());
         appDispatch(setCheckLoginStatus('success'));
+        appDispatch(setUserRoles(session?.user?.user_metadata?.roles || []));
       } else if (event === 'SIGNED_OUT') {
         appDispatch(setIsLoggedIn({isLoggedIn: false, username: undefined}));
         appDispatch(clearUserProfile());
         appDispatch(setAvatarUrl(undefined));
         appDispatch(setAvatarBackgroundUrl(undefined));
+        appDispatch(setUserRoles([]));
+
       }
     });
     return () => subscription.data?.unsubscribe()
