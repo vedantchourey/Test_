@@ -1,5 +1,5 @@
-import { createStateRepository, StateRepository } from '../../../../../services/backend-services/database/repositories/state-repository';
-import { createTransaction } from '../../../../../services/backend-services/database/repositories/knex-utils';
+import { createStateRepository, StateRepository } from '../../../../../backend/services/database/repositories/state-repository';
+import { createTransaction } from '../../../../../backend/services/database/repositories/knex-utils';
 import { expect } from 'chai';
 
 describe('StateRepository', () => {

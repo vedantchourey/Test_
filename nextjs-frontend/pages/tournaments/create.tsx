@@ -1,11 +1,11 @@
 import Head from 'next/head';
-import NoobHeader from '../../components/header/noob-header';
+import NoobHeader from '../../src/frontend/components/header/noob-header';
 import homeModule from '../../styles/common.module.css';
-import AuthGuard from '../../components/auth/auth-guard';
+import AuthGuard from '../../src/frontend/components/auth/auth-guard';
 import { Card, useTheme } from '@mui/material';
-import { NoobUserRole } from '../../utils/api-middle-ware/noob-user-role';
-import { useAppSelector } from '../../store/redux-store';
-import { getAppHeaderHeightSelector } from '../../store/layout/layout-selectors';
+import { NoobUserRole } from '../../src/backend/utils/api-middle-ware/noob-user-role';
+import { useAppSelector } from '../../src/frontend/redux-store/redux-store';
+import { getAppHeaderHeightSelector } from '../../src/frontend/redux-store/layout/layout-selectors';
 
 const requiredRoles: NoobUserRole[] = ['noob-admin'];
 

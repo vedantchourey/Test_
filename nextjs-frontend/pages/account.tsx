@@ -1,14 +1,14 @@
 import Head from 'next/head';
-import NoobHeader from '../components/header/noob-header';
 import commonStyles from '../styles/common.module.css';
 import { useTheme } from '@mui/material';
-import { useAppSelector } from '../store/redux-store';
-import { authCheckStatusSelector, isLoggedInSelector } from '../store/authentication/authentication-selectors';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import UserProfileCard from '../components/cards/user-profile-card/user-profile-card';
 import styles from './account.module.css';
-import { getAppHeaderHeightSelector } from '../store/layout/layout-selectors';
+import { useAppSelector } from '../src/frontend/redux-store/redux-store';
+import { authCheckStatusSelector, isLoggedInSelector } from '../src/frontend/redux-store/authentication/authentication-selectors';
+import { getAppHeaderHeightSelector } from '../src/frontend/redux-store/layout/layout-selectors';
+import NoobHeader from '../src/frontend/components/header/noob-header';
+import UserProfileCard from '../src/frontend/components/cards/user-profile-card/user-profile-card';
 
 export default function Account() {
   const theme = useTheme();

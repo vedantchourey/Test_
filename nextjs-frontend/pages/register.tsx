@@ -1,14 +1,14 @@
 import { Container, Typography, useTheme } from '@mui/material';
 import Head from 'next/head';
-import NoobHeader from '../components/header/noob-header';
+import NoobHeader from '../src/frontend/components/header/noob-header';
 import styles from './register.module.css';
 import commonStyles from '../styles/common.module.css';
-import RegistrationForm from '../components/auth/registration-form/registration-form';
-import { useAppSelector } from '../store/redux-store';
-import { getAppHeaderHeightSelector, isDeviceTypeSelector } from '../store/layout/layout-selectors';
-import { deviceTypes } from '../store/layout/device-types';
+import RegistrationForm from '../src/frontend/components/auth/registration-form/registration-form';
+import { useAppSelector } from '../src/frontend/redux-store/redux-store';
+import { getAppHeaderHeightSelector, isDeviceTypeSelector } from '../src/frontend/redux-store/layout/layout-selectors';
+import { deviceTypes } from '../src/frontend/redux-store/layout/device-types';
 import { useRouter } from 'next/router';
-import { isLoggedInSelector } from '../store/authentication/authentication-selectors';
+import { isLoggedInSelector } from '../src/frontend/redux-store/authentication/authentication-selectors';
 import { useEffect } from 'react';
 
 export default function Register() {

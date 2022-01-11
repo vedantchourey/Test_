@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { createTransaction } from '../../../../../services/backend-services/database/repositories/knex-utils';
-import { createUsersRepository, UsersRepository } from '../../../../../services/backend-services/database/repositories/users-repository';
+import { createTransaction } from '../../../../../backend/services/database/repositories/knex-utils';
+import { createUsersRepository, UsersRepository } from '../../../../../backend/services/database/repositories/users-repository';
 
 describe('users-repository', () => {
   let repository: UsersRepository;

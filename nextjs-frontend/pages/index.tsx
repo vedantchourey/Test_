@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useTheme } from '@mui/material';
-import NoobHeader from '../components/header/noob-header';
+import NoobHeader from '../src/frontend/components/header/noob-header';
 import homeModule from '../styles/common.module.css';
 
 

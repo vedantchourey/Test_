@@ -1,10 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import signupUser from '../../services/backend-services/auth-service/signup/signup-user';
-import { ServiceResponse } from '../../services/backend-services/common/contracts/service-response';
-import { SignupRequest, SignupResponse } from '../../services/backend-services/auth-service/signup/signup-contracts';
-import { createNextJsRouteHandler } from '../../utils/api-middle-ware/api-handler-factory';
-import { beginTransactionMiddleWare, commitOrRollBackTransactionMiddleWare } from '../../utils/api-middle-ware/transaction-middle-ware';
-import { PerRequestContext } from '../../utils/api-middle-ware/api-middleware-typings';
+import { createNextJsRouteHandler } from '../../src/backend/utils/api-middle-ware/api-handler-factory';
+import { ServiceResponse } from '../../src/backend/services/common/contracts/service-response';
+import { SignupRequest, SignupResponse } from '../../src/backend/services/auth-service/signup/signup-contracts';
+import { PerRequestContext } from '../../src/backend/utils/api-middle-ware/api-middleware-typings';
+import signupUser from '../../src/backend/services/auth-service/signup/signup-user';
+import { beginTransactionMiddleWare, commitOrRollBackTransactionMiddleWare } from '../../src/backend/utils/api-middle-ware/transaction-middle-ware';
+
 
 export default createNextJsRouteHandler({
   post: {
