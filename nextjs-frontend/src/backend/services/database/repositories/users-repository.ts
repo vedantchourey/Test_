@@ -1,10 +1,6 @@
 import { BaseRepository } from './base-repository';
 import { Knex } from 'knex';
-
-interface IUser {
-  email: string;
-  id: string;
-}
+import { IUser } from '../models/i-user';
 
 export class UsersRepository extends BaseRepository<IUser> {
 

@@ -1,5 +1,5 @@
-import { frontendSupabase } from '../../services/supabase-frontend-service';
-import { IState } from '../../../backend/services/database/repositories/state-repository';
+import { IState } from '../../backend/services/database/models/i-state';
+import { frontendSupabase } from '../services/supabase-frontend-service';
 
 export const getAllStates = async (countryIsoCode: string): Promise<IState[]> => {
   const values = await frontendSupabase.from('states')

@@ -1,40 +1,29 @@
-import Head from 'next/head';
-import NoobHeader from '../../src/frontend/components/header/noob-header';
-import homeModule from '../../styles/common.module.css';
 import AuthGuard from '../../src/frontend/components/auth/auth-guard';
-import { Card, useTheme } from '@mui/material';
+import { Card } from '@mui/material';
 import { NoobUserRole } from '../../src/backend/utils/api-middle-ware/noob-user-role';
-import { useAppSelector } from '../../src/frontend/redux-store/redux-store';
-import { getAppHeaderHeightSelector } from '../../src/frontend/redux-store/layout/layout-selectors';
+import NotFound from '../../src/frontend/components/not-found/not-found';
+import { NoobPage } from '../../src/frontend/components/page/noob-page';
+import CreateTournamentForm from '../../src/frontend/components/tournaments/create-tournament-form';
+import { useRouter } from 'next/router';
 
 const requiredRoles: NoobUserRole[] = ['noob-admin'];
 
 export default function Create() {
 
-  const theme = useTheme();
-  const appHeaderHeight = useAppSelector(getAppHeaderHeightSelector);
+  const router = useRouter();
+
+  async function onTournamentCreated(id: string) {
+    await router.push(`/tournaments/${id}/edit`);
+  }
 
   return (
-    <div style={{backgroundColor: theme.palette.background.default}}>
-      <Head>
-        <title>Create Tournament</title>
-        <meta name="description" content="Noob storm home page"/>
-        <link rel="icon" href="/noob-fav.ico"/>
-      </Head>
-      <NoobHeader/>
-      <main className={homeModule.main}>
-        <div style={{marginTop: appHeaderHeight}}>
-          <Card>
-            <AuthGuard requiredRoles={requiredRoles}
-                       redirectToOnFailure="/404"
-                       renderOnCheckSuccess={() => <div>Hello</div>}
-                       renderOnCheckFailure={() => <div>Bye Bye</div>}/>
-          </Card>
-        </div>
-
-      </main>
-    </div>
+    <NoobPage title="Create Tournament" metaData={{description: "Noob storm home page"}}>
+      <AuthGuard requiredRoles={requiredRoles} renderOnCheckFailure={() => <NotFound/>}>
+        <Card>
+          <CreateTournamentForm onCreated={onTournamentCreated}/>
+        </Card>
+      </AuthGuard>
+    </NoobPage>
   )
-
 
 }

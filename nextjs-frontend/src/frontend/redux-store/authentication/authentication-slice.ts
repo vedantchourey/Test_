@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IAuthenticationState } from './i-authentication-state';
 import { fetchUserProfile } from '../../services/profile-service';
-import { NoobUserRole } from '../../../backend/utils/api-middle-ware/noob-user-role';
 import { IProfile } from '../../../backend/services/database/models/i-profile';
 
 const initialState: IAuthenticationState = {
@@ -14,7 +13,6 @@ const initialState: IAuthenticationState = {
   username: undefined,
   avatarBackgroundUrl: undefined,
   avatarUrl: undefined,
-  userRoles: []
 }
 
 export const fetchUserProfileThunk = createAsyncThunk('authentication/userProfile', (arg, thunkAPI) => {
@@ -49,9 +47,6 @@ const authenticationSlice = createSlice({
     },
     setAvatarBackgroundUrl(state, action: PayloadAction<string | undefined>) {
       state.avatarBackgroundUrl = action.payload;
-    },
-    setUserRoles(state, action: PayloadAction<NoobUserRole[]>) {
-      state.userRoles = action.payload;
     }
   },
   extraReducers: builder => {
@@ -68,6 +63,6 @@ const authenticationSlice = createSlice({
   }
 });
 
-export const {setCheckLoginStatus, setIsLoggedIn, clearUserProfile, setAvatarBackgroundUrl, setAvatarUrl, setUserProfile, setUserRoles} = authenticationSlice.actions;
+export const {setCheckLoginStatus, setIsLoggedIn, clearUserProfile, setAvatarBackgroundUrl, setAvatarUrl, setUserProfile} = authenticationSlice.actions;
 const authenticationSliceReducer = authenticationSlice.reducer;
 export default authenticationSliceReducer;

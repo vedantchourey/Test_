@@ -1,6 +1,6 @@
 import { DataFetchStatus } from '../../../models/noob-types';
-import { IState } from '../../../backend/services/database/repositories/state-repository';
-import { ICountry } from '../../../backend/services/database/repositories/country-repository';
+import { ICountry } from '../../../backend/services/database/models/i-country';
+import { IState } from '../../../backend/services/database/models/i-state';
 
 export interface ICountryState {
   countries: ICountry[];

@@ -10,5 +10,6 @@ export interface IProfile {
   createdAt: string;
   updatedAt: string;
   avatarUrl?: string;
-  profileBackgroundImageUrl?: string
+  profileBackgroundImageUrl?: string;
+  userRoles: string[];
 }

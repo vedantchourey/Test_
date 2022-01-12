@@ -5,16 +5,16 @@ import { NoobUserRole } from '../../../backend/utils/api-middle-ware/noob-user-r
 import { useRouter } from 'next/router';
 
 type Props = {
-  renderOnCheckSuccess?: () => React.ReactElement;
   renderOnCheckFailure?: () => React.ReactElement;
   redirectToOnFailure?: string;
   redirectToOnSuccess?: string;
   requiredRoles?: NoobUserRole[];
+  children: React.ReactElement;
 }
 
 export default function AuthGuard(props: Props): React.ReactElement {
   const {
-    renderOnCheckSuccess,
+    children,
     renderOnCheckFailure,
     requiredRoles = [],
     redirectToOnFailure,
@@ -22,7 +22,7 @@ export default function AuthGuard(props: Props): React.ReactElement {
   } = props;
 
   const isLoggedIn = useAppSelector(isLoggedInSelector);
-  const userRoles = useAppSelector(userRolesSelector);
+  const userRoles = useAppSelector(userRolesSelector) || [];
   const authCheckStatus = useAppSelector(authCheckStatusSelector);
   const router = useRouter();
 
@@ -40,7 +40,8 @@ export default function AuthGuard(props: Props): React.ReactElement {
 
 
   if (!isLoggedIn) return renderOnCheckFailure?.() || <></>;
-  if (requiredRoles.length > 0 && userRoles.length == 0) return renderOnCheckFailure?.() || <></>;
+  if (requiredRoles.length === 0) return children || <></>;
+  if (userRoles.length == 0) return renderOnCheckFailure?.() || <></>;
   if (!requiredRoles.some(x => userRoles.indexOf(x) !== -1)) return renderOnCheckFailure?.() || <></>;
-  return renderOnCheckSuccess?.() || <></>;
+  return children || <></>;
 }

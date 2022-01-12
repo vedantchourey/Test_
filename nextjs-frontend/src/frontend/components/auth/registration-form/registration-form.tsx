@@ -6,7 +6,7 @@ import { DateTime } from 'luxon';
 import Link from 'next/link'
 import commonStyles from '../../../../../styles/common.module.css';
 import { parseDateTime, toISOString } from '../../../../common/utils/date-time-utils';
-import StateDropDown from '../../drop-downs/state-drop-down/state-drop-down';
+import StateDropDown from '../../drop-downs/state-drop-down';
 import { validateSignUp } from './validator';
 import { getErrorForProp, isThereAnyError, propsHasError, ValidationResult } from '../../../../common/utils/validation/validator';
 import { SignupRequest } from '../../../../backend/services/auth-service/signup/signup-contracts';

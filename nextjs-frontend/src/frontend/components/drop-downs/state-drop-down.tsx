@@ -1,9 +1,9 @@
-import { useAppDispatch, useAppSelector } from '../../../redux-store/redux-store';
-import { allStatesSelector } from '../../../redux-store/countries/country-selectors';
+import { useAppDispatch, useAppSelector } from '../../redux-store/redux-store';
+import { allStatesSelector } from '../../redux-store/countries/country-selectors';
 import { useEffect, useState } from 'react';
-import { fetchCountryStatesThunk } from '../../../redux-store/countries/country-slice';
+import { fetchCountryStatesThunk } from '../../redux-store/countries/country-slice';
 import { Autocomplete, TextField } from '@mui/material';
-import { IState } from '../../../../backend/services/database/repositories/state-repository';
+import { IState } from '../../../backend/services/database/models/i-state';
 
 interface Props {
   countryIsoCode?: string;
@@ -27,12 +27,12 @@ export default function StateDropDown(props: Props) {
     const matchingState = states.filter(x => x.id === value)[0];
     if (matchingState?.id === selectedState?.id) return;
     setSelectedState(matchingState);
-  }, [countryIsoCode, statesCheck]);
+  }, [countryIsoCode, selectedState?.id, states, statesCheck, value]);
 
   useEffect(() => {
     if (countryIsoCode == null) return;
     appDispatch(fetchCountryStatesThunk(countryIsoCode))
-  }, [countryIsoCode]);
+  }, [appDispatch, countryIsoCode]);
 
   const onInputChange = (event: any, newValue: IState | null) => {
     setSelectedState(newValue)

@@ -1,4 +1,3 @@
-import { NoobUserRole } from '../../../backend/utils/api-middle-ware/noob-user-role';
 import { DataFetchStatus } from '../../../models/noob-types';
 import { IProfile } from '../../../backend/services/database/models/i-profile';
 
@@ -13,5 +12,4 @@ export interface IAuthenticationState {
   username: string | undefined;
   avatarUrl: string | undefined;
   avatarBackgroundUrl: string | undefined;
-  userRoles: NoobUserRole[];
 }

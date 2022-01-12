@@ -1,3 +1,5 @@
+import validator from 'validator';
+
 export type ValidationResult<Type> = {
   [Property in keyof Partial<Type>]: string | undefined;
 };
@@ -14,4 +16,9 @@ export function getErrorForProp<T, TKey extends keyof ValidationResult<T>>(resul
 
 export function propsHasError<T, TKey extends keyof ValidationResult<T>>(result: ValidationResult<T>, prop: keyof T) {
   return result[prop] != null;
+}
+
+export function isNullOrEmptyString(value: string | undefined | null) {
+  if (value == null) return true;
+  return validator.isEmpty(value);
 }

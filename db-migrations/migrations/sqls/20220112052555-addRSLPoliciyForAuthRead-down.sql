@@ -1,0 +1,11 @@
+drop policy authenticated_read_games on games;
+drop policy authenticated_read_platforms on platforms;
+drop policy authenticated_read_game_platforms on game_platforms;
+drop policy authenticated_read_game_maps on game_maps;
+drop policy authenticated_read_match_best_ofs on match_best_ofs;
+drop policy authenticated_read_match_formats on match_formats;
+drop policy authenticated_read_game_match_best_of on game_match_best_ofs;
+drop policy authenticated_read_game_match_format on game_match_formats;
+drop policy authenticated_read_tournaments on tournaments;
+drop policy authenticated_read_countries on countries;
+drop policy authenticated_read_states on states;

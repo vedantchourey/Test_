@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { ICountryState } from './i-country-state';
-import { getAllStates } from '../../service-clients/country-service/country-service';
+import { getAllStates } from '../../service-clients/country-service';
 
 export const fetchCountryStatesThunk = createAsyncThunk('countries/fetchStates', (countryIsoCode: string) => {
   return getAllStates(countryIsoCode);

@@ -1,12 +1,7 @@
 import { BaseRepository } from './base-repository';
 import { Knex } from 'knex';
+import { IState } from '../models/i-state';
 
-export interface IState {
-  id: string;
-  isoCode: string;
-  displayName: string;
-  countryId: string;
-}
 
 export class StateRepository extends BaseRepository<IState> {
 

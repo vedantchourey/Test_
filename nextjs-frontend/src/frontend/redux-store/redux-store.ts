@@ -4,13 +4,17 @@ import layoutSliceReducer from './layout/layout-slice';
 import authenticationSliceReducer from './authentication/authentication-slice';
 import countrySliceReducer from './countries/country-slice';
 import screenAnimationsSliceReducer from './screen-animations/screen-animation-slice';
+import platformSliceReducer from './platforms/platform-slice';
+import gameSliceReducer from './games/game-slice';
 
 const reduxStore = configureStore({
   reducer: {
     layout: layoutSliceReducer,
     screenAnimations: screenAnimationsSliceReducer,
     authentication: authenticationSliceReducer,
-    countries: countrySliceReducer
+    countries: countrySliceReducer,
+    platforms: platformSliceReducer,
+    games: gameSliceReducer
   }
 });
 

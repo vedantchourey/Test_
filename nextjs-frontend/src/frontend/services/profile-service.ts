@@ -8,10 +8,33 @@ import { IProfile } from '../../backend/services/database/models/i-profile';
 
 const imagesUrl = frontendConfig.noobStormServices.profile.profileImages;
 
+interface IRawProfile {
+  id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  countryId: string;
+  stateId: string;
+  agreeToTnc: boolean;
+  createdAt: string;
+  updatedAt: string;
+  avatarUrl?: string;
+  profileBackgroundImageUrl?: string,
+  user_roles: { id: string, code: string }[]
+}
+
+
 export async function fetchUserProfile(): Promise<IProfile> {
   const user = await authenticatedUser();
-  const profiles = await frontendSupabase.from('profiles').select('*').eq('id', user!.id).single();
-  return profiles.data as IProfile;
+  const profiles = await frontendSupabase.from('profiles')
+                                         .select('*,user_roles(id,code)')
+                                         .eq('id', user!.id)
+                                         .single();
+  const rawProfile = profiles.data as IRawProfile;
+  const {user_roles, ...others} = rawProfile;
+  const userRoles = user_roles.map(x => x.code);
+  return {...others, userRoles}
 }
 
 export async function updateProfileImages(request: UpdateProfileImageRequest): Promise<NoobFetchResponse<UpdateProfileImageRequest, IProfile>> {
