@@ -52,7 +52,8 @@ function validateScheduleDate(tournament: Partial<CreateOrEditTournamentRequest>
 function validateGameMap(tournament: Partial<CreateOrEditTournamentRequest>, allGames: IGameResponse[]) {
   if (isNullOrEmptyString(tournament.gameId)) return;
   const matchingGame = allGames.filter(x => x.id === tournament.gameId)[0];
-  if (matchingGame.gameMaps.length === 0 && !isNullOrEmptyString(tournament.gameMapId)) return 'Game does not have a map';
+  if (matchingGame.gameMaps.length === 0) return;
+  if (isNullOrEmptyString(tournament.gameMapId)) return 'Is required';
   if (!matchingGame.gameMaps.some(x => x.id === tournament.gameMapId)) return 'Invalid map';
 }
 

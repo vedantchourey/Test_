@@ -169,6 +169,7 @@ export default function TournamentDetailsForm(props: Props) {
                      error={errors.rules != null}
                      className={styles.column}
                      rows={3}
+                     helperText={getErrorForProp(errors, 'rules')}
                      onChange={event => onChange({...value, rules: event.target.value})}
           />
         </div>
