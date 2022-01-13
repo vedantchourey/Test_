@@ -14,7 +14,7 @@ import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
 import MilitaryTechOutlinedIcon from '@mui/icons-material/MilitaryTechOutlined';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
-import { signOut } from '../../services/auth-service';
+import { signOut } from '../../service-clients/auth-service-client';
 import { setMobileHeaderHeight } from '../../redux-store/layout/layout-slice';
 import { mobileHeaderHeightSelector } from '../../redux-store/layout/layout-selectors';
 import { useRouter } from 'next/router';

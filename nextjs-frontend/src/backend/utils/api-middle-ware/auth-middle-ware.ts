@@ -12,9 +12,11 @@ type Opts = {
 
 const defaultOPts: Opts = {allowedRoles: [], allowAnonymous: false};
 
-function throwError(res: NextApiResponse, message: string) {
+function throwError(res: NextApiResponse, message: string, context: PerRequestContext) {
   res.status(401).json({message: 'Unauthorised'});
-  throw new Error(message)
+  const error = new Error(message);
+  context.error = error;
+  throw error
 }
 
 async function isUserAuthorized(user: User, allowedRoles: NoobUserRole[]) {
@@ -30,13 +32,13 @@ export const authMiddleWare = (opts: Opts = defaultOPts): RouteHandler => {
   return async (req: NextApiRequest, res: NextApiResponse, context: PerRequestContext): Promise<any> => {
     const {authorization} = req.headers;
     if (allowAnonymous) return;
-    if (authorization == null) return throwError(res, 'No auth header found!');
-    if (!authorization.startsWith('Bearer ')) return throwError(res, 'No bearer token!');
+    if (authorization == null) return throwError(res, 'No auth header found!', context);
+    if (!authorization.startsWith('Bearer ')) return throwError(res, 'No bearer token!', context);
     const bearerToken = authorization.replace('Bearer ', '');
     const {user} = await backendSupabase.auth.api.getUser(bearerToken);
-    if (user == null) return throwError(res, 'Invalid token');
-    if (user.role !== 'authenticated') return throwError(res, 'Invalid role');
-    if (!(await isUserAuthorized(user, allowedRoles))) return throwError(res, 'unauthorized!');
+    if (user == null) return throwError(res, 'Invalid token', context);
+    if (user.role !== 'authenticated') return throwError(res, 'Invalid role', context);
+    if (!(await isUserAuthorized(user, allowedRoles))) return throwError(res, 'unauthorized!', context);
     context.user = user;
   }
 }

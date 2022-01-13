@@ -1,8 +1,8 @@
-import { IGame } from '../../../backend/services/database/models/i-game';
 import { DataFetchStatus } from '../../../models/noob-types';
+import { IGameResponse } from '../../service-clients/messages/i-game-response';
 
 export interface IGameState {
-  games: IGame[];
+  games: IGameResponse[];
   fetchStatus: DataFetchStatus;
   error: any;
 }

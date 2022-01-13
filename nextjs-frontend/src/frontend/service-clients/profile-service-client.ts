@@ -1,10 +1,11 @@
-import { frontendSupabase } from './supabase-frontend-service';
-import { authenticatedUser, authSession } from './auth-service';
-import { post } from '../service-clients/fetch-api-wrapper';
+import { frontendSupabase } from '../services/supabase-frontend-service';
+import { authenticatedUser, authSession } from './auth-service-client';
+import { post } from './fetch-api-wrapper';
 import frontendConfig from '../utils/config/front-end-config';
-import { NoobFetchResponse } from './common-messages';
+import { NoobFetchResponse } from './messages/common-messages';
 import { UpdateProfileImageRequest } from '../../backend/services/profile-service/update-profile-image-request';
 import { IProfile } from '../../backend/services/database/models/i-profile';
+import { IProfileResponse } from './messages/i-profile';
 
 const imagesUrl = frontendConfig.noobStormServices.profile.profileImages;
 
@@ -25,7 +26,7 @@ interface IRawProfile {
 }
 
 
-export async function fetchUserProfile(): Promise<IProfile> {
+export async function fetchUserProfile(): Promise<IProfileResponse> {
   const user = await authenticatedUser();
   const profiles = await frontendSupabase.from('profiles')
                                          .select('*,user_roles(id,code)')
@@ -37,7 +38,7 @@ export async function fetchUserProfile(): Promise<IProfile> {
   return {...others, userRoles}
 }
 
-export async function updateProfileImages(request: UpdateProfileImageRequest): Promise<NoobFetchResponse<UpdateProfileImageRequest, IProfile>> {
+export async function updateProfileImages(request: UpdateProfileImageRequest): Promise<NoobFetchResponse<UpdateProfileImageRequest, IProfileResponse>> {
   const session = await authSession();
   const result = await post(imagesUrl, request, {'Authorization': `Bearer ${session!.access_token}`});
   const body = await result.json();

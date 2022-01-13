@@ -10,7 +10,7 @@ import StateDropDown from '../../drop-downs/state-drop-down';
 import { validateSignUp } from './validator';
 import { getErrorForProp, isThereAnyError, propsHasError, ValidationResult } from '../../../../common/utils/validation/validator';
 import { SignupRequest } from '../../../../backend/services/auth-service/signup/signup-contracts';
-import { signUp } from '../../../services/auth-service';
+import { signUp } from '../../../service-clients/auth-service-client';
 import { useAppDispatch } from '../../../redux-store/redux-store';
 import { setIsLoading } from '../../../redux-store/screen-animations/screen-animation-slice';
 
@@ -140,7 +140,7 @@ export default function RegistrationForm(props: Props) {
       </div>
       <div className={styles.inputRow}>
         <StateDropDown value={request.stateId}
-                       onChange={(id, state) => setRequest({...request, stateId: id, countryId: state?.countryId})}
+                       onChange={(id, state) => setRequest({...request, stateId: id || '', countryId: state?.countryId})}
                        countryIsoCode="IND"
                        autoCompleteClassName={styles.inputRowItem}
                        inputClassName={styles.inputRowItem}
@@ -159,9 +159,6 @@ export default function RegistrationForm(props: Props) {
       </div>
       <div className={styles.inputRow}>
         <Button className={styles.actionButton} onClick={onClickSignUp}><Typography>Sign up Today</Typography></Button>
-      </div>
-      <div className={styles.inputRow}>
-        <Typography style={{color: 'white', fontWeight: '900'}}>OR SIGN UP WITH</Typography>
       </div>
     </div>
   )

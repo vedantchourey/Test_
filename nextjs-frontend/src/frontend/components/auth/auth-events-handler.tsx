@@ -2,10 +2,10 @@ import { authCheckStatusSelector, userProfileFetchStatusSelector, userProfileSel
 import { useAppDispatch, useAppSelector } from '../../redux-store/redux-store';
 import { useEffect } from 'react';
 import { clearUserProfile, fetchUserProfileThunk, setAvatarBackgroundUrl, setAvatarUrl, setCheckLoginStatus, setIsLoggedIn } from '../../redux-store/authentication/authentication-slice';
-import { refreshSession } from '../../services/auth-service';
+import { refreshSession } from '../../service-clients/auth-service-client';
 import { frontendSupabase } from '../../services/supabase-frontend-service';
 import { setIsLoading } from '../../redux-store/screen-animations/screen-animation-slice';
-import { downloadImage } from '../../services/image-service';
+import { downloadImage } from '../../service-clients/image-service-client';
 
 export default function AuthEventsHandler() {
   const status = useAppSelector(authCheckStatusSelector);

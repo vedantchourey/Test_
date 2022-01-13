@@ -1,6 +1,6 @@
 import { Avatar, Card, Divider, Fab, Typography, useTheme } from '@mui/material';
 import { ChangeEvent, useRef } from 'react';
-import { uploadImage } from '../../../services/image-service';
+import { uploadImage } from '../../../service-clients/image-service-client';
 import { useAppDispatch, useAppSelector } from '../../../redux-store/redux-store';
 import { avatarBackgroundUrlSelector, avatarUrlSelector, isLoggedInSelector, userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
 import styles from './user-profile-card.module.css';
@@ -8,7 +8,7 @@ import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternate
 import { toLocalDDMMYYYY } from '../../../../common/utils/date-time-utils';
 import { setIsLoading } from '../../../redux-store/screen-animations/screen-animation-slice';
 import { v4 } from 'uuid';
-import { updateProfileImages } from '../../../services/profile-service';
+import { updateProfileImages } from '../../../service-clients/profile-service-client';
 import { setUserProfile } from '../../../redux-store/authentication/authentication-slice';
 import { ProfileImageTypes } from '../../../../backend/services/profile-service/profile-image-types';
 import { isDeviceTypeSelector } from '../../../redux-store/layout/layout-selectors';

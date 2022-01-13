@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { IGameState } from './i-game-state';
-import { getAllGames } from '../../service-clients/game-service';
+import { getAllGames } from '../../service-clients/game-service-client';
 
 const initialState: IGameState = {
   error: undefined,

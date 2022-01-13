@@ -1,5 +1,5 @@
 import { DataFetchStatus } from '../../../models/noob-types';
-import { IProfile } from '../../../backend/services/database/models/i-profile';
+import { IProfileResponse } from '../../service-clients/messages/i-profile';
 
 export interface IAuthenticationState {
   isAuthenticated: boolean;
@@ -7,7 +7,7 @@ export interface IAuthenticationState {
   checkStatus: 'idle' | 'loading' | 'success';
   isUserRequestingLogin: boolean;
   profileFetchStatus: DataFetchStatus;
-  userProfile: IProfile | undefined;
+  userProfile: IProfileResponse | undefined;
   // temp cache from auth token
   username: string | undefined;
   avatarUrl: string | undefined;

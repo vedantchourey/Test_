@@ -7,8 +7,8 @@ import { useAppDispatch, useAppSelector } from '../../../redux-store/redux-store
 import { isDeviceTypeSelector } from '../../../redux-store/layout/layout-selectors';
 import { deviceTypes } from '../../../redux-store/layout/device-types';
 import validator from 'validator';
-import { SignInRequest } from '../../../services/sign-in-request';
-import { signIn } from '../../../services/auth-service';
+import { SignInRequest } from '../../../service-clients/messages/sign-in-request';
+import { signIn } from '../../../service-clients/auth-service-client';
 import { ApiError } from '@supabase/gotrue-js';
 import { setIsLoading } from '../../../redux-store/screen-animations/screen-animation-slice';
 import { useRouter } from 'next/router';

@@ -1,13 +1,13 @@
-import { IPlatform } from '../../../backend/services/database/models/i-platform';
+import { IPlatformResponse } from '../../service-clients/messages/i-platform-response';
 import { useAppDispatch, useAppSelector } from '../../redux-store/redux-store';
 import { useEffect, useState } from 'react';
-import { Autocomplete, TextField } from '@mui/material';
-import { getAllPlatformsStatusSelector, platformsByIdsSelector } from '../../redux-store/platforms/platform-selectors';
+import { Autocomplete, CircularProgress, TextField } from '@mui/material';
+import { getAllPlatformsSelector, getAllPlatformsStatusSelector } from '../../redux-store/platforms/platform-selectors';
 import { fetchAllPlatformsThunk } from '../../redux-store/platforms/platform-slice';
 
 
 interface Props {
-  onChange?: (id?: string, state?: IPlatform | null) => void;
+  onChange?: (id: string | undefined, state: IPlatformResponse | null) => void;
   value?: string;
   autoCompleteClassName?: string;
   inputClassName?: string;
@@ -23,9 +23,10 @@ interface Props {
 export default function PlatformDropDown(props: Props) {
   const {value, onChange, autoCompleteClassName, inputClassName, error, helperText, label, placeholder, disabled, allowedPlatformIds} = props;
   const appDispatch = useAppDispatch();
-  const platforms = useAppSelector(x => platformsByIdsSelector(x, allowedPlatformIds));
+  const platforms = useAppSelector(getAllPlatformsSelector);
   const platformsFetchStatus = useAppSelector(getAllPlatformsStatusSelector);
-  const [selectedPlatform, setSelectedPlatform] = useState<IPlatform | null>();
+  const [selectedPlatform, setSelectedPlatform] = useState<IPlatformResponse | null>(null);
+  const isLoading = platformsFetchStatus === 'loading';
 
   useEffect(() => {
     if (platformsFetchStatus !== 'idle') return;
@@ -33,20 +34,27 @@ export default function PlatformDropDown(props: Props) {
   }, [appDispatch, platformsFetchStatus]);
 
   useEffect(() => {
-    const matchingPlatform = platforms.filter(x => x.id === value);
-    setSelectedPlatform(matchingPlatform[0]);
-  }, [platforms, value]);
+    const matchingPlatform = platforms.filter(x => x.id === value)[0];
+    if (matchingPlatform?.id === selectedPlatform?.id) return;
+    setSelectedPlatform(matchingPlatform || null);
+  }, [platforms, selectedPlatform?.id, value]);
 
-  const onInputChange = (event: any, newValue: IPlatform | null) => {
+  const onInputChange = (event: any, newValue: IPlatformResponse | null) => {
     setSelectedPlatform(newValue)
     onChange?.(newValue?.id, newValue);
   };
 
+  const optionDisabled = (option: IPlatformResponse) => allowedPlatformIds.indexOf(option.id) === -1;
   return (
     <Autocomplete disablePortal
                   className={autoCompleteClassName}
                   options={platforms}
+                  value={selectedPlatform}
                   getOptionLabel={x => x.displayName}
+                  getOptionDisabled={optionDisabled}
+                  onChange={onInputChange}
+                  disabled={disabled}
+                  isOptionEqualToValue={(option: IPlatformResponse, value1: IPlatformResponse) => option.id === value1.id}
                   renderInput={(params) => <TextField {...params}
                                                       label={label}
                                                       variant="filled"
@@ -54,10 +62,16 @@ export default function PlatformDropDown(props: Props) {
                                                       error={error}
                                                       placeholder={placeholder}
                                                       helperText={helperText}
+                                                      InputProps={{
+                                                        ...params.InputProps,
+                                                        endAdornment: (
+                                                          <div>
+                                                            {isLoading ? <CircularProgress color="inherit" size={20}/> : null}
+                                                            {params.InputProps.endAdornment}
+                                                          </div>
+                                                        )
+                                                      }}
                   />}
-                  value={selectedPlatform || null}
-                  onChange={onInputChange}
-                  disabled={disabled}
     />
   )
 }

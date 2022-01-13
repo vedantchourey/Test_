@@ -1,9 +1,9 @@
 import { SignupRequest, SignupResponse } from '../../backend/services/auth-service/signup/signup-contracts';
-import { post } from '../service-clients/fetch-api-wrapper';
+import { post } from './fetch-api-wrapper';
 import frontEndConfig from '../utils/config/front-end-config';
-import { NoobFetchResponse, SupabaseFetchResponse } from './common-messages';
-import { SignInRequest } from './sign-in-request';
-import { frontendSupabase } from './supabase-frontend-service';
+import { NoobFetchResponse, SupabaseFetchResponse } from './messages/common-messages';
+import { SignInRequest } from './messages/sign-in-request';
+import { frontendSupabase } from '../services/supabase-frontend-service';
 import { Session, User } from '@supabase/gotrue-js/src/lib/types';
 import { ApiError } from '@supabase/gotrue-js';
 

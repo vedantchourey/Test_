@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { IPlatformState } from './i-platform-state';
-import { fetchAllPlatforms } from '../../service-clients/platform-service';
+import { fetchAllPlatforms } from '../../service-clients/platform-service-client';
 
 const initialState: IPlatformState = {
   error: undefined,

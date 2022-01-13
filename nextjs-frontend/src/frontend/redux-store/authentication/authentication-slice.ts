@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IAuthenticationState } from './i-authentication-state';
-import { fetchUserProfile } from '../../services/profile-service';
-import { IProfile } from '../../../backend/services/database/models/i-profile';
+import { fetchUserProfile } from '../../service-clients/profile-service-client';
+import { IProfileResponse } from '../../service-clients/messages/i-profile';
 
 const initialState: IAuthenticationState = {
   isAuthenticated: false,
@@ -39,7 +39,7 @@ const authenticationSlice = createSlice({
     clearUserProfile(state) {
       state.userProfile = undefined;
     },
-    setUserProfile(state, action: PayloadAction<IProfile | undefined>) {
+    setUserProfile(state, action: PayloadAction<IProfileResponse | undefined>) {
       state.userProfile = action.payload;
     },
     setAvatarUrl(state, action: PayloadAction<string | undefined>) {

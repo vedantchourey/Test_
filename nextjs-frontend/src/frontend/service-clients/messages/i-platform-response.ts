@@ -1,4 +1,4 @@
-export interface IPlatform {
+export interface IPlatformResponse {
   id: string;
   displayName: string;
   code: string;

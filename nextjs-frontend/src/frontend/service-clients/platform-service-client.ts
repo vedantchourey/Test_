@@ -1,8 +1,8 @@
 import { frontendSupabase } from '../services/supabase-frontend-service';
-import { IPlatform } from '../../backend/services/database/models/i-platform';
+import { IPlatformResponse } from './messages/i-platform-response';
 
-export async function fetchAllPlatforms(): Promise<IPlatform[]> {
+export async function fetchAllPlatforms(): Promise<IPlatformResponse[]> {
   const values = await frontendSupabase.from('platforms')
                                        .select('id,displayName,code');
-  return values.data as IPlatform[];
+  return values.data as IPlatformResponse[];
 }

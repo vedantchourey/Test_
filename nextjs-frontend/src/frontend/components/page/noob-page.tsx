@@ -1,11 +1,12 @@
 import { useTheme } from '@mui/material';
 import { useAppSelector } from '../../redux-store/redux-store';
-import { getAppHeaderHeightSelector } from '../../redux-store/layout/layout-selectors';
+import { getAppHeaderHeightSelector, isDeviceTypeSelector } from '../../redux-store/layout/layout-selectors';
 import Head from 'next/head';
 import NoobHeader from '../header/noob-header';
 import commonStyles from '../../../../styles/common.module.css';
 import styles from './noob-page.module.css';
 import React from 'react';
+import { deviceTypes } from '../../redux-store/layout/device-types';
 
 interface Props {
   title: string;
@@ -25,8 +26,12 @@ export function NoobPage(props: Props) {
 
   const theme = useTheme();
   const appHeaderHeight = useAppSelector(getAppHeaderHeightSelector);
+  const isDesktop = useAppSelector(x => isDeviceTypeSelector(x, deviceTypes.desktop));
+  const backgroundColor = isDesktop ? theme.palette.background.default : theme.palette.background.paper;
+
+
   return (
-    <div style={{backgroundColor: theme.palette.background.default}}>
+    <div style={{backgroundColor}}>
       <Head>
         <title>{title}</title>
         {metaKeys.map((key, index) => <meta key={index} name={key} content={metaData[key]}/>)}

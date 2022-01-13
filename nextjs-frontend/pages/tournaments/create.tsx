@@ -1,5 +1,4 @@
 import AuthGuard from '../../src/frontend/components/auth/auth-guard';
-import { Card } from '@mui/material';
 import { NoobUserRole } from '../../src/backend/utils/api-middle-ware/noob-user-role';
 import NotFound from '../../src/frontend/components/not-found/not-found';
 import { NoobPage } from '../../src/frontend/components/page/noob-page';
@@ -19,9 +18,7 @@ export default function Create() {
   return (
     <NoobPage title="Create Tournament" metaData={{description: "Noob storm home page"}}>
       <AuthGuard requiredRoles={requiredRoles} renderOnCheckFailure={() => <NotFound/>}>
-        <Card>
-          <CreateTournamentForm onCreated={onTournamentCreated}/>
-        </Card>
+        <CreateTournamentForm onCreated={onTournamentCreated}/>
       </AuthGuard>
     </NoobPage>
   )

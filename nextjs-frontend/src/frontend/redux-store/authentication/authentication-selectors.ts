@@ -1,6 +1,7 @@
 import { RootState } from '../redux-store';
 import { createSelector } from '@reduxjs/toolkit';
-import { IProfile } from '../../../backend/services/database/models/i-profile';
+import { IProfileResponse } from '../../service-clients/messages/i-profile';
+
 
 export const isLoggedInSelector = (rootState: RootState) => rootState.authentication.isAuthenticated;
 export const authCheckStatusSelector = (rootState: RootState) => rootState.authentication.checkStatus;
@@ -13,7 +14,7 @@ export const userRolesSelector = (rootState: RootState) => rootState.authenticat
 // memoized
 const accessTokenUsernameSelector = (rootState: RootState) => rootState.authentication.username;
 
-export const userNameSelector = createSelector([accessTokenUsernameSelector, userProfileSelector], (tokenUsername: string | undefined, userProfile: IProfile | undefined) => {
+export const userNameSelector = createSelector([accessTokenUsernameSelector, userProfileSelector], (tokenUsername: string | undefined, userProfile: IProfileResponse | undefined) => {
   if (userProfile?.username != null) return userProfile.username;
   return tokenUsername || '';
 });

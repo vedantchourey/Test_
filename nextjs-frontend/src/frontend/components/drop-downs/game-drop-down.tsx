@@ -1,13 +1,13 @@
-import { IGame } from '../../../backend/services/database/models/i-game';
 import { useAppDispatch, useAppSelector } from '../../redux-store/redux-store';
 import { useEffect, useState } from 'react';
 import { Autocomplete, CircularProgress, TextField } from '@mui/material';
 import { gamesByPlatformSelector, gamesFetchStatusSelector } from '../../redux-store/games/game-selectors';
 import { fetchAllGamesThunk } from '../../redux-store/games/game-slice';
+import { IGameResponse } from '../../service-clients/messages/i-game-response';
 
 interface Props {
   platformId?: string;
-  onChange?: (id: string | null, state: IGame | null) => void;
+  onChange?: (id: string | undefined, state: IGameResponse | null) => void;
   value?: string;
   autoCompleteClassName?: string;
   inputClassName?: string;
@@ -22,7 +22,7 @@ export default function GameDropDown(props: Props) {
   const appDispatch = useAppDispatch();
   const games = useAppSelector(x => gamesByPlatformSelector(x, platformId));
   const gamesFetchStatus = useAppSelector(gamesFetchStatusSelector);
-  const [selectedGame, setSelectedGame] = useState<IGame | null>(null);
+  const [selectedGame, setSelectedGame] = useState<IGameResponse | null>(null);
   const isLoading = gamesFetchStatus === 'loading';
 
   useEffect(() => {
@@ -33,13 +33,13 @@ export default function GameDropDown(props: Props) {
   useEffect(() => {
     const matchingGame = games.filter(x => x.id === value)[0];
     if (matchingGame?.id === selectedGame?.id) return;
-    setSelectedGame(matchingGame);
-  }, [games, value]);
+    setSelectedGame(matchingGame || null);
+  }, [games, selectedGame?.id, value]);
 
 
-  const onInputChange = (event: any, newValue: IGame | null) => {
+  const onInputChange = (event: any, newValue: IGameResponse | null) => {
     setSelectedGame(newValue)
-    onChange?.(newValue?.id || null, newValue || null);
+    onChange?.(newValue?.id, newValue || null);
   };
 
   return (

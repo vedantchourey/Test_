@@ -1,4 +1,4 @@
-import { frontendSupabase } from './supabase-frontend-service';
+import { frontendSupabase } from '../services/supabase-frontend-service';
 
 export function downloadImage(bucket: string, filename: string): Promise<{ data: Blob | null; error: Error | null }> {
   return frontendSupabase.storage
