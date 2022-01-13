@@ -2,6 +2,22 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+Use [Env files](https://nextjs.org/docs/basic-features/environment-variables) to pass variable to nextjs.
+
+Create an env file `.env.local` in the root folder.
+```
+NOOB_DATA_BASE_NAME='postgres'
+NOOB_DATA_BASE_HOST=<Your supabase db host>
+NOOB_DATA_BASE_PORT='5432'
+NOOB_DATA_BASE_USER='postgres'
+NOOB_DATA_BASE_PASSWORD=<Your supabase db password>
+NEXT_PUBLIC_NOOB_SUPABASE_URL=<Your supabase api url>
+NEXT_PUBLIC_NOOB_SUPABASE_ANON_KEY=<Your supabase anonymous key>
+NEXT_PUBLIC_NOOB_BASE_APP_URL='http://localhost:3000'
+NEXT_PUBLIC_NOOB_BASE_API_URL='http://localhost:3000'
+```
+
+
 First, run the development server:
 
 ```bash
