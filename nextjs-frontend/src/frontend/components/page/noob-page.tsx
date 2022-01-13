@@ -3,7 +3,7 @@ import { useAppSelector } from '../../redux-store/redux-store';
 import { getAppHeaderHeightSelector, isDeviceTypeSelector } from '../../redux-store/layout/layout-selectors';
 import Head from 'next/head';
 import NoobHeader from '../header/noob-header';
-import commonStyles from '../../../../styles/common.module.css';
+import commonStyles from '../../styles/common.module.css';
 import styles from './noob-page.module.css';
 import React from 'react';
 import { deviceTypes } from '../../redux-store/layout/device-types';

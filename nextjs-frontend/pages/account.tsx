@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import commonStyles from '../styles/common.module.css';
+import commonStyles from '../src/frontend/styles/common.module.css';
 import { useTheme } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';

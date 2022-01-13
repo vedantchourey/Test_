@@ -2,7 +2,7 @@ import { Container, Typography, useTheme } from '@mui/material';
 import Head from 'next/head';
 import NoobHeader from '../src/frontend/components/header/noob-header';
 import styles from './register.module.css';
-import commonStyles from '../styles/common.module.css';
+import commonStyles from '../src/frontend/styles/common.module.css';
 import RegistrationForm from '../src/frontend/components/auth/registration-form/registration-form';
 import { useAppSelector } from '../src/frontend/redux-store/redux-store';
 import { getAppHeaderHeightSelector, isDeviceTypeSelector } from '../src/frontend/redux-store/layout/layout-selectors';

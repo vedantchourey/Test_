@@ -1,4 +1,4 @@
-import '../styles/globals.css'
+import '../src/frontend/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { Provider } from 'react-redux';
 import { ThemeProvider } from '@mui/material/styles';

@@ -4,7 +4,7 @@ import { DesktopDatePicker } from '@mui/lab';
 import { ChangeEvent, useState } from 'react';
 import { DateTime } from 'luxon';
 import Link from 'next/link'
-import commonStyles from '../../../../../styles/common.module.css';
+import commonStyles from '../../../styles/common.module.css';
 import { parseDateTime, toISOString } from '../../../../common/utils/date-time-utils';
 import StateDropDown from '../../drop-downs/state-drop-down';
 import { validateSignUp } from './validator';

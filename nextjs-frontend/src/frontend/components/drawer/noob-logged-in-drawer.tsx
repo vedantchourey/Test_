@@ -16,7 +16,7 @@ import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import LogoutIcon from '@mui/icons-material/Logout';
 import CloseIcon from '@mui/icons-material/Close';
 import Image from 'next/image';
-import commonStyles from '../../../../styles/common.module.css';
+import commonStyles from '../../styles/common.module.css';
 
 interface Props {
   show: boolean;

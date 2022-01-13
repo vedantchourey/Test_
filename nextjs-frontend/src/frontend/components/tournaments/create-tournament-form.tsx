@@ -2,9 +2,10 @@ import TournamentDetailsForm from './tournament-details-form';
 import { useState } from 'react';
 import { isThereAnyError, ValidationResult } from '../../../common/utils/validation/validator';
 import { CreateOrEditTournamentRequest } from '../../../backend/services/tournament-service/create-or-edit-tournament-request';
-import { validateTournament } from './tournament-details-validator';
-import { Container, Typography } from '@mui/material';
+import { Button, Container, Typography } from '@mui/material';
 import styles from './create-tournament-form.module.css';
+import commonStyles from '../../styles/common.module.css';
+import { validateTournament } from './tournament-details-validator';
 
 interface Props {
   onCreated: (tournamentId: string) => void;
@@ -20,10 +21,13 @@ export default function CreateTournamentForm(props: Props) {
 
   const onChangeHandler = (value: Partial<CreateOrEditTournamentRequest>) => {
     setRequest(value);
-    // const newErrors = validateTournament(value);
-    // setErrors(newErrors);
-    // if (isThereAnyError(newErrors)) return;
   };
+
+  function onClickCreateTournament() {
+    const newErrors = validateTournament(request);
+    setErrors(newErrors);
+    if (isThereAnyError(newErrors)) return;
+  }
 
   return (
     <Container maxWidth="md" className={styles.container}>
@@ -35,6 +39,11 @@ export default function CreateTournamentForm(props: Props) {
                                value={request}
                                onChange={onChangeHandler}
         />
+        <div className={styles.row}>
+          <div className={styles.buttonGroup}>
+            <Button className={commonStyles.actionButton} onClick={onClickCreateTournament}><Typography>Create</Typography></Button>
+          </div>
+        </div>
       </div>
     </Container>
   )

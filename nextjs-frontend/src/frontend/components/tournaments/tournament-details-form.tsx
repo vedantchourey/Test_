@@ -4,7 +4,7 @@ import GameDropDown from '../drop-downs/game-drop-down';
 import * as React from 'react';
 import { useState } from 'react';
 import { CreateOrEditTournamentRequest } from '../../../backend/services/tournament-service/create-or-edit-tournament-request';
-import { isNullOrEmptyString, ValidationResult } from '../../../common/utils/validation/validator';
+import { getErrorForProp, isNullOrEmptyString, ValidationResult } from '../../../common/utils/validation/validator';
 import styles from './tournament-details-form.module.css';
 import { IGameResponse } from '../../service-clients/messages/i-game-response';
 import { IGameMapResponse } from '../../service-clients/messages/i-game-map-response';
@@ -47,6 +47,7 @@ export default function TournamentDetailsForm(props: Props) {
                    value={value.name}
                    className={styles.column}
                    onChange={event => onChange({...value, name: event.target.value})}
+                   helperText={getErrorForProp(errors, 'name')}
         />
       </div>
       <div className={styles.row}>
@@ -58,6 +59,7 @@ export default function TournamentDetailsForm(props: Props) {
                         value={value.gameId}
                         inputClassName={styles.inputItem}
                         autoCompleteClassName={styles.inputItem}
+                        helperText={getErrorForProp(errors, 'gameId')}
           />
         </div>
         <div className={styles.column}>
@@ -70,6 +72,7 @@ export default function TournamentDetailsForm(props: Props) {
                            inputClassName={styles.inputItem}
                            autoCompleteClassName={styles.inputItem}
                            disabled={allowedGameMaps.length === 0}
+                           helperText={getErrorForProp(errors, 'gameMapId')}
           />
         </div>
       </div>
@@ -84,6 +87,7 @@ export default function TournamentDetailsForm(props: Props) {
                             inputClassName={styles.inputItem}
                             autoCompleteClassName={styles.inputItem}
                             value={value.platformId}
+                            helperText={getErrorForProp(errors, 'platformId')}
           />
         </div>
         <div className={styles.column}>
@@ -94,6 +98,7 @@ export default function TournamentDetailsForm(props: Props) {
                                inputClassName={styles.inputItem}
                                autoCompleteClassName={styles.inputItem}
                                value={value.matchBestOfId}
+                               helperText={getErrorForProp(errors, 'matchBestOfId')}
           />
         </div>
       </div>
@@ -106,6 +111,7 @@ export default function TournamentDetailsForm(props: Props) {
                                inputClassName={styles.inputItem}
                                autoCompleteClassName={styles.inputItem}
                                value={value.matchFormatId}
+                               helperText={getErrorForProp(errors, 'matchFormatId')}
           />
         </div>
         <div className={styles.column}>
@@ -116,6 +122,7 @@ export default function TournamentDetailsForm(props: Props) {
                                   inputClassName={styles.inputItem}
                                   autoCompleteClassName={styles.inputItem}
                                   value={value.type}
+                                  helperText={getErrorForProp(errors, 'type')}
           />
         </div>
       </div>
@@ -137,16 +144,20 @@ export default function TournamentDetailsForm(props: Props) {
                            error={errors.numberOfPlayers != null}
                            className={styles.column}
                            onChangeNumber={numberOfPlayers => onChange({...value, numberOfPlayers})}
+                           helperText={getErrorForProp(errors, 'numberOfPlayers')}
           />
         </div>
       </div>
       <div className={styles.row}>
         <div className={styles.column}>
-          <DateTimePicker renderInput={(props) => <TextField {...props} />}
-                          label="Scheduled date time"
+          <DateTimePicker label="Scheduled date time"
                           value={scheduledDateTime}
                           inputFormat="dd/MM/yyyy HH:mm"
                           onChange={(newValue: DateTime | null) => onChange({...value, scheduledDateTime: toISOString(newValue)})}
+                          renderInput={(props) => <TextField {...props}
+                                                             error={value.scheduledDateTime != null}
+                                                             helperText={getErrorForProp(errors, 'scheduledDateTime')}
+                          />}
           />
         </div>
       </div>

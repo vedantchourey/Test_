@@ -2,7 +2,7 @@ import { Container, Icon, Link, Typography, useTheme } from '@mui/material';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { useRouter } from 'next/router';
 import styles from './not-found.module.css';
-import commonStyles from '../../../../styles/common.module.css';
+import commonStyles from '../../styles/common.module.css';
 
 export default function NotFound() {
 

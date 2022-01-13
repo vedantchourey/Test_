@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useTheme } from '@mui/material';
 import NoobHeader from '../src/frontend/components/header/noob-header';
-import homeModule from '../styles/common.module.css';
+import homeModule from '../src/frontend/styles/common.module.css';
 
 
 const Home: NextPage = () => {

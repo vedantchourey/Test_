@@ -2,7 +2,7 @@ import { Container, Icon, Typography, useTheme } from '@mui/material';
 import Head from 'next/head';
 import NoobHeader from '../src/frontend/components/header/noob-header';
 import styles from './register.module.css';
-import commonStyles from '../styles/common.module.css';
+import commonStyles from '../src/frontend/styles/common.module.css';
 import { useAppSelector } from '../src/frontend/redux-store/redux-store';
 import { getAppHeaderHeightSelector, isDeviceTypeSelector } from '../src/frontend/redux-store/layout/layout-selectors';
 import { deviceTypes } from '../src/frontend/redux-store/layout/device-types';
