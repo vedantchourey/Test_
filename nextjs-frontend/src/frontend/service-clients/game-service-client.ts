@@ -15,7 +15,8 @@ export async function getAllGames(): Promise<IGameResponse[]> {
                                          id,
                                          displayName,
                                          code,
-                                         game_platforms(platformId)
+                                         game_platforms(platformId),
+                                         game_maps!fk_game_maps_games_id(id,code,displayName,gameId)
                                        `);
   const rawGames = values.data as IRawGamePlatforms[];
   return rawGames.map(x => {

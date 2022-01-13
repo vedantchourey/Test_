@@ -17,7 +17,7 @@ interface Props {
 
 export default function GameMapDropDown(props: Props) {
   const {value, options, onChange, autoCompleteClassName, inputClassName, error, helperText, label, placeholder, disabled} = props;
-  const selectedMap = options.filter(x => x.id === value)[0];
+  const selectedMap = options.filter(x => x.id === value)[0] || null;
 
   const onInputChange = (event: any, newValue: IGameMapResponse | null) => {
     onChange?.(newValue?.id, newValue);

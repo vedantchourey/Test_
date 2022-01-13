@@ -6,6 +6,8 @@ import countrySliceReducer from './countries/country-slice';
 import screenAnimationsSliceReducer from './screen-animations/screen-animation-slice';
 import platformSliceReducer from './platforms/platform-slice';
 import gameSliceReducer from './games/game-slice';
+import matchBestOfSliceReducer from './match-best-of/match-best-of-slice';
+import matchFormatSliceReducer from './match-format/match-format-slice';
 
 const reduxStore = configureStore({
   reducer: {
@@ -14,7 +16,9 @@ const reduxStore = configureStore({
     authentication: authenticationSliceReducer,
     countries: countrySliceReducer,
     platforms: platformSliceReducer,
-    games: gameSliceReducer
+    games: gameSliceReducer,
+    matchBestOfs: matchBestOfSliceReducer,
+    matchFormats: matchFormatSliceReducer
   }
 });
 

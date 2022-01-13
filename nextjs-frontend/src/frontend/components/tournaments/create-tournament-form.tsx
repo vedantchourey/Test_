@@ -14,7 +14,8 @@ export default function CreateTournamentForm(props: Props) {
   const {onCreated} = props;
   const [errors, setErrors] = useState<ValidationResult<CreateOrEditTournamentRequest>>({});
   const [request, setRequest] = useState<Partial<CreateOrEditTournamentRequest>>({
-    name: ''
+    name: '',
+    isTeam: false
   });
 
   const onChangeHandler = (value: Partial<CreateOrEditTournamentRequest>) => {
