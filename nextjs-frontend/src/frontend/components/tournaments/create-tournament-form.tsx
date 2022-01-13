@@ -6,6 +6,8 @@ import { Button, Container, Typography } from '@mui/material';
 import styles from './create-tournament-form.module.css';
 import commonStyles from '../../styles/common.module.css';
 import { validateTournament } from './tournament-details-validator';
+import { useAppSelector } from '../../redux-store/redux-store';
+import { allGamesSelector } from '../../redux-store/games/game-selectors';
 
 interface Props {
   onCreated: (tournamentId: string) => void;
@@ -18,13 +20,14 @@ export default function CreateTournamentForm(props: Props) {
     name: '',
     isTeam: false
   });
+  const allGames = useAppSelector(allGamesSelector);
 
   const onChangeHandler = (value: Partial<CreateOrEditTournamentRequest>) => {
     setRequest(value);
   };
 
   function onClickCreateTournament() {
-    const newErrors = validateTournament(request);
+    const newErrors = validateTournament(request, allGames);
     setErrors(newErrors);
     if (isThereAnyError(newErrors)) return;
   }
