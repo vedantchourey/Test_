@@ -2,6 +2,11 @@ import { DateTime } from 'luxon';
 
 type TimePart = { hour: number, minute: number };
 
+export const isUTCTime = (iso: string) => {
+  const dateTime = DateTime.fromISO(iso, {setZone: true});
+  return dateTime.zoneName === 'UTC'
+}
+
 export const parseDateTime = (iso: string) => {
   const dateTime = DateTime.fromISO(iso, {setZone: true});
   if (dateTime.zoneName !== 'UTC') throw new Error('Time zone is not UTC!');
@@ -55,3 +60,8 @@ export const toISOString = (datetime: DateTime | undefined | null) => {
 export const nowAsISOString = (): string => {
   return toISOString(DateTime.now()) as string;
 }
+
+
+export const isValidDateTime = (iso: string): boolean => {
+  return DateTime.fromISO(iso).isValid;
+};

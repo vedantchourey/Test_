@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { backendSupabase } from '../../services/common/supabase-backend-client';
 import { NoobUserRole } from './noob-user-role';
-import { PerRequestContext, RouteHandler } from './api-middleware-typings';
+import { PerRequestContext, NoobApiRouteHandler } from './api-middleware-typings';
 import { createUserRoleRepository } from '../../services/database/repositories/user-roles-repository';
 import { User } from '@supabase/gotrue-js';
 
@@ -9,8 +9,6 @@ type Opts = {
   allowedRoles: NoobUserRole[];
   allowAnonymous: boolean;
 }
-
-const defaultOPts: Opts = {allowedRoles: [], allowAnonymous: false};
 
 function throwError(res: NextApiResponse, message: string, context: PerRequestContext) {
   res.status(401).json({message: 'Unauthorised'});
@@ -27,7 +25,7 @@ async function isUserAuthorized(user: User, allowedRoles: NoobUserRole[]) {
   return roles.some(x => allowedRoles.indexOf(x.code) !== -1);
 }
 
-export const authMiddleWare = (opts: Opts = defaultOPts): RouteHandler => {
+const authMiddleWare = (opts: Opts): NoobApiRouteHandler => {
   const {allowAnonymous, allowedRoles} = opts;
   return async (req: NextApiRequest, res: NextApiResponse, context: PerRequestContext): Promise<any> => {
     const {authorization} = req.headers;
@@ -43,4 +41,5 @@ export const authMiddleWare = (opts: Opts = defaultOPts): RouteHandler => {
   }
 }
 
-export const authenticatedUserMiddleware = authMiddleWare();
+export const authenticatedUserMiddleware = authMiddleWare({allowedRoles: [], allowAnonymous: false});
+export const authenticatedAdminUserMiddleware = authMiddleWare({allowedRoles: ['noob-admin'], allowAnonymous: false});

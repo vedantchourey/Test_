@@ -39,6 +39,7 @@ export async function authSession(): Promise<Session | null> {
   return frontendSupabase.auth.session()
 }
 
+
 export async function refreshSession(): Promise<{ data: Session | null; user: User | null; error: ApiError | null }> {
   return frontendSupabase.auth.refreshSession();
 }

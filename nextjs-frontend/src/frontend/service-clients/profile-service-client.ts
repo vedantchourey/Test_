@@ -4,7 +4,6 @@ import { post } from './fetch-api-wrapper';
 import frontendConfig from '../utils/config/front-end-config';
 import { NoobFetchResponse } from './messages/common-messages';
 import { UpdateProfileImageRequest } from '../../backend/services/profile-service/update-profile-image-request';
-import { IProfile } from '../../backend/services/database/models/i-profile';
 import { IProfileResponse } from './messages/i-profile';
 
 const imagesUrl = frontendConfig.noobStormServices.profile.profileImages;
