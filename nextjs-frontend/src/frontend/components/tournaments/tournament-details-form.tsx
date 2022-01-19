@@ -147,6 +147,9 @@ export default function TournamentDetailsForm(props: Props) {
             <ToggleButton value="true" aria-label="left aligned" style={{flexGrow: 1, flexBasis: 0}}><Typography>Team</Typography></ToggleButton>
           </ToggleButtonGroup>
         </div>
+        <div className={styles.column}/>
+      </div>
+      <div className={styles.row}>
         <div className={styles.column}>
           <NoobNumberInput label={value.isTeamParticipating ? 'Number of teams' : 'Number of players'}
                            placeholder="Enter count"
@@ -156,15 +159,13 @@ export default function TournamentDetailsForm(props: Props) {
                            helperText={getErrorForProp(errors, 'numberOfParticipants')}
           />
         </div>
-      </div>
-      <div className={styles.row}>
         <div className={styles.column}>
           <DateTimePicker label="Scheduled date time"
                           value={scheduledDateTime}
                           inputFormat="dd/MM/yyyy HH:mm"
                           onChange={(newValue: DateTime | null) => onChange({...value, scheduleDate: toISOString(newValue)})}
                           renderInput={(props) => <TextField {...props}
-                                                             error={value.scheduleDate != null}
+                                                             error={errors.scheduleDate != null}
                                                              helperText={getErrorForProp(errors, 'scheduleDate')}
                           />}
           />
