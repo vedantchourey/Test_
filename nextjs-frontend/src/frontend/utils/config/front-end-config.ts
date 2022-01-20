@@ -15,7 +15,8 @@ const frontendConfig: IFrontendConfig = {
       profileImages: `${baseApiUrl}/api/profile-images`
     },
     tournament: {
-      createUrl: `${baseApiUrl}/api/tournaments`
+      createUrl: `${baseApiUrl}/api/tournaments`,
+      getById:  `${baseApiUrl}/api/tournaments/{id}`,
     }
   },
   supabase: {

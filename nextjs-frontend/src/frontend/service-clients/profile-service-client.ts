@@ -2,7 +2,7 @@ import { frontendSupabase } from '../services/supabase-frontend-service';
 import { authenticatedUser, authSession } from './auth-service-client';
 import { post } from './fetch-api-wrapper';
 import frontendConfig from '../utils/config/front-end-config';
-import { NoobFetchResponse } from './messages/common-messages';
+import { NoobPostResponse } from './messages/common-messages';
 import { UpdateProfileImageRequest } from '../../backend/services/profile-service/update-profile-image-request';
 import { IProfileResponse } from './messages/i-profile';
 
@@ -37,7 +37,7 @@ export async function fetchUserProfile(): Promise<IProfileResponse> {
   return {...others, userRoles}
 }
 
-export async function updateProfileImages(request: UpdateProfileImageRequest): Promise<NoobFetchResponse<UpdateProfileImageRequest, IProfileResponse>> {
+export async function updateProfileImages(request: UpdateProfileImageRequest): Promise<NoobPostResponse<UpdateProfileImageRequest, IProfileResponse>> {
   const session = await authSession();
   const result = await post(imagesUrl, request, {'Authorization': `Bearer ${session!.access_token}`});
   const body = await result.json();
