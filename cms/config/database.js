@@ -1,12 +1,20 @@
+const {
+  DB_HOST,
+  DB_PORT,
+  DB_NAME,
+  DB_USER,
+  DB_PASSWORD
+} = process.env;
+
 module.exports = ({ env }) => ({
   connection: {
     client: 'postgres',
     connection: {
-      host: env('DATABASE_HOST', 'db.bqungsamjrdpbmzwnoyz.supabase.co'),
-      port: env.int('DATABASE_PORT', 5432),
-      database: env('DATABASE_NAME', 'noobstorm-cms'),
-      user: env('DATABASE_USERNAME', 'postgres'),
-      password: env('DATABASE_PASSWORD', 'Noobstorm@123'),
+      host: env('DATABASE_HOST', DB_HOST),
+      port: env.int('DATABASE_PORT', DB_PORT),
+      database: env('DATABASE_NAME', DB_NAME),
+      user: env('DATABASE_USERNAME', DB_USER),
+      password: env('DATABASE_PASSWORD', DB_PASSWORD),
       ssl: env.bool('DATABASE_SSL', false),
     },
   },

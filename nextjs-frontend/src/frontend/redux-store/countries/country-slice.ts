@@ -22,7 +22,7 @@ const countrySlice = createSlice({
     });
     builder.addCase(fetchCountryStatesThunk.fulfilled, (state, action) => {
       state.stateFetchStatus = 'success';
-      state.states = action.payload;
+      state.states = action?.payload ? action.payload : [];
     });
     builder.addCase(fetchCountryStatesThunk.rejected, (state, action) => {
       state.stateFetchStatus = 'error';
