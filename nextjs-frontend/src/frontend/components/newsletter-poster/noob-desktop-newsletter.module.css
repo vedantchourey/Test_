@@ -1,0 +1,77 @@
+.NewsletterContainer {
+    position: relative;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    height: 360px;
+    background: linear-gradient(180deg, #0D17AD 0%, #09128C 48.77%, #000772 100%);
+}
+
+.innerContainer {
+ position: absolute;
+ z-index: 1;
+ align-items: center;
+ display: flex;
+ align-self: center;
+ justify-content: space-between;
+ flex-direction: column;
+ width: -webkit-fill-available;
+ height: -webkit-fill-available;
+ justify-content: space-evenly !important;
+ top: 50%;
+ left: 50%;
+ transform: translate(-50%, -50%);
+
+}
+
+.emailInputContainer {
+    align-self: center;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    border: 1px solid #FFFFFF87;
+    padding: 5px;
+    background: #0C16A7;
+}
+
+.headerText {
+    font-family: Chakra Petch;
+    font-size: 37px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 48px;
+    letter-spacing: -0.011em;
+    text-align: center;
+    color: white;
+    width: 30%;
+    text-transform: uppercase;
+}
+
+.bodyText {
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 24px;
+    letter-spacing: -0.011em;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.textField {
+    border-radius: 0; 
+    flex: 1px;
+    padding:20px
+}
+
+.actionButton {
+    background: linear-gradient(180deg, #EF507E 0%, #F09633 100%);
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    color: white;
+    border-radius: 0;
+    padding: 16px 59px;
+    flex: 0.1;
+}
