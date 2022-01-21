@@ -6,6 +6,7 @@ import { GetServerSideProps } from 'next';
 import NoobHeader from '../../src/frontend/components/header/noob-header';
 import Heading from '../../src/frontend/components/ui-components/typography/heading';
 import NewsletterPoster from "../../src/frontend/components/newsletter-poster/index"
+import NoobFooter from '../../src/frontend/components/footer';
 
 interface IPageProps {
     pageContent: {
@@ -70,6 +71,7 @@ export default function AboutUs(props: IPageProps) {
                 </Container>
 
             </main>
+            <NoobFooter />
         </div>
     )
 }
