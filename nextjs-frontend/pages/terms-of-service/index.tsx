@@ -6,7 +6,7 @@ import NoobHeader from "../../src/frontend/components/header/noob-header"
 import { Typography, useTheme } from "@mui/material";
 import homeModule from '../../src/frontend/styles/common.module.css';
 import commonStyles from '../../src/frontend/styles/common.module.css';
-import Heading from "../../src/frontend/components/typography/heading"
+import Heading from "../../src/frontend/components/ui-components/typography/heading"
 
 interface IPageProps {
     pageContent: {

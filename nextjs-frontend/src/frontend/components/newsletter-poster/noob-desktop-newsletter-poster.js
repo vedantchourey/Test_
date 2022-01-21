@@ -1,6 +1,5 @@
 import { Button, TextField, Typography } from "@mui/material"
 import { useState } from "react";
-import commonStyles from "../../styles/common.module.css"
 import styles from "./noob-desktop-newsletter.module.css"
 
 export default function NoobDesktopNewsletterPoster() {
@@ -9,10 +8,10 @@ export default function NoobDesktopNewsletterPoster() {
     return (
         <div className={styles.NewsletterContainer}>
             <div className={styles.innerContainer}>
-                <Typography className={styles.headerText}>
+                <Typography align="center" variantMapping="h1" variant="h1">
                     subscribe to our newsletter
                 </Typography>
-                <Typography className={styles.bodyText}>
+                <Typography align="center" variant="h3" variantMapping={"h3"}>
                     Receive news, stay updated and special offers
                 </Typography>
                 <div className={styles.emailInputContainer}>
@@ -20,18 +19,15 @@ export default function NoobDesktopNewsletterPoster() {
                         id="email"
                         placeholder="Your Email Address"
                         variant="filled"
-                        // className={styles.inputRowItem}
                         value={value}
-                        // error={propsHasError(errors, 'username')}
-                        // helperText={getErrorForProp(errors, 'username')}
                         onChange={event => setValue(event.target.value)}
-                        style={styles.textField}
+                        className={styles.textField}
                         InputProps={{
                             disableUnderline: true,
-                            style: {
-                                borderTopRightRadius: 0,
-                                borderTopLeftRadius: 0
-                            }
+                            className: styles.inputStyle
+                        }}
+                        inputProps={{
+                            className: styles.inputStyle
                         }}
                     />
                     <Button className={styles.actionButton} onClick={() => { }}>
