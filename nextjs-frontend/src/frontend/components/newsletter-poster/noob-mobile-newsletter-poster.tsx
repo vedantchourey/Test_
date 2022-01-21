@@ -9,10 +9,10 @@ export default function NoobMobileNewsletterPoster() {
         <div className={styles.NewsletterContainer}>
 
             <div className={styles.innerContainer}>
-                <Typography align="center" variant="h1" variantMapping={"h1"} marginBottom={2}>
+                <Typography align="center" variant="h1" marginBottom={2}>
                     subscribe to our newsletter
                 </Typography>
-                <Typography align="center" variant="h3" variantMapping={"h3"} marginBottom={2}>
+                <Typography align="center" variant="h3" marginBottom={2}>
                     Receive news, stay updated and special offers
                 </Typography>
                 <div className={styles.emailInputContainer}>

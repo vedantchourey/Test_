@@ -8,10 +8,10 @@ export default function NoobDesktopNewsletterPoster() {
     return (
         <div className={styles.NewsletterContainer}>
             <div className={styles.innerContainer}>
-                <Typography align="center" variantMapping="h1" variant="h1">
+                <Typography align="center" variant="h1">
                     subscribe to our newsletter
                 </Typography>
-                <Typography align="center" variant="h3" variantMapping={"h3"}>
+                <Typography align="center" variant="h3" >
                     Receive news, stay updated and special offers
                 </Typography>
                 <div className={styles.emailInputContainer}>
