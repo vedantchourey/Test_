@@ -1,16 +1,18 @@
 import { Button, TextField, Typography } from "@mui/material"
-import commonStyles from "../../styles/common.module.css"
+import { useState } from "react";
 import styles from "./noob-mobile-newsletter.module.css"
 
 export default function NoobMobileNewsletterPoster() {
+    const [value, setValue] = useState('');
+
     return (
         <div className={styles.NewsletterContainer}>
 
             <div className={styles.innerContainer}>
-                <Typography className={styles.headerText} marginBottom={2}>
+                <Typography align="center" variant="h1" variantMapping={"h1"} marginBottom={2}>
                     subscribe to our newsletter
                 </Typography>
-                <Typography className={styles.bodyText} marginBottom={2}>
+                <Typography align="center" variant="h3" variantMapping={"h3"} marginBottom={2}>
                     Receive news, stay updated and special offers
                 </Typography>
                 <div className={styles.emailInputContainer}>
@@ -18,13 +20,16 @@ export default function NoobMobileNewsletterPoster() {
                         id="email"
                         placeholder="Your Email Address"
                         variant="filled"
-                        // className={styles.inputRowItem}
-                        // value={request.username}
-                        // error={propsHasError(errors, 'username')}
-                        // helperText={getErrorForProp(errors, 'username')}
-                        // onChange={event => setRequest({ ...request, username: event.target.value })}
-                        style={{ borderRadius: 0, flex: 1 }}
-                        InputProps={{ disableUnderline: true, style: { borderTopRightRadius: 0, borderTopLeftRadius: 0 } }}
+                        value={value}
+                        onChange={event => setValue(event.target.value)}
+                        className={styles.textField}
+                        InputProps={{
+                            disableUnderline: true,
+                            className: styles.inputStyle
+                        }}
+                        inputProps={{
+                            style: { padding: "0 !important" }
+                        }}
                     />
                     <Button className={styles.actionButton} onClick={() => { }}>
                         <Typography>Subscribe</Typography>

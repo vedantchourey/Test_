@@ -1,7 +1,7 @@
 import { Divider, Typography } from "@mui/material"
 import React from "react"
-import { getAppHeaderHeightSelector } from "../../redux-store/layout/layout-selectors";
-import { useAppSelector } from "../../redux-store/redux-store";
+import { getAppHeaderHeightSelector } from "../../../redux-store/layout/layout-selectors";
+import { useAppSelector } from "../../../redux-store/redux-store";
 import styles from "./heading.module.css";
 
 interface Props {
@@ -15,7 +15,9 @@ export default function Heading({ heading, divider }: Props) {
     return (
         <>
             <div className={styles.mainBanner} style={{ marginTop: appHeaderHeight, marginBottom: 20 }}>
-                <Typography className={styles.mainBannerText}>{heading}</Typography>
+                <Typography variant="h1">
+                    {heading}
+                </Typography>
             </div>
             {divider && <Divider style={{ marginBottom: 20 }} />}
         </>

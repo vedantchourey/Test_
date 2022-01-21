@@ -11,6 +11,7 @@
 
 .innerContainer {
  position: absolute;
+ width: 90% !important;
  z-index: 1;
  align-items: center;
  display: flex;
@@ -19,13 +20,7 @@
  flex-direction: column;
  width: -webkit-fill-available;
  height: -webkit-fill-available;
- /* min-width: 40% !important;
- width: 45% !important; */
  justify-content: space-evenly !important;
- /* height: 70%; */
- /* top: 50%;
- left: 50%;
- transform: translate(-50%, -50%); */
 
 }
 
@@ -41,28 +36,20 @@
     box-sizing: border-box;
 }
 
-.headerText {
-    font-family: Chakra Petch;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 31px;
-    letter-spacing: -0.011em;
-    text-align: center;
-    color: white;
-    width: 80%;
-    text-transform: uppercase;
+.textField {
+    flex: 1;
 }
 
-.bodyText {
-    font-family: Inter;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 24px;
-    letter-spacing: -0.011em;
+.inputStyle {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    height: 100%;
+    padding: 0 10px !important;
+}
+
+.inputStyle::placeholder {
     text-align: center;
-    color: #FFFFFF;
+    align-self: center;
 }
 
 .actionButton {
@@ -72,6 +59,4 @@
     line-height: 1.5rem;
     color: white;
     border-radius: 0;
-    padding: 16px 59px;
-    flex:0.1;
 }

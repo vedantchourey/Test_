@@ -4,7 +4,8 @@ import { Container, Grid, Typography, useTheme } from '@mui/material';
 import axios from 'axios';
 import { GetServerSideProps } from 'next';
 import NoobHeader from '../../src/frontend/components/header/noob-header';
-import Heading from '../../src/frontend/components/typography/heading';
+import Heading from '../../src/frontend/components/ui-components/typography/heading';
+import NewsletterPoster from "../../src/frontend/components/newsletter-poster/index"
 
 interface IPageProps {
     pageContent: {
@@ -29,11 +30,13 @@ export default function AboutUs(props: IPageProps) {
 
     return (
         <div style={{ backgroundColor: theme.palette.background.default }}>
+
             <Head>
                 <title>About Us</title>
                 <meta name="description" content="Sign up to noob storm" />
                 <link rel="icon" href="/noob-fav.ico" />
             </Head>
+
             <NoobHeader />
             <main className={commonStyles.main}>
                 <Container maxWidth="xl">
@@ -58,9 +61,9 @@ export default function AboutUs(props: IPageProps) {
                             <img src="/images/about-us-hero.png" className={commonStyles.fillImage} />
                         </Grid>
 
-                        {/* <Grid item xs={12}>
+                        <Grid item xs={12}>
                             <NewsletterPoster />
-                        </Grid> */}
+                        </Grid>
 
                     </Grid>
 
