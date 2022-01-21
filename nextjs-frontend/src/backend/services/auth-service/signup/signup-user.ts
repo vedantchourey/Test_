@@ -22,8 +22,7 @@ function mapToProfile(user: User, request: SignupRequest): IProfile {
     lastName: request.lastName,
     username: request.username,
     createdAt: nowAsString,
-    updatedAt: nowAsString,
-    userRoles: []
+    updatedAt: nowAsString
   };
 }
 
