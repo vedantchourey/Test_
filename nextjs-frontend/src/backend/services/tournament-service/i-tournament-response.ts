@@ -1,6 +1,7 @@
 import { TournamentType } from './tournament-type';
 
-export interface CreateOrEditTournamentRequest {
+export interface ITournamentResponse {
+  id:string;
   tournamentName: string;
   gameId: string;
   mapId: string;

@@ -1,15 +1,17 @@
-import { TournamentType } from './tournament-type';
+import { TournamentType } from '../../tournament-service/tournament-type';
 
-export interface CreateOrEditTournamentRequest {
+export interface ITournament {
+  id: string | undefined;
   tournamentName: string;
   gameId: string;
-  mapId: string;
   platformId: string;
   bestOfId: string;
+  mapId: string;
   formatId: string;
+  scheduleDate: string;
   rules: string;
   isTeamParticipating: boolean;
   numberOfParticipants: number;
   tournamentType: TournamentType;
-  scheduleDate: string;
+  isOpenToPublic: boolean;
 }

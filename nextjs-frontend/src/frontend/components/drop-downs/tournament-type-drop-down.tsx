@@ -1,6 +1,6 @@
 import { Autocomplete, TextField } from '@mui/material';
-import { TournamentType } from '../../../backend/services/tournament-service/create-or-edit-tournament-request';
 import { useEffect, useState } from 'react';
+import { TournamentType } from '../../../backend/services/tournament-service/tournament-type';
 
 interface Props {
   value?: TournamentType;

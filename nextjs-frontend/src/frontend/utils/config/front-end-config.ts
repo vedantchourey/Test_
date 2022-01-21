@@ -13,6 +13,9 @@ const frontendConfig: IFrontendConfig = {
     },
     profile: {
       profileImages: `${baseApiUrl}/api/profile-images`
+    },
+    tournament: {
+      createUrl: `${baseApiUrl}/api/tournaments`
     }
   },
   supabase: {

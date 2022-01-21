@@ -6,8 +6,10 @@ import { Button, Container, Typography } from '@mui/material';
 import styles from './create-tournament-form.module.css';
 import commonStyles from '../../styles/common.module.css';
 import { validateTournament } from './tournament-details-validator';
-import { useAppSelector } from '../../redux-store/redux-store';
+import { useAppDispatch, useAppSelector } from '../../redux-store/redux-store';
 import { allGamesSelector } from '../../redux-store/games/game-selectors';
+import { createTournament } from '../../service-clients/tournament-service-client';
+import { setIsLoading } from '../../redux-store/screen-animations/screen-animation-slice';
 
 interface Props {
   onCreated: (tournamentId: string) => void;
@@ -16,20 +18,32 @@ interface Props {
 export default function CreateTournamentForm(props: Props) {
   const {onCreated} = props;
   const [errors, setErrors] = useState<ValidationResult<CreateOrEditTournamentRequest>>({});
-  const [request, setRequest] = useState<Partial<CreateOrEditTournamentRequest>>({
-    name: '',
-    isTeam: false
-  });
+  const [request, setRequest] = useState<Partial<CreateOrEditTournamentRequest>>({tournamentName: '', isTeamParticipating: false});
+  const appDispatch = useAppDispatch();
   const allGames = useAppSelector(allGamesSelector);
 
   const onChangeHandler = (value: Partial<CreateOrEditTournamentRequest>) => {
     setRequest(value);
   };
 
-  function onClickCreateTournament() {
+  async function onClickCreateTournament() {
     const newErrors = validateTournament(request, allGames);
     setErrors(newErrors);
     if (isThereAnyError(newErrors)) return;
+    try {
+      appDispatch(setIsLoading(true));
+      const response = await createTournament(request as CreateOrEditTournamentRequest);
+      if (response.isError) {
+        setErrors(response.errors);
+      } else  {
+        setErrors({});
+        onCreated(response.id);
+      }
+    }
+    finally {
+      appDispatch(setIsLoading(false));
+    }
+
   }
 
   return (

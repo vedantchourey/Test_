@@ -7,8 +7,8 @@ import { DateTime } from 'luxon';
 
 
 function validateName(tournament: Partial<CreateOrEditTournamentRequest>) {
-  if (isNullOrEmptyString(tournament.name)) return 'Is required';
-  if (!validator.isLength(tournament.name!, {min: 5})) return 'Min length 5';
+  if (isNullOrEmptyString(tournament.tournamentName)) return 'Is required';
+  if (!validator.isLength(tournament.tournamentName!, {min: 5})) return 'Min length 5';
 }
 
 function validateGame(tournament: Partial<CreateOrEditTournamentRequest>) {
@@ -21,31 +21,32 @@ function validatePlatform(tournament: Partial<CreateOrEditTournamentRequest>) {
 }
 
 function validateNumberOfPlayers(tournament: Partial<CreateOrEditTournamentRequest>) {
-  if (tournament.numberOfPlayers == null) return 'Is required';
-  if (isNaN(tournament.numberOfPlayers)) return 'Not a valid number';
-  if (tournament.numberOfPlayers < 2) return 'Must be 2 or more';
+  if (tournament.numberOfParticipants == null) return 'Is required';
+  if (isNaN(tournament.numberOfParticipants)) return 'Not a valid number';
+  if (tournament.numberOfParticipants < 2) return 'Must be 2 or more';
 }
 
 function validateIsTeam(tournament: Partial<CreateOrEditTournamentRequest>) {
-  if (tournament.isTeam == null) return 'Is Required';
+  if (tournament.isTeamParticipating == null) return 'Is Required';
 }
 
 function validateMatchFormat(tournament: Partial<CreateOrEditTournamentRequest>) {
-  if (isNullOrEmptyString(tournament.matchFormatId)) return 'Is required';
+  if (isNullOrEmptyString(tournament.formatId)) return 'Is required';
 }
 
 function validateMatchBestOf(tournament: Partial<CreateOrEditTournamentRequest>) {
-  if (isNullOrEmptyString(tournament.matchBestOfId)) return 'Is required';
+  if (isNullOrEmptyString(tournament.bestOfId)) return 'Is required';
 }
 
 function validateType(tournament: Partial<CreateOrEditTournamentRequest>) {
-  if (isNullOrEmptyString(tournament.type)) return 'Is required';
+  if (isNullOrEmptyString(tournament.tournamentType)) return 'Is required';
 }
 
 function validateScheduleDate(tournament: Partial<CreateOrEditTournamentRequest>) {
-  if (isNullOrEmptyString(tournament.scheduledDateTime)) return 'Is required';
-  const scheduledDateTime = parseDateTime(tournament.scheduledDateTime!);
-  const diffFromNow = scheduledDateTime.diff(DateTime.now());
+  if (isNullOrEmptyString(tournament.scheduleDate)) return 'Is required';
+  const scheduledDateTime = parseDateTime(tournament.scheduleDate!);
+  const now = DateTime.now();
+  const diffFromNow = scheduledDateTime.diff(now);
   if (diffFromNow.hours < 2) return 'Must be at least 2 hours later';
 }
 
@@ -53,8 +54,8 @@ function validateGameMap(tournament: Partial<CreateOrEditTournamentRequest>, all
   if (isNullOrEmptyString(tournament.gameId)) return;
   const matchingGame = allGames.filter(x => x.id === tournament.gameId)[0];
   if (matchingGame.gameMaps.length === 0) return;
-  if (isNullOrEmptyString(tournament.gameMapId)) return 'Is required';
-  if (!matchingGame.gameMaps.some(x => x.id === tournament.gameMapId)) return 'Invalid map';
+  if (isNullOrEmptyString(tournament.mapId)) return 'Is required';
+  if (!matchingGame.gameMaps.some(x => x.id === tournament.mapId)) return 'Invalid map';
 }
 
 function validateRules(tournament: Partial<CreateOrEditTournamentRequest>) {
@@ -64,16 +65,16 @@ function validateRules(tournament: Partial<CreateOrEditTournamentRequest>) {
 
 export function validateTournament(tournament: Partial<CreateOrEditTournamentRequest>, allGames: IGameResponse[]): ValidationResult<CreateOrEditTournamentRequest> {
   return {
-    name: validateName(tournament),
+    tournamentName: validateName(tournament),
     gameId: validateGame(tournament),
     platformId: validatePlatform(tournament),
-    numberOfPlayers: validateNumberOfPlayers(tournament),
-    isTeam: validateIsTeam(tournament),
-    matchFormatId: validateMatchFormat(tournament),
-    matchBestOfId: validateMatchBestOf(tournament),
-    gameMapId: validateGameMap(tournament, allGames),
+    numberOfParticipants: validateNumberOfPlayers(tournament),
+    isTeamParticipating: validateIsTeam(tournament),
+    formatId: validateMatchFormat(tournament),
+    bestOfId: validateMatchBestOf(tournament),
+    mapId: validateGameMap(tournament, allGames),
     rules: validateRules(tournament),
-    type: validateType(tournament),
-    scheduledDateTime: validateScheduleDate(tournament)
+    tournamentType: validateType(tournament),
+    scheduleDate: validateScheduleDate(tournament)
   };
 }

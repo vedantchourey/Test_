@@ -1,15 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { Methods, PerRequestContext, RouteHandler } from './api-middleware-typings';
+import { Methods, PerRequestContext, NoobApiRouteHandler } from './api-middleware-typings';
 
 
 type RouteDefinitions = {
-  handler: RouteHandler,
-  preHooks?: RouteHandler[],
-  postHooks?: RouteHandler[],
+  handler: NoobApiRouteHandler,
+  preHooks?: NoobApiRouteHandler[],
+  postHooks?: NoobApiRouteHandler[],
 };
 
 
-function executeAll(hooks: RouteHandler[], req: NextApiRequest, res: NextApiResponse, context: PerRequestContext, seed: Promise<any> = Promise.resolve()) {
+function executeAll(hooks: NoobApiRouteHandler[], req: NextApiRequest, res: NextApiResponse, context: PerRequestContext, seed: Promise<any> = Promise.resolve()) {
   return hooks.reduce((acc, currentHandler) => {
     return acc.then(() => currentHandler(req, res, context))
   }, seed);
