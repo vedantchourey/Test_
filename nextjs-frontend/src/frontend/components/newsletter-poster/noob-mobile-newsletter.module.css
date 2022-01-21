@@ -1,0 +1,77 @@
+.NewsletterContainer {
+    position: relative;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    width: 100%;
+    height: 360px;
+    background: linear-gradient(180deg, #0D17AD 0%, #09128C 48.77%, #000772 100%);
+}
+
+.innerContainer {
+ position: absolute;
+ z-index: 1;
+ align-items: center;
+ display: flex;
+ align-self: center;
+ justify-content: space-between;
+ flex-direction: column;
+ width: -webkit-fill-available;
+ height: -webkit-fill-available;
+ /* min-width: 40% !important;
+ width: 45% !important; */
+ justify-content: space-evenly !important;
+ /* height: 70%; */
+ /* top: 50%;
+ left: 50%;
+ transform: translate(-50%, -50%); */
+
+}
+
+.emailInputContainer {
+    align-self: center;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    padding: 5px;
+    width: 90%;
+    background: #0C16A7;
+    border: 1px solid rgba(255, 255, 255, 0.53);
+    box-sizing: border-box;
+}
+
+.headerText {
+    font-family: Chakra Petch;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 31px;
+    letter-spacing: -0.011em;
+    text-align: center;
+    color: white;
+    width: 80%;
+    text-transform: uppercase;
+}
+
+.bodyText {
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 24px;
+    letter-spacing: -0.011em;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.actionButton {
+    background: linear-gradient(180deg, #EF507E 0%, #F09633 100%);
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    color: white;
+    border-radius: 0;
+    padding: 16px 59px;
+    flex:0.1;
+}
