@@ -1,16 +1,26 @@
 import React from "react"
-import { useEffect } from "react"
+import axios from 'axios';
 import Head from "next/head"
+import { GetServerSideProps } from 'next';
 import NoobHeader from "../../src/frontend/components/header/noob-header"
-import { Container, Typography, useTheme } from "@mui/material";
+import { Typography, useTheme } from "@mui/material";
 import homeModule from '../../src/frontend/styles/common.module.css';
 import commonStyles from '../../src/frontend/styles/common.module.css';
 import Heading from "../../src/frontend/components/typography/heading"
 
-const TEXT = `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum`
+interface IPageProps {
+    pageContent: {
+        attributes: {
+            content: string
+        }
+    } | null
+}
 
-export default function TermsOfServicePage() {
+export default function TermsOfServicePage(props: IPageProps) {
     const theme = useTheme();
+    const fallback_text = 'Terms and Conditions not available';
+    const content = props.pageContent?.attributes?.content || fallback_text;
+
     return (
         <div style={{ backgroundColor: theme.palette.background.default }}>
             <Head>
@@ -25,15 +35,8 @@ export default function TermsOfServicePage() {
                     <Heading divider heading={"TERMS OF SERVICE"} />
 
                     <Typography className={commonStyles.whiteText} marginBottom={2}>
-                        {TEXT}
+                        {content}
                     </Typography>
-
-                    {new Array(4).fill(TEXT).map((text, i) => (
-                        <Typography className={commonStyles.whiteText} marginBottom={2}>
-                            {i + 1}. {text}
-                        </Typography>
-                    ))}
-
                 </div>
 
             </main>
@@ -41,3 +44,32 @@ export default function TermsOfServicePage() {
     )
 }
 
+export const getServerSideProps: GetServerSideProps = async () => {
+    const {
+        NEXT_PUBLIC_CMS_API_ENDPOINT,
+        NEXT_PUBLIC_CMS_API_TOKEN
+    } = process.env;
+    try {
+        const endpoint = NEXT_PUBLIC_CMS_API_ENDPOINT + '/api/terms-and-condition';
+        const res = await axios.get(endpoint, {
+            headers: {
+                'Authorization': 'Bearer ' + NEXT_PUBLIC_CMS_API_TOKEN
+            }
+        });
+
+        return {
+            props: {
+                pageContent: res.data.data
+            }
+        }
+
+    }
+    catch (err) {
+        // console.log(err);
+        return {
+            props: {
+                pageContent: null
+            }
+        }
+    }
+}
