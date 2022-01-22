@@ -25,32 +25,34 @@ export default function NoobDesktopFooter() {
     return (
         <div className={styles.footerContainer}>
             <Grid container spacing={2}>
-                <Grid container>
-                    <Grid item xs={12} sm={4}>
-                        <Image src="/images/noobstorm-logo-small.png"
-                            width={130}
-                            height={28}
-                            alt="noob storm logo" />
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                        <Button variant="text" style={buttonStyle(['/tournaments'])}>Tournaments</Button>
-                        <Button variant="text" style={buttonStyle(['/leaderboards'])}>Leaderboards</Button>
-                        <Button variant="text" onClick={gotoAboutUsPage} style={buttonStyle(['/about-us'])}>About Us</Button>
-                        <Button variant="text" style={buttonStyle(['/support'])}>Support</Button>
-                    </Grid>
-                    <Grid item xs={12} sm={4} textAlign={"end"}>
-                        <IconButton color="default" aria-label="upload picture" component="span">
-                            <YouTubeIcon />
-                        </IconButton>
-                        <IconButton color="default" aria-label="upload picture" component="span">
-                            <YouTubeIcon />
-                        </IconButton>
-                        <IconButton color="default" aria-label="upload picture" component="span">
-                            <YouTubeIcon />
-                        </IconButton>
+                <Grid item xs={12}>
+                    <Grid container spacing={5}>
+                        <Grid item xs={12} sm={4}>
+                            <Image src="/images/noobstorm-logo-small.png"
+                                width={130}
+                                height={28}
+                                alt="noob storm logo" />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <Button variant="text" style={buttonStyle(['/tournaments'])}>Tournaments</Button>
+                            <Button variant="text" style={buttonStyle(['/leaderboards'])}>Leaderboards</Button>
+                            <Button variant="text" onClick={gotoAboutUsPage} style={buttonStyle(['/about-us'])}>About Us</Button>
+                            <Button variant="text" style={buttonStyle(['/support'])}>Support</Button>
+                        </Grid>
+                        <Grid item xs={12} sm={4} textAlign={"end"}>
+                            <IconButton color="default" aria-label="upload picture" component="span">
+                                <YouTubeIcon />
+                            </IconButton>
+                            <IconButton color="default" aria-label="upload picture" component="span">
+                                <YouTubeIcon />
+                            </IconButton>
+                            <IconButton color="default" aria-label="upload picture" component="span">
+                                <YouTubeIcon />
+                            </IconButton>
+                        </Grid>
                     </Grid>
                 </Grid>
-                <Grid xs={12}>
+                <Grid item xs={12}>
                     <Divider />
                 </Grid>
                 <Grid item xs={12}>
