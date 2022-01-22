@@ -6,7 +6,7 @@ import styles from "./heading.module.css";
 
 interface Props {
     heading: string,
-    divider: boolean
+    divider?: boolean
 }
 
 export default function Heading({ heading, divider }: Props) {
