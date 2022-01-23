@@ -14,7 +14,7 @@ export default createNextJsRouteHandler({
       const result = await createTournament(req.body, context);
       res.status(result.errors ? 400 : 200).json(result);
     },
-    preHooks: [authenticatedAdminUserMiddleware, beginTransactionMiddleWare],
+    preHooks: [beginTransactionMiddleWare, authenticatedAdminUserMiddleware],
     postHooks: [commitOrRollBackTransactionMiddleWare]
   }
 });

@@ -1,6 +1,5 @@
 import { BaseRepository } from './base-repository';
 import { Knex } from 'knex';
-import { knex } from '../knex';
 import { NoobUserRole } from '../../../utils/api-middle-ware/noob-user-role';
 
 interface IUserRole {
@@ -23,7 +22,3 @@ export class UserRoleRepository extends BaseRepository<IUserRole> {
   }
 }
 
-
-export function createUserRoleRepository() {
-  return new UserRoleRepository(knex.transaction());
-}

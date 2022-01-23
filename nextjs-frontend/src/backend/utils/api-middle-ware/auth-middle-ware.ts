@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { backendSupabase } from '../../services/common/supabase-backend-client';
 import { NoobUserRole } from './noob-user-role';
-import { PerRequestContext, NoobApiRouteHandler } from './api-middleware-typings';
-import { createUserRoleRepository } from '../../services/database/repositories/user-roles-repository';
+import { NoobApiRouteHandler, PerRequestContext } from './api-middleware-typings';
+import { UserRoleRepository } from '../../services/database/repositories/user-roles-repository';
 import { User } from '@supabase/gotrue-js';
 
 type Opts = {
@@ -17,9 +17,9 @@ function throwError(res: NextApiResponse, message: string, context: PerRequestCo
   throw error
 }
 
-async function isUserAuthorized(user: User, allowedRoles: NoobUserRole[]) {
+async function isUserAuthorized(user: User, allowedRoles: NoobUserRole[], context: PerRequestContext) {
   if (allowedRoles.length === 0) return true;
-  const userRoleRepository = createUserRoleRepository();
+  const userRoleRepository = new UserRoleRepository(context.transaction!);
   const roles = await userRoleRepository.getRolesByUserId(user.id);
   if (roles.length === 0) return false;
   return roles.some(x => allowedRoles.indexOf(x.code) !== -1);
@@ -36,7 +36,7 @@ const authMiddleWare = (opts: Opts): NoobApiRouteHandler => {
     const {user} = await backendSupabase.auth.api.getUser(bearerToken);
     if (user == null) return throwError(res, 'Invalid token', context);
     if (user.role !== 'authenticated') return throwError(res, 'Invalid role', context);
-    if (!(await isUserAuthorized(user, allowedRoles))) return throwError(res, 'unauthorized!', context);
+    if (!(await isUserAuthorized(user, allowedRoles, context))) return throwError(res, 'unauthorized!', context);
     context.user = user;
   }
 }

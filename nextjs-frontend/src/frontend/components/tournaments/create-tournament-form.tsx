@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from '../../redux-store/redux-store';
 import { allGamesSelector } from '../../redux-store/games/game-selectors';
 import { createTournament } from '../../service-clients/tournament-service-client';
 import { setIsLoading } from '../../redux-store/screen-animations/screen-animation-slice';
+import { daysFromToday } from '../../../common/utils/date-time-utils';
 
 interface Props {
   onCreated: (tournamentId: string) => void;
@@ -18,7 +19,7 @@ interface Props {
 export default function CreateTournamentForm(props: Props) {
   const {onCreated} = props;
   const [errors, setErrors] = useState<ValidationResult<CreateOrEditTournamentRequest>>({});
-  const [request, setRequest] = useState<Partial<CreateOrEditTournamentRequest>>({tournamentName: '', isTeamParticipating: false});
+  const [request, setRequest] = useState<Partial<CreateOrEditTournamentRequest>>({tournamentName: '', isTeamParticipating: false, scheduleDate: daysFromToday(7)});
   const appDispatch = useAppDispatch();
   const allGames = useAppSelector(allGamesSelector);
 
@@ -35,12 +36,11 @@ export default function CreateTournamentForm(props: Props) {
       const response = await createTournament(request as CreateOrEditTournamentRequest);
       if (response.isError) {
         setErrors(response.errors);
-      } else  {
+      } else {
         setErrors({});
         onCreated(response.id);
       }
-    }
-    finally {
+    } finally {
       appDispatch(setIsLoading(false));
     }
 

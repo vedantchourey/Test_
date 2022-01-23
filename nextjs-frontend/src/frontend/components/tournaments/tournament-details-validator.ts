@@ -3,7 +3,6 @@ import { isNullOrEmptyString, ValidationResult } from '../../../common/utils/val
 import validator from 'validator';
 import { IGameResponse } from '../../service-clients/messages/i-game-response';
 import { parseDateTime } from '../../../common/utils/date-time-utils';
-import { DateTime } from 'luxon';
 
 
 function validateName(tournament: Partial<CreateOrEditTournamentRequest>) {
@@ -45,9 +44,8 @@ function validateType(tournament: Partial<CreateOrEditTournamentRequest>) {
 function validateScheduleDate(tournament: Partial<CreateOrEditTournamentRequest>) {
   if (isNullOrEmptyString(tournament.scheduleDate)) return 'Is required';
   const scheduledDateTime = parseDateTime(tournament.scheduleDate!);
-  const now = DateTime.now();
-  const diffFromNow = scheduledDateTime.diff(now);
-  if (diffFromNow.hours < 2) return 'Must be at least 2 hours later';
+  const diffFromNow = scheduledDateTime.diffNow(['days']);
+  if (diffFromNow.days < 5) return 'Must be at least 5 days later';
 }
 
 function validateGameMap(tournament: Partial<CreateOrEditTournamentRequest>, allGames: IGameResponse[]) {
@@ -60,7 +58,7 @@ function validateGameMap(tournament: Partial<CreateOrEditTournamentRequest>, all
 
 function validateRules(tournament: Partial<CreateOrEditTournamentRequest>) {
   if (isNullOrEmptyString(tournament.rules)) return 'Is required';
-  if (validator.isLength(tournament.rules!, {min: 20})) return 'Min length 20 chars';
+  if (!validator.isLength(tournament.rules!, {min: 20})) return 'Min length 20 chars';
 }
 
 export function validateTournament(tournament: Partial<CreateOrEditTournamentRequest>, allGames: IGameResponse[]): ValidationResult<CreateOrEditTournamentRequest> {

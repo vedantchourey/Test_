@@ -5,7 +5,7 @@ import { UpdateProfileImageRequest } from '../../src/backend/services/profile-se
 import { updateProfileImage } from '../../src/backend/services/profile-service/profile-service';
 import { PerRequestContext } from '../../src/backend/utils/api-middle-ware/api-middleware-typings';
 import { IProfile } from '../../src/backend/services/database/models/i-profile';
-import { authenticatedAdminUserMiddleware } from '../../src/backend/utils/api-middle-ware/auth-middle-ware';
+import { authenticatedUserMiddleware } from '../../src/backend/utils/api-middle-ware/auth-middle-ware';
 import { beginTransactionMiddleWare, commitOrRollBackTransactionMiddleWare } from '../../src/backend/utils/api-middle-ware/transaction-middle-ware';
 
 
@@ -15,7 +15,7 @@ export default createNextJsRouteHandler({
       const response = await updateProfileImage(req.body, context);
       return res.status(getHttpCode(response)).send(response);
     },
-    preHooks: [authenticatedAdminUserMiddleware, beginTransactionMiddleWare],
+    preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],
     postHooks: [commitOrRollBackTransactionMiddleWare]
   }
 })
