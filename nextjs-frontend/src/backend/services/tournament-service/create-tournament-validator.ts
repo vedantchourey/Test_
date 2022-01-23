@@ -56,8 +56,8 @@ function validateScheduleDate(tournament: Partial<CreateOrEditTournamentRequest>
   if (!isValidDateTime(tournament.scheduleDate!)) return 'Invalid';
   if (!isUTCTime(tournament.scheduleDate!)) return 'Not in UTC';
   const scheduledDateTime = parseDateTime(tournament.scheduleDate!);
-  const diffFromNow = scheduledDateTime.diff(DateTime.now());
-  if (diffFromNow.hours < 2) return 'Must be at least 2 hours later';
+  const diffFromNow = scheduledDateTime.diffNow(['days']);
+  if (diffFromNow.days < 5) return 'Must be at least 5 days later';
 }
 
 async function validateGameMap(tournament: Partial<CreateOrEditTournamentRequest>, gameMapsRepository: GameMapsRepository) {
@@ -70,7 +70,7 @@ async function validateGameMap(tournament: Partial<CreateOrEditTournamentRequest
 
 function validateRules(tournament: Partial<CreateOrEditTournamentRequest>) {
   if (isNullOrEmptyString(tournament.rules)) return 'Is required';
-  if (validator.isLength(tournament.rules!, {min: 20})) return 'Min length 20 chars';
+  if (!validator.isLength(tournament.rules!, {min: 20})) return 'Min length 20 chars';
 }
 
 export async function validateTournament(tournament: Partial<CreateOrEditTournamentRequest>, context: PerRequestContext): Promise<ValidationResult<CreateOrEditTournamentRequest>> {

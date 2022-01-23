@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { Methods, PerRequestContext, NoobApiRouteHandler } from './api-middleware-typings';
+import { Methods, NoobApiRouteHandler, PerRequestContext } from './api-middleware-typings';
 
 
 type RouteDefinitions = {

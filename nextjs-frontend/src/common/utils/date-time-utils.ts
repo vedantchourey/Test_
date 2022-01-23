@@ -65,3 +65,8 @@ export const nowAsISOString = (): string => {
 export const isValidDateTime = (iso: string): boolean => {
   return DateTime.fromISO(iso).isValid;
 };
+
+
+export const daysFromToday = (days: number) => {
+  return DateTime.now().plus({day: 7}).toUTC().toISO();
+};
