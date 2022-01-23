@@ -1,7 +1,7 @@
 import { useTheme } from '@mui/material';
 import Head from 'next/head';
 import NoobHeader from '../../src/frontend/components/header/noob-header';
-import homeModule from '../src/frontend/styles/common.module.css';
+import homeModule from '../../src/frontend/styles/common.module.css';
 import { useAppSelector } from '../../src/frontend/redux-store/redux-store';
 import { getAppHeaderHeightSelector } from '../../src/frontend/redux-store/layout/layout-selectors';
 import styles from './404.module.css'
