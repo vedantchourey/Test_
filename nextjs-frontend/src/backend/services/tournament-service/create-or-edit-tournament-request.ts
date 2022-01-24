@@ -1,15 +1,16 @@
-export type TournamentType = 'SingleElimination' | 'League';
+import { TournamentType } from './tournament-type';
 
 export interface CreateOrEditTournamentRequest {
-  name: string;
+  id?: string;
+  tournamentName: string;
   gameId: string;
-  gameMapId: string;
+  mapId: string;
   platformId: string;
-  matchBestOfId: string;
-  matchFormatId: string;
+  bestOfId: string;
+  formatId: string;
   rules: string;
-  isTeam: boolean;
-  numberOfPlayers: number;
-  type: TournamentType;
-  scheduledDateTime: string;
+  isTeamParticipating: boolean;
+  numberOfParticipants: number;
+  tournamentType: TournamentType;
+  scheduleDate: string;
 }

@@ -15,7 +15,7 @@ export default createNextJsRouteHandler({
       const response = await updateProfileImage(req.body, context);
       return res.status(getHttpCode(response)).send(response);
     },
-    preHooks: [authenticatedUserMiddleware, beginTransactionMiddleWare],
+    preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],
     postHooks: [commitOrRollBackTransactionMiddleWare]
   }
 })

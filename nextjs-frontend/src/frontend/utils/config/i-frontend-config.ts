@@ -10,6 +10,10 @@ export interface IFrontendConfig {
     };
     profile: {
       profileImages: string;
+    },
+    tournament: {
+      createUrl: string,
+      getById: string
     }
   }
 }

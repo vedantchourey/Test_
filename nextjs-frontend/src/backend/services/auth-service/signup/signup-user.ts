@@ -8,8 +8,9 @@ import { createProfileRepository } from '../../database/repositories/profiles-re
 import { Knex } from 'knex';
 import { PerRequestContext } from '../../../utils/api-middle-ware/api-middleware-typings';
 import { backendSupabase } from '../../common/supabase-backend-client';
+import { IProfile } from '../../database/models/i-profile';
 
-function mapToProfile(user: User, request: SignupRequest) {
+function mapToProfile(user: User, request: SignupRequest): IProfile {
   const nowAsString = nowAsISOString();
   return {
     id: user.id,
@@ -52,9 +53,9 @@ export default async function signupUser(request: SignupRequest, context: PerReq
   if (isThereAnyError(errors)) return {errors: errors};
   const {signupParams, metaData} = mapRequiredParams(request);
   const result = await backendSupabase.auth.signUp(signupParams, metaData);
-  if (result.error) return {errors: {apiError: result.error}}
+  if (result.error) return {errors: {apiError: result.error}};
   const profilesRepository = createProfileRepository(context.transaction as Knex.Transaction);
-  await profilesRepository.createProfile(mapToProfile(result.user!, request))
+  await profilesRepository.createProfile(mapToProfile(result.user!, request));
   return {data: {userId: result.user?.id}};
 }
 
