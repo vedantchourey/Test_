@@ -1,20 +1,16 @@
 import { Container, Icon, Typography, useTheme } from '@mui/material';
-import Head from 'next/head';
-import NoobHeader from '../../src/frontend/components/header/noob-header';
 import styles from '../register/register.module.css';
 import commonStyles from '../../src/frontend/styles/common.module.css';
 import { useAppSelector } from '../../src/frontend/redux-store/redux-store';
-import { getAppHeaderHeightSelector, isDeviceTypeSelector } from '../../src/frontend/redux-store/layout/layout-selectors';
-import { deviceTypes } from '../../src/frontend/redux-store/layout/device-types';
+import { getAppHeaderHeightSelector } from '../../src/frontend/redux-store/layout/layout-selectors';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import { useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { isLoggedInSelector } from '../../src/frontend/redux-store/authentication/authentication-selectors';
+import NoobPage from '../../src/frontend/components/page/noob-page';
 
 export default function RegisterSuccess() {
     const theme = useTheme();
-    const isDesktop = useAppSelector(x => isDeviceTypeSelector(x, deviceTypes.desktop));
-    const backgroundColor = isDesktop ? theme.palette.background.default : theme.palette.background.paper;
     const router = useRouter();
     const isLoggedIn = useAppSelector(isLoggedInSelector);
     const appHeaderHeight = useAppSelector(getAppHeaderHeightSelector);
@@ -27,14 +23,13 @@ export default function RegisterSuccess() {
     }, [isLoggedIn]);
 
     return (
-        <div style={{ backgroundColor }}>
-            <Head>
-                <title>Registration Success</title>
-                <meta name="description" content="Sign up to noob storm" />
-                <link rel="icon" href="/noob-fav.ico" />
-            </Head>
-            <NoobHeader />
-            <main className={commonStyles.main}>
+        <NoobPage
+            title="Registration Success"
+            metaData={{
+                description: "Noob Storm registration success page"
+            }}
+        >
+            <Fragment>
                 <div className={styles.mainBanner} style={{ marginTop: appHeaderHeight }}>
                     <Typography className={styles.mainBannerText}>ACTIVATION</Typography>
                 </div>
@@ -43,7 +38,7 @@ export default function RegisterSuccess() {
                         <Icon className={commonStyles.whiteText}><ErrorOutlineIcon /></Icon><Typography className={commonStyles.whiteText}>Signed up successfully! Please confirm activation email and sign in.</Typography>
                     </div>
                 </Container>
-            </main>
-        </div>
+            </Fragment>
+        </NoobPage>
     )
 }

@@ -7,6 +7,7 @@ import commonStyles from '../../styles/common.module.css';
 import styles from './noob-page.module.css';
 import React from 'react';
 import { deviceTypes } from '../../redux-store/layout/device-types';
+import NoobFooter from '../footer';
 
 interface Props {
   title: string;
@@ -15,7 +16,7 @@ interface Props {
   children: React.ReactElement
 }
 
-export function NoobPage(props: Props) {
+export default function NoobPage(props: Props) {
   const {
     metaData,
     favIcon = '/noob-fav.ico',
@@ -31,18 +32,19 @@ export function NoobPage(props: Props) {
 
 
   return (
-    <div style={{backgroundColor}}>
+    <div style={{ backgroundColor }}>
       <Head>
         <title>{title}</title>
-        {metaKeys.map((key, index) => <meta key={index} name={key} content={metaData[key]}/>)}
-        <link rel="icon" href={favIcon}/>
+        {metaKeys.map((key, index) => <meta key={index} name={key} content={metaData[key]} />)}
+        <link rel="icon" href={favIcon} />
       </Head>
-      <NoobHeader/>
+      <NoobHeader />
       <main className={commonStyles.main}>
-        <div className={styles.container} style={{marginTop: appHeaderHeight}}>
+        <div className={styles.container} style={{ marginTop: appHeaderHeight }}>
           {children}
         </div>
       </main>
+      <NoobFooter />
     </div>
   )
 }

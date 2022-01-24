@@ -1,26 +1,17 @@
 import type { NextPage } from 'next'
-import Head from 'next/head'
-import { useTheme } from '@mui/material';
-import NoobHeader from '../src/frontend/components/header/noob-header';
-import homeModule from '../src/frontend/styles/common.module.css';
-
+import NoobPage from '../src/frontend/components/page/noob-page';
+import Heading from '../src/frontend/components/ui-components/typography/heading';
 
 const Home: NextPage = () => {
-  const theme = useTheme();
   return (
-    <div style={{backgroundColor: theme.palette.background.default}}>
-      <Head>
-        <title>Home</title>
-        <meta name="description" content="Noob storm home page"/>
-        <link rel="icon" href="/noob-fav.ico"/>
-      </Head>
-      <NoobHeader/>
-      <main className={homeModule.main}>
-        <div>
-          Hello
-        </div>
-      </main>
-    </div>
+    <NoobPage
+      title="Home"
+      metaData={{
+        description: "Noob Storm home page"
+      }}
+    >
+      <Heading heading='Homepage' />
+    </NoobPage>
   )
 }
 

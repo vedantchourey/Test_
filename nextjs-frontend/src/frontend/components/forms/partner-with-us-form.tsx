@@ -5,7 +5,7 @@ import commonStyles from "../../styles/common.module.css"
 import styles from "./partner-with-us.module.css"
 
 interface Props {
-    onRegistrationSuccess: Function
+    onRegistrationSuccess: () => void
 }
 
 export default function PartnerWithUsForm(props: Props) {

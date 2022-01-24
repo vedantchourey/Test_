@@ -1,12 +1,11 @@
-import Head from 'next/head';
-import commonStyles from '../../src/frontend/styles/common.module.css';
-import { Container, Grid, Typography, useTheme } from '@mui/material';
+import { Fragment } from 'react';
 import axios from 'axios';
 import { GetServerSideProps } from 'next';
-import NoobHeader from '../../src/frontend/components/header/noob-header';
+import commonStyles from '../../src/frontend/styles/common.module.css';
+import { Container, Grid, Typography } from '@mui/material';
 import Heading from '../../src/frontend/components/ui-components/typography/heading';
 import NewsletterPoster from "../../src/frontend/components/newsletter-poster/index"
-import NoobFooter from '../../src/frontend/components/footer';
+import NoobPage from '../../src/frontend/components/page/noob-page';
 
 interface IPageProps {
     pageContent: {
@@ -17,29 +16,17 @@ interface IPageProps {
     } | null
 }
 
-export default function AboutUs(props: IPageProps) {
+const AboutUs = (props: IPageProps) => {
     const content = props.pageContent?.attributes;
-    const theme = useTheme();
-
-    // useEffect(() => {
-    //     (async () => {
-    //         if (checkStatus !== 'success') return;
-    //         if (isLoggedIn) return;
-    //         await router.push('/')
-    //     })()
-    // });
 
     return (
-        <div style={{ backgroundColor: theme.palette.background.default }}>
-
-            <Head>
-                <title>About Us</title>
-                <meta name="description" content="Sign up to noob storm" />
-                <link rel="icon" href="/noob-fav.ico" />
-            </Head>
-
-            <NoobHeader />
-            <main className={commonStyles.main}>
+        <NoobPage
+            title="About Us"
+            metaData={{
+                description: "Noob Storm about us page"
+            }}
+        >
+            <Fragment>
                 <Container maxWidth="xl">
 
                     <Heading divider heading={"ABOUT US"} />
@@ -69,24 +56,21 @@ export default function AboutUs(props: IPageProps) {
                     </Grid>
 
                 </Container>
-
-            </main>
-            <NoobFooter />
-        </div>
+            </Fragment>
+        </NoobPage>
     )
 }
 
-
 export const getServerSideProps: GetServerSideProps = async () => {
     const {
-        NEXT_PUBLIC_CMS_API_ENDPOINT,
-        NEXT_PUBLIC_CMS_API_TOKEN
+        CMS_API_ENDPOINT,
+        CMS_API_TOKEN
     } = process.env;
     try {
-        const endpoint = NEXT_PUBLIC_CMS_API_ENDPOINT + '/api/about-us';
+        const endpoint = CMS_API_ENDPOINT + '/api/about-us';
         const res = await axios.get(endpoint, {
             headers: {
-                'Authorization': 'Bearer ' + NEXT_PUBLIC_CMS_API_TOKEN
+                'Authorization': 'Bearer ' + CMS_API_TOKEN
             },
             params: {
                 populate: '*'
@@ -109,3 +93,5 @@ export const getServerSideProps: GetServerSideProps = async () => {
         }
     }
 }
+
+export default AboutUs

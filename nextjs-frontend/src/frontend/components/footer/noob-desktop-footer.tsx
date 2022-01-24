@@ -1,8 +1,11 @@
+import React from 'react';
 import Image from 'next/image';
 import { Button, Divider, Grid, IconButton, Typography, useTheme } from "@mui/material"
 import styles from "./noob-footer.module.css"
 import { useRouter } from 'next/router';
-import YouTubeIcon from '@mui/icons-material/YouTube';
+import YoutubeIcon from '../icons/youtube-icon';
+import TwitchIcon from '../icons/twitch-icon';
+import DiscordIcon from '../icons/discord-icon';
 
 export default function NoobDesktopFooter() {
 
@@ -40,14 +43,14 @@ export default function NoobDesktopFooter() {
                             <Button variant="text" style={buttonStyle(['/support'])}>Support</Button>
                         </Grid>
                         <Grid item xs={12} sm={4} textAlign={"end"}>
-                            <IconButton color="default" aria-label="upload picture" component="span">
-                                <YouTubeIcon />
+                            <IconButton color="default" aria-label="Youtube" component="span">
+                                <YoutubeIcon />
                             </IconButton>
-                            <IconButton color="default" aria-label="upload picture" component="span">
-                                <YouTubeIcon />
+                            <IconButton color="default" aria-label="Twitch" component="span">
+                                <TwitchIcon />
                             </IconButton>
-                            <IconButton color="default" aria-label="upload picture" component="span">
-                                <YouTubeIcon />
+                            <IconButton color="default" aria-label="Discord" component="span">
+                                <DiscordIcon />
                             </IconButton>
                         </Grid>
                     </Grid>
