@@ -4,7 +4,8 @@
   "info": {
     "singularName": "terms-and-condition",
     "pluralName": "terms-and-conditions",
-    "displayName": "Terms and Condition"
+    "displayName": "Terms and Condition",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -12,7 +13,7 @@
   "pluginOptions": {},
   "attributes": {
     "content": {
-      "type": "text"
+      "type": "richtext"
     }
   }
 }
