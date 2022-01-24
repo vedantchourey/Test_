@@ -16,10 +16,6 @@
       "type": "string",
       "required": true
     },
-    "description": {
-      "type": "text",
-      "required": true
-    },
     "about_cover": {
       "type": "media",
       "multiple": false,
@@ -27,6 +23,9 @@
       "allowedTypes": [
         "images"
       ]
+    },
+    "description": {
+      "type": "richtext"
     }
   }
 }

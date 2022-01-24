@@ -48,7 +48,7 @@ export default function AboutUs(props: IPageProps) {
 
                         <Grid item xs={12} lg={6}>
 
-                            <Typography className={commonStyles.primaryText} marginBottom={2}>
+                            <Typography className={commonStyles.primaryText} marginBottom={2} style={{ whiteSpace: 'pre-line' }}>
                                 {content?.title}
                             </Typography>
 

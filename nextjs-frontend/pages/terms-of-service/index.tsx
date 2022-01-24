@@ -34,7 +34,7 @@ export default function TermsOfServicePage(props: IPageProps) {
 
                     <Heading divider heading={"TERMS OF SERVICE"} />
 
-                    <Typography className={commonStyles.whiteText} marginBottom={2}>
+                    <Typography className={commonStyles.whiteText} marginBottom={2} style={{ whiteSpace: 'pre-line' }}>
                         {content}
                     </Typography>
                 </div>
