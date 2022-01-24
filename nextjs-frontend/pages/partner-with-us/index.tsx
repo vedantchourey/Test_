@@ -29,15 +29,19 @@ export default function PartnerWithUs() {
                     </div>
                 </div>
 
-                <Container maxWidth="lg">
+
+                <Container maxWidth="md">
+
                     <Divider sx={{ my: 5 }}>
                         <Typography variant="h3" color="default">
                             PARTNER WITH US
                         </Typography>
                     </Divider>
+
+                    <PartnerWithUsForm onRegistrationSuccess={onRegistrationSuccess} />
                 </Container>
 
-                <PartnerWithUsForm onRegistrationSuccess={onRegistrationSuccess} />
+
 
             </Fragment>
         </NoobPage>
