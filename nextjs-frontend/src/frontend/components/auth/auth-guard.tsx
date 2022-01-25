@@ -41,7 +41,7 @@ export default function AuthGuard(props: Props): React.ReactElement {
 
   if (!isLoggedIn) return renderOnCheckFailure?.() || <></>;
   if (requiredRoles.length === 0) return children || <></>;
-  if (userRoles.length == 0) return renderOnCheckFailure?.() || <></>;
-  if (!requiredRoles.some(x => userRoles.indexOf(x) !== -1)) return renderOnCheckFailure?.() || <></>;
+  if (userRoles.length === 0) return renderOnCheckFailure?.() || <></>;
+  if (!requiredRoles.some((x) => userRoles.indexOf(x) !== -1)) return renderOnCheckFailure?.() || <></>;
   return children || <></>;
 }

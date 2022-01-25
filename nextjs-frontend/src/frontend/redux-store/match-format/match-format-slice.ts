@@ -16,8 +16,8 @@ const matchFormatSlice = createSlice({
   name: 'matchFormat',
   initialState,
   reducers: {},
-  extraReducers: builder => {
-    builder.addCase(fetchAllMatchFormatsThunk.pending, (state, action) => {
+  extraReducers: (builder) => {
+    builder.addCase(fetchAllMatchFormatsThunk.pending, (state) => {
       state.fetchStatus = 'loading';
     });
     builder.addCase(fetchAllMatchFormatsThunk.fulfilled, (state, action) => {

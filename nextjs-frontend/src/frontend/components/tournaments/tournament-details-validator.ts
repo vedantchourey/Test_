@@ -7,7 +7,7 @@ import { parseDateTime } from '../../../common/utils/date-time-utils';
 
 function validateName(tournament: Partial<CreateOrEditTournamentRequest>) {
   if (isNullOrEmptyString(tournament.tournamentName)) return 'Is required';
-  if (!validator.isLength(tournament.tournamentName!, {min: 5})) return 'Min length 5';
+  if (!validator.isLength(tournament.tournamentName as string, {min: 5})) return 'Min length 5';
 }
 
 function validateGame(tournament: Partial<CreateOrEditTournamentRequest>) {
@@ -43,22 +43,22 @@ function validateType(tournament: Partial<CreateOrEditTournamentRequest>) {
 
 function validateScheduleDate(tournament: Partial<CreateOrEditTournamentRequest>) {
   if (isNullOrEmptyString(tournament.scheduleDate)) return 'Is required';
-  const scheduledDateTime = parseDateTime(tournament.scheduleDate!);
+  const scheduledDateTime = parseDateTime(tournament.scheduleDate as string);
   const diffFromNow = scheduledDateTime.diffNow(['days']);
   if (diffFromNow.days < 5) return 'Must be at least 5 days later';
 }
 
 function validateGameMap(tournament: Partial<CreateOrEditTournamentRequest>, allGames: IGameResponse[]) {
   if (isNullOrEmptyString(tournament.gameId)) return;
-  const matchingGame = allGames.filter(x => x.id === tournament.gameId)[0];
+  const matchingGame = allGames.filter((x) => x.id === tournament.gameId)[0];
   if (matchingGame.gameMaps.length === 0) return;
   if (isNullOrEmptyString(tournament.mapId)) return 'Is required';
-  if (!matchingGame.gameMaps.some(x => x.id === tournament.mapId)) return 'Invalid map';
+  if (!matchingGame.gameMaps.some((x) => x.id === tournament.mapId)) return 'Invalid map';
 }
 
 function validateRules(tournament: Partial<CreateOrEditTournamentRequest>) {
   if (isNullOrEmptyString(tournament.rules)) return 'Is required';
-  if (!validator.isLength(tournament.rules!, {min: 20})) return 'Min length 20 chars';
+  if (!validator.isLength(tournament.rules as string, {min: 20})) return 'Min length 20 chars';
 }
 
 export function validateTournament(tournament: Partial<CreateOrEditTournamentRequest>, allGames: IGameResponse[]): ValidationResult<CreateOrEditTournamentRequest> {

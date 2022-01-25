@@ -40,9 +40,9 @@ export default function NoobLoggedInDrawer(props: Props) {
           <div className={commonStyles.flexEqualSpace}/>
           <div className={commonStyles.flexEqualSpace}>
             <Image src="/images/noobstorm-logo-small.png"
-                   width={130}
-                   height={28}
-                   alt="noob storm logo"/>
+              width={130}
+              height={28}
+              alt="noob storm logo"/>
           </div>
           <div className={styles.topMenuItemRight}>
             <IconButton onClick={onClose}>

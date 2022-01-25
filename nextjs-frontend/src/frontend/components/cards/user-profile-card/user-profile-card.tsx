@@ -20,7 +20,7 @@ export default function UserProfileCard() {
   const backgroundInputRef = useRef<HTMLInputElement>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const appDispatch = useAppDispatch();
-  const isDesktop = useAppSelector(x => isDeviceTypeSelector(x, deviceTypes.desktop));
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
   const avatarUrl = useAppSelector(avatarUrlSelector);
   const avatarBackgroundUrl = useAppSelector(avatarBackgroundUrlSelector);
   const theme = useTheme();
@@ -31,8 +31,11 @@ export default function UserProfileCard() {
   }
 
   function generateFileUrl(type: 'avatar' | 'avatarBackground', file: File) {
-    const fileExt = file.name.split('.').pop()?.toLowerCase();
-    return `avatars/${type}${userProfile!.id}${v4()}.${fileExt}`;
+    if (userProfile == null) throw new Error('User cannot be null');
+    const fileExt = file.name.split('.')
+                        .pop()
+                        ?.toLowerCase();
+    return `avatars/${type}${userProfile.id}${v4()}.${fileExt}`;
   }
 
   async function updateUserProfile(fileUrl: string, file: File, imageType: ProfileImageTypes) {
@@ -42,7 +45,7 @@ export default function UserProfileCard() {
   }
 
   async function onUploadAvatar(event: ChangeEvent<HTMLInputElement>) {
-    if (!event.target.files || event.target.files.length == 0) return;
+    if (!event.target.files || event.target.files.length === 0) return;
     const file = event.target.files[0];
     await uploadImageAndLinkToProfile('avatar', file, ProfileImageTypes.avatar);
   }
@@ -59,7 +62,7 @@ export default function UserProfileCard() {
   }
 
   async function onUploadBackground(event: ChangeEvent<HTMLInputElement>) {
-    if (!event.target.files || event.target.files.length == 0) return;
+    if (!event.target.files || event.target.files.length === 0) return;
     const file = event.target.files[0];
     await uploadImageAndLinkToProfile('avatarBackground', file, ProfileImageTypes.background);
   }
@@ -88,13 +91,13 @@ export default function UserProfileCard() {
           <AddPhotoAlternateOutlinedIcon/>
         </Fab>
         <Avatar alt="Remy Sharp"
-                sx={{width: 156, height: 156}}
-                className={styles.userProfilePic}
-                src={avatarUrl || "/images/default-user-profile-background.jpg"}/>
+          sx={{width: 156, height: 156}}
+          className={styles.userProfilePic}
+          src={avatarUrl || "/images/default-user-profile-background.jpg"}/>
         <div style={{overflow: 'hidden', flexGrow: 1}}>
           <img className={styles.imageBackground}
-               src={avatarBackgroundUrl || "/images/default-user-profile-background.jpg"}
-               alt="profile background"/>
+            src={avatarBackgroundUrl || "/images/default-user-profile-background.jpg"}
+            alt="profile background"/>
         </div>
       </div>
       <div className={styles.userDetailsContainer}>

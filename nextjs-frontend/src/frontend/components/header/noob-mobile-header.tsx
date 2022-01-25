@@ -44,9 +44,9 @@ export default function NoobMobileHeader() {
   function avatar() {
     if (avatarUrl == null) return (<Icon className={styles.userIcon}><PersonIcon className={styles.userIcon}/></Icon>);
     return <Avatar alt="Remy Sharp"
-                   sx={{width: 40, height: 40}}
-                   className={styles.userProfilePic}
-                   src={avatarUrl}/>
+      sx={{width: 40, height: 40}}
+      className={styles.userProfilePic}
+      src={avatarUrl}/>
   }
 
   async function onLogoutClick() {
@@ -56,7 +56,7 @@ export default function NoobMobileHeader() {
 
   const updateMobileHeight = (element: HTMLDivElement | null) => {
     if (!element?.clientHeight) return;
-    if (currentHeight == element?.clientHeight) return;
+    if (currentHeight === element?.clientHeight) return;
     return appDispatch(setMobileHeaderHeight(element?.clientHeight || 0));
   };
 
@@ -69,9 +69,9 @@ export default function NoobMobileHeader() {
           </div>
           <div className={styles.appBarItemMiddle}>
             <Image src="/images/noobstorm-logo-small.png"
-                   width={130}
-                   height={28}
-                   alt="noob storm logo"/>
+              width={130}
+              height={28}
+              alt="noob storm logo"/>
           </div>
           <div className={styles.appBarItemLast}>
             <IconButton onClick={toggleDrawer}>
@@ -99,13 +99,13 @@ export default function NoobMobileHeader() {
         }
       </AppBar>
       <NoobDrawer show={showMenu}
-                  onClose={hideMenu}
-                  onLoginClick={onLoginClick}
-                  onLogoutClick={onLogoutClick}
+        onClose={hideMenu}
+        onLoginClick={onLoginClick}
+        onLogoutClick={onLogoutClick}
       />
       <LoginModal show={showLoginModal}
-                  onCancel={() => setShowLoginModal(false)}
-                  onSuccessfulLogin={onSuccessfulLogin}
+        onCancel={() => setShowLoginModal(false)}
+        onSuccessfulLogin={onSuccessfulLogin}
       />
     </>
   );

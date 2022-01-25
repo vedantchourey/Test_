@@ -16,8 +16,8 @@ const gamesSlice = createSlice({
   name: 'games',
   initialState,
   reducers: {},
-  extraReducers: builder => {
-    builder.addCase(fetchAllGamesThunk.pending, (state, action) => {
+  extraReducers: (builder) => {
+    builder.addCase(fetchAllGamesThunk.pending, (state) => {
       state.fetchStatus = 'loading';
     });
     builder.addCase(fetchAllGamesThunk.fulfilled, (state, action) => {

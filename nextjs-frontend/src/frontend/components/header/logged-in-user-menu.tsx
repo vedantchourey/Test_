@@ -18,7 +18,7 @@ import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined
 import { useRouter } from 'next/router';
 
 
-const CustomMenu = styled(Menu)(({theme}) => {
+const CustomMenu = styled(Menu)(() => {
   return ({
     '& .MuiPaper-root': {
       borderRadius: 0
@@ -83,12 +83,12 @@ export default function LoggedInUserMenu() {
           </IconButton>
         </div>
         <CustomMenu id="basic-menu"
-                    anchorEl={containerRef?.current}
-                    open={showMenu}
-                    onClose={handleClose}
-                    MenuListProps={{
-                      'aria-labelledby': 'basic-button',
-                    }}
+          anchorEl={containerRef?.current}
+          open={showMenu}
+          onClose={handleClose}
+          MenuListProps={{
+            'aria-labelledby': 'basic-button',
+          }}
         >
           <MenuItem onClick={handleAccountItem}><ListItemIcon><PersonIcon fontSize="small"/></ListItemIcon><ListItemText>Account</ListItemText></MenuItem>
           <MenuItem onClick={handleClose}><ListItemIcon><DashboardIcon fontSize="small"/></ListItemIcon><ListItemText>Dashboard</ListItemText></MenuItem>

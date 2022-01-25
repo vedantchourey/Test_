@@ -3,6 +3,7 @@ import { ApiError } from '@supabase/gotrue-js';
 
 export type NoobServiceErrors<T> = { apiError: ApiError } | ValidationResult<T>;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getHttpCode(response: ServiceResponse<any, any>): number {
   if (response.errors == null) return 200;
   if (response.errors.apiError == null) return 400;

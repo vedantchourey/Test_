@@ -31,42 +31,42 @@ export default function MatchFormatDropDown(props: Props) {
   }, [appDispatch, matchFormatsFetchStatus]);
 
   useEffect(() => {
-    const matchingFormat = matchFormats.filter(x => x.id === value)[0];
+    const matchingFormat = matchFormats.filter((x) => x.id === value)[0];
     if (matchingFormat?.id === selectedFormat?.id) return;
     setSelectedFormat(matchingFormat || null);
   }, [matchFormats, selectedFormat?.id, value]);
 
 
-  const onInputChange = (event: any, newValue: IMatchFormatResponse | null) => {
+  const onInputChange = (event: unknown, newValue: IMatchFormatResponse | null) => {
     setSelectedFormat(newValue)
     onChange?.(newValue?.id, newValue || null);
   };
 
   return (
     <Autocomplete disablePortal
-                  className={autoCompleteClassName}
-                  options={matchFormats}
-                  getOptionLabel={x => x.displayName}
-                  loading={isLoading}
-                  renderInput={(params) => <TextField {...params}
-                                                      label={label}
-                                                      variant="filled"
-                                                      className={inputClassName}
-                                                      error={error}
-                                                      placeholder={placeholder}
-                                                      helperText={helperText}
-                                                      InputProps={{
-                                                        ...params.InputProps,
-                                                        endAdornment: (
-                                                          <div>
-                                                            {isLoading ? <CircularProgress color="inherit" size={20}/> : null}
-                                                            {params.InputProps.endAdornment}
-                                                          </div>
-                                                        )
-                                                      }}
-                  />}
-                  value={selectedFormat}
-                  onChange={onInputChange}
+      className={autoCompleteClassName}
+      options={matchFormats}
+      getOptionLabel={(x) => x.displayName}
+      loading={isLoading}
+      renderInput={(params) => <TextField {...params}
+        label={label}
+        variant="filled"
+        className={inputClassName}
+        error={error}
+        placeholder={placeholder}
+        helperText={helperText}
+        InputProps={{
+          ...params.InputProps,
+          endAdornment: (
+            <div>
+              {isLoading ? <CircularProgress color="inherit" size={20}/> : null}
+              {params.InputProps.endAdornment}
+            </div>
+          )
+        }}
+      />}
+      value={selectedFormat}
+      onChange={onInputChange}
     />
   )
 

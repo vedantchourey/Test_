@@ -4,6 +4,7 @@ import { NoobUserRole } from './noob-user-role';
 import { NoobApiRouteHandler, PerRequestContext } from './api-middleware-typings';
 import { UserRoleRepository } from '../../services/database/repositories/user-roles-repository';
 import { User } from '@supabase/gotrue-js';
+import { Knex } from 'knex';
 
 type Opts = {
   allowedRoles: NoobUserRole[];
@@ -19,14 +20,15 @@ function throwError(res: NextApiResponse, message: string, context: PerRequestCo
 
 async function isUserAuthorized(user: User, allowedRoles: NoobUserRole[], context: PerRequestContext) {
   if (allowedRoles.length === 0) return true;
-  const userRoleRepository = new UserRoleRepository(context.transaction!);
+  const userRoleRepository = new UserRoleRepository(context.transaction as Knex.Transaction);
   const roles = await userRoleRepository.getRolesByUserId(user.id);
   if (roles.length === 0) return false;
-  return roles.some(x => allowedRoles.indexOf(x.code) !== -1);
+  return roles.some((x) => allowedRoles.indexOf(x.code) !== -1);
 }
 
 const authMiddleWare = (opts: Opts): NoobApiRouteHandler => {
   const {allowAnonymous, allowedRoles} = opts;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return async (req: NextApiRequest, res: NextApiResponse, context: PerRequestContext): Promise<any> => {
     const {authorization} = req.headers;
     if (allowAnonymous) return;

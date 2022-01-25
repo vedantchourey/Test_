@@ -9,7 +9,9 @@ export class UsersRepository extends BaseRepository<IUser> {
   }
 
   async countUsersByEmail(email: string): Promise<number> {
-    const result = await this.entities().where({email: email}).count('id');
+    const result = await this.entities()
+                             .where({email: email})
+                             .count('id');
     return parseInt(result[0].count, 10);
   }
 

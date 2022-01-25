@@ -14,7 +14,7 @@ import { useEffect } from 'react';
 export default function Register() {
   const theme = useTheme();
   const router = useRouter();
-  const isDesktop = useAppSelector(x => isDeviceTypeSelector(x, deviceTypes.desktop));
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
   const backgroundColor = isDesktop ? theme.palette.background.default : theme.palette.background.paper;
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const appHeaderHeight = useAppSelector(getAppHeaderHeightSelector);
