@@ -7,9 +7,9 @@ import { TournamentRepository } from '../database/repositories/tournament-reposi
 
 export const createTournament: NoobApiService<CreateOrEditTournamentRequest, ITournamentResponse> = async (req, context) => {
   const errors = await validateTournament(req, context);
-  if (isThereAnyError(errors)) return {errors: errors};
+  if (isThereAnyError(errors)) return { errors: errors };
   const repository = new TournamentRepository(context.transaction!);
-  const createdTournament = await repository.create({id: undefined, isOpenToPublic: false, ...req});
-  const {id, ...others} = createdTournament;
-  return {data: {id: createdTournament.id as string, ...others}};
+  const createdTournament = await repository.create({ id: undefined, isOpenToPublic: false, ...req });
+  const { id, ...others } = createdTournament;
+  return { data: { id: createdTournament.id as string, ...others } };
 }

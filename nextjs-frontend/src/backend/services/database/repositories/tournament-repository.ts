@@ -10,21 +10,21 @@ export class TournamentRepository extends BaseRepository<ITournament> {
 
   async create(tournament: ITournament): Promise<ITournament> {
     const createdItems = await this.entities()
-                                   .insert(tournament, [
-                                     'id',
-                                     'tournamentName',
-                                     'gameId',
-                                     'platformId',
-                                     'bestOfId',
-                                     'mapId',
-                                     'formatId',
-                                     'scheduleDate',
-                                     'rules',
-                                     'isTeamParticipating',
-                                     'numberOfParticipants',
-                                     'tournamentType',
-                                     'isOpenToPublic',
-                                   ]);
+      .insert(tournament, [
+        'id',
+        'tournamentName',
+        'gameId',
+        'platformId',
+        'bestOfId',
+        'mapId',
+        'formatId',
+        'scheduleDate',
+        'rules',
+        'isTeamParticipating',
+        'numberOfParticipants',
+        'tournamentType',
+        'isOpenToPublic',
+      ]);
     return createdItems[0];
   }
 

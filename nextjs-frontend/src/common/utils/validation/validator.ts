@@ -22,3 +22,13 @@ export function isNullOrEmptyString(value: string | undefined | null) {
   if (value == null) return true;
   return validator.isEmpty(value);
 }
+
+export function isUrl(value: string | undefined | null) {
+  if (value === null || value === undefined) return false;
+  return validator.isURL(value);
+}
+
+export function isUUID(value: string | undefined | null) {
+  if (value === null || value === undefined) return false;
+  return validator.isUUID(value);
+}

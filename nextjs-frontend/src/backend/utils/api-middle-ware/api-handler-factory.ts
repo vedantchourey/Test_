@@ -18,15 +18,15 @@ function executeAll(hooks: NoobApiRouteHandler[], req: NextApiRequest, res: Next
 export function createNextJsRouteHandler(definitions: Partial<Record<Methods, RouteDefinitions>>): (req: NextApiRequest, res: NextApiResponse) => (void) {
   return (req: NextApiRequest, res: NextApiResponse) => {
     const definition = definitions[req.method!.toLowerCase() as Methods];
-    if (definition == null) return res.status(404).json({message: 'not found'});
-    const {handler, preHooks = [], postHooks = []} = definition;
+    if (definition == null) return res.status(404).json({ message: 'not found' });
+    const { handler, preHooks = [], postHooks = [] } = definition;
     const context: PerRequestContext = {};
     return executeAll(preHooks, req, res, context).then(x => handler(req, res, context))
-                                                  .then(x => executeAll(postHooks, req, res, context))
-                                                  .catch(async e => {
-                                                    console.error(e);
-                                                    await executeAll(postHooks, req, res, {...context, error: e});
-                                                    throw e;
-                                                  })
+      .then(x => executeAll(postHooks, req, res, context))
+      .catch(async e => {
+        console.error(e);
+        await executeAll(postHooks, req, res, { ...context, error: e });
+        throw e;
+      })
   }
 }
