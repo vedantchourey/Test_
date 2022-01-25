@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IAuthenticationState } from './i-authentication-state';
 import { fetchUserProfile } from '../../service-clients/profile-service-client';
 import { IProfileResponse } from '../../service-clients/messages/i-profile';
+import {v4} from 'uuid';
 
 const initialState: IAuthenticationState = {
   isAuthenticated: false,
@@ -11,8 +12,10 @@ const initialState: IAuthenticationState = {
   profileFetchStatus: 'idle',
   userProfile: undefined,
   username: undefined,
-  avatarBackgroundUrl: undefined,
-  avatarUrl: undefined,
+  avatarBackgroundImageBlob: undefined,
+  avatarImageBlob: undefined,
+  forceFetchAvatarImageBlob: v4(),
+  forceFetchAvatarBackgroundImageBlob: v4()
 }
 
 export const fetchUserProfileThunk = createAsyncThunk('authentication/userProfile', () => {
@@ -42,11 +45,17 @@ const authenticationSlice = createSlice({
     setUserProfile(state, action: PayloadAction<IProfileResponse | undefined>) {
       state.userProfile = action.payload;
     },
-    setAvatarUrl(state, action: PayloadAction<string | undefined>) {
-      state.avatarUrl = action.payload;
+    setAvatarBlob(state, action: PayloadAction<string | undefined>) {
+      state.avatarImageBlob = action.payload;
     },
-    setAvatarBackgroundUrl(state, action: PayloadAction<string | undefined>) {
-      state.avatarBackgroundUrl = action.payload;
+    setAvatarBackgroundBlob(state, action: PayloadAction<string | undefined>) {
+      state.avatarBackgroundImageBlob = action.payload;
+    },
+    forceFetchAvatarImageBlob(state) {
+      state.forceFetchAvatarImageBlob = v4();
+    },
+    forceFetchAvatarBackgroundImageBlob(state) {
+      state.forceFetchAvatarBackgroundImageBlob = v4();
     }
   },
   extraReducers: (builder) => {
@@ -63,6 +72,15 @@ const authenticationSlice = createSlice({
   }
 });
 
-export const {setCheckLoginStatus, setIsLoggedIn, clearUserProfile, setAvatarBackgroundUrl, setAvatarUrl, setUserProfile} = authenticationSlice.actions;
+export const {
+  setCheckLoginStatus,
+  setIsLoggedIn,
+  clearUserProfile,
+  setAvatarBackgroundBlob,
+  setAvatarBlob,
+  setUserProfile,
+  forceFetchAvatarImageBlob,
+  forceFetchAvatarBackgroundImageBlob
+} = authenticationSlice.actions;
 const authenticationSliceReducer = authenticationSlice.reducer;
 export default authenticationSliceReducer;

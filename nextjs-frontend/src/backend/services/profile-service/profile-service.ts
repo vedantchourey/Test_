@@ -10,13 +10,11 @@ import { PerRequestContext } from '../../utils/api-middle-ware/api-middleware-ty
 async function handleAvatarUpdate(userId: string, request: UpdateProfileImageRequest, userProfile: IProfile, profilesRepository: ProfilesRepository) {
   await profilesRepository.updateAvatar(userId, request.url);
   if (userProfile.avatarUrl == null) return;
-  await backendSupabase.storage.from('resources').remove([userProfile.avatarUrl]);
 }
 
 async function handleBackgroundImageUpdate(userId: string, request: UpdateProfileImageRequest, userProfile: IProfile, profilesRepository: ProfilesRepository) {
   await profilesRepository.updateProfileBackground(userId, request.url);
   if (userProfile.profileBackgroundImageUrl == null) return;
-  await backendSupabase.storage.from('resources').remove([userProfile.profileBackgroundImageUrl]);
 }
 
 export async function updateProfileImage(request: UpdateProfileImageRequest, context: PerRequestContext): Promise<ServiceResponse<UpdateProfileImageRequest, IProfile>> {

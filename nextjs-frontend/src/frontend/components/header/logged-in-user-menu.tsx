@@ -3,7 +3,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { signOut } from '../../service-clients/auth-service-client';
 import { useRef, useState } from 'react';
 import { useAppSelector } from '../../redux-store/redux-store';
-import { avatarUrlSelector, userNameSelector } from '../../redux-store/authentication/authentication-selectors';
+import { avatarImageBlobUrlSelector, userNameSelector } from '../../redux-store/authentication/authentication-selectors';
 import styles from './logged-in-user-menu.module.css';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import PersonIcon from '@mui/icons-material/Person';
@@ -32,7 +32,7 @@ export default function LoggedInUserMenu() {
   const router = useRouter();
   const [showMenu, setShowMenu] = useState(false);
   const username = useAppSelector(userNameSelector);
-  const avatarUrl = useAppSelector(avatarUrlSelector);
+  const avatarUrl = useAppSelector(avatarImageBlobUrlSelector);
 
 
   function handleClose() {
