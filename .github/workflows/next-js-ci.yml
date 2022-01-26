@@ -4,19 +4,19 @@ on:
     paths:
       - 'nextjs-frontend/**'
       - '.github/workflows/**'
-    branches: 
-      - main
-      - 'features/**'
-      - 'feature/**'
-      - 'bugfix/**'
-      - 'bugfixes/**'
-  pull_request:
-    branches: 
-      - main
-      - 'features/**'
-      - 'feature/**'
-      - 'bugfix/**'
-      - 'bugfixes/**'
+  #   branches: 
+  #     - main
+  #     - 'features/**'
+  #     - 'feature/**'
+  #     - 'bugfix/**'
+  #     - 'bugfixes/**'
+  # pull_request:
+  #   branches: 
+  #     - main
+  #     - 'features/**'
+  #     - 'feature/**'
+  #     - 'bugfix/**'
+  #     - 'bugfixes/**'
 
 defaults:
   run:
