@@ -1,12 +1,13 @@
 import { expect } from 'chai';
 import { createUsersRepository, UsersRepository } from '../../../../../src/backend/services/database/repositories/users-repository';
-import { createTransaction } from '../../../../../src/backend/services/database/repositories/knex-utils';
+import { createKnexConnection } from '../../../../../src/backend/services/database/knex';
 
 describe('users-repository', () => {
   let repository: UsersRepository;
 
   beforeEach(async () => {
-    repository = createUsersRepository(await createTransaction());
+    const knex = createKnexConnection();
+    repository = createUsersRepository(await knex.transaction());
   });
 
   it('gets counts of users matching email', async function () {

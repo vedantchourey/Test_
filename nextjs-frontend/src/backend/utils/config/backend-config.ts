@@ -12,7 +12,7 @@ export const backendConfig: IBackendConfig = {
   db: {
     databaseName: databaseName,
     dbHost: dbHost,
-    dbPort: dbPort,
+    dbPort: parseInt(dbPort),
     dbUser: dbUser,
     dbPassword: dbPassword
   },

@@ -19,7 +19,7 @@ export default function Register() {
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const appHeaderHeight = useAppSelector(getAppHeaderHeightSelector);
 
-  const onSignUpSuccess = async (userId: string | undefined) => {
+  const onSignUpSuccess = async () => {
     await router.push('/register-success');
   }
 

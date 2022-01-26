@@ -1,14 +1,14 @@
-
 import { expect } from 'chai';
 import { createStateRepository, StateRepository } from '../../../../../src/backend/services/database/repositories/state-repository';
-import { createTransaction } from '../../../../../src/backend/services/database/repositories/knex-utils';
+import { createKnexConnection } from '../../../../../src/backend/services/database/knex';
 
 describe('StateRepository', () => {
 
   let repository: StateRepository;
 
   beforeEach(async () => {
-    repository = createStateRepository(await createTransaction());
+    const knex = createKnexConnection();
+    repository = createStateRepository(await knex.transaction());
   });
 
 
