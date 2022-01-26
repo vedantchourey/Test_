@@ -6,10 +6,6 @@ on:
       - '.github/workflows/**'
     branches: 
       - master
-      - 'features/**'
-      - 'feature/**'
-      - 'bugfix/**'
-      - 'bugfixes/**'
   pull_request:
     branches: 
       - master
