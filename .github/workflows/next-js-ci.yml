@@ -1,6 +1,9 @@
 name: next-js-build
 on: 
   push:
+    paths:
+      - 'nextjs-frontend/**'
+      - '.github/workflows/**'
     branches: 
       - main
       - 'features/**'
@@ -14,6 +17,11 @@ on:
       - 'feature/**'
       - 'bugfix/**'
       - 'bugfixes/**'
+
+defaults:
+  run:
+    shell: bash
+    working-directory: 'nextjs-frontend'
 
 jobs:
   build:
