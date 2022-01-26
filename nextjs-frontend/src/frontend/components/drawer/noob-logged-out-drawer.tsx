@@ -31,8 +31,8 @@ export default function NoobLoggedOutDrawer(props: Props) {
         <div className={styles.topMenuGroup}>
           <div className={styles.topMenuItemLeft}>
             <Button variant="outlined"
-                    style={{textTransform: 'none', color: 'white'}}
-                    onClick={()=> router.push('/register')}
+              style={{textTransform: 'none', color: 'white'}}
+              onClick={()=> router.push('/register')}
             >
               Register
             </Button>

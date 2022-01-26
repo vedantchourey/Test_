@@ -26,8 +26,8 @@ interface CustomLoginDialogProps {
   right?: number;
 }
 
-const CustomLoginDialog = styled(Dialog)<CustomLoginDialogProps>(({theme, top = 100, right = 70}) => {
-  const isDesktop = useAppSelector(x => isDeviceTypeSelector(x, deviceTypes.desktop));
+const CustomLoginDialog = styled(Dialog)<CustomLoginDialogProps>(({top = 100, right = 70}) => {
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
   const positionStyle = !isDesktop ? {} : {position: 'absolute', top, right};
 
   return ({
@@ -115,27 +115,27 @@ export default function LoginModal(props: Props) {
         </div>
         <div className={styles.row}>
           <TextField id="email"
-                     label="Email"
-                     variant="filled"
-                     className={styles.inputRowItem}
-                     value={request.email}
-                     error={propsHasError(errors, 'email')}
-                     helperText={getErrorForProp(errors, 'email')}
-                     onChange={event => setRequest({...request, email: event.target.value})}
-                     disabled={isBusy}
+            label="Email"
+            variant="filled"
+            className={styles.inputRowItem}
+            value={request.email}
+            error={propsHasError(errors, 'email')}
+            helperText={getErrorForProp(errors, 'email')}
+            onChange={(event) => setRequest({...request, email: event.target.value})}
+            disabled={isBusy}
           />
         </div>
         <div className={styles.row}>
           <TextField id="password"
-                     label="Password"
-                     variant="filled"
-                     type="password"
-                     className={styles.inputRowItem}
-                     value={request.password}
-                     error={propsHasError(errors, 'password')}
-                     helperText={getErrorForProp(errors, 'password')}
-                     onChange={event => setRequest({...request, password: event.target.value})}
-                     disabled={isBusy}
+            label="Password"
+            variant="filled"
+            type="password"
+            className={styles.inputRowItem}
+            value={request.password}
+            error={propsHasError(errors, 'password')}
+            helperText={getErrorForProp(errors, 'password')}
+            onChange={(event) => setRequest({...request, password: event.target.value})}
+            disabled={isBusy}
           />
         </div>
         <div className={styles.row}>
@@ -146,8 +146,8 @@ export default function LoginModal(props: Props) {
         </div>
         <div className={styles.row}>
           <Button className={styles.actionButton}
-                  onClick={onClickLogin}
-                  disabled={isBusy}>
+            onClick={onClickLogin}
+            disabled={isBusy}>
             <Typography>Log In</Typography>
           </Button>
         </div>

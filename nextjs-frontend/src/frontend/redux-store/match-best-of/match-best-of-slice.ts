@@ -16,8 +16,8 @@ const matchBestOfSlice = createSlice({
   name: 'matchBestOf',
   initialState,
   reducers: {},
-  extraReducers: builder => {
-    builder.addCase(fetchAllMatchBestOfsThunk.pending, (state, action) => {
+  extraReducers: (builder) => {
+    builder.addCase(fetchAllMatchBestOfsThunk.pending, (state) => {
       state.fetchStatus = 'loading';
     });
     builder.addCase(fetchAllMatchBestOfsThunk.fulfilled, (state, action) => {

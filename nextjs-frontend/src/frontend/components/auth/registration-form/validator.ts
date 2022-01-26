@@ -31,13 +31,13 @@ function validateEmail(details: Partial<SignupRequest>) {
 function validateFirstName(details: Partial<SignupRequest>) {
   if (isNullOrEmpty(details.firstName)) return 'Is required';
   const parts = (details.firstName as string).split(' ');
-  if (parts.some(x => !validator.isAlpha(x))) return 'Can only contain A-Za-z';
+  if (parts.some((x) => !validator.isAlpha(x))) return 'Can only contain A-Za-z';
 }
 
 function validateLastName(details: Partial<SignupRequest>) {
   if (isNullOrEmpty(details.lastName)) return 'Is required';
   const parts = (details.lastName as string).split(' ');
-  if (parts.some(x => !validator.isAlpha(x))) return 'Can only contain A-Za-z';
+  if (parts.some((x) => !validator.isAlpha(x))) return 'Can only contain A-Za-z';
 }
 
 function validatePassword(details: Partial<SignupRequest>) {
@@ -46,10 +46,10 @@ function validatePassword(details: Partial<SignupRequest>) {
   if (!validator.isStrongPassword(details.password as string, options)) return 'Required min length 8 and at least 1 lower case, upper case, number and special char';
 }
 
-function validatePhoneNumber(details: Partial<SignupRequest>) {
-  if (isNullOrEmpty(details.phone)) return 'Is required';
-  if (!validator.isMobilePhone(details.phone as string, "en-IN")) return 'Invalid mobile number';
-}
+// function validatePhoneNumber(details: Partial<SignupRequest>) {
+//   if (isNullOrEmpty(details.phone)) return 'Is required';
+//   if (!validator.isMobilePhone(details.phone as string, "en-IN")) return 'Invalid mobile number';
+// }
 
 function validateUserName(details: Partial<SignupRequest>) {
   if (isNullOrEmpty(details.username)) return 'Is required';

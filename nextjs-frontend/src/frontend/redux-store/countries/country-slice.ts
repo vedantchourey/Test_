@@ -17,7 +17,7 @@ const countrySlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchCountryStatesThunk.pending, state => {
+    builder.addCase(fetchCountryStatesThunk.pending, (state) => {
       state.stateFetchStatus = 'loading';
     });
     builder.addCase(fetchCountryStatesThunk.fulfilled, (state, action) => {

@@ -11,5 +11,5 @@ const platformIdSelector = (rootState: RootState, platformId: string | undefined
 
 export const gamesByPlatformSelector = createSelector([allGamesSelector, platformIdSelector], function (allGames: IGameResponse[], platformId: string | undefined) {
   if (platformId == null) return allGames;
-  return allGames.filter(x => x.platformIds.indexOf(platformId) !== -1);
+  return allGames.filter((x) => x.platformIds.indexOf(platformId) !== -1);
 });

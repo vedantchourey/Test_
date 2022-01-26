@@ -31,42 +31,42 @@ export default function MatchBestOfDropDown(props: Props) {
   }, [appDispatch, matchBestOfFetchStatus]);
 
   useEffect(() => {
-    const matchingBestOf = matchBestOfs.filter(x => x.id === value)[0];
+    const matchingBestOf = matchBestOfs.filter((x) => x.id === value)[0];
     if (matchingBestOf?.id === selectedBestOf?.id) return;
     setSelectedBestOf(matchingBestOf || null);
   }, [matchBestOfs, selectedBestOf?.id, value]);
 
 
-  const onInputChange = (event: any, newValue: IMatchBestOfResponse | null) => {
+  const onInputChange = (event: unknown, newValue: IMatchBestOfResponse | null) => {
     setSelectedBestOf(newValue)
     onChange?.(newValue?.id, newValue || null);
   };
 
   return (
     <Autocomplete disablePortal
-                  className={autoCompleteClassName}
-                  options={matchBestOfs}
-                  getOptionLabel={x => x.displayName}
-                  loading={isLoading}
-                  renderInput={(params) => <TextField {...params}
-                                                      label={label}
-                                                      variant="filled"
-                                                      className={inputClassName}
-                                                      error={error}
-                                                      placeholder={placeholder}
-                                                      helperText={helperText}
-                                                      InputProps={{
-                                                        ...params.InputProps,
-                                                        endAdornment: (
-                                                          <div>
-                                                            {isLoading ? <CircularProgress color="inherit" size={20}/> : null}
-                                                            {params.InputProps.endAdornment}
-                                                          </div>
-                                                        )
-                                                      }}
-                  />}
-                  value={selectedBestOf}
-                  onChange={onInputChange}
+      className={autoCompleteClassName}
+      options={matchBestOfs}
+      getOptionLabel={(x) => x.displayName}
+      loading={isLoading}
+      renderInput={(params) => <TextField {...params}
+        label={label}
+        variant="filled"
+        className={inputClassName}
+        error={error}
+        placeholder={placeholder}
+        helperText={helperText}
+        InputProps={{
+          ...params.InputProps,
+          endAdornment: (
+            <div>
+              {isLoading ? <CircularProgress color="inherit" size={20}/> : null}
+              {params.InputProps.endAdornment}
+            </div>
+          )
+        }}
+      />}
+      value={selectedBestOf}
+      onChange={onInputChange}
     />
   )
 

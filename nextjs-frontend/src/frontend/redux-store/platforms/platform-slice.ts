@@ -8,7 +8,7 @@ const initialState: IPlatformState = {
   platforms: []
 }
 
-export const fetchAllPlatformsThunk = createAsyncThunk('platforms/fetchAll', (arg, thunkAPI) => {
+export const fetchAllPlatformsThunk = createAsyncThunk('platforms/fetchAll', () => {
   return fetchAllPlatforms();
 });
 
@@ -16,8 +16,8 @@ const platformSlice = createSlice({
   name: 'platforms',
   initialState,
   reducers: {},
-  extraReducers: builder => {
-    builder.addCase(fetchAllPlatformsThunk.pending, (state, action) => {
+  extraReducers: (builder) => {
+    builder.addCase(fetchAllPlatformsThunk.pending, (state) => {
       state.platformFetchStatus = 'loading';
     });
     builder.addCase(fetchAllPlatformsThunk.fulfilled, (state, action) => {

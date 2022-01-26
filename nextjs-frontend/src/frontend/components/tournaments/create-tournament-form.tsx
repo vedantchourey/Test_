@@ -53,8 +53,8 @@ export default function CreateTournamentForm(props: Props) {
           <Typography className={styles.title}>CREATE TOURNAMENT</Typography>
         </div>
         <TournamentDetailsForm errors={errors}
-                               value={request}
-                               onChange={onChangeHandler}
+          value={request}
+          onChange={onChangeHandler}
         />
         <div className={styles.row}>
           <div className={styles.buttonGroup}>

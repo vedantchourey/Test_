@@ -63,96 +63,96 @@ export default function RegistrationForm(props: Props) {
       </div>
       <div className={styles.inputRow}>
         <TextField id="username"
-                   label="Username"
-                   variant="filled"
-                   className={styles.inputRowItem}
-                   value={request.username}
-                   error={propsHasError(errors, 'username')}
-                   helperText={getErrorForProp(errors, 'username')}
-                   onChange={event => setRequest({...request, username: event.target.value})}
+          label="Username"
+          variant="filled"
+          className={styles.inputRowItem}
+          value={request.username}
+          error={propsHasError(errors, 'username')}
+          helperText={getErrorForProp(errors, 'username')}
+          onChange={(event) => setRequest({...request, username: event.target.value})}
         />
       </div>
       <div className={styles.inputRow}>
         <TextField id="email"
-                   label="Email"
-                   variant="filled"
-                   className={styles.inputRowItem}
-                   value={request.email}
-                   error={propsHasError(errors, 'email')}
-                   helperText={getErrorForProp(errors, 'email')}
-                   onChange={event => setRequest({...request, email: event.target.value})}
+          label="Email"
+          variant="filled"
+          className={styles.inputRowItem}
+          value={request.email}
+          error={propsHasError(errors, 'email')}
+          helperText={getErrorForProp(errors, 'email')}
+          onChange={(event) => setRequest({...request, email: event.target.value})}
         />
         <TextField id="mobile"
-                   label="Mobile"
-                   variant="filled"
-                   className={styles.inputRowItem}
-                   value={request.phone}
-                   error={propsHasError(errors, 'phone')}
-                   helperText={getErrorForProp(errors, 'phone')}
-                   onChange={event => setRequest({...request, phone: event.target.value})}
+          label="Mobile"
+          variant="filled"
+          className={styles.inputRowItem}
+          value={request.phone}
+          error={propsHasError(errors, 'phone')}
+          helperText={getErrorForProp(errors, 'phone')}
+          onChange={(event) => setRequest({...request, phone: event.target.value})}
         />
       </div>
       <div className={styles.inputRow}>
         <TextField id="firstName"
-                   label="First Name"
-                   variant="filled"
-                   className={styles.inputRowItem}
-                   value={request.firstName}
-                   error={propsHasError(errors, 'firstName')}
-                   helperText={getErrorForProp(errors, 'firstName')}
-                   onChange={event => setRequest({...request, firstName: event.target.value})}
+          label="First Name"
+          variant="filled"
+          className={styles.inputRowItem}
+          value={request.firstName}
+          error={propsHasError(errors, 'firstName')}
+          helperText={getErrorForProp(errors, 'firstName')}
+          onChange={(event) => setRequest({...request, firstName: event.target.value})}
         />
         <TextField id="lastName"
-                   label="Last Name"
-                   variant="filled"
-                   className={styles.inputRowItem}
-                   value={request.lastName}
-                   error={propsHasError(errors, 'lastName')}
-                   helperText={getErrorForProp(errors, 'lastName')}
-                   onChange={event => setRequest({...request, lastName: event.target.value})}
+          label="Last Name"
+          variant="filled"
+          className={styles.inputRowItem}
+          value={request.lastName}
+          error={propsHasError(errors, 'lastName')}
+          helperText={getErrorForProp(errors, 'lastName')}
+          onChange={(event) => setRequest({...request, lastName: event.target.value})}
         />
       </div>
       <div className={styles.inputRow}>
         <DesktopDatePicker label="Date of birth"
-                           className={styles.inputRowItem}
-                           value={dateOfBirth}
-                           mask={'__/__/____'}
-                           onChange={(value: DateTime | null) => setRequest({...request, dateOfBirth: toISOString(value)})}
-                           inputFormat="dd/MM/yyyy"
-                           renderInput={(params) =>
-                             <TextField {...params}
-                                        variant="filled"
-                                        className={styles.inputRowItem}
-                                        error={propsHasError(errors, 'dateOfBirth')}
-                                        helperText={getErrorForProp(errors, 'dateOfBirth')}/>
-                           }
+          className={styles.inputRowItem}
+          value={dateOfBirth}
+          mask={'__/__/____'}
+          onChange={(value: DateTime | null) => setRequest({...request, dateOfBirth: toISOString(value)})}
+          inputFormat="dd/MM/yyyy"
+          renderInput={(params) =>
+            <TextField {...params}
+              variant="filled"
+              className={styles.inputRowItem}
+              error={propsHasError(errors, 'dateOfBirth')}
+              helperText={getErrorForProp(errors, 'dateOfBirth')}/>
+          }
         />
         <TextField id="password"
-                   label="Password"
-                   variant="filled"
-                   type="password"
-                   className={styles.inputRowItem}
-                   value={request.password}
-                   error={propsHasError(errors, 'password')}
-                   helperText={getErrorForProp(errors, 'password')}
-                   onChange={event => setRequest({...request, password: event.target.value})}
+          label="Password"
+          variant="filled"
+          type="password"
+          className={styles.inputRowItem}
+          value={request.password}
+          error={propsHasError(errors, 'password')}
+          helperText={getErrorForProp(errors, 'password')}
+          onChange={(event) => setRequest({...request, password: event.target.value})}
         />
       </div>
       <div className={styles.inputRow}>
         <StateDropDown value={request.stateId}
-                       onChange={(id, state) => setRequest({...request, stateId: id || '', countryId: state?.countryId})}
-                       countryIsoCode="IND"
-                       autoCompleteClassName={styles.inputRowItem}
-                       inputClassName={styles.inputRowItem}
-                       error={propsHasError(errors, 'stateId')}
-                       helperText={getErrorForProp(errors, 'stateId')}
+          onChange={(id, state) => setRequest({...request, stateId: id || '', countryId: state?.countryId})}
+          countryIsoCode="IND"
+          autoCompleteClassName={styles.inputRowItem}
+          inputClassName={styles.inputRowItem}
+          error={propsHasError(errors, 'stateId')}
+          helperText={getErrorForProp(errors, 'stateId')}
         />
       </div>
       <div className={styles.inputRow}>
         <FormControl>
           <FormControlLabel control={<Checkbox id="agreeToTNC" value={request.agreeToTnc} onChange={handleTncChange}/>}
-                            className={styles.inputRowItem}
-                            label={<Typography className={commonStyles.whiteText}>I certify I am over 18 and agree to the <Link href="/terms-and-conditions">Terms and Conditions!</Link></Typography>}
+            className={styles.inputRowItem}
+            label={<Typography className={commonStyles.whiteText}>I certify I am over 18 and agree to the <Link href="/terms-and-conditions">Terms and Conditions!</Link></Typography>}
           />
           <FormHelperText style={{display: propsHasError(errors, 'agreeToTnc') ? '' : 'none'}} error={true}>{getErrorForProp(errors, 'agreeToTnc')}</FormHelperText>
         </FormControl>

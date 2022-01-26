@@ -17,6 +17,7 @@ import { setDesktopHeaderHeight } from '../../redux-store/layout/layout-slice';
 export default function NoobDesktopHeader() {
   const theme = useTheme();
   const router = useRouter()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const loginButtonRef = useRef<any>();
   const [loginButtonDimensions, setLoginButtonDimensions] = useState(new ComponentDimensions(0, 0, 0, 0, 0, 0, 0))
   const {pathname} = router;
@@ -29,7 +30,7 @@ export default function NoobDesktopHeader() {
 
   const updateDesktopHeight = (element: HTMLDivElement | null) => {
     if (!element?.clientHeight) return;
-    if (currentHeight == element?.clientHeight) return;
+    if (currentHeight === element?.clientHeight) return;
     return appDispatch(setDesktopHeaderHeight(element?.clientHeight || 0));
   };
 
@@ -62,9 +63,9 @@ export default function NoobDesktopHeader() {
           <div className={styles.topLeftMenuGroup}>
             <div className={styles.noobLogo}>
               <Image src="/images/noobstorm-logo-small.png"
-                     width={130}
-                     height={28}
-                     alt="noob storm logo"/>
+                width={130}
+                height={28}
+                alt="noob storm logo"/>
             </div>
             <Button variant="text" startIcon={<ShoppingCartIcon/>} style={{textTransform: 'none'}}>
               Store
@@ -105,10 +106,10 @@ export default function NoobDesktopHeader() {
         </div>
       </AppBar>
       <LoginModal show={showLoginModal}
-                  onSuccessfulLogin={onSuccessfulLogin}
-                  onCancel={() => setShowLoginModal(false)}
-                  top={loginButtonDimensions.bottom + 10}
-                  right={screenWidth - loginButtonDimensions.right}
+        onSuccessfulLogin={onSuccessfulLogin}
+        onCancel={() => setShowLoginModal(false)}
+        top={loginButtonDimensions.bottom + 10}
+        right={screenWidth - loginButtonDimensions.right}
       />
     </>
 

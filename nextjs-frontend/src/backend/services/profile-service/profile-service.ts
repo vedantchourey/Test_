@@ -21,7 +21,8 @@ async function handleBackgroundImageUpdate(userId: string, request: UpdateProfil
 
 export async function updateProfileImage(request: UpdateProfileImageRequest, context: PerRequestContext): Promise<ServiceResponse<UpdateProfileImageRequest, IProfile>> {
   const profilesRepository = createProfileRepository(context.transaction as Knex.Transaction);
-  const userId = context!.user!.id;
+  if (context.user == null) throw new Error('No user found in context.');
+  const userId = context.user.id;
   const userProfile = await profilesRepository.getProfileById(userId);
   if (userProfile == null) return {errors: {apiError: {message: 'Could not find profile.', status: 404}}}
   if (request.imageType === ProfileImageTypes.avatar) await handleAvatarUpdate(userId, request, userProfile, profilesRepository);

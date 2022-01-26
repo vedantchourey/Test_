@@ -13,7 +13,7 @@ import { isLoggedInSelector } from '../src/frontend/redux-store/authentication/a
 
 export default function RegisterSuccess() {
   const theme = useTheme();
-  const isDesktop = useAppSelector(x => isDeviceTypeSelector(x, deviceTypes.desktop));
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
   const backgroundColor = isDesktop ? theme.palette.background.default : theme.palette.background.paper;
   const router = useRouter();
   const isLoggedIn = useAppSelector(isLoggedInSelector);

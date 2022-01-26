@@ -34,11 +34,15 @@ export class ProfilesRepository extends BaseRepository<IProfile> {
 
 
   async updateAvatar(userId: string, url: string): Promise<number> {
-    return this.entities().update({avatarUrl: url, updatedAt: nowAsISOString()}).where({id: userId})
+    return this.entities()
+               .update({avatarUrl: url, updatedAt: nowAsISOString()})
+               .where({id: userId})
   }
 
   async updateProfileBackground(userId: string, url: string): Promise<number> {
-    return this.entities().update({profileBackgroundImageUrl: url, updatedAt: nowAsISOString()}).where({id: userId})
+    return this.entities()
+               .update({profileBackgroundImageUrl: url, updatedAt: nowAsISOString()})
+               .where({id: userId})
   }
 
 }

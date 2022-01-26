@@ -21,9 +21,9 @@ export default function NotFound() {
         </Icon>
         <Typography className={commonStyles.whiteText}>Your are lost! Click</Typography>
         <Link onClick={gotoHomePage}
-              component="button"
-              variant="body2"
-              className={commonStyles.whiteText}>here for home page.
+          component="button"
+          variant="body2"
+          className={commonStyles.whiteText}>here for home page.
         </Link>
       </div>
     </Container>

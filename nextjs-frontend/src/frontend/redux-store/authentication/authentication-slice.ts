@@ -15,7 +15,7 @@ const initialState: IAuthenticationState = {
   avatarUrl: undefined,
 }
 
-export const fetchUserProfileThunk = createAsyncThunk('authentication/userProfile', (arg, thunkAPI) => {
+export const fetchUserProfileThunk = createAsyncThunk('authentication/userProfile', () => {
   return fetchUserProfile();
 });
 
@@ -49,15 +49,15 @@ const authenticationSlice = createSlice({
       state.avatarBackgroundUrl = action.payload;
     }
   },
-  extraReducers: builder => {
-    builder.addCase(fetchUserProfileThunk.pending, (state, action) => {
+  extraReducers: (builder) => {
+    builder.addCase(fetchUserProfileThunk.pending, (state) => {
       state.profileFetchStatus = 'loading';
     });
     builder.addCase(fetchUserProfileThunk.fulfilled, (state, action) => {
       state.profileFetchStatus = 'success';
       state.userProfile = action.payload;
     });
-    builder.addCase(fetchUserProfileThunk.rejected, (state, action) => {
+    builder.addCase(fetchUserProfileThunk.rejected, (state) => {
       state.profileFetchStatus = 'error';
     });
   }

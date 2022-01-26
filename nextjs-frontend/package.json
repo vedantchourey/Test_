@@ -5,7 +5,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint ./ --ext js,jsx,ts,tsx",
     "test": "env NODE_ENV='test' TS_NODE_PROJECT='tsconfig.testing.json'  mocha --require ts-node/register ./test/**/*.spec.ts"
   },
   "dependencies": {
@@ -40,6 +40,7 @@
     "@types/react": "17.0.37",
     "@types/uuid": "^8.3.3",
     "@types/validator": "^13.7.0",
+    "@typescript-eslint/eslint-plugin": "^5.10.1",
     "chai": "^4.3.4",
     "dotenv": "^10.0.0",
     "enzyme": "^3.11.0",
