@@ -1,4 +1,4 @@
-import { ICreatePostRequest } from './i-posts-service';
+import { ICreatePostRequest } from './i-create-post';
 import { PerRequestContext } from '../../../utils/api-middle-ware/api-middleware-typings';
 import { PostsRepository } from '../../database/repositories/posts-repository';
 import { validatePost } from './create-post-validator';
@@ -12,7 +12,7 @@ export async function createPost(req: ICreatePostRequest, context: PerRequestCon
     const errors = await validatePost(req, context);
     if (isThereAnyError(errors)) return { errors: errors }
     const repository = new PostsRepository(context.transaction!);
-    await repository.createPost(req);
+    await repository.createPost({ ...req, postedBy: context.user?.id! });
     const res: ICreatePostResponse = { message: 'Post created' };
     return { data: res }
 }

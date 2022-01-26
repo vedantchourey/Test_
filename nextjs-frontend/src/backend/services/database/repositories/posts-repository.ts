@@ -10,4 +10,9 @@ export class PostsRepository extends BaseRepository<IPost>{
     async createPost(post: IPost) {
         return await this.entities().insert(post);
     }
+
+    async getPostById(id: string) {
+        return await this.entities().select('*').first().where('id', id)
+    }
+
 }
