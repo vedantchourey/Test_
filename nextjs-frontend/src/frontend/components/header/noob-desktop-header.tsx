@@ -61,7 +61,7 @@ export default function NoobDesktopHeader() {
 
   return (
     <>
-      <AppBar position="fixed" className={styles.appHeader} ref={updateDesktopHeight}>
+      <AppBar position="fixed" color='transparent' className={styles.appHeader} ref={updateDesktopHeight}>
         <div className={styles.topMenu}>
           <div className={styles.topLeftMenuGroup}>
             <div className={styles.noobLogo}>
@@ -82,7 +82,7 @@ export default function NoobDesktopHeader() {
               <Button variant="outlined" style={{ textTransform: 'none', color: 'white' }} onClick={gotoRegisterPage}>
                 Register
               </Button>
-              <Typography style={{ alignSelf: 'center' }}>OR</Typography>
+              <Typography color='white' style={{ alignSelf: 'center' }}>OR</Typography>
               <Button variant="contained" ref={loginButtonRef} style={{ textTransform: 'none' }} onClick={onShowLoginModal}>
                 Sign In
               </Button>

@@ -22,12 +22,12 @@ export default function PartnerWithUs() {
             }}
         >
             <Fragment>
-                <div className={styles.heroContainer}>
 
-                    <div className={styles.heading}>
-                        <Heading heading="Partner with us and let's do great things together." />
-                    </div>
-                </div>
+                <Heading
+                    backgroundImage
+                    backgroundImageUrl="/images/partner-with-us.png"
+                    heading="Partner with us and let's do great things together."
+                />
 
 
                 <Container maxWidth="md">

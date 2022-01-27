@@ -40,7 +40,7 @@ export default function NoobPage(props: Props) {
       </Head>
       <NoobHeader />
       <main className={commonStyles.main}>
-        <div className={styles.container} style={{ marginTop: appHeaderHeight }}>
+        <div className={styles.container}>
           {children}
         </div>
       </main>
