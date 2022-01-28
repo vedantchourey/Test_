@@ -3,23 +3,15 @@ import { PerRequestContext } from '../../../utils/api-middle-ware/api-middleware
 import { PostsRepository } from '../../database/repositories/posts-repository';
 import { validateRequest } from './update-post-validator';
 import { isThereAnyError } from '../../../../common/utils/validation/validator';
+import { sanitizeObject } from '../../../../common/utils/utils';
 
-interface IPostUpdate {
-    postId?: string;
-    postImgUrl?: string;
-    postContent?: string;
-    postedBy?: string;
-}
 
 export async function updatePost(post: IUpdatePostRequest, context: PerRequestContext) {
     const errors = await validateRequest(post, context);
     if (isThereAnyError(errors)) return { errors }
     const repository = new PostsRepository(context.transaction!);
 
-    const update: IPostUpdate = { ...post };
-    // Remove unwanted fields if exists
-    delete update['postId'];
-    delete update['postedBy'];
+    const update = sanitizeObject(post, ['postId', 'postedBy']);
 
     await repository.updatePost(post.postId, update);
 
