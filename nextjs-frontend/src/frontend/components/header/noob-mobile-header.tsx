@@ -7,7 +7,7 @@ import { useState } from 'react';
 import NoobDrawer from '../drawer/noob-drawer';
 import LoginModal from '../auth/login-modal/login-modal';
 import { useAppDispatch, useAppSelector } from '../../redux-store/redux-store';
-import { avatarUrlSelector, isLoggedInSelector } from '../../redux-store/authentication/authentication-selectors';
+import { avatarImageBlobUrlSelector, isLoggedInSelector } from '../../redux-store/authentication/authentication-selectors';
 import PersonIcon from '@mui/icons-material/Person';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
@@ -25,7 +25,7 @@ export default function NoobMobileHeader() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const toggleDrawer = () => setShowMenu(true);
   const hideMenu = () => setShowMenu(false);
-  const avatarUrl = useAppSelector(avatarUrlSelector);
+  const avatarUrl = useAppSelector(avatarImageBlobUrlSelector);
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const appDispatch = useAppDispatch();
   const currentHeight = useAppSelector(mobileHeaderHeightSelector);

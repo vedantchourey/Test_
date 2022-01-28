@@ -1,7 +1,13 @@
-import { authCheckStatusSelector, userProfileFetchStatusSelector, userProfileSelector } from '../../redux-store/authentication/authentication-selectors';
+import {
+  authCheckStatusSelector,
+  forceFetchAvatarBackgroundImageBlobSelector,
+  forceFetchAvatarImageBlobSelector,
+  userProfileFetchStatusSelector,
+  userProfileSelector
+} from '../../redux-store/authentication/authentication-selectors';
 import { useAppDispatch, useAppSelector } from '../../redux-store/redux-store';
 import { useEffect } from 'react';
-import { clearUserProfile, fetchUserProfileThunk, setAvatarBackgroundUrl, setAvatarUrl, setCheckLoginStatus, setIsLoggedIn } from '../../redux-store/authentication/authentication-slice';
+import { clearUserProfile, fetchUserProfileThunk, setAvatarBackgroundBlob, setAvatarBlob, setCheckLoginStatus, setIsLoggedIn } from '../../redux-store/authentication/authentication-slice';
 import { refreshSession } from '../../service-clients/auth-service-client';
 import { frontendSupabase } from '../../services/supabase-frontend-service';
 import { setIsLoading } from '../../redux-store/screen-animations/screen-animation-slice';
@@ -12,6 +18,8 @@ export default function AuthEventsHandler() {
   const appDispatch = useAppDispatch();
   const profileFetchStatus = useAppSelector(userProfileFetchStatusSelector);
   const userProfile = useAppSelector(userProfileSelector);
+  const forceFetchAvatar = useAppSelector(forceFetchAvatarImageBlobSelector);
+  const forceFetchAvatarBackground = useAppSelector(forceFetchAvatarBackgroundImageBlobSelector);
 
   useEffect(() => {
     (async () => {
@@ -35,7 +43,7 @@ export default function AuthEventsHandler() {
   useEffect(() => {
     if (profileFetchStatus !== 'success') return;
     appDispatch(setIsLoading(false));
-  }, [profileFetchStatus]);
+  }, [appDispatch, profileFetchStatus]);
 
   useEffect(() => {
     const subscription = frontendSupabase.auth.onAuthStateChange(async (event, session) => {
@@ -47,33 +55,33 @@ export default function AuthEventsHandler() {
       } else if (event === 'SIGNED_OUT') {
         appDispatch(setIsLoggedIn({isLoggedIn: false, username: undefined}));
         appDispatch(clearUserProfile());
-        appDispatch(setAvatarUrl(undefined));
-        appDispatch(setAvatarBackgroundUrl(undefined));
+        appDispatch(setAvatarBlob(undefined));
+        appDispatch(setAvatarBackgroundBlob(undefined));
       }
     });
     return () => subscription.data?.unsubscribe()
-  }, [])
+  }, [appDispatch])
 
   useEffect(() => {
     (async () => {
       if (userProfile?.avatarUrl == null) return;
-      const usersAvatar = await downloadImage('resources', userProfile?.avatarUrl);
+      const usersAvatar = await downloadImage('resources', userProfile.avatarUrl, true);
       if (usersAvatar.data == null) return;
       const objectURL: string = URL.createObjectURL(usersAvatar.data);
-      appDispatch(setAvatarUrl(objectURL));
+      appDispatch(setAvatarBlob(objectURL));
     })();
-  }, [userProfile?.avatarUrl]);
+  }, [appDispatch, userProfile?.avatarUrl, forceFetchAvatar]);
 
 
   useEffect(() => {
     (async () => {
       if (userProfile?.profileBackgroundImageUrl == null) return;
-      const usersBackground = await downloadImage('resources', userProfile?.profileBackgroundImageUrl);
+      const usersBackground = await downloadImage('resources', userProfile.profileBackgroundImageUrl, true);
       if (usersBackground.data == null) return;
       const objectURL: string = URL.createObjectURL(usersBackground.data);
-      appDispatch(setAvatarBackgroundUrl(objectURL));
+      appDispatch(setAvatarBackgroundBlob(objectURL));
     })();
-  }, [userProfile?.profileBackgroundImageUrl])
+  }, [appDispatch, userProfile?.profileBackgroundImageUrl, forceFetchAvatarBackground])
 
   return null;
 }

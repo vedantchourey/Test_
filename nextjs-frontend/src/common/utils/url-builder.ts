@@ -37,7 +37,9 @@ export default class UrlBuilder {
   }
 
   build(): string {
-    return `${(this.populateRouteParams())}?${(this.getQueryParams())}`
+    const route = this.populateRouteParams();
+    if (route.indexOf('?') === -1) return `${route}?${(this.getQueryParams())}`;
+    return `${route}&${(this.getQueryParams())}`;
   }
 
   private getQueryParams() {

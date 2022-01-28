@@ -10,6 +10,8 @@ export interface IAuthenticationState {
   userProfile: IProfileResponse | undefined;
   // temp cache from auth token
   username: string | undefined;
-  avatarUrl: string | undefined;
-  avatarBackgroundUrl: string | undefined;
+  avatarImageBlob: string | undefined;
+  avatarBackgroundImageBlob: string | undefined;
+  forceFetchAvatarImageBlob: string;
+  forceFetchAvatarBackgroundImageBlob: string;
 }
