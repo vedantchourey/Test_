@@ -1,7 +1,7 @@
 export interface IBackendConfig {
   db: {
     dbHost: string;
-    dbPort: string;
+    dbPort: number;
     dbUser: string;
     dbPassword: string;
     databaseName: string;
