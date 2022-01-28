@@ -2,10 +2,10 @@
   "dev": {
     "driver": "pg",
     "user": "postgres",
-    "password": "postgres",
-    "host": "localhost",
+    "password": "Noobstorm@123",
+    "host": "db.swbpdojioeafkmzrxnxz.supabase.co",
     "database": "postgres",
-    "port": "54322",
+    "port": "5432",
     "schema": "public"
   },
   "cloud": {

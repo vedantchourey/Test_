@@ -15,6 +15,8 @@ NEXT_PUBLIC_NOOB_SUPABASE_URL=<Your supabase api url>
 NEXT_PUBLIC_NOOB_SUPABASE_ANON_KEY=<Your supabase anonymous key>
 NEXT_PUBLIC_NOOB_BASE_APP_URL='http://localhost:3000'
 NEXT_PUBLIC_NOOB_BASE_API_URL='http://localhost:3000'
+CMS_API_ENDPOINT=<CMS API endpoint>
+CMS_API_TOKEN=<Auth token for cms apis>
 ```
 
 
