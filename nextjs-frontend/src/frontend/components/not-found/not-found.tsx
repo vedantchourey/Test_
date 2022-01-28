@@ -14,7 +14,7 @@ export default function NotFound() {
 
   return (
     <div style={{ margin: 50 }}>
-      <MessageContainer icon>
+      <MessageContainer icon style={{ padding: 20 }}>
         <Fragment>
           <Typography className={commonStyles.whiteText}>
             Your are lost! Click

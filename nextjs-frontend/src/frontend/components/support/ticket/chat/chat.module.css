@@ -1,0 +1,6 @@
+.paperContainer {
+    background: #160C30;
+    display: flex;
+    justify-content: space-between;
+    padding: 5;
+}

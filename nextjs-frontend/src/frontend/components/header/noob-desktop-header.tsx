@@ -46,6 +46,10 @@ export default function NoobDesktopHeader() {
     await router.push('/register')
   }
 
+  async function gotoSupportPage() {
+    await router.push('/support')
+  }
+
   async function gotoHomePage() {
     await router.push('/')
   }
@@ -101,7 +105,7 @@ export default function NoobDesktopHeader() {
             <Button variant="text" style={buttonStyle(['/tournaments'])}>Tournaments</Button>
             <Button variant="text" style={buttonStyle(['/leaderboards'])}>Leaderboards</Button>
             <Button variant="text" onClick={gotoAboutUsPage} style={buttonStyle(['/about-us'])}>About Us</Button>
-            <Button variant="text" style={buttonStyle(['/support'])}>Support</Button>
+            <Button variant="text" onClick={gotoSupportPage} style={buttonStyle(['/support'])}>Support</Button>
             <Button variant="text" style={buttonStyle(['/faq'])}>FAQ</Button>
           </div>
           <div className={styles.bottomMenuRightGroup}>

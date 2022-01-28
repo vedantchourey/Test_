@@ -21,7 +21,9 @@ const ResetPasswordRequestCode = ({ onResetHandler }: Props) => {
         phone: ''
     });
 
-    async function onClickResetPassword() {
+    async function onClickResetPassword(e: Event) {
+        e.preventDefault()
+
         const validationResults = await validateResetPassword(request);
         setErrors(validationResults);
         if (isThereAnyError(validationResults)) return;
@@ -54,42 +56,44 @@ const ResetPasswordRequestCode = ({ onResetHandler }: Props) => {
     }
 
     return (
-        <Grid container spacing={3}>
+        <form noValidate autoComplete='off' onSubmit={onClickResetPassword}>
+            <Grid container spacing={3}>
 
-            <Grid item xs={12}>
-                <Typography align='left' variant={"h3"}>
-                    Please enter your phone number or email address. You will receive a code to create a new password via email.
-                </Typography>
+                <Grid item xs={12}>
+                    <Typography align='left' variant={"h3"}>
+                        Please enter your phone number or email address. You will receive a code to create a new password via email.
+                    </Typography>
+                </Grid>
+
+                <Grid item xs={12}>
+                    <Typography align='left' mb={1} variant={"h3"}>
+                        E-mail or Phone Number:
+                    </Typography>
+                    <TextField
+                        id="emailorphone"
+                        variant="filled"
+                        value={request.email || request.phone}
+                        error={propsHasError(errors, request.email ? "email" : "phone")}
+                        helperText={getErrorForProp(errors, request.email ? "email" : "phone")}
+                        onChange={handleChangeValue}
+                        fullWidth
+                        InputProps={{ disableUnderline: true }}
+                        inputProps={{
+                            style: {
+                                padding: "12px !important"
+                            }
+                        }}
+                    />
+                </Grid>
+
+                <Grid item xs={12}>
+                    <Button className={commonStyles.actionButton} variant="contained" type='submit'>
+                        <Typography>Send</Typography>
+                    </Button>
+                </Grid>
+
             </Grid>
-
-            <Grid item xs={12}>
-                <Typography align='left' mb={1} variant={"h3"}>
-                    E-mail or Phone Number:
-                </Typography>
-                <TextField
-                    id="emailorphone"
-                    variant="filled"
-                    value={request.email || request.phone}
-                    error={propsHasError(errors, request.email ? "email" : "phone")}
-                    helperText={getErrorForProp(errors, request.email ? "email" : "phone")}
-                    onChange={handleChangeValue}
-                    fullWidth
-                    InputProps={{ disableUnderline: true }}
-                    inputProps={{
-                        style: {
-                            padding: "12px !important"
-                        }
-                    }}
-                />
-            </Grid>
-
-            <Grid item xs={12}>
-                <Button className={commonStyles.actionButton} variant="contained" onClick={onClickResetPassword}>
-                    <Typography>Send</Typography>
-                </Button>
-            </Grid>
-
-        </Grid>
+        </form>
     )
 }
 

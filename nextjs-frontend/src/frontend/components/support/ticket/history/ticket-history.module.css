@@ -1,0 +1,24 @@
+.cardBackground {
+    background: #160C30;
+}
+
+.cardBackground *::first-letter {
+    text-transform: capitalize;
+}
+
+.flexRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cardBackground .cardButton {
+    text-align: right;
+}
+
+@media only screen and (max-width: 600px)  {
+    .cardBackground .cardButton {
+        text-align: center;
+    }
+}
