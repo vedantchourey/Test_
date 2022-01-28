@@ -5,6 +5,7 @@ import { Typography } from "@mui/material";
 import commonStyles from '../../src/frontend/styles/common.module.css';
 import Heading from "../../src/frontend/components/ui-components/typography/heading"
 import NoobPage from "../../src/frontend/components/page/noob-page";
+import { backendConfig } from '../../src/backend/utils/config/backend-config';
 
 interface IPageProps {
     pageContent: {
@@ -40,14 +41,15 @@ export default function TermsOfServicePage(props: IPageProps) {
 
 export const getServerSideProps: GetServerSideProps = async () => {
     const {
-        CMS_API_ENDPOINT,
-        CMS_API_TOKEN
-    } = process.env;
+        cmsApiEndpoint,
+        cmsApiToken
+    } = backendConfig.client;
+
     try {
-        const endpoint = CMS_API_ENDPOINT + '/api/terms-and-condition';
+        const endpoint = cmsApiEndpoint + '/api/terms-and-condition';
         const res = await axios.get(endpoint, {
             headers: {
-                'Authorization': 'Bearer ' + CMS_API_TOKEN
+                'Authorization': 'Bearer ' + cmsApiToken
             }
         });
 
