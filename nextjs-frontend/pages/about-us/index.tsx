@@ -6,6 +6,7 @@ import { Container, Grid, Typography } from '@mui/material';
 import Heading from '../../src/frontend/components/ui-components/typography/heading';
 import NewsletterPoster from "../../src/frontend/components/newsletter-poster/index"
 import NoobPage from '../../src/frontend/components/page/noob-page';
+import { backendConfig } from '../../src/backend/utils/config/backend-config';
 
 interface IPageProps {
     pageContent: {
@@ -63,14 +64,15 @@ const AboutUs = (props: IPageProps) => {
 
 export const getServerSideProps: GetServerSideProps = async () => {
     const {
-        CMS_API_ENDPOINT,
-        CMS_API_TOKEN
-    } = process.env;
+        cmsApiEndpoint,
+        cmsApiToken
+    } = backendConfig.client;
+
     try {
-        const endpoint = CMS_API_ENDPOINT + '/api/about-us';
+        const endpoint = cmsApiEndpoint + '/api/about-us';
         const res = await axios.get(endpoint, {
             headers: {
-                'Authorization': 'Bearer ' + CMS_API_TOKEN
+                'Authorization': 'Bearer ' + cmsApiToken
             },
             params: {
                 populate: '*'
