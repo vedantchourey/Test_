@@ -26,9 +26,9 @@ interface CustomLoginDialogProps {
   right?: number;
 }
 
-const CustomLoginDialog = styled(Dialog)<CustomLoginDialogProps>(({theme, top = 100, right = 70}) => {
+const CustomLoginDialog = styled(Dialog)<CustomLoginDialogProps>(({ theme, top = 100, right = 70 }) => {
   const isDesktop = useAppSelector(x => isDeviceTypeSelector(x, deviceTypes.desktop));
-  const positionStyle = !isDesktop ? {} : {position: 'absolute', top, right};
+  const positionStyle = !isDesktop ? {} : { position: 'absolute', top, right };
 
   return ({
     '& .MuiPaper-root': {
@@ -58,8 +58,8 @@ function validateCredentials(request: SignInRequest): ValidationResult<SignInReq
 }
 
 export default function LoginModal(props: Props) {
-  const {onSuccessfulLogin, onCancel, show, right = 70, top = 100} = props;
-  const [request, setRequest] = useState<SignInRequest>({email: '', password: ''});
+  const { onSuccessfulLogin, onCancel, show, right = 70, top = 100 } = props;
+  const [request, setRequest] = useState<SignInRequest>({ email: '', password: '' });
   const [errors, setErrors] = useState<ValidationResult<SignInRequest>>({});
   const [loginError, setLoginError] = useState<ApiError | undefined>();
   const appDispatch = useAppDispatch();
@@ -67,7 +67,7 @@ export default function LoginModal(props: Props) {
   const router = useRouter();
 
   function resetData() {
-    setRequest({email: '', password: ''});
+    setRequest({ email: '', password: '' });
     setErrors({});
     setLoginError(undefined);
   }
@@ -97,7 +97,7 @@ export default function LoginModal(props: Props) {
   }
 
   const onClickLostPassword = async () => {
-    await router.push('/forgot-password')
+    await router.push('/reset-password')
   };
 
   return (
@@ -109,45 +109,45 @@ export default function LoginModal(props: Props) {
           </div>
           <div className={styles.headerButtons}>
             <IconButton onClick={onClose} disabled={isBusy}>
-              <CancelIcon/>
+              <CancelIcon />
             </IconButton>
           </div>
         </div>
         <div className={styles.row}>
           <TextField id="email"
-                     label="Email"
-                     variant="filled"
-                     className={styles.inputRowItem}
-                     value={request.email}
-                     error={propsHasError(errors, 'email')}
-                     helperText={getErrorForProp(errors, 'email')}
-                     onChange={event => setRequest({...request, email: event.target.value})}
-                     disabled={isBusy}
+            label="Email"
+            variant="filled"
+            className={styles.inputRowItem}
+            value={request.email}
+            error={propsHasError(errors, 'email')}
+            helperText={getErrorForProp(errors, 'email')}
+            onChange={event => setRequest({ ...request, email: event.target.value })}
+            disabled={isBusy}
           />
         </div>
         <div className={styles.row}>
           <TextField id="password"
-                     label="Password"
-                     variant="filled"
-                     type="password"
-                     className={styles.inputRowItem}
-                     value={request.password}
-                     error={propsHasError(errors, 'password')}
-                     helperText={getErrorForProp(errors, 'password')}
-                     onChange={event => setRequest({...request, password: event.target.value})}
-                     disabled={isBusy}
+            label="Password"
+            variant="filled"
+            type="password"
+            className={styles.inputRowItem}
+            value={request.password}
+            error={propsHasError(errors, 'password')}
+            helperText={getErrorForProp(errors, 'password')}
+            onChange={event => setRequest({ ...request, password: event.target.value })}
+            disabled={isBusy}
           />
         </div>
         <div className={styles.row}>
-          <FormHelperText style={{display: loginError ? '' : 'none'}} error={true}>{loginError?.message}</FormHelperText>
+          <FormHelperText style={{ display: loginError ? '' : 'none' }} error={true}>{loginError?.message}</FormHelperText>
         </div>
         <div className={styles.row}>
           <Typography><Link onClick={onClickLostPassword}>Lost your password</Link></Typography>
         </div>
         <div className={styles.row}>
           <Button className={styles.actionButton}
-                  onClick={onClickLogin}
-                  disabled={isBusy}>
+            onClick={onClickLogin}
+            disabled={isBusy}>
             <Typography>Log In</Typography>
           </Button>
         </div>

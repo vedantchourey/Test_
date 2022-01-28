@@ -1,0 +1,17 @@
+.heroContainer {
+    position: relative;
+    margin-top: -20px !important;
+    height: 500px;
+    background: url('/images/partner-with-us.png');
+    background-repeat: no-repeat;
+    background-clip: border-box;
+    background-size: cover;
+    background-origin: border-box;
+}
+
+.heading {
+    position: absolute;
+    bottom: 30px;
+    left: 70px;
+    width: 40%;
+}

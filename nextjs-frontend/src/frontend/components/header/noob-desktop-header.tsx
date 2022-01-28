@@ -19,7 +19,7 @@ export default function NoobDesktopHeader() {
   const router = useRouter()
   const loginButtonRef = useRef<any>();
   const [loginButtonDimensions, setLoginButtonDimensions] = useState(new ComponentDimensions(0, 0, 0, 0, 0, 0, 0))
-  const {pathname} = router;
+  const { pathname } = router;
   const [showLoginModal, setShowLoginModal] = useState(false);
   const screenWidth = useAppSelector(screenWidthSelector);
   const isLoggedIn = useAppSelector(isLoggedInSelector);
@@ -34,12 +34,20 @@ export default function NoobDesktopHeader() {
   };
 
   function buttonStyle(expectedPaths: string[]): React.CSSProperties {
-    if (expectedPaths.indexOf(pathname) === -1) return {color: 'white', fontWeight: 700};
-    return {color: theme.palette.primary.main, fontWeight: 700};
+    if (expectedPaths.indexOf(pathname) === -1) return { color: 'white', fontWeight: 700 };
+    return { color: theme.palette.primary.main, fontWeight: 700 };
+  }
+
+  async function gotoAboutUsPage() {
+    await router.push('/about-us')
   }
 
   async function gotoRegisterPage() {
     await router.push('/register')
+  }
+
+  async function gotoSupportPage() {
+    await router.push('/support')
   }
 
   async function gotoHomePage() {
@@ -57,36 +65,36 @@ export default function NoobDesktopHeader() {
 
   return (
     <>
-      <AppBar position="fixed" className={styles.appHeader} ref={updateDesktopHeight}>
+      <AppBar position="fixed" color='transparent' className={styles.appHeader} ref={updateDesktopHeight}>
         <div className={styles.topMenu}>
           <div className={styles.topLeftMenuGroup}>
             <div className={styles.noobLogo}>
               <Image src="/images/noobstorm-logo-small.png"
-                     width={130}
-                     height={28}
-                     alt="noob storm logo"/>
+                width={130}
+                height={28}
+                alt="noob storm logo" />
             </div>
-            <Button variant="text" startIcon={<ShoppingCartIcon/>} style={{textTransform: 'none'}}>
+            <Button variant="text" startIcon={<ShoppingCartIcon />} style={{ textTransform: 'none' }}>
               Store
             </Button>
-            <Button variant="text" startIcon={<FlashOnIcon/>} style={{color: theme.palette.secondary.main, textTransform: 'none'}}>
+            <Button variant="text" startIcon={<FlashOnIcon />} style={{ color: theme.palette.secondary.main, textTransform: 'none' }}>
               Free Agency Market
             </Button>
           </div>
           {
             !isLoggedIn && <div className={styles.topRightMenuGroup}>
-              <Button variant="outlined" style={{textTransform: 'none', color: 'white'}} onClick={gotoRegisterPage}>
+              <Button variant="outlined" style={{ textTransform: 'none', color: 'white' }} onClick={gotoRegisterPage}>
                 Register
               </Button>
-              <Typography style={{alignSelf: 'center'}}>OR</Typography>
-              <Button variant="contained" ref={loginButtonRef} style={{textTransform: 'none'}} onClick={onShowLoginModal}>
+              <Typography color='white' style={{ alignSelf: 'center' }}>OR</Typography>
+              <Button variant="contained" ref={loginButtonRef} style={{ textTransform: 'none' }} onClick={onShowLoginModal}>
                 Sign In
               </Button>
             </div>
           }
           {
             isLoggedIn && <div className={styles.topRightMenuGroup}>
-              <LoggedInUserMenu/>
+              <LoggedInUserMenu />
             </div>
           }
 
@@ -96,8 +104,8 @@ export default function NoobDesktopHeader() {
             <Button variant="text" style={buttonStyle(['/'])} onClick={gotoHomePage}>Home</Button>
             <Button variant="text" style={buttonStyle(['/tournaments'])}>Tournaments</Button>
             <Button variant="text" style={buttonStyle(['/leaderboards'])}>Leaderboards</Button>
-            <Button variant="text" style={buttonStyle(['/about-us'])}>About Us</Button>
-            <Button variant="text" style={buttonStyle(['/support'])}>Support</Button>
+            <Button variant="text" onClick={gotoAboutUsPage} style={buttonStyle(['/about-us'])}>About Us</Button>
+            <Button variant="text" onClick={gotoSupportPage} style={buttonStyle(['/support'])}>Support</Button>
             <Button variant="text" style={buttonStyle(['/faq'])}>FAQ</Button>
           </div>
           <div className={styles.bottomMenuRightGroup}>
@@ -105,10 +113,10 @@ export default function NoobDesktopHeader() {
         </div>
       </AppBar>
       <LoginModal show={showLoginModal}
-                  onSuccessfulLogin={onSuccessfulLogin}
-                  onCancel={() => setShowLoginModal(false)}
-                  top={loginButtonDimensions.bottom + 10}
-                  right={screenWidth - loginButtonDimensions.right}
+        onSuccessfulLogin={onSuccessfulLogin}
+        onCancel={() => setShowLoginModal(false)}
+        top={loginButtonDimensions.bottom + 10}
+        right={screenWidth - loginButtonDimensions.right}
       />
     </>
 

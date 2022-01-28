@@ -24,7 +24,6 @@ export function createNextJsRouteHandler(definitions: Partial<Record<Methods, Ro
     return executeAll(preHooks, req, res, context).then(x => handler(req, res, context))
       .then(x => executeAll(postHooks, req, res, context))
       .catch(async e => {
-        console.error(e);
         await executeAll(postHooks, req, res, { ...context, error: e });
         throw e;
       })

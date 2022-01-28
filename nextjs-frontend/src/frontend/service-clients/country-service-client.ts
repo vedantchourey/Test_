@@ -3,8 +3,8 @@ import { frontendSupabase } from '../services/supabase-frontend-service';
 
 export const getAllStates = async (countryIsoCode: string): Promise<IState[]> => {
   const values = await frontendSupabase.from('states')
-                                       .select(
-                                         `id,
+    .select(
+      `id,
                                           countryId,
                                           isoCode, 
                                           displayName,
@@ -12,7 +12,7 @@ export const getAllStates = async (countryIsoCode: string): Promise<IState[]> =>
                                           (
                                             id
                                           )`
-                                       )
-                                       .eq('countries.isoCode', countryIsoCode);
+    )
+    .eq('countries.isoCode', countryIsoCode);
   return values.data as IState[];
 }
