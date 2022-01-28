@@ -10,4 +10,8 @@ export interface IBackendConfig {
     apiUrl: string;
     anonKey: string;
   };
+  client: {
+    cmsApiToken: string;
+    cmsApiEndpoint: string;
+  }
 }
