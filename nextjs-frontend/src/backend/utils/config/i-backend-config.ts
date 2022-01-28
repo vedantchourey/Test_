@@ -10,4 +10,7 @@ export interface IBackendConfig {
     apiUrl: string;
     anonKey: string;
   };
+  client: {
+    appUrl: string;
+  }
 }

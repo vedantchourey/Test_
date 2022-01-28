@@ -5,6 +5,6 @@ export function createTransaction(): Promise<Knex.Transaction> {
   return knex.transaction();
 }
 
-export function knexQuery(table: string): Promise<Knex.QueryBuilder> {
-  return knex(table);
+export function knexQuery(): Knex{
+  return knex;
 }

@@ -7,6 +7,7 @@ const dbUser = process.env.NOOB_DATA_BASE_USER || 'postgres';
 const dbPassword = process.env.NOOB_DATA_BASE_PASSWORD || 'postgres';
 const supabaseUrl = process.env.NEXT_PUBLIC_NOOB_SUPABASE_URL || 'http://localhost:54321';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_NOOB_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiJ9.ZopqoUt20nEV9cklpv9e3yw3PVyZLmKs5qLD6nGL1SI';
+const appUrl = process.env.NEXT_PUBLIC_NOOB_BASE_APP_URL || 'http://localhost:3000';
 
 export const backendConfig: IBackendConfig = {
   db: {
@@ -19,6 +20,9 @@ export const backendConfig: IBackendConfig = {
   supabase: {
     anonKey: supabaseAnonKey,
     apiUrl: supabaseUrl
+  },
+  client: {
+    appUrl: appUrl
   }
 }
 
