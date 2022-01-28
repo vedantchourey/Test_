@@ -6,7 +6,7 @@
 
 CREATE TABLE IF NOT EXISTS public.post_comments
 (
-    id uuid NOT NULL,
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
     comment text COLLATE pg_catalog."default" NOT NULL,
     "commentBy" uuid NOT NULL,
     "postId" uuid NOT NULL,

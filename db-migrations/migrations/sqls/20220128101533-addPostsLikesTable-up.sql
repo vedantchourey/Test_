@@ -6,7 +6,7 @@
 
 CREATE TABLE IF NOT EXISTS public.post_likes
 (
-    id uuid NOT NULL,
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
     "postId" uuid NOT NULL,
     "likedBy" uuid NOT NULL,
     CONSTRAINT post_likes_pk PRIMARY KEY (id),
