@@ -9,5 +9,5 @@ export async function createComment(req: ICreateCommentRequest, context: PerRequ
     if (isThereAnyError(errors)) return { errors };
     const repository = new PostCommentsRepository(context.transaction!);
     await repository.createComment({ ...req, commentBy: context.user?.id! });
-    return { data: { message: 'Post Created' } }
+    return { data: { message: 'Comment created' } }
 }
