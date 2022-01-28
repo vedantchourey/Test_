@@ -1,12 +1,10 @@
-const path = require('path');
-const fs = require('fs');
-
 const {
   DB_HOST,
   DB_PORT,
   DB_NAME,
   DB_USER,
-  DB_PASSWORD
+  DB_PASSWORD,
+  DB_SSL
 } = process.env;
 
 module.exports = ({ env }) => ({
@@ -19,7 +17,7 @@ module.exports = ({ env }) => ({
       user: env('DATABASE_USERNAME', DB_USER),
       password: env('DATABASE_PASSWORD', DB_PASSWORD),
       ssl: {
-        ca: fs.readFileSync(path.join(__dirname, './db-ssl.crt')).toString(),
+        ca: DB_SSL.toString(),
       },
     },
   },
