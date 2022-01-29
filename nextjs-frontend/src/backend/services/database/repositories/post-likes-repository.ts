@@ -11,6 +11,10 @@ export class PostLikesRepository extends BaseRepository<object>{
         return await this.entities().insert(like);
     }
 
+    async deleteLike(like: ILike) {
+        return await this.entities().where({ postId: like.postId, likedBy: like.likedBy }).del();
+    }
+
     async isLiked(postId: string, userId: string) {
         return await this.entities().select('id').where({ postId: postId, likedBy: userId }).first();
     }
