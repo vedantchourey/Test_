@@ -28,32 +28,33 @@ export default function TournamentTypeDropDown(props: Props) {
 
   useEffect(() => {
     if (value === selectedType?.value) return;
-    const matchingValue = options.filter(x => x.value === value)[0];
+    const matchingValue = options.filter((x) => x.value === value)[0];
     setSelectedType(matchingValue);
   }, [selectedType?.value, value])
 
-  const onInputChange = (event: any, newValue: IOption | null) => {
+
+  const onInputChange = (event: unknown, newValue: IOption | null) => {
     setSelectedType(newValue);
     onChange?.(newValue?.value);
   };
 
   return (
     <Autocomplete disablePortal
-                  className={autoCompleteClassName}
-                  options={options}
-                  value={selectedType}
-                  getOptionLabel={x => x.display}
-                  onChange={onInputChange}
-                  disabled={disabled}
-                  isOptionEqualToValue={(option: IOption, value1: IOption) => option.value === value1.value}
-                  renderInput={(params) => <TextField {...params}
-                                                      label={label}
-                                                      variant="filled"
-                                                      className={inputClassName}
-                                                      error={error}
-                                                      placeholder={placeholder}
-                                                      helperText={helperText}
-                  />}
+      className={autoCompleteClassName}
+      options={options}
+      value={selectedType}
+      getOptionLabel={(x) => x.display}
+      onChange={onInputChange}
+      disabled={disabled}
+      isOptionEqualToValue={(option: IOption, value1: IOption) => option.value === value1.value}
+      renderInput={(params) => <TextField {...params}
+        label={label}
+        variant="filled"
+        className={inputClassName}
+        error={error}
+        placeholder={placeholder}
+        helperText={helperText}
+      />}
     />
   )
 }

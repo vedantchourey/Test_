@@ -17,6 +17,7 @@ import { setDesktopHeaderHeight } from '../../redux-store/layout/layout-slice';
 export default function NoobDesktopHeader() {
   const theme = useTheme();
   const router = useRouter()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const loginButtonRef = useRef<any>();
   const [loginButtonDimensions, setLoginButtonDimensions] = useState(new ComponentDimensions(0, 0, 0, 0, 0, 0, 0))
   const { pathname } = router;
@@ -29,7 +30,7 @@ export default function NoobDesktopHeader() {
 
   const updateDesktopHeight = (element: HTMLDivElement | null) => {
     if (!element?.clientHeight) return;
-    if (currentHeight == element?.clientHeight) return;
+    if (currentHeight === element?.clientHeight) return;
     return appDispatch(setDesktopHeaderHeight(element?.clientHeight || 0));
   };
 
@@ -115,6 +116,5 @@ export default function NoobDesktopHeader() {
         right={screenWidth - loginButtonDimensions.right}
       />
     </>
-
   );
 }

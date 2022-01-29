@@ -7,7 +7,7 @@ export function LoadingIndicator() {
   const isLoading = useAppSelector(isLoadingSelector);
   return (
     <Backdrop sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}
-              open={isLoading}>
+      open={isLoading}>
       <CircularProgress color="inherit"/>
     </Backdrop>
   )

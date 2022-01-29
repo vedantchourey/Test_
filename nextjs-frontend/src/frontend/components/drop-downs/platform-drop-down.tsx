@@ -34,12 +34,12 @@ export default function PlatformDropDown(props: Props) {
   }, [appDispatch, platformsFetchStatus]);
 
   useEffect(() => {
-    const matchingPlatform = platforms.filter(x => x.id === value)[0];
+    const matchingPlatform = platforms.filter((x) => x.id === value)[0];
     if (matchingPlatform?.id === selectedPlatform?.id) return;
     setSelectedPlatform(matchingPlatform || null);
   }, [platforms, selectedPlatform?.id, value]);
 
-  const onInputChange = (event: any, newValue: IPlatformResponse | null) => {
+  const onInputChange = (event: unknown, newValue: IPlatformResponse | null) => {
     setSelectedPlatform(newValue)
     onChange?.(newValue?.id, newValue);
   };
@@ -47,31 +47,31 @@ export default function PlatformDropDown(props: Props) {
   const optionDisabled = (option: IPlatformResponse) => allowedPlatformIds.indexOf(option.id) === -1;
   return (
     <Autocomplete disablePortal
-                  className={autoCompleteClassName}
-                  options={platforms}
-                  value={selectedPlatform}
-                  getOptionLabel={x => x.displayName}
-                  getOptionDisabled={optionDisabled}
-                  onChange={onInputChange}
-                  disabled={disabled}
-                  isOptionEqualToValue={(option: IPlatformResponse, value1: IPlatformResponse) => option.id === value1.id}
-                  renderInput={(params) => <TextField {...params}
-                                                      label={label}
-                                                      variant="filled"
-                                                      className={inputClassName}
-                                                      error={error}
-                                                      placeholder={placeholder}
-                                                      helperText={helperText}
-                                                      InputProps={{
-                                                        ...params.InputProps,
-                                                        endAdornment: (
-                                                          <div>
-                                                            {isLoading ? <CircularProgress color="inherit" size={20}/> : null}
-                                                            {params.InputProps.endAdornment}
-                                                          </div>
-                                                        )
-                                                      }}
-                  />}
+      className={autoCompleteClassName}
+      options={platforms}
+      value={selectedPlatform}
+      getOptionLabel={(x) => x.displayName}
+      getOptionDisabled={optionDisabled}
+      onChange={onInputChange}
+      disabled={disabled}
+      isOptionEqualToValue={(option: IPlatformResponse, value1: IPlatformResponse) => option.id === value1.id}
+      renderInput={(params) => <TextField {...params}
+        label={label}
+        variant="filled"
+        className={inputClassName}
+        error={error}
+        placeholder={placeholder}
+        helperText={helperText}
+        InputProps={{
+          ...params.InputProps,
+          endAdornment: (
+            <div>
+              {isLoading ? <CircularProgress color="inherit" size={20}/> : null}
+              {params.InputProps.endAdornment}
+            </div>
+          )
+        }}
+      />}
     />
   )
 }

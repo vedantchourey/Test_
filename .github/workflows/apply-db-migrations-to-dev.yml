@@ -1,0 +1,38 @@
+name: apply-db-migrations-to-dev
+on: 
+  push:
+    paths:
+      - 'db-migrations/**'
+      - '.github/workflows/apply-db-migrations-to-dev.yml'
+    branches: 
+      - master
+
+defaults:
+  run:
+    shell: bash
+    working-directory: 'db-migrations'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    env:
+      DB_USER: ${{ secrets.SUPABASE_DEV_DB_USER }}
+      DB_PASSWORD: ${{ secrets.SUPABASE_DEV_DB_PASSWORD }}
+      DB_HOST: ${{ secrets.SUPABASE_DEV_DB_HOST }}
+      DB_DATABASE: ${{ secrets.SUPABASE_DEV_DB_NAME }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: install yarn
+        run: npm install -g yarn
+      - name: run migrations
+        run: |
+          yarn
+          yarn up -e cloud
+

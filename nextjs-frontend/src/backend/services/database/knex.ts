@@ -1,19 +1,23 @@
 import backendConfig from '../../utils/config/backend-config';
+import knexModule from 'knex';
 
-const {databaseName, dbUser, dbPort, dbHost, dbPassword} = backendConfig.db;
+const {databaseName, dbUser, dbPort, dbHost, dbPassword, ssl} = backendConfig.db;
 
-const knexModule = require('knex');
+export function createKnexConnection() {
+  return knexModule({
+    client: 'pg',
+    connection: {
+      host: dbHost,
+      port: dbPort,
+      user: dbUser,
+      password: dbPassword,
+      database: databaseName,
+      ssl
+    }
+  });
+}
 
-export const knex = knexModule({
-  client: 'pg',
-  connection: {
-    host: dbHost,
-    port: dbPort,
-    user: dbUser,
-    password: dbPassword,
-    database: databaseName
-  }
-});
+
 
 
 

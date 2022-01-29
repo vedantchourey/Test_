@@ -19,31 +19,40 @@ const clearTime = (sourceDateTime: DateTime) => {
 
 export const setDate = (sourceISO: string, destinationISO: string | undefined): string => {
   const sourceDateTime = parseDateTime(sourceISO).toLocal();
-  if (destinationISO == null) return clearTime(sourceDateTime).toUTC().toISO();
+  if (destinationISO == null) return clearTime(sourceDateTime).toUTC()
+                                                              .toISO();
   const {year, day, month} = sourceDateTime;
-  return parseDateTime(destinationISO).toLocal().set({year, day, month}).toUTC().toISO();
+  return parseDateTime(destinationISO).toLocal()
+                                      .set({year, day, month})
+                                      .toUTC()
+                                      .toISO();
 };
 
 export const setTime = (source: TimePart, destinationISO: string): string => {
   const dateTime = parseDateTime(destinationISO).toLocal();
   const {hour, minute} = source;
-  return dateTime.set({hour, minute}).toUTC().toISO();
+  return dateTime.set({hour, minute})
+                 .toUTC()
+                 .toISO();
 }
 
 export const toLocalDDMMYYYY = (sourceISO: string | undefined) => {
   if (sourceISO == null) return '';
-  return parseDateTime(sourceISO).toLocal().toFormat('dd/LL/yyyy')
+  return parseDateTime(sourceISO).toLocal()
+                                 .toFormat('dd/LL/yyyy')
 }
 
 export const toDisplayDateTime = (sourceISO: string | undefined) => {
   if (sourceISO == null) return '';
-  return parseDateTime(sourceISO).toLocal().toFormat('dd/LL/yyyy - hh:mm');
+  return parseDateTime(sourceISO).toLocal()
+                                 .toFormat('dd/LL/yyyy - hh:mm');
 }
 
 
 export const parseToLocalJSDate = (iso: string | undefined) => {
   if (iso == null) return undefined;
-  return parseDateTime(iso).toLocal().toJSDate();
+  return parseDateTime(iso).toLocal()
+                           .toJSDate();
 }
 
 export const getTimeAsLocal = (iso: string): TimePart | undefined => {
@@ -68,5 +77,8 @@ export const isValidDateTime = (iso: string): boolean => {
 
 
 export const daysFromToday = (days: number) => {
-  return DateTime.now().plus({day: 7}).toUTC().toISO();
+  return DateTime.now()
+                 .plus({day: days})
+                 .toUTC()
+                 .toISO();
 };

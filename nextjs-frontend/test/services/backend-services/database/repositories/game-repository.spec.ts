@@ -1,13 +1,14 @@
 import { GameRepository } from '../../../../../src/backend/services/database/repositories/game-repository';
-import { createTransaction } from '../../../../../src/backend/services/database/repositories/knex-utils';
 import { expect } from 'chai';
+import { createKnexConnection } from '../../../../../src/backend/services/database/knex';
 
 describe('GameRepository', () => {
 
   let gameRepository: GameRepository;
 
   beforeEach(async () => {
-    gameRepository = new GameRepository(await createTransaction());
+    const knex = createKnexConnection();
+    gameRepository = new GameRepository(await knex.transaction());
   });
 
   it.only('should be able to load a game with joins', async function () {

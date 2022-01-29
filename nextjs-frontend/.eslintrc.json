@@ -1,9 +1,90 @@
 {
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
   "extends": [
-    "next/core-web-vitals",
-    "eslint:recommended"
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "react",
+    "@typescript-eslint"
   ],
   "rules": {
-    "no-unused-vars": 2
+    "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off",
+    "no-unused-vars": [
+      "error",
+      {
+        "args": "none"
+      }
+    ],
+    "indent": [
+      "error",
+      2,
+      {
+        "MemberExpression": "off"
+      }
+    ],
+    "newline-per-chained-call": [
+      "error",
+      {
+        "ignoreChainWithDepth": 2
+      }
+    ],
+    "eqeqeq": [
+      "error",
+      "always",
+      {
+        "null": "ignore"
+      }
+    ],
+    "no-else-return": [
+      "error"
+    ],
+    "no-extra-semi": "error",
+    "no-implicit-coercion": "error",
+    "no-lonely-if": "error",
+    "no-unneeded-ternary": "error",
+    "no-useless-return": "error",
+    "one-var-declaration-per-line": [
+      "error",
+      "always"
+    ],
+    "prefer-const": [
+      "error"
+    ],
+    "array-bracket-spacing": [
+      "error",
+      "never"
+    ],
+    "arrow-parens": [
+      "error",
+      "always"
+    ],
+    "function-paren-newline": [
+      "error",
+      "consistent"
+    ],
+    "no-multi-spaces": [
+      "error"
+    ],
+    "@typescript-eslint/no-explicit-any": ["error"]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }

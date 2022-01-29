@@ -7,9 +7,11 @@ export const isLoggedInSelector = (rootState: RootState) => rootState.authentica
 export const authCheckStatusSelector = (rootState: RootState) => rootState.authentication.checkStatus;
 export const userProfileSelector = (rootState: RootState) => rootState.authentication.userProfile;
 export const userProfileFetchStatusSelector = (rootState: RootState) => rootState.authentication.profileFetchStatus;
-export const avatarUrlSelector = (rootState: RootState) => rootState.authentication.avatarUrl;
-export const avatarBackgroundUrlSelector = (rootState: RootState) => rootState.authentication.avatarBackgroundUrl;
+export const avatarImageBlobUrlSelector = (rootState: RootState) => rootState.authentication.avatarImageBlob;
+export const avatarBackgroundImageBlobUrlSelector = (rootState: RootState) => rootState.authentication.avatarBackgroundImageBlob;
 export const userRolesSelector = (rootState: RootState) => rootState.authentication.userProfile?.userRoles;
+export const forceFetchAvatarImageBlobSelector = (rootState: RootState) => rootState.authentication.forceFetchAvatarImageBlob;
+export const forceFetchAvatarBackgroundImageBlobSelector = (rootState: RootState) => rootState.authentication.forceFetchAvatarBackgroundImageBlob;
 
 // memoized
 const accessTokenUsernameSelector = (rootState: RootState) => rootState.authentication.username;

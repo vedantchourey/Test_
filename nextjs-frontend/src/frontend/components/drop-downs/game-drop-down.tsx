@@ -20,7 +20,7 @@ interface Props {
 export default function GameDropDown(props: Props) {
   const {value, onChange, autoCompleteClassName, inputClassName, error, helperText, label, platformId, placeholder} = props;
   const appDispatch = useAppDispatch();
-  const games = useAppSelector(x => gamesByPlatformSelector(x, platformId));
+  const games = useAppSelector((x) => gamesByPlatformSelector(x, platformId));
   const gamesFetchStatus = useAppSelector(gamesFetchStatusSelector);
   const [selectedGame, setSelectedGame] = useState<IGameResponse | null>(null);
   const isLoading = gamesFetchStatus === 'loading';
@@ -31,42 +31,42 @@ export default function GameDropDown(props: Props) {
   }, [appDispatch, gamesFetchStatus]);
 
   useEffect(() => {
-    const matchingGame = games.filter(x => x.id === value)[0];
+    const matchingGame = games.filter((x) => x.id === value)[0];
     if (matchingGame?.id === selectedGame?.id) return;
     setSelectedGame(matchingGame || null);
   }, [games, selectedGame?.id, value]);
 
 
-  const onInputChange = (event: any, newValue: IGameResponse | null) => {
+  const onInputChange = (event: unknown, newValue: IGameResponse | null) => {
     setSelectedGame(newValue)
     onChange?.(newValue?.id, newValue || null);
   };
 
   return (
     <Autocomplete disablePortal
-                  className={autoCompleteClassName}
-                  options={games}
-                  getOptionLabel={x => x.displayName}
-                  loading={isLoading}
-                  renderInput={(params) => <TextField {...params}
-                                                      label={label}
-                                                      variant="filled"
-                                                      className={inputClassName}
-                                                      error={error}
-                                                      placeholder={placeholder}
-                                                      helperText={helperText}
-                                                      InputProps={{
-                                                        ...params.InputProps,
-                                                        endAdornment: (
-                                                          <div>
-                                                            {isLoading ? <CircularProgress color="inherit" size={20}/> : null}
-                                                            {params.InputProps.endAdornment}
-                                                          </div>
-                                                        )
-                                                      }}
-                  />}
-                  value={selectedGame}
-                  onChange={onInputChange}
+      className={autoCompleteClassName}
+      options={games}
+      getOptionLabel={(x) => x.displayName}
+      loading={isLoading}
+      renderInput={(params) => <TextField {...params}
+        label={label}
+        variant="filled"
+        className={inputClassName}
+        error={error}
+        placeholder={placeholder}
+        helperText={helperText}
+        InputProps={{
+          ...params.InputProps,
+          endAdornment: (
+            <div>
+              {isLoading ? <CircularProgress color="inherit" size={20}/> : null}
+              {params.InputProps.endAdornment}
+            </div>
+          )
+        }}
+      />}
+      value={selectedGame}
+      onChange={onInputChange}
     />
   )
 

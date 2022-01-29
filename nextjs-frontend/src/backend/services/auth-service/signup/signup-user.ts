@@ -55,7 +55,7 @@ export default async function signupUser(request: SignupRequest, context: PerReq
   const result = await backendSupabase.auth.signUp(signupParams, metaData);
   if (result.error) return {errors: {apiError: result.error}};
   const profilesRepository = createProfileRepository(context.transaction as Knex.Transaction);
-  await profilesRepository.createProfile(mapToProfile(result.user!, request));
+  await profilesRepository.createProfile(mapToProfile(result.user as User, request));
   return {data: {userId: result.user?.id}};
 }
 

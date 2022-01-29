@@ -18,16 +18,15 @@ export async function signUp(request: SignupRequest): Promise<NoobPostResponse<S
 }
 
 
-export async function signIn(request: SignInRequest): Promise<SupabaseFetchResponse<SignInRequest, (Session | null)>> {
+export async function signIn(request: SignInRequest): Promise<SupabaseFetchResponse<(Session | null)>> {
   const result = await frontendSupabase.auth.signIn({
     email: request.email,
     password: request.password
   });
   if (result.error != null) {
     return {isError: true, error: result.error}
-  } else {
-    return {isError: false, ...result.session} as any;
   }
+  return {isError: false, ...result.session as Session};
 }
 
 

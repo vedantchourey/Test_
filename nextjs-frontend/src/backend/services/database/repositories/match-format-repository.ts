@@ -2,6 +2,9 @@ import { BaseRepository } from './base-repository';
 import { Knex } from 'knex';
 
 interface IMatchFormat {
+  id: string;
+  code: string;
+  displayName: string;
 }
 
 export class MatchFormatRepository extends BaseRepository<IMatchFormat> {

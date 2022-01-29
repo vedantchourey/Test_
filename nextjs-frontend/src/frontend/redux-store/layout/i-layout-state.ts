@@ -5,6 +5,6 @@ export type WindowDimensions = {
 
 export default interface ILayoutState {
   window: WindowDimensions;
-  desktopHeaderHeight:  number;
+  desktopHeaderHeight: number;
   mobileHeaderHeight: number;
 }
