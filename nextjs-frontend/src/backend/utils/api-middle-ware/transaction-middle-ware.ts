@@ -11,9 +11,9 @@ export async function beginTransactionMiddleWare(req: NextApiRequest, res: NextA
 export async function commitOrRollBackTransactionMiddleWare(req: NextApiRequest, res: NextApiResponse, context: PerRequestContext): Promise<any> {
   if (context.error) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    context.transaction!.rollback(context.error);
+    await context.transaction!.rollback(context.error);
   } else {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    context.transaction!.commit();
+    await context.transaction!.commit();
   }
 }

@@ -21,8 +21,13 @@ export function createNextJsRouteHandler(definitions: Partial<Record<Methods, Ro
     if (definition == null) return res.status(404).json({message: 'not found'});
     const {handler, preHooks = [], postHooks = []} = definition;
     const context: PerRequestContext = new PerRequestContext();
+    await executeAll(preHooks, req, res, context);
+    if (context.middlewareResponse != null) {
+      await context.destroy();
+      const {status, data} = context.middlewareResponse;
+      return res.status(status).json(data);
+    }
     try {
-      await executeAll(preHooks, req, res, context);
       await handler(req, res, context);
       await executeAll(postHooks, req, res, context);
     } catch (e) {
