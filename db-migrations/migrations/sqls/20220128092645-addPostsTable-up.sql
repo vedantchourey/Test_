@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS public.posts
     "postContent" text COLLATE pg_catalog."default" NOT NULL,
     "postImgUrl" text COLLATE pg_catalog."default" NOT NULL,
     "postedBy" uuid NOT NULL,
+    "createdAt" timestamp with time zone NOT NULL DEFAULT now(),
+    "updatedAt" timestamp with time zone NOT NULL DEFAULT now(),
     CONSTRAINT fk_posts_profiles_id FOREIGN KEY ("postedBy")
         REFERENCES public.profiles (id) MATCH SIMPLE
         ON UPDATE NO ACTION
@@ -42,5 +44,5 @@ CREATE UNIQUE INDEX IF NOT EXISTS posts_id_uindex
 
 CREATE UNIQUE INDEX IF NOT EXISTS posts_id_uindex_2
     ON public.posts USING btree
-    (id ASC NULLS LAST)
+    (id ASC NULLS LAST, id ASC NULLS LAST)
     TABLESPACE pg_default;

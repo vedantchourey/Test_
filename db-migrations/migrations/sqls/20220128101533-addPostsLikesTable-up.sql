@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS public.post_likes
     id uuid NOT NULL DEFAULT gen_random_uuid(),
     "postId" uuid NOT NULL,
     "likedBy" uuid NOT NULL,
+    "createdAt" timestamp with time zone NOT NULL DEFAULT now(),
     CONSTRAINT post_likes_pk PRIMARY KEY (id),
     CONSTRAINT fk_post_likes_posts_id FOREIGN KEY ("postId")
         REFERENCES public.posts (id) MATCH SIMPLE

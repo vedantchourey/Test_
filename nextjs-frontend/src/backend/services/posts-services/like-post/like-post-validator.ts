@@ -13,6 +13,8 @@ async function validatePostId(post: ILikePostRequest, postsRepository: PostsRepo
 }
 
 async function validateIsAlreadyLiked(post: ILikePostRequest, context: PerRequestContext, postLikesRepository: PostLikesRepository) {
+    if (isNullOrEmptyString(post.postId)) return;
+    if (!isUUID(post.postId)) return;
     const isLiked = await postLikesRepository.isLiked(post.postId, context.user?.id!);
     if (isLiked) return 'Post already liked';
 }

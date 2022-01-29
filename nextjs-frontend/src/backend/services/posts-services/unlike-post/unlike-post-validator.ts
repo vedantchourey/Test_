@@ -13,6 +13,9 @@ async function validatePostId(post: IUnlikePostRequest, postsRepository: PostsRe
 }
 
 async function validateIsAlreadyLiked(post: IUnlikePostRequest, context: PerRequestContext, postLikesRepository: PostLikesRepository) {
+    if (isNullOrEmptyString(post.postId)) return;
+    if (!isUUID(post.postId)) return;
+
     const isLiked = await postLikesRepository.isLiked(post.postId, context.user?.id!);
     /* Validate if post already liked */
     if (!isObjectHasProperty(isLiked, 'id')) return 'Post not liked';

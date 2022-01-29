@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS public.post_comments
     comment text COLLATE pg_catalog."default" NOT NULL,
     "commentBy" uuid NOT NULL,
     "postId" uuid NOT NULL,
+    "createdAt" timestamp with time zone NOT NULL DEFAULT now(),
+    "updatedAt" timestamp with time zone NOT NULL DEFAULT now(),
     CONSTRAINT post_comments_pk PRIMARY KEY (id),
     CONSTRAINT fk_post_comments_posts_id FOREIGN KEY ("postId")
         REFERENCES public.posts (id) MATCH SIMPLE

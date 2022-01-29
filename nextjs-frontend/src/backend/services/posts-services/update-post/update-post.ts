@@ -13,7 +13,7 @@ export async function updatePost(post: IUpdatePostRequest, context: PerRequestCo
 
     const update = sanitizeObject(post, ['postId', 'postedBy']);
 
-    await repository.updatePost(post.postId, update);
+    await repository.updatePost(post.postId, { ...update, updatedAt: new Date().toISOString() });
 
     return {
         data: {

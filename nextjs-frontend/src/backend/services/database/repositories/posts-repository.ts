@@ -5,6 +5,7 @@ import { IPost } from '../models/i-post';
 interface IUpdatePost {
     postImgUrl?: string;
     postContent?: string;
+    updatedAt: string
 }
 
 export class PostsRepository extends BaseRepository<IPost>{

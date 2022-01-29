@@ -5,6 +5,7 @@ import { IPostComments } from '../models/i-post-comments';
 interface IUpdateComment {
     comment?: string;
     postId?: string;
+    updatedAt: string;
 }
 
 export class PostCommentsRepository extends BaseRepository<IPostComments>{
@@ -22,9 +23,9 @@ export class PostCommentsRepository extends BaseRepository<IPostComments>{
 
     async countCommentById(id: string): Promise<number> {
         const result = await this.entities().whereRaw("id = ?", [id])
-                                 .count('id');
+            .count('id');
         return parseInt(result[0].count, 10);
-      }
+    }
 
     async updateComment(id: string, update: IUpdateComment): Promise<any> {
         return await this.entities().where('id', id).update(update);

@@ -10,9 +10,14 @@ async function validatePostId(comment: ICreateCommentRequest, postsRepository: P
     if (!('id' in postData)) return 'Invalid post id';
 }
 
+function validateComment(comment: ICreateCommentRequest) {
+    if (isNullOrEmptyString(comment.comment)) return 'Comment is missing';
+}
+
 export async function validateRequest(comment: ICreateCommentRequest, context: PerRequestContext) {
     const postsRepository = new PostsRepository(context.transaction!)
     return {
-        postId: await validatePostId(comment, postsRepository)
+        postId: await validatePostId(comment, postsRepository),
+        comment: validateComment(comment)
     };
 }
