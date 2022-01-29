@@ -1,3 +1,8 @@
+export type DbSslConfig = {
+  rejectUnauthorized: false;
+  ca: string;
+};
+
 export interface IBackendConfig {
   db: {
     dbHost: string;
@@ -5,6 +10,7 @@ export interface IBackendConfig {
     dbUser: string;
     dbPassword: string;
     databaseName: string;
+    ssl: DbSslConfig
   };
   supabase: {
     apiUrl: string;
