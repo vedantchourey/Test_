@@ -3,7 +3,7 @@ on:
   push:
     paths:
       - 'db-migrations/**'
-      - '.github\workflows\apply-db-migrations-to-dev.yml'
+      - '.github/workflows/apply-db-migrations-to-dev.yml'
     branches: 
       - master
 
