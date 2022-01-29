@@ -2,7 +2,7 @@ name: apply-db-migrations-to-dev
 on: 
   push:
     paths:
-      - 'nextjs-frontend/**'
+      - 'db-migrations/**'
       - '.github\workflows\apply-db-migrations-to-dev.yml'
     branches: 
       - master
