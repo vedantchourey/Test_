@@ -35,5 +35,5 @@ jobs:
       - name: install vercel cli
         run: npm install -g vercel
       - name: deploy to vercel
-        run: vercel --scope ${{ secrets.VERCEL_TEAM_SLUG }} --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel --prod --scope ${{ secrets.VERCEL_TEAM_SLUG }} --token=${{ secrets.VERCEL_TOKEN }}
 
