@@ -1,11 +1,12 @@
 import { Container, Typography } from '@mui/material';
-import styles from './create-tournament-form.module.css';
+import {useStyles} from './create-tournament-form-styles';
 
 interface Props {
   id: string;
 }
 
 export default function EditTournamentForm(props: Props) {
+  const styles = useStyles();
 
   return (
     <Container maxWidth="md" className={styles.container}>

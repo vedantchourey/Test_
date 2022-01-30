@@ -1,5 +1,5 @@
 import { Button, Dialog, Divider, IconButton, ListItemIcon, ListItemText, MenuItem, MenuList, useTheme } from '@mui/material';
-import styles from './noob-drawer.module.css';
+import {useStyles} from './noob-drawer-styles';
 import * as React from 'react';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
@@ -16,7 +16,7 @@ import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import LogoutIcon from '@mui/icons-material/Logout';
 import CloseIcon from '@mui/icons-material/Close';
 import Image from 'next/image';
-import commonStyles from '../../styles/common.module.css';
+import {useCommonStyles} from '../../styles/common-styles';
 
 interface Props {
   show: boolean;
@@ -28,6 +28,8 @@ export default function NoobLoggedInDrawer(props: Props) {
   const {show, onClose, onLogoutClick} = props;
   const theme = useTheme();
   const router = useRouter();
+  const styles = useStyles();
+  const commonStyles = useCommonStyles();
 
   async function gotoPage(url: string) {
     onClose();

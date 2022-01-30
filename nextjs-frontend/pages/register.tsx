@@ -1,8 +1,7 @@
 import { Container, Typography, useTheme } from '@mui/material';
 import Head from 'next/head';
 import NoobHeader from '../src/frontend/components/header/noob-header';
-import styles from './register.module.css';
-import commonStyles from '../src/frontend/styles/common.module.css';
+import {useCommonStyles} from '../src/frontend/styles/common-styles';
 import RegistrationForm from '../src/frontend/components/auth/registration-form/registration-form';
 import { useAppSelector } from '../src/frontend/redux-store/redux-store';
 import { getAppHeaderHeightSelector, isDeviceTypeSelector } from '../src/frontend/redux-store/layout/layout-selectors';
@@ -10,6 +9,7 @@ import { deviceTypes } from '../src/frontend/redux-store/layout/device-types';
 import { useRouter } from 'next/router';
 import { isLoggedInSelector } from '../src/frontend/redux-store/authentication/authentication-selectors';
 import { useEffect } from 'react';
+import { useStyles } from '../src/frontend/styles/page-styles/register-styles';
 
 export default function Register() {
   const theme = useTheme();
@@ -18,6 +18,8 @@ export default function Register() {
   const backgroundColor = isDesktop ? theme.palette.background.default : theme.palette.background.paper;
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const appHeaderHeight = useAppSelector(getAppHeaderHeightSelector);
+  const styles = useStyles();
+  const commonStyles = useCommonStyles();
 
   const onSignUpSuccess = async () => {
     await router.push('/register-success');

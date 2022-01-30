@@ -1,5 +1,5 @@
 import { Button, Dialog, Divider, IconButton, ListItemText, MenuItem, Typography, useTheme } from '@mui/material';
-import styles from './noob-drawer.module.css';
+import {useStyles} from './noob-drawer-styles';
 import CloseIcon from '@mui/icons-material/Close';
 import * as React from 'react';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -19,6 +19,7 @@ export default function NoobLoggedOutDrawer(props: Props) {
   const {show, onClose, onLoginClick} = props;
   const theme = useTheme();
   const router = useRouter();
+  const styles = useStyles();
 
   async function gotoPage(url: string) {
     onClose();
