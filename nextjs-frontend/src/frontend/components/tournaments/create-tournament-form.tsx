@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { isThereAnyError, ValidationResult } from '../../../common/utils/validation/validator';
 import { CreateOrEditTournamentRequest } from '../../../backend/services/tournament-service/create-or-edit-tournament-request';
 import { Button, Container, Typography } from '@mui/material';
-import styles from './create-tournament-form.module.css';
-import commonStyles from '../../styles/common.module.css';
+import { useStyles } from './create-tournament-form-styles';
+import { useCommonStyles } from '../../styles/common-styles';
 import { validateTournament } from './tournament-details-validator';
 import { useAppDispatch, useAppSelector } from '../../redux-store/redux-store';
 import { allGamesSelector } from '../../redux-store/games/game-selectors';
@@ -18,10 +18,12 @@ interface Props {
 
 export default function CreateTournamentForm(props: Props) {
   const {onCreated} = props;
+  const styles = useStyles();
   const [errors, setErrors] = useState<ValidationResult<CreateOrEditTournamentRequest>>({});
   const [request, setRequest] = useState<Partial<CreateOrEditTournamentRequest>>({tournamentName: '', isTeamParticipating: false, scheduleDate: daysFromToday(7)});
   const appDispatch = useAppDispatch();
   const allGames = useAppSelector(allGamesSelector);
+  const commonStyles = useCommonStyles();
 
   const onChangeHandler = (value: Partial<CreateOrEditTournamentRequest>) => {
     setRequest(value);

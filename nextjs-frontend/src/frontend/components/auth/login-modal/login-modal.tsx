@@ -1,5 +1,4 @@
 import { Button, Dialog, FormHelperText, IconButton, Link, styled, TextField, Typography } from '@mui/material';
-import styles from './login-modal.module.css';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useState } from 'react';
 import { getErrorForProp, isThereAnyError, propsHasError, ValidationResult } from '../../../../common/utils/validation/validator';
@@ -12,6 +11,8 @@ import { signIn } from '../../../service-clients/auth-service-client';
 import { ApiError } from '@supabase/gotrue-js';
 import { setIsLoading } from '../../../redux-store/screen-animations/screen-animation-slice';
 import { useRouter } from 'next/router';
+import {useStyles} from './login-modal-styles';
+
 
 interface Props {
   show: boolean;
@@ -65,6 +66,7 @@ export default function LoginModal(props: Props) {
   const appDispatch = useAppDispatch();
   const [isBusy, setIsBusy] = useState(false);
   const router = useRouter();
+  const styles = useStyles();
 
   function resetData() {
     setRequest({email: '', password: ''});
