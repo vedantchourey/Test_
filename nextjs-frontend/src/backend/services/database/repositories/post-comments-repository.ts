@@ -1,6 +1,7 @@
 import { Knex } from 'knex';
 import { BaseRepository } from './base-repository';
 import { IPostComments } from '../models/i-post-comments';
+import { PostAddOutlined } from '@mui/icons-material';
 
 interface IUpdateComment {
     comment?: string;
@@ -25,6 +26,11 @@ export class PostCommentsRepository extends BaseRepository<IPostComments>{
         const result = await this.entities().whereRaw("id = ?", [id])
             .count('id');
         return parseInt(result[0].count, 10);
+    }
+
+    async deleteComment(id: string, userId: string) {
+console.log({id, userId})
+        return await this.entities().where({ id: id, commentBy: userId }).del()
     }
 
     async updateComment(id: string, update: IUpdateComment): Promise<any> {

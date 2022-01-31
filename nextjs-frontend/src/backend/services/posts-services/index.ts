@@ -4,6 +4,8 @@ import { createComment } from './create-comment/create-comment';
 import { updatePost } from './update-post/update-post';
 import { updateComment } from './update-comment/update-comment';
 import { unlikePost } from './unlike-post/unlike-post';
+import { deleteComment } from './delete-comment/delete-comment';
+import { deletePost } from './delete-post/delete-post';
 
 export {
     createPost,
@@ -11,5 +13,7 @@ export {
     createComment,
     updatePost,
     updateComment,
-    unlikePost
+    unlikePost,
+    deleteComment,
+    deletePost
 }
