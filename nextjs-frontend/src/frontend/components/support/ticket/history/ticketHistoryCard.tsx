@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Box, Button, Card, CardActions, CardContent, CardHeader, Container, Divider, Grid, Typography } from "@mui/material";
+import TicketIcon from "../../../icons/ticket-icon";
 import MessageIcon from "../../../icons/message-icon";
 import styles from './ticket-history.module.css'
 
@@ -19,10 +20,10 @@ export default function TicketHisoryCard({ _id, answer, created_at, ticketNumber
       <Container>
         <CardHeader
           avatar={
-            <MessageIcon />
+            <TicketIcon style={{ width: 32, height: 32 }} />
           }
           action={
-            <Typography variant='body1' color={status == 'active' ? 'greenyellow' : 'secondary'}>
+            <Typography variant='body1' color={status == 'active' ? 'success.main' : 'secondary'}>
               {status}
             </Typography>
           }

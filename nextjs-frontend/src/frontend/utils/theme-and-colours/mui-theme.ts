@@ -3,6 +3,9 @@ import { createTheme } from '@mui/material/styles';
 const noobTheme = createTheme({
   palette: {
     mode: 'dark',
+    success: {
+      main: '#0EEB3E'
+    },
     primary: {
       main: '#6932F9',
       dark: '#160c30',
@@ -17,7 +20,7 @@ const noobTheme = createTheme({
     },
     text: {
       primary: '#ffffff',
-      secondary: '#b5b5b5',
+      secondary: '#b5b5b5'
     },
     action: {},
     error: {
