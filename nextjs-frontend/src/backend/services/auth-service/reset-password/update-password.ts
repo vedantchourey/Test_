@@ -1,5 +1,5 @@
 import { validateUpdatePassword } from "./reset-password-validator";
-import { UpdatePasswordRequest } from './i-reset-password';
+import { UpdatePasswordRequest, ResetPasswordResponse } from './i-reset-password';
 import { isThereAnyError } from '../../../../common/utils/validation/validator';
 import { backendSupabase } from '../../common/supabase-backend-client';
 import { ServiceResponse } from "../../common/contracts/service-response";
@@ -11,7 +11,7 @@ function updatePasswordParams(request: UpdatePasswordRequest){
     return { data };
 }
 
-export default async function updatePassword(request: UpdatePasswordRequest, context: PerRequestContext): Promise<ServiceResponse<UpdatePasswordRequest, object>>{
+export default async function updatePassword(request: UpdatePasswordRequest, context: PerRequestContext): Promise<ServiceResponse<UpdatePasswordRequest, ResetPasswordResponse>>{
     const errors = await validateUpdatePassword(request, context);
     if(isThereAnyError(errors)) return {errors: errors};
     const { data } = updatePasswordParams(request);
