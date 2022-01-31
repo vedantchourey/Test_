@@ -9,14 +9,16 @@ const frontendConfig: IFrontendConfig = {
   baseAppUrl: baseAppUrl,
   noobStormServices: {
     auth: {
-      signup: `${baseApiUrl}/api/sign-up`
+      signup: `${baseApiUrl}/api/sign-up`,
+      resetPassword: `${baseApiUrl}/api/reset-password`,
+      sendResetPasswordLink: `${baseApiUrl}/api/send-reset-password-link`,
     },
     profile: {
       profileImages: `${baseApiUrl}/api/profile-images`
     },
     tournament: {
       createUrl: `${baseApiUrl}/api/tournaments`,
-      getById:  `${baseApiUrl}/api/tournaments/{id}`,
+      getById: `${baseApiUrl}/api/tournaments/{id}`,
     }
   },
   supabase: {

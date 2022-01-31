@@ -6,6 +6,7 @@ import { useAppDispatch } from '../../../redux-store/redux-store';
 import { ResetPasswordRequest } from '../../../../backend/services/auth-service/reset-password/reset-password-contracts';
 import { validateResetPassword } from './validator';
 import { setIsLoading } from '../../../redux-store/screen-animations/screen-animation-slice';
+import { resetPassword } from '../../../service-clients/auth-service-client';
 
 interface Props {
     onResetHandler: () => void
@@ -18,7 +19,7 @@ const ResetPasswordRequestCode = ({ onResetHandler }: Props) => {
     const [errors, setErrors] = useState<ValidationResult<ResetPasswordRequest>>({});
     const [request, setRequest] = useState<Partial<ResetPasswordRequest>>({
         email: '',
-        phone: ''
+        // phone: ''
     });
 
     async function onClickResetPassword(e: Event) {
@@ -29,15 +30,16 @@ const ResetPasswordRequestCode = ({ onResetHandler }: Props) => {
         if (isThereAnyError(validationResults)) return;
         try {
             appDispatch(setIsLoading(true));
-            // const response = await signUp(request as SignupRequest);
-            const response = {
-                isError: false,
-                errors: {
-                    email: ""
-                }
-            }
+            const response = await resetPassword(request as ResetPasswordRequest);
+            // const response = {
+            //     isError: false,
+            //     errors: {
+            //         email: ""
+            //     }
+            // }
             if (!response.isError) {
-                onResetHandler();
+                // onResetHandler();
+                alert("success")
             } else {
                 setErrors(response.errors);
             }
@@ -48,11 +50,12 @@ const ResetPasswordRequestCode = ({ onResetHandler }: Props) => {
 
     const handleChangeValue = (e: { target: { value: string } }) => {
         const { value } = e.target;
-        if (/^[\d]+$/gi.test(value)) {
-            setRequest({ email: '', phone: value })
-        } else {
-            setRequest({ phone: '', email: value })
-        }
+        setRequest({ email: value })
+        // if (/^[\d]+$/gi.test(value)) {
+        // setRequest({ email: '', phone: value })
+        // } else {
+        // setRequest({ phone: '', email: value })
+        // }
     }
 
     return (
@@ -67,20 +70,23 @@ const ResetPasswordRequestCode = ({ onResetHandler }: Props) => {
 
                 <Grid item xs={12}>
                     <Typography align='left' mb={1} variant={"h3"}>
-                        E-mail or Phone Number:
+                        E-mail
                     </Typography>
                     <TextField
-                        id="emailorphone"
+                        id="email"
                         variant="filled"
-                        value={request.email || request.phone}
-                        error={propsHasError(errors, request.email ? "email" : "phone")}
-                        helperText={getErrorForProp(errors, request.email ? "email" : "phone")}
+                        value={request.email}
+                        error={propsHasError(errors, "email")}
+                        helperText={getErrorForProp(errors, "email")}
+                        // value={request.email || request.phone}
+                        // error={propsHasError(errors, request.email ? "email" : "phone")}
+                        // helperText={getErrorForProp(errors, request.email ? "email" : "phone")}
                         onChange={handleChangeValue}
                         fullWidth
                         InputProps={{ disableUnderline: true }}
                         inputProps={{
                             style: {
-                                padding: "12px !important"
+                                padding: 12
                             }
                         }}
                     />

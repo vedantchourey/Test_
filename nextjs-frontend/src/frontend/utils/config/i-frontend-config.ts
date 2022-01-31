@@ -7,6 +7,8 @@ export interface IFrontendConfig {
   noobStormServices: {
     auth: {
       signup: string;
+      resetPassword: string;
+      sendResetPasswordLink: string
     };
     profile: {
       profileImages: string;
