@@ -27,7 +27,7 @@ export class PostsRepository extends BaseRepository<IPost>{
         return parseInt(result[0].count, 10);
     }
 
-    async deletePostById(id: string): Promise<any>{
+    async deletePost(id: string): Promise<any> {
         return await this.entities().where("id", id).del();
     }
 
