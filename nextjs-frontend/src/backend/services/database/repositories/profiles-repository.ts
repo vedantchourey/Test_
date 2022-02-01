@@ -32,6 +32,11 @@ export class ProfilesRepository extends BaseRepository<IProfile> {
                .first();
   }
 
+  async countUserById(id: string): Promise<number> {
+    const result = await this.entities().whereRaw("id = ?", [id])
+        .count('id');
+    return parseInt(result[0].count, 10);
+  }
 
   async updateAvatar(userId: string, url: string): Promise<number> {
     return this.entities().update({avatarUrl: url, updatedAt: nowAsISOString()}).where({id: userId})
