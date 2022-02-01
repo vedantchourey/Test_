@@ -1,0 +1,56 @@
+.appBar {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.topHeader {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  flex-wrap: nowrap;
+  height: 40px;
+  margin: 16px;
+}
+
+.bottomHeader {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  flex-wrap: nowrap;
+  height: 40px;
+  margin: 0 16px 16px 16px;
+}
+
+.bottomHeaderIcons {
+  flex-grow: 1;
+}
+
+.appBarItem {
+  display: flex;
+  flex-grow: 1;
+  flex-basis: 0;
+}
+
+.appBarItemMiddle {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  vertical-align: center;
+  margin: 10px 0 10px 0;
+  flex-basis: 0;
+}
+
+.appBarItemLast {
+  display: flex;
+  flex-grow: 1;
+  justify-content: flex-end;
+  flex-basis: 0;
+}
+
+
+.userIcon {
+  height: 48px;
+  width: 48px;
+}

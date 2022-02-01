@@ -3,8 +3,8 @@ import { useAppSelector } from '../../redux-store/redux-store';
 import { getAppHeaderHeightSelector, isDeviceTypeSelector } from '../../redux-store/layout/layout-selectors';
 import Head from 'next/head';
 import NoobHeader from '../header/noob-header';
-import { useCommonStyles } from '../../styles/common-styles';
-import {useStyles} from './noob-page-styles';
+import commonStyles from '../../styles/common.module.css';
+import styles from './noob-page.module.css';
 import React from 'react';
 import { deviceTypes } from '../../redux-store/layout/device-types';
 
@@ -23,8 +23,6 @@ export function NoobPage(props: Props) {
     children
   } = props;
   const metaKeys = Object.keys(metaData);
-  const styles = useStyles();
-  const commonStyles = useCommonStyles();
 
   const theme = useTheme();
   const appHeaderHeight = useAppSelector(getAppHeaderHeightSelector);

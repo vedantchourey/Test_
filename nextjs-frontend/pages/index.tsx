@@ -2,12 +2,11 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useTheme } from '@mui/material';
 import NoobHeader from '../src/frontend/components/header/noob-header';
-import {useCommonStyles} from '../src/frontend/styles/common-styles';
+import homeModule from '../src/frontend/styles/common.module.css';
 
 
 const Home: NextPage = () => {
   const theme = useTheme();
-  const commonStyles = useCommonStyles();
   return (
     <div style={{backgroundColor: theme.palette.background.default}}>
       <Head>
@@ -16,7 +15,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/noob-fav.ico"/>
       </Head>
       <NoobHeader/>
-      <main className={commonStyles.main}>
+      <main className={homeModule.main}>
         <div>
           Hello
         </div>

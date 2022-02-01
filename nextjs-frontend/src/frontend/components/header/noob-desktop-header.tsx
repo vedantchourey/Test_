@@ -1,4 +1,4 @@
-import {useStyles} from './noob-desktop-header-styles';
+import styles from './noob-desktop-header.module.css';
 import Image from 'next/image';
 import { AppBar, Button, Typography, useTheme } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -15,7 +15,6 @@ import LoggedInUserMenu from './logged-in-user-menu';
 import { setDesktopHeaderHeight } from '../../redux-store/layout/layout-slice';
 
 export default function NoobDesktopHeader() {
-  const styles = useStyles();
   const theme = useTheme();
   const router = useRouter()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import { CreateOrEditTournamentRequest } from '../../../backend/services/tournament-service/create-or-edit-tournament-request';
 import { getErrorForProp, isNullOrEmptyString, ValidationResult } from '../../../common/utils/validation/validator';
-import {useStyles} from './tournament-details-form-styles';
+import styles from './tournament-details-form.module.css';
 import { IGameResponse } from '../../service-clients/messages/i-game-response';
 import { IGameMapResponse } from '../../service-clients/messages/i-game-map-response';
 import GameMapDropDown from '../drop-downs/game-map-drop-down';
@@ -26,7 +26,6 @@ interface Props {
 
 export default function TournamentDetailsForm(props: Props) {
   const {errors, value, onChange} = props;
-  const styles = useStyles();
 
   const [allowedPlatformIds, setAllowedPlatformIds] = useState<string[]>([]);
   const [allowedGameMaps, setAllowedGameMaps] = useState<IGameMapResponse[]>([]);

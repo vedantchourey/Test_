@@ -1,7 +1,8 @@
 import { Container, Icon, Typography, useTheme } from '@mui/material';
 import Head from 'next/head';
 import NoobHeader from '../src/frontend/components/header/noob-header';
-import { useCommonStyles } from '../src/frontend/styles/common-styles';
+import styles from './register.module.css';
+import commonStyles from '../src/frontend/styles/common.module.css';
 import { useAppSelector } from '../src/frontend/redux-store/redux-store';
 import { getAppHeaderHeightSelector, isDeviceTypeSelector } from '../src/frontend/redux-store/layout/layout-selectors';
 import { deviceTypes } from '../src/frontend/redux-store/layout/device-types';
@@ -9,7 +10,6 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { isLoggedInSelector } from '../src/frontend/redux-store/authentication/authentication-selectors';
-import { useStyles } from '../src/frontend/styles/page-styles/register-styles';
 
 export default function RegisterSuccess() {
   const theme = useTheme();
@@ -18,8 +18,6 @@ export default function RegisterSuccess() {
   const router = useRouter();
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const appHeaderHeight = useAppSelector(getAppHeaderHeightSelector);
-  const styles = useStyles();
-  const commonStyles = useCommonStyles();
 
   useEffect(() => {
     (async () => {
@@ -42,8 +40,7 @@ export default function RegisterSuccess() {
         </div>
         <Container maxWidth="md" className={styles.registrationFormContainer}>
           <div className={commonStyles.simpleMessageContent} style={{backgroundColor: theme.palette.background.paper}}>
-            <Icon className={commonStyles.whiteText}><ErrorOutlineIcon/></Icon><Typography className={commonStyles.whiteText}>Signed up successfully! Please confirm activation email and sign
-            in.</Typography>
+            <Icon className={commonStyles.whiteText}><ErrorOutlineIcon/></Icon><Typography className={commonStyles.whiteText}>Signed up successfully! Please confirm activation email and sign in.</Typography>
           </div>
         </Container>
       </main>

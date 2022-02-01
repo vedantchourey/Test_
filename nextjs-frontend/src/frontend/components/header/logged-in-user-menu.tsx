@@ -4,7 +4,7 @@ import { signOut } from '../../service-clients/auth-service-client';
 import { useRef, useState } from 'react';
 import { useAppSelector } from '../../redux-store/redux-store';
 import { avatarImageBlobUrlSelector, userNameSelector } from '../../redux-store/authentication/authentication-selectors';
-import {useStyles} from './logged-in-user-menu-styles';
+import styles from './logged-in-user-menu.module.css';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import PersonIcon from '@mui/icons-material/Person';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
@@ -33,7 +33,6 @@ export default function LoggedInUserMenu() {
   const [showMenu, setShowMenu] = useState(false);
   const username = useAppSelector(userNameSelector);
   const avatarUrl = useAppSelector(avatarImageBlobUrlSelector);
-  const styles = useStyles();
 
 
   function handleClose() {

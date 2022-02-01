@@ -1,5 +1,5 @@
 import { AppBar, Avatar, Icon, IconButton } from '@mui/material';
-import {useStyles} from './noob-mobile-header-styles';
+import styles from './noob-mobile-header.module.css';
 import MenuIcon from '@mui/icons-material/Menu';
 import Image from 'next/image';
 import * as React from 'react';
@@ -30,7 +30,6 @@ export default function NoobMobileHeader() {
   const appDispatch = useAppDispatch();
   const currentHeight = useAppSelector(mobileHeaderHeightSelector);
   const router = useRouter();
-  const styles = useStyles();
 
   function onSuccessfulLogin() {
     setShowLoginModal(false);
@@ -46,6 +45,7 @@ export default function NoobMobileHeader() {
     if (avatarUrl == null) return (<Icon className={styles.userIcon}><PersonIcon className={styles.userIcon}/></Icon>);
     return <Avatar alt="Remy Sharp"
       sx={{width: 40, height: 40}}
+      className={styles.userProfilePic}
       src={avatarUrl}/>
   }
 

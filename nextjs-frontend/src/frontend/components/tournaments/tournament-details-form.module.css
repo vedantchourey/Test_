@@ -1,0 +1,25 @@
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  row-gap: 24px;
+  justify-content: center;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  column-gap: 16px;
+  margin: 0 110px 0 110px;
+}
+
+.column {
+  display: flex;
+  flex-grow: 1;
+  flex-basis: 0;
+}
+
+.inputItem {
+  flex-grow: 1;
+}

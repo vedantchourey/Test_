@@ -1,10 +1,10 @@
-import { useStyles } from './registration-form-styles';
+import styles from './registration-form.module.css';
 import { Button, Checkbox, FormControl, FormControlLabel, FormHelperText, TextField, Typography } from '@mui/material';
 import { DesktopDatePicker } from '@mui/lab';
 import { ChangeEvent, useState } from 'react';
 import { DateTime } from 'luxon';
 import Link from 'next/link'
-import { useCommonStyles } from '../../../styles/common-styles';
+import commonStyles from '../../../styles/common.module.css';
 import { parseDateTime, toISOString } from '../../../../common/utils/date-time-utils';
 import StateDropDown from '../../drop-downs/state-drop-down';
 import { validateSignUp } from './validator';
@@ -19,8 +19,6 @@ interface Props {
 }
 
 export default function RegistrationForm(props: Props) {
-  const styles = useStyles();
-  const commonStyles = useCommonStyles();
   const {onSignUpSuccess} = props;
   const appDispatch = useAppDispatch();
   const [errors, setErrors] = useState<ValidationResult<SignupRequest>>({});

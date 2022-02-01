@@ -3,7 +3,7 @@ import { ChangeEvent, useRef } from 'react';
 import { updateImage, uploadImage } from '../../../service-clients/image-service-client';
 import { useAppDispatch, useAppSelector } from '../../../redux-store/redux-store';
 import { avatarBackgroundImageBlobUrlSelector, avatarImageBlobUrlSelector, isLoggedInSelector, userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
-import {useStyles} from './user-profile-card-styles';
+import styles from './user-profile-card.module.css';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import { toLocalDDMMYYYY } from '../../../../common/utils/date-time-utils';
 import { setIsLoading } from '../../../redux-store/screen-animations/screen-animation-slice';
@@ -18,7 +18,6 @@ import { deviceTypes } from '../../../redux-store/layout/device-types';
 type ImagePrefix = 'avatar' | 'avatarBackground';
 
 export default function UserProfileCard() {
-  const styles = useStyles();
   const userProfile = useAppSelector(userProfileSelector);
   const backgroundInputRef = useRef<HTMLInputElement>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
@@ -117,7 +116,7 @@ export default function UserProfileCard() {
           className={styles.userProfilePic}
           src={avatarImageBlobUrl || "/images/default-user-profile-background.jpg"}/>
         <div style={{overflow: 'hidden', flexGrow: 1}}>
-          <img
+          <img className={styles.imageBackground}
             src={avatarBackgroundImageBlobUrl || "/images/default-user-profile-background.jpg"}
             alt="profile background"/>
         </div>
@@ -128,7 +127,7 @@ export default function UserProfileCard() {
             <Typography className={styles.heading}>Username</Typography>
           </div>
           <div className={styles.userDetailValue}>
-            <Typography>{userProfile?.username}</Typography>
+            <Typography className={styles.value}>{userProfile?.username}</Typography>
           </div>
         </div>
         <Divider className={styles.userDetailsRow}/>
@@ -137,7 +136,7 @@ export default function UserProfileCard() {
             <Typography className={styles.heading}>Elo Rating</Typography>
           </div>
           <div className={styles.userDetailValue}>
-            <Typography>{userProfile?.username}</Typography>
+            <Typography className={styles.value}>{userProfile?.username}</Typography>
           </div>
         </div>
         <Divider className={styles.userDetailsRow}/>
@@ -146,7 +145,7 @@ export default function UserProfileCard() {
             <Typography className={styles.heading}>Team</Typography>
           </div>
           <div className={styles.userDetailValue}>
-            <Typography>{userProfile?.username}</Typography>
+            <Typography className={styles.value}>{userProfile?.username}</Typography>
           </div>
         </div>
         <Divider className={styles.userDetailsRow}/>
@@ -155,7 +154,7 @@ export default function UserProfileCard() {
             <Typography className={styles.heading}>Joined</Typography>
           </div>
           <div className={styles.userDetailValue}>
-            <Typography>{toLocalDDMMYYYY(userProfile?.createdAt)}</Typography>
+            <Typography className={styles.value}>{toLocalDDMMYYYY(userProfile?.createdAt)}</Typography>
           </div>
         </div>
         <Divider className={styles.userDetailsRow}/>
@@ -164,7 +163,7 @@ export default function UserProfileCard() {
             <Typography className={styles.heading}>Tournament Wins</Typography>
           </div>
           <div className={styles.userDetailValue}>
-            <Typography>{userProfile?.username}</Typography>
+            <Typography className={styles.value}>{userProfile?.username}</Typography>
           </div>
         </div>
       </div>

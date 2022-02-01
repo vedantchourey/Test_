@@ -1,14 +1,13 @@
 import { Container, Icon, Link, Typography, useTheme } from '@mui/material';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { useRouter } from 'next/router';
-import {useStyles} from './not-found-styles';
-import {useCommonStyles} from '../../styles/common-styles';
+import styles from './not-found.module.css';
+import commonStyles from '../../styles/common.module.css';
 
 export default function NotFound() {
+
   const theme = useTheme();
   const router = useRouter();
-  const styles = useStyles();
-  const commonStyles = useCommonStyles();
 
   async function gotoHomePage() {
     await router.push('/');
