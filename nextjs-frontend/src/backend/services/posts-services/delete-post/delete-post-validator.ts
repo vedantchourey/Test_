@@ -4,15 +4,16 @@ import { PostsRepository } from '../../database/repositories/posts-repository';
 import { isUUID, ValidationResult } from '../../../../common/utils/validation/validator';
 import { Knex } from 'knex';
 
-async function validatePostId(post: IDeletePostRequest, postRepository: PostsRepository){
+async function validatePostId(post: IDeletePostRequest, postRepository: PostsRepository, context: PerRequestContext){
     if (!isUUID(post.postId)) return 'Invalid post id';
-    if ((await postRepository.countPostById(post.postId as string)) === 0) return 'Post not available';
+    const postData = await postRepository.getPostById(post.postId as string);
+    if((postData && postData.postedBy) !== context.user?.id!) return 'Unauthorized';
 }
 
 export async function ValidateDeletePost(obj: IDeletePostRequest, context: PerRequestContext): Promise<ValidationResult<IDeletePostRequest>>{
     const transaction = context.transaction as Knex.Transaction;
     const commentRepository = new PostsRepository(transaction);
     return <ValidationResult<IDeletePostRequest>>{
-        postId: await validatePostId(obj, commentRepository)
+        postId: await validatePostId(obj, commentRepository, context)
     }
 }
