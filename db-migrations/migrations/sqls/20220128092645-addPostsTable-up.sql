@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS public.posts
     "postedBy" uuid NOT NULL,
     "createdAt" timestamp with time zone NOT NULL DEFAULT now(),
     "updatedAt" timestamp with time zone NOT NULL DEFAULT now(),
+    CONSTRAINT posts_pk PRIMARY KEY (id),
     CONSTRAINT fk_posts_profiles_id FOREIGN KEY ("postedBy")
         REFERENCES public.profiles (id) MATCH SIMPLE
         ON UPDATE NO ACTION
