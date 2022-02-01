@@ -1,5 +1,3 @@
-/* Replace with your SQL commands */
-
 -- Table: public.post_likes
 
 -- DROP TABLE IF EXISTS public.post_likes;
@@ -14,11 +12,11 @@ CREATE TABLE IF NOT EXISTS public.post_likes
     CONSTRAINT fk_post_likes_posts_id FOREIGN KEY ("postId")
         REFERENCES public.posts (id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
+        ON DELETE CASCADE,
     CONSTRAINT fk_post_likes_profiles_id FOREIGN KEY ("likedBy")
         REFERENCES public.profiles (id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON DELETE CASCADE
 )
 
 TABLESPACE pg_default;

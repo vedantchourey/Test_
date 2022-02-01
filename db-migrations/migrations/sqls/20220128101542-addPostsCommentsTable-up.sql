@@ -1,5 +1,3 @@
-/* Replace with your SQL commands */
-
 -- Table: public.post_comments
 
 -- DROP TABLE IF EXISTS public.post_comments;
@@ -16,11 +14,11 @@ CREATE TABLE IF NOT EXISTS public.post_comments
     CONSTRAINT fk_post_comments_posts_id FOREIGN KEY ("postId")
         REFERENCES public.posts (id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
+        ON DELETE CASCADE,
     CONSTRAINT fk_post_comments_profile_id FOREIGN KEY ("commentBy")
         REFERENCES public.profiles (id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON DELETE CASCADE
 )
 
 TABLESPACE pg_default;
