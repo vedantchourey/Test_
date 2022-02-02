@@ -19,7 +19,7 @@ interface Props {
 }
 
 export default function RegistrationForm(props: Props) {
-  const {onSignUpSuccess} = props;
+  const { onSignUpSuccess } = props;
   const appDispatch = useAppDispatch();
   const [errors, setErrors] = useState<ValidationResult<SignupRequest>>({});
   const [request, setRequest] = useState<Partial<SignupRequest>>({
@@ -34,7 +34,7 @@ export default function RegistrationForm(props: Props) {
   });
 
   const handleTncChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setRequest({...request, agreeToTnc: event.target.checked})
+    setRequest({ ...request, agreeToTnc: event.target.checked })
   };
 
   const dateOfBirth = request.dateOfBirth == null ? null : parseDateTime(request.dateOfBirth);
@@ -62,7 +62,8 @@ export default function RegistrationForm(props: Props) {
         <Typography className={styles.title}>JOIN NOOBSTORM TODAY FOR FREE!</Typography>
       </div>
       <div className={styles.inputRow}>
-        <TextField id="username"
+        <TextField
+          id="username"
           label="Username"
           variant="filled"
           className={styles.inputRowItem}
@@ -109,11 +110,12 @@ export default function RegistrationForm(props: Props) {
           value={request.lastName}
           error={propsHasError(errors, 'lastName')}
           helperText={getErrorForProp(errors, 'lastName')}
-          onChange={(event) => setRequest({...request, lastName: event.target.value})}
+          onChange={(event) => setRequest({ ...request, lastName: event.target.value })}
         />
       </div>
       <div className={styles.inputRow}>
-        <DesktopDatePicker label="Date of birth"
+        <DesktopDatePicker
+          label="Date of birth"
           className={styles.inputRowItem}
           value={dateOfBirth}
           mask={'__/__/____'}
@@ -124,7 +126,7 @@ export default function RegistrationForm(props: Props) {
               variant="filled"
               className={styles.inputRowItem}
               error={propsHasError(errors, 'dateOfBirth')}
-              helperText={getErrorForProp(errors, 'dateOfBirth')}/>
+              helperText={getErrorForProp(errors, 'dateOfBirth')} />
           }
         />
         <TextField id="password"
@@ -150,11 +152,11 @@ export default function RegistrationForm(props: Props) {
       </div>
       <div className={styles.inputRow}>
         <FormControl>
-          <FormControlLabel control={<Checkbox id="agreeToTNC" value={request.agreeToTnc} onChange={handleTncChange}/>}
+          <FormControlLabel control={<Checkbox id="agreeToTNC" value={request.agreeToTnc} onChange={handleTncChange} />}
             className={styles.inputRowItem}
             label={<Typography className={commonStyles.whiteText}>I certify I am over 18 and agree to the <Link href="/terms-and-conditions">Terms and Conditions!</Link></Typography>}
           />
-          <FormHelperText style={{display: propsHasError(errors, 'agreeToTnc') ? '' : 'none'}} error={true}>{getErrorForProp(errors, 'agreeToTnc')}</FormHelperText>
+          <FormHelperText style={{ display: propsHasError(errors, 'agreeToTnc') ? '' : 'none' }} error={true}>{getErrorForProp(errors, 'agreeToTnc')}</FormHelperText>
         </FormControl>
       </div>
       <div className={styles.inputRow}>

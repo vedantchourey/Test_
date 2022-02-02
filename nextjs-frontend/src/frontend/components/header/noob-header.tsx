@@ -9,8 +9,8 @@ export default function NoobHeader() {
   const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
   return (
     <nav>
-      {isDesktop && <NoobDesktopHeader/>}
-      {!isDesktop && <NoobMobileHeader/>}
+      {isDesktop && <NoobDesktopHeader />}
+      {!isDesktop && <NoobMobileHeader />}
     </nav>
   );
 }
