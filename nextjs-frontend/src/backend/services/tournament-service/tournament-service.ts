@@ -8,10 +8,10 @@ import { Knex } from 'knex';
 
 export const createTournament: NoobApiService<CreateOrEditTournamentRequest, ITournamentResponse> = async (req, context) => {
   const errors = await validateTournament(req, context);
-  if (isThereAnyError(errors)) return {errors: errors};
+  if (isThereAnyError(errors)) return { errors: errors };
   const repository = new TournamentRepository(context.transaction as Knex.Transaction);
-  const createdTournament = await repository.create({id: undefined, isOpenToPublic: false, ...req});
+  const createdTournament = await repository.create({ id: undefined, isOpenToPublic: false, ...req });
   // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
-  const {id, ...others} = createdTournament;
-  return {data: {id: createdTournament.id as string, ...others}};
+  const { id, ...others } = createdTournament;
+  return { data: { id: createdTournament.id as string, ...others } };
 }

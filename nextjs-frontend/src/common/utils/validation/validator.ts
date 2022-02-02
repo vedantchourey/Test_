@@ -25,3 +25,25 @@ export function isNullOrEmptyString(value: string | undefined | null) {
   if (value == null) return true;
   return validator.isEmpty(value);
 }
+
+export function isObject(val: any): boolean {
+  return val instanceof Object;
+}
+
+export function isObjectHasProperty(obj: object, property: string) {
+  if (isObject(obj)) {
+    return obj.hasOwnProperty(property);
+  }
+
+  return false;
+}
+
+export function isUrl(value: string | undefined | null) {
+  if (value === null || value === undefined) return false;
+  return validator.isURL(value);
+}
+
+export function isUUID(value: string | undefined | null) {
+  if (value === null || value === undefined) return false;
+  return validator.isUUID(value);
+}

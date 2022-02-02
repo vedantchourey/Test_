@@ -45,4 +45,4 @@ export type NoobApiRouteHandler = (req: NextApiRequest, res: NextApiResponse, co
 
 export type NoobApiService<TRequest, TResponse> = (req: TRequest, context: PerRequestContext) => Promise<ServiceResponse<TRequest, TResponse>>;
 
-export type Methods = 'post' | 'get';
+export type Methods = 'post' | 'get' | 'patch' | 'delete';
