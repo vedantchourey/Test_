@@ -1,7 +1,6 @@
 import { Container, Divider, Typography } from "@mui/material";
 import Heading from "../../src/frontend/components/ui-components/typography/heading";
 import PartnerWithUsForm from "../../src/frontend/components/forms/partner-with-us-form";
-import styles from "./partner-with-us.module.css";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
 import NoobPage from "../../src/frontend/components/page/noob-page";
@@ -34,7 +33,7 @@ export default function PartnerWithUs() {
 
           <Divider sx={{ my: 5 }}>
             <Typography variant="h3" color="default">
-                            PARTNER WITH US
+              PARTNER WITH US
             </Typography>
           </Divider>
 

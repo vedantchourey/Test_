@@ -6,8 +6,18 @@ import Heading from '../../../../src/frontend/components/ui-components/typograph
 import NewsletterPoster from '../../../../src/frontend/components/newsletter-poster'
 import TicketHisoryCard from '../../../../src/frontend/components/support/ticket/history/ticketHistoryCard'
 
+interface TicketObject {
+  _id: number,
+  status: 'active' | 'solved';
+  ticketNumber: string;
+  query: string;
+  answer: string;
+  created_at: Date | string;
+  commentCount: number
+}
+
 interface Props {
-    tickets?: Array<any>
+  tickets?: Array<TicketObject>
 }
 
 const NoobTicketHistoryPage = ({ tickets }: Props): JSX.Element => {
@@ -28,7 +38,7 @@ const NoobTicketHistoryPage = ({ tickets }: Props): JSX.Element => {
         <Box className={commonStyles.container} sx={{ my: 5 }}>
           <Divider>
             <Typography variant='h3'>
-                            TICKET HISTORY
+              TICKET HISTORY
             </Typography>
           </Divider>
 
