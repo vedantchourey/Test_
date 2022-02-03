@@ -62,8 +62,8 @@ const NoobSupportPage: NextPage = () => {
                                 sub: `Lorem Ipsum has been the industry's standard dummy 0.32.`,
                             },
                         ].map((_, i) => (
-                            <Grid item className={styles.gridContainer} xs={12} lg={4}>
-                                <Link key={i} href={_.to}>
+                            <Grid item key={i} className={styles.gridContainer} xs={12} lg={4}>
+                                <Link href={_.to}>
                                     <a>
                                         <Card className={styles.card}>
                                             <CardContent className={styles.cardContent}>

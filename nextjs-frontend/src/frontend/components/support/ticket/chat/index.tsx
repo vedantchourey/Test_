@@ -1,11 +1,23 @@
 import React, { Fragment, useState } from 'react'
-import { Button, Paper, Grid, TextField, Typography, IconButton, Box, CardContent, Card, CardHeader, Avatar } from '@mui/material';
+import { Button, Paper, Grid, TextField, Typography, IconButton, Box, CardContent, Card, Avatar } from '@mui/material';
 import AttachmentIcon from '@mui/icons-material/Attachment';
 import DoneIcon from '@mui/icons-material/Done';
 import styles from './chat.module.css'
 
-export default function TicketChats() {
+interface Chat {
+    profileImage: string,
+    comment: string,
+    userName: string,
+    created_at: string,
+}
 
+interface Props {
+    ticketNumber: string;
+    ticketSubject: string;
+    chats: Chat[];
+}
+
+export default function TicketChats({ ticketNumber, ticketSubject, chats }: Props) {
     const [message, setMessage] = useState("")
     const [errors, setErrors] = useState({
         message: ""
@@ -15,7 +27,7 @@ export default function TicketChats() {
         <Fragment>
 
             <Grid item xs={12} my={5}>
-                <Box className={styles.paperContainer}>
+                <Box className={styles.paperContainer} p={1}>
                     <TextField
                         id="message"
                         placeholder='Type in your message...'
@@ -44,10 +56,10 @@ export default function TicketChats() {
 
             <Paper elevation={5} className={styles.paperContainer} sx={{ flexDirection: 'column' }} square>
 
-                <Card elevation={5}>
+                <Card elevation={0} sx={{ width: "100%" }}>
                     <CardContent className={styles.paperContainer}>
                         <Typography variant='h3' align='left'>
-                            #2020-8697 - Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                            #{ticketNumber} - {ticketSubject}
                         </Typography>
                         <IconButton color="default" sx={{
                             backgroundColor: "orange",
@@ -56,32 +68,29 @@ export default function TicketChats() {
                             <DoneIcon />
                         </IconButton>
                     </CardContent>
-                </Card>
 
 
-                {new Array(4).fill("").map((_, i) => (
-                    <Card key={i} color='transparent' variant='elevation'>
-                        <CardHeader
-                            avatar={
-                                <Avatar>
-                                    G
-                                </Avatar>
-                            }
-                            action={
-                                <Typography variant="body1" color="text.secondary">
-                                    04/09/2021, 19:21
+                    {chats.map((_, i) => (
+                        <Fragment>
+                            <CardContent className={styles.paperContainer} style={{ borderTop: '1px solid #FFFFFF1A' }}>
+                                <Box className={styles.paperContainer}>
+                                    <Avatar alt='user profile image' />
+                                    <Typography align='left' ml={2} variant="h3" color="default">
+                                        {_.userName}
+                                    </Typography>
+                                </Box>
+                                <Typography align='left' variant="body1" color="text.secondary">
+                                    {_.created_at}
                                 </Typography>
-                            }
-                            title="Guy Hawkins"
-                        />
-                        <CardContent>
-                            <Typography align='left' variant="body1" color="text.secondary">
-                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-                            </Typography>
-                        </CardContent>
-                    </Card>
-
-                ))}
+                            </CardContent>
+                            <CardContent className={styles.paperContainer}>
+                                <Typography align='left' variant="body1" color="text.secondary">
+                                    {_.comment}
+                                </Typography>
+                            </CardContent>
+                        </Fragment>
+                    ))}
+                </Card>
             </Paper>
         </Fragment>
     )

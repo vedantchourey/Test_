@@ -1,14 +1,29 @@
 import * as React from 'react'
-import type { NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
 import NoobPage from '../../../../src/frontend/components/page/noob-page'
 import commonStyles from '../../../../src/frontend/styles/common.module.css'
-import { Container, Divider, Paper, Typography } from '@mui/material'
+import { Container, Divider, Typography } from '@mui/material'
 import Heading from '../../../../src/frontend/components/ui-components/typography/heading'
 import { Box } from '@mui/system'
 import NewsletterPoster from '../../../../src/frontend/components/newsletter-poster'
 import TicketChats from '../../../../src/frontend/components/support/ticket/chat'
 
-const NoobTicketCreatePage: NextPage = () => {
+interface Chat {
+    profileImage: string,
+    comment: string,
+    userName: string,
+    created_at: string,
+}
+
+interface Props {
+    ticketNumber: string;
+    ticketSubject: string;
+    chats: Chat[];
+}
+
+const NoobTicketCreatePage = (props: Props) => {
+    const { ticketNumber, ticketSubject, chats } = props;
+
     return (
         <NoobPage
             title='Ticket Chat'
@@ -18,7 +33,7 @@ const NoobTicketCreatePage: NextPage = () => {
         >
             <React.Fragment>
                 <Heading
-                    heading='For questions about your account,purchases, or general inquires.'
+                    heading='For questions about your account, purchases, or general inquires.'
                     backgroundImage
                     backgroundImageUrl="/images/partner-with-us.png"
                 />
@@ -32,7 +47,7 @@ const NoobTicketCreatePage: NextPage = () => {
                     </Divider>
 
                     <Container maxWidth='md'>
-                        <TicketChats />
+                        <TicketChats ticketNumber={ticketNumber} ticketSubject={ticketSubject} chats={chats} />
                     </Container>
 
                     <NewsletterPoster />
@@ -41,6 +56,32 @@ const NoobTicketCreatePage: NextPage = () => {
             </React.Fragment>
         </NoobPage>
     )
+}
+
+export const getServerSideProps: GetServerSideProps = async () => {
+    try {
+        // todo integrate fetch api here
+        return {
+            props: {
+                ticketNumber: "2020-8697",
+                ticketSubject: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                chats: [{
+                    userName: "Guy Hawkins",
+                    profileImage: "",
+                    created_at: '04/09/2021, 19:21',
+                    comment: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.`
+                }]
+            }
+        }
+    } catch (error) {
+        return {
+            props: {
+                ticketNumber: "",
+                ticketSubject: "",
+                chats: []
+            }
+        }
+    }
 }
 
 export default NoobTicketCreatePage
