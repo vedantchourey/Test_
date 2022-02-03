@@ -9,10 +9,10 @@ export default function NoobDesktopNewsletterPoster() {
     <div className={styles.NewsletterContainer}>
       <div className={styles.innerContainer}>
         <Typography align="center" variant="h1">
-                    subscribe to our newsletter
+          subscribe to our newsletter
         </Typography>
         <Typography align="center" variant="h3" >
-                    Receive news, stay updated and special offers
+          Receive news, stay updated and special offers
         </Typography>
         <div className={styles.emailInputContainer}>
           <TextField
@@ -30,7 +30,7 @@ export default function NoobDesktopNewsletterPoster() {
               className: styles.inputStyle
             }}
           />
-          <Button className={styles.actionButton} onClick={() => { }}>
+          <Button className={styles.actionButton}>
             <Typography>Subscribe</Typography>
           </Button>
 

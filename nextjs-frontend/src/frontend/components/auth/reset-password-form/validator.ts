@@ -27,7 +27,7 @@ function validatePassword(obj: Partial<NewPasswordRequest>) {
 
 function validateConfirmPassword(obj: Partial<NewPasswordRequest>) {
   if (isNullOrEmpty(obj.confirm_password)) return 'Is required';
-  if (obj.password != obj.confirm_password) return "Password disn't match";
+  if (obj.password !== obj.confirm_password) return "Password disn't match";
 }
 
 function validatePhoneNumber(details: Partial<ResetPasswordRequest>) {

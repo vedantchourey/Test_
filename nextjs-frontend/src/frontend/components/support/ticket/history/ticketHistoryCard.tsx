@@ -23,7 +23,7 @@ export default function TicketHisoryCard({ _id, answer, created_at, ticketNumber
             <TicketIcon style={{ width: 32, height: 32 }} />
           }
           action={
-            <Typography variant='body1' color={status == 'active' ? 'success.main' : 'secondary'}>
+            <Typography variant='body1' color={status === 'active' ? 'success.main' : 'secondary'}>
               {status}
             </Typography>
           }

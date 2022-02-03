@@ -1,6 +1,6 @@
 import validator from 'validator';
 import { isNullOrEmptyString, ValidationResult } from '../../../../common/utils/validation/validator';
-import { ResetPasswordRequest, UpdatePasswordRequest, ResetPasswordResponse } from './i-reset-password';
+import { ResetPasswordRequest, UpdatePasswordRequest } from './i-reset-password';
 import { PerRequestContext } from '../../../utils/api-middle-ware/api-middleware-typings';
 import { Knex } from 'knex';
 import { createUsersRepository, UsersRepository } from '../../database/repositories/users-repository';

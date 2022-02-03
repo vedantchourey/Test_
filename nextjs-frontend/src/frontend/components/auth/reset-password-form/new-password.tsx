@@ -109,16 +109,16 @@ const SetNewPassword = ({ onResetHandler }: Props) => {
       </Grid>
 
       <Grid item xs={12}>
-        <Button className={commonStyles.actionButton} variant="contained" onClick={onClickResetPassword}>
-          <Typography variant={"h3"}>
+        <Button className={commonStyles.actionButton} variant='contained' onClick={onClickResetPassword}>
+          <Typography variant={'h3'}>
             Reset Password
           </Typography>
         </Button>
       </Grid>
 
       <Grid item xs={12}>
-        <Typography align='left' variant={"h3"}>
-          *The password should be at least twelve characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^.
+        <Typography align='left' variant={'h3'}>
+          * The password should be at least twelve characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^.
         </Typography>
       </Grid>
 

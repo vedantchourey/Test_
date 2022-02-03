@@ -1,14 +1,14 @@
 import MessageContainer from '../../ui-components/message/messageContainer';
-import { Button, Divider, Grid, Icon, Typography } from '@mui/material';
+import { Grid, Icon, Typography } from '@mui/material';
 import { Fragment } from 'react';
 import commonStyles from '../../../styles/common.module.css'
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
-interface Props {
-    handleNext?: () => void
-}
+// interface Props {
+//   handleNext?: () => void
+// }
 
-const ResetPasswordLinkSent = ({ handleNext }: Props) => {
+const ResetPasswordLinkSent = () => {
   return (
     <MessageContainer>
       <Fragment>
@@ -18,7 +18,7 @@ const ResetPasswordLinkSent = ({ handleNext }: Props) => {
               <ErrorOutlineIcon />
             </Icon>
             <Typography variant="h3" color="default">
-                            Check your email address for your new password.
+              Check your email address for your new password.
             </Typography>
           </Grid>
         </Grid>

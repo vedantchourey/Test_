@@ -4,11 +4,11 @@ import { getErrorForProp, propsHasError } from "../../../common/utils/validation
 import commonStyles from "../../styles/common.module.css"
 import styles from "./partner-with-us.module.css"
 
-interface Props {
-    onRegistrationSuccess: () => void
-}
+// interface Props {
+//     onRegistrationSuccess: () => void
+// }
 
-export default function PartnerWithUsForm(props: Props) {
+export default function PartnerWithUsForm() {
 
   const [errors] = useState({});
   const [request, setRequest] = useState({

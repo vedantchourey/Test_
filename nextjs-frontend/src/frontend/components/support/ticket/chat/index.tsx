@@ -5,23 +5,23 @@ import DoneIcon from '@mui/icons-material/Done';
 import styles from './chat.module.css'
 
 interface Chat {
-    profileImage: string,
-    comment: string,
-    userName: string,
-    created_at: string,
+  profileImage: string,
+  comment: string,
+  userName: string,
+  created_at: string,
 }
 
 interface Props {
-    ticketNumber: string;
-    ticketSubject: string;
-    chats: Chat[];
+  ticketNumber: string;
+  ticketSubject: string;
+  chats: Chat[];
 }
 
 export default function TicketChats({ ticketNumber, ticketSubject, chats }: Props) {
   const [message, setMessage] = useState("")
-  const [errors, setErrors] = useState({
-    message: ""
-  })
+  // const [errors, setErrors] = useState({
+  //   message: ""
+  // })
 
   return (
     <Fragment>
@@ -49,7 +49,7 @@ export default function TicketChats({ ticketNumber, ticketSubject, chats }: Prop
           </IconButton>
 
           <Button variant="contained">
-                        Send
+            Send
           </Button>
         </Box>
       </Grid>
@@ -59,7 +59,7 @@ export default function TicketChats({ ticketNumber, ticketSubject, chats }: Prop
         <Card elevation={0} sx={{ width: "100%" }}>
           <CardContent className={styles.paperContainer}>
             <Typography variant='h3' align='left'>
-                            #{ticketNumber} - {ticketSubject}
+              #{ticketNumber} - {ticketSubject}
             </Typography>
             <IconButton color="default" sx={{
               backgroundColor: "orange",
@@ -71,7 +71,7 @@ export default function TicketChats({ ticketNumber, ticketSubject, chats }: Prop
 
 
           {chats.map((_, i) => (
-            <Fragment>
+            <Fragment key={i}>
               <CardContent className={styles.paperContainer} style={{ borderTop: '1px solid #FFFFFF1A' }}>
                 <Box className={styles.paperContainer}>
                   <Avatar alt='user profile image' />

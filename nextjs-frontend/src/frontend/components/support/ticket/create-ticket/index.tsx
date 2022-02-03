@@ -6,7 +6,7 @@ import styles from "./create-ticket.module.css"
 
 export default function CreateTicketForm() {
 
-  const [errors, setErrors] = useState({});
+  const [errors] = useState({});
   const [request, setRequest] = useState({
     subject: '',
     ticketType: 'default',
@@ -41,7 +41,7 @@ export default function CreateTicketForm() {
 
         <Grid item xs={12}>
           <Typography align='left' mb={1} variant={"h3"}>
-                        Subject
+            Subject
           </Typography>
           <TextField
             id="subject"
@@ -64,7 +64,7 @@ export default function CreateTicketForm() {
 
         <Grid item xs={12}>
           <Typography align='left' mb={1} variant={"h3"}>
-                        Ticket Type
+            Ticket Type
           </Typography>
           <TextField
             id="ticketType"
@@ -88,7 +88,7 @@ export default function CreateTicketForm() {
             }}
           >
             <MenuItem value={'default'}>
-                            -- select type --
+              -- select type --
             </MenuItem>
             {TICKET_TYPES.map((_, i) => (
               <MenuItem key={i} value={_.value}>
@@ -104,7 +104,7 @@ export default function CreateTicketForm() {
 
         <Grid item xs={12}>
           <Typography align='left' mb={1} variant={"h3"}>
-                        Message
+            Message
           </Typography>
           <TextField
             id="message"
