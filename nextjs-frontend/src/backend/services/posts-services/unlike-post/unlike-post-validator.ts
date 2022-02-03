@@ -16,13 +16,16 @@ async function validateIsAlreadyLiked(post: IUnlikePostRequest, context: PerRequ
   if (isNullOrEmptyString(post.postId)) return;
   if (!isUUID(post.postId)) return;
 
-  const isLiked = await postLikesRepository.isLiked(post.postId, context.user?.id!);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const isLiked = await postLikesRepository.isLiked(post.postId, context.user?.id || '');
   /* Validate if post already liked */
   if (!isObjectHasProperty(isLiked, 'id')) return 'Post not liked';
 }
 
 export async function validateRequest(post: IUnlikePostRequest, context: PerRequestContext) {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const postsRepository = new PostsRepository(context.transaction!);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const postLikesRepository = new PostLikesRepository(context.transaction!);
 
   return {

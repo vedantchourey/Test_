@@ -26,12 +26,14 @@ export function isNullOrEmptyString(value: string | undefined | null) {
   return validator.isEmpty(value);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isObject(val: any): boolean {
   return val instanceof Object;
 }
 
 export function isObjectHasProperty(obj: object, property: string) {
   if (isObject(obj)) {
+    // eslint-disable-next-line no-prototype-builtins
     return obj.hasOwnProperty(property);
   }
 

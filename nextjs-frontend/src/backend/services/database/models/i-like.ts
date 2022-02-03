@@ -1,4 +1,4 @@
 export interface ILike {
     postId: string,
-    likedBy: string
+    likedBy: string | undefined
 }

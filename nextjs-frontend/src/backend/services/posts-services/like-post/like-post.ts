@@ -5,14 +5,16 @@ import { ILikePostRequest } from './i-like-post';
 import { PostLikesRepository } from '../../database/repositories/post-likes-repository';
 
 interface ILikePostResponse {
-    message: string
+  message: string
 }
 
 const likePost = async (req: ILikePostRequest, context: PerRequestContext) => {
   const errors = await validateRequest(req, context);
   if (isThereAnyError(errors)) return { errors: errors };
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const repository = new PostLikesRepository(context.transaction!);
-  await repository.createLike({ ...req, likedBy: context.user?.id! });
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  await repository.createLike({ ...req, likedBy: context.user?.id });
   const res: ILikePostResponse = { message: 'Post liked' };
   return { data: res };
 }

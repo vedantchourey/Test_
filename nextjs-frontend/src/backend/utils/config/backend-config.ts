@@ -31,8 +31,8 @@ export const backendConfig: IBackendConfig = {
     apiUrl: supabaseUrl
   },
   client: {
-    cmsApiEndpoint: CMS_API_ENDPOINT!,
-    cmsApiToken: CMS_API_TOKEN!,
+    cmsApiEndpoint: CMS_API_ENDPOINT || 'API_ENDPOINT',
+    cmsApiToken: CMS_API_TOKEN || 'API_TOKEN',
     appUrl: appUrl
   }
 }

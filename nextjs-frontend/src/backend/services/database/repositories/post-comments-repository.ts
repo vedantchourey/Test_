@@ -3,9 +3,9 @@ import { BaseRepository } from './base-repository';
 import { IPostComments } from '../models/i-post-comments';
 
 interface IUpdateComment {
-    comment?: string;
-    postId?: string;
-    updatedAt: string;
+  comment?: string;
+  postId?: string;
+  updatedAt: string;
 }
 
 export class PostCommentsRepository extends BaseRepository<IPostComments>{
@@ -19,23 +19,23 @@ export class PostCommentsRepository extends BaseRepository<IPostComments>{
 
   async getCommentById(id: string) {
     return await this.entities().select('*')
-.first()
-.where('id', id)
+      .first()
+      .where('id', id)
   }
 
   async countCommentById(id: string): Promise<number> {
     const result = await this.entities().whereRaw("id = ?", [id])
-            .count('id');
+      .count('id');
     return parseInt(result[0].count, 10);
   }
 
-  async deleteComment(id: string, userId: string) {
+  async deleteComment(id: string, userId: string | undefined) {
     return await this.entities().where({ id: id, commentBy: userId })
-.del()
+      .del()
   }
 
-  async updateComment(id: string, update: IUpdateComment): Promise<any> {
+  async updateComment(id: string, update: IUpdateComment): Promise<object> {
     return await this.entities().where('id', id)
-.update(update);
+      .update(update);
   }
 }

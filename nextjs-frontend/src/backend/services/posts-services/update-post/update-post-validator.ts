@@ -22,6 +22,7 @@ async function validateIsPostOwner(post: IUpdatePostRequest, context: PerRequest
 
 
 export async function validateRequest(post: IUpdatePostRequest, context: PerRequestContext) {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const postsRepository = new PostsRepository(context.transaction!);
 
   return {

@@ -36,6 +36,7 @@ const ResetPasswordRequestCode = ({ onResetHandler }: Props) => {
       } else {
         setErrors(response.errors);
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setErrors({ email: err.errors?.apiError?.message || "Error occured" });
     } finally {

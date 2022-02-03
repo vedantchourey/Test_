@@ -7,8 +7,10 @@ import { PostLikesRepository } from '../../database/repositories/post-likes-repo
 export const unlikePost = async (req: IUnlikePostRequest, context: PerRequestContext) => {
   const errors = await validateRequest(req, context);
   if (isThereAnyError(errors)) return { errors }
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const repository = new PostLikesRepository(context.transaction!);
-  await repository.deleteLike({ postId: req.postId, likedBy: context.user?.id! })
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  await repository.deleteLike({ postId: req.postId, likedBy: context.user?.id })
   return {
     data: { message: "Post unliked" }
   }

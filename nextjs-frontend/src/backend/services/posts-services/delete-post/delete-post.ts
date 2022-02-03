@@ -8,6 +8,7 @@ import { PostsRepository } from '../../database/repositories/posts-repository';
 const deletePost = async (req: IDeletePostRequest, context: PerRequestContext) => {
   const errors = await ValidateDeletePost(req, context);
   if (isThereAnyError(errors)) return { errors: errors };
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const repository = new PostsRepository(context.transaction!);
   await repository.deletePost(req.postId as string);
   const res: IDeletePostResponse = { message: 'Post deleted' };

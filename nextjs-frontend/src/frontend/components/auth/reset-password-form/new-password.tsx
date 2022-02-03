@@ -36,6 +36,7 @@ const SetNewPassword = ({ onResetHandler }: Props) => {
       } else {
         setErrors(response.errors);
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setErrors({ password: err.errors?.apiError?.message || "Error occured" });
     } finally {
@@ -118,7 +119,7 @@ const SetNewPassword = ({ onResetHandler }: Props) => {
 
       <Grid item xs={12}>
         <Typography align='left' variant={'h3'}>
-          * The password should be at least twelve characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^.
+          {' * The password should be at least twelve characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^.'}
         </Typography>
       </Grid>
 

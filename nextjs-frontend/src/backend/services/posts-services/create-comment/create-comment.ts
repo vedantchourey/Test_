@@ -7,7 +7,9 @@ import { PostCommentsRepository } from '../../database/repositories/post-comment
 export async function createComment(req: ICreateCommentRequest, context: PerRequestContext) {
   const errors = await validateRequest(req, context);
   if (isThereAnyError(errors)) return { errors };
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const repository = new PostCommentsRepository(context.transaction!);
-  await repository.createComment({ ...req, commentBy: context.user?.id! });
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  await repository.createComment({ ...req, commentBy: context.user?.id });
   return { data: { message: 'Comment created' } }
 }

@@ -15,6 +15,7 @@ function validateComment(comment: ICreateCommentRequest) {
 }
 
 export async function validateRequest(comment: ICreateCommentRequest, context: PerRequestContext) {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const postsRepository = new PostsRepository(context.transaction!)
   return {
     postId: await validatePostId(comment, postsRepository),

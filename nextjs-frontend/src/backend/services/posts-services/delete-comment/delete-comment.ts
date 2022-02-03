@@ -8,8 +8,10 @@ import { PostCommentsRepository } from '../../database/repositories/post-comment
 const deleteComment = async (req: IDeleteCommentRequest, context: PerRequestContext) => {
   const errors = await ValidateDeleteComment(req, context);
   if (isThereAnyError(errors)) return { errors: errors };
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const repository = new PostCommentsRepository(context.transaction!);
-  await repository.deleteComment(req.commentId, context.user?.id!);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  await repository.deleteComment(req.commentId, context.user?.id);
   const res: IDeleteResponse = { message: 'Comment deleted' };
   return { data: res };
 }

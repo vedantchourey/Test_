@@ -8,6 +8,7 @@ import { sanitizeObject } from '../../../../common/utils/utils';
 export async function updateComment(comment: IUpdateCommentRequest, context: PerRequestContext) {
   const errors = await validateUpdateCommentRequest(comment, context);
   if (isThereAnyError(errors)) return { errors }
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const repository = new PostCommentsRepository(context.transaction!);
 
   // Remove unwanted fields if exists

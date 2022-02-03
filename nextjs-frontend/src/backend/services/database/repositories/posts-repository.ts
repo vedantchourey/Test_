@@ -3,9 +3,9 @@ import { BaseRepository } from './base-repository';
 import { IPost } from '../models/i-post';
 
 interface IUpdatePost {
-    postImgUrl?: string;
-    postContent?: string;
-    updatedAt: string
+  postImgUrl?: string;
+  postContent?: string;
+  updatedAt: string
 }
 
 export class PostsRepository extends BaseRepository<IPost>{
@@ -19,24 +19,24 @@ export class PostsRepository extends BaseRepository<IPost>{
 
   async getPostById(id: string) {
     return await this.entities().select('*')
-.first()
-.where('id', id)
+      .first()
+      .where('id', id)
   }
 
   async countPostById(id: string): Promise<number> {
     const result = await this.entities().whereRaw("id = ?", [id])
-            .count('id');
+      .count('id');
     return parseInt(result[0].count, 10);
   }
 
-  async deletePost(id: string): Promise<any> {
+  async deletePost(id: string): Promise<object> {
     return await this.entities().where("id", id)
-.del();
+      .del();
   }
 
-  async updatePost(id: string, update: IUpdatePost): Promise<any> {
+  async updatePost(id: string, update: IUpdatePost): Promise<object> {
     return await this.entities().where('id', id)
-.update(update);
+      .update(update);
   }
 
 }
