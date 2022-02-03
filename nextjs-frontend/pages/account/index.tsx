@@ -6,26 +6,26 @@ import UserProfileCard from '../../src/frontend/components/cards/user-profile-ca
 import NoobPage from '../../src/frontend/components/page/noob-page';
 
 export default function Account() {
-    const router = useRouter();
-    const isLoggedIn = useAppSelector(isLoggedInSelector);
-    const checkStatus = useAppSelector(authCheckStatusSelector);
+  const router = useRouter();
+  const isLoggedIn = useAppSelector(isLoggedInSelector);
+  const checkStatus = useAppSelector(authCheckStatusSelector);
 
-    useEffect(() => {
-        (async () => {
-            if (checkStatus !== 'success') return;
-            if (isLoggedIn) return;
-            await router.push('/')
-        })()
-    });
+  useEffect(() => {
+    (async () => {
+      if (checkStatus !== 'success') return;
+      if (isLoggedIn) return;
+      await router.push('/')
+    })()
+  });
 
-    return (
-        <NoobPage
-            title="Account"
-            metaData={{
-                description: "Noob Storm account page"
-            }}
-        >
-            <UserProfileCard />
-        </NoobPage>
-    )
+  return (
+    <NoobPage
+      title="Account"
+      metaData={{
+        description: "Noob Storm account page"
+      }}
+    >
+      <UserProfileCard />
+    </NoobPage>
+  )
 }

@@ -8,16 +8,16 @@ function isNullOrEmpty(value: string | undefined | null) {
 }
 
 function validateEmail(details: Partial<ResetPasswordRequest>) {
-  if (details.phone) return;
+  // if (details.phone) return;
   if (isNullOrEmpty(details.email)) return 'Is required';
   if (!validator.isEmail(details.email as string)) return 'Invalid email';
 }
 
-function validateCode(obj: Partial<NewPasswordRequest>) {
-  if (isNullOrEmpty(obj.code)) return 'Is required';
-  const parts = (obj.code as string).split(' ');
-  if (parts.some(x => !validator.isAlphanumeric(x))) return 'Can only contain A-Za-z0-9';
-}
+// function validateCode(obj: Partial<NewPasswordRequest>) {
+//   if (isNullOrEmpty(obj.code)) return 'Is required';
+//   const parts = (obj.code as string).split(' ');
+//   if (parts.some((x) => !validator.isAlphanumeric(x))) return 'Can only contain A-Za-z0-9';
+// }
 
 function validatePassword(obj: Partial<NewPasswordRequest>) {
   if (isNullOrEmpty(obj.password)) return 'Is required';

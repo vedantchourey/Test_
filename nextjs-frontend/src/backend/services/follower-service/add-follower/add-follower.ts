@@ -6,15 +6,15 @@ import { FollowersRepository } from '../../database/repositories/followers-repos
 
 
 export async function addFollower(req: IUserFollowerRequest, context: PerRequestContext) {
-    const errors = await ValidateFollowing(req, context);
-    if (isThereAnyError(errors)) return { errors };
-    const followerRepository = new FollowersRepository(context.transaction!);
-    if(req.follow_action === 'following'){
-        await followerRepository.createUserFollower({ followerId: req.followerId, userId: context.user?.id! });
-        return { data: { message: 'Following' } }
-    } else {
-        await followerRepository.unfollowUser(req.followerId, context.user?.id!);
-        return { data: { message: 'Unfollowing' } }
-    }
+  const errors = await ValidateFollowing(req, context);
+  if (isThereAnyError(errors)) return { errors };
+  const followerRepository = new FollowersRepository(context.transaction!);
+  if(req.follow_action === 'following'){
+    await followerRepository.createUserFollower({ followerId: req.followerId, userId: context.user?.id! });
+    return { data: { message: 'Following' } }
+  } 
+  await followerRepository.unfollowUser(req.followerId, context.user?.id!);
+  return { data: { message: 'Unfollowing' } }
+    
     
 }

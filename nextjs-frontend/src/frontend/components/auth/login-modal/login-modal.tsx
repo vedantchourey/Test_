@@ -121,7 +121,7 @@ export default function LoginModal(props: Props) {
             value={request.email}
             error={propsHasError(errors, 'email')}
             helperText={getErrorForProp(errors, 'email')}
-            onChange={event => setRequest({ ...request, email: event.target.value })}
+            onChange={(event) => setRequest({ ...request, email: event.target.value })}
             disabled={isBusy}
           />
         </div>
@@ -134,7 +134,7 @@ export default function LoginModal(props: Props) {
             value={request.password}
             error={propsHasError(errors, 'password')}
             helperText={getErrorForProp(errors, 'password')}
-            onChange={event => setRequest({ ...request, password: event.target.value })}
+            onChange={(event) => setRequest({ ...request, password: event.target.value })}
             disabled={isBusy}
           />
         </div>

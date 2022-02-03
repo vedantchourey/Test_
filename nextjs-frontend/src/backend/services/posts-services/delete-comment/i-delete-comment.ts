@@ -1,4 +1,4 @@
-export interface IDeleteCommentRequest{
+export interface IDeleteCommentRequest {
     commentId: string;
     commentBy: string;
     postId: string;

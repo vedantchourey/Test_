@@ -6,13 +6,13 @@ interface Props {
 }
 
 const MainBannerHeading = ({ heading }: Props) => {
-    return (
-        <div className={styles.mainBanner}>
-            <Typography className={styles.mainBannerText}>
-                {heading}
-            </Typography>
-        </div>
-    )
+  return (
+    <div className={styles.mainBanner}>
+      <Typography className={styles.mainBannerText}>
+        {heading}
+      </Typography>
+    </div>
+  )
 }
 
 export default MainBannerHeading

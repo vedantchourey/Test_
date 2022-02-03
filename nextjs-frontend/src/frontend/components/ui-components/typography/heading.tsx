@@ -12,37 +12,37 @@ interface Props {
 }
 
 export default function Heading({ heading, divider, backgroundImage, backgroundImageUrl }: Props) {
-    const appHeaderHeight = useAppSelector(getAppHeaderHeightSelector);
+  const appHeaderHeight = useAppSelector(getAppHeaderHeightSelector);
 
-    const simpleHeading = () => (
-        <Fragment>
-            <div className={styles.mainBanner} style={{ marginTop: appHeaderHeight, marginBottom: 20 }}>
-                <Typography variant="h1">
-                    {heading}
-                </Typography>
-            </div>
-            {divider && <Divider style={{ marginBottom: 20 }} />}
-        </Fragment>
+  const simpleHeading = () => (
+    <Fragment>
+      <div className={styles.mainBanner} style={{ marginTop: appHeaderHeight, marginBottom: 20 }}>
+        <Typography variant="h1">
+          {heading}
+        </Typography>
+      </div>
+      {divider && <Divider style={{ marginBottom: 20 }} />}
+    </Fragment>
+  )
+
+  if (backgroundImage) {
+    return (
+      <div className={styles.heroContainer} style={{ background: `url(${backgroundImageUrl})` }}>
+        {heading && (
+          <div className={styles.heading}>
+            {simpleHeading()}
+          </div>
+        )}
+      </div>
     )
+  }
 
-    if (backgroundImage) {
-        return (
-            <div className={styles.heroContainer} style={{ background: `url(${backgroundImageUrl})` }}>
-                {heading && (
-                    <div className={styles.heading}>
-                        {simpleHeading()}
-                    </div>
-                )}
-            </div>
-        )
-    }
-
-    return simpleHeading()
+  return simpleHeading()
 }
 
 Heading.defaultProps = {
-    heading: '',
-    divider: false,
-    backgroundImage: false,
-    backgroundUrl: ''
+  heading: '',
+  divider: false,
+  backgroundImage: false,
+  backgroundUrl: ''
 }

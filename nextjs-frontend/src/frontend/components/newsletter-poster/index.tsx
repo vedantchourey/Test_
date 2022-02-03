@@ -6,11 +6,11 @@ import NoobDesktopNewsletterPoster from "./noob-desktop-newsletter-poster"
 import NoobMobileNewsletterPoster from "./noob-mobile-newsletter-poster"
 
 export default function NewsletterPoster() {
-    const isDesktop = useAppSelector(x => isDeviceTypeSelector(x, deviceTypes.desktop));
-    return (
-        <nav>
-            {isDesktop && <NoobDesktopNewsletterPoster />}
-            {!isDesktop && <NoobMobileNewsletterPoster />}
-        </nav>
-    );
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
+  return (
+    <nav>
+      {isDesktop && <NoobDesktopNewsletterPoster />}
+      {!isDesktop && <NoobMobileNewsletterPoster />}
+    </nav>
+  );
 }

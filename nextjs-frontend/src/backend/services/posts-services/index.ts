@@ -8,12 +8,12 @@ import { deleteComment } from './delete-comment/delete-comment';
 import { deletePost } from './delete-post/delete-post';
 
 export {
-    createPost,
-    likePost,
-    createComment,
-    updatePost,
-    updateComment,
-    unlikePost,
-    deleteComment,
-    deletePost
+  createPost,
+  likePost,
+  createComment,
+  updatePost,
+  updateComment,
+  unlikePost,
+  deleteComment,
+  deletePost
 }

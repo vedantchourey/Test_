@@ -8,28 +8,28 @@ import ResetPasswordForm from '../../src/frontend/components/auth/reset-password
 import Heading from '../../src/frontend/components/ui-components/typography/heading'
 
 const NoobResetPasswordPage: NextPage = () => {
-    return (
-        <NoobPage
-            title='Reset Password'
-            metaData={{
-                description: "Noob Storm reset password page"
-            }}
-        >
-            <React.Fragment>
-                <Heading
-                    backgroundImage
-                    backgroundImageUrl="/images/partner-with-us.png"
-                />
+  return (
+    <NoobPage
+      title='Reset Password'
+      metaData={{
+        description: "Noob Storm reset password page"
+      }}
+    >
+      <React.Fragment>
+        <Heading
+          backgroundImage
+          backgroundImageUrl="/images/partner-with-us.png"
+        />
 
-                <MainBannerHeading heading={'RESET PASSWORD'} />
+        <MainBannerHeading heading={'RESET PASSWORD'} />
 
-                <Container maxWidth="md" className={styles.registrationFormContainer} sx={{ my: 5 }}>
-                    <ResetPasswordForm />
-                </Container>
+        <Container maxWidth="md" className={styles.registrationFormContainer} sx={{ my: 5 }}>
+          <ResetPasswordForm />
+        </Container>
 
-            </React.Fragment>
-        </NoobPage>
-    )
+      </React.Fragment>
+    </NoobPage>
+  )
 }
 
 export default NoobResetPasswordPage

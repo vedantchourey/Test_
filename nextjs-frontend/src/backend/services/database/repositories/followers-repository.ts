@@ -19,7 +19,8 @@ export class FollowersRepository extends BaseRepository<IUserFollower> {
   }
 
   async unfollowUser(id: string, user: string) {
-      return await this.entities().where({followerId: id, userId: user}).del()
+    return await this.entities().where({followerId: id, userId: user})
+.del()
   }
   
 }

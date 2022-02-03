@@ -6,12 +6,12 @@ import { deleteComment } from '../../src/backend/services/posts-services';
 import { authenticatedUserMiddleware } from '../../src/backend/utils/api-middle-ware/auth-middle-ware';
 
 export default createNextJsRouteHandler({
-    delete: {
-        handler: async function (req: NextApiRequest, res: NextApiResponse, context: PerRequestContext) {
-            const result = await deleteComment(req.body, context);
-            res.status(result.errors ? 400 : 200).send(result);
-        },
-        preHooks: [authenticatedUserMiddleware, beginTransactionMiddleWare],
-        postHooks: [commitOrRollBackTransactionMiddleWare]
-    }
+  delete: {
+    handler: async function (req: NextApiRequest, res: NextApiResponse, context: PerRequestContext) {
+      const result = await deleteComment(req.body, context);
+      res.status(result.errors ? 400 : 200).send(result);
+    },
+    preHooks: [authenticatedUserMiddleware, beginTransactionMiddleWare],
+    postHooks: [commitOrRollBackTransactionMiddleWare]
+  }
 })

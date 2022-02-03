@@ -6,16 +6,16 @@ import { ServiceResponse } from "../../common/contracts/service-response";
 import { PerRequestContext } from "../../../utils/api-middle-ware/api-middleware-typings";
 
 function updatePasswordParams(request: UpdatePasswordRequest) {
-    const { token, password } = request;
-    const data = { token, password }
-    return { data };
+  const { token, password } = request;
+  const data = { token, password }
+  return { data };
 }
 
 export default async function updatePassword(request: UpdatePasswordRequest, context: PerRequestContext): Promise<ServiceResponse<UpdatePasswordRequest, ResetPasswordResponse>> {
-    const errors = await validateUpdatePassword(request, context);
-    if (isThereAnyError(errors)) return { errors: errors };
-    const { data } = updatePasswordParams(request);
-    const result = await backendSupabase.auth.api.updateUser(data.token, { password: data.password });
-    if (result.error) return { errors: { apiError: result.error } };
-    return { data: { message: "Password updated successfully." } }
+  const errors = await validateUpdatePassword(request, context);
+  if (isThereAnyError(errors)) return { errors: errors };
+  const { data } = updatePasswordParams(request);
+  const result = await backendSupabase.auth.api.updateUser(data.token, { password: data.password });
+  if (result.error) return { errors: { apiError: result.error } };
+  return { data: { message: "Password updated successfully." } }
 }

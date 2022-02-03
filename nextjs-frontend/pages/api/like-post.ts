@@ -7,12 +7,12 @@ import { authenticatedUserMiddleware } from '../../src/backend/utils/api-middle-
 
 
 export default createNextJsRouteHandler({
-    post: {
-        handler: async (req: NextApiRequest, res: NextApiResponse, context: PerRequestContext) => {
-            const result = await likePost(req.body, context);
-            res.status(result?.errors ? 400 : 200).send(result)
-        },
-        preHooks: [authenticatedUserMiddleware, beginTransactionMiddleWare],
-        postHooks: [commitOrRollBackTransactionMiddleWare]
-    }
+  post: {
+    handler: async (req: NextApiRequest, res: NextApiResponse, context: PerRequestContext) => {
+      const result = await likePost(req.body, context);
+      res.status(result?.errors ? 400 : 200).send(result)
+    },
+    preHooks: [authenticatedUserMiddleware, beginTransactionMiddleWare],
+    postHooks: [commitOrRollBackTransactionMiddleWare]
+  }
 })
