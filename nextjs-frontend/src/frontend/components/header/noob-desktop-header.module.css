@@ -1,6 +1,6 @@
 .appHeader {
   flex-grow: 1;
-  background: #08001c;
+  /* background: #08001c; */
   display: flex;
   flex-direction: column;
   row-gap: 15px;

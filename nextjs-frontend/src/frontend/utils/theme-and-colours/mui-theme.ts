@@ -32,7 +32,7 @@ const noobTheme = createTheme({
       fontFamily: "Chakra Petch",
       color: "white",
       textTransform: "uppercase",
-      fontWeight:"700",
+      fontWeight: "700",
       letterSpacing: "-0.011em",
       '@media (max-width:768px)': {
         fontSize: '24px',
@@ -40,12 +40,30 @@ const noobTheme = createTheme({
     },
     h3: {
       fontSize: '16px',
-    fontStyle: "normal",
-    fontWeight: "700",
-    lineHeight: "24px",
-    letterSpacing: "-0.011em",
-    textAlign: "center",
-    color: "#FFFFFF",
+      fontStyle: "normal",
+      fontWeight: "700",
+      lineHeight: "24px",
+      letterSpacing: "-0.011em",
+      textAlign: "center",
+      color: "#FFFFFF",
+    },
+    body1: {
+      fontFamily: 'Inter',
+      fontSize: '16px',
+      fontStyle: 'normal',
+      fontWeight: '500',
+      lineHeight: '24px',
+      letterSpacing: '-0.011em',
+      textAlign: "center",
+    },
+  },
+  components: {
+    MuiLink: {
+      defaultProps: {
+        style: {
+          textDecorationColor: "transparent"
+        }
+      }
     }
   }
 });

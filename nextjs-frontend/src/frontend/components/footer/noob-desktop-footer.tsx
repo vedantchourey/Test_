@@ -25,6 +25,10 @@ export default function NoobDesktopFooter() {
         await router.push('/')
     }
 
+    async function gotoSupportPage() {
+        await router.push('/support')
+    }
+
     return (
         <div className={styles.footerContainer}>
             <Grid container spacing={2}>
@@ -40,7 +44,7 @@ export default function NoobDesktopFooter() {
                             <Button variant="text" style={buttonStyle(['/tournaments'])}>Tournaments</Button>
                             <Button variant="text" style={buttonStyle(['/leaderboards'])}>Leaderboards</Button>
                             <Button variant="text" onClick={gotoAboutUsPage} style={buttonStyle(['/about-us'])}>About Us</Button>
-                            <Button variant="text" style={buttonStyle(['/support'])}>Support</Button>
+                            <Button variant="text" onClick={gotoSupportPage} style={buttonStyle(['/support'])}>Support</Button>
                         </Grid>
                         <Grid item xs={12} sm={4} textAlign={"end"}>
                             <IconButton color="default" aria-label="Youtube" component="span">

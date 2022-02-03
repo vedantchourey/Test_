@@ -12,6 +12,7 @@ const {
   CMS_API_TOKEN
 } = process.env;
 
+const appUrl = process.env.NEXT_PUBLIC_NOOB_BASE_APP_URL || 'http://localhost:3000';
 
 export const backendConfig: IBackendConfig = {
   db: {
@@ -31,7 +32,8 @@ export const backendConfig: IBackendConfig = {
   },
   client: {
     cmsApiEndpoint: CMS_API_ENDPOINT!,
-    cmsApiToken: CMS_API_TOKEN!
+    cmsApiToken: CMS_API_TOKEN!,
+    appUrl: appUrl
   }
 }
 

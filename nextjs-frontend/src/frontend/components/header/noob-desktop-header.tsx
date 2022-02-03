@@ -47,6 +47,10 @@ export default function NoobDesktopHeader() {
     await router.push('/register')
   }
 
+  async function gotoSupportPage() {
+    await router.push('/support')
+  }
+
   async function gotoHomePage() {
     await router.push('/')
   }
@@ -62,7 +66,7 @@ export default function NoobDesktopHeader() {
 
   return (
     <>
-      <AppBar position="fixed" className={styles.appHeader} ref={updateDesktopHeight}>
+      <AppBar position="fixed" color='transparent' className={styles.appHeader} ref={updateDesktopHeight}>
         <div className={styles.topMenu}>
           <div className={styles.topLeftMenuGroup}>
             <div className={styles.noobLogo}>
@@ -83,7 +87,7 @@ export default function NoobDesktopHeader() {
               <Button variant="outlined" style={{ textTransform: 'none', color: 'white' }} onClick={gotoRegisterPage}>
                 Register
               </Button>
-              <Typography style={{ alignSelf: 'center' }}>OR</Typography>
+              <Typography color='white' style={{ alignSelf: 'center' }}>OR</Typography>
               <Button variant="contained" ref={loginButtonRef} style={{ textTransform: 'none' }} onClick={onShowLoginModal}>
                 Sign In
               </Button>
@@ -102,7 +106,7 @@ export default function NoobDesktopHeader() {
             <Button variant="text" style={buttonStyle(['/tournaments'])}>Tournaments</Button>
             <Button variant="text" style={buttonStyle(['/leaderboards'])}>Leaderboards</Button>
             <Button variant="text" onClick={gotoAboutUsPage} style={buttonStyle(['/about-us'])}>About Us</Button>
-            <Button variant="text" style={buttonStyle(['/support'])}>Support</Button>
+            <Button variant="text" onClick={gotoSupportPage} style={buttonStyle(['/support'])}>Support</Button>
             <Button variant="text" style={buttonStyle(['/faq'])}>FAQ</Button>
           </div>
           <div className={styles.bottomMenuRightGroup}>

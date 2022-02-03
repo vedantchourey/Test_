@@ -19,5 +19,6 @@ export interface IBackendConfig {
   client: {
     cmsApiToken: string;
     cmsApiEndpoint: string;
+    appUrl: string;
   }
 }
