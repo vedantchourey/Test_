@@ -71,7 +71,6 @@ const SetNewPassword = ({ onResetHandler }: Props) => {
                     type="password"
                     size='small'
                     variant="filled"
-                    value={request.password}
                     error={propsHasError(errors, 'password')}
                     helperText={getErrorForProp(errors, 'password')}
                     onChange={event => setRequest({ ...request, password: event.target.value })}

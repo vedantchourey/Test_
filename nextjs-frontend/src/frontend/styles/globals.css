@@ -1,3 +1,9 @@
+:root {
+  --primary: #6932F9;
+  --primary-dark: #160c30;
+  --swiper-theme-color: #6932F9 !important;
+}
+
 html,
 body {
   padding: 0;
