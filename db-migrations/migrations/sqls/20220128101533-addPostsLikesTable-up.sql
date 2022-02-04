@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS post_likes
+CREATE TABLE post_likes
 (
     id          uuid                     NOT NULL DEFAULT gen_random_uuid(),
     "postId"    uuid                     NOT NULL,

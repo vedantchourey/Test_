@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS posts
+CREATE TABLE posts
 (
     id            uuid                     NOT NULL DEFAULT gen_random_uuid(),
     "postContent" text                     NOT NULL,

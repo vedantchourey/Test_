@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS post_comments
+CREATE TABLE post_comments
 (
     id          uuid                     NOT NULL DEFAULT gen_random_uuid(),
     comment     text                     NOT NULL,

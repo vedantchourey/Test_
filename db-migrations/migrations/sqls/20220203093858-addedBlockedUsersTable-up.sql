@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS blocked_users
+CREATE TABLE blocked_users
 (
     id            uuid NOT NULL            DEFAULT gen_random_uuid(),
     "blockedBy"   uuid NOT NULL,
