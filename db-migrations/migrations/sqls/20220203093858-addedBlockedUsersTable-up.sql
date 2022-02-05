@@ -1,35 +1,18 @@
--- Table: public.blocked_users
-
--- DROP TABLE IF EXISTS public.blocked_users;
-
-CREATE TABLE IF NOT EXISTS public.blocked_users
+CREATE TABLE blocked_users
 (
-    id uuid NOT NULL DEFAULT gen_random_uuid(),
-    "blockedBy" uuid NOT NULL,
+    id            uuid NOT NULL            DEFAULT gen_random_uuid(),
+    "blockedBy"   uuid NOT NULL,
     "blockedUser" uuid NOT NULL,
-    "createdAt" timestamp with time zone DEFAULT now(),
+    "createdAt"   timestamp with time zone DEFAULT now(),
     CONSTRAINT blocked_users_pkey PRIMARY KEY (id),
-    CONSTRAINT "blocked_users_blockedBy_fkey" FOREIGN KEY ("blockedBy")
-        REFERENCES public.profiles (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT "blocked_users_blockedUser_fkey" FOREIGN KEY ("blockedUser")
-        REFERENCES public.profiles (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-)
+    CONSTRAINT fk_blocked_users_blocked_by_profiles FOREIGN KEY ("blockedBy")
+        REFERENCES profiles (id),
+    CONSTRAINT fk_blocked_users_blocked_user_profiles FOREIGN KEY ("blockedUser")
+        REFERENCES profiles (id)
+);
 
-TABLESPACE pg_default;
+ALTER TABLE blocked_users
+    ADD CONSTRAINT blocked_users_blocked_by_blocked_user UNIQUE ("blockedBy", "blockedUser");
 
-ALTER TABLE IF EXISTS public.blocked_users
-    OWNER to supabase_admin;
-
-GRANT ALL ON TABLE public.blocked_users TO anon;
-
-GRANT ALL ON TABLE public.blocked_users TO authenticated;
-
-GRANT ALL ON TABLE public.blocked_users TO postgres;
-
-GRANT ALL ON TABLE public.blocked_users TO service_role;
-
-GRANT ALL ON TABLE public.blocked_users TO supabase_admin;
+alter table blocked_users
+    enable row level security;
