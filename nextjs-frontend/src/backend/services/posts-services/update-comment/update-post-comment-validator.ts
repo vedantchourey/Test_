@@ -9,19 +9,19 @@ function validateComment(comment: IUpdateCommentRequest) {
   if (isNullOrEmptyString(comment.comment)) return 'Comment content is missing';
 }
 
-async function validateIsCommentedBy(comment: Partial<IUpdateCommentRequest>, context: PerRequestContext, commentRepository: PostCommentsRepository) {
-  if (isNullOrEmptyString(comment.commentId)) return 'comment id is missing';
-  if (!isUUID(comment.commentId)) return 'Invalid post id';
-  const commentData = await commentRepository.getCommentById(comment.commentId as string);
+async function validateIsCommentedBy(context: PerRequestContext, commentRepository: PostCommentsRepository) {
+  if (isNullOrEmptyString(context._param.commentId)) return 'comment id is missing';
+  if (!isUUID(context._param.commentId)) return 'Invalid post id';
+  const commentData = await commentRepository.getCommentById(context._param.commentId as string);
   if (!commentData || !isObject(commentData)) return 'Comment do not exists';
   if (commentData.commentBy !== context.user?.id) return 'You are not allowed to update comment';
 }
 
-export async function validateUpdateCommentRequest(comment: IUpdateCommentRequest, context: PerRequestContext): Promise<ValidationResult<IUpdateCommentRequest>> {
+export async function validateUpdateCommentRequest(comment: Partial<IUpdateCommentRequest>, context: PerRequestContext): Promise<ValidationResult<IUpdateCommentRequest>> {
   const transaction = context.transaction as Knex.Transaction;
   const repository = new PostCommentsRepository(transaction);
   return <ValidationResult<IUpdateCommentRequest>>{
-    commentBy: await validateIsCommentedBy(comment, context, repository),
+    commentBy: await validateIsCommentedBy( context, repository),
     comment: validateComment(comment)
   }
 }

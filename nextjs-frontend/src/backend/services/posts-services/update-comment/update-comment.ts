@@ -14,7 +14,7 @@ export async function updateComment(comment: IUpdateCommentRequest, context: Per
   // Remove unwanted fields if exists
   const update = sanitizeObject(comment, ['commentBy', 'commentId', 'postId']);
 
-  await repository.updateComment(comment.commentId as string, { ...update, updatedAt: new Date().toISOString() });
+  await repository.updateComment(context._param.commentId as string, { ...update, updatedAt: new Date().toISOString() });
 
   return {
     data: {

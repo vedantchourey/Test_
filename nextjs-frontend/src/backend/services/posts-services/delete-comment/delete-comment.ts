@@ -1,17 +1,17 @@
 import { ValidateDeleteComment } from './delete-comment-validator';
 import { PerRequestContext } from '../../../utils/api-middle-ware/api-middleware-typings';
 import { isThereAnyError } from '../../../../common/utils/validation/validator';
-import { IDeleteCommentRequest, IDeleteResponse } from './i-delete-comment';
+import { IDeleteResponse } from './i-delete-comment';
 import { PostCommentsRepository } from '../../database/repositories/post-comments-repository';
 
 
-const deleteComment = async (req: IDeleteCommentRequest, context: PerRequestContext) => {
-  const errors = await ValidateDeleteComment(req, context);
+const deleteComment = async (context: PerRequestContext) => {
+  const errors = await ValidateDeleteComment(context);
   if (isThereAnyError(errors)) return { errors: errors };
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const repository = new PostCommentsRepository(context.transaction!);
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  await repository.deleteComment(req.commentId, context.user?.id);
+  await repository.deleteComment(context._param.commentId, context.user?.id);
   const res: IDeleteResponse = { message: 'Comment deleted' };
   return { data: res };
 }
