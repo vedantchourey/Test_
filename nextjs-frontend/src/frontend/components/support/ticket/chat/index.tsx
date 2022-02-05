@@ -19,9 +19,9 @@ interface Props {
 
 export default function TicketChats({ ticketNumber, ticketSubject, chats }: Props) {
     const [message, setMessage] = useState("")
-    const [errors, setErrors] = useState({
-        message: ""
-    })
+    // const [errors, setErrors] = useState({
+    //     message: ""
+    // })
 
     return (
         <Fragment>
@@ -71,7 +71,7 @@ export default function TicketChats({ ticketNumber, ticketSubject, chats }: Prop
 
 
                     {chats.map((_, i) => (
-                        <Fragment>
+                        <Fragment key={i}>
                             <CardContent className={styles.paperContainer} style={{ borderTop: '1px solid #FFFFFF1A' }}>
                                 <Box className={styles.paperContainer}>
                                     <Avatar alt='user profile image' />

@@ -1,27 +1,50 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { CardActions, IconButton, Card, CardMedia, Typography, Box, Avatar, Backdrop, Modal, Fade, List, ListItem, ListItemButton, ListItemText, Button } from '@mui/material'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import Slider from '../../ui-components/swiper'
 import styles from './post.module.css'
 
 interface Props {
-
+    liked?: false;
+    likesCount?: number;
+    comment?: string;
+    commentsCount?: number;
 }
 
 const PostCard = ({ }: Props) => {
 
+    const [values, setValues] = useState({
+        user: {
+            name: 'ShaigExp',
+            avatarUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRe1_6-PtcF48iM3PkReAZlBpbSaLDhKNyisg&usqp=CAU'
+        },
+        media: {
+            image: "https://images.pexels.com/photos/1714208/pexels-photo-1714208.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+            video: "https://player.vimeo.com/external/539040662.sd.mp4?s=720645642b1c5b26cd4703fd60bd70ba57e0a2de&profile_id=164&oauth2_token_id=57447761"
+        },
+        liked: false,
+        likesCount: 100,
+        comment: 'this is just a comment',
+        commentsCount: 30,
+        created_at: '2022-02-05T04:52:38.097Z'
+    })
     const [showMenu, setShowMenu] = useState(false)
-    const [likePost, setLikePost] = useState(false);
-    const menuRef = useRef()
 
     const handleCloseMenu = () => setShowMenu(false)
     const handleOpenMenu = () => setShowMenu(true)
 
-    const handleToggleLike = () => setLikePost(pre => !pre)
+    const handleToggleLike = () => {
+        setValues(pre => {
+            return {
+                ...pre,
+                likesCount: pre.liked ? --pre.likesCount : ++pre.likesCount,
+                liked: !pre.liked
+            }
+        })
+    }
 
     return (
         <Card className={styles.postCard} sx={{ my: 3 }}>
@@ -33,16 +56,16 @@ const PostCard = ({ }: Props) => {
                 <Avatar
                     className={styles.postAvatar}
                     alt="Remy Sharp"
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRe1_6-PtcF48iM3PkReAZlBpbSaLDhKNyisg&usqp=CAU"
+                    src={values.user.avatarUrl}
                 />
                 <Box>
                     <Box className={styles.flexRow} sx={{ justifyContent: "space-between", width: '100%' }}>
                         <Box className={styles.flexRow} sx={{ gap: 1 }}>
                             <Typography variant={'h3'}>
-                                ShaigExp
+                                {values.user.name}
                             </Typography>
                             <Typography variant="caption" color='text.secondary'>
-                                3m
+                                {new Date(values.created_at).toDateString()}
                             </Typography>
                         </Box>
                         <IconButton onClick={handleOpenMenu}>
@@ -61,11 +84,11 @@ const PostCard = ({ }: Props) => {
                     <CardMedia
                         component="img"
                         className={styles.postImage}
-                        image="https://images.pexels.com/photos/1714208/pexels-photo-1714208.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                        image={values.media.image}
                         alt="user avatar"
                     />,
                     <video className={styles.postVideo} autoPlay controls>
-                        <source src="https://player.vimeo.com/external/539040662.sd.mp4?s=720645642b1c5b26cd4703fd60bd70ba57e0a2de&profile_id=164&oauth2_token_id=57447761" type="video/mp4" />
+                        <source src={values.media.video} />
                         Your browser does not support the video tag.
                     </video>
                 ]}
@@ -73,13 +96,13 @@ const PostCard = ({ }: Props) => {
 
             <CardActions sx={{ gap: 3 }}>
                 <Box className={styles.flexRow}>
-                    <Button variant='text' color='inherit' startIcon={likePost ? <FavoriteIcon /> : <FavoriteBorderIcon />} onClick={handleToggleLike}>
-                        30
+                    <Button variant='text' color={values.liked ? 'primary' : 'inherit'} startIcon={<FavoriteBorderIcon />} onClick={handleToggleLike}>
+                        {values.likesCount}
                     </Button>
                 </Box>
                 <Box className={styles.flexRow}>
                     <Button variant='text' color='inherit' startIcon={<ChatBubbleOutlineIcon />}>
-                        100
+                        {values.commentsCount}
                     </Button>
                 </Box>
                 <Box className={styles.flexRow}>
@@ -96,18 +119,7 @@ const PostCard = ({ }: Props) => {
                 BackdropComponent={Backdrop}
             >
                 <Fade in={showMenu}>
-                    <List sx={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        width: 400,
-                        p: 0,
-                        bgcolor: 'white',
-                        border: '2px solid #000',
-                        boxShadow: 24,
-                        borderRadius: '30px'
-                    }}>
+                    <List className={styles.postCardOptionsContainer}>
                         <ListItem disablePadding>
                             <ListItemButton>
                                 <ListItemText primaryTypographyProps={{

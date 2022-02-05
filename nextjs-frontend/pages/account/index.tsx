@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useAppSelector } from '../../src/frontend/redux-store/redux-store';
 import { authCheckStatusSelector, isLoggedInSelector } from '../../src/frontend/redux-store/authentication/authentication-selectors';
 import UserProfileCard from '../../src/frontend/components/cards/user-profile-card/user-profile-card';
@@ -17,13 +17,13 @@ export default function Account() {
 
     const [activeTab, setActiveTab] = useState('posts')
 
-    // useEffect(() => {
-    //     (async () => {
-    //         if (checkStatus !== 'success') return;
-    //         if (isLoggedIn) return;
-    //         await router.push('/')
-    //     })()
-    // });
+    useEffect(() => {
+        (async () => {
+            if (checkStatus !== 'success') return;
+            if (isLoggedIn) return;
+            await router.push('/')
+        })()
+    });
 
     const handleChange = (_, newValue: string) => {
         setActiveTab(newValue);
@@ -37,42 +37,38 @@ export default function Account() {
             }}
         >
             <div className={commonStyles.container}>
-                <Grid container spacing={2}>
+                <Grid container my={2} spacing={2}>
                     <Grid item xs={12} md={4}>
                         <UserProfileCard />
                     </Grid>
                     <Grid item xs={12} md={8}>
-                        <Container maxWidth={"lg"}>
+                        <TabContext value={activeTab}>
+                            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                                <TabList onChange={handleChange}>
+                                    <Tab label="Posts" value="posts" />
+                                    <Tab label="About" value="about" />
+                                    <Tab label="Match activity" value="activity" />
+                                </TabList>
+                            </Box>
 
-                            <TabContext value={activeTab}>
-                                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                                    <TabList onChange={handleChange}>
-                                        <Tab label="Posts" value="posts" />
-                                        <Tab label="About" value="about" />
-                                        <Tab label="Match activity" value="activity" />
-                                    </TabList>
-                                </Box>
+                            <Divider light />
 
-                                <Divider light />
+                            <TabPanel sx={{ p: 0 }} value="posts">
+                                <CreatePostInput />
 
-                                <TabPanel value="posts">
-                                    Posts
-                                    <CreatePostInput />
-
-                                    {new Array(5).fill("").map((_, i) => (
+                                {new Array(5).fill("").map((_, i) => (
+                                    <Fragment key={i}>
                                         <PostCard />
-                                    ))}
-
-                                </TabPanel>
-                                <TabPanel value="about">
-                                    About
-                                </TabPanel>
-                                <TabPanel value="activity">
-                                    Match activity
-                                </TabPanel>
-                            </TabContext>
-
-                        </Container>
+                                    </Fragment>
+                                ))}
+                            </TabPanel>
+                            <TabPanel sx={{ p: 0 }} value="about">
+                                About
+                            </TabPanel>
+                            <TabPanel sx={{ p: 0 }} value="activity">
+                                Match activity
+                            </TabPanel>
+                        </TabContext>
                     </Grid>
                 </Grid>
             </div>

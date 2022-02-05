@@ -6,7 +6,7 @@ import styles from "./create-ticket.module.css"
 
 export default function CreateTicketForm() {
 
-    const [errors, setErrors] = useState({});
+    const [errors] = useState({});
     const [request, setRequest] = useState({
         subject: '',
         ticketType: 'default',

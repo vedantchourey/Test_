@@ -5,7 +5,7 @@ interface Props {
   id: string;
 }
 
-export default function EditTournamentForm(props: Props) {
+export default function EditTournamentForm() {
 
   return (
     <Container maxWidth="md" className={styles.container}>

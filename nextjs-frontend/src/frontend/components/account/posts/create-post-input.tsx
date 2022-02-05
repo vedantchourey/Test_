@@ -1,18 +1,29 @@
 import { useState, useRef } from 'react'
-import { Button, Card, CardActions, CardContent, TextField, IconButton, Avatar, ImageListItem, ImageList, Box } from "@mui/material";
+import { Button, Card, CardActions, CardContent, TextField, IconButton, Avatar, Grid, Tooltip, Paper, CircularProgress, Box } from "@mui/material";
 import ImageIcon from '@mui/icons-material/Image';
-import { useDispatch } from 'react-redux';
 import { validatePostContent } from './validator'
 import { getErrorForProp, isThereAnyError, propsHasError, ValidationResult } from '../../../../common/utils/validation/validator';
 import { setIsLoading } from '../../../redux-store/screen-animations/screen-animation-slice';
-import { useAppDispatch } from '../../../redux-store/redux-store';
+import { useAppDispatch, useAppSelector } from '../../../redux-store/redux-store';
 import { ICreatePostRequest } from '../../../../backend/services/posts-services/create-post/i-create-post';
+import CloseIcon from '@mui/icons-material/Close';
+import styles from "./post.module.css"
+import { v4 } from 'uuid';
+import { uploadImage } from '../../../service-clients/image-service-client';
+
+interface mediaInterface {
+    contentUrl: string,
+    contentType: 'image' | 'video'
+}
 
 export default function CreatePostInput() {
 
     const appDispatch = useAppDispatch()
+    const userProfile = useAppSelector(state => state.authentication.userProfile)
+    const [isUploading, setIsUploading] = useState(false);
 
-    const [media, setMedia] = useState([])
+    const [media, setMedia] = useState<Array<mediaInterface>>([])
+
     const [request, setRequest] = useState<Partial<ICreatePostRequest>>({
         postContent: '',
         postImgUrl: ''
@@ -21,8 +32,23 @@ export default function CreatePostInput() {
 
     const imageInputRef = useRef()
 
+
+    function generateFileUrl(prefix: string, file: File) {
+        if (userProfile == null) throw new Error('user cannot be null');
+        const fileExt = file.name
+            .split('.')
+            .pop()
+            ?.toLowerCase();
+        return `resources/${prefix}${userProfile.id}${v4()}.${fileExt}`;
+    }
+
+    async function UploadMedia(file: File): Promise<{ data: { Key: string } | null; error: Error | null }> {
+        const CustomfileUrl = generateFileUrl('post-image', file)
+        return await uploadImage('resources', CustomfileUrl, file);
+    }
+
     async function onClickCreatePost() {
-        console.log(media)
+
         const newErrors = validatePostContent(request);
         setErrors(newErrors);
         if (isThereAnyError(newErrors)) return;
@@ -34,25 +60,94 @@ export default function CreatePostInput() {
                 isError: false,
                 errors: {}
             }
-            if (response.isError) {
-                setErrors(response.errors);
-            } else {
+            if (!response.isError) {
+                setMedia([])
+                setRequest({
+                    postContent: '',
+                    postImgUrl: ''
+                })
                 setErrors({});
-                // onCreated();
+            } else {
+                setErrors(response.errors);
             }
         } finally {
-            // appDispatch(setIsLoading(false));
+            appDispatch(setIsLoading(false));
         }
     }
 
+    const createVideoThumb = async (file: any) => {
+        const blob = URL.createObjectURL(file);
+        const video = document.createElement('video');
+        const canvas = document.createElement('canvas');
+        video.src = blob;
+
+        /* Load Video to generate thumbnail */
+        video.load();
+        video.onloadeddata = async function () {
+            video.muted = true
+            await video.play();
+            setMedia(pre => {
+                return [
+                    ...pre,
+                    {
+                        contentUrl: blob,
+                        contentType: 'video'
+                    }
+                ]
+            })
+        }
+
+        return new Promise((resolve, reject) => {
+            /* Create thumbnail after video is played */
+            setTimeout(async () => {
+                canvas.width = video.videoWidth / 2;
+                canvas.height = video.videoHeight / 2;
+                canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth / 2, video.videoHeight / 2);
+                canvas.toBlob(blob => {
+                    if (blob) {
+                        const preview = URL.createObjectURL(blob);
+                        const fileName = 'image.jpeg';
+                        const file = new File([blob], fileName, {
+                            type: 'image/jpeg'
+                        });
+                        resolve({ preview: preview, videoThumbnail: file });
+                    }
+                }, 'image/jpeg');
+            }, 500);
+        })
+
+    }
+
+    const createImageThumb = async (file: any) => {
+        setMedia(pre => {
+            return [
+                ...pre,
+                {
+                    contentUrl: URL.createObjectURL(file),
+                    contentType: 'image'
+                }
+            ]
+        })
+    }
+
+    const handleRemovePreviewImage = (index: number) => {
+        setMedia(_ => _.filter((_, i: number) => index !== i))
+        setRequest(pre => {
+            return {
+                ...pre,
+                postImgUrl: ''
+            }
+        })
+    }
+
     return (
-        <Card>
+        <Card sx={{ my: 2 }}>
             <CardContent sx={{
                 display: "flex",
                 gap: "10px",
                 padding: "20px"
             }}>
-                <Avatar alt={"user avatar"} src={""} />
+                <Avatar alt={"user avatar"} src={userProfile?.avatarUrl} />
                 <TextField
                     placeholder={`What's happening?`}
                     fullWidth
@@ -68,9 +163,93 @@ export default function CreatePostInput() {
                         disableUnderline: true
                     }}
                 />
-                <input type="file" ref={imageInputRef} multiple accept='image/*;video/*;' hidden onChange={e => setMedia(e.target.files)} />
+                <input type="file" ref={imageInputRef} multiple accept='image/*;video/*;' value='' hidden onChange={(event: InputEvent) => {
+                    const { files }: any = event.target
+
+                    // validating the input file
+                    for (let index = 0; index < files?.length; index++) {
+                        const file = files?.item(index);
+                        const fileType = file.type.split("/")[0]
+                        if (!['video', 'image'].includes(fileType)) {
+                            alert("Only video and image files are allowed to post")
+                            return
+                        }
+                    }
+
+                    if (files && (files.length + media.length) > 1) {
+                        alert("Only 1 media file is allowed with a post")
+                        return
+                    }
+                    if (files?.length >= 0) {
+                        for (let index = 0; index < files?.length; index++) {
+                            const file = files?.item(index);
+                            const fileType = file.type.split("/")[0]
+                            setIsUploading(true)
+                            UploadMedia(file)
+                                .then(({ data: { Key } }) => {
+                                    console.log("this is key", Key)
+                                    if (fileType === 'video') {
+                                        createVideoThumb(file)
+                                    }
+
+                                    if (fileType === 'image') {
+                                        createImageThumb(file)
+                                    }
+
+                                    setRequest(pre => {
+                                        return {
+                                            ...pre,
+                                            postImgUrl: Key
+                                        }
+                                    })
+                                })
+                                .catch(error => {
+                                    alert(error)
+                                }).finally(() => {
+                                    setIsUploading(false)
+                                })
+                        }
+                    }
+                }} />
             </CardContent>
-            <CardActions sx={{ display: "flex", justifyContent: "end", gap: '15px' }} disableSpacing>
+            <CardContent>
+
+                {isUploading && (
+                    <Box sx={{ textAlign: 'center' }}>
+                        <CircularProgress color="inherit" />
+                    </Box>
+                )}
+
+                <Paper elevation={0} sx={{ bgcolor: 'primary' }}>
+                    <Grid container alignItems={'center'} justifyContent='center' spacing={2}>
+                        {media.map(({ contentType, contentUrl }, i) => (
+                            <Grid item style={{ position: 'relative' }} key={i}>
+
+                                {contentType === 'video' && (
+                                    <video src={contentUrl} autoPlay muted className={styles.previewImageStyle} controls={false} />
+                                )}
+
+                                {contentType === 'image' && (
+                                    <img
+                                        src={contentUrl}
+                                        alt={'media'}
+                                        className={styles.previewImageStyle}
+                                    />
+                                )}
+
+                                <Tooltip title="Remove">
+                                    <IconButton color='default' size='small' className={styles.previewImageCancel} onClick={() => handleRemovePreviewImage(i)}>
+                                        <CloseIcon />
+                                    </IconButton>
+                                </Tooltip>
+
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Paper>
+
+            </CardContent>
+            <CardActions sx={{ display: "flex", justifyContent: "end", gap: '15px', px: 3 }} disableSpacing>
                 <IconButton color='primary' sx={{ bgcolor: 'primary.dark' }} size='small' onClick={() => imageInputRef.current.click()}>
                     <ImageIcon />
                 </IconButton>

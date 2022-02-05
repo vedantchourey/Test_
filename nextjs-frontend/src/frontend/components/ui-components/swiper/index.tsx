@@ -19,8 +19,6 @@ export default function Slider({ slides }: Props) {
                 clickable: true
             }}
             modules={[Pagination]}
-            onSlideChange={() => console.log('slide change')}
-            onSwiper={(swiper) => console.log(swiper)}
         >
             {slides.map((media: HTMLMediaElement, i: number) => (
                 <SwiperSlide key={i}>{media}</SwiperSlide>
