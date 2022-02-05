@@ -7,6 +7,16 @@ type MiddlewareResponse = { status: number, data: { message: string } };
 
 export class PerRequestContext {
 
+  private readonly _param: Readonly<{ [p: string]: string | string[] }>;
+
+  constructor(param: { [p: string]: string | string[] }) {
+    this._param = Object.freeze({...param})
+  }
+
+  get param(): Readonly<{ [p: string]: string | string[] }> {
+    return this._param;
+  }
+
   user?: User;
   private _transaction?: Knex.Transaction;
   private _knexConnection?: Knex;
