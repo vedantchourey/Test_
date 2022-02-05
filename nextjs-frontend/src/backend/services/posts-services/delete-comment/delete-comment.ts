@@ -11,7 +11,7 @@ const deleteComment = async (context: PerRequestContext) => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const repository = new PostCommentsRepository(context.transaction!);
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  await repository.deleteComment(context._param.commentId, context.user?.id);
+  await repository.deleteComment(context.getParamValue('commentId') as string, context.user?.id);
   const res: IDeleteResponse = { message: 'Comment deleted' };
   return { data: res };
 }

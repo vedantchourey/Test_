@@ -11,6 +11,13 @@ export function isThereAnyError<T, TKey extends keyof ValidationResult<T>>(resul
   return keys.some((x) => result[x] != null);
 }
 
+export function convertToJoinedMessage<T, TKey extends keyof ValidationResult<T>>(result: ValidationResult<T>) {
+  const keys = Object.keys(result) as TKey[];
+  return keys.filter((Key) => result[Key] != null)
+             .map((key) => `${key}: ${result[key]}`)
+             .join(', ');
+}
+
 // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
 export function getErrorForProp<T, TKey extends keyof ValidationResult<T>>(result: ValidationResult<T>, prop: keyof T) {
   return result[prop];
