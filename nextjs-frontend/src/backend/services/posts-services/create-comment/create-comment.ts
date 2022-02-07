@@ -10,7 +10,7 @@ export async function createComment(req: ICreateCommentRequest, context: PerRequ
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const repository = new PostCommentsRepository(context.transaction!);
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  console.log({ ...req, commentBy: context.user?.id, postId: context._param.postId[0] });
-  await repository.createComment({ ...req, commentBy: context.user?.id, postId: context._param.postId[0] });
+  console.log({ ...req, commentBy: context.user?.id, postId: context.param.postId});
+  await repository.createComment({ ...req, commentBy: context.user?.id, postId: context.param.postId as string });
   return { data: { message: 'Comment created' } }
 }
