@@ -10,8 +10,7 @@ interface Opts {
 
 
 export const createQueryParamsMiddleWare = (opts: Opts): NoobApiRouteHandler => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return async (req: NextApiRequest, res: NextApiResponse, context: PerRequestContext): Promise<any> => {
+  return async (req: NextApiRequest, res: NextApiResponse, context: PerRequestContext): Promise<unknown> => {
     if (context.middlewareResponse != null) return;
     const params = opts.params;
     type OptParams = typeof params;
@@ -30,11 +29,11 @@ export const createQueryParamsMiddleWare = (opts: Opts): NoobApiRouteHandler => 
       return;
     }
     const complexValidationError = opts.validate == null ? null : await opts.validate(context.param, context);
-    if (complexValidationError !== null) {
+    if (complexValidationError != null) {
       console.log(complexValidationError);
       context.middlewareResponse = {status: 404, data: {message: 'not found'}}
       return;
     }
-    context.setQueryParamType(params)
+    context.setQueryParamType(params);
   }
 }

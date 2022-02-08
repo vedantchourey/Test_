@@ -82,3 +82,9 @@ export const daysFromToday = (days: number) => {
                  .toUTC()
                  .toISO();
 };
+
+export const nowAsJsDate = () => {
+  return DateTime.now()
+                 .toUTC()
+                 .toJSDate();
+}

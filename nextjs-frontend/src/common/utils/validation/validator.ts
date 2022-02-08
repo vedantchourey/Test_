@@ -38,15 +38,6 @@ export function isObject(val: any): boolean {
   return val instanceof Object;
 }
 
-export function isObjectHasProperty(obj: object, property: string) {
-  if (isObject(obj)) {
-    // eslint-disable-next-line no-prototype-builtins
-    return obj.hasOwnProperty(property);
-  }
-
-  return false;
-}
-
 export function isUrl(value: string | undefined | null) {
   if (value === null || value === undefined) return false;
   return validator.isURL(value);

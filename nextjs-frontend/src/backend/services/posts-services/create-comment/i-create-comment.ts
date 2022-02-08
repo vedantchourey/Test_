@@ -1,5 +1,5 @@
 export interface ICreateCommentRequest {
     comment: string,
     commentBy: string,
-    postId: string | undefined
+    postId: string
 }
