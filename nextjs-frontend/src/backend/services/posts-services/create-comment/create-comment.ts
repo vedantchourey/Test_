@@ -9,7 +9,7 @@ import { IPostCommentResponse } from '../update-comment/i-post-comment-response'
 import { IPostComment } from '../../database/models/i-post-comment';
 
 export async function createComment(req: ICreateCommentRequest, context: PerRequestContext): Promise<ServiceResponse<ICreateCommentRequest, IPostCommentResponse>> {
-  const errors = await validateRequest(req, context);
+  const errors = await validateRequest(req);
   if (isThereAnyError(errors)) return {errors};
   const repository = new PostCommentsRepository(context.transaction as Knex.Transaction);
   const postId = context.getParamValue('postId') as string;

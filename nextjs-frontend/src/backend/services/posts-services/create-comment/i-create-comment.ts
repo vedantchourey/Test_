@@ -1,5 +1,3 @@
 export interface ICreateCommentRequest {
-    comment: string,
-    commentBy: string,
-    postId: string
+    comment: string;
 }
