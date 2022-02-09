@@ -14,8 +14,8 @@ export function isThereAnyError<T, TKey extends keyof ValidationResult<T>>(resul
 export function convertToJoinedMessage<T, TKey extends keyof ValidationResult<T>>(result: ValidationResult<T>): string {
   const keys = Object.keys(result) as TKey[];
   return keys.filter((Key) => result[Key] != null)
-             .map((key) => `${key}: ${result[key]}`)
-             .join(', ');
+    .map((key) => `${key}: ${result[key]}`)
+    .join(', ');
 }
 
 export function getErrorForProp<T>(result: ValidationResult<T>, prop: keyof T): string | undefined {
