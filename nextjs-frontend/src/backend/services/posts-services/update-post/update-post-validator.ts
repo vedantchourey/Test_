@@ -1,7 +1,8 @@
 import { IUpdatePostRequest } from './i-update-post';
-import { isUUID, isNullOrEmptyString, isObject, isUrl, isObjectHasProperty } from '../../../../common/utils/validation/validator';
+import { isNullOrEmptyString, isObject, isUrl } from '../../../../common/utils/validation/validator';
 import { PerRequestContext } from '../../../utils/api-middle-ware/api-middleware-typings';
 import { PostsRepository } from '../../database/repositories/posts-repository';
+import { Knex } from 'knex';
 
 function validatePostContent(post: IUpdatePostRequest) {
   if (isNullOrEmptyString(post.postContent)) return 'Post content is missing';
@@ -13,21 +14,19 @@ function validatePostImgUrl(post: IUpdatePostRequest) {
 }
 
 async function validateIsPostOwner(post: IUpdatePostRequest, context: PerRequestContext, postsRepository: PostsRepository) {
-  if (isNullOrEmptyString(post.postId)) return 'Post id is missing';
-  if (!isUUID(post.postId)) return 'Invalid post id';
-  const postData = await postsRepository.getPostById(post.postId);
+  const postId = context.getParamValue('postId') as string;
+  const postData = await postsRepository.getPostById(postId);
   if (!postData || !isObject(postData)) return 'Post do not exists';
   if (postData.postedBy !== context.user?.id) return 'You are not allowed to update post';
 }
 
 
 export async function validateRequest(post: IUpdatePostRequest, context: PerRequestContext) {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const postsRepository = new PostsRepository(context.transaction!);
+  const postsRepository = new PostsRepository(context.transaction as Knex.Transaction);
 
   return {
     postOwner: await validateIsPostOwner(post, context, postsRepository),
-    postImgUrl: isObjectHasProperty(post, 'postImgUrl') ? validatePostImgUrl(post) : undefined,
-    postContent: isObjectHasProperty(post, 'postContent') ? validatePostContent(post) : undefined
+    postImgUrl: post.postImgUrl == null ? validatePostImgUrl(post) : undefined,
+    postContent: post.postContent == null ? validatePostContent(post) : undefined
   }
 }

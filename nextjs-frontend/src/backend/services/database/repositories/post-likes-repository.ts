@@ -2,23 +2,33 @@ import { Knex } from 'knex';
 import { BaseRepository } from './base-repository';
 import { ILike } from '../models/i-like';
 
-export class PostLikesRepository extends BaseRepository<object>{
+export class PostLikesRepository extends BaseRepository<ILike> {
   constructor(transaction: Knex.Transaction) {
     super(transaction, 'post_likes');
   }
 
-  async createLike(like: ILike) {
-    return await this.entities().insert(like);
+  createLike(like: ILike): Promise<ILike> {
+    return this.entities()
+               .insert(like);
   }
 
-  async deleteLike(like: ILike) {
-    return await this.entities().where({ postId: like.postId, likedBy: like.likedBy })
-      .del();
+  deleteLike(like: ILike): Promise<number> {
+    return this.entities()
+               .where({
+                 postId: like.postId,
+                 likedBy: like.likedBy
+               })
+               .del();
   }
 
-  async isLiked(postId: string, userId: string | undefined) {
-    return await this.entities().select('id')
-      .where({ postId: postId, likedBy: userId })
-      .first();
+  async isLiked(postId: string, userId: string | undefined): Promise<boolean> {
+    const count = await this.entities()
+                            .select('id')
+                            .where({
+                              postId: postId,
+                              likedBy: userId
+                            })
+                            .count();
+    return count > 0;
   }
 }

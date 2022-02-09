@@ -10,6 +10,7 @@ export async function addFollower(req: IUserFollowerRequest, context: PerRequest
   if (isThereAnyError(errors)) return { errors };
   // eslint-disable-next-line
   const followerRepository = new FollowersRepository(context.transaction!);
+  console.log(req)
   if (req.follow_action === 'following') {
     // eslint-disable-next-line
     await followerRepository.createUserFollower({ followerId: req.followerId, userId: context.user?.id! });
@@ -17,7 +18,6 @@ export async function addFollower(req: IUserFollowerRequest, context: PerRequest
   }
   // eslint-disable-next-line
   await followerRepository.unfollowUser(req.followerId, context.user?.id!);
-  return { data: { message: 'Unfollowing' } }
-
+  return { data: { message: 'Unfollow' } }
 
 }

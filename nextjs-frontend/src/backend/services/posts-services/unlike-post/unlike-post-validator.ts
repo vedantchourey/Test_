@@ -1,5 +1,5 @@
 import { PerRequestContext } from '../../../utils/api-middle-ware/api-middleware-typings';
-import { isNullOrEmptyString, isUUID, isObjectHasProperty } from '../../../../common/utils/validation/validator';
+import { isNullOrEmptyString, isUUID } from '../../../../common/utils/validation/validator';
 import { IUnlikePostRequest } from './i-unlike-post';
 import { PostsRepository } from '../../database/repositories/posts-repository';
 import { PostLikesRepository } from '../../database/repositories/post-likes-repository';
@@ -15,11 +15,8 @@ async function validatePostId(post: IUnlikePostRequest, postsRepository: PostsRe
 async function validateIsAlreadyLiked(post: IUnlikePostRequest, context: PerRequestContext, postLikesRepository: PostLikesRepository) {
   if (isNullOrEmptyString(post.postId)) return;
   if (!isUUID(post.postId)) return;
-
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const isLiked = await postLikesRepository.isLiked(post.postId, context.user?.id || '');
-  /* Validate if post already liked */
-  if (!isObjectHasProperty(isLiked, 'id')) return 'Post not liked';
+  const isLiked = await postLikesRepository.isLiked(post.postId, context.user?.id);
+  if (isLiked) return 'Post already liked';
 }
 
 export async function validateRequest(post: IUnlikePostRequest, context: PerRequestContext) {

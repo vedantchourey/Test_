@@ -25,8 +25,7 @@ async function isUserAuthorized(user: User, allowedRoles: NoobUserRole[], contex
 
 const authMiddleWare = (opts: Opts): NoobApiRouteHandler => {
   const {allowAnonymous, allowedRoles} = opts;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return async (req: NextApiRequest, res: NextApiResponse, context: PerRequestContext): Promise<any> => {
+  return async (req: NextApiRequest, res: NextApiResponse, context: PerRequestContext): Promise<unknown> => {
     const {authorization} = req.headers;
     if (allowAnonymous) return;
     if (authorization == null) return setResponse('No auth header found!', context);

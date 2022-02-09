@@ -2,10 +2,23 @@ import { User } from '@supabase/gotrue-js';
 import { Knex } from 'knex';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ServiceResponse } from '../../services/common/contracts/service-response';
+import { ParamConfig } from './query-param-middle-ware/param-config';
 
 type MiddlewareResponse = { status: number, data: { message: string } };
 
 export class PerRequestContext {
+
+  private readonly _param: Readonly<{ [p: string]: string | string[] }>;
+  private _paramTypes: { [p: string]: ParamConfig<unknown> };
+
+  constructor(param: { [p: string]: string | string[] }) {
+    this._param = Object.freeze({...param})
+    this._paramTypes = {};
+  }
+
+  get param(): Readonly<{ [p: string]: string | string[] }> {
+    return this._param;
+  }
 
   user?: User;
   private _transaction?: Knex.Transaction;
@@ -27,7 +40,7 @@ export class PerRequestContext {
   }
 
   set middlewareResponse(value: MiddlewareResponse | undefined) {
-    if (this._middlewareResponse != null) throw new Error('middle ware resposne already set');
+    if (this._middlewareResponse != null) throw new Error('middle ware response already set');
     this._middlewareResponse = value;
   }
 
@@ -38,6 +51,21 @@ export class PerRequestContext {
     this._transaction?.destroy();
     await this._knexConnection?.destroy();
   }
+
+  setQueryParamType(paramTypes: { [p: string]: ParamConfig<unknown> }) {
+    this._paramTypes = paramTypes
+  }
+
+  getParamValue<T>(queryParamKey: string): null | T {
+    const paramType: ParamConfig<unknown> = this._paramTypes[queryParamKey];
+    if (paramType == null) {
+      throw new Error(`no definition for ${queryParamKey} in query params`);
+    }
+    const actualValue = this.param[queryParamKey];
+    if (actualValue == null) return null;
+    return paramType.type.parse(actualValue) as T;
+  }
+
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
