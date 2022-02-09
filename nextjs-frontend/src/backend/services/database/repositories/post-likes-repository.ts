@@ -23,11 +23,11 @@ export class PostLikesRepository extends BaseRepository<ILike> {
 
   deleteLike(like: ILike): Promise<number> {
     return this.entities()
-               .where({
-                 postId: like.postId,
-                 likedBy: like.likedBy
-               })
-               .del();
+      .where({
+        postId: like.postId,
+        likedBy: like.likedBy
+      })
+      .del();
   }
 
   async isLiked(postId: string, userId: string | undefined): Promise<boolean> {
