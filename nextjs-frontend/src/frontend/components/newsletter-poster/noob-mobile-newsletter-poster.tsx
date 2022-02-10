@@ -2,7 +2,7 @@ import { Button, TextField, Typography } from "@mui/material"
 import { useState } from "react";
 import styles from "./noob-mobile-newsletter.module.css"
 
-export default function NoobMobileNewsletterPoster() {
+export default function NoobMobileNewsletterPoster(): JSX.Element {
   const [value, setValue] = useState('');
 
   return (
@@ -21,7 +21,7 @@ export default function NoobMobileNewsletterPoster() {
             placeholder="Your Email Address"
             variant="filled"
             value={value}
-            onChange={(event) => setValue(event.target.value)}
+            onChange={(event): void => setValue(event.target.value)}
             className={styles.textField}
             InputProps={{
               disableUnderline: true,

@@ -1,9 +1,10 @@
 // @ts-check
 
+/* eslint-disable */
+
 /** @type {import('next').NextConfig} */
 module.exports = {
   reactStrictMode: true,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   webpack: (config, {buildId, dev, isServer, defaultLoaders, webpack}) => {
     config.module.rules.push({
       test: /\.svg$/,

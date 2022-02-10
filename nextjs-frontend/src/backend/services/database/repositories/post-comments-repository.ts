@@ -41,7 +41,7 @@ export class PostCommentsRepository extends BaseRepository<IPostComment> {
     return parseInt(result[0].count, 10);
   }
 
-  async deleteComment(id: string, userId: string | undefined) {
+  async deleteComment(id: string, userId: string | undefined): Promise<number> {
     return this.entities()
                .where({
                  id: id,
@@ -50,7 +50,7 @@ export class PostCommentsRepository extends BaseRepository<IPostComment> {
                .del();
   }
 
-  async updateComment(id: string, postId: string, update: IUpdateComment) {
+  async updateComment(id: string, postId: string, update: IUpdateComment): Promise<number> {
     return this.entities()
                .where({
                  id: id,

@@ -1,23 +1,20 @@
-import { IUserFollowerRequest } from './i-add-follower';
+import { IUserFollowerRequest, IUserFollowerResponse } from './i-add-follower';
 import { ValidateFollowing } from './add-follower-validator';
 import { isThereAnyError } from '../../../../common/utils/validation/validator';
 import { PerRequestContext } from '../../../utils/api-middle-ware/api-middleware-typings';
 import { FollowersRepository } from '../../database/repositories/followers-repository';
+import { Knex } from 'knex';
+import { ServiceResponse } from '../../common/contracts/service-response';
 
 
-export async function addFollower(req: IUserFollowerRequest, context: PerRequestContext) {
+export async function addFollower(req: IUserFollowerRequest, context: PerRequestContext): Promise<ServiceResponse<IUserFollowerRequest, IUserFollowerResponse>> {
   const errors = await ValidateFollowing(req, context);
   if (isThereAnyError(errors)) return { errors };
-  // eslint-disable-next-line
-  const followerRepository = new FollowersRepository(context.transaction!);
-  console.log(req)
+  const followerRepository = new FollowersRepository(context.transaction as Knex.Transaction);
   if (req.follow_action === 'following') {
-    // eslint-disable-next-line
-    await followerRepository.createUserFollower({ followerId: req.followerId, userId: context.user?.id! });
+    await followerRepository.createUserFollower({ followerId: req.followerId, userId: context.user?.id as string });
     return { data: { message: 'Following' } }
   }
-  // eslint-disable-next-line
-  await followerRepository.unfollowUser(req.followerId, context.user?.id!);
+  await followerRepository.unfollowUser(req.followerId, context.user?.id as string);
   return { data: { message: 'Unfollow' } }
-
 }

@@ -8,7 +8,7 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 //   handleNext?: () => void
 // }
 
-const ResetPasswordLinkSent = () => {
+const ResetPasswordLinkSent = ():JSX.Element => {
   return (
     <MessageContainer>
       <Fragment>

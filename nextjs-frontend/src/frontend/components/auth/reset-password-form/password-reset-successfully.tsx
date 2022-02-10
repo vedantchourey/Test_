@@ -4,7 +4,7 @@ import { Fragment } from 'react';
 import commonStyles from '../../../styles/common.module.css'
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
-const PasswordResetSuccessfully = () => {
+const PasswordResetSuccessfully = (): JSX.Element => {
   return (
     <MessageContainer>
       <Fragment>

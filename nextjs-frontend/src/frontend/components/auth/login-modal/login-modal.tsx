@@ -40,12 +40,12 @@ const CustomLoginDialog = styled(Dialog)<CustomLoginDialogProps>(({ top = 100, r
   });
 });
 
-function validateEmail(details: SignInRequest) {
+function validateEmail(details: SignInRequest): string | undefined {
   if (details.email == null) return 'Is required';
   if (!validator.isEmail(details.email)) return 'Invalid email';
 }
 
-function validatePassword(details: SignInRequest) {
+function validatePassword(details: SignInRequest): string | undefined {
   if (details.password == null) return 'Is required';
 }
 
@@ -57,7 +57,7 @@ function validateCredentials(request: SignInRequest): ValidationResult<SignInReq
   }
 }
 
-export default function LoginModal(props: Props) {
+export default function LoginModal(props: Props): JSX.Element {
   const { onSuccessfulLogin, onCancel, show, right = 70, top = 100 } = props;
   const [request, setRequest] = useState<SignInRequest>({ email: '', password: '' });
   const [errors, setErrors] = useState<ValidationResult<SignInRequest>>({});
@@ -66,18 +66,18 @@ export default function LoginModal(props: Props) {
   const [isBusy, setIsBusy] = useState(false);
   const router = useRouter();
 
-  function resetData() {
+  function resetData(): void {
     setRequest({ email: '', password: '' });
     setErrors({});
     setLoginError(undefined);
   }
 
-  function onClose() {
+  function onClose(): void {
     resetData();
     onCancel();
   }
 
-  async function onClickLogin() {
+  async function onClickLogin(): Promise<void> {
     const results = validateCredentials(request);
     setErrors(results);
     if (isThereAnyError(results)) return;
@@ -96,7 +96,7 @@ export default function LoginModal(props: Props) {
     }
   }
 
-  const onClickLostPassword = async () => {
+  const onClickLostPassword = async (): Promise<void> => {
     await router.push('/reset-password')
   };
 
@@ -121,7 +121,7 @@ export default function LoginModal(props: Props) {
             value={request.email}
             error={propsHasError(errors, 'email')}
             helperText={getErrorForProp(errors, 'email')}
-            onChange={(event) => setRequest({ ...request, email: event.target.value })}
+            onChange={(event): void => setRequest({ ...request, email: event.target.value })}
             disabled={isBusy}
           />
         </div>
@@ -134,7 +134,7 @@ export default function LoginModal(props: Props) {
             value={request.password}
             error={propsHasError(errors, 'password')}
             helperText={getErrorForProp(errors, 'password')}
-            onChange={(event) => setRequest({ ...request, password: event.target.value })}
+            onChange={(event): void => setRequest({ ...request, password: event.target.value })}
             disabled={isBusy}
           />
         </div>

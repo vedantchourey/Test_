@@ -1,7 +1,7 @@
 import { SvgIcon } from '@mui/material';
 import * as React from 'react';
 
-export default function YoutubeIcon() {
+export default function YoutubeIcon(): JSX.Element {
   return (
     <SvgIcon>
       <path

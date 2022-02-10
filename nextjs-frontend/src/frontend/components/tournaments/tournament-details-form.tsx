@@ -24,13 +24,13 @@ interface Props {
   onChange: (value: Partial<CreateOrEditTournamentRequest>) => void;
 }
 
-export default function TournamentDetailsForm(props: Props) {
+export default function TournamentDetailsForm(props: Props): JSX.Element {
   const {errors, value, onChange} = props;
 
   const [allowedPlatformIds, setAllowedPlatformIds] = useState<string[]>([]);
   const [allowedGameMaps, setAllowedGameMaps] = useState<IGameMapResponse[]>([]);
 
-  const onGameChanged = (id: string | undefined, selectedGame: IGameResponse | null) => {
+  const onGameChanged = (id: string | undefined, selectedGame: IGameResponse | null): void => {
     setAllowedPlatformIds(selectedGame?.platformIds || []);
     setAllowedGameMaps(selectedGame?.gameMaps || []);
     onChange({...value, gameId: id, platformId: undefined, mapId: undefined});
@@ -46,7 +46,7 @@ export default function TournamentDetailsForm(props: Props) {
           error={errors.tournamentName != null}
           value={value.tournamentName}
           className={styles.column}
-          onChange={(event) => onChange({...value, tournamentName: event.target.value})}
+          onChange={(event): void => onChange({...value, tournamentName: event.target.value})}
           helperText={getErrorForProp(errors, 'tournamentName')}
         />
       </div>
@@ -68,7 +68,7 @@ export default function TournamentDetailsForm(props: Props) {
             options={allowedGameMaps}
             value={value.mapId}
             error={errors.mapId != null}
-            onChange={(id) => onChange({...value, mapId: id})}
+            onChange={(id): void => onChange({...value, mapId: id})}
             inputClassName={styles.inputItem}
             autoCompleteClassName={styles.inputItem}
             disabled={allowedGameMaps.length === 0}
@@ -83,7 +83,7 @@ export default function TournamentDetailsForm(props: Props) {
             error={errors.platformId != null}
             disabled={isNullOrEmptyString(value.gameId)}
             allowedPlatformIds={allowedPlatformIds}
-            onChange={(id) => onChange({...value, platformId: id})}
+            onChange={(id): void => onChange({...value, platformId: id})}
             inputClassName={styles.inputItem}
             autoCompleteClassName={styles.inputItem}
             value={value.platformId}
@@ -94,7 +94,7 @@ export default function TournamentDetailsForm(props: Props) {
           <MatchBestOfDropDown label="Match best of"
             placeholder="Select match best of"
             error={errors.bestOfId != null}
-            onChange={(id) => onChange({...value, bestOfId: id})}
+            onChange={(id): void => onChange({...value, bestOfId: id})}
             inputClassName={styles.inputItem}
             autoCompleteClassName={styles.inputItem}
             value={value.bestOfId}
@@ -107,7 +107,7 @@ export default function TournamentDetailsForm(props: Props) {
           <MatchFormatDropDown label="Match format"
             placeholder="Select match format"
             error={errors.formatId != null}
-            onChange={(id) => onChange({...value, formatId: id})}
+            onChange={(id): void => onChange({...value, formatId: id})}
             inputClassName={styles.inputItem}
             autoCompleteClassName={styles.inputItem}
             value={value.formatId}
@@ -118,7 +118,7 @@ export default function TournamentDetailsForm(props: Props) {
           <TournamentTypeDropDown label="Tournament type"
             placeholder="Select type"
             error={errors.tournamentType != null}
-            onChange={(type) => onChange({...value, tournamentType: type})}
+            onChange={(type): void => onChange({...value, tournamentType: type})}
             inputClassName={styles.inputItem}
             autoCompleteClassName={styles.inputItem}
             value={value.tournamentType}
@@ -130,7 +130,7 @@ export default function TournamentDetailsForm(props: Props) {
         <div className={styles.column}>
           <ToggleButtonGroup value={(value.isTeamParticipating === true).toString()}
             exclusive
-            onChange={(event, selectedValue) => onChange({...value, isTeamParticipating: selectedValue === 'true'})}
+            onChange={(event, selectedValue): void => onChange({...value, isTeamParticipating: selectedValue === 'true'})}
             aria-label="text alignment"
             style={{flexGrow: 1, flexDirection: 'row'}}
           >
@@ -146,7 +146,7 @@ export default function TournamentDetailsForm(props: Props) {
             placeholder="Enter count"
             error={errors.numberOfParticipants != null}
             className={styles.column}
-            onChangeNumber={(numberOfPlayers) => onChange({...value, numberOfParticipants: numberOfPlayers})}
+            onChangeNumber={(numberOfPlayers): void => onChange({...value, numberOfParticipants: numberOfPlayers})}
             helperText={getErrorForProp(errors, 'numberOfParticipants')}
           />
         </div>
@@ -154,8 +154,8 @@ export default function TournamentDetailsForm(props: Props) {
           <DateTimePicker label="Scheduled date time"
             value={scheduledDateTime}
             inputFormat="dd/MM/yyyy HH:mm"
-            onChange={(newValue: DateTime | null) => onChange({...value, scheduleDate: toISOString(newValue)})}
-            renderInput={(props) => <TextField {...props}
+            onChange={(newValue: DateTime | null): void => onChange({...value, scheduleDate: toISOString(newValue)})}
+            renderInput={(props): JSX.Element => <TextField {...props}
               error={errors.scheduleDate != null}
               helperText={getErrorForProp(errors, 'scheduleDate')}
             />}
@@ -171,7 +171,7 @@ export default function TournamentDetailsForm(props: Props) {
             className={styles.column}
             rows={3}
             helperText={getErrorForProp(errors, 'rules')}
-            onChange={(event) => onChange({...value, rules: event.target.value})}
+            onChange={(event): void => onChange({...value, rules: event.target.value})}
           />
         </div>
       </div>

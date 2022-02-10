@@ -1,7 +1,7 @@
 import { authSession } from '../service-clients/auth-service-client';
 
-export async function getAuthHeader() {
+export async function getAuthHeader(): Promise<{ [i: string]: string }> {
   const session = await authSession();
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return {'Authorization': `Bearer ${session!.access_token}`};
+  if (session?.access_token == null) throw new Error('session was null');
+  return {'Authorization': `Bearer ${session.access_token}`};
 }

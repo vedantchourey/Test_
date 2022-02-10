@@ -18,7 +18,7 @@ interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
 }
 // https://github.com/mui-org/material-ui/tree/ce5332fbcd11308be7f898511a3da5c7f2726e6b/examples/nextjs-with-typescript
-function MyApp(props: MyAppProps) {
+function MyApp(props: MyAppProps): JSX.Element {
   const {Component, emotionCache = clientSideEmotionCache, pageProps} = props;
   return (
     <CacheProvider value={emotionCache}>

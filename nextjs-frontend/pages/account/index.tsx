@@ -5,13 +5,13 @@ import { authCheckStatusSelector, isLoggedInSelector } from '../../src/frontend/
 import UserProfileCard from '../../src/frontend/components/cards/user-profile-card/user-profile-card';
 import NoobPage from '../../src/frontend/components/page/noob-page';
 
-export default function Account() {
+export default function Account(): JSX.Element {
   const router = useRouter();
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const checkStatus = useAppSelector(authCheckStatusSelector);
 
   useEffect(() => {
-    (async () => {
+    (async (): Promise<void> => {
       if (checkStatus !== 'success') return;
       if (isLoggedIn) return;
       await router.push('/')

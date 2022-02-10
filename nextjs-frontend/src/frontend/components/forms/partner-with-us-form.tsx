@@ -8,7 +8,7 @@ interface Props {
   onRegistrationSuccess: () => void
 }
 
-export default function PartnerWithUsForm(props: Props) {
+export default function PartnerWithUsForm(props: Props): JSX.Element {
 
   const [errors] = useState({});
   const [request, setRequest] = useState({
@@ -19,13 +19,11 @@ export default function PartnerWithUsForm(props: Props) {
     message: '',
   });
 
-  console.log(props);
-
   /**
      * @todo form validation && post api integration
      */
-  function onClickCreateTeam() {
-    console.log("form submitted: ", request)
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  function onClickCreateTeam(): void {
   }
 
   return (
@@ -40,7 +38,7 @@ export default function PartnerWithUsForm(props: Props) {
             value={request.firstName}
             error={propsHasError(errors, 'firstName')}
             helperText={getErrorForProp(errors, 'firstName')}
-            onChange={(event) => setRequest({ ...request, firstName: event.target.value })}
+            onChange={(event): void => setRequest({ ...request, firstName: event.target.value })}
             fullWidth
           />
         </Grid>
@@ -53,7 +51,7 @@ export default function PartnerWithUsForm(props: Props) {
             value={request.lastName}
             error={propsHasError(errors, 'lastName')}
             helperText={getErrorForProp(errors, 'lastName')}
-            onChange={(event) => setRequest({ ...request, lastName: event.target.value })}
+            onChange={(event): void => setRequest({ ...request, lastName: event.target.value })}
             fullWidth
           />
         </Grid>
@@ -66,7 +64,7 @@ export default function PartnerWithUsForm(props: Props) {
             value={request.email}
             error={propsHasError(errors, 'email')}
             helperText={getErrorForProp(errors, 'email')}
-            onChange={(event) => setRequest({ ...request, email: event.target.value })}
+            onChange={(event): void => setRequest({ ...request, email: event.target.value })}
             fullWidth
           />
         </Grid>
@@ -80,7 +78,7 @@ export default function PartnerWithUsForm(props: Props) {
             value={request.phone}
             error={propsHasError(errors, 'phone')}
             helperText={getErrorForProp(errors, 'phone')}
-            onChange={(event) => setRequest({ ...request, phone: event.target.value })}
+            onChange={(event): void => setRequest({ ...request, phone: event.target.value })}
             fullWidth
           />
         </Grid>
@@ -95,7 +93,7 @@ export default function PartnerWithUsForm(props: Props) {
             value={request.message}
             error={propsHasError(errors, 'message')}
             helperText={getErrorForProp(errors, 'message')}
-            onChange={(event) => setRequest({ ...request, message: event.target.value })}
+            onChange={(event): void => setRequest({ ...request, message: event.target.value })}
             fullWidth
           />
         </Grid>

@@ -5,11 +5,11 @@ import { PostCommentsRepository } from '../../database/repositories/post-comment
 import { Knex } from 'knex';
 
 
-function validateComment(comment: IUpdateCommentRequest) {
+function validateComment(comment: IUpdateCommentRequest): string | undefined {
   if (isNullOrEmptyString(comment.comment)) return 'Is required';
 }
 
-async function validateIsCommentedBy(context: PerRequestContext, commentRepository: PostCommentsRepository) {
+async function validateIsCommentedBy(context: PerRequestContext, commentRepository: PostCommentsRepository): Promise<string | undefined> {
   const commentId = context.getParamValue<string>('commentId');
   const comment = await commentRepository.getCommentById(commentId as string);
   if (comment == null) return 'Comment do not exists';

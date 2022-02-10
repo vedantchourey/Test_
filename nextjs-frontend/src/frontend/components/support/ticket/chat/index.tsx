@@ -17,7 +17,7 @@ interface Props {
   chats: Chat[];
 }
 
-export default function TicketChats({ ticketNumber, ticketSubject, chats }: Props) {
+export default function TicketChats({ ticketNumber, ticketSubject, chats }: Props): JSX.Element {
   const [message, setMessage] = useState("")
   // const [errors, setErrors] = useState({
   //   message: ""
@@ -35,7 +35,7 @@ export default function TicketChats({ ticketNumber, ticketSubject, chats }: Prop
             value={message}
             // error={propsHasError(errors, "message")}
             // helperText={getErrorForProp(errors, "message")}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(e): void => setMessage(e.target.value)}
             fullWidth
             InputProps={{ disableUnderline: true }}
             inputProps={{

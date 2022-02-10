@@ -16,7 +16,7 @@ interface Props {
   children: React.ReactElement
 }
 
-export default function NoobPage(props: Props) {
+export default function NoobPage(props: Props): JSX.Element {
   const {
     metaData,
     favIcon = '/noob-fav.ico',

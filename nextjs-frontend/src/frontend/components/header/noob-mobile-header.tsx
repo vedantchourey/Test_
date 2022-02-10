@@ -20,28 +20,28 @@ import { mobileHeaderHeightSelector } from '../../redux-store/layout/layout-sele
 import { useRouter } from 'next/router';
 
 
-export default function NoobMobileHeader() {
+export default function NoobMobileHeader(): JSX.Element {
   const [showMenu, setShowMenu] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const toggleDrawer = () => setShowMenu(true);
-  const hideMenu = () => setShowMenu(false);
+  const toggleDrawer = (): void => setShowMenu(true);
+  const hideMenu = (): void => setShowMenu(false);
   const avatarUrl = useAppSelector(avatarImageBlobUrlSelector);
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const appDispatch = useAppDispatch();
   const currentHeight = useAppSelector(mobileHeaderHeightSelector);
   const router = useRouter();
 
-  function onSuccessfulLogin() {
+  function onSuccessfulLogin(): void {
     setShowLoginModal(false);
   }
 
-  function onLoginClick() {
+  function onLoginClick():void {
     setShowLoginModal(true)
     hideMenu();
   }
 
 
-  function avatar() {
+  function avatar(): JSX.Element {
     if (avatarUrl == null) return (<Icon className={styles.userIcon}><PersonIcon className={styles.userIcon}/></Icon>);
     return <Avatar alt="Remy Sharp"
       sx={{width: 40, height: 40}}
@@ -49,15 +49,15 @@ export default function NoobMobileHeader() {
       src={avatarUrl}/>
   }
 
-  async function onLogoutClick() {
+  async function onLogoutClick(): Promise<void> {
     hideMenu();
     await signOut();
   }
 
-  const updateMobileHeight = (element: HTMLDivElement | null) => {
+  const updateMobileHeight = (element: HTMLDivElement | null): void => {
     if (!element?.clientHeight) return;
     if (currentHeight === element?.clientHeight) return;
-    return appDispatch(setMobileHeaderHeight(element?.clientHeight || 0));
+    appDispatch(setMobileHeaderHeight(element?.clientHeight || 0));
   };
 
   return (
@@ -80,7 +80,7 @@ export default function NoobMobileHeader() {
           </div>
         </div>
         {isLoggedIn && <div className={styles.bottomHeader}>
-          <IconButton className={styles.bottomHeaderIcons} onClick={() => router.push('/')}>
+          <IconButton className={styles.bottomHeaderIcons} onClick={(): Promise<boolean> => router.push('/')}>
             <Icon><HomeOutlinedIcon/></Icon>
           </IconButton>
           <IconButton className={styles.bottomHeaderIcons}>
@@ -104,7 +104,7 @@ export default function NoobMobileHeader() {
         onLogoutClick={onLogoutClick}
       />
       <LoginModal show={showLoginModal}
-        onCancel={() => setShowLoginModal(false)}
+        onCancel={(): void => setShowLoginModal(false)}
         onSuccessfulLogin={onSuccessfulLogin}
       />
     </>

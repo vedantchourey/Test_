@@ -7,7 +7,7 @@ import YoutubeIcon from '../icons/youtube-icon';
 import TwitchIcon from '../icons/twitch-icon';
 import DiscordIcon from '../icons/discord-icon';
 
-export default function NoobMobileFooter() {
+export default function NoobMobileFooter():JSX.Element {
   const theme = useTheme();
   const router = useRouter()
   const { pathname } = router;
@@ -16,11 +16,11 @@ export default function NoobMobileFooter() {
     return { color: theme.palette.primary.main, fontWeight: 700 };
   }
 
-  async function gotoAboutUsPage() {
+  async function gotoAboutUsPage(): Promise<void> {
     await router.push('/about-us')
   }
 
-  async function gotoHomePage() {
+  async function gotoHomePage(): Promise<void> {
     await router.push('/')
   }
 

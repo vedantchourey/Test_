@@ -6,11 +6,11 @@ import { createProfileRepository, ProfilesRepository } from '../database/reposit
 import { Knex } from 'knex';
 import { PerRequestContext } from '../../utils/api-middle-ware/api-middleware-typings';
 
-async function handleAvatarUpdate(userId: string, request: UpdateProfileImageRequest, userProfile: IProfile, profilesRepository: ProfilesRepository) {
+async function handleAvatarUpdate(userId: string, request: UpdateProfileImageRequest, userProfile: IProfile, profilesRepository: ProfilesRepository): Promise<void> {
   await profilesRepository.updateAvatar(userId, request.url);
 }
 
-async function handleBackgroundImageUpdate(userId: string, request: UpdateProfileImageRequest, userProfile: IProfile, profilesRepository: ProfilesRepository) {
+async function handleBackgroundImageUpdate(userId: string, request: UpdateProfileImageRequest, userProfile: IProfile, profilesRepository: ProfilesRepository): Promise<void> {
   await profilesRepository.updateProfileBackground(userId, request.url);
 }
 

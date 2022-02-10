@@ -1,24 +1,25 @@
-import { validateRequest } from './like-post-validator';
 import { PerRequestContext } from '../../../utils/api-middle-ware/api-middleware-typings';
-import { isThereAnyError } from '../../../../common/utils/validation/validator';
-import { ILikePostRequest } from './i-like-post';
 import { PostLikesRepository } from '../../database/repositories/post-likes-repository';
+import { ServiceResponse } from '../../common/contracts/service-response';
+import { Knex } from 'knex';
+import { ILike } from '../../database/models/i-like';
 
 interface ILikePostResponse {
-  message: string
+  id: string;
+  postId: string;
+  likedBy: string;
+  createdAt: string;
 }
 
-const likePost = async (req: ILikePostRequest, context: PerRequestContext) => {
-  const errors = await validateRequest(req, context);
-  if (isThereAnyError(errors)) return { errors: errors };
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const repository = new PostLikesRepository(context.transaction!);
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  await repository.createLike({ ...req, likedBy: context.user?.id });
-  const res: ILikePostResponse = { message: 'Post liked' };
-  return { data: res };
+export const likePost = async (context: PerRequestContext): Promise<ServiceResponse<unknown, ILikePostResponse>> => {
+  const repository = new PostLikesRepository(context.transaction as Knex.Transaction);
+  const postId = context.getParamValue('postId') as string;
+  const id = await repository.createLike({
+    likedBy: context.user?.id as string,
+    postId: postId
+  });
+  const like = await repository.getById(id);
+  const {createdAt, ...others} = like as ILike;
+  return {data: {...others, createdAt: createdAt?.toISOString()} as ILikePostResponse};
 }
 
-export {
-  likePost
-}

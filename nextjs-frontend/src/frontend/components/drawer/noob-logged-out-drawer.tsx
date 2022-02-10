@@ -15,12 +15,12 @@ interface Props {
   onLoginClick: () => void;
 }
 
-export default function NoobLoggedOutDrawer(props: Props) {
+export default function NoobLoggedOutDrawer(props: Props): JSX.Element {
   const {show, onClose, onLoginClick} = props;
   const theme = useTheme();
   const router = useRouter();
 
-  async function gotoPage(url: string) {
+  async function gotoPage(url: string): Promise<void> {
     onClose();
     await router.push(url);
   }
@@ -32,7 +32,7 @@ export default function NoobLoggedOutDrawer(props: Props) {
           <div className={styles.topMenuItemLeft}>
             <Button variant="outlined"
               style={{textTransform: 'none', color: 'white'}}
-              onClick={()=> router.push('/register')}
+              onClick={(): Promise<boolean> => router.push('/register')}
             >
               Register
             </Button>
@@ -49,7 +49,7 @@ export default function NoobLoggedOutDrawer(props: Props) {
         </div>
         <Divider/>
         <div>
-          <MenuItem><ListItemText primary="Home" onClick={() => gotoPage('/')}/></MenuItem>
+          <MenuItem><ListItemText primary="Home" onClick={(): Promise<void> => gotoPage('/')}/></MenuItem>
           <MenuItem><ListItemText primary="Leaderboards"/></MenuItem>
           <MenuItem><ListItemText primary="About Us"/></MenuItem>
           <MenuItem><ListItemText primary="Support"/></MenuItem>

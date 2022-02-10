@@ -24,15 +24,16 @@ interface Props {
   onLogoutClick: () => void;
 }
 
-export default function NoobLoggedInDrawer(props: Props) {
+export default function NoobLoggedInDrawer(props: Props): JSX.Element {
   const {show, onClose, onLogoutClick} = props;
   const theme = useTheme();
   const router = useRouter();
 
-  async function gotoPage(url: string) {
+  async function gotoPage(url: string): Promise<void> {
     onClose();
     await router.push(url);
   }
+
   return (
     <Dialog open={show} onClose={onClose} fullScreen color="#08001C">
       <div className={styles.container}>
@@ -52,7 +53,7 @@ export default function NoobLoggedInDrawer(props: Props) {
         </div>
         <div className={styles.topMenuGroup}>
           <MenuList>
-            <MenuItem onClick={()=> gotoPage('/account')}><ListItemIcon><PersonIcon fontSize="small"/></ListItemIcon><ListItemText>Account</ListItemText></MenuItem>
+            <MenuItem onClick={(): Promise<void> => gotoPage('/account')}><ListItemIcon><PersonIcon fontSize="small"/></ListItemIcon><ListItemText>Account</ListItemText></MenuItem>
             <MenuItem><ListItemIcon><DashboardIcon fontSize="small"/></ListItemIcon><ListItemText>Dashboard</ListItemText></MenuItem>
             <MenuItem><ListItemIcon><ShoppingBagIcon fontSize="small"/></ListItemIcon><ListItemText>Orders</ListItemText></MenuItem>
             <MenuItem><ListItemIcon><AccountBalanceWalletIcon fontSize="small"/></ListItemIcon><ListItemText>Wallet</ListItemText></MenuItem>
@@ -64,7 +65,7 @@ export default function NoobLoggedInDrawer(props: Props) {
         </div>
         <Divider/>
         <div className={styles.flexRowWrap}>
-          <MenuItem><ListItemText primary="Home" onClick={() => gotoPage('/')}/></MenuItem>
+          <MenuItem><ListItemText primary="Home" onClick={(): Promise<void> => gotoPage('/')}/></MenuItem>
           <MenuItem><ListItemText primary="Leaderboards"/></MenuItem>
           <MenuItem><ListItemText primary="About Us"/></MenuItem>
           <MenuItem><ListItemText primary="Support"/></MenuItem>

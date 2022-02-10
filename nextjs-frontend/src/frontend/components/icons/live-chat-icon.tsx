@@ -1,7 +1,7 @@
 import { SvgIcon, SvgIconProps } from '@mui/material';
 import * as React from 'react';
 
-export default function LiveChatIcon(props: SvgIconProps) {
+export default function LiveChatIcon(props: SvgIconProps): JSX.Element {
   return (
     <SvgIcon {...props}>
       <path d="M16 27.7334V29.8667C18.4981 29.8667 20.4821 28.9569 21.9979 27.7334H16Z" fill="white" />

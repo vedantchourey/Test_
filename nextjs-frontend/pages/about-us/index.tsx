@@ -17,7 +17,7 @@ interface IPageProps {
     } | null
 }
 
-const AboutUs = (props: IPageProps) => {
+const AboutUs = (props: IPageProps): JSX.Element => {
   const content = props.pageContent?.attributes;
 
   return (

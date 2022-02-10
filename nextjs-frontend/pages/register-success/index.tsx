@@ -9,14 +9,14 @@ import { useRouter } from 'next/router';
 import { isLoggedInSelector } from '../../src/frontend/redux-store/authentication/authentication-selectors';
 import NoobPage from '../../src/frontend/components/page/noob-page';
 
-export default function RegisterSuccess() {
+export default function RegisterSuccess(): JSX.Element {
   const theme = useTheme();
   const router = useRouter();
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const appHeaderHeight = useAppSelector(getAppHeaderHeightSelector);
 
   useEffect(() => {
-    (async () => {
+    (async (): Promise<void> => {
       if (!isLoggedIn) return;
       await router.push('/');
     })();

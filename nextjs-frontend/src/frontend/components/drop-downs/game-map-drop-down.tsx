@@ -15,11 +15,11 @@ interface Props {
 }
 
 
-export default function GameMapDropDown(props: Props) {
+export default function GameMapDropDown(props: Props): JSX.Element {
   const {value, options, onChange, autoCompleteClassName, inputClassName, error, helperText, label, placeholder, disabled} = props;
   const selectedMap = options.filter((x) => x.id === value)[0] || null;
 
-  const onInputChange = (event: unknown, newValue: IGameMapResponse | null) => {
+  const onInputChange = (event: unknown, newValue: IGameMapResponse | null): void => {
     onChange?.(newValue?.id, newValue);
   };
 
@@ -28,11 +28,11 @@ export default function GameMapDropDown(props: Props) {
       className={autoCompleteClassName}
       options={options}
       value={selectedMap}
-      getOptionLabel={(x) => x.displayName}
+      getOptionLabel={(x): string => x.displayName}
       onChange={onInputChange}
       disabled={disabled}
-      isOptionEqualToValue={(option: IGameMapResponse, value1: IGameMapResponse) => option.id === value1.id}
-      renderInput={(params) => <TextField {...params}
+      isOptionEqualToValue={(option: IGameMapResponse, value1: IGameMapResponse): boolean => option.id === value1.id}
+      renderInput={(params): JSX.Element => <TextField {...params}
         label={label}
         variant="filled"
         className={inputClassName}

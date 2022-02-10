@@ -10,42 +10,42 @@ import { createUsersRepository, UsersRepository } from '../../database/repositor
 import { PerRequestContext } from '../../../utils/api-middle-ware/api-middleware-typings';
 
 
-async function validateStateId(details: Partial<SignupRequest>, stateRepository: StateRepository) {
+async function validateStateId(details: Partial<SignupRequest>, stateRepository: StateRepository): Promise<string | undefined> {
   if (isNullOrEmptyString(details.stateId)) return 'Is required';
   if (details.countryId == null) return;
   if ((await stateRepository.getStateById(details.stateId as string, details.countryId)) == null) return 'Invalid state';
 }
 
-async function validateCountry(details: Partial<SignupRequest>, repository: CountryRepository) {
+async function validateCountry(details: Partial<SignupRequest>, repository: CountryRepository): Promise<string | undefined> {
   if (isNullOrEmptyString(details.countryId)) return 'Is required';
   if ((await repository.getCountryById(details.countryId as string)) == null) return 'Invalid country';
 }
 
-function validateDOB(details: Partial<SignupRequest>) {
+function validateDOB(details: Partial<SignupRequest>): string | undefined {
   if (isNullOrEmptyString(details.dateOfBirth)) return 'Is required';
   const dob = parseDateTime(details.dateOfBirth as string);
   if (DateTime.now().diff(dob, 'years').years < 18) return 'Must be 18 years min';
 }
 
-async function validateEmail(details: Partial<SignupRequest>, usersRepository: UsersRepository) {
+async function validateEmail(details: Partial<SignupRequest>, usersRepository: UsersRepository): Promise<string| undefined> {
   if (isNullOrEmptyString(details.email)) return 'Is required';
   if (!validator.isEmail(details.email as string)) return 'Invalid email';
   if ((await usersRepository.countUsersByEmail(details.email as string)) !== 0) return 'Not available';
 }
 
-function validateFirstName(details: Partial<SignupRequest>) {
+function validateFirstName(details: Partial<SignupRequest>): string | undefined {
   if (isNullOrEmptyString(details.firstName)) return 'Is required';
   const parts = (details.firstName as string).split(' ');
   if (parts.some((x) => !validator.isAlpha(x))) return 'Can only contain A-Za-z';
 }
 
-function validateLastName(details: Partial<SignupRequest>) {
+function validateLastName(details: Partial<SignupRequest>): string | undefined {
   if (isNullOrEmptyString(details.lastName)) return 'Is required';
   const parts = (details.lastName as string).split(' ');
   if (parts.some((x) => !validator.isAlpha(x))) return 'Can only contain A-Za-z';
 }
 
-function validatePassword(details: Partial<SignupRequest>) {
+function validatePassword(details: Partial<SignupRequest>): string | undefined {
   if (isNullOrEmptyString(details.password)) return 'Is required';
   const options = {minLength: 8, minLowercase: 1, minNumbers: 1, minSymbols: 1, minUppercase: 1};
   if (!validator.isStrongPassword(details.password as string, options)) return 'Required min length 10 and at least 1 lower case, upper case, number and special char';
@@ -56,13 +56,13 @@ function validatePassword(details: Partial<SignupRequest>) {
 //   if (!validator.isMobilePhone(details.phone as string, "en-IN")) return 'Invalid mobile number';
 // }
 
-async function validateUserName(details: Partial<SignupRequest>, usersRepository: UsersRepository) {
+async function validateUserName(details: Partial<SignupRequest>, usersRepository: UsersRepository): Promise<string | undefined> {
   if (isNullOrEmptyString(details.username)) return 'Is required';
   if (!validator.isAlphanumeric(details.username as string)) return 'Only A-Za-z1-9 allowed';
   if ((await usersRepository.countUsersByUserName(details.username as string)) !== 0) return 'Not available';
 }
 
-function validateTnc(details: Partial<SignupRequest>) {
+function validateTnc(details: Partial<SignupRequest>): string | undefined {
   if (!details.agreeToTnc) return 'Agreement to terms and conditions required';
 }
 

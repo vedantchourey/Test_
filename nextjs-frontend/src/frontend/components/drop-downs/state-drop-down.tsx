@@ -15,7 +15,7 @@ interface Props {
   helperText?: string;
 }
 
-export default function StateDropDown(props: Props) {
+export default function StateDropDown(props: Props): JSX.Element {
   const {countryIsoCode, value, onChange, autoCompleteClassName, inputClassName, error, helperText} = props;
   const appDispatch = useAppDispatch();
   const states = useAppSelector(allStatesSelector);
@@ -36,7 +36,7 @@ export default function StateDropDown(props: Props) {
     appDispatch(fetchCountryStatesThunk(countryIsoCode))
   }, [appDispatch, countryIsoCode]);
 
-  const onInputChange = (event: unknown, newValue: IState | null) => {
+  const onInputChange = (event: unknown, newValue: IState | null): void => {
     setSelectedState(newValue)
     onChange?.(newValue?.id || null, newValue);
   };
@@ -45,8 +45,8 @@ export default function StateDropDown(props: Props) {
     <Autocomplete disablePortal
       className={autoCompleteClassName}
       options={states}
-      getOptionLabel={(x) => x.displayName}
-      renderInput={(params) => <TextField {...params}
+      getOptionLabel={(x): string => x.displayName}
+      renderInput={(params): JSX.Element => <TextField {...params}
         label="State"
         variant="filled"
         className={inputClassName}

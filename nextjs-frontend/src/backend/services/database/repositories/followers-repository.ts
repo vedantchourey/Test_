@@ -8,7 +8,7 @@ export class FollowersRepository extends BaseRepository<IUserFollower> {
     super(transaction, 'user_followers');
   }
 
-  createUserFollower(data: IUserFollower) {
+  createUserFollower(data: IUserFollower): Promise<void> {
     return this.entities().insert(data);
   }
 
@@ -22,7 +22,7 @@ export class FollowersRepository extends BaseRepository<IUserFollower> {
     return parseInt(result[0].count, 10);
   }
 
-  unfollowUser(id: string, user: string) {
+  unfollowUser(id: string, user: string): Promise<number> {
     return this.entities()
                .where({
                  followerId: id,

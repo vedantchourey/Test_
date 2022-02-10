@@ -11,14 +11,14 @@ export function downloadImage(bucket: string, filename: string, bustCache = fals
 }
 
 
-export function uploadImage(bucket: string, filename: string, file: File) {
+export function uploadImage(bucket: string, filename: string, file: File): Promise<{ data: { Key: string } | null; error: Error | null }> {
   return frontendSupabase.storage
                          .from(bucket)
                          .upload(filename, file)
 
 }
 
-export function updateImage(bucket: string, filename: string, file: File) {
+export function updateImage(bucket: string, filename: string, file: File): Promise<{ data: { Key: string } | null; error: Error | null }> {
   return frontendSupabase.storage
                          .from(bucket)
                          .update(filename, file, {upsert: true});

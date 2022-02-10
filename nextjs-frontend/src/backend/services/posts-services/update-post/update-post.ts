@@ -8,8 +8,9 @@ import { ServiceResponse } from '../../common/contracts/service-response';
 import { IPostResponse } from '../i-post-response';
 import { IPost } from '../../database/models/i-post';
 
+
 export async function updatePost(request: IUpdatePostRequest, context: PerRequestContext): Promise<ServiceResponse<IUpdatePostRequest, IPostResponse>> {
-  const errors = await validateRequest(request, context);
+  const errors = await validateRequest(request);
   if (isThereAnyError(errors)) return {errors}
   const repository = new PostsRepository(context.transaction as Knex.Transaction);
   const postId = context.getParamValue('postId') as string;

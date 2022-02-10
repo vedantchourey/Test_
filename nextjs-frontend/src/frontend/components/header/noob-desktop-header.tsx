@@ -14,11 +14,10 @@ import { isLoggedInSelector } from '../../redux-store/authentication/authenticat
 import LoggedInUserMenu from './logged-in-user-menu';
 import { setDesktopHeaderHeight } from '../../redux-store/layout/layout-slice';
 
-export default function NoobDesktopHeader() {
+export default function NoobDesktopHeader(): JSX.Element {
   const theme = useTheme();
   const router = useRouter()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const loginButtonRef = useRef<any>();
+  const loginButtonRef = useRef<HTMLButtonElement>(null);
   const [loginButtonDimensions, setLoginButtonDimensions] = useState(new ComponentDimensions(0, 0, 0, 0, 0, 0, 0))
   const { pathname } = router;
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -28,10 +27,10 @@ export default function NoobDesktopHeader() {
 
   const appDispatch = useAppDispatch();
 
-  const updateDesktopHeight = (element: HTMLDivElement | null) => {
+  const updateDesktopHeight = (element: HTMLDivElement | null): void => {
     if (!element?.clientHeight) return;
     if (currentHeight === element?.clientHeight) return;
-    return appDispatch(setDesktopHeaderHeight(element?.clientHeight || 0));
+    appDispatch(setDesktopHeaderHeight(element?.clientHeight || 0));
   };
 
   function buttonStyle(expectedPaths: string[]): React.CSSProperties {
@@ -39,27 +38,27 @@ export default function NoobDesktopHeader() {
     return { color: theme.palette.primary.main, fontWeight: 700 };
   }
 
-  async function gotoAboutUsPage() {
+  async function gotoAboutUsPage(): Promise<void> {
     await router.push('/about-us')
   }
 
-  async function gotoRegisterPage() {
+  async function gotoRegisterPage(): Promise<void> {
     await router.push('/register')
   }
 
-  async function gotoSupportPage() {
+  async function gotoSupportPage(): Promise<void> {
     await router.push('/support')
   }
 
-  async function gotoHomePage() {
+  async function gotoHomePage(): Promise<void> {
     await router.push('/')
   }
 
-  function onSuccessfulLogin() {
+  function onSuccessfulLogin(): void {
     setShowLoginModal(false);
   }
 
-  function onShowLoginModal() {
+  function onShowLoginModal(): void {
     setLoginButtonDimensions(createFromRef(loginButtonRef));
     setShowLoginModal(true);
   }
@@ -115,7 +114,7 @@ export default function NoobDesktopHeader() {
       </AppBar>
       <LoginModal show={showLoginModal}
         onSuccessfulLogin={onSuccessfulLogin}
-        onCancel={() => setShowLoginModal(false)}
+        onCancel={(): void => setShowLoginModal(false)}
         top={loginButtonDimensions.bottom + 10}
         right={screenWidth - loginButtonDimensions.right}
       />

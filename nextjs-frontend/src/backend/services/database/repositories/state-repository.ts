@@ -22,7 +22,7 @@ export class StateRepository extends BaseRepository<IState> {
 }
 
 
-export const createStateRepository = (transaction: Knex.Transaction) => new StateRepository(transaction);
+export const createStateRepository = (transaction: Knex.Transaction): StateRepository => new StateRepository(transaction);
 
 
 
