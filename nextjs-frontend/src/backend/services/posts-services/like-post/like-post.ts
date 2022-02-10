@@ -22,5 +22,3 @@ export const likePost = async (context: PerRequestContext): Promise<ServiceRespo
   const {createdAt, ...others} = like as ILike;
   return {data: {...others, createdAt: createdAt?.toISOString()} as ILikePostResponse};
 }
-
-

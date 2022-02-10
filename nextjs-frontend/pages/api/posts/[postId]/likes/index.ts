@@ -57,7 +57,7 @@ export default createNextJsRouteHandler({
   delete: {
     handler: async function (req: NextApiRequest, res: NextApiResponse, context: PerRequestContext) {
       const result = await unlikePost(context);
-      res.status(result.errors ? 400 : 200).send(result);
+      res.status(result?.errors ? 400 : 200).send(result);
     },
     preHooks: [authenticatedUserMiddleware, beginTransactionMiddleWare, unlikeQueryParams],
     postHooks: [commitOrRollBackTransactionMiddleWare]
