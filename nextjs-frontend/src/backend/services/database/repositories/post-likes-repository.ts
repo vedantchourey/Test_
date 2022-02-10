@@ -31,13 +31,13 @@ export class PostLikesRepository extends BaseRepository<ILike> {
   }
 
   async isLiked(postId: string, userId: string | undefined): Promise<boolean> {
-    const count = await this.entities()
-                            .select('id')
+    const like = await this.entities()
+                            .select('*')
                             .where({
                               postId: postId,
                               likedBy: userId
                             })
-                            .count();
-    return count > 0;
+                            .first();
+    return like != null;
   }
 }

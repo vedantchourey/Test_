@@ -32,7 +32,7 @@ const basicQueryParams = createQueryParamsMiddleWare({
 export default createNextJsRouteHandler({
   post: {
     handler: async (req: NextApiRequest, res: NextApiResponse, context: PerRequestContext) => {
-      const result = await likePost(req.body, context);
+      const result = await likePost(context);
       res.status(result?.errors ? 400 : 200).send(result)
     },
     preHooks: [authenticatedUserMiddleware, beginTransactionMiddleWare, basicQueryParams],
