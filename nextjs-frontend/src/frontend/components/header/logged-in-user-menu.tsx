@@ -26,7 +26,7 @@ const CustomMenu = styled(Menu)(() => {
   });
 });
 
-export default function LoggedInUserMenu() {
+export default function LoggedInUserMenu(): JSX.Element {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -35,26 +35,26 @@ export default function LoggedInUserMenu() {
   const avatarUrl = useAppSelector(avatarImageBlobUrlSelector);
 
 
-  function handleClose() {
+  function handleClose(): void {
     setShowMenu(false);
   }
 
-  function onDownArrowClick() {
+  function onDownArrowClick(): void {
     setShowMenu(true);
   }
 
-  async function handleSignOut() {
+  async function handleSignOut(): Promise<void> {
     handleClose();
     await signOut();
     await router.push('/');
   }
 
-  async function handleAccountItem() {
+  async function handleAccountItem(): Promise<void> {
     handleClose();
     await router.push('/account')
   }
 
-  function getUserAvatar() {
+  function getUserAvatar(): JSX.Element {
     if (avatarUrl == null) return (<Icon className={styles.userIcon}><PersonIcon className={styles.userIcon}/></Icon>);
     return <img className={styles.userIcon} src={avatarUrl} alt="avatar"/>
   }

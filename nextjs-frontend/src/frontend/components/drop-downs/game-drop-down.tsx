@@ -17,7 +17,7 @@ interface Props {
   placeholder?: string;
 }
 
-export default function GameDropDown(props: Props) {
+export default function GameDropDown(props: Props): JSX.Element {
   const {value, onChange, autoCompleteClassName, inputClassName, error, helperText, label, platformId, placeholder} = props;
   const appDispatch = useAppDispatch();
   const games = useAppSelector((x) => gamesByPlatformSelector(x, platformId));
@@ -37,7 +37,7 @@ export default function GameDropDown(props: Props) {
   }, [games, selectedGame?.id, value]);
 
 
-  const onInputChange = (event: unknown, newValue: IGameResponse | null) => {
+  const onInputChange = (event: unknown, newValue: IGameResponse | null): void => {
     setSelectedGame(newValue)
     onChange?.(newValue?.id, newValue || null);
   };
@@ -46,9 +46,9 @@ export default function GameDropDown(props: Props) {
     <Autocomplete disablePortal
       className={autoCompleteClassName}
       options={games}
-      getOptionLabel={(x) => x.displayName}
+      getOptionLabel={(x): string => x.displayName}
       loading={isLoading}
-      renderInput={(params) => <TextField {...params}
+      renderInput={(params): JSX.Element => <TextField {...params}
         label={label}
         variant="filled"
         className={inputClassName}

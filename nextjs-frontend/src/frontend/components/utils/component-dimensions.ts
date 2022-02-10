@@ -13,14 +13,13 @@ export class ComponentDimensions {
 
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function createFromRef(ref: MutableRefObject<any>) {
+export function createFromRef(ref: MutableRefObject<HTMLElement | null>): ComponentDimensions {
+  if (ref.current == null) return new ComponentDimensions(0, 0, 0, 0, 0, 0, 0);
   const {x, y, height, width, top, right, bottom} = ref.current.getBoundingClientRect();
   return new ComponentDimensions(x, y, height, width, top, right, bottom);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function getHeightFromRef(ref: MutableRefObject<any>): number {
+export function getHeightFromRef(ref: MutableRefObject<HTMLElement | null>): number {
   return ref.current?.getBoundingClientRect()?.height || 0;
 }
 

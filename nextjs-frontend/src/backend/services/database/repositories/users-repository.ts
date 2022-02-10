@@ -22,5 +22,5 @@ export class UsersRepository extends BaseRepository<IUser> {
   }
 }
 
-export const createUsersRepository = (transaction: Knex.Transaction) => new UsersRepository(transaction);
+export const createUsersRepository = (transaction: Knex.Transaction): UsersRepository => new UsersRepository(transaction);
 

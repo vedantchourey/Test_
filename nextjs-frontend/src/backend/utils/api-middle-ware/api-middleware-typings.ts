@@ -30,7 +30,7 @@ export class PerRequestContext {
     return this._transaction;
   }
 
-  async createTransaction(knexConnection: Knex) {
+  async createTransaction(knexConnection: Knex): Promise<void> {
     this._knexConnection = knexConnection;
     this._transaction = await knexConnection.transaction();
   }
@@ -44,7 +44,7 @@ export class PerRequestContext {
     this._middlewareResponse = value;
   }
 
-  async destroy() {
+  async destroy(): Promise<void> {
     if (this._transaction != null && !this._transaction.isCompleted()) {
       await this._transaction.rollback();
     }
@@ -52,7 +52,7 @@ export class PerRequestContext {
     await this._knexConnection?.destroy();
   }
 
-  setQueryParamType(paramTypes: { [p: string]: ParamConfig<unknown> }) {
+  setQueryParamType(paramTypes: { [p: string]: ParamConfig<unknown> }): void {
     this._paramTypes = paramTypes
   }
 
@@ -68,8 +68,7 @@ export class PerRequestContext {
 
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type NoobApiRouteHandler = (req: NextApiRequest, res: NextApiResponse, context: PerRequestContext) => Promise<any>;
+export type NoobApiRouteHandler = (req: NextApiRequest, res: NextApiResponse, context: PerRequestContext) => Promise<unknown>;
 
 export type NoobApiService<TRequest, TResponse> = (req: TRequest, context: PerRequestContext) => Promise<ServiceResponse<TRequest, TResponse>>;
 

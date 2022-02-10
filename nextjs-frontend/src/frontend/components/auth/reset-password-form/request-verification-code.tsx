@@ -13,7 +13,7 @@ interface Props {
 }
 
 /*TODO integrating with api */
-const ResetPasswordRequestCode = ({ onResetHandler }: Props) => {
+const ResetPasswordRequestCode = ({ onResetHandler }: Props): JSX.Element => {
 
   const appDispatch = useAppDispatch();
   const [errors, setErrors] = useState<ValidationResult<Partial<ResetPasswordErrors>>>({});
@@ -22,7 +22,7 @@ const ResetPasswordRequestCode = ({ onResetHandler }: Props) => {
     // phone: ''
   });
 
-  async function onClickResetPassword(e: FormEvent) {
+  async function onClickResetPassword(e: FormEvent): Promise<void> {
     e.preventDefault()
 
     const validationResults = await validateResetPassword(request);
@@ -36,15 +36,15 @@ const ResetPasswordRequestCode = ({ onResetHandler }: Props) => {
       } else {
         setErrors(response.errors);
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      setErrors({ email: err.errors?.apiError?.message || "Error occured" });
+    } catch (err) {
+      console.error(err);
+      setErrors({ email: "Error occurred" });
     } finally {
       appDispatch(setIsLoading(false));
     }
   }
 
-  const handleChangeValue = (e: { target: { value: string } }) => {
+  const handleChangeValue = (e: { target: { value: string } }): void => {
     const { value } = e.target;
     setRequest({ email: value })
     // if (/^[\d]+$/gi.test(value)) {

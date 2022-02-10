@@ -8,8 +8,7 @@ type RouteDefinitions = {
   postHooks?: NoobApiRouteHandler[],
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function executeAll(hooks: NoobApiRouteHandler[], req: NextApiRequest, res: NextApiResponse, context: PerRequestContext, seed: Promise<any> = Promise.resolve()) {
+function executeAll(hooks: NoobApiRouteHandler[], req: NextApiRequest, res: NextApiResponse, context: PerRequestContext, seed: Promise<unknown> = Promise.resolve()): Promise<unknown> {
   return hooks.reduce((acc, currentHandler) => {
     return acc.then(() => currentHandler(req, res, context))
   }, seed);

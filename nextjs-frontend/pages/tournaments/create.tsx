@@ -7,17 +7,17 @@ import { useRouter } from 'next/router';
 
 const requiredRoles: NoobUserRole[] = ['noob-admin'];
 
-export default function Create() {
+export default function Create(): JSX.Element {
 
   const router = useRouter();
 
-  async function onTournamentCreated(id: string) {
+  async function onTournamentCreated(id: string): Promise<void> {
     await router.push(`/tournaments/${id}/edit`);
   }
 
   return (
     <NoobPage title="Create Tournament" metaData={{ description: "Noob storm home page" }}>
-      <AuthGuard requiredRoles={requiredRoles} renderOnCheckFailure={() => <NotFound />}>
+      <AuthGuard requiredRoles={requiredRoles} renderOnCheckFailure={(): JSX.Element => <NotFound />}>
         <CreateTournamentForm onCreated={onTournamentCreated} />
       </AuthGuard>
     </NoobPage>

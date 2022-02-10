@@ -14,12 +14,12 @@ const Register: NextPage = () => {
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const appHeaderHeight = useAppSelector(getAppHeaderHeightSelector);
 
-  const onSignUpSuccess = async () => {
+  const onSignUpSuccess = async (): Promise<void> => {
     await router.push('/register-success');
   }
 
   useEffect(() => {
-    (async () => {
+    (async (): Promise<void> => {
       if (!isLoggedIn) return;
       await router.push('/');
     })();

@@ -5,7 +5,7 @@ import styles from './create-tournament-form.module.css';
 //   id: string;
 // }
 
-export default function EditTournamentForm() {
+export default function EditTournamentForm(): JSX.Element {
 
   return (
     <Container maxWidth="md" className={styles.container}>

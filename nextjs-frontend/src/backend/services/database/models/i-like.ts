@@ -1,4 +1,6 @@
 export interface ILike {
-    postId: string,
-    likedBy: string | undefined
+    id?: string;
+    postId: string;
+    likedBy: string;
+    createdAt?: Date;
 }

@@ -40,7 +40,7 @@ export class PostsRepository extends BaseRepository<IPost> {
                .del();
   }
 
-  updatePost(id: string, update: IUpdatePost) {
+  updatePost(id: string, update: IUpdatePost): Promise<number> {
     return this.entities()
                .update({
                  postImgUrl: update.postImgUrl,

@@ -52,4 +52,4 @@ export class ProfilesRepository extends BaseRepository<IProfile> {
 
 }
 
-export const createProfileRepository = (transaction: Knex.Transaction) => new ProfilesRepository(transaction);
+export const createProfileRepository = (transaction: Knex.Transaction): ProfilesRepository => new ProfilesRepository(transaction);

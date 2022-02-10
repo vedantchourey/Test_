@@ -16,18 +16,18 @@ interface Props {
   onCreated: (tournamentId: string) => void;
 }
 
-export default function CreateTournamentForm(props: Props) {
+export default function CreateTournamentForm(props: Props): JSX.Element {
   const {onCreated} = props;
   const [errors, setErrors] = useState<ValidationResult<CreateOrEditTournamentRequest>>({});
   const [request, setRequest] = useState<Partial<CreateOrEditTournamentRequest>>({tournamentName: '', isTeamParticipating: false, scheduleDate: daysFromToday(7)});
   const appDispatch = useAppDispatch();
   const allGames = useAppSelector(allGamesSelector);
 
-  const onChangeHandler = (value: Partial<CreateOrEditTournamentRequest>) => {
+  const onChangeHandler = (value: Partial<CreateOrEditTournamentRequest>): void => {
     setRequest(value);
   };
 
-  async function onClickCreateTournament() {
+  async function onClickCreateTournament(): Promise<void> {
     const newErrors = validateTournament(request, allGames);
     setErrors(newErrors);
     if (isThereAnyError(newErrors)) return;

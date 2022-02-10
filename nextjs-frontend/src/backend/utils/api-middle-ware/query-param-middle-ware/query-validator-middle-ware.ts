@@ -24,13 +24,13 @@ export const createQueryParamsMiddleWare = (opts: Opts): NoobApiRouteHandler => 
       if (validationResult != null) errors[expectedKey] = validationResult;
     })
     if (isThereAnyError(errors)) {
-      console.log(convertToJoinedMessage(errors));
+      console.warn(convertToJoinedMessage(errors));
       context.middlewareResponse = {status: 404, data: {message: 'not found'}}
       return;
     }
     const complexValidationError = opts.validate == null ? null : await opts.validate(context.param, context);
     if (complexValidationError != null) {
-      console.log(complexValidationError);
+      console.warn(complexValidationError);
       context.middlewareResponse = {status: 404, data: {message: 'not found'}}
       return;
     }

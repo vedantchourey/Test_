@@ -20,7 +20,7 @@ interface Props {
 }
 
 
-export default function PlatformDropDown(props: Props) {
+export default function PlatformDropDown(props: Props): JSX.Element {
   const {value, onChange, autoCompleteClassName, inputClassName, error, helperText, label, placeholder, disabled, allowedPlatformIds} = props;
   const appDispatch = useAppDispatch();
   const platforms = useAppSelector(getAllPlatformsSelector);
@@ -39,23 +39,23 @@ export default function PlatformDropDown(props: Props) {
     setSelectedPlatform(matchingPlatform || null);
   }, [platforms, selectedPlatform?.id, value]);
 
-  const onInputChange = (event: unknown, newValue: IPlatformResponse | null) => {
+  const onInputChange = (event: unknown, newValue: IPlatformResponse | null): void => {
     setSelectedPlatform(newValue)
     onChange?.(newValue?.id, newValue);
   };
 
-  const optionDisabled = (option: IPlatformResponse) => allowedPlatformIds.indexOf(option.id) === -1;
+  const optionDisabled = (option: IPlatformResponse): boolean => allowedPlatformIds.indexOf(option.id) === -1;
   return (
     <Autocomplete disablePortal
       className={autoCompleteClassName}
       options={platforms}
       value={selectedPlatform}
-      getOptionLabel={(x) => x.displayName}
+      getOptionLabel={(x): string => x.displayName}
       getOptionDisabled={optionDisabled}
       onChange={onInputChange}
       disabled={disabled}
-      isOptionEqualToValue={(option: IPlatformResponse, value1: IPlatformResponse) => option.id === value1.id}
-      renderInput={(params) => <TextField {...params}
+      isOptionEqualToValue={(option: IPlatformResponse, value1: IPlatformResponse): boolean => option.id === value1.id}
+      renderInput={(params): JSX.Element => <TextField {...params}
         label={label}
         variant="filled"
         className={inputClassName}

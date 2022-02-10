@@ -13,7 +13,7 @@ const MessageContainer = ({
   icon,
   children,
   style = {}
-}: Props) => {
+}: Props): JSX.Element => {
   const theme = useTheme();
   return (
     <Container maxWidth="md" style={{ backgroundColor: theme.palette.background.paper, display: "flex", alignItems: "center", gap: "10px", ...style }}>

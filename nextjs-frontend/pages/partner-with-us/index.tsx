@@ -5,11 +5,11 @@ import { useRouter } from "next/router";
 import { Fragment } from "react";
 import NoobPage from "../../src/frontend/components/page/noob-page";
 
-export default function PartnerWithUs() {
+export default function PartnerWithUs():JSX.Element {
 
   const router = useRouter()
 
-  const onRegistrationSuccess = async () => {
+  const onRegistrationSuccess = async (): Promise<void> => {
     await router.push('/register-success');
   }
 

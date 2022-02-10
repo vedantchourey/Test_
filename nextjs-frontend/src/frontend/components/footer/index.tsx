@@ -5,7 +5,7 @@ import { deviceTypes } from '../../redux-store/layout/device-types';
 import NoobDesktopFooter from './noob-desktop-footer';
 import NoobMobileFooter from './noob-mobile-footer';
 
-export default function NoobFooter() {
+export default function NoobFooter(): JSX.Element {
   const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
   return (
     <nav>

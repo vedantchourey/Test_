@@ -5,7 +5,7 @@ import { isDeviceTypeSelector } from '../../redux-store/layout/layout-selectors'
 import { deviceTypes } from '../../redux-store/layout/device-types';
 import NoobMobileHeader from './noob-mobile-header';
 
-export default function NoobHeader() {
+export default function NoobHeader(): JSX.Element {
   const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
   return (
     <nav>

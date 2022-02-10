@@ -2,9 +2,9 @@ import Document, { Head, Html, Main, NextScript } from 'next/document'
 import createEmotionCache from '../src/frontend/utils/emoticon-cache';
 import createEmotionServer from '@emotion/server/create-instance';
 
-class MyDocument extends Document {
+class NoobDocument extends Document {
 
-  render() {
+  render(): JSX.Element {
     return (
       <Html>
         <Head>
@@ -29,7 +29,8 @@ class MyDocument extends Document {
 // https://github.com/mui-org/material-ui/tree/ce5332fbcd11308be7f898511a3da5c7f2726e6b/examples/nextjs-with-typescript
 // `getInitialProps` belongs to `_document` (instead of `_app`),
 // it's compatible with static-site generation (SSG).
-MyDocument.getInitialProps = async (ctx) => {
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+NoobDocument.getInitialProps = async (ctx) => {
   // Resolution order
   //
   // On the server:
@@ -59,14 +60,16 @@ MyDocument.getInitialProps = async (ctx) => {
   const cache = createEmotionCache();
   const { extractCriticalToChunks } = createEmotionServer(cache);
 
-  ctx.renderPage = () =>
-    originalRenderPage({
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  ctx.renderPage = () => {
+    return originalRenderPage({
       // eslint-disable-next-line
       enhanceApp: (App: any) =>
-        function EnhanceApp(props) {
+        function EnhanceApp(props): JSX.Element {
           return <App emotionCache={cache} {...props} />;
         },
     });
+  };
 
   const initialProps = await Document.getInitialProps(ctx);
   // This is important. It prevents emotion to render invalid HTML.
@@ -88,4 +91,4 @@ MyDocument.getInitialProps = async (ctx) => {
   };
 };
 
-export default MyDocument
+export default NoobDocument

@@ -18,7 +18,7 @@ export class CountryRepository extends BaseRepository<ICountry> {
   }
 }
 
-export const createCountryRepository = (transaction: Knex.Transaction) => new CountryRepository(transaction);
+export const createCountryRepository = (transaction: Knex.Transaction): CountryRepository => new CountryRepository(transaction);
 
 
 

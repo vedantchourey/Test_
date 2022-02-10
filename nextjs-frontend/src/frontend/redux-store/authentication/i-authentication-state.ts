@@ -1,10 +1,12 @@
 import { DataFetchStatus } from '../../../models/noob-types';
 import { IProfileResponse } from '../../service-clients/messages/i-profile';
 
+export type AuthCheckStatus = 'idle' | 'loading' | 'success';
+
 export interface IAuthenticationState {
   isAuthenticated: boolean;
   role: string | undefined;
-  checkStatus: 'idle' | 'loading' | 'success';
+  checkStatus: AuthCheckStatus;
   isUserRequestingLogin: boolean;
   profileFetchStatus: DataFetchStatus;
   userProfile: IProfileResponse | undefined;

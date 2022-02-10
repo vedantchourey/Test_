@@ -13,7 +13,7 @@ interface Props {
   onResetHandler: () => void,
 }
 
-const SetNewPassword = ({ onResetHandler }: Props) => {
+const SetNewPassword = ({ onResetHandler }: Props): JSX.Element => {
 
   const router = useRouter()
   const appDispatch = useAppDispatch();
@@ -24,7 +24,7 @@ const SetNewPassword = ({ onResetHandler }: Props) => {
     token: ''
   });
 
-  async function onClickResetPassword() {
+  async function onClickResetPassword(): Promise<void> {
     const validationResults = await validateNewPasswordInputs(request);
     setErrors(validationResults);
     if (isThereAnyError(validationResults)) return;
@@ -36,9 +36,9 @@ const SetNewPassword = ({ onResetHandler }: Props) => {
       } else {
         setErrors(response.errors);
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      setErrors({ password: err.errors?.apiError?.message || "Error occured" });
+    } catch (err) {
+      console.error(err);
+      setErrors({ password: 'Error occurred' });
     } finally {
       appDispatch(setIsLoading(false));
     }
@@ -75,7 +75,7 @@ const SetNewPassword = ({ onResetHandler }: Props) => {
           value={request.password}
           error={propsHasError(errors, 'password')}
           helperText={getErrorForProp(errors, 'password')}
-          onChange={(event) => setRequest({ ...request, password: event.target.value })}
+          onChange={(event): void => setRequest({ ...request, password: event.target.value })}
           fullWidth
           InputProps={{ disableUnderline: true }}
           inputProps={{
@@ -98,7 +98,7 @@ const SetNewPassword = ({ onResetHandler }: Props) => {
           value={request.confirm_password}
           error={propsHasError(errors, 'confirm_password')}
           helperText={getErrorForProp(errors, 'confirm_password')}
-          onChange={(event) => setRequest({ ...request, confirm_password: event.target.value })}
+          onChange={(event): void => setRequest({ ...request, confirm_password: event.target.value })}
           fullWidth
           InputProps={{ disableUnderline: true }}
           inputProps={{

@@ -15,7 +15,7 @@ interface IPageProps {
     } | null
 }
 
-export default function TermsOfServicePage(props: IPageProps) {
+export default function TermsOfServicePage(props: IPageProps): JSX.Element {
 
   const fallback_text = 'Terms and Conditions not available';
   const content = props.pageContent?.attributes?.content || fallback_text;

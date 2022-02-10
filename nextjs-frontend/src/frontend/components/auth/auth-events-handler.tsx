@@ -14,7 +14,7 @@ import { setIsLoading } from '../../redux-store/screen-animations/screen-animati
 import { downloadImage } from '../../service-clients/image-service-client';
 import Router from 'next/router';
 
-export default function AuthEventsHandler() {
+export default function AuthEventsHandler(): JSX.Element | null {
   const status = useAppSelector(authCheckStatusSelector);
   const appDispatch = useAppDispatch();
   const profileFetchStatus = useAppSelector(userProfileFetchStatusSelector);
@@ -23,7 +23,7 @@ export default function AuthEventsHandler() {
   const forceFetchAvatarBackground = useAppSelector(forceFetchAvatarBackgroundImageBlobSelector);
 
   useEffect(() => {
-    (async () => {
+    (async (): Promise<void> => {
       if (status !== 'idle') return;
       try {
         appDispatch(setIsLoading(true));
@@ -31,7 +31,7 @@ export default function AuthEventsHandler() {
         const session = await refreshSession();
         if (session.error != null) {
           appDispatch(setCheckLoginStatus('success'));
-          appDispatch(setIsLoggedIn({ isLoggedIn: false, username: undefined }));
+          appDispatch(setIsLoggedIn({isLoggedIn: false, username: undefined}));
           appDispatch(setIsLoading(false))
         }
       } catch (e) {
@@ -50,11 +50,11 @@ export default function AuthEventsHandler() {
     const subscription = frontendSupabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN') {
         appDispatch(setIsLoading(true));
-        appDispatch(setIsLoggedIn({ isLoggedIn: session?.user != null, username: session?.user?.user_metadata?.username }));
+        appDispatch(setIsLoggedIn({isLoggedIn: session?.user != null, username: session?.user?.user_metadata?.username}));
         appDispatch(fetchUserProfileThunk());
         appDispatch(setCheckLoginStatus('success'));
       } else if (event === 'SIGNED_OUT') {
-        appDispatch(setIsLoggedIn({ isLoggedIn: false, username: undefined }));
+        appDispatch(setIsLoggedIn({isLoggedIn: false, username: undefined}));
         appDispatch(clearUserProfile());
         appDispatch(setAvatarBlob(undefined));
         appDispatch(setAvatarBackgroundBlob(undefined));
@@ -63,17 +63,17 @@ export default function AuthEventsHandler() {
         const fullPath = Router.asPath;
         const urlSearchParams = new URLSearchParams(fullPath);
         const searchQuery = Object.fromEntries(urlSearchParams.entries());
-        appDispatch(setIsLoggedIn({ isLoggedIn: session?.user != null, username: session?.user?.user_metadata?.username }));
+        appDispatch(setIsLoggedIn({isLoggedIn: session?.user != null, username: session?.user?.user_metadata?.username}));
         appDispatch(fetchUserProfileThunk());
         appDispatch(setCheckLoginStatus('success'));
         Router.push(`/reset-password?token=${searchQuery['/#access_token']}`)
       }
     });
-    return () => subscription.data?.unsubscribe()
+    return (): void => subscription.data?.unsubscribe()
   }, [appDispatch])
 
   useEffect(() => {
-    (async () => {
+    (async (): Promise<void> => {
       if (userProfile?.avatarUrl == null) return;
       const usersAvatar = await downloadImage('resources', userProfile.avatarUrl, true);
       if (usersAvatar.data == null) return;
@@ -84,7 +84,7 @@ export default function AuthEventsHandler() {
 
 
   useEffect(() => {
-    (async () => {
+    (async (): Promise<void> => {
       if (userProfile?.profileBackgroundImageUrl == null) return;
       const usersBackground = await downloadImage('resources', userProfile.profileBackgroundImageUrl, true);
       if (usersBackground.data == null) return;

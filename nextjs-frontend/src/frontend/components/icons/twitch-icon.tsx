@@ -1,7 +1,7 @@
 import { SvgIcon } from '@mui/material';
 import * as React from 'react';
 
-export default function TwitchIcon() {
+export default function TwitchIcon(): JSX.Element {
   return (
     <SvgIcon>
       <path

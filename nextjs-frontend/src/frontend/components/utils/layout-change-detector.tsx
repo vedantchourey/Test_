@@ -3,14 +3,14 @@ import debounce from 'lodash/debounce';
 import { useAppDispatch } from '../../redux-store/redux-store';
 import { updateScreenDimensions } from '../../redux-store/layout/layout-slice';
 
-export default function LayoutChangeDetector() {
+export default function LayoutChangeDetector(): JSX.Element | null {
   const appDispatch = useAppDispatch();
 
   const debounceCallback = useCallback(debounce(() => {
     appDispatch(updateScreenDimensions());
   }, 300), []);
 
-  const handleWindowSizeChange = () => {
+  const handleWindowSizeChange = (): void => {
     debounceCallback();
   };
 

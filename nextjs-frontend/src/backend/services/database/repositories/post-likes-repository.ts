@@ -7,9 +7,18 @@ export class PostLikesRepository extends BaseRepository<ILike> {
     super(transaction, 'post_likes');
   }
 
-  createLike(like: ILike): Promise<ILike> {
+  async createLike(like: ILike): Promise<string> {
+    const ids = await this.entities()
+                          .insert(like)
+                          .returning('id');
+    return ids[0] as string;
+  }
+
+  getById(id: string): Promise<ILike | undefined> {
     return this.entities()
-               .insert(like);
+               .select('*')
+               .where({id: id})
+               .first();
   }
 
   deleteLike(like: ILike): Promise<number> {

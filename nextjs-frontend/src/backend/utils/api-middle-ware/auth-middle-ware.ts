@@ -11,11 +11,11 @@ type Opts = {
   allowAnonymous: boolean;
 }
 
-function setResponse(message: string, context: PerRequestContext) {
+function setResponse(message: string, context: PerRequestContext): void {
   context.middlewareResponse = {status: 401, data: {message: 'Unauthorised'}}
 }
 
-async function isUserAuthorized(user: User, allowedRoles: NoobUserRole[], context: PerRequestContext) {
+async function isUserAuthorized(user: User, allowedRoles: NoobUserRole[], context: PerRequestContext): Promise<boolean> {
   if (allowedRoles.length === 0) return true;
   const userRoleRepository = new UserRoleRepository(context.transaction as Knex.Transaction);
   const roles = await userRoleRepository.getRolesByUserId(user.id);

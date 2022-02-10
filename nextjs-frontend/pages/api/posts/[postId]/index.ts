@@ -20,6 +20,7 @@ const basicQueryParams = createQueryParamsMiddleWare({
     const postId = params['postId'];
     const post = await repository.getPostById(postId as string);
     if (post == null) return `Could not find post with postId: ${postId}`;
+    if (post.postedBy !== context.user?.id) return 'You are not allowed to update post';
   }
 });
 

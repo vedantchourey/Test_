@@ -21,7 +21,7 @@ interface Props {
   chats: Chat[];
 }
 
-const NoobTicketCreatePage = (props: Props) => {
+const NoobTicketCreatePage = (props: Props): JSX.Element => {
   const { ticketNumber, ticketSubject, chats } = props;
 
   return (
