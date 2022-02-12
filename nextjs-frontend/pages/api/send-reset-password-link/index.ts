@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { createNextJsRouteHandler } from '../../../src/backend/utils/api-middle-ware/api-handler-factory';
-import resetPassword from '../../../src/backend/services/auth-service/reset-password/reset-password';
+import resetPassword from "../../../src/backend/services/auth-service/reset-password/reset-password";
 import { ServiceResponse } from '../../../src/backend/services/common/contracts/service-response';
 import { ResetPasswordRequest, ResetPasswordResponse } from '../../../src/backend/services/auth-service/reset-password/i-reset-password';
 import { PerRequestContext } from '../../../src/backend/utils/api-middle-ware/api-middleware-typings';
