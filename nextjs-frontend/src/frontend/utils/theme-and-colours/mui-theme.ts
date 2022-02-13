@@ -16,7 +16,7 @@ const noobTheme = createTheme({
     },
     background: {
       default: '#08001C',
-      paper: '#160C30'
+      paper: '#100626'
     },
     text: {
       primary: '#ffffff',

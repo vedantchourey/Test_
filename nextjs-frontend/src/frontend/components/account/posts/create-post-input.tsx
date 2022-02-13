@@ -12,8 +12,8 @@ import { v4 } from 'uuid';
 import { uploadImage } from '../../../service-clients/image-service-client';
 
 interface mediaInterface {
-    contentUrl: string,
-    contentType: 'image' | 'video'
+  contentUrl: string,
+  contentType: 'image' | 'video'
 }
 
 export default function CreatePostInput() {
@@ -36,9 +36,9 @@ export default function CreatePostInput() {
   function generateFileUrl(prefix: string, file: File) {
     if (userProfile == null) throw new Error('user cannot be null');
     const fileExt = file.name
-            .split('.')
-            .pop()
-            ?.toLowerCase();
+      .split('.')
+      .pop()
+      ?.toLowerCase();
     return `resources/${prefix}${userProfile.id}${v4()}.${fileExt}`;
   }
 
@@ -141,10 +141,10 @@ export default function CreatePostInput() {
   }
 
   return (
-    <Card sx={{ my: 2 }}>
+    <Card sx={{ my: 2, borderRadius: 3, py: 3 }}>
       <CardContent sx={{
         display: "flex",
-        gap: "10px",
+        gap: "20px",
         padding: "20px"
       }}>
         <Avatar alt={"user avatar"} src={userProfile?.avatarUrl} />
@@ -186,33 +186,34 @@ export default function CreatePostInput() {
               const fileType = file.type.split("/")[0]
               setIsUploading(true)
               UploadMedia(file)
-                                .then(({ data: { Key } }) => {
-                                  console.log("this is key", Key)
-                                  if (fileType === 'video') {
-                                    createVideoThumb(file)
-                                  }
+                .then(({ data: { Key } }) => {
+                  console.log("this is key", Key)
+                  if (fileType === 'video') {
+                    createVideoThumb(file)
+                  }
 
-                                  if (fileType === 'image') {
-                                    createImageThumb(file)
-                                  }
+                  if (fileType === 'image') {
+                    createImageThumb(file)
+                  }
 
-                                  setRequest((pre) => {
-                                    return {
-                                      ...pre,
-                                      postImgUrl: Key
-                                    }
-                                  })
-                                })
-                                .catch((error) => {
-                                  alert(error)
-                                })
-.finally(() => {
-  setIsUploading(false)
-})
+                  setRequest((pre) => {
+                    return {
+                      ...pre,
+                      postImgUrl: Key
+                    }
+                  })
+                })
+                .catch((error) => {
+                  alert(error)
+                })
+                .finally(() => {
+                  setIsUploading(false)
+                })
             }
           }
         }} />
       </CardContent>
+
       <CardContent>
 
         {isUploading && (
@@ -220,43 +221,37 @@ export default function CreatePostInput() {
             <CircularProgress color="inherit" />
           </Box>
         )}
-
-        <Paper elevation={0} sx={{ bgcolor: 'primary' }}>
-          <Grid container alignItems={'center'} justifyContent='center' spacing={2}>
-            {media.map(({ contentType, contentUrl }, i) => (
-              <Grid item style={{ position: 'relative' }} key={i}>
-
-                {contentType === 'video' && (
-                  <video src={contentUrl} autoPlay muted className={styles.previewImageStyle} controls={false} />
-                )}
-
-                {contentType === 'image' && (
-                  <img
-                    src={contentUrl}
-                    alt={'media'}
-                    className={styles.previewImageStyle}
-                  />
-                )}
-
-                <Tooltip title="Remove">
-                  <IconButton color='default' size='small' className={styles.previewImageCancel} onClick={() => handleRemovePreviewImage(i)}>
-                    <CloseIcon />
-                  </IconButton>
-                </Tooltip>
-
-              </Grid>
-            ))}
-          </Grid>
-        </Paper>
-
       </CardContent>
+
       <CardActions sx={{ display: "flex", justifyContent: "end", gap: '15px', px: 3 }} disableSpacing>
-        <IconButton color='primary' sx={{ bgcolor: 'primary.dark' }} size='small' onClick={() => imageInputRef.current.click()}>
-          <ImageIcon />
-        </IconButton>
-        <Button size="small" variant={"contained"} style={{
-          borderRadius: 99999
-        }} onClick={onClickCreatePost}>Share</Button>
+        {media.map(({ contentType, contentUrl }, i) => (
+          <Grid item style={{ position: 'relative' }} key={i}>
+            {contentType === 'image' ? (
+              <img
+                src={contentUrl}
+                alt={'media'}
+                className={styles.previewImageStyle}
+              />
+            ) : (
+              <div></div>
+            )}
+            <Tooltip title="Remove">
+              <IconButton color='default' size='small' className={styles.previewImageCancel} onClick={() => handleRemovePreviewImage(i)}>
+                <CloseIcon sx={{ fontSize: '10px' }} />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+        ))}
+
+        <div>
+          <IconButton color='primary' sx={{ bgcolor: 'primary.dark', mr: 2 }} size='small' onClick={() => imageInputRef.current.click()}>
+            <ImageIcon />
+          </IconButton>
+          <Button size="small" variant={"contained"} style={{
+            borderRadius: 99999
+          }} onClick={onClickCreatePost}>Share</Button>
+        </div>
+
       </CardActions>
     </Card>
   )

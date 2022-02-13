@@ -1,11 +1,15 @@
 /* eslint-disable indent */
 import React, { useState } from 'react'
-import { CardActions, IconButton, Card, CardMedia, Typography, Box, Avatar, Backdrop, Modal, Fade, List, ListItem, ListItemButton, ListItemText, Button, Grid } from '@mui/material'
+import { CardActions, IconButton, Card, CardMedia, Typography, Box, Avatar, Backdrop, Modal, Fade, List, ListItem, ListItemButton, ListItemText, Button, Grid, Divider } from '@mui/material'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import styles from './post.module.css'
+import styles from './post.module.css';
+
+const PostIconStyles = {
+    color: 'rgba(255,255,255,0.4)'
+}
 
 const PostCard = () => {
     const [values, setValues] = useState({
@@ -39,8 +43,8 @@ const PostCard = () => {
     }
 
     return (
-        <Grid md={8}>
-            <Card className={styles.postCard} sx={{ my: 3 }}>
+        <Grid item md={8}>
+            <Card className={styles.postCard} sx={{ my: 3 }} elevation={0}>
                 <Box sx={{
                     display: 'inline-flex',
                     gap: 2,
@@ -53,20 +57,19 @@ const PostCard = () => {
                     />
                     <Box>
                         <Box className={styles.flexRow} sx={{ justifyContent: "space-between", width: '100%' }}>
-                            <Box className={styles.flexRow} sx={{ gap: 1 }}>
-                                <Typography variant={'h3'}>
-                                    {values.user.name}
-                                </Typography>
-                                <Typography variant="caption" color='text.secondary'>
+                            <Typography variant={'h3'} fontSize={15}>
+                                {values.user.name}
+                                <Typography variant="caption" color='text.secondary' sx={{ ml: 1 }}>
                                     {new Date(values.created_at).toDateString()}
                                 </Typography>
-                            </Box>
-                            <IconButton onClick={handleOpenMenu}>
+                            </Typography>
+
+                            <IconButton onClick={handleOpenMenu} size={'small'}>
                                 <MoreVertIcon />
                             </IconButton>
                         </Box>
 
-                        <Typography align='left' paragraph>
+                        <Typography align='left' fontSize={14} fontWeight={100} paragraph>
                             Last week saw the relaunch of the Trials of Osiris in Destiny Season of the Lost, which has been drastically improved by Bungie recent changes to how it works.
                         </Typography>
                     </Box>
@@ -82,17 +85,17 @@ const PostCard = () => {
 
                 <CardActions sx={{ gap: 3 }}>
                     <Box className={styles.flexRow}>
-                        <Button variant='text' color={values.liked ? 'primary' : 'inherit'} startIcon={<FavoriteBorderIcon />} onClick={handleToggleLike}>
+                        <Button variant='text' startIcon={<FavoriteBorderIcon />} onClick={handleToggleLike} sx={PostIconStyles}>
                             {values.likesCount}
                         </Button>
                     </Box>
                     <Box className={styles.flexRow}>
-                        <Button variant='text' color='inherit' startIcon={<ChatBubbleOutlineIcon />}>
+                        <Button variant='text' color='inherit' startIcon={<ChatBubbleOutlineIcon />} sx={PostIconStyles}>
                             {values.commentsCount}
                         </Button>
                     </Box>
                     <Box className={styles.flexRow}>
-                        <IconButton size="small">
+                        <IconButton size="small" sx={PostIconStyles}>
                             <ShareIcon />
                         </IconButton>
                     </Box>
@@ -132,6 +135,9 @@ const PostCard = () => {
                     </Fade>
                 </Modal>
             </Card>
+            <Box my={4}>
+                <Divider light />
+            </Box>
         </Grid>
     )
 }
