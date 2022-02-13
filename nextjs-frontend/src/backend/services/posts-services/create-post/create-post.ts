@@ -9,10 +9,10 @@ interface ICreatePostResponse {
 }
 
 export async function createPost(req: ICreatePostRequest, context: PerRequestContext) {
-    const errors = await validatePost(req, context);
-    if (isThereAnyError(errors)) return { errors: errors }
-    const repository = new PostsRepository(context.transaction!);
-    await repository.createPost({ ...req, postedBy: context.user?.id! });
-    const res: ICreatePostResponse = { message: 'Post created' };
-    return { data: res }
+  const errors = await validatePost(req, context);
+  if (isThereAnyError(errors)) return { errors: errors }
+  const repository = new PostsRepository(context.transaction!);
+  await repository.createPost({ ...req, postedBy: context.user?.id! });
+  const res: ICreatePostResponse = { message: 'Post created' };
+  return { data: res }
 }

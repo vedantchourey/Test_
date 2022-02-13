@@ -10,21 +10,21 @@ interface Props {
 }
 
 const MessageContainer = ({
-    icon,
-    children,
-    style = {}
+  icon,
+  children,
+  style = {}
 }: Props) => {
-    const theme = useTheme();
-    return (
-        <Container maxWidth="md" style={{ backgroundColor: theme.palette.background.paper, display: "flex", alignItems: "center", gap: "10px", ...style }}>
-            {icon && typeof icon === 'boolean' ? (
-                <Icon className={commonStyles.whiteText}>
-                    <ErrorOutlineIcon />
-                </Icon>
-            ) : icon}
-            {children}
-        </Container>
-    )
+  const theme = useTheme();
+  return (
+    <Container maxWidth="md" style={{ backgroundColor: theme.palette.background.paper, display: "flex", alignItems: "center", gap: "10px", ...style }}>
+      {icon && typeof icon === 'boolean' ? (
+        <Icon className={commonStyles.whiteText}>
+          <ErrorOutlineIcon />
+        </Icon>
+      ) : icon}
+      {children}
+    </Container>
+  )
 }
 
 export default MessageContainer

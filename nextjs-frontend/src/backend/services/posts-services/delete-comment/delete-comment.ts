@@ -6,15 +6,15 @@ import { PostCommentsRepository } from '../../database/repositories/post-comment
 
 
 const deleteComment = async (req: IDeleteCommentRequest, context: PerRequestContext) => {
-    const errors = await ValidateDeleteComment(req, context);
-    if (isThereAnyError(errors)) return { errors: errors };
-    const repository = new PostCommentsRepository(context.transaction!);
-    const data = await repository.deleteComment(req.commentId, context.user?.id! as string);
-    console.log(data)
-    const res: IDeleteResponse = { message: 'Comment deleted' };
-    return { data: res };
+  const errors = await ValidateDeleteComment(req, context);
+  if (isThereAnyError(errors)) return { errors: errors };
+  const repository = new PostCommentsRepository(context.transaction!);
+  const data = await repository.deleteComment(req.commentId, context.user?.id! as string);
+  console.log(data)
+  const res: IDeleteResponse = { message: 'Comment deleted' };
+  return { data: res };
 }
 
 export {
-    deleteComment
+  deleteComment
 }

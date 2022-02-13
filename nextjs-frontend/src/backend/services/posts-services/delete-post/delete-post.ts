@@ -6,14 +6,14 @@ import { PostsRepository } from '../../database/repositories/posts-repository';
 
 
 const deletePost = async (req: IDeletePostRequest, context: PerRequestContext) => {
-    const errors = await ValidateDeletePost(req, context);
-    if (isThereAnyError(errors)) return { errors: errors };
-    const repository = new PostsRepository(context.transaction!);
-    await repository.deletePost(req.postId as string);
-    const res: IDeletePostResponse = { message: 'Post deleted' };
-    return { data: res };
+  const errors = await ValidateDeletePost(req, context);
+  if (isThereAnyError(errors)) return { errors: errors };
+  const repository = new PostsRepository(context.transaction!);
+  await repository.deletePost(req.postId as string);
+  const res: IDeletePostResponse = { message: 'Post deleted' };
+  return { data: res };
 }
 
 export {
-    deletePost
+  deletePost
 }

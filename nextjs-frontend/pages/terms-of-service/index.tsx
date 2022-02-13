@@ -17,55 +17,55 @@ interface IPageProps {
 
 export default function TermsOfServicePage(props: IPageProps) {
 
-    const fallback_text = 'Terms and Conditions not available';
-    const content = props.pageContent?.attributes?.content || fallback_text;
+  const fallback_text = 'Terms and Conditions not available';
+  const content = props.pageContent?.attributes?.content || fallback_text;
 
-    return (
-        <NoobPage
-            title="Terms of service"
-            metaData={{
-                description: "Noob Storm terms of service page"
-            }}
-        >
-            <div className={commonStyles.container}>
+  return (
+    <NoobPage
+      title="Terms of service"
+      metaData={{
+        description: "Noob Storm terms of service page"
+      }}
+    >
+      <div className={commonStyles.container}>
 
-                <Heading divider heading={"TERMS OF SERVICE"} />
+        <Heading divider heading={"TERMS OF SERVICE"} />
 
-                <Typography className={commonStyles.whiteText} marginBottom={2} style={{ whiteSpace: 'pre-line' }}>
-                    {content}
-                </Typography>
-            </div>
-        </NoobPage>
-    )
+        <Typography className={commonStyles.whiteText} marginBottom={2} style={{ whiteSpace: 'pre-line' }}>
+          {content}
+        </Typography>
+      </div>
+    </NoobPage>
+  )
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-    const {
-        cmsApiEndpoint,
-        cmsApiToken
-    } = backendConfig.client;
+  const {
+    cmsApiEndpoint,
+    cmsApiToken
+  } = backendConfig.client;
 
-    try {
-        const endpoint = cmsApiEndpoint + '/api/terms-and-condition';
-        const res = await axios.get(endpoint, {
-            headers: {
-                'Authorization': 'Bearer ' + cmsApiToken
-            }
-        });
+  try {
+    const endpoint = cmsApiEndpoint + '/api/terms-and-condition';
+    const res = await axios.get(endpoint, {
+      headers: {
+        'Authorization': 'Bearer ' + cmsApiToken
+      }
+    });
 
-        return {
-            props: {
-                pageContent: res.data.data
-            }
-        }
-
+    return {
+      props: {
+        pageContent: res.data.data
+      }
     }
-    catch (err) {
-        // console.log(err);
-        return {
-            props: {
-                pageContent: null
-            }
-        }
+
+  }
+  catch (err) {
+    // console.log(err);
+    return {
+      props: {
+        pageContent: null
+      }
     }
+  }
 }

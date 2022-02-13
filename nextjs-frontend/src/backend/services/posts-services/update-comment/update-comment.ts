@@ -6,18 +6,18 @@ import { isThereAnyError } from '../../../../common/utils/validation/validator';
 import { sanitizeObject } from '../../../../common/utils/utils';
 
 export async function updateComment(comment: IUpdateCommentRequest, context: PerRequestContext) {
-    const errors = await validateUpdateCommentRequest(comment, context);
-    if (isThereAnyError(errors)) return { errors }
-    const repository = new PostCommentsRepository(context.transaction!);
+  const errors = await validateUpdateCommentRequest(comment, context);
+  if (isThereAnyError(errors)) return { errors }
+  const repository = new PostCommentsRepository(context.transaction!);
 
-    // Remove unwanted fields if exists
-    const update = sanitizeObject(comment, ['commentBy', 'commentId', 'postId']);
+  // Remove unwanted fields if exists
+  const update = sanitizeObject(comment, ['commentBy', 'commentId', 'postId']);
 
-    await repository.updateComment(comment.commentId as string, { ...update, updatedAt: new Date().toISOString() });
+  await repository.updateComment(comment.commentId as string, { ...update, updatedAt: new Date().toISOString() });
 
-    return {
-        data: {
-            message: 'Comment updated'
-        }
+  return {
+    data: {
+      message: 'Comment updated'
     }
+  }
 }

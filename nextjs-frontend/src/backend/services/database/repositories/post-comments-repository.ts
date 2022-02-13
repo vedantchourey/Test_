@@ -9,30 +9,34 @@ interface IUpdateComment {
 }
 
 export class PostCommentsRepository extends BaseRepository<IPostComments>{
-    constructor(transaction: Knex.Transaction) {
-        super(transaction, 'post_comments');
-    }
+  constructor(transaction: Knex.Transaction) {
+    super(transaction, 'post_comments');
+  }
 
-    async createComment(comment: IPostComments) {
-        return await this.entities().insert(comment);
-    }
+  async createComment(comment: IPostComments) {
+    return await this.entities().insert(comment);
+  }
 
-    async getCommentById(id: string) {
-        return await this.entities().select('*').first().where('id', id)
-    }
+  async getCommentById(id: string) {
+    return await this.entities().select('*')
+.first()
+.where('id', id)
+  }
 
-    async countCommentById(id: string): Promise<number> {
-        const result = await this.entities().whereRaw("id = ?", [id])
+  async countCommentById(id: string): Promise<number> {
+    const result = await this.entities().whereRaw("id = ?", [id])
             .count('id');
-        return parseInt(result[0].count, 10);
-    }
+    return parseInt(result[0].count, 10);
+  }
 
-    async deleteComment(id: string, userId: string) {
-console.log({id, userId})
-        return await this.entities().where({ id: id, commentBy: userId }).del()
-    }
+  async deleteComment(id: string, userId: string) {
+    console.log({id, userId})
+    return await this.entities().where({ id: id, commentBy: userId })
+.del()
+  }
 
-    async updateComment(id: string, update: IUpdateComment): Promise<any> {
-        return await this.entities().where('id', id).update(update);
-    }
+  async updateComment(id: string, update: IUpdateComment): Promise<any> {
+    return await this.entities().where('id', id)
+.update(update);
+  }
 }

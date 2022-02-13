@@ -7,17 +7,17 @@ import { sanitizeObject } from '../../../../common/utils/utils';
 
 
 export async function updatePost(post: IUpdatePostRequest, context: PerRequestContext) {
-    const errors = await validateRequest(post, context);
-    if (isThereAnyError(errors)) return { errors }
-    const repository = new PostsRepository(context.transaction!);
+  const errors = await validateRequest(post, context);
+  if (isThereAnyError(errors)) return { errors }
+  const repository = new PostsRepository(context.transaction!);
 
-    const update = sanitizeObject(post, ['postId', 'postedBy']);
+  const update = sanitizeObject(post, ['postId', 'postedBy']);
 
-    await repository.updatePost(post.postId, { ...update, updatedAt: new Date().toISOString() });
+  await repository.updatePost(post.postId, { ...update, updatedAt: new Date().toISOString() });
 
-    return {
-        data: {
-            message: 'Post updated'
-        }
+  return {
+    data: {
+      message: 'Post updated'
     }
+  }
 }

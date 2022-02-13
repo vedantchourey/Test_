@@ -9,14 +9,14 @@ interface ILikePostResponse {
 }
 
 const likePost = async (req: ILikePostRequest, context: PerRequestContext) => {
-    const errors = await validateRequest(req, context);
-    if (isThereAnyError(errors)) return { errors: errors };
-    const repository = new PostLikesRepository(context.transaction!);
-    await repository.createLike({ ...req, likedBy: context.user?.id! });
-    const res: ILikePostResponse = { message: 'Post liked' };
-    return { data: res };
+  const errors = await validateRequest(req, context);
+  if (isThereAnyError(errors)) return { errors: errors };
+  const repository = new PostLikesRepository(context.transaction!);
+  await repository.createLike({ ...req, likedBy: context.user?.id! });
+  const res: ILikePostResponse = { message: 'Post liked' };
+  return { data: res };
 }
 
 export {
-    likePost
+  likePost
 }

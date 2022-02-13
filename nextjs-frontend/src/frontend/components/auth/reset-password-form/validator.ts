@@ -16,7 +16,7 @@ function validateEmail(details: Partial<ResetPasswordRequest>) {
 function validateCode(obj: Partial<NewPasswordRequest>) {
   if (isNullOrEmpty(obj.code)) return 'Is required';
   const parts = (obj.code as string).split(' ');
-  if (parts.some(x => !validator.isAlphanumeric(x))) return 'Can only contain A-Za-z0-9';
+  if (parts.some((x) => !validator.isAlphanumeric(x))) return 'Can only contain A-Za-z0-9';
 }
 
 function validatePassword(obj: Partial<NewPasswordRequest>) {

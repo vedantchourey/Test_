@@ -1,21 +1,13 @@
+/* eslint-disable indent */
 import React, { useState } from 'react'
-import { CardActions, IconButton, Card, CardMedia, Typography, Box, Avatar, Backdrop, Modal, Fade, List, ListItem, ListItemButton, ListItemText, Button } from '@mui/material'
+import { CardActions, IconButton, Card, CardMedia, Typography, Box, Avatar, Backdrop, Modal, Fade, List, ListItem, ListItemButton, ListItemText, Button, Grid } from '@mui/material'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Slider from '../../ui-components/swiper'
 import styles from './post.module.css'
 
-interface Props {
-    liked?: false;
-    likesCount?: number;
-    comment?: string;
-    commentsCount?: number;
-}
-
-const PostCard = ({ }: Props) => {
-
+const PostCard = () => {
     const [values, setValues] = useState({
         user: {
             name: 'ShaigExp',
@@ -37,7 +29,7 @@ const PostCard = ({ }: Props) => {
     const handleOpenMenu = () => setShowMenu(true)
 
     const handleToggleLike = () => {
-        setValues(pre => {
+        setValues((pre) => {
             return {
                 ...pre,
                 likesCount: pre.liked ? --pre.likesCount : ++pre.likesCount,
@@ -47,105 +39,100 @@ const PostCard = ({ }: Props) => {
     }
 
     return (
-        <Card className={styles.postCard} sx={{ my: 3 }}>
-            <Box sx={{
-                display: 'inline-flex',
-                gap: 2,
-                padding: 2
-            }}>
-                <Avatar
-                    className={styles.postAvatar}
-                    alt="Remy Sharp"
-                    src={values.user.avatarUrl}
-                />
-                <Box>
-                    <Box className={styles.flexRow} sx={{ justifyContent: "space-between", width: '100%' }}>
-                        <Box className={styles.flexRow} sx={{ gap: 1 }}>
-                            <Typography variant={'h3'}>
-                                {values.user.name}
-                            </Typography>
-                            <Typography variant="caption" color='text.secondary'>
-                                {new Date(values.created_at).toDateString()}
-                            </Typography>
+        <Grid md={8}>
+            <Card className={styles.postCard} sx={{ my: 3 }}>
+                <Box sx={{
+                    display: 'inline-flex',
+                    gap: 2,
+                    padding: 2
+                }}>
+                    <Avatar
+                        className={styles.postAvatar}
+                        alt="Remy Sharp"
+                        src={values.user.avatarUrl}
+                    />
+                    <Box>
+                        <Box className={styles.flexRow} sx={{ justifyContent: "space-between", width: '100%' }}>
+                            <Box className={styles.flexRow} sx={{ gap: 1 }}>
+                                <Typography variant={'h3'}>
+                                    {values.user.name}
+                                </Typography>
+                                <Typography variant="caption" color='text.secondary'>
+                                    {new Date(values.created_at).toDateString()}
+                                </Typography>
+                            </Box>
+                            <IconButton onClick={handleOpenMenu}>
+                                <MoreVertIcon />
+                            </IconButton>
                         </Box>
-                        <IconButton onClick={handleOpenMenu}>
-                            <MoreVertIcon />
+
+                        <Typography align='left' paragraph>
+                            Last week saw the relaunch of the Trials of Osiris in Destiny Season of the Lost, which has been drastically improved by Bungie recent changes to how it works.
+                        </Typography>
+                    </Box>
+                </Box>
+
+                <CardMedia
+                    component="img"
+                    className={styles.postImage}
+                    image={values.media.image}
+                    alt="user avatar"
+                    key={'as'}
+                />
+
+                <CardActions sx={{ gap: 3 }}>
+                    <Box className={styles.flexRow}>
+                        <Button variant='text' color={values.liked ? 'primary' : 'inherit'} startIcon={<FavoriteBorderIcon />} onClick={handleToggleLike}>
+                            {values.likesCount}
+                        </Button>
+                    </Box>
+                    <Box className={styles.flexRow}>
+                        <Button variant='text' color='inherit' startIcon={<ChatBubbleOutlineIcon />}>
+                            {values.commentsCount}
+                        </Button>
+                    </Box>
+                    <Box className={styles.flexRow}>
+                        <IconButton size="small">
+                            <ShareIcon />
                         </IconButton>
                     </Box>
+                </CardActions>
 
-                    <Typography align='left' paragraph>
-                        Last week saw the relaunch of the Trials of Osiris in Destiny 2's Season of the Lost, which has been drastically improved by Bungie's recent changes to how it works.
-                    </Typography>
-                </Box>
-            </Box>
-
-            <Slider
-                slides={[
-                    <CardMedia
-                        component="img"
-                        className={styles.postImage}
-                        image={values.media.image}
-                        alt="user avatar"
-                    />,
-                    <video className={styles.postVideo} autoPlay controls>
-                        <source src={values.media.video} />
-                        Your browser does not support the video tag.
-                    </video>
-                ]}
-            />
-
-            <CardActions sx={{ gap: 3 }}>
-                <Box className={styles.flexRow}>
-                    <Button variant='text' color={values.liked ? 'primary' : 'inherit'} startIcon={<FavoriteBorderIcon />} onClick={handleToggleLike}>
-                        {values.likesCount}
-                    </Button>
-                </Box>
-                <Box className={styles.flexRow}>
-                    <Button variant='text' color='inherit' startIcon={<ChatBubbleOutlineIcon />}>
-                        {values.commentsCount}
-                    </Button>
-                </Box>
-                <Box className={styles.flexRow}>
-                    <IconButton size="small">
-                        <ShareIcon />
-                    </IconButton>
-                </Box>
-            </CardActions>
-
-            <Modal
-                open={showMenu}
-                onClose={handleCloseMenu}
-                closeAfterTransition
-                BackdropComponent={Backdrop}
-            >
-                <Fade in={showMenu}>
-                    <List className={styles.postCardOptionsContainer}>
-                        <ListItem disablePadding>
-                            <ListItemButton>
-                                <ListItemText primaryTypographyProps={{
-                                    color: 'error.main'
-                                }} primary="Report" />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem disablePadding>
-                            <ListItemButton>
-                                <ListItemText primary="Share" />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem disablePadding>
-                            <ListItemButton>
-                                <ListItemText primary="Unfollow" />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem disablePadding>
-                            <ListItemButton onClick={handleCloseMenu}>
-                                <ListItemText primary="Hide" />
-                            </ListItemButton>
-                        </ListItem>
-                    </List>
-                </Fade>
-            </Modal>
-        </Card>
+                <Modal
+                    open={showMenu}
+                    onClose={handleCloseMenu}
+                    closeAfterTransition
+                    BackdropComponent={Backdrop}
+                >
+                    <Fade in={showMenu}>
+                        <List className={styles.postCardOptionsContainer}>
+                            <ListItem disablePadding>
+                                <ListItemButton>
+                                    <ListItemText primaryTypographyProps={{
+                                        color: 'error.main'
+                                    }} primary="Report" />
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding>
+                                <ListItemButton>
+                                    <ListItemText primary="Share" />
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding>
+                                <ListItemButton>
+                                    <ListItemText primary="Unfollow" />
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding>
+                                <ListItemButton onClick={handleCloseMenu}>
+                                    <ListItemText primary="Hide" />
+                                </ListItemButton>
+                            </ListItem>
+                        </List>
+                    </Fade>
+                </Modal>
+            </Card>
+        </Grid>
     )
 }
 

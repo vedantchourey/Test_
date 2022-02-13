@@ -6,11 +6,11 @@ import NoobDesktopFooter from './noob-desktop-footer';
 import NoobMobileFooter from './noob-mobile-footer';
 
 export default function NoobFooter() {
-    const isDesktop = useAppSelector(x => isDeviceTypeSelector(x, deviceTypes.desktop));
-    return (
-        <nav>
-            {isDesktop && <NoobDesktopFooter />}
-            {!isDesktop && <NoobMobileFooter />}
-        </nav>
-    );
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
+  return (
+    <nav>
+      {isDesktop && <NoobDesktopFooter />}
+      {!isDesktop && <NoobMobileFooter />}
+    </nav>
+  );
 }
