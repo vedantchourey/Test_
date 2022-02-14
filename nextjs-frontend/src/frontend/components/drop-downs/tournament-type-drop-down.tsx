@@ -22,7 +22,7 @@ const options: IOption[] = [
 ]
 
 
-export default function TournamentTypeDropDown(props: Props) {
+export default function TournamentTypeDropDown(props: Props):JSX.Element {
   const {value, onChange, autoCompleteClassName, inputClassName, error, helperText, label, placeholder, disabled} = props;
   const [selectedType, setSelectedType] = useState<IOption | null>(null);
 
@@ -33,7 +33,7 @@ export default function TournamentTypeDropDown(props: Props) {
   }, [selectedType?.value, value])
 
 
-  const onInputChange = (event: unknown, newValue: IOption | null) => {
+  const onInputChange = (event: unknown, newValue: IOption | null): void => {
     setSelectedType(newValue);
     onChange?.(newValue?.value);
   };
@@ -43,11 +43,11 @@ export default function TournamentTypeDropDown(props: Props) {
       className={autoCompleteClassName}
       options={options}
       value={selectedType}
-      getOptionLabel={(x) => x.display}
+      getOptionLabel={(x): string => x.display}
       onChange={onInputChange}
       disabled={disabled}
-      isOptionEqualToValue={(option: IOption, value1: IOption) => option.value === value1.value}
-      renderInput={(params) => <TextField {...params}
+      isOptionEqualToValue={(option: IOption, value1: IOption): boolean => option.value === value1.value}
+      renderInput={(params): JSX.Element => <TextField {...params}
         label={label}
         variant="filled"
         className={inputClassName}

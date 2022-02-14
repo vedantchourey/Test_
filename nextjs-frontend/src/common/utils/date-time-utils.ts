@@ -2,18 +2,18 @@ import { DateTime } from 'luxon';
 
 type TimePart = { hour: number, minute: number };
 
-export const isUTCTime = (iso: string) => {
+export const isUTCTime = (iso: string): boolean => {
   const dateTime = DateTime.fromISO(iso, {setZone: true});
   return dateTime.zoneName === 'UTC'
 }
 
-export const parseDateTime = (iso: string) => {
+export const parseDateTime = (iso: string): DateTime => {
   const dateTime = DateTime.fromISO(iso, {setZone: true});
   if (dateTime.zoneName !== 'UTC') throw new Error('Time zone is not UTC!');
   return dateTime;
 };
 
-const clearTime = (sourceDateTime: DateTime) => {
+const clearTime = (sourceDateTime: DateTime): DateTime => {
   return sourceDateTime.set({minute: 0, hour: 0, second: 0, millisecond: 0});
 };
 
@@ -36,20 +36,20 @@ export const setTime = (source: TimePart, destinationISO: string): string => {
                  .toISO();
 }
 
-export const toLocalDDMMYYYY = (sourceISO: string | undefined) => {
+export const toLocalDDMMYYYY = (sourceISO: string | undefined): string => {
   if (sourceISO == null) return '';
   return parseDateTime(sourceISO).toLocal()
                                  .toFormat('dd/LL/yyyy')
 }
 
-export const toDisplayDateTime = (sourceISO: string | undefined) => {
+export const toDisplayDateTime = (sourceISO: string | undefined): string => {
   if (sourceISO == null) return '';
   return parseDateTime(sourceISO).toLocal()
                                  .toFormat('dd/LL/yyyy - hh:mm');
 }
 
 
-export const parseToLocalJSDate = (iso: string | undefined) => {
+export const parseToLocalJSDate = (iso: string | undefined): Date | undefined => {
   if (iso == null) return undefined;
   return parseDateTime(iso).toLocal()
                            .toJSDate();
@@ -61,7 +61,7 @@ export const getTimeAsLocal = (iso: string): TimePart | undefined => {
   return {hour, minute}
 }
 
-export const toISOString = (datetime: DateTime | undefined | null) => {
+export const toISOString = (datetime: DateTime | undefined | null): string | undefined => {
   if (datetime == null) return undefined;
   return datetime.toUTC().toISO();
 }
@@ -76,9 +76,15 @@ export const isValidDateTime = (iso: string): boolean => {
 };
 
 
-export const daysFromToday = (days: number) => {
+export const daysFromToday = (days: number): string => {
   return DateTime.now()
                  .plus({day: days})
                  .toUTC()
                  .toISO();
 };
+
+export const nowAsJsDate = (): Date => {
+  return DateTime.now()
+                 .toUTC()
+                 .toJSDate();
+}

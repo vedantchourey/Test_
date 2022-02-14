@@ -27,7 +27,7 @@ export default function AuthGuard(props: Props): React.ReactElement {
   const router = useRouter();
 
   useEffect(() => {
-    (async () => {
+    (async (): Promise<void> => {
       if (authCheckStatus !== 'success') return;
       if (isLoggedIn && redirectToOnSuccess) {
         await router.push(redirectToOnSuccess);

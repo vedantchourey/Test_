@@ -8,8 +8,7 @@ type RouteDefinitions = {
   postHooks?: NoobApiRouteHandler[],
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function executeAll(hooks: NoobApiRouteHandler[], req: NextApiRequest, res: NextApiResponse, context: PerRequestContext, seed: Promise<any> = Promise.resolve()) {
+function executeAll(hooks: NoobApiRouteHandler[], req: NextApiRequest, res: NextApiResponse, context: PerRequestContext, seed: Promise<unknown> = Promise.resolve()): Promise<unknown> {
   return hooks.reduce((acc, currentHandler) => {
     return acc.then(() => currentHandler(req, res, context))
   }, seed);
@@ -20,7 +19,7 @@ export function createNextJsRouteHandler(definitions: Partial<Record<Methods, Ro
     const definition = definitions[req.method?.toLowerCase() as Methods];
     if (definition == null) return res.status(404).json({ message: 'not found' });
     const { handler, preHooks = [], postHooks = [] } = definition;
-    const context: PerRequestContext = new PerRequestContext();
+    const context: PerRequestContext = new PerRequestContext(req.query);
     await executeAll(preHooks, req, res, context);
     if (context.middlewareResponse != null) {
       await context.destroy();

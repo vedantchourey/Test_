@@ -40,4 +40,5 @@ jobs:
         run: |
           yarn
           yarn lint
+          yarn build
 

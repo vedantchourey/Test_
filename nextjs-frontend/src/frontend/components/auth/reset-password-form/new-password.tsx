@@ -10,10 +10,10 @@ import { resetPasswordManually } from '../../../service-clients/auth-service-cli
 import { useRouter } from 'next/router';
 
 interface Props {
-    onResetHandler: () => void,
+  onResetHandler: () => void,
 }
 
-const SetNewPassword = ({ onResetHandler }: Props) => {
+const SetNewPassword = ({ onResetHandler }: Props): JSX.Element => {
 
   const router = useRouter()
   const appDispatch = useAppDispatch();
@@ -24,7 +24,7 @@ const SetNewPassword = ({ onResetHandler }: Props) => {
     token: ''
   });
 
-  async function onClickResetPassword() {
+  async function onClickResetPassword(): Promise<void> {
     const validationResults = await validateNewPasswordInputs(request);
     setErrors(validationResults);
     if (isThereAnyError(validationResults)) return;
@@ -58,22 +58,23 @@ const SetNewPassword = ({ onResetHandler }: Props) => {
 
       <Grid item xs={12}>
         <Typography align='left' variant={"h3"}>
-                    Enter your new password below.
+          Enter your new password below.
         </Typography>
       </Grid>
 
       <Grid item xs={12}>
         <Typography align='left' mb={1} variant={"h3"}>
-                    New password
+          New password
         </Typography>
         <TextField
           id="password"
           type="password"
           size='small'
           variant="filled"
+          value={request.password}
           error={propsHasError(errors, 'password')}
           helperText={getErrorForProp(errors, 'password')}
-          onChange={(event) => setRequest({ ...request, password: event.target.value })}
+          onChange={(event): void => setRequest({ ...request, password: event.target.value })}
           fullWidth
           InputProps={{ disableUnderline: true }}
           inputProps={{
@@ -86,7 +87,7 @@ const SetNewPassword = ({ onResetHandler }: Props) => {
 
       <Grid item xs={12}>
         <Typography align='left' mb={1} variant={"h3"}>
-                    Confirm password
+          Confirm password
         </Typography>
         <TextField
           id="confirm_password"
@@ -96,7 +97,7 @@ const SetNewPassword = ({ onResetHandler }: Props) => {
           value={request.confirm_password}
           error={propsHasError(errors, 'confirm_password')}
           helperText={getErrorForProp(errors, 'confirm_password')}
-          onChange={(event) => setRequest({ ...request, confirm_password: event.target.value })}
+          onChange={(event): void => setRequest({ ...request, confirm_password: event.target.value })}
           fullWidth
           InputProps={{ disableUnderline: true }}
           inputProps={{
@@ -108,16 +109,16 @@ const SetNewPassword = ({ onResetHandler }: Props) => {
       </Grid>
 
       <Grid item xs={12}>
-        <Button className={commonStyles.actionButton} variant="contained" onClick={onClickResetPassword}>
-          <Typography variant={"h3"}>
-                        Reset Password
+        <Button className={commonStyles.actionButton} variant='contained' onClick={onClickResetPassword}>
+          <Typography variant={'h3'}>
+            Reset Password
           </Typography>
         </Button>
       </Grid>
 
       <Grid item xs={12}>
-        <Typography align='left' variant={"h3"}>
-                    *The password should be at least twelve characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^.
+        <Typography align='left' variant={'h3'}>
+          {' * The password should be at least twelve characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^.'}
         </Typography>
       </Grid>
 

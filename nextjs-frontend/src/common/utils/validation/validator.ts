@@ -6,44 +6,37 @@ export type ValidationResult<Type> = {
 };
 
 
-export function isThereAnyError<T, TKey extends keyof ValidationResult<T>>(result: ValidationResult<T>) {
+export function isThereAnyError<T, TKey extends keyof ValidationResult<T>>(result: ValidationResult<T>): boolean {
   const keys = Object.keys(result) as TKey[];
   return keys.some((x) => result[x] != null);
 }
 
-// eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
-export function getErrorForProp<T, TKey extends keyof ValidationResult<T>>(result: ValidationResult<T>, prop: keyof T) {
+export function convertToJoinedMessage<T, TKey extends keyof ValidationResult<T>>(result: ValidationResult<T>): string {
+  const keys = Object.keys(result) as TKey[];
+  return keys.filter((Key) => result[Key] != null)
+    .map((key) => `${key}: ${result[key]}`)
+    .join(', ');
+}
+
+export function getErrorForProp<T>(result: ValidationResult<T>, prop: keyof T): string | undefined {
   return result[prop];
 }
 
-// eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
-export function propsHasError<T, TKey extends keyof ValidationResult<T>>(result: ValidationResult<T>, prop: keyof T) {
+export function propsHasError<T>(result: ValidationResult<T>, prop: keyof T): boolean {
   return result[prop] != null;
 }
 
-export function isNullOrEmptyString(value: string | undefined | null) {
+export function isNullOrEmptyString(value: string | undefined | null): boolean {
   if (value == null) return true;
   return validator.isEmpty(value);
 }
 
-export function isObject(val: any): boolean {
-  return val instanceof Object;
-}
-
-export function isObjectHasProperty(obj: object, property: string) {
-  if (isObject(obj)) {
-    return obj.hasOwnProperty(property);
-  }
-
-  return false;
-}
-
-export function isUrl(value: string | undefined | null) {
+export function isUrl(value: string | undefined | null): boolean {
   if (value === null || value === undefined) return false;
   return validator.isURL(value);
 }
 
-export function isUUID(value: string | undefined | null) {
+export function isUUID(value: string | undefined | null): boolean {
   if (value === null || value === undefined) return false;
   return validator.isUUID(value);
 }

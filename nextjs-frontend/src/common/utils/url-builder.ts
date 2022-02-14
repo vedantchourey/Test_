@@ -22,7 +22,7 @@ export default class UrlBuilder {
     return this;
   }
 
-  private addArrayValues(value: ParamValues[], key: string) {
+  private addArrayValues(value: ParamValues[], key: string): UrlBuilder {
     (value as ParamValues[]).forEach((item: ParamValues, index: number) => {
       if (item == null) return;
       this.queryParams[`${key}[${index}]`] = convertToString(item);
@@ -42,14 +42,14 @@ export default class UrlBuilder {
     return `${route}&${(this.getQueryParams())}`;
   }
 
-  private getQueryParams() {
+  private getQueryParams(): string {
     const keys = Object.keys(this.queryParams);
     return keys.reduce((acc: string[], key: string) => {
       return acc.concat(`${key}=${this.queryParams[key]}`);
     }, []).join('&');
   }
 
-  private populateRouteParams() {
+  private populateRouteParams(): string {
     const keys = Object.keys(this.routeParams);
     const route = keys.reduce((acc: string, key: string) => {
       return acc.replace(`{${key}}`, this.routeParams[key])

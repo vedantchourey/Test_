@@ -4,11 +4,11 @@ import commonStyles from '../../styles/common.module.css';
 import MessageContainer from '../ui-components/message/messageContainer';
 import { Fragment } from 'react';
 
-export default function NotFound() {
+export default function NotFound(): JSX.Element {
 
   const router = useRouter();
 
-  async function gotoHomePage() {
+  async function gotoHomePage(): Promise<void> {
     await router.push('/');
   }
 

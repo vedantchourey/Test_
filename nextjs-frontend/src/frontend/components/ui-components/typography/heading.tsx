@@ -5,16 +5,16 @@ import { useAppSelector } from "../../../redux-store/redux-store";
 import styles from "./heading.module.css";
 
 interface Props {
-    heading?: string,
-    divider?: boolean,
-    backgroundImage?: boolean,
-    backgroundImageUrl?: string
+  heading?: string,
+  divider?: boolean,
+  backgroundImage?: boolean,
+  backgroundImageUrl?: string
 }
 
-export default function Heading({ heading, divider, backgroundImage, backgroundImageUrl }: Props) {
+export default function Heading({ heading, divider, backgroundImage, backgroundImageUrl }: Props): JSX.Element {
   const appHeaderHeight = useAppSelector(getAppHeaderHeightSelector);
 
-  const simpleHeading = () => (
+  const simpleHeading = (): JSX.Element => (
     <Fragment>
       <div className={styles.mainBanner} style={{ marginTop: appHeaderHeight, marginBottom: 20 }}>
         <Typography variant="h1">

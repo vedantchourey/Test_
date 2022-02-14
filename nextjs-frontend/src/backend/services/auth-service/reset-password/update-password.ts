@@ -3,8 +3,8 @@ import { UpdatePasswordRequest, ResetPasswordResponse } from './i-reset-password
 import { isThereAnyError } from '../../../../common/utils/validation/validator';
 import { backendSupabase } from '../../common/supabase-backend-client';
 import { ServiceResponse } from "../../common/contracts/service-response";
-import { PerRequestContext } from "../../../utils/api-middle-ware/api-middleware-typings";
 
+<<<<<<< HEAD
 function updatePasswordParams(request: UpdatePasswordRequest) {
   const { token, password } = request;
   const data = { token, password }
@@ -19,3 +19,13 @@ export default async function updatePassword(request: UpdatePasswordRequest, con
   if (result.error) return { errors: { apiError: result.error } };
   return { data: { message: "Password updated successfully." } }
 }
+=======
+
+export default async function updatePassword(request: UpdatePasswordRequest): Promise<ServiceResponse<UpdatePasswordRequest, ResetPasswordResponse>> {
+  const errors = await validateUpdatePassword(request);
+  if (isThereAnyError(errors)) return { errors: errors };
+  const result = await backendSupabase.auth.api.updateUser(request.token, { password: request.password });
+  if (result.error) return { errors: { apiError: result.error } };
+  return { data: { message: "Password updated successfully." } }
+}
+>>>>>>> 7e085c995fb3ba8e50714d58ad4a01415272908d

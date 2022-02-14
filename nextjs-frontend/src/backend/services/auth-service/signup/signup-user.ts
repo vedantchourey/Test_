@@ -26,7 +26,10 @@ function mapToProfile(user: User, request: SignupRequest): IProfile {
   };
 }
 
-function mapRequiredParams(request: SignupRequest) {
+type Metadata = { data: { firstName: string; lastName: string; agreeToTnc: boolean; stateId: string; dateOfBirth: string; countryId: string; username: string } };
+type SignupParams = { password: string; phone: string; provider: "facebook" | "apple" | "google" | undefined; email: string };
+
+function mapRequiredParams(request: SignupRequest): { metaData: Metadata; signupParams: SignupParams } {
   const {password, phone, email, provider, countryId, stateId, agreeToTnc, dateOfBirth, firstName, lastName, username} = request;
   const signupParams = {
     password: password,

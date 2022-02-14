@@ -6,8 +6,18 @@ import Heading from '../../../../src/frontend/components/ui-components/typograph
 import NewsletterPoster from '../../../../src/frontend/components/newsletter-poster'
 import TicketHisoryCard from '../../../../src/frontend/components/support/ticket/history/ticketHistoryCard'
 
+interface TicketObject {
+  _id: number,
+  status: 'active' | 'solved';
+  ticketNumber: string;
+  query: string;
+  answer: string;
+  created_at: Date | string;
+  commentCount: number
+}
+
 interface Props {
-    tickets?: Array<string>
+  tickets?: Array<TicketObject>
 }
 
 const NoobTicketHistoryPage = ({ tickets }: Props): JSX.Element => {
@@ -28,14 +38,22 @@ const NoobTicketHistoryPage = ({ tickets }: Props): JSX.Element => {
         <Box className={commonStyles.container} sx={{ my: 5 }}>
           <Divider>
             <Typography variant='h3'>
-                            TICKET HISTORY
+              TICKET HISTORY
             </Typography>
           </Divider>
 
           <Container maxWidth='md'>
             {Array.isArray(tickets) && tickets.map((ticket, i) => (
               <React.Fragment key={i}>
-                <TicketHisoryCard {...ticket} />
+                <TicketHisoryCard
+                  _id={ticket._id}
+                  status={ticket.status}
+                  ticketNumber={ticket.ticketNumber}
+                  query={ticket.query}
+                  answer={ticket.answer}
+                  created_at={ticket.created_at}
+                  commentCount={ticket.commentCount}
+                />
               </React.Fragment>
             ))}
           </Container>
@@ -48,7 +66,7 @@ const NoobTicketHistoryPage = ({ tickets }: Props): JSX.Element => {
   )
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(): Promise<{ [i: string]: unknown }> {
   try {
     // todo make an api call here
     return {

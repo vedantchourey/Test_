@@ -4,7 +4,7 @@ import { getErrorForProp, propsHasError } from "../../../../../common/utils/vali
 import commonStyles from "../../../../styles/common.module.css"
 import styles from "./create-ticket.module.css"
 
-export default function CreateTicketForm() {
+export default function CreateTicketForm(): JSX.Element {
 
   const [errors] = useState({});
   const [request, setRequest] = useState({
@@ -31,8 +31,8 @@ export default function CreateTicketForm() {
   /**
      * @todo form validation && post api integration
      */
-  function onClickCreateTicket() {
-    console.log("form submitted: ", request)
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  function onClickCreateTicket(): void {
   }
 
   return (
@@ -41,7 +41,7 @@ export default function CreateTicketForm() {
 
         <Grid item xs={12}>
           <Typography align='left' mb={1} variant={"h3"}>
-                        Subject
+            Subject
           </Typography>
           <TextField
             id="subject"
@@ -51,7 +51,7 @@ export default function CreateTicketForm() {
             value={request.subject}
             error={propsHasError(errors, 'subject')}
             helperText={getErrorForProp(errors, 'subject')}
-            onChange={(event) => setRequest({ ...request, subject: event.target.value })}
+            onChange={(event): void => setRequest({ ...request, subject: event.target.value })}
             fullWidth
             InputProps={{ disableUnderline: true }}
             inputProps={{
@@ -64,7 +64,7 @@ export default function CreateTicketForm() {
 
         <Grid item xs={12}>
           <Typography align='left' mb={1} variant={"h3"}>
-                        Ticket Type
+            Ticket Type
           </Typography>
           <TextField
             id="ticketType"
@@ -75,7 +75,7 @@ export default function CreateTicketForm() {
             value={request.ticketType}
             error={propsHasError(errors, 'ticketType')}
             helperText={getErrorForProp(errors, 'ticketType')}
-            onChange={(event) => setRequest({ ...request, ticketType: event.target.value })}
+            onChange={(event): void => setRequest({ ...request, ticketType: event.target.value })}
             fullWidth
             InputProps={{
               disableUnderline: true,
@@ -88,7 +88,7 @@ export default function CreateTicketForm() {
             }}
           >
             <MenuItem value={'default'}>
-                            -- select type --
+              -- select type --
             </MenuItem>
             {TICKET_TYPES.map((_, i) => (
               <MenuItem key={i} value={_.value}>
@@ -104,7 +104,7 @@ export default function CreateTicketForm() {
 
         <Grid item xs={12}>
           <Typography align='left' mb={1} variant={"h3"}>
-                        Message
+            Message
           </Typography>
           <TextField
             id="message"
@@ -115,7 +115,7 @@ export default function CreateTicketForm() {
             value={request.message}
             error={propsHasError(errors, 'message')}
             helperText={getErrorForProp(errors, 'message')}
-            onChange={(event) => setRequest({ ...request, message: event.target.value })}
+            onChange={(event): void => setRequest({ ...request, message: event.target.value })}
             fullWidth
             InputProps={{ disableUnderline: true }}
             inputProps={{

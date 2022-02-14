@@ -11,47 +11,47 @@ import { GameMapsRepository } from '../database/repositories/game-maps-repositor
 import { Knex } from 'knex';
 
 
-function validateName(tournament: Partial<CreateOrEditTournamentRequest>) {
+function validateName(tournament: Partial<CreateOrEditTournamentRequest>): string | undefined {
   if (isNullOrEmptyString(tournament.tournamentName)) return 'Is required';
   if (!validator.isLength(tournament.tournamentName as string, {min: 5})) return 'Min length 5';
 }
 
-async function validateGame(tournament: Partial<CreateOrEditTournamentRequest>, gameRepository: GameRepository) {
+async function validateGame(tournament: Partial<CreateOrEditTournamentRequest>, gameRepository: GameRepository): Promise<string | undefined> {
   if (isNullOrEmptyString(tournament.gameId)) return 'Is required';
   if ((await gameRepository.getGameById(tournament.gameId as string) == null)) return 'Invalid game';
 }
 
-async function validatePlatform(tournament: Partial<CreateOrEditTournamentRequest>, platformRepository: PlatformRepository) {
+async function validatePlatform(tournament: Partial<CreateOrEditTournamentRequest>, platformRepository: PlatformRepository): Promise<string | undefined> {
   if (isNullOrEmptyString(tournament.gameId)) return;
   if (isNullOrEmptyString(tournament.platformId)) return 'Is required';
   if ((await platformRepository.getById(tournament.platformId as string)) == null) return 'Invalid';
 }
 
-function validateNumberOfPlayers(tournament: Partial<CreateOrEditTournamentRequest>) {
+function validateNumberOfPlayers(tournament: Partial<CreateOrEditTournamentRequest>) : string | undefined{
   if (tournament.numberOfParticipants == null) return 'Is required';
   if (isNaN(tournament.numberOfParticipants)) return 'Not a valid number';
   if (tournament.numberOfParticipants < 2) return 'Must be 2 or more';
 }
 
-function validateIsTeam(tournament: Partial<CreateOrEditTournamentRequest>) {
+function validateIsTeam(tournament: Partial<CreateOrEditTournamentRequest>): string | undefined {
   if (tournament.isTeamParticipating == null) return 'Is Required';
 }
 
-async function validateMatchFormat(tournament: Partial<CreateOrEditTournamentRequest>, matchFormatRepository: MatchFormatRepository) {
+async function validateMatchFormat(tournament: Partial<CreateOrEditTournamentRequest>, matchFormatRepository: MatchFormatRepository): Promise<string | undefined> {
   if (isNullOrEmptyString(tournament.formatId)) return 'Is required';
   if ((await matchFormatRepository.getById(tournament.formatId as string)) == null) return 'Invalid';
 }
 
-async function validateMatchBestOf(tournament: Partial<CreateOrEditTournamentRequest>, matchBestOfRepository: MatchBestOfRepository) {
+async function validateMatchBestOf(tournament: Partial<CreateOrEditTournamentRequest>, matchBestOfRepository: MatchBestOfRepository): Promise<string | undefined> {
   if (isNullOrEmptyString(tournament.bestOfId)) return 'Is required';
   if ((await matchBestOfRepository.getById(tournament.bestOfId as string)) == null) return 'Invalid';
 }
 
-function validateType(tournament: Partial<CreateOrEditTournamentRequest>) {
+function validateType(tournament: Partial<CreateOrEditTournamentRequest>): string | undefined {
   if (isNullOrEmptyString(tournament.tournamentType)) return 'Is required';
 }
 
-function validateScheduleDate(tournament: Partial<CreateOrEditTournamentRequest>) {
+function validateScheduleDate(tournament: Partial<CreateOrEditTournamentRequest>): string | undefined {
   if (isNullOrEmptyString(tournament.scheduleDate)) return 'Is required';
   if (!isValidDateTime(tournament.scheduleDate as string)) return 'Invalid';
   if (!isUTCTime(tournament.scheduleDate as string)) return 'Not in UTC';
@@ -60,7 +60,7 @@ function validateScheduleDate(tournament: Partial<CreateOrEditTournamentRequest>
   if (diffFromNow.days < 5) return 'Must be at least 5 days later';
 }
 
-async function validateGameMap(tournament: Partial<CreateOrEditTournamentRequest>, gameMapsRepository: GameMapsRepository) {
+async function validateGameMap(tournament: Partial<CreateOrEditTournamentRequest>, gameMapsRepository: GameMapsRepository): Promise<string | undefined> {
   if (isNullOrEmptyString(tournament.gameId)) return;
   const maps = await gameMapsRepository.getForGame(tournament.gameId as string);
   if (maps.length === 0) return;
@@ -68,7 +68,7 @@ async function validateGameMap(tournament: Partial<CreateOrEditTournamentRequest
   if (!maps.some((x) => x.id === tournament.mapId)) return 'Invalid map';
 }
 
-function validateRules(tournament: Partial<CreateOrEditTournamentRequest>) {
+function validateRules(tournament: Partial<CreateOrEditTournamentRequest>): string | undefined {
   if (isNullOrEmptyString(tournament.rules)) return 'Is required';
   if (!validator.isLength(tournament.rules as string, {min: 20})) return 'Min length 20 chars';
 }

@@ -6,11 +6,12 @@
 export interface NewPasswordRequest {
     password: string;
     confirm_password: string;
-    token?: string | null
+    token?: string | null;
 }
 // -----------------------
 export interface ResetPasswordRequest {
     email: string;
+    phone?: string | undefined | null;
 }
 
 export interface ResetPasswordErrors {

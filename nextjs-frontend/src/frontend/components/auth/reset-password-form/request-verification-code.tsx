@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import { Button, Grid, TextField, Typography } from '@mui/material';
 import commonStyles from '../../../styles/common.module.css'
 import { getErrorForProp, isThereAnyError, propsHasError, ValidationResult } from '../../../../common/utils/validation/validator';
@@ -9,11 +9,11 @@ import { setIsLoading } from '../../../redux-store/screen-animations/screen-anim
 import { resetPassword } from '../../../service-clients/auth-service-client';
 
 interface Props {
-    onResetHandler: () => void
+  onResetHandler: () => void
 }
 
 /*TODO integrating with api */
-const ResetPasswordRequestCode = ({ onResetHandler }: Props) => {
+const ResetPasswordRequestCode = ({ onResetHandler }: Props): JSX.Element => {
 
   const appDispatch = useAppDispatch();
   const [errors, setErrors] = useState<ValidationResult<Partial<ResetPasswordErrors>>>({});
@@ -22,7 +22,7 @@ const ResetPasswordRequestCode = ({ onResetHandler }: Props) => {
     // phone: ''
   });
 
-  async function onClickResetPassword(e: Event) {
+  async function onClickResetPassword(e: FormEvent): Promise<void> {
     e.preventDefault()
 
     const validationResults = await validateResetPassword(request);
@@ -43,7 +43,7 @@ const ResetPasswordRequestCode = ({ onResetHandler }: Props) => {
     }
   }
 
-  const handleChangeValue = (e: { target: { value: string } }) => {
+  const handleChangeValue = (e: { target: { value: string } }): void => {
     const { value } = e.target;
     setRequest({ email: value })
     // if (/^[\d]+$/gi.test(value)) {
@@ -59,14 +59,14 @@ const ResetPasswordRequestCode = ({ onResetHandler }: Props) => {
 
         <Grid item xs={12}>
           <Typography align='left' variant={"h3"}>
-                        Please enter your phone number or email address. You will receive a code to create a new password via email.
-          </Typography>
-        </Grid>
+            Please enter your phone number or email address. You will receive a code to create a new password via email.
+          </Typography >
+        </Grid >
 
         <Grid item xs={12}>
           <Typography align='left' mb={1} variant={"h3"}>
-                        E-mail
-          </Typography>
+            E-mail
+          </Typography >
           <TextField
             id="email"
             variant="filled"
@@ -85,7 +85,7 @@ const ResetPasswordRequestCode = ({ onResetHandler }: Props) => {
               }
             }}
           />
-        </Grid>
+        </Grid >
 
         <Grid item xs={12}>
           <Button className={commonStyles.actionButton} variant="contained" type='submit'>
@@ -93,8 +93,8 @@ const ResetPasswordRequestCode = ({ onResetHandler }: Props) => {
           </Button>
         </Grid>
 
-      </Grid>
-    </form>
+      </Grid >
+    </form >
   )
 }
 

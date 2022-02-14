@@ -5,12 +5,12 @@ import MessageIcon from "../../../icons/message-icon";
 import styles from './ticket-history.module.css'
 
 interface Props {
-  _id: string | number,
+  _id: number,
   status: 'active' | 'solved';
   ticketNumber: string;
   query: string;
   answer: string;
-  created_at: Date;
+  created_at: Date | string;
   commentCount: number
 }
 

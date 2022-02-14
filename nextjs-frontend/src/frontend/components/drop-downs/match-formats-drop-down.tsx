@@ -17,7 +17,7 @@ interface Props {
 }
 
 
-export default function MatchFormatDropDown(props: Props) {
+export default function MatchFormatDropDown(props: Props):JSX.Element {
   const {value, onChange, autoCompleteClassName, inputClassName, error, helperText, label, placeholder} = props;
   const appDispatch = useAppDispatch();
   const matchFormats = useAppSelector(allMatchFormatsSelector);
@@ -37,7 +37,7 @@ export default function MatchFormatDropDown(props: Props) {
   }, [matchFormats, selectedFormat?.id, value]);
 
 
-  const onInputChange = (event: unknown, newValue: IMatchFormatResponse | null) => {
+  const onInputChange = (event: unknown, newValue: IMatchFormatResponse | null): void => {
     setSelectedFormat(newValue)
     onChange?.(newValue?.id, newValue || null);
   };
@@ -46,9 +46,9 @@ export default function MatchFormatDropDown(props: Props) {
     <Autocomplete disablePortal
       className={autoCompleteClassName}
       options={matchFormats}
-      getOptionLabel={(x) => x.displayName}
+      getOptionLabel={(x): string => x.displayName}
       loading={isLoading}
-      renderInput={(params) => <TextField {...params}
+      renderInput={(params): JSX.Element => <TextField {...params}
         label={label}
         variant="filled"
         className={inputClassName}

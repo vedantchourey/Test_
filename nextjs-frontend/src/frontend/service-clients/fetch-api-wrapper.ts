@@ -1,4 +1,4 @@
-export const get = (url: string) => {
+export const get = (url: string): Promise<Response> => {
   return fetch(url, {
     method: 'get',
     mode: 'cors',
@@ -8,14 +8,14 @@ export const get = (url: string) => {
   });
 };
 
-function defaultHeaders() {
+function defaultHeaders(): {[i: string]: string} {
   return {
     'Accept': 'application/json',
     'Content-Type': 'application/json;charset=UTF-8'
   };
 }
 
-export const post = <TRequest>(url: string, payload: TRequest, headers: { [key: string]: string } = {}) => {
+export const post = <TRequest>(url: string, payload: TRequest, headers: { [key: string]: string } = {}): Promise<Response> => {
   return fetch(url, {
     method: 'post',
     mode: 'cors',

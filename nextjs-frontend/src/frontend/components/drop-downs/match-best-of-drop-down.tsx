@@ -17,7 +17,7 @@ interface Props {
 }
 
 
-export default function MatchBestOfDropDown(props: Props) {
+export default function MatchBestOfDropDown(props: Props): JSX.Element {
   const {value, onChange, autoCompleteClassName, inputClassName, error, helperText, label, placeholder} = props;
   const appDispatch = useAppDispatch();
   const matchBestOfs = useAppSelector(allMatchBestOfSelector);
@@ -37,7 +37,7 @@ export default function MatchBestOfDropDown(props: Props) {
   }, [matchBestOfs, selectedBestOf?.id, value]);
 
 
-  const onInputChange = (event: unknown, newValue: IMatchBestOfResponse | null) => {
+  const onInputChange = (event: unknown, newValue: IMatchBestOfResponse | null): void => {
     setSelectedBestOf(newValue)
     onChange?.(newValue?.id, newValue || null);
   };
@@ -46,9 +46,9 @@ export default function MatchBestOfDropDown(props: Props) {
     <Autocomplete disablePortal
       className={autoCompleteClassName}
       options={matchBestOfs}
-      getOptionLabel={(x) => x.displayName}
+      getOptionLabel={(x): string => x.displayName}
       loading={isLoading}
-      renderInput={(params) => <TextField {...params}
+      renderInput={(params): JSX.Element => <TextField {...params}
         label={label}
         variant="filled"
         className={inputClassName}

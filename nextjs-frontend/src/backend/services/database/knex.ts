@@ -1,9 +1,9 @@
 import backendConfig from '../../utils/config/backend-config';
-import knexModule from 'knex';
+import knexModule, { Knex } from 'knex';
 
 const { databaseName, dbUser, dbPort, dbHost, dbPassword, ssl } = backendConfig.db;
 
-export function createKnexConnection() {
+export function createKnexConnection(): Knex {
   return knexModule({
     client: 'pg',
     connection: {

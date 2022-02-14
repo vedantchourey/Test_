@@ -1,5 +1,5 @@
 import * as React from 'react'
-import type { GetServerSideProps, NextPage } from 'next'
+import type { GetServerSideProps } from 'next'
 import NoobPage from '../../../../src/frontend/components/page/noob-page'
 import commonStyles from '../../../../src/frontend/styles/common.module.css'
 import { Container, Divider, Typography } from '@mui/material'
@@ -9,19 +9,19 @@ import NewsletterPoster from '../../../../src/frontend/components/newsletter-pos
 import TicketChats from '../../../../src/frontend/components/support/ticket/chat'
 
 interface Chat {
-    profileImage: string,
-    comment: string,
-    userName: string,
-    created_at: string,
+  profileImage: string,
+  comment: string,
+  userName: string,
+  created_at: string,
 }
 
 interface Props {
-    ticketNumber: string;
-    ticketSubject: string;
-    chats: Chat[];
+  ticketNumber: string;
+  ticketSubject: string;
+  chats: Chat[];
 }
 
-const NoobTicketCreatePage = (props: Props) => {
+const NoobTicketCreatePage = (props: Props): JSX.Element => {
   const { ticketNumber, ticketSubject, chats } = props;
 
   return (
@@ -42,7 +42,7 @@ const NoobTicketCreatePage = (props: Props) => {
 
           <Divider light>
             <Typography variant='h3' gutterBottom>
-                            TICKET
+              TICKET
             </Typography>
           </Divider>
 

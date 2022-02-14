@@ -33,7 +33,7 @@ export class ProfilesRepository extends BaseRepository<IProfile> {
   }
 
   async countUserById(id: string): Promise<number> {
-    const result = await this.entities().whereRaw("id = ?", [id])
+    const result = await this.entities().where({id: id})
         .count('id');
     return parseInt(result[0].count, 10);
   }
@@ -52,4 +52,4 @@ export class ProfilesRepository extends BaseRepository<IProfile> {
 
 }
 
-export const createProfileRepository = (transaction: Knex.Transaction) => new ProfilesRepository(transaction);
+export const createProfileRepository = (transaction: Knex.Transaction): ProfilesRepository => new ProfilesRepository(transaction);

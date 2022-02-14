@@ -7,7 +7,7 @@ import YoutubeIcon from '../icons/youtube-icon';
 import TwitchIcon from '../icons/twitch-icon';
 import DiscordIcon from '../icons/discord-icon';
 
-export default function NoobDesktopFooter() {
+export default function NoobDesktopFooter(): JSX.Element {
 
   const theme = useTheme();
   const router = useRouter()
@@ -17,15 +17,15 @@ export default function NoobDesktopFooter() {
     return { color: theme.palette.primary.main, fontWeight: 700 };
   }
 
-  async function gotoAboutUsPage() {
+  async function gotoAboutUsPage(): Promise<void> {
     await router.push('/about-us')
   }
 
-  async function gotoHomePage() {
+  async function gotoHomePage(): Promise<void> {
     await router.push('/')
   }
 
-  async function gotoSupportPage() {
+  async function gotoSupportPage(): Promise<void> {
     await router.push('/support')
   }
 
@@ -64,8 +64,8 @@ export default function NoobDesktopFooter() {
         </Grid>
         <Grid item xs={12}>
           <Typography color={"default"} variant="h3">
-                        Copyright © 2021. All Rights Reserved By <Button variant="text" onClick={gotoHomePage}>
-                            NOOBSTORM
+            Copyright © 2021. All Rights Reserved By <Button variant="text" onClick={gotoHomePage}>
+              NOOBSTORM
             </Button>
           </Typography>
         </Grid>

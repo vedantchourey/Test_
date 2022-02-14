@@ -4,7 +4,7 @@ import { Fragment } from 'react';
 import commonStyles from '../../../styles/common.module.css'
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
-const PasswordResetSuccessfully = () => {
+const PasswordResetSuccessfully = (): JSX.Element => {
   return (
     <MessageContainer>
       <Fragment>
@@ -13,7 +13,7 @@ const PasswordResetSuccessfully = () => {
             <ErrorOutlineIcon />
           </Icon>
           <Typography variant="h3" color="default">
-                        Password updated successfully.
+            Password updated successfully.
           </Typography>
         </Grid>
       </Fragment>

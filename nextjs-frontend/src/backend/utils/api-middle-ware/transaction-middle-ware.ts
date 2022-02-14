@@ -1,19 +1,17 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { PerRequestContext } from './api-middleware-typings';
 import { createKnexConnection } from '../../services/database/knex';
+import { Knex } from 'knex';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function beginTransactionMiddleWare(req: NextApiRequest, res: NextApiResponse, context: PerRequestContext): Promise<any> {
+export async function beginTransactionMiddleWare(req: NextApiRequest, res: NextApiResponse, context: PerRequestContext): Promise<void> {
   await context.createTransaction(createKnexConnection());
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function commitOrRollBackTransactionMiddleWare(req: NextApiRequest, res: NextApiResponse, context: PerRequestContext): Promise<any> {
+export async function commitOrRollBackTransactionMiddleWare(req: NextApiRequest, res: NextApiResponse, context: PerRequestContext): Promise<void> {
+  const transaction = context.transaction as Knex.Transaction;
   if (context.error) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    await context.transaction!.rollback(context.error);
+    await transaction.rollback(context.error);
   } else {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    await context.transaction!.commit();
+    await transaction.commit();
   }
 }

@@ -9,15 +9,15 @@ import NoobPage from '../../src/frontend/components/page/noob-page';
 import { backendConfig } from '../../src/backend/utils/config/backend-config';
 
 interface IPageProps {
-    pageContent: {
-        attributes: {
-            title: string,
-            description: string
-        }
-    } | null
+  pageContent: {
+    attributes: {
+      title: string,
+      description: string
+    }
+  } | null
 }
 
-const AboutUs = (props: IPageProps) => {
+const AboutUs = (props: IPageProps): JSX.Element => {
   const content = props.pageContent?.attributes;
 
   return (

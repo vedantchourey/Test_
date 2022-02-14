@@ -1,7 +1,7 @@
 import { SvgIcon } from '@mui/material';
 import * as React from 'react';
 
-export default function DiscordIcon() {
+export default function DiscordIcon(): JSX.Element {
   return (
     <SvgIcon>
       <path

@@ -1,5 +1,8 @@
 export interface IPost {
-    postContent: string,
-    postImgUrl: string,
-    postedBy: string
+  id?: string;
+  postContent: string;
+  postImgUrl: string;
+  postedBy: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

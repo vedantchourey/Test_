@@ -4,16 +4,16 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import commonStyles from '../../../styles/common.module.css'
 
 interface Props {
-    icon?: React.ReactNode | boolean,
-    children: React.ReactChild,
-    style?: React.CSSProperties
+  icon?: React.ReactNode | boolean,
+  children: React.ReactChild,
+  style?: React.CSSProperties
 }
 
 const MessageContainer = ({
   icon,
   children,
   style = {}
-}: Props) => {
+}: Props): JSX.Element => {
   const theme = useTheme();
   return (
     <Container maxWidth="md" style={{ backgroundColor: theme.palette.background.paper, display: "flex", alignItems: "center", gap: "10px", ...style }}>

@@ -17,7 +17,7 @@ import { deviceTypes } from '../../../redux-store/layout/device-types';
 
 type ImagePrefix = 'avatar' | 'avatarBackground';
 
-export default function UserProfileCard() {
+export default function UserProfileCard(): JSX.Element {
   const userProfile = useAppSelector(userProfileSelector);
   const backgroundInputRef = useRef<HTMLInputElement>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
@@ -30,11 +30,11 @@ export default function UserProfileCard() {
   const avatarUrl = userProfile?.avatarUrl;
   const backgroundImageUrl = userProfile?.profileBackgroundImageUrl;
 
-  function showUploadBackgroundPicker() {
+  function showUploadBackgroundPicker(): void {
     backgroundInputRef.current?.click();
   }
 
-  function generateFileUrl(prefix: ImagePrefix, file: File) {
+  function generateFileUrl(prefix: ImagePrefix, file: File): string {
     if (userProfile == null) throw new Error('user cannot be null');
     if (prefix === 'avatar' && avatarUrl != null) return avatarUrl;
     if (prefix === 'avatarBackground' && backgroundImageUrl != null) return backgroundImageUrl;
@@ -45,13 +45,13 @@ export default function UserProfileCard() {
     return `avatars/${prefix}${userProfile.id}${v4()}.${fileExt}`;
   }
 
-  async function updateUserProfile(fileUrl: string, file: File, imageType: ProfileImageTypes) {
+  async function updateUserProfile(fileUrl: string, file: File, imageType: ProfileImageTypes): Promise<void> {
     const response = await updateProfileImages({ url: fileUrl, imageType: imageType });
     if (response.isError) return console.error(response);
     appDispatch(setUserProfile(response));
   }
 
-  async function onUploadAvatar(event: ChangeEvent<HTMLInputElement>) {
+  async function onUploadAvatar(event: ChangeEvent<HTMLInputElement>): Promise<void> {
     if (!event.target.files || event.target.files.length === 0) return;
     const file = event.target.files[0];
     await uploadImageAndLinkToProfile('avatar', file, ProfileImageTypes.avatar);
@@ -67,7 +67,7 @@ export default function UserProfileCard() {
     return await uploadImage('resources', fileUrl, file);
   }
 
-  async function uploadImageAndLinkToProfile(prefix: ImagePrefix, file: File, imageType: ProfileImageTypes) {
+  async function uploadImageAndLinkToProfile(prefix: ImagePrefix, file: File, imageType: ProfileImageTypes): Promise<void> {
     appDispatch(setIsLoading(true));
     try {
       const fileUrl = generateFileUrl(prefix, file);
@@ -81,14 +81,14 @@ export default function UserProfileCard() {
     }
   }
 
-  async function onUploadBackground(event: ChangeEvent<HTMLInputElement>) {
+  async function onUploadBackground(event: ChangeEvent<HTMLInputElement>): Promise<void> {
     if (!event.target.files || event.target.files.length === 0) return;
     const file = event.target.files[0];
     await uploadImageAndLinkToProfile('avatarBackground', file, ProfileImageTypes.background);
     appDispatch(forceFetchAvatarBackgroundImageBlob());
   }
 
-  function showUploadAvatarPicker() {
+  function showUploadAvatarPicker(): void {
     avatarInputRef.current?.click();
   }
 

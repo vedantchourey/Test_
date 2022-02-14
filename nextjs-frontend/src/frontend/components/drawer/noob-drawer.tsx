@@ -11,7 +11,7 @@ interface Props {
   onLogoutClick: () => void;
 }
 
-export default function NoobDrawer(props: Props) {
+export default function NoobDrawer(props: Props): JSX.Element {
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   if (!isLoggedIn) return <NoobLoggedOutDrawer {...props}/>
   return <NoobLoggedInDrawer {...props}/>

@@ -8,10 +8,10 @@ type Props = TextFieldProps & {
   onChangeNumber: (value: number | undefined) => void;
 };
 
-export function NoobNumberInput(props: Props) {
+export function NoobNumberInput(props: Props): JSX.Element {
   const {onChangeNumber, ...others} = props;
 
-  function handleOnChange(event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
+  function handleOnChange(event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void {
     const value = event.target.value;
     if (isNullOrEmptyString(value)) return onChangeNumber(undefined);
     if (validator.isNumeric(value)) return onChangeNumber(parseInt(value));

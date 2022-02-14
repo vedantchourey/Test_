@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import ILayoutState from './i-layout-state';
 
-export function getScreenDimensions() {
+export function getScreenDimensions(): { width: number; height: number } {
   const width = window.innerWidth
     || document.documentElement.clientWidth
     || document.body.clientWidth;

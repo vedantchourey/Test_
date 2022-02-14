@@ -17,7 +17,7 @@ const tabStyles: CSSProperties = {
   fontWeight: 600
 }
 
-export default function Account() {
+export default function Account(): JSX.Element {
   const router = useRouter();
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const checkStatus = useAppSelector(authCheckStatusSelector);

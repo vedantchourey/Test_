@@ -1,8 +1,7 @@
 import { ICreateCommentRequest } from './i-create-comment';
-import { isNullOrEmptyString, isUUID } from '../../../../common/utils/validation/validator';
-import { PostsRepository } from '../../database/repositories/posts-repository';
-import { PerRequestContext } from '../../../utils/api-middle-ware/api-middleware-typings';
+import { isNullOrEmptyString, ValidationResult } from '../../../../common/utils/validation/validator';
 
+<<<<<<< HEAD
 async function validatePostId(comment: ICreateCommentRequest, postsRepository: PostsRepository) {
   if (isNullOrEmptyString(comment.postId)) return 'Post id is missing';
   if (!isUUID(comment.postId)) return 'Invalid post id';
@@ -21,3 +20,15 @@ export async function validateRequest(comment: ICreateCommentRequest, context: P
     comment: validateComment(comment)
   };
 }
+=======
+
+function validateComment(comment: ICreateCommentRequest): string | undefined {
+  if (isNullOrEmptyString(comment.comment)) return 'Comment is missing';
+}
+
+export async function validateRequest(comment: ICreateCommentRequest): Promise<ValidationResult<ICreateCommentRequest>> {
+  return {
+    comment: validateComment(comment)
+  };
+}
+>>>>>>> 7e085c995fb3ba8e50714d58ad4a01415272908d
