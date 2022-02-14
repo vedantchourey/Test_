@@ -4,7 +4,7 @@ import { BlockUserRequest, BlockUserResponse } from './i-block-user';
 import { BlockedUserRepository } from '../database/repositories/block-user-repository';
 import { Knex } from 'knex';
 
-export async function blockUnblockUser(context: PerRequestContext): Promise<ServiceResponse<BlockUserRequest, BlockUserResponse>> {
+export default async function blockUnblockUser(context: PerRequestContext): Promise<ServiceResponse<BlockUserRequest, BlockUserResponse>> {
   const user = context.getParamValue('userId') as string;
   const blockAction = context.getParamValue('block_action') as string;
   const repository = new BlockedUserRepository(context.transaction as Knex.Transaction);
