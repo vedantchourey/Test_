@@ -12,8 +12,4 @@ export default function LiveChatIcon(props: SvgIconProps): JSX.Element {
       <path d="M26.6665 21.3333H24.5332V16H26.6665C27.8452 16 28.7999 16.9547 28.7999 18.1333V19.2C28.7999 20.3787 27.8452 21.3333 26.6665 21.3333Z" fill="white" />
     </SvgIcon>
   );
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 7e085c995fb3ba8e50714d58ad4a01415272908d

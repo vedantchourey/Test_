@@ -11,7 +11,7 @@ const PostIconStyles = {
     color: 'rgba(255,255,255,0.4)'
 }
 
-const PostCard = () => {
+const PostCard = (): JSX.Element => {
     const [values, setValues] = useState({
         user: {
             name: 'ShaigExp',
@@ -29,10 +29,10 @@ const PostCard = () => {
     })
     const [showMenu, setShowMenu] = useState(false)
 
-    const handleCloseMenu = () => setShowMenu(false)
-    const handleOpenMenu = () => setShowMenu(true)
+    const handleCloseMenu = (): void => setShowMenu(false)
+    const handleOpenMenu = (): void => setShowMenu(true)
 
-    const handleToggleLike = () => {
+    const handleToggleLike = (): void => {
         setValues((pre) => {
             return {
                 ...pre,

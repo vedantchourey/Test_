@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { Button, Card, CardActions, CardContent, TextField, IconButton, Avatar, Grid, Tooltip, Paper, CircularProgress, Box } from "@mui/material";
+import { Button, Card, CardActions, CardContent, TextField, IconButton, Avatar, Grid, Tooltip, CircularProgress, Box } from "@mui/material";
 import ImageIcon from '@mui/icons-material/Image';
 import { validatePostContent } from './validator'
 import { getErrorForProp, isThereAnyError, propsHasError, ValidationResult } from '../../../../common/utils/validation/validator';
@@ -16,7 +16,7 @@ interface mediaInterface {
   contentType: 'image' | 'video'
 }
 
-export default function CreatePostInput() {
+export default function CreatePostInput(): JSX.Element {
 
   const appDispatch = useAppDispatch()
   const userProfile = useAppSelector((state) => state.authentication.userProfile)
@@ -33,7 +33,7 @@ export default function CreatePostInput() {
   const imageInputRef = useRef()
 
 
-  function generateFileUrl(prefix: string, file: File) {
+  function generateFileUrl(prefix: string, file: File): string {
     if (userProfile == null) throw new Error('user cannot be null');
     const fileExt = file.name
       .split('.')
@@ -47,14 +47,14 @@ export default function CreatePostInput() {
     return await uploadImage('resources', CustomfileUrl, file);
   }
 
-  async function onClickCreatePost() {
+  async function onClickCreatePost(): Promise<void> {
 
     const newErrors = validatePostContent(request);
     setErrors(newErrors);
     if (isThereAnyError(newErrors)) return;
     try {
       appDispatch(setIsLoading(true));
-      console.log(request)
+      // console.log(request)
       // const response = await create(request as CreateOrEditTournamentRequest);
       const response = {
         isError: false,
@@ -75,7 +75,7 @@ export default function CreatePostInput() {
     }
   }
 
-  const createVideoThumb = async (file: any) => {
+  const createVideoThumb = async (file: object): Promise<void> => {
     const blob = URL.createObjectURL(file);
     const video = document.createElement('video');
     const canvas = document.createElement('canvas');
@@ -83,7 +83,7 @@ export default function CreatePostInput() {
 
     /* Load Video to generate thumbnail */
     video.load();
-    video.onloadeddata = async function () {
+    video.onloadeddata = async function (): Promise<void> {
       video.muted = true
       await video.play();
       setMedia((pre) => {
@@ -97,9 +97,9 @@ export default function CreatePostInput() {
       })
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       /* Create thumbnail after video is played */
-      setTimeout(async () => {
+      setTimeout(async (): Promise<void> => {
         canvas.width = video.videoWidth / 2;
         canvas.height = video.videoHeight / 2;
         canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth / 2, video.videoHeight / 2);
@@ -118,7 +118,7 @@ export default function CreatePostInput() {
 
   }
 
-  const createImageThumb = async (file: any) => {
+  const createImageThumb = async (file: object): Promise<void> => {
     setMedia((pre) => {
       return [
         ...pre,
@@ -130,7 +130,7 @@ export default function CreatePostInput() {
     })
   }
 
-  const handleRemovePreviewImage = (index: number) => {
+  const handleRemovePreviewImage = (index: number): void => {
     setMedia((_) => _.filter((_, i: number) => index !== i))
     setRequest((pre) => {
       return {
@@ -157,14 +157,14 @@ export default function CreatePostInput() {
           value={request.postContent}
           error={propsHasError(errors, 'postContent')}
           helperText={getErrorForProp(errors, 'postContent')}
-          onChange={(event) => setRequest({ ...request, postContent: event.target.value })}
+          onChange={(event): void => setRequest({ ...request, postContent: event.target.value })}
           variant='standard'
           InputProps={{
             disableUnderline: true
           }}
         />
-        <input type="file" ref={imageInputRef} multiple accept='image/*;video/*;' value='' hidden onChange={(event: InputEvent) => {
-          const { files }: any = event.target
+        <input type="file" ref={imageInputRef} multiple accept='image/*;video/*;' value='' hidden onChange={(event: InputEvent): void => {
+          const { files }: object = event.target
 
           // validating the input file
           for (let index = 0; index < files?.length; index++) {
@@ -187,7 +187,7 @@ export default function CreatePostInput() {
               setIsUploading(true)
               UploadMedia(file)
                 .then(({ data: { Key } }) => {
-                  console.log("this is key", Key)
+                  // console.log("this is key", Key)
                   if (fileType === 'video') {
                     createVideoThumb(file)
                   }
@@ -236,7 +236,7 @@ export default function CreatePostInput() {
               <div></div>
             )}
             <Tooltip title="Remove">
-              <IconButton color='default' size='small' className={styles.previewImageCancel} onClick={() => handleRemovePreviewImage(i)}>
+              <IconButton color='default' size='small' className={styles.previewImageCancel} onClick={(): void => handleRemovePreviewImage(i)}>
                 <CloseIcon sx={{ fontSize: '10px' }} />
               </IconButton>
             </Tooltip>
@@ -244,7 +244,7 @@ export default function CreatePostInput() {
         ))}
 
         <div>
-          <IconButton color='primary' sx={{ bgcolor: 'primary.dark', mr: 2 }} size='small' onClick={() => imageInputRef.current.click()}>
+          <IconButton color='primary' sx={{ bgcolor: 'primary.dark', mr: 2 }} size='small' onClick={(): void => imageInputRef.current.click()}>
             <ImageIcon />
           </IconButton>
           <Button size="small" variant={"contained"} style={{

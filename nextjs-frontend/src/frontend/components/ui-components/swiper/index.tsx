@@ -5,10 +5,10 @@ import 'swiper/css';
 import "swiper/css/pagination";
 
 interface Props {
-    slides: Array<HTMLMediaElement>
+  slides: Array<HTMLMediaElement>
 }
 
-export default function Slider({ slides }: Props) {
+export default function Slider({ slides }: Props): JSX.Element {
   return (
     <Swiper
       spaceBetween={0}

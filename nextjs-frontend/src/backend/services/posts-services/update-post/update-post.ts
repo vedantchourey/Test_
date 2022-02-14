@@ -9,26 +9,9 @@ import { IPostResponse } from '../i-post-response';
 import { IPost } from '../../database/models/i-post';
 
 
-<<<<<<< HEAD
-export async function updatePost(post: IUpdatePostRequest, context: PerRequestContext) {
-  const errors = await validateRequest(post, context);
-  if (isThereAnyError(errors)) return { errors }
-  const repository = new PostsRepository(context.transaction!);
-
-  const update = sanitizeObject(post, ['postId', 'postedBy']);
-
-  await repository.updatePost(post.postId, { ...update, updatedAt: new Date().toISOString() });
-
-  return {
-    data: {
-      message: 'Post updated'
-    }
-  }
-}
-=======
 export async function updatePost(request: IUpdatePostRequest, context: PerRequestContext): Promise<ServiceResponse<IUpdatePostRequest, IPostResponse>> {
   const errors = await validateRequest(request);
-  if (isThereAnyError(errors)) return {errors}
+  if (isThereAnyError(errors)) return { errors }
   const repository = new PostsRepository(context.transaction as Knex.Transaction);
   const postId = context.getParamValue('postId') as string;
   const updatedPost = {
@@ -37,7 +20,7 @@ export async function updatePost(request: IUpdatePostRequest, context: PerReques
   };
   await repository.updatePost(postId, updatedPost);
   const updatedPostFromDb = await repository.getPostById(postId as string);
-  const {updatedAt, createdAt, ...others} = updatedPostFromDb as IPost;
+  const { updatedAt, createdAt, ...others } = updatedPostFromDb as IPost;
   return {
     data: {
       ...others,
@@ -46,4 +29,3 @@ export async function updatePost(request: IUpdatePostRequest, context: PerReques
     } as IPostResponse
   }
 }
->>>>>>> 7e085c995fb3ba8e50714d58ad4a01415272908d

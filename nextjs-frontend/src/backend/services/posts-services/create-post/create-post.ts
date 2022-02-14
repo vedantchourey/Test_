@@ -10,11 +10,11 @@ import { IPost } from '../../database/models/i-post';
 
 export async function createPost(req: ICreatePostRequest, context: PerRequestContext): Promise<ServiceResponse<ICreatePostRequest, IPostResponse>> {
   const errors = await validatePost(req);
-  if (isThereAnyError(errors)) return {errors: errors}
+  if (isThereAnyError(errors)) return { errors: errors }
   const repository = new PostsRepository(context.transaction as Knex.Transaction);
-  const id = await repository.createPost({...req, postedBy: context.user?.id as string});
+  const id = await repository.createPost({ ...req, postedBy: context.user?.id as string });
   const createdPost = await repository.getPostById(id as string);
-  const {updatedAt, createdAt, ...others} = createdPost as IPost;
+  const { updatedAt, createdAt, ...others } = createdPost as IPost;
   return {
     data: {
       ...others,
@@ -23,15 +23,3 @@ export async function createPost(req: ICreatePostRequest, context: PerRequestCon
     } as IPostResponse
   }
 }
-<<<<<<< HEAD
-
-export async function createPost(req: ICreatePostRequest, context: PerRequestContext) {
-  const errors = await validatePost(req, context);
-  if (isThereAnyError(errors)) return { errors: errors }
-  const repository = new PostsRepository(context.transaction!);
-  await repository.createPost({ ...req, postedBy: context.user?.id! });
-  const res: ICreatePostResponse = { message: 'Post created' };
-  return { data: res }
-}
-=======
->>>>>>> 7e085c995fb3ba8e50714d58ad4a01415272908d

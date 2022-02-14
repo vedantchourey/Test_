@@ -25,14 +25,14 @@ export default function Account(): JSX.Element {
   const [activeTab, setActiveTab] = useState('posts')
 
   useEffect(() => {
-    (async () => {
+    (async (): void => {
       if (checkStatus !== 'success') return;
       if (isLoggedIn) return;
       await router.push('/')
     })()
   });
 
-  const handleChange = (e: unknown, newValue: string) => {
+  const handleChange = (e: unknown, newValue: string): void => {
     setActiveTab(newValue);
   };
 

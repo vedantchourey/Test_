@@ -4,14 +4,14 @@ import { PostCommentsRepository } from '../../database/repositories/post-comment
 import { isUUID, ValidationResult } from '../../../../common/utils/validation/validator';
 import { Knex } from 'knex';
 
-async function validateCommentId(comment: Partial<IDeleteCommentRequest>, context: PerRequestContext,postCommentsRepository: PostCommentsRepository){
+async function validateCommentId(comment: Partial<IDeleteCommentRequest>, context: PerRequestContext, postCommentsRepository: PostCommentsRepository): string | void {
   if (!isUUID(comment.commentId)) return 'Invalid comment id';
   const commentData = await postCommentsRepository.getCommentById(comment.commentId as string);
-  if(!commentData) return 'Comment not available';
-  if(commentData.commentBy !== context.user?.id!) return 'Unauthorized';
+  if (!commentData) return 'Comment not available';
+  if (commentData.commentBy !== context.user?.id!) return 'Unauthorized';
 }
 
-export async function ValidateDeleteComment(obj: IDeleteCommentRequest, context: PerRequestContext): Promise<ValidationResult<IDeleteCommentRequest>>{
+export async function ValidateDeleteComment(obj: IDeleteCommentRequest, context: PerRequestContext): Promise<ValidationResult<IDeleteCommentRequest>> {
   const transaction = context.transaction as Knex.Transaction;
   const commentRepository = new PostCommentsRepository(transaction);
   return <ValidationResult<IDeleteCommentRequest>>{

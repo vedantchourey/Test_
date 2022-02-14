@@ -8,18 +8,9 @@ import { ServiceResponse } from '../../common/contracts/service-response';
 import { IPostCommentResponse } from '../update-comment/i-post-comment-response';
 import { IPostComment } from '../../database/models/i-post-comment';
 
-<<<<<<< HEAD
-export async function createComment(req: ICreateCommentRequest, context: PerRequestContext) {
-  const errors = await validateRequest(req, context);
-  if (isThereAnyError(errors)) return { errors };
-  const repository = new PostCommentsRepository(context.transaction!);
-  await repository.createComment({ ...req, commentBy: context.user?.id! });
-  return { data: { message: 'Comment created' } }
-}
-=======
 export async function createComment(req: ICreateCommentRequest, context: PerRequestContext): Promise<ServiceResponse<ICreateCommentRequest, IPostCommentResponse>> {
   const errors = await validateRequest(req);
-  if (isThereAnyError(errors)) return {errors};
+  if (isThereAnyError(errors)) return { errors };
   const repository = new PostCommentsRepository(context.transaction as Knex.Transaction);
   const postId = context.getParamValue('postId') as string;
   const commentId = await repository.createComment({
@@ -28,7 +19,7 @@ export async function createComment(req: ICreateCommentRequest, context: PerRequ
     postId: postId
   });
   const createdComment = await repository.getByPostIdCommentId(postId, commentId);
-  const {createdAt, updatedAt, ...others} = createdComment as IPostComment;
+  const { createdAt, updatedAt, ...others } = createdComment as IPostComment;
   return {
     data: {
       ...others,
@@ -37,4 +28,3 @@ export async function createComment(req: ICreateCommentRequest, context: PerRequ
     } as IPostCommentResponse
   }
 }
->>>>>>> 7e085c995fb3ba8e50714d58ad4a01415272908d
