@@ -7,7 +7,7 @@ import { createQueryParamsMiddleWare } from '../../../../../src/backend/utils/ap
 import { uuidType } from '../../../../../src/backend/utils/api-middle-ware/query-param-middle-ware/types/uuid-type';
 import { stringType } from '../../../../../src/backend/utils/api-middle-ware/query-param-middle-ware/types/string-type';
 import { Knex } from 'knex';
-import { blockUnblockUser } from '../../../../../src/backend/services/block-user-service/block-user';
+import blockUnblockUser from '../../../../../src/backend/services/block-user-service/block-user';
 import { BlockedUserRepository } from '../../../../../src/backend/services/database/repositories/block-user-repository';
 import { ProfilesRepository } from '../../../../../src/backend/services/database/repositories/profiles-repository';
 
