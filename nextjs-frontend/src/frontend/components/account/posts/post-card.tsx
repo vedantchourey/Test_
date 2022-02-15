@@ -6,40 +6,25 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import styles from './post.module.css';
+import { IPostsResponse } from "../../../service-clients/messages/i-posts-response";
+
+interface IProps {
+    data : IPostsResponse
+}
 
 const PostIconStyles = {
     color: 'rgba(255,255,255,0.4)'
 }
 
-const PostCard = (): JSX.Element => {
-    const [values, setValues] = useState({
-        user: {
-            name: 'ShaigExp',
-            avatarUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRe1_6-PtcF48iM3PkReAZlBpbSaLDhKNyisg&usqp=CAU'
-        },
-        media: {
-            image: "https://images.pexels.com/photos/1714208/pexels-photo-1714208.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-            video: "https://player.vimeo.com/external/539040662.sd.mp4?s=720645642b1c5b26cd4703fd60bd70ba57e0a2de&profile_id=164&oauth2_token_id=57447761"
-        },
-        liked: false,
-        likesCount: 100,
-        comment: 'this is just a comment',
-        commentsCount: 30,
-        created_at: '2022-02-05T04:52:38.097Z'
-    })
+const PostCard = (props:IProps): JSX.Element => {
+    const [values,setValues] = useState<IPostsResponse>(props.data);
     const [showMenu, setShowMenu] = useState(false)
 
     const handleCloseMenu = (): void => setShowMenu(false)
     const handleOpenMenu = (): void => setShowMenu(true)
 
     const handleToggleLike = (): void => {
-        setValues((pre) => {
-            return {
-                ...pre,
-                likesCount: pre.liked ? --pre.likesCount : ++pre.likesCount,
-                liked: !pre.liked
-            }
-        })
+        setValues({...values, isLiked : true})
     }
 
     return (
@@ -52,15 +37,15 @@ const PostCard = (): JSX.Element => {
                 }}>
                     <Avatar
                         className={styles.postAvatar}
-                        alt="Remy Sharp"
-                        src={values.user.avatarUrl}
+                        alt="avatar"
+                        src={''}
                     />
                     <Box>
                         <Box className={styles.flexRow} sx={{ justifyContent: "space-between", width: '100%' }}>
                             <Typography variant={'h3'} fontSize={15}>
-                                {values.user.name}
+                                {values.postOwner.firstName + ' ' + values.postOwner.lastName }
                                 <Typography variant="caption" color='text.secondary' sx={{ ml: 1 }}>
-                                    {new Date(values.created_at).toDateString()}
+                                    {new Date(values.createdAt).toDateString()}
                                 </Typography>
                             </Typography>
 
@@ -70,7 +55,7 @@ const PostCard = (): JSX.Element => {
                         </Box>
 
                         <Typography align='left' fontSize={14} fontWeight={100} paragraph>
-                            Last week saw the relaunch of the Trials of Osiris in Destiny Season of the Lost, which has been drastically improved by Bungie recent changes to how it works.
+                            {values.postContent}
                         </Typography>
                     </Box>
                 </Box>
@@ -78,7 +63,7 @@ const PostCard = (): JSX.Element => {
                 <CardMedia
                     component="img"
                     className={styles.postImage}
-                    image={values.media.image}
+                    image={values.postImgUrl}
                     alt="user avatar"
                     key={'as'}
                 />
@@ -86,12 +71,12 @@ const PostCard = (): JSX.Element => {
                 <CardActions sx={{ gap: 3 }}>
                     <Box className={styles.flexRow}>
                         <Button variant='text' startIcon={<FavoriteBorderIcon />} onClick={handleToggleLike} sx={PostIconStyles}>
-                            {values.likesCount}
+                            {'values.likesCount'}
                         </Button>
                     </Box>
                     <Box className={styles.flexRow}>
                         <Button variant='text' color='inherit' startIcon={<ChatBubbleOutlineIcon />} sx={PostIconStyles}>
-                            {values.commentsCount}
+                            {'values.commentsCount'}
                         </Button>
                     </Box>
                     <Box className={styles.flexRow}>

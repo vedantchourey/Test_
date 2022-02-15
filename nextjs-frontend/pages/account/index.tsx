@@ -66,7 +66,7 @@ export default function Account(): JSX.Element {
       .map((data, i) => <h1 key={i}>sf</h1>);
     }
     const jsx = posts.map((postData, i) => {
-      return <PostCard key={i} />;
+      return <PostCard key={i} data={postData} />;
     });
     return jsx;
   };
