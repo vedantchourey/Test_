@@ -23,14 +23,14 @@ const ResetPasswordPage = (): JSX.Element => {
   }, [])
 
   switch (activeScreen) {
-    case 1:
-      return <CodeSendMessage handleNext={handleNext} />
-    case 2:
-      return <SetNewPassword onResetHandler={handleNext} />
-    case 3:
-      return <PasswordResetSuccessfully />
-    default:
-      return <RequestVerificationCode onResetHandler={handleNext} />
+  case 1:
+    return <CodeSendMessage handleNext={handleNext} />
+  case 2:
+    return <SetNewPassword onResetHandler={handleNext} />
+  case 3:
+    return <PasswordResetSuccessfully />
+  default:
+    return <RequestVerificationCode onResetHandler={handleNext} />
   }
 }
 
