@@ -6,7 +6,6 @@ function validatePostContent(post: ICreatePostRequest): string | undefined {
 }
 
 function validatePostImgUrl(post: ICreatePostRequest): string| undefined {
-  if (isNullOrEmptyString(post.postImgUrl)) return 'Post image url is missing';
   if (!isUrl(post.postImgUrl)) return 'Post image url is invalid';
 }
 
