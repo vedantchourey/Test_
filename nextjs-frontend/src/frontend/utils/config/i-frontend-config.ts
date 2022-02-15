@@ -3,6 +3,9 @@ export interface IFrontendConfig {
   supabase: {
     apiUrl: string;
     anonKey: string;
+    storage : {
+      getObjectUrl : (filepath : string, token? : string) => string; 
+    };
   };
   noobStormServices: {
     auth: {

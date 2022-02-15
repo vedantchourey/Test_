@@ -141,7 +141,7 @@ export default function CreatePostInput(): JSX.Element {
                 setRequest((pre) => {
                   return {
                     ...pre,
-                    postImgUrl:  `${process.env.NEXT_PUBLIC_NOOB_SUPABASE_URL}/${data?.Key}`
+                    postImgUrl:  `${data?.Key}`
                   }
                 })
               })

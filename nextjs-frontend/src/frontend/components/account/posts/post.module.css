@@ -18,10 +18,6 @@
     display: inline-flex;
 }
 
-.postAvatar {
-    border: 1px solid var(--primary);
-}
-
 .postImage {
     width: 100%;
     height: 300px;

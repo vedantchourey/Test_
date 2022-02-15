@@ -7,6 +7,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import styles from './post.module.css';
 import { IPostsResponse } from "../../../service-clients/messages/i-posts-response";
+import config from '../../../utils/config/front-end-config';
 
 interface IProps {
     data : IPostsResponse
@@ -15,6 +16,8 @@ interface IProps {
 const PostIconStyles = {
     color: 'rgba(255,255,255,0.4)'
 }
+
+const {getObjectUrl} = config.supabase.storage;
 
 const PostCard = (props:IProps): JSX.Element => {
     const [values,setValues] = useState<IPostsResponse>(props.data);
@@ -36,9 +39,8 @@ const PostCard = (props:IProps): JSX.Element => {
                     padding: 2
                 }}>
                     <Avatar
-                        className={styles.postAvatar}
                         alt="avatar"
-                        src={''}
+                        src={getObjectUrl(values.postOwner.avatarUrl)}
                     />
                     <Box>
                         <Box className={styles.flexRow} sx={{ justifyContent: "space-between", width: '100%' }}>
@@ -63,7 +65,7 @@ const PostCard = (props:IProps): JSX.Element => {
                 <CardMedia
                     component="img"
                     className={styles.postImage}
-                    image={values.postImgUrl}
+                    image={getObjectUrl(values.postImgUrl)}
                     alt="user avatar"
                     key={'as'}
                 />
