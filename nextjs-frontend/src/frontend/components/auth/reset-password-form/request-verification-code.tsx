@@ -37,7 +37,7 @@ const ResetPasswordRequestCode = ({ onResetHandler }: Props): JSX.Element => {
         setErrors(response.errors);
       }
     } catch (err) {
-      setErrors({ email: err.errors?.apiError?.message || "Error occured" });
+      setErrors({ email:  "Error occured" });
     } finally {
       appDispatch(setIsLoading(false));
     }

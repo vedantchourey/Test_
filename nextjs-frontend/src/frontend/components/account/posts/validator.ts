@@ -1,7 +1,7 @@
 import { isNullOrEmptyString, ValidationResult } from "../../../../common/utils/validation/validator";
 import { ICreatePostRequest } from '../../../../backend/services/posts-services/create-post/i-create-post';
 
-function validateMessage(obj: Partial<ICreatePostRequest>): void | string {
+function validateMessage(obj: Partial<ICreatePostRequest>): undefined | string {
   if (isNullOrEmptyString(obj.postContent)) return 'Is required';
 }
 

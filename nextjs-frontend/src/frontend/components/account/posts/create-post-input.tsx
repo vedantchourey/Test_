@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { Button, Card, CardActions, CardContent, TextField, IconButton, Avatar, Grid, Tooltip, CircularProgress, Box } from "@mui/material";
 import ImageIcon from '@mui/icons-material/Image';
 import { validatePostContent } from './validator'
@@ -30,7 +30,7 @@ export default function CreatePostInput(): JSX.Element {
   })
   const [errors, setErrors] = useState<ValidationResult<ICreatePostRequest>>({})
 
-  const imageInputRef = useRef()
+  const imageInputRef = useRef <null | HTMLInputElement> (null)
 
 
   function generateFileUrl(prefix: string, file: File): string {
@@ -75,50 +75,7 @@ export default function CreatePostInput(): JSX.Element {
     }
   }
 
-  const createVideoThumb = async (file: object): Promise<void> => {
-    const blob = URL.createObjectURL(file);
-    const video = document.createElement('video');
-    const canvas = document.createElement('canvas');
-    video.src = blob;
-
-    /* Load Video to generate thumbnail */
-    video.load();
-    video.onloadeddata = async function (): Promise<void> {
-      video.muted = true
-      await video.play();
-      setMedia((pre) => {
-        return [
-          ...pre,
-          {
-            contentUrl: blob,
-            contentType: 'video'
-          }
-        ]
-      })
-    }
-
-    return new Promise((resolve) => {
-      /* Create thumbnail after video is played */
-      setTimeout(async (): Promise<void> => {
-        canvas.width = video.videoWidth / 2;
-        canvas.height = video.videoHeight / 2;
-        canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth / 2, video.videoHeight / 2);
-        canvas.toBlob((blob) => {
-          if (blob) {
-            const preview = URL.createObjectURL(blob);
-            const fileName = 'image.jpeg';
-            const file = new File([blob], fileName, {
-              type: 'image/jpeg'
-            });
-            resolve({ preview: preview, videoThumbnail: file });
-          }
-        }, 'image/jpeg');
-      }, 500);
-    })
-
-  }
-
-  const createImageThumb = async (file: object): Promise<void> => {
+  const createImageThumb = async (file: MediaSource | Blob): Promise<void> => {
     setMedia((pre) => {
       return [
         ...pre,
@@ -163,53 +120,39 @@ export default function CreatePostInput(): JSX.Element {
             disableUnderline: true
           }}
         />
-        <input type="file" ref={imageInputRef} multiple accept='image/*;video/*;' value='' hidden onChange={(event: InputEvent): void => {
-          const { files }: object = event.target
-
-          // validating the input file
-          for (let index = 0; index < files?.length; index++) {
-            const file = files?.item(index);
-            const fileType = file.type.split("/")[0]
-            if (!['video', 'image'].includes(fileType)) {
-              alert("Only video and image files are allowed to post")
-              return
-            }
+        <input type="file" ref={imageInputRef} multiple accept='image/*;video/*;' value='' hidden onChange={(event: React.ChangeEvent<HTMLInputElement>): unknown=> {
+          if(!event.target.files){
+            return null;
           }
+          const files:FileList= event.target.files;
 
           if (files && (files.length + media.length) > 1) {
             alert("Only 1 media file is allowed with a post")
-            return
+            return;
           }
-          if (files?.length >= 0) {
-            for (let index = 0; index < files?.length; index++) {
-              const file = files?.item(index);
-              const fileType = file.type.split("/")[0]
-              setIsUploading(true)
-              UploadMedia(file)
-                .then(({ data: { Key } }) => {
-                  // console.log("this is key", Key)
-                  if (fileType === 'video') {
-                    createVideoThumb(file)
-                  }
+          if (files.length) {
+            const file = files[0];
+            const fileType = file.type.split("/")[0]
+            setIsUploading(true)
+            UploadMedia(file)
+              .then(({ data }) => {
+                if (fileType === 'image') {
+                  createImageThumb(file)
+                }
 
-                  if (fileType === 'image') {
-                    createImageThumb(file)
+                setRequest((pre) => {
+                  return {
+                    ...pre,
+                    postImgUrl: data?.Key
                   }
-
-                  setRequest((pre) => {
-                    return {
-                      ...pre,
-                      postImgUrl: Key
-                    }
-                  })
                 })
-                .catch((error) => {
-                  alert(error)
-                })
-                .finally(() => {
-                  setIsUploading(false)
-                })
-            }
+              })
+              .catch((error) => {
+                alert(error)
+              })
+              .finally(() => {
+                setIsUploading(false)
+              })
           }
         }} />
       </CardContent>
@@ -244,7 +187,11 @@ export default function CreatePostInput(): JSX.Element {
         ))}
 
         <div>
-          <IconButton color='primary' sx={{ bgcolor: 'primary.dark', mr: 2 }} size='small' onClick={(): void => imageInputRef.current.click()}>
+          <IconButton color='primary' sx={{ bgcolor: 'primary.dark', mr: 2 }} size='small' onClick={(): void => {
+            if(imageInputRef?.current){
+              imageInputRef.current?.click();
+            }
+          } }>
             <ImageIcon />
           </IconButton>
           <Button size="small" variant={"contained"} style={{

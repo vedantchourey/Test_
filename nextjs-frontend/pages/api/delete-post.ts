@@ -8,7 +8,7 @@ import { authenticatedUserMiddleware } from '../../src/backend/utils/api-middle-
 export default createNextJsRouteHandler({
   delete: {
     handler: async function (req: NextApiRequest, res: NextApiResponse, context: PerRequestContext) {
-      const result = await deletePost(req.body, context);
+      const result = await deletePost(context);
       res.status(result.errors ? 400 : 200).send(result);
     },
     preHooks: [authenticatedUserMiddleware, beginTransactionMiddleWare],

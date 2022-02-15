@@ -24,7 +24,7 @@ const ResetPasswordPage = (): JSX.Element => {
 
   switch (activeScreen) {
   case 1:
-    return <CodeSendMessage handleNext={handleNext} />
+    return <CodeSendMessage />
   case 2:
     return <SetNewPassword onResetHandler={handleNext} />
   case 3:
