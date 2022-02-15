@@ -10,11 +10,11 @@ import { IPost } from '../../database/models/i-post';
 
 export async function createPost(req: ICreatePostRequest, context: PerRequestContext): Promise<ServiceResponse<ICreatePostRequest, IPostResponse>> {
   const errors = await validatePost(req);
-  if (isThereAnyError(errors)) return { errors: errors }
+  if (isThereAnyError(errors)) return {errors: errors}
   const repository = new PostsRepository(context.transaction as Knex.Transaction);
-  const id = await repository.createPost({ ...req, postedBy: context.user?.id as string });
+  const id = await repository.createPost({...req, postedBy: context.user?.id as string});
   const createdPost = await repository.getPostById(id as string);
-  const { updatedAt, createdAt, ...others } = createdPost as IPost;
+  const {updatedAt, createdAt, ...others} = createdPost as IPost;
   return {
     data: {
       ...others,

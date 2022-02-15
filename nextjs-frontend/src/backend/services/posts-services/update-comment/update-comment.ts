@@ -10,13 +10,13 @@ import { IPostComment } from '../../database/models/i-post-comment';
 
 export async function updateComment(request: IUpdateCommentRequest, context: PerRequestContext): Promise<ServiceResponse<IUpdateCommentRequest, IPostCommentResponse>> {
   const errors = await validateUpdateCommentRequest(request, context);
-  if (isThereAnyError(errors)) return { errors }
+  if (isThereAnyError(errors)) return {errors}
   const repository = new PostCommentsRepository(context.transaction as Knex.Transaction);
   const commentId = context.getParamValue('commentId') as string;
   const postId = context.getParamValue('postId') as string;
-  await repository.updateComment(commentId, postId, { comment: request.comment });
+  await repository.updateComment(commentId, postId, {comment: request.comment});
   const updatedComment = await repository.getByPostIdCommentId(postId, commentId);
-  const { updatedAt, createdAt, ...others } = updatedComment as IPostComment;
+  const {updatedAt, createdAt, ...others} = updatedComment as IPostComment;
   return {
     data: {
       ...others,

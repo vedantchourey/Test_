@@ -1,7 +1,7 @@
 import {
-  addFollower
+  followUnfollow
 } from './add-follower/add-follower';
 
 export {
-  addFollower
+  followUnfollow
 }

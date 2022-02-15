@@ -10,7 +10,7 @@ import { IPostComment } from '../../database/models/i-post-comment';
 
 export async function createComment(req: ICreateCommentRequest, context: PerRequestContext): Promise<ServiceResponse<ICreateCommentRequest, IPostCommentResponse>> {
   const errors = await validateRequest(req);
-  if (isThereAnyError(errors)) return { errors };
+  if (isThereAnyError(errors)) return {errors};
   const repository = new PostCommentsRepository(context.transaction as Knex.Transaction);
   const postId = context.getParamValue('postId') as string;
   const commentId = await repository.createComment({
@@ -19,7 +19,7 @@ export async function createComment(req: ICreateCommentRequest, context: PerRequ
     postId: postId
   });
   const createdComment = await repository.getByPostIdCommentId(postId, commentId);
-  const { createdAt, updatedAt, ...others } = createdComment as IPostComment;
+  const {createdAt, updatedAt, ...others} = createdComment as IPostComment;
   return {
     data: {
       ...others,

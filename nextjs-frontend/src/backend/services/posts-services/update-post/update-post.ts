@@ -11,7 +11,7 @@ import { IPost } from '../../database/models/i-post';
 
 export async function updatePost(request: IUpdatePostRequest, context: PerRequestContext): Promise<ServiceResponse<IUpdatePostRequest, IPostResponse>> {
   const errors = await validateRequest(request);
-  if (isThereAnyError(errors)) return { errors }
+  if (isThereAnyError(errors)) return {errors}
   const repository = new PostsRepository(context.transaction as Knex.Transaction);
   const postId = context.getParamValue('postId') as string;
   const updatedPost = {
@@ -20,7 +20,7 @@ export async function updatePost(request: IUpdatePostRequest, context: PerReques
   };
   await repository.updatePost(postId, updatedPost);
   const updatedPostFromDb = await repository.getPostById(postId as string);
-  const { updatedAt, createdAt, ...others } = updatedPostFromDb as IPost;
+  const {updatedAt, createdAt, ...others} = updatedPostFromDb as IPost;
   return {
     data: {
       ...others,
