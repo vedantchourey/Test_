@@ -16,6 +16,9 @@ export interface IFrontendConfig {
     tournament: {
       createUrl: string,
       getById: string
+    },
+    post :{
+      createUrl : string
     }
   }
 }

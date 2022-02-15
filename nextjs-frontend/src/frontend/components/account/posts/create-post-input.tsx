@@ -10,6 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import styles from "./post.module.css"
 import { v4 } from 'uuid';
 import { uploadImage } from '../../../service-clients/image-service-client';
+import {createPost} from '../../../service-clients/post-service-client';
 
 interface mediaInterface {
   contentUrl: string,
@@ -39,7 +40,7 @@ export default function CreatePostInput(): JSX.Element {
       .split('.')
       .pop()
       ?.toLowerCase();
-    return `resources/${prefix}${userProfile.id}${v4()}.${fileExt}`;
+    return `${prefix}${userProfile.id}${v4()}.${fileExt}`;
   }
 
   async function UploadMedia(file: File): Promise<{ data: { Key: string } | null; error: Error | null }> {
@@ -54,12 +55,9 @@ export default function CreatePostInput(): JSX.Element {
     if (isThereAnyError(newErrors)) return;
     try {
       appDispatch(setIsLoading(true));
-      // console.log(request)
-      // const response = await create(request as CreateOrEditTournamentRequest);
-      const response = {
-        isError: false,
-        errors: {}
-      }
+
+      const response = await createPost(request as ICreatePostRequest);
+
       if (!response.isError) {
         setMedia([])
         setRequest({
@@ -143,7 +141,7 @@ export default function CreatePostInput(): JSX.Element {
                 setRequest((pre) => {
                   return {
                     ...pre,
-                    postImgUrl: data?.Key
+                    postImgUrl:  `${process.env.NEXT_PUBLIC_NOOB_SUPABASE_URL}/${data?.Key}`
                   }
                 })
               })
