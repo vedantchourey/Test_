@@ -25,7 +25,7 @@ export default function Account(): JSX.Element {
   const [activeTab, setActiveTab] = useState('posts')
 
   useEffect(() => {
-    (async (): void => {
+    (async (): Promise<unknown> => {
       if (checkStatus !== 'success') return;
       if (isLoggedIn) return;
       await router.push('/')
