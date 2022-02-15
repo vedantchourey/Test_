@@ -1,5 +1,5 @@
 import { ICreatePostRequest } from './i-create-post';
-import { isNullOrEmptyString, isUrl, ValidationResult } from '../../../../common/utils/validation/validator';
+import { isNullOrEmptyString, ValidationResult } from '../../../../common/utils/validation/validator';
 
 function validatePostContent(post: ICreatePostRequest): string | undefined {
   if (isNullOrEmptyString(post.postContent)) return 'Post content is missing';
