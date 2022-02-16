@@ -5,7 +5,7 @@ export interface IPostsResponse {
   createdAt: string;
   updatedAt: string;
   postOwner: {
-    id : string;
+    id ?: string;
     username : string;
     firstName : string;
     lastName : string;

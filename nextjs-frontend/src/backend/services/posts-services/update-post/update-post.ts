@@ -20,6 +20,7 @@ export async function updatePost(request: IUpdatePostRequest, context: PerReques
   };
   await repository.updatePost(postId, updatedPost);
   const updatedPostFromDb = await repository.getPostById(postId as string);
+  // const test = await repository.getPostLikesCommentsByPostId(postId as string);
   const {updatedAt, createdAt, ...others} = updatedPostFromDb as IPost;
   return {
     data: {
