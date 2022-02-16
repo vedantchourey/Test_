@@ -2,7 +2,7 @@ export interface IFrontendConfig {
   baseAppUrl: string;
   supabase: {
     apiUrl: string;
-    anonKey: string;
+    anonKey: string
   };
   noobStormServices: {
     auth: {
@@ -16,6 +16,9 @@ export interface IFrontendConfig {
     tournament: {
       createUrl: string,
       getById: string
+    },
+    post :{
+      createUrl : string
     }
   }
 }

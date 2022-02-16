@@ -19,6 +19,9 @@ const frontendConfig: IFrontendConfig = {
     tournament: {
       createUrl: `${baseApiUrl}/api/tournaments`,
       getById: `${baseApiUrl}/api/tournaments/{id}`,
+    },
+    post :{
+      createUrl : `${baseApiUrl}/api/posts`,
     }
   },
   supabase: {

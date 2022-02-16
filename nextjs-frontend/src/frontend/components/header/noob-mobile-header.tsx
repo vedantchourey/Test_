@@ -35,18 +35,17 @@ export default function NoobMobileHeader(): JSX.Element {
     setShowLoginModal(false);
   }
 
-  function onLoginClick():void {
+  function onLoginClick(): void {
     setShowLoginModal(true)
     hideMenu();
   }
 
-
   function avatar(): JSX.Element {
-    if (avatarUrl == null) return (<Icon className={styles.userIcon}><PersonIcon className={styles.userIcon}/></Icon>);
+    if (avatarUrl == null) return (<Icon className={styles.userIcon}><PersonIcon className={styles.userIcon} /></Icon>);
     return <Avatar alt="Remy Sharp"
-      sx={{width: 40, height: 40}}
+      sx={{ width: 40, height: 40 }}
       className={styles.userProfilePic}
-      src={avatarUrl}/>
+      src={avatarUrl} />
   }
 
   async function onLogoutClick(): Promise<void> {
@@ -71,29 +70,29 @@ export default function NoobMobileHeader(): JSX.Element {
             <Image src="/images/noobstorm-logo-small.png"
               width={130}
               height={28}
-              alt="noob storm logo"/>
+              alt="noob storm logo" />
           </div>
           <div className={styles.appBarItemLast}>
             <IconButton onClick={toggleDrawer}>
-              <MenuIcon/>
+              <MenuIcon />
             </IconButton>
           </div>
         </div>
         {isLoggedIn && <div className={styles.bottomHeader}>
           <IconButton className={styles.bottomHeaderIcons} onClick={(): Promise<boolean> => router.push('/')}>
-            <Icon><HomeOutlinedIcon/></Icon>
+            <Icon><HomeOutlinedIcon /></Icon>
           </IconButton>
           <IconButton className={styles.bottomHeaderIcons}>
-            <Icon><EqualizerOutlinedIcon/></Icon>
+            <Icon><EqualizerOutlinedIcon /></Icon>
           </IconButton>
           <IconButton className={styles.bottomHeaderIcons}>
-            <Icon><MilitaryTechOutlinedIcon/></Icon>
+            <Icon><MilitaryTechOutlinedIcon /></Icon>
           </IconButton>
           <IconButton className={styles.bottomHeaderIcons}>
-            <Icon><NotificationsOutlinedIcon/></Icon>
+            <Icon><NotificationsOutlinedIcon /></Icon>
           </IconButton>
           <IconButton className={styles.bottomHeaderIcons}>
-            <Icon><ChatBubbleOutlineOutlinedIcon/></Icon>
+            <Icon><ChatBubbleOutlineOutlinedIcon /></Icon>
           </IconButton>
         </div>
         }

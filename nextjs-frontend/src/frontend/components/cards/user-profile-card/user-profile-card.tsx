@@ -29,7 +29,6 @@ export default function UserProfileCard(): JSX.Element {
   const theme = useTheme();
   const avatarUrl = userProfile?.avatarUrl;
   const backgroundImageUrl = userProfile?.profileBackgroundImageUrl;
-
   function showUploadBackgroundPicker(): void {
     backgroundInputRef.current?.click();
   }

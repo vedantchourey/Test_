@@ -2,7 +2,7 @@ import { isNullOrEmptyString, ValidationResult } from "../../../../common/utils/
 import { ICreatePostRequest } from '../../../../backend/services/posts-services/create-post/i-create-post';
 
 function validateMessage(obj: Partial<ICreatePostRequest>): undefined | string {
-  if (isNullOrEmptyString(obj.postContent)) return 'Is required';
+  if (isNullOrEmptyString(obj.postContent)) return 'Please enter post caption';
 }
 
 export function validatePostContent(obj: Partial<ICreatePostRequest>): ValidationResult<ICreatePostRequest> {

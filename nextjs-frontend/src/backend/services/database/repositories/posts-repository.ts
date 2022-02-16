@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 import { BaseRepository } from './base-repository';
-import { IPost } from '../models/i-post';
+import { IPost, IUpdatePostResponse } from '../models/i-post';
 import { nowAsJsDate } from '../../../../common/utils/date-time-utils';
 
 interface IUpdatePost {
@@ -25,6 +25,15 @@ export class PostsRepository extends BaseRepository<IPost> {
                .select('*')
                .where({id: id})
                .first()
+  }
+
+  async getPostLikesCommentsById(id: string): Promise<IUpdatePostResponse | undefined>{
+    return await this.entities()
+      .select('*')
+      .from('posts')
+      .innerJoin('post_likes', 'posts.id', 'post_likes.postId')
+      .where('posts.id', '=', id)
+      .first();
   }
 
   async countPostById(id: string): Promise<number> {
