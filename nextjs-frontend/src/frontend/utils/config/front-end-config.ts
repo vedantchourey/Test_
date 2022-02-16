@@ -26,12 +26,7 @@ const frontendConfig: IFrontendConfig = {
   },
   supabase: {
     anonKey: supabaseAnonKey,
-    apiUrl: supabaseUrl,
-    storage : {
-      getObjectUrl : (filepath) =>{
-        return supabaseUrl + '/storage/v1/object/sign/' + filepath + `?token=${supabaseAnonKey}` ;
-      }
-    }
+    apiUrl: supabaseUrl
   }
 }
 

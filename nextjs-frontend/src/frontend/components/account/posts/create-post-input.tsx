@@ -40,12 +40,11 @@ export default function CreatePostInput(): JSX.Element {
       .split('.')
       .pop()
       ?.toLowerCase();
-    return `${prefix}${userProfile.id}${v4()}.${fileExt}`;
+    return `posts/${prefix}${userProfile.id}${v4()}.${fileExt}`;
   }
 
-  async function UploadMedia(file: File): Promise<{ data: { Key: string } | null; error: Error | null }> {
-    const CustomfileUrl = generateFileUrl('post-image', file)
-    return await uploadImage('resources', CustomfileUrl, file);
+  async function UploadMedia(file: File, fileUrl : string): Promise<{ data: { Key: string } | null; error: Error | null }> {
+    return await uploadImage('resources', fileUrl, file);
   }
 
   async function onClickCreatePost(): Promise<void> {
@@ -74,9 +73,8 @@ export default function CreatePostInput(): JSX.Element {
   }
 
   const createImageThumb = async (file: MediaSource | Blob): Promise<void> => {
-    setMedia((pre) => {
+    setMedia(() => {
       return [
-        ...pre,
         {
           contentUrl: URL.createObjectURL(file),
           contentType: 'image'
@@ -124,16 +122,14 @@ export default function CreatePostInput(): JSX.Element {
           }
           const files:FileList= event.target.files;
 
-          if (files && (files.length + media.length) > 1) {
-            alert("Only 1 media file is allowed with a post")
-            return;
-          }
           if (files.length) {
             const file = files[0];
             const fileType = file.type.split("/")[0]
+            const fileUrl = generateFileUrl('post-image', file)
+
             setIsUploading(true)
-            UploadMedia(file)
-              .then(({ data }) => {
+            UploadMedia(file,fileUrl)
+              .then(() => {
                 if (fileType === 'image') {
                   createImageThumb(file)
                 }
@@ -141,7 +137,7 @@ export default function CreatePostInput(): JSX.Element {
                 setRequest((pre) => {
                   return {
                     ...pre,
-                    postImgUrl:  `${data?.Key}`
+                    postImgUrl:  fileUrl
                   }
                 })
               })

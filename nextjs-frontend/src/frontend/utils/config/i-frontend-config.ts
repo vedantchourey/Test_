@@ -2,10 +2,7 @@ export interface IFrontendConfig {
   baseAppUrl: string;
   supabase: {
     apiUrl: string;
-    anonKey: string;
-    storage : {
-      getObjectUrl : (filepath : string, token? : string) => string; 
-    };
+    anonKey: string
   };
   noobStormServices: {
     auth: {
