@@ -111,7 +111,7 @@ export default function Account(): JSX.Element {
               </Box>
 
               <TabPanel sx={{ p: 0 }} value="posts">
-                <CreatePostInput />
+                <CreatePostInput setPosts={setPosts} />
                 {_renderPosts()}
               </TabPanel>
               <TabPanel sx={{ p: 0 }} value="about"></TabPanel>

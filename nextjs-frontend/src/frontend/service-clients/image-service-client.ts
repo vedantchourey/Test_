@@ -10,6 +10,10 @@ export function downloadImage(bucket: string, filename: string, bustCache = fals
                          .download(url)
 }
 
+export function getImageSignedUrl(bucket: string, filename: string):Promise<{signedURL :string | null; error : Error | null}>{
+  return frontendSupabase.storage.from(bucket).createSignedUrl(filename,60);
+}
+
 
 export function uploadImage(bucket: string, filename: string, file: File): Promise<{ data: { Key: string } | null; error: Error | null }> {
   return frontendSupabase.storage

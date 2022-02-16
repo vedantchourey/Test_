@@ -1,130 +1,183 @@
 /* eslint-disable indent */
-import React, { useState } from 'react'
-import { CardActions, IconButton, Card, CardMedia, Typography, Box, Avatar, Backdrop, Modal, Fade, List, ListItem, ListItemButton, ListItemText, Button, Grid, Divider } from '@mui/material'
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import ShareIcon from '@mui/icons-material/Share';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import styles from './post.module.css';
+import React, { useEffect, useState } from "react";
+import {
+  IconButton,
+  Card,
+  CardMedia,
+  Typography,
+  Box,
+  Avatar,
+  List,
+  ListItem,
+  Button,
+  Grid
+} from "@mui/material";
+import styles from "./post.module.css";
 import { IPostsResponse } from "../../../service-clients/messages/i-posts-response";
+import { getImageSignedUrl } from "../../../service-clients/image-service-client";
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 interface IProps {
-    data : IPostsResponse
+  data: IPostsResponse;
 }
 
-const PostIconStyles = {
-    color: 'rgba(255,255,255,0.4)'
-}
+const PostCard = (props: IProps): JSX.Element => {
+  const [values, setValues] = useState<IPostsResponse>(props.data);
+  const [showMenu, setShowMenu] = useState(false);
+  const [imgUrl, setImgUrl] = useState<string | null>("");
 
-const PostCard = (props:IProps): JSX.Element => {
-    const [values,setValues] = useState<IPostsResponse>(props.data);
-    const [showMenu, setShowMenu] = useState(false)
+  const handleCloseMenu = (): void => setShowMenu(false);
+  const handleToggleMenu = (): void => setShowMenu((pre) => !pre)
 
-    const handleCloseMenu = (): void => setShowMenu(false)
-    const handleOpenMenu = (): void => setShowMenu(true)
+  const handleToggleLike = (): void => {
+    setValues({ ...values, isLiked: true });
+  };
 
-    const handleToggleLike = (): void => {
-        setValues({...values, isLiked : true})
-    }
+  useEffect(() => {
+    (async (): Promise<void> => {
+      const { signedURL } = await getImageSignedUrl(
+        "resources",
+        values.postImgUrl
+      );
+      setImgUrl(signedURL);
+    })();
+  }, []);
 
-    return (
-        <Grid item md={8}>
-            <Card className={styles.postCard} sx={{ my: 3 }} elevation={0}>
-                <Box sx={{
-                    display: 'inline-flex',
-                    gap: 2,
-                    padding: 2
-                }}>
-                    <Avatar
-                        className={styles.postAvatar}
-                        alt="avatar"
-                        src={''}
-                    />
-                    <Box>
-                        <Box className={styles.flexRow} sx={{ justifyContent: "space-between", width: '100%' }}>
-                            <Typography variant={'h3'} fontSize={15}>
-                                {values.postOwner.firstName + ' ' + values.postOwner.lastName }
-                                <Typography variant="caption" color='text.secondary' sx={{ ml: 1 }}>
-                                    {new Date(values.createdAt).toDateString()}
-                                </Typography>
-                            </Typography>
+  return (
+    <Grid item md={12}>
+      <Card className={styles.postCard} sx={{ my: 3 }} elevation={0}>
 
-                            <IconButton onClick={handleOpenMenu} size={'small'}>
-                                <MoreVertIcon />
-                            </IconButton>
-                        </Box>
+        <Box sx={{
+          width: "100%",
+          display: 'inline-flex',
+          justifyContent: "space-between",
 
-                        <Typography align='left' fontSize={14} fontWeight={100} paragraph>
-                            {values.postContent}
-                        </Typography>
-                    </Box>
+        }}>
+          <Box sx={{ display: 'flex' }}>
+            <Avatar
+              className={styles.postAvatar}
+              alt="Remy Sharp"
+              src={values.postOwner.avatarUrl}
+            />
+            <Box sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'baseline',
+              paddingLeft: "10px"
+            }}>
+              <Typography variant={'h3'} fontSize={15}>
+                {values.postOwner.firstName + " " + values.postOwner.lastName}
+              </Typography>
+              <Typography variant="subtitle2" color='#575265'>
+                {new Date(values.createdAt).toDateString()}
+              </Typography>
+            </Box>
+          </Box>
+
+          <div>
+            <IconButton sx={{ padding: '10px' }} onClick={handleToggleMenu} >
+              <MoreHorizIcon />
+            </IconButton>
+            {showMenu && (
+              <List className={styles.postCardOptionsContainer}>
+                <ListItem disablePadding>
+                  <Button
+                    fullWidth
+                    className={styles.postCardOptionsBtn}
+                    sx={{ color: 'red', borderBottomLeftRadius: 0, borderBottomRightRadius: 0, }}
+                  >
+                    <img src='icons/error.svg' alt='icon' />
+                    Report Post
+                  </Button>
+                </ListItem>
+                <ListItem disablePadding>
+                  <Button
+                    fullWidth
+                    className={styles.postCardOptionsBtn}
+                    sx={{ color: 'red', margin: '2px 0', borderRadius: '0px' }}
+                  >
+                    <img src='icons/copy.svg' alt='icon' />
+                    Copy Link
+                  </Button>
+                </ListItem>
+                <ListItem disablePadding>
+                  <Button
+                    fullWidth
+                    onClick={handleCloseMenu}
+                    className={styles.postCardOptionsBtn}
+                    sx={{ color: 'black', borderTopLeftRadius: 0, borderTopRightRadius: 0, }}
+                  >
+                    Cancel
+                  </Button>
+                </ListItem>
+              </List>
+            )}
+          </div>
+
+        </Box>
+
+        <Typography my={2} align='left' fontSize={14} fontWeight={100} paragraph>
+          {values.postContent}
+        </Typography>
+
+        {/* Action Button Blur Container */}
+        <Box sx={{ position: 'relative' }}>
+          {imgUrl && (
+            <CardMedia
+              component="img"
+              className={styles.postImage}
+              image={imgUrl || ""}
+              alt="user avatar"
+              key={"as"}
+            />
+          )}
+          <Box className={styles.actionButtons}>
+            <Box className={styles.blurContainer}>
+              <Box sx={{
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                <Box>
+                  <IconButton
+                    onClick={handleToggleLike}
+                    className={styles.postBtn}
+                    sx={{ padding: '12px' }}
+                  >
+                    <img src='icons/heart.svg' alt='icon' />
+                  </IconButton>
+                  {50}
+                </Box>
+                <Box mx={1}>
+                  <IconButton
+                    className={styles.postBtn}
+                    onClick={handleToggleLike}
+                    sx={{ padding: '15px' }}
+                  >
+                    <img src='icons/message.svg' alt='icon' />
+                  </IconButton>
+                  {50}
+                </Box>
+                <Box>
+                  <IconButton
+                    onClick={handleToggleLike}
+                    className={styles.postBtn}
+                  >
+                    <img src='icons/share.svg' alt='icon' />
+                  </IconButton>
+                  5
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+
+        <Box mt={5} sx={{ textAlign: 'center' }}>
+                    <img width={85} src='images/noobstorm-logo-small.png' />
                 </Box>
 
-                <CardMedia
-                    component="img"
-                    className={styles.postImage}
-                    image={values.postImgUrl}
-                    alt="user avatar"
-                    key={'as'}
-                />
+      </Card>
+    </Grid>
+  );
+};
 
-                <CardActions sx={{ gap: 3 }}>
-                    <Box className={styles.flexRow}>
-                        <Button variant='text' startIcon={<FavoriteBorderIcon />} onClick={handleToggleLike} sx={PostIconStyles}>
-                            {'values.likesCount'}
-                        </Button>
-                    </Box>
-                    <Box className={styles.flexRow}>
-                        <Button variant='text' color='inherit' startIcon={<ChatBubbleOutlineIcon />} sx={PostIconStyles}>
-                            {'values.commentsCount'}
-                        </Button>
-                    </Box>
-                    <Box className={styles.flexRow}>
-                        <IconButton size="small" sx={PostIconStyles}>
-                            <ShareIcon />
-                        </IconButton>
-                    </Box>
-                </CardActions>
-
-                <Modal
-                    open={showMenu}
-                    onClose={handleCloseMenu}
-                    closeAfterTransition
-                    BackdropComponent={Backdrop}
-                >
-                    <Fade in={showMenu}>
-                        <List className={styles.postCardOptionsContainer}>
-                            <ListItem disablePadding>
-                                <ListItemButton>
-                                    <ListItemText primaryTypographyProps={{
-                                        color: 'error.main'
-                                    }} primary="Report" />
-                                </ListItemButton>
-                            </ListItem>
-                            <ListItem disablePadding>
-                                <ListItemButton>
-                                    <ListItemText primary="Share" />
-                                </ListItemButton>
-                            </ListItem>
-                            <ListItem disablePadding>
-                                <ListItemButton>
-                                    <ListItemText primary="Unfollow" />
-                                </ListItemButton>
-                            </ListItem>
-                            <ListItem disablePadding>
-                                <ListItemButton onClick={handleCloseMenu}>
-                                    <ListItemText primary="Hide" />
-                                </ListItemButton>
-                            </ListItem>
-                        </List>
-                    </Fade>
-                </Modal>
-            </Card>
-            <Box my={4}>
-                <Divider light />
-            </Box>
-        </Grid>
-    )
-}
-
-export default PostCard
+export default PostCard;

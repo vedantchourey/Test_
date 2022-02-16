@@ -2,7 +2,7 @@ export interface IFrontendConfig {
   baseAppUrl: string;
   supabase: {
     apiUrl: string;
-    anonKey: string;
+    anonKey: string
   };
   noobStormServices: {
     auth: {
