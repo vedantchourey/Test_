@@ -1,18 +1,30 @@
 .postCard {
     background: none !important;
+    border: 2px solid #201736;
+    padding: 18px 28px 8px 28px;
 }
 
 .postCardOptionsContainer {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 400px;
+    width: 200px;
+    right: 64px;
+    margin-top: 4px;
     padding: 0;
-    background-color: #fff;
     box-shadow: 24;
-    border-radius: 30px;
+    border-radius: 16px !important;
+    background-color: #dedede;
+    z-index: 4;
 }
+.postCardOptionsBtn img{
+    margin-right: 10px;
+}
+.postCardOptionsBtn {
+    font-weight: 700;
+    text-transform: capitalize !important;
+    padding: 8px 10px;
+    background-color: white !important;
+}
+
 
 .flexRow {
     display: inline-flex;
@@ -24,6 +36,33 @@
     max-height: 300px;
     object-fit: cover;
     border-radius: 10px;
+}
+
+.actionButtons{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    bottom: -25px;
+}
+.blurContainer{
+    backdrop-filter: blur(5px);
+    background-color: rgba(0,0,0, 0.4);
+    padding: 6px 12px;
+    border-radius: 10px;
+}
+.blurContainer div{
+    display: flex;
+    align-items: center;
+}
+
+
+
+.postBtn:hover{
+    background-color: transparent;
+}
+.postBtn span:focus-visible {
+    outline: none;
 }
 
 .postVideo {
@@ -46,6 +85,22 @@
     max-height: 100px;
     object-fit: cover;
 }
+.customTextArea{
+    margin: 10px 0;
+    border-radius: 15px;
+    padding: 22px 0 22px 12px;
+    background-color: none !important;
+}
+.textArea{
+    padding: 5px 0 ;
+}
+.textArea ::placeholder{
+    color: #4D465E;
+    font-weight: 500;
+}
+
+
+
 
 @media screen and (max-width: 600px) {
     .postCardOptionsContainer {
