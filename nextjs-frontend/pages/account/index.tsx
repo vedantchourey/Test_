@@ -63,10 +63,10 @@ export default function Account(): JSX.Element {
   const _renderPosts = (): JSX.Element | React.ReactNode => {
     if (isFetchingPosts) {
       return new Array(5).fill("")
-      .map((data, i) => <h1 key={i}>sf</h1>);
+        .map((data, i) => <h1 key={i}>sf</h1>);
     }
     const jsx = posts.map((postData, i) => {
-      return <PostCard key={i} data={postData} />;
+      return <PostCard key={Date.now() + i} data={postData} />;
     });
     return jsx;
   };

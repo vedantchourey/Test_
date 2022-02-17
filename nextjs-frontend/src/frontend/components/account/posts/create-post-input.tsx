@@ -43,7 +43,7 @@ interface IProps {
 }
 
 export default function CreatePostInput(props: IProps): JSX.Element {
-  const {setPosts} = props;
+  const { setPosts } = props;
   const appDispatch = useAppDispatch();
   const userProfile = useAppSelector(
     (state) => state.authentication.userProfile
@@ -65,7 +65,7 @@ export default function CreatePostInput(props: IProps): JSX.Element {
   function generateFileUrl(prefix: string, file: File): string {
     if (userProfile == null) throw new Error("user cannot be null");
     const fileExt = file.name.split(".").pop()
-    ?.toLowerCase();
+      ?.toLowerCase();
     return `posts/${prefix}${userProfile.id}${v4()}.${fileExt}`;
   }
 
@@ -86,8 +86,8 @@ export default function CreatePostInput(props: IProps): JSX.Element {
       const response = await createPost(request as ICreatePostRequest);
 
       if (!response.isError) {
-        setPosts((prevState :[]) => {
-          return [...prevState, response];
+        setPosts((prevState: []) => {
+          return [response, ...prevState];
         })
         setMedia([]);
         setRequest({

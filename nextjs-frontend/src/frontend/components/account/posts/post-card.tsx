@@ -16,6 +16,7 @@ import styles from "./post.module.css";
 import { IPostsResponse } from "../../../service-clients/messages/i-posts-response";
 import { getImageSignedUrl } from "../../../service-clients/image-service-client";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import CommentsModal from './comments-modal'
 
 interface IProps {
   data: IPostsResponse;
@@ -23,9 +24,13 @@ interface IProps {
 
 const PostCard = (props: IProps): JSX.Element => {
   const [values, setValues] = useState<IPostsResponse>(props.data);
+  const [openCommentsModal, setOpenCommentsModal] = useState<boolean>(false);
   const [showMenu, setShowMenu] = useState(false);
   const [imgUrl, setImgUrl] = useState<string | null>("");
 
+
+  const handleOpenComments = (): void => setOpenCommentsModal((pre) => !pre)
+  const handleCloseComments = (): void => setOpenCommentsModal(false);
   const handleCloseMenu = (): void => setShowMenu(false);
   const handleToggleMenu = (): void => setShowMenu((pre) => !pre)
 
@@ -46,7 +51,6 @@ const PostCard = (props: IProps): JSX.Element => {
   return (
     <Grid item md={12}>
       <Card className={styles.postCard} sx={{ my: 3 }} elevation={0}>
-
         <Box sx={{
           width: "100%",
           display: 'inline-flex',
@@ -115,67 +119,70 @@ const PostCard = (props: IProps): JSX.Element => {
           </div>
 
         </Box>
-
         <Typography my={2} align='left' fontSize={14} fontWeight={100} paragraph>
           {values.postContent}
         </Typography>
 
-        {/* Action Button Blur Container */}
-        <Box sx={{ position: 'relative' }}>
-          {imgUrl && (
-            <CardMedia
-              component="img"
-              className={styles.postImage}
-              image={imgUrl || ""}
-              alt="user avatar"
-              key={"as"}
-            />
-          )}
-          <Box className={styles.actionButtons}>
-            <Box className={styles.blurContainer}>
-              <Box sx={{
-                display: 'flex',
-                alignItems: 'center'
-              }}>
-                <Box>
-                  <IconButton
-                    onClick={handleToggleLike}
-                    className={styles.postBtn}
-                    sx={{ padding: '12px' }}
-                  >
-                    <img src='icons/heart.svg' alt='icon' />
-                  </IconButton>
-                  {50}
-                </Box>
-                <Box mx={1}>
-                  <IconButton
-                    className={styles.postBtn}
-                    onClick={handleToggleLike}
-                    sx={{ padding: '15px' }}
-                  >
-                    <img src='icons/message.svg' alt='icon' />
-                  </IconButton>
-                  {50}
-                </Box>
-                <Box>
-                  <IconButton
-                    onClick={handleToggleLike}
-                    className={styles.postBtn}
-                  >
-                    <img src='icons/share.svg' alt='icon' />
-                  </IconButton>
-                  5
+        {imgUrl && (
+          <>
+            {/* Action Button Blur Container */}
+            <Box sx={{ position: 'relative' }}>
+              <CardMedia
+                component="img"
+                className={styles.postImage}
+                image={imgUrl || ""}
+                alt="user avatar"
+                key={"as"}
+              />
+              <Box className={styles.actionButtons}>
+                <Box className={styles.blurContainer}>
+                  <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}>
+                    <Box>
+                      <IconButton
+                        onClick={handleToggleLike}
+                        className={styles.postBtn}
+                        sx={{ padding: '12px' }}
+                      >
+                        <img src='icons/heart.svg' alt='icon' />
+                      </IconButton>
+                      {50}
+                    </Box>
+                    <Box mx={1}>
+                      <IconButton
+                        className={styles.postBtn}
+                        onClick={handleToggleLike}
+                        sx={{ padding: '15px' }}
+                      >
+                        <img src='icons/message.svg' alt='icon' />
+                      </IconButton>
+                      {50}
+                    </Box>
+                    <Box>
+                      <IconButton
+                        onClick={handleToggleLike}
+                        className={styles.postBtn}
+                      >
+                        <img src='icons/share.svg' alt='icon' />
+                      </IconButton>
+                      5
+                    </Box>
+                  </Box>
                 </Box>
               </Box>
             </Box>
-          </Box>
-        </Box>
 
-        <Box mt={5} sx={{ textAlign: 'center' }}>
-                    <img width={85} src='images/noobstorm-logo-small.png' />
-                </Box>
-
+            <Box mt={5} sx={{ textAlign: 'center' }}>
+              <img width={85} src='images/noobstorm-logo-small.png' />
+            </Box>
+          </>
+        )}
       </Card>
+
+      <CommentsModal isModalOpen={openCommentsModal} handleClose={handleCloseComments} />
+
     </Grid>
   );
 };
