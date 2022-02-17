@@ -120,61 +120,62 @@ const PostCard = (props: IProps): JSX.Element => {
           {values.postContent}
         </Typography>
 
-        {/* Action Button Blur Container */}
-        <Box sx={{ position: 'relative' }}>
-          {imgUrl && (
-            <CardMedia
-              component="img"
-              className={styles.postImage}
-              image={imgUrl || ""}
-              alt="user avatar"
-              key={"as"}
-            />
-          )}
-          <Box className={styles.actionButtons}>
-            <Box className={styles.blurContainer}>
-              <Box sx={{
-                display: 'flex',
-                alignItems: 'center'
-              }}>
-                <Box>
-                  <IconButton
-                    onClick={handleToggleLike}
-                    className={styles.postBtn}
-                    sx={{ padding: '12px' }}
-                  >
-                    <img src='icons/heart.svg' alt='icon' />
-                  </IconButton>
-                  {50}
-                </Box>
-                <Box mx={1}>
-                  <IconButton
-                    className={styles.postBtn}
-                    onClick={handleToggleLike}
-                    sx={{ padding: '15px' }}
-                  >
-                    <img src='icons/message.svg' alt='icon' />
-                  </IconButton>
-                  {50}
-                </Box>
-                <Box>
-                  <IconButton
-                    onClick={handleToggleLike}
-                    className={styles.postBtn}
-                  >
-                    <img src='icons/share.svg' alt='icon' />
-                  </IconButton>
-                  5
+        {imgUrl && (
+          <>
+            {/* Action Button Blur Container */}
+            <Box sx={{ position: 'relative' }}>
+              <CardMedia
+                component="img"
+                className={styles.postImage}
+                image={imgUrl || ""}
+                alt="user avatar"
+                key={"as"}
+              />
+              <Box className={styles.actionButtons}>
+                <Box className={styles.blurContainer}>
+                  <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}>
+                    <Box>
+                      <IconButton
+                        onClick={handleToggleLike}
+                        className={styles.postBtn}
+                        sx={{ padding: '12px' }}
+                      >
+                        <img src='icons/heart.svg' alt='icon' />
+                      </IconButton>
+                      {50}
+                    </Box>
+                    <Box mx={1}>
+                      <IconButton
+                        className={styles.postBtn}
+                        onClick={handleToggleLike}
+                        sx={{ padding: '15px' }}
+                      >
+                        <img src='icons/message.svg' alt='icon' />
+                      </IconButton>
+                      {50}
+                    </Box>
+                    <Box>
+                      <IconButton
+                        onClick={handleToggleLike}
+                        className={styles.postBtn}
+                      >
+                        <img src='icons/share.svg' alt='icon' />
+                      </IconButton>
+                      5
+                    </Box>
+                  </Box>
                 </Box>
               </Box>
             </Box>
-          </Box>
-        </Box>
 
-        <Box mt={5} sx={{ textAlign: 'center' }}>
-                    <img width={85} src='images/noobstorm-logo-small.png' />
-                </Box>
-
+            <Box mt={5} sx={{ textAlign: 'center' }}>
+              <img width={85} src='images/noobstorm-logo-small.png' />
+            </Box>
+          </>
+        )}
       </Card>
     </Grid>
   );
