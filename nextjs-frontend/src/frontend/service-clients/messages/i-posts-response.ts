@@ -15,3 +15,9 @@ export interface IPostsResponse {
   totalComments : number;
   isLiked : boolean;
 }
+export interface ILikePostResponse {
+  id: string;
+  postId: string;
+  likedBy: string;
+  createdAt: string;
+}

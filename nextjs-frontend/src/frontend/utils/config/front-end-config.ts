@@ -22,6 +22,7 @@ const frontendConfig: IFrontendConfig = {
     },
     post :{
       createUrl : `${baseApiUrl}/api/posts`,
+      likePostUrl : (postId:string):string => `${baseApiUrl}/api/posts/${postId}/likes`
     }
   },
   supabase: {
