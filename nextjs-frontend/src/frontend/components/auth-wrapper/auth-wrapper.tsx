@@ -1,8 +1,8 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { useAppSelector } from '../src/frontend/redux-store/redux-store';
-import { isLoggedInSelector, userProfileSelector } from '../src/frontend/redux-store/authentication/authentication-selectors';
-import { isLoadingSelector } from '../src/frontend/redux-store/screen-animations/screen-animations-selectors';
+import { useAppSelector } from '../../redux-store/redux-store';
+import { isLoggedInSelector, userProfileSelector } from '../../redux-store/authentication/authentication-selectors';
+import { isLoadingSelector } from '../../redux-store/screen-animations/screen-animations-selectors';
 
 const withProtected = (Component: React.ElementType): unknown => {
   const AuthenticatedRoute = (): JSX.Element | null => {
