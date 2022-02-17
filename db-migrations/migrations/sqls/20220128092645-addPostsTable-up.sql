@@ -13,3 +13,15 @@ CREATE TABLE posts
 
 alter table posts
     enable row level security;
+
+create
+    policy authenticated_read_posts_table on posts
+    for
+    select
+    using (auth.role() = 'authenticated');
+
+create
+    policy authenticated_insert_posts_table on posts
+    for
+    insert with check
+    (auth.role() = 'authenticated');
