@@ -25,6 +25,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../../redux-store/redux-store";
+import { avatarImageBlobUrlSelector, userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
 import { ICreatePostRequest } from "../../../../backend/services/posts-services/create-post/i-create-post";
 import CloseIcon from "@mui/icons-material/Close";
 import styles from "./post.module.css";
@@ -45,9 +46,8 @@ interface IProps {
 export default function CreatePostInput(props: IProps): JSX.Element {
   const { setPosts } = props;
   const appDispatch = useAppDispatch();
-  const userProfile = useAppSelector(
-    (state) => state.authentication.userProfile
-  );
+  const userProfile = useAppSelector(userProfileSelector);
+  const userAvatar = useAppSelector(avatarImageBlobUrlSelector);
   const [isUploading, setIsUploading] = useState(false);
 
   const [media, setMedia] = useState<Array<mediaInterface>>([]);
@@ -133,7 +133,7 @@ export default function CreatePostInput(props: IProps): JSX.Element {
           padding: "20px",
         }}
       >
-        <Avatar alt={"user avatar"} src={userProfile?.avatarUrl} />
+        <Avatar alt={"user avatar"} src={userAvatar} />
         <TextField
           placeholder={`What's happening?`}
           fullWidth

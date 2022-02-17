@@ -27,6 +27,7 @@ const PostCard = (props: IProps): JSX.Element => {
   const [openCommentsModal, setOpenCommentsModal] = useState<boolean>(false);
   const [showMenu, setShowMenu] = useState(false);
   const [imgUrl, setImgUrl] = useState<string | null>("");
+  const [avatarUrl, setAvatarUrl] = useState<string>("")
 
 
   const handleOpenComments = (): void => setOpenCommentsModal((pre) => !pre)
@@ -46,6 +47,13 @@ const PostCard = (props: IProps): JSX.Element => {
       );
       setImgUrl(signedURL);
     })();
+    (async (): Promise<void> => {
+      const { signedURL } = await getImageSignedUrl(
+        "resources",
+        values.postOwner.avatarUrl
+      )
+      setAvatarUrl(signedURL);
+    })()
   }, []);
 
   return (
@@ -61,7 +69,7 @@ const PostCard = (props: IProps): JSX.Element => {
             <Avatar
               className={styles.postAvatar}
               alt="Remy Sharp"
-              src={values.postOwner.avatarUrl}
+              src={avatarUrl}
             />
             <Box sx={{
               display: 'flex',
