@@ -1,32 +1,46 @@
-import { IUpdatePostRequest } from './i-update-post';
+import { IUpdatePostRequest, IPostResponse, IUpdatePostResponse } from './i-update-post';
 import { PerRequestContext } from '../../../utils/api-middle-ware/api-middleware-typings';
 import { PostsRepository } from '../../database/repositories/posts-repository';
 import { validateRequest } from './update-post-validator';
 import { isThereAnyError } from '../../../../common/utils/validation/validator';
 import { Knex } from 'knex';
 import { ServiceResponse } from '../../common/contracts/service-response';
-import { IPostResponse } from '../i-post-response';
-import { IPost } from '../../database/models/i-post';
+import { PostCommentsRepository } from '../../database/repositories/post-comments-repository';
+import { PostLikesRepository } from '../../database/repositories/post-likes-repository';
 
 
-export async function updatePost(request: IUpdatePostRequest, context: PerRequestContext): Promise<ServiceResponse<IUpdatePostRequest, IPostResponse>> {
+export async function updatePost(request: IUpdatePostRequest, context: PerRequestContext): Promise<ServiceResponse<IUpdatePostRequest, IUpdatePostResponse>> {
   const errors = await validateRequest(request);
   if (isThereAnyError(errors)) return {errors}
-  const repository = new PostsRepository(context.transaction as Knex.Transaction);
   const postId = context.getParamValue('postId') as string;
+  const repository = new PostsRepository(context.transaction as Knex.Transaction);
+  const postCommentRepository = new PostCommentsRepository(context.transaction as Knex.Transaction);
+  const postLikeRepository = new PostLikesRepository(context.transaction as Knex.Transaction);
   const updatedPost = {
     postImgUrl: request.postImgUrl,
     postContent: request.postContent
   };
   await repository.updatePost(postId, updatedPost);
-  const updatedPostFromDb = await repository.getPostById(postId as string);
-  // const test = await repository.getPostLikesCommentsByPostId(postId as string);
-  const {updatedAt, createdAt, ...others} = updatedPostFromDb as IPost;
+  const updatedPostFromDb = await repository.getPostById(postId);
+  const commentCount = await postCommentRepository.countCommentByPostId(postId);
+  const likeCount = await postLikeRepository.countLikesByPostId(postId);
+  const {updatedAt, createdAt, username, firstName, lastName, avatarUrl, postContent, postImgUrl, id} = updatedPostFromDb as IPostResponse;
   return {
     data: {
-      ...others,
+      id,
+      postContent,
+      postImgUrl,
+      postOwner: {
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
+        avatarUrl: avatarUrl
+      },
       updatedAt: updatedAt?.toISOString() as string,
-      createdAt: createdAt?.toISOString() as string
-    } as IPostResponse
+      createdAt: createdAt?.toISOString() as string,
+      totalComments: commentCount,
+      totalLikes: likeCount,
+      isLiked: false
+    } as unknown as IUpdatePostResponse
   }
 }
