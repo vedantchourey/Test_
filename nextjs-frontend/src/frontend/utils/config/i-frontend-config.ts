@@ -17,9 +17,13 @@ export interface IFrontendConfig {
       createUrl: string,
       getById: string
     },
-    post :{
-      createUrl : string,
-      likePostUrl : (postId:string) => string;
-    }
+    post: {
+      createUrl: string,
+      likePostUrl: (postId: string) => string;
+      unlikePostUrl: (postId: string) => string;
+    },
+    comment: {
+      createUrl: string
+    },
   }
 }

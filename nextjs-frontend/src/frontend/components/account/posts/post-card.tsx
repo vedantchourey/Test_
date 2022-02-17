@@ -17,7 +17,7 @@ import { IPostsResponse } from "../../../service-clients/messages/i-posts-respon
 import { getImageSignedUrl } from "../../../service-clients/image-service-client";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CommentsModal from './comments-modal'
-import { checkIsPostLiked, likePost, getPostLikesCount, getPostCommentsCount } from '../../../service-clients/post-service-client'
+import { checkIsPostLiked, likePost, unlikePost, getPostLikesCount, getPostCommentsCount } from '../../../service-clients/post-service-client'
 import { useAppSelector } from '../../../redux-store/redux-store';
 import { userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
 
@@ -81,13 +81,34 @@ const PostCard = (props: IProps): JSX.Element => {
 
   const addLike = async (): Promise<void> => {
     const postId = values.id;
-    await likePost(postId);
-    setValues((pre) => {
+    await setValues((pre) => {
       return {
         ...pre,
-        isLiked: true
+        isLiked: true,
+        totalLikes: values.totalLikes + 1
       }
     })
+    likePost(postId);
+  }
+
+  const removeLike = async (): Promise<void> => {
+    const postId = values.id;
+    await setValues((pre) => {
+      return {
+        ...pre,
+        isLiked: false,
+        totalLikes: values.totalLikes - 1
+      }
+    })
+    unlikePost(postId);
+  }
+
+  const toggleLike = (): void => {
+    if (values.isLiked) {
+      addLike();
+    } else {
+      removeLike();
+    }
   }
 
   return (
@@ -184,7 +205,7 @@ const PostCard = (props: IProps): JSX.Element => {
                   }}>
                     <Box>
                       <IconButton
-                        onClick={addLike}
+                        onClick={toggleLike}
                         className={styles.postBtn}
                         sx={{ padding: '12px' }}
                       >

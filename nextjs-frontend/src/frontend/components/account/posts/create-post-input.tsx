@@ -175,7 +175,6 @@ export default function CreatePostInput(props: IProps): JSX.Element {
                   if (fileType === "image") {
                     createImageThumb(file);
                   }
-
                   setRequest((pre) => {
                     return {
                       ...pre,

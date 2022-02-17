@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { AppBar, Avatar, Button, IconButton, Modal, TextField, Toolbar, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import styles from "./post.module.css";
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import ShareIcon from '@mui/icons-material/Share';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { ICreateCommentRequest } from '../../../../backend/services/posts-services/create-comment/i-create-comment';
+import { setIsLoading } from "../../../redux-store/screen-animations/screen-animation-slice";
+import {
+  useAppDispatch,
+} from "../../../redux-store/redux-store";
+import { createComment } from "../../../service-clients/post-service-client";
 
 
 
@@ -28,6 +34,24 @@ interface IProps {
 
 const CommentsModal = (props: IProps): JSX.Element => {
   const { isModalOpen, handleClose } = props;
+  const appDispatch = useAppDispatch();
+  const [request, setRequest] = useState<Partial<ICreateCommentRequest>>({
+    comment: "",
+  });
+
+
+  async function onClickCreateComment(): Promise<void> {
+    try {
+      appDispatch(setIsLoading(true));
+      await createComment(request as ICreateCommentRequest);
+      setRequest({
+        comment: "",
+      });
+    } finally {
+      appDispatch(setIsLoading(false));
+    }
+  }
+
   return (
     <Modal
       open={isModalOpen}
@@ -110,6 +134,9 @@ const CommentsModal = (props: IProps): JSX.Element => {
                   InputProps={{
                     disableUnderline: true,
                   }}
+                  onChange={(event): void =>
+                    setRequest({ comment: event.target.value })
+                  }
                 />
 
               </Box>
@@ -121,6 +148,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
                     borderRadius: 99999,
                     textTransform: 'capitalize'
                   }}
+                  onClick={onClickCreateComment}
                 >
                   Send
                 </Button>
