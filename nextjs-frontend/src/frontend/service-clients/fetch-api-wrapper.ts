@@ -8,7 +8,7 @@ export const get = (url: string): Promise<Response> => {
   });
 };
 
-function defaultHeaders(): {[i: string]: string} {
+function defaultHeaders(): { [i: string]: string } {
   return {
     'Accept': 'application/json',
     'Content-Type': 'application/json;charset=UTF-8'
@@ -20,6 +20,15 @@ export const post = <TRequest>(url: string, payload: TRequest, headers: { [key: 
     method: 'post',
     mode: 'cors',
     body: JSON.stringify(payload),
-    headers: {...defaultHeaders(), ...headers}
+    headers: { ...defaultHeaders(), ...headers }
+  });
+};
+
+export const deleteRequest = <TRequest>(url: string, payload: TRequest, headers: { [key: string]: string } = {}): Promise<Response> => {
+  return fetch(url, {
+    method: 'delete',
+    mode: 'cors',
+    body: JSON.stringify(payload),
+    headers: { ...defaultHeaders(), ...headers }
   });
 };

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IScreenAnimations } from './i-screen-animations';
 
 const initialState: IScreenAnimations = {
-  isLoading: false
+  isLoading: true
 };
 
 const screenAnimationsSlice = createSlice({
