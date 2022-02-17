@@ -153,7 +153,7 @@ const PostCard = (props: IProps): JSX.Element => {
                     <Box mx={1}>
                       <IconButton
                         className={styles.postBtn}
-                        onClick={handleToggleLike}
+                        onClick={handleOpenComments}
                         sx={{ padding: '15px' }}
                       >
                         <img src='icons/message.svg' alt='icon' />
