@@ -31,7 +31,7 @@ export default function AuthEventsHandler(): JSX.Element | null {
         const session = await refreshSession();
         if (session.error != null) {
           appDispatch(setCheckLoginStatus('success'));
-          appDispatch(setIsLoggedIn({isLoggedIn: false, username: undefined}));
+          appDispatch(setIsLoggedIn({ isLoggedIn: false, username: undefined }));
           appDispatch(setIsLoading(false))
         }
       } catch (e) {
@@ -50,11 +50,11 @@ export default function AuthEventsHandler(): JSX.Element | null {
     const subscription = frontendSupabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN') {
         appDispatch(setIsLoading(true));
-        appDispatch(setIsLoggedIn({isLoggedIn: session?.user != null, username: session?.user?.user_metadata?.username}));
+        appDispatch(setIsLoggedIn({ isLoggedIn: session?.user != null, username: session?.user?.user_metadata?.username }));
         appDispatch(fetchUserProfileThunk());
         appDispatch(setCheckLoginStatus('success'));
       } else if (event === 'SIGNED_OUT') {
-        appDispatch(setIsLoggedIn({isLoggedIn: false, username: undefined}));
+        appDispatch(setIsLoggedIn({ isLoggedIn: false, username: undefined }));
         appDispatch(clearUserProfile());
         appDispatch(setAvatarBlob(undefined));
         appDispatch(setAvatarBackgroundBlob(undefined));
@@ -63,7 +63,7 @@ export default function AuthEventsHandler(): JSX.Element | null {
         const fullPath = Router.asPath;
         const urlSearchParams = new URLSearchParams(fullPath);
         const searchQuery = Object.fromEntries(urlSearchParams.entries());
-        appDispatch(setIsLoggedIn({isLoggedIn: session?.user != null, username: session?.user?.user_metadata?.username}));
+        appDispatch(setIsLoggedIn({ isLoggedIn: session?.user != null, username: session?.user?.user_metadata?.username }));
         appDispatch(fetchUserProfileThunk());
         appDispatch(setCheckLoginStatus('success'));
         Router.push(`/reset-password?token=${searchQuery['/#access_token']}`)

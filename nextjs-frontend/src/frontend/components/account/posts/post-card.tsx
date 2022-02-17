@@ -17,27 +17,26 @@ import { IPostsResponse } from "../../../service-clients/messages/i-posts-respon
 import { getImageSignedUrl } from "../../../service-clients/image-service-client";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CommentsModal from './comments-modal'
+import { checkIsPostLiked, likePost, getPostLikesCount, getPostCommentsCount } from '../../../service-clients/post-service-client'
+import { useAppSelector } from '../../../redux-store/redux-store';
+import { userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
 
 interface IProps {
   data: IPostsResponse;
 }
 
 const PostCard = (props: IProps): JSX.Element => {
+  const user = useAppSelector(userProfileSelector);
   const [values, setValues] = useState<IPostsResponse>(props.data);
   const [openCommentsModal, setOpenCommentsModal] = useState<boolean>(false);
   const [showMenu, setShowMenu] = useState(false);
   const [imgUrl, setImgUrl] = useState<string | null>("");
-  const [avatarUrl, setAvatarUrl] = useState<string>("")
-
+  const [avatarUrl, setAvatarUrl] = useState<string | null>("")
 
   const handleOpenComments = (): void => setOpenCommentsModal((pre) => !pre)
   const handleCloseComments = (): void => setOpenCommentsModal(false);
   const handleCloseMenu = (): void => setShowMenu(false);
   const handleToggleMenu = (): void => setShowMenu((pre) => !pre)
-
-  const handleToggleLike = (): void => {
-    setValues({ ...values, isLiked: true });
-  };
 
   useEffect(() => {
     (async (): Promise<void> => {
@@ -56,6 +55,41 @@ const PostCard = (props: IProps): JSX.Element => {
     })()
   }, []);
 
+  useEffect(() => {
+    fetchPostData()
+  }, [])
+
+  const fetchPostData = async (): Promise<void> => {
+    const payload = {
+      userId: user?.id,
+      postId: values.id
+    };
+    const isPostLiked = checkIsPostLiked(payload);
+    const postLikesCount = getPostLikesCount(payload.postId);
+    const postCommentsCount = getPostCommentsCount(payload.postId);
+    const [p1, p2, p3] = await Promise.all([isPostLiked, postLikesCount, postCommentsCount]);
+    if (!p1.error) setValues((prevVals: IPostsResponse) => {
+      return { ...prevVals, ...{ isLiked: p1.isLiked || false } }
+    });
+    if (p2.totalLikes) setValues((prevVals: IPostsResponse) => {
+      return { ...prevVals, ...{ totalLikes: p2.totalLikes || 0 } }
+    });
+    if (p3.totalComments) setValues((prevVals: IPostsResponse) => {
+      return { ...prevVals, ...{ totalComments: p3.totalComments || 0 } }
+    });
+  }
+
+  const addLike = async (): Promise<void> => {
+    const postId = values.id;
+    await likePost(postId);
+    setValues((pre) => {
+      return {
+        ...pre,
+        isLiked: true
+      }
+    })
+  }
+
   return (
     <Grid item md={12}>
       <Card className={styles.postCard} sx={{ my: 3 }} elevation={0}>
@@ -69,7 +103,7 @@ const PostCard = (props: IProps): JSX.Element => {
             <Avatar
               className={styles.postAvatar}
               alt="Remy Sharp"
-              src={avatarUrl}
+              src={avatarUrl || ''}
             />
             <Box sx={{
               display: 'flex',
@@ -140,7 +174,7 @@ const PostCard = (props: IProps): JSX.Element => {
                 className={styles.postImage}
                 image={imgUrl || ""}
                 alt="user avatar"
-                key={"as"}
+                key={values.id}
               />
               <Box className={styles.actionButtons}>
                 <Box className={styles.blurContainer}>
@@ -150,13 +184,13 @@ const PostCard = (props: IProps): JSX.Element => {
                   }}>
                     <Box>
                       <IconButton
-                        onClick={handleToggleLike}
+                        onClick={addLike}
                         className={styles.postBtn}
                         sx={{ padding: '12px' }}
                       >
                         <img src='icons/heart.svg' alt='icon' />
                       </IconButton>
-                      {50}
+                      {values?.totalLikes || 0}
                     </Box>
                     <Box mx={1}>
                       <IconButton
@@ -166,11 +200,10 @@ const PostCard = (props: IProps): JSX.Element => {
                       >
                         <img src='icons/message.svg' alt='icon' />
                       </IconButton>
-                      {50}
+                      {values.totalComments || 0}
                     </Box>
                     <Box>
                       <IconButton
-                        onClick={handleToggleLike}
                         className={styles.postBtn}
                       >
                         <img src='icons/share.svg' alt='icon' />
