@@ -16,6 +16,7 @@ import styles from "./post.module.css";
 import { IPostsResponse } from "../../../service-clients/messages/i-posts-response";
 import { getImageSignedUrl } from "../../../service-clients/image-service-client";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import CommentsModal from './comments-modal'
 
 interface IProps {
   data: IPostsResponse;
@@ -23,9 +24,13 @@ interface IProps {
 
 const PostCard = (props: IProps): JSX.Element => {
   const [values, setValues] = useState<IPostsResponse>(props.data);
+  const [openCommentsModal, setOpenCommentsModal] = useState<boolean>(false);
   const [showMenu, setShowMenu] = useState(false);
   const [imgUrl, setImgUrl] = useState<string | null>("");
 
+
+  const handleOpenComments = (): void => setOpenCommentsModal((pre) => !pre)
+  const handleCloseComments = (): void => setOpenCommentsModal(false);
   const handleCloseMenu = (): void => setShowMenu(false);
   const handleToggleMenu = (): void => setShowMenu((pre) => !pre)
 
@@ -46,7 +51,6 @@ const PostCard = (props: IProps): JSX.Element => {
   return (
     <Grid item md={12}>
       <Card className={styles.postCard} sx={{ my: 3 }} elevation={0}>
-
         <Box sx={{
           width: "100%",
           display: 'inline-flex',
@@ -115,7 +119,6 @@ const PostCard = (props: IProps): JSX.Element => {
           </div>
 
         </Box>
-
         <Typography my={2} align='left' fontSize={14} fontWeight={100} paragraph>
           {values.postContent}
         </Typography>
@@ -177,6 +180,9 @@ const PostCard = (props: IProps): JSX.Element => {
           </>
         )}
       </Card>
+
+      <CommentsModal isModalOpen={openCommentsModal} handleClose={handleCloseComments} />
+
     </Grid>
   );
 };

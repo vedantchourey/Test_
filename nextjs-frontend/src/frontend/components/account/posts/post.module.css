@@ -99,10 +99,78 @@
     font-weight: 500;
 }
 
+.commentsContainer{
+    height: 600px;
+    overflow: auto;
+    position: relative;
+    padding-bottom: 80px;
+}
+.commentsContainer::-webkit-scrollbar {
+    width: 8px;
+}
+.commentsContainer::-webkit-scrollbar-thumb {
+    background: #211933; 
+    border-radius: 10px;
+}
 
-
+.appBar{
+    background-image: none !important;
+    box-shadow: none;
+    padding-right: 0 !important;
+    background-color: #08001C;
+}
+.customToolBar{
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+    border-bottom: 1px solid #211933;
+    margin: 0 16px;
+}
+.commentCard{
+    margin-top: 80px;
+    margin: 25px 20px;
+    border-bottom: 1px solid #211933;
+}
+.commentAvatar{
+    border: 2px solid #6932f9;
+    width: 60px;
+    height: 60px;
+    margin-right: 16px;
+}
+.commetActionBtn{
+    display: flex;
+    align-items: center;
+}
+.commentInputCotainer{
+    width: 100%;
+    padding: 0 20px 20px 20px;
+    position: fixed;
+    bottom: 0;
+    background-color: #08001C;
+}
+.commentInput{
+    padding:  12px;
+    border-radius: 10px;
+    background-color: #100626;
+    /* background-color: #6932f9; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
 @media screen and (max-width: 600px) {
+    .mainModalContainer{
+        width: -webkit-fill-available;
+        top: 60%;
+        padding: 1px;
+    }
+    .commentsContainer{
+        height: 692px;
+        padding-bottom: 112px;
+    }
+    .commentInputCotainer{
+        padding-bottom: 40px;
+    }
     .postCardOptionsContainer {
         margin: auto;
         width: 80%;
