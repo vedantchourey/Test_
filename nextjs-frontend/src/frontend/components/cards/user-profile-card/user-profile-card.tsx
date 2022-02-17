@@ -44,8 +44,9 @@ export default function UserProfileCard(): JSX.Element {
     return `avatars/${prefix}${userProfile.id}${v4()}.${fileExt}`;
   }
 
-  async function updateUserProfile(fileUrl: string, file: File, imageType: ProfileImageTypes): Promise<void> {
-    const response = await updateProfileImages({ url: fileUrl, imageType: imageType });
+
+  async function updateUserProfile(fileUrl: string, imageType: ProfileImageTypes): Promise<void> {
+    const response = await updateProfileImages({url: fileUrl, imageType: imageType});
     if (response.isError) return console.error(response);
     appDispatch(setUserProfile(response));
   }
@@ -74,7 +75,7 @@ export default function UserProfileCard(): JSX.Element {
       if (uploadResult.error != null) throw uploadResult.error;
       if (backgroundImageUrl != null && imageType === ProfileImageTypes.background) return;
       if (avatarUrl != null && imageType === ProfileImageTypes.avatar) return;
-      await updateUserProfile(fileUrl, file, imageType);
+      await updateUserProfile(fileUrl, imageType);
     } finally {
       appDispatch(setIsLoading(false));
     }

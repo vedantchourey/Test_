@@ -49,7 +49,7 @@ function createFileFromStream(stream: Readable, outputBuffer: Promise<Buffer> | 
 
 export const createMultiPartMiddleWare = (opts: Opts): NoobApiRouteHandler => {
   return async (req: NextApiRequest, res: NextApiResponse, context: PerRequestContext): Promise<void> => {
-
+    if (context.middlewareResponse != null) return;
     return new Promise((resolve, reject) => {
 
       const bb = busboy({headers: req.headers, limits: opts.limits});
@@ -68,19 +68,23 @@ export const createMultiPartMiddleWare = (opts: Opts): NoobApiRouteHandler => {
       });
 
       bb.on('partsLimit', () => {
+        if (context.middlewareResponse != null) return;
         context.middlewareResponse = {status: 400, data: {message: 'parts limit exceeded!'}};
       });
 
       bb.on('fieldsLimit', () => {
+        if (context.middlewareResponse != null) return;
         context.middlewareResponse = {status: 400, data: {message: 'fields limit exceeded!'}};
       });
 
       bb.on('filesLimit', () => {
+        if (context.middlewareResponse != null) return;
         context.middlewareResponse = {status: 400, data: {message: 'files limit exceeded!'}};
       });
 
       bb.on('error', (error) => {
         console.error(error);
+        if (context.middlewareResponse != null) return;
         context.middlewareResponse = {status: 500, data: {message: 'something went wrong!'}};
       });
 
