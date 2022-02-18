@@ -21,9 +21,7 @@ export interface IFrontendConfig {
       createUrl: string,
       likePostUrl: (postId: string) => string;
       unlikePostUrl: (postId: string) => string;
-    },
-    comment: {
-      createUrl: string
-    },
+      createCommentUrl : (postID : string) => string;
+    }
   }
 }

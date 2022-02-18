@@ -6,3 +6,16 @@ export interface IPostComment {
   createdAt?: Date,
   updatedAt?: Date
 }
+
+export interface IPostCommentResponse {
+  id: string,
+  comment: string,
+  commentBy: string,
+  postId: string,
+  username: string,
+  firstName: string,
+  lastName: string,
+  avatarUrl: string,
+  createdAt: Date,
+  updatedAt: Date
+}

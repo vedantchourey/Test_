@@ -15,7 +15,7 @@
     background-color: #dedede;
     z-index: 4;
 }
-.postCardOptionsBtn img{
+.postCardOptionsBtn img {
     margin-right: 10px;
 }
 .postCardOptionsBtn {
@@ -24,7 +24,6 @@
     padding: 8px 10px;
     background-color: white !important;
 }
-
 
 .flexRow {
     display: inline-flex;
@@ -38,27 +37,25 @@
     border-radius: 10px;
 }
 
-.actionButtons{
+.actionButtons {
     width: 100%;
     display: flex;
     justify-content: center;
     position: absolute;
     bottom: -25px;
 }
-.blurContainer{
+.blurContainer {
     backdrop-filter: blur(5px);
-    background-color: rgba(0,0,0, 0.4);
+    background-color: rgba(0, 0, 0, 0.4);
     padding: 6px 12px;
     border-radius: 10px;
 }
-.blurContainer div{
+.blurContainer div {
     display: flex;
     align-items: center;
 }
 
-
-
-.postBtn:hover{
+.postBtn:hover {
     background-color: transparent;
 }
 .postBtn span:focus-visible {
@@ -85,21 +82,21 @@
     max-height: 100px;
     object-fit: cover;
 }
-.customTextArea{
+.customTextArea {
     margin: 10px 0;
     border-radius: 15px;
     padding: 22px 0 22px 12px;
     background-color: none !important;
 }
-.textArea{
-    padding: 5px 0 ;
+.textArea {
+    padding: 5px 0;
 }
-.textArea ::placeholder{
-    color: #4D465E;
+.textArea ::placeholder {
+    color: #4d465e;
     font-weight: 500;
 }
 
-.commentsContainer{
+.commentsContainer {
     height: 600px;
     overflow: auto;
     position: relative;
@@ -109,47 +106,48 @@
     width: 8px;
 }
 .commentsContainer::-webkit-scrollbar-thumb {
-    background: #211933; 
+    background: #211933;
     border-radius: 10px;
 }
 
-.appBar{
+.appBar {
     background-image: none !important;
     box-shadow: none;
     padding-right: 0 !important;
-    background-color: #08001C;
+    background-color: #08001c;
 }
-.customToolBar{
+.customToolBar {
     display: flex;
     justify-content: space-between;
     padding: 0 10px;
     border-bottom: 1px solid #211933;
     margin: 0 16px;
 }
-.commentCard{
+.commentCard {
     margin-top: 80px;
     margin: 25px 20px;
+    padding-bottom: 20px;
     border-bottom: 1px solid #211933;
 }
-.commentAvatar{
+.commentAvatar {
     border: 2px solid #6932f9;
     width: 60px;
     height: 60px;
     margin-right: 16px;
 }
-.commetActionBtn{
+.commetActionBtn {
     display: flex;
     align-items: center;
 }
-.commentInputCotainer{
+.commentInputCotainer {
     width: 100%;
-    padding: 0 20px 20px 20px;
+    padding: 0 20px 0px 20px;
+    bottom: 20px;
     position: fixed;
-    bottom: 0;
-    background-color: #08001C;
+    background-color: #08001c;
 }
-.commentInput{
-    padding:  12px;
+.commentInput {
+    padding: 12px;
     border-radius: 10px;
     background-color: #100626;
     /* background-color: #6932f9; */
@@ -159,16 +157,16 @@
 }
 
 @media screen and (max-width: 600px) {
-    .mainModalContainer{
+    .mainModalContainer {
         width: -webkit-fill-available;
         top: 60%;
         padding: 1px;
     }
-    .commentsContainer{
+    .commentsContainer {
         height: 692px;
         padding-bottom: 112px;
     }
-    .commentInputCotainer{
+    .commentInputCotainer {
         padding-bottom: 40px;
     }
     .postCardOptionsContainer {

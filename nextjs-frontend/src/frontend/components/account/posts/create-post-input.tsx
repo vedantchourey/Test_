@@ -49,6 +49,7 @@ export default function CreatePostInput(props: IProps): JSX.Element {
   const userProfile = useAppSelector(userProfileSelector);
   const userAvatar = useAppSelector(avatarImageBlobUrlSelector);
   const [isUploading, setIsUploading] = useState(false);
+  const [isImgUploaded, setIsImgUploaded] = useState(false);
 
   const [media, setMedia] = useState<Array<mediaInterface>>([]);
 
@@ -181,6 +182,7 @@ export default function CreatePostInput(props: IProps): JSX.Element {
                       postImgUrl: fileUrl,
                     };
                   });
+                  setIsImgUploaded(true)
                 })
                 .catch((error) => {
                   alert(error);
@@ -205,29 +207,33 @@ export default function CreatePostInput(props: IProps): JSX.Element {
         sx={{ display: "flex", justifyContent: "end", gap: "15px", px: 3 }}
         disableSpacing
       >
-        {media.map(({ contentType, contentUrl }, i) => (
-          <Grid item style={{ position: "relative" }} key={i}>
-            {contentType === "image" ? (
-              <img
-                src={contentUrl}
-                alt={"media"}
-                className={styles.previewImageStyle}
-              />
-            ) : (
-              <div></div>
-            )}
-            <Tooltip title="Remove">
-              <IconButton
-                color="default"
-                size="small"
-                className={styles.previewImageCancel}
-                onClick={(): void => handleRemovePreviewImage(i)}
-              >
-                <CloseIcon sx={{ fontSize: "10px" }} />
-              </IconButton>
-            </Tooltip>
-          </Grid>
-        ))}
+        {media.map(({ contentType, contentUrl }, i) => {
+          if (isImgUploaded) {
+            return (
+              <Grid item style={{ position: "relative" }} key={i}>
+                {contentType === "image" ? (
+                  <img
+                    src={contentUrl}
+                    alt={"media"}
+                    className={styles.previewImageStyle}
+                  />
+                ) : (
+                  <div></div>
+                )}
+                <Tooltip title="Remove">
+                  <IconButton
+                    color="default"
+                    size="small"
+                    className={styles.previewImageCancel}
+                    onClick={(): void => handleRemovePreviewImage(i)}
+                  >
+                    <CloseIcon sx={{ fontSize: "10px" }} />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+            )
+          }
+        })}
 
         <div>
           <IconButton

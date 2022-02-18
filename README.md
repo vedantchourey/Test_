@@ -25,4 +25,6 @@ This the nextjs frontend and apis
 - commands
     - `yarn run dev` runs the app at `http://localhost:3000`
 
+## URLs
+- [Vercel Environment](https://noobstorm-dev.vercel.app/)
  
