@@ -21,6 +21,20 @@ export const getUserPosts = async (): Promise<IPostsResponse[]> => {
   return result.data as IPostsResponse[];
 };
 
+export const getPostsByUserId = async (userid:string): Promise<IPostsResponse[]> => {
+  const result = await frontendSupabase.from("posts").select(`
+        id,
+        postContent,
+        postImgUrl,
+        postOwner : profiles!fk_posts_profiles_id(id, username, firstName, lastName, avatarUrl),
+        createdAt,
+        updatedAt
+  `)
+  .match({id :userid});
+  if (result.error) throw result.error;
+  return result.data as IPostsResponse[];
+};
+
 export const createPost = async (
   request: ICreatePostRequest
 ): Promise<NoobPostResponse<ICreatePostRequest, IPostsResponse>> => {

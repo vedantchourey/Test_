@@ -1,21 +1,15 @@
-import React from "react";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { useAppSelector } from "../../src/frontend/redux-store/redux-store";
-import {
-  authCheckStatusSelector,
-  isLoggedInSelector,
-} from "../../src/frontend/redux-store/authentication/authentication-selectors";
-import UserProfileCard from "../../src/frontend/components/cards/user-profile-card/user-profile-card";
+import { useState, useEffect } from 'react';
 import NoobPage from "../../src/frontend/components/page/noob-page";
+import UserProfileCard from "../../src/frontend/components/cards/user-profile-card/user-profile-card";
 import { Box, Divider, Grid, Tab, SxProps } from "@mui/material";
 import commonStyles from "../../src/frontend/styles/common.module.css";
-import { TabContext, TabList, TabPanel } from "@mui/lab";
-import CreatePostInput from "../../src/frontend/components/account/posts/create-post-input";
 import PostCard from "../../src/frontend/components/account/posts/post-card";
-import { getUserPosts } from "../../src/frontend/service-clients/post-service-client";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { getPostsByUserId } from "../../src/frontend/service-clients/post-service-client";
+import Router from 'next/router';
 import { IPostsResponse } from "../../src/frontend/service-clients/messages/i-posts-response";
-import { withProtected } from '../../src/frontend/components/auth-wrapper/auth-wrapper';
+import { IProfileResponse } from "../../src/frontend/service-clients/messages/i-profile";
+import { getUserProfileByUsername } from '../../src/frontend/service-clients/profile-service-client';
 
 type TabsProps = "posts" | "about" | "activity";
 
@@ -29,37 +23,44 @@ const tabStyles: SxProps = {
   border: "none",
 };
 
-function Account(): JSX.Element {
-  const router = useRouter();
-  const isLoggedIn = useAppSelector(isLoggedInSelector);
-  const checkStatus = useAppSelector(authCheckStatusSelector);
 
+function UserAccount(): JSX.Element {
   const [activeTab, setActiveTab] = useState<TabsProps>("posts");
-  const [isFetchingPosts, setIsFetchingPosts] = useState<boolean>(true);
+  const [userData, setUserData] = useState<IProfileResponse | null>(null);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
-
-  useEffect(() => {
-    (async (): Promise<unknown> => {
-      if (checkStatus !== "success") return;
-      if (isLoggedIn) return;
-      await router.push("/");
-    })();
-  });
-
-  useEffect(() => {
-    try {
-      (async (): Promise<void> => {
-        const posts = await getUserPosts();
-        setPosts(posts);
-      })();
-    } finally {
-      setIsFetchingPosts(false);
-    }
-  }, []);
+  const [isFetchingUserData, setIsFetchingUserData] = useState<boolean>(true);
+  const [isFetchingPosts, setIsFetchingPosts] = useState<boolean>(true);
 
   const handleChange = (e: unknown, newValue: TabsProps): void => {
     setActiveTab(newValue);
   };
+
+  useEffect(() => {
+    try {
+      (async (): Promise<void> => {
+        const username = Router.query.username as string;
+        const user = await getUserProfileByUsername(username);
+        if (user) {
+          setUserData(user);
+        }
+      })();
+    } finally {
+      setIsFetchingUserData(false)
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!userData) return;
+    try {
+      (async (): Promise<void> => {
+        const posts = await getPostsByUserId(userData?.id);
+        setPosts(posts);
+      })
+    }
+    finally {
+      setIsFetchingPosts(false);
+    }
+  }, [userData])
 
   const _renderPosts = (): JSX.Element | React.ReactNode => {
     if (isFetchingPosts) {
@@ -74,11 +75,10 @@ function Account(): JSX.Element {
 
   return (
     <NoobPage
-      title="Account"
+      title="User Account"
       metaData={{
         description: "Noob Storm account page",
-      }}
-    >
+      }}>
       <div className={commonStyles.container}>
         <Grid container my={2} spacing={2}>
           <Grid item xs={12} md={4}>
@@ -112,7 +112,6 @@ function Account(): JSX.Element {
               </Box>
 
               <TabPanel sx={{ p: 0 }} value="posts">
-                <CreatePostInput setPosts={setPosts} />
                 {_renderPosts()}
               </TabPanel>
               <TabPanel sx={{ p: 0 }} value="about"></TabPanel>
@@ -122,7 +121,7 @@ function Account(): JSX.Element {
         </Grid>
       </div>
     </NoobPage>
-  );
+  )
 }
 
-export default withProtected(Account);
+export default UserAccount;
