@@ -90,6 +90,10 @@ const CommentsModal = (props: IProps): JSX.Element => {
                   className={styles.commentAvatar}
                   alt="Remy Sharp"
                   src={''}
+                  sx={{
+                    width: 20,
+                    height: 20
+                  }}
                 />
                 <Box>
                   <Box sx={{ display: "inline-flex" }}>

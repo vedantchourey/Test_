@@ -21,7 +21,7 @@ type TabsProps = "posts" | "about" | "activity";
 
 const tabStyles: SxProps = {
   textTransform: "capitalize",
-  fontWeight: 100,
+  fontWeight: 400,
   marginRight: 2,
   borderRadius: 2,
   minHeight: 42,

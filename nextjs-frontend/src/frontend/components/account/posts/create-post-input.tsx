@@ -137,6 +137,11 @@ export default function CreatePostInput(props: IProps): JSX.Element {
         <Avatar alt={"user avatar"} src={userAvatar} />
         <TextField
           placeholder={`What's happening?`}
+          sx={{
+            '& .MuiInput-root': {
+              fontWeight: 300
+            }
+          }}
           fullWidth
           multiline
           autoFocus

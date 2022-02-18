@@ -8,18 +8,12 @@ class NoobDocument extends Document {
     return (
       <Html>
         <Head>
-          <link
-            href="https://fonts.googleapis.com/css2?family=Chakra+Petch&display=swap"
-            rel="stylesheet"
-          />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Inter&display=swap"
-            rel="stylesheet"
-          />
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=Inter:wght@100;300;500;700;900&display=swap" rel="stylesheet" />
         </Head>
         <body>
-          <Main/>
-          <NextScript/>
+          <Main />
+          <NextScript />
         </body>
       </Html>
     )
