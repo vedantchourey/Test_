@@ -32,6 +32,7 @@ const PostCard = (props: IProps): JSX.Element => {
   const [showMenu, setShowMenu] = useState(false);
   const [imgUrl, setImgUrl] = useState<string | null>("");
   const [avatarUrl, setAvatarUrl] = useState<string | null>("")
+  const [isFetchingMeta, setIsFetchingMeta] = useState<boolean>(true);
 
   const handleOpenComments = (): void => setOpenCommentsModal((pre) => !pre)
   const handleCloseComments = (): void => setOpenCommentsModal(false);
@@ -68,20 +69,28 @@ const PostCard = (props: IProps): JSX.Element => {
     const postLikesCount = getPostLikesCount(payload.postId);
     const postCommentsCount = getPostCommentsCount(payload.postId);
     const [p1, p2, p3] = await Promise.all([isPostLiked, postLikesCount, postCommentsCount]);
-    if (!p1.error) setValues((prevVals: IPostsResponse) => {
-      return { ...prevVals, ...{ isLiked: p1.isLiked || false } }
-    });
-    if (p2.totalLikes) setValues((prevVals: IPostsResponse) => {
-      return { ...prevVals, ...{ totalLikes: p2.totalLikes || 0 } }
-    });
-    if (p3.totalComments) setValues((prevVals: IPostsResponse) => {
-      return { ...prevVals, ...{ totalComments: p3.totalComments || 0 } }
-    });
+    if (!p1.error) {
+      setValues((prevVals: IPostsResponse) => {
+        return { ...prevVals, ...{ isLiked: p1.isLiked || false } }
+      });
+    }
+
+    if (p2.totalLikes?.toString()) {
+      setValues((prevVals: IPostsResponse) => {
+        return { ...prevVals, ...{ totalLikes: p2.totalLikes || 0 } }
+      });
+    }
+    if (p3.totalComments?.toString()) {
+      setValues((prevVals: IPostsResponse) => {
+        return { ...prevVals, ...{ totalComments: p3.totalComments || 0 } }
+      });
+    }
+    setIsFetchingMeta(false);
   }
 
   const addLike = async (): Promise<void> => {
     const postId = values.id;
-    await setValues((pre) => {
+    setValues((pre) => {
       return {
         ...pre,
         isLiked: true,
@@ -93,7 +102,7 @@ const PostCard = (props: IProps): JSX.Element => {
 
   const removeLike = async (): Promise<void> => {
     const postId = values.id;
-    await setValues((pre) => {
+    setValues((pre) => {
       return {
         ...pre,
         isLiked: false,
@@ -104,7 +113,7 @@ const PostCard = (props: IProps): JSX.Element => {
   }
 
   const toggleLike = (): void => {
-    if (values.isLiked) {
+    if (!values.isLiked) {
       addLike();
     } else {
       removeLike();
@@ -197,43 +206,47 @@ const PostCard = (props: IProps): JSX.Element => {
                 alt="user avatar"
                 key={values.id}
               />
-              <Box className={styles.actionButtons}>
-                <Box className={styles.blurContainer}>
-                  <Box sx={{
-                    display: 'flex',
-                    alignItems: 'center'
-                  }}>
-                    <Box>
-                      <IconButton
-                        onClick={toggleLike}
-                        className={styles.postBtn}
-                        sx={{ padding: '12px' }}
-                      >
-                        <img src='icons/heart.svg' alt='icon' />
-                      </IconButton>
-                      {values?.totalLikes || 0}
-                    </Box>
-                    <Box mx={1}>
-                      <IconButton
-                        className={styles.postBtn}
-                        onClick={handleOpenComments}
-                        sx={{ padding: '15px' }}
-                      >
-                        <img src='icons/message.svg' alt='icon' />
-                      </IconButton>
-                      {values.totalComments || 0}
-                    </Box>
-                    <Box>
-                      <IconButton
-                        className={styles.postBtn}
-                      >
-                        <img src='icons/share.svg' alt='icon' />
-                      </IconButton>
-                      5
+              {
+                !isFetchingMeta && (
+                  <Box className={styles.actionButtons}>
+                    <Box className={styles.blurContainer}>
+                      <Box sx={{
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}>
+                        <Box>
+                          <IconButton
+                            onClick={toggleLike}
+                            className={styles.postBtn}
+                            sx={{ padding: '12px' }}
+                          >
+                            <img src='icons/heart.svg' alt='icon' />
+                          </IconButton>
+                          {values?.totalLikes || 0}
+                        </Box>
+                        <Box mx={1}>
+                          <IconButton
+                            className={styles.postBtn}
+                            onClick={handleOpenComments}
+                            sx={{ padding: '15px' }}
+                          >
+                            <img src='icons/message.svg' alt='icon' />
+                          </IconButton>
+                          {values.totalComments || 0}
+                        </Box>
+                        <Box>
+                          <IconButton
+                            className={styles.postBtn}
+                          >
+                            <img src='icons/share.svg' alt='icon' />
+                          </IconButton>
+                          5
+                        </Box>
+                      </Box>
                     </Box>
                   </Box>
-                </Box>
-              </Box>
+                )
+              }
             </Box>
 
             <Box mt={5} sx={{ textAlign: 'center' }}>

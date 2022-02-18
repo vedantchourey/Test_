@@ -37,7 +37,7 @@ export const createPost = async (
 export const checkIsPostLiked = async (payload: { userId: string | undefined; postId: string }): Promise<{ isLiked?: boolean | undefined, error?: unknown }> => {
   const result = await frontendSupabase.from('post_likes').select('id', { count: 'exact' })
     .match({
-      id: payload.postId,
+      postId: payload.postId,
       likedBy: payload.userId
     })
   if (result.error) throw result.error;
