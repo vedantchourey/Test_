@@ -5,7 +5,6 @@ import { IPostsResponse, ILikePostResponse,IPostCommentResponse } from "./messag
 import { NoobPostResponse } from "./messages/common-messages";
 import { getAuthHeader } from "../utils/headers";
 import { frontendSupabase } from "../services/supabase-frontend-service";
-
 import { ICreateCommentRequest } from "../../backend/services/posts-services/create-comment/i-create-comment";
 
 export const getUserPosts = async (): Promise<IPostsResponse[]> => {
@@ -90,7 +89,7 @@ export const unlikePost = async (postId: string): Promise<NoobPostResponse<unkno
 
 export const createComment = async (
   payload : {postId : string; comment : string}
-): Promise<NoobPostResponse<ICreateCommentRequest, IPostsResponse>> => {
+): Promise<NoobPostResponse<ICreateCommentRequest, IPostCommentResponse>> => {
   const endpoint = frontendConfig.noobStormServices.post.createCommentUrl(payload.postId);
   const header = await getAuthHeader();
   const result = await post(endpoint, {comment : payload.comment} , header);
