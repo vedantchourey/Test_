@@ -1,18 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AppBar, Avatar, Button, IconButton, Modal, TextField, Toolbar, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { Skeleton } from '@mui/material';
 import styles from "./post.module.css";
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import ShareIcon from '@mui/icons-material/Share';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { ICreateCommentRequest } from '../../../../backend/services/posts-services/create-comment/i-create-comment';
-import { setIsLoading } from "../../../redux-store/screen-animations/screen-animation-slice";
+import { IPostCommentResponse } from '../../../service-clients/messages/i-posts-response';
 import {
-  useAppDispatch,
+  useAppSelector,
 } from "../../../redux-store/redux-store";
-import { createComment } from "../../../service-clients/post-service-client";
-
-
+import { avatarImageBlobUrlSelector } from '../../../redux-store/authentication/authentication-selectors';
+import { createComment, getPostComments } from "../../../service-clients/post-service-client";
 
 const style = {
   position: 'absolute',
@@ -30,25 +26,108 @@ const style = {
 interface IProps {
   isModalOpen: boolean;
   handleClose: () => void;
+  postId: string
 }
 
 const CommentsModal = (props: IProps): JSX.Element => {
+  const userAvatar = useAppSelector(avatarImageBlobUrlSelector);
   const { isModalOpen, handleClose } = props;
-  const appDispatch = useAppDispatch();
-  const [request, setRequest] = useState<Partial<ICreateCommentRequest>>({
-    comment: "",
-  });
+  const [comment, setComment] = useState<string>('');
 
+  const [isFetchingComments, setIsFetchingComments] = useState<boolean>(true)
+  const [comments, setComments] = useState<IPostCommentResponse[]>([]);
+
+  useEffect(() => {
+    getComments();
+  }, [])
+
+  const getComments = async (): Promise<void> => {
+    const data = await getPostComments(props.postId);
+    setComments(data);
+    setIsFetchingComments(false);
+  }
 
   async function onClickCreateComment(): Promise<void> {
-    try {
-      appDispatch(setIsLoading(true));
-      await createComment(request as ICreateCommentRequest);
-      setRequest({
-        comment: "",
-      });
-    } finally {
-      appDispatch(setIsLoading(false));
+    if (!comment) {
+      alert('Please enter you comment');
+      return;
+    }
+    const result = await createComment({
+      postId: props.postId,
+      comment: comment
+    });
+    if (!result.isError) setComments((prevState: IPostCommentResponse[]) => [result, ...prevState]);
+    setComment('');
+  }
+
+  const _renderComments = (): JSX.Element[] | JSX.Element | void[] => {
+    if (isFetchingComments) {
+      return (
+        new Array(20).fill('')
+          .map((_, i) => {
+            return (
+              <Box key={i} sx={{ px: 2 }} mb={3}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Skeleton variant="circular" width={40} height={40} />
+                  <div style={{ width: '90%' }}>
+                    <Skeleton key={i} width={'40%'} height={14} />
+                    <Skeleton key={i} height={14} />
+                    <Skeleton key={i} height={14} />
+                  </div>
+                </div>
+              </Box>
+            )
+          })
+      )
+    }
+    else if (!isFetchingComments && comments.length) {
+      return (
+        comments.map((data, i) => {
+          return (
+            <Box key={Date.now() + i} className={styles.commentCard}>
+              <Box sx={{ display: 'inline-flex' }}>
+                <Avatar
+                  className={styles.commentAvatar}
+                  alt="Remy Sharp"
+                  src={''}
+                />
+                <Box>
+                  <Box sx={{ display: "inline-flex" }}>
+                    <Typography variant={'body1'} color="white">
+                      {
+                        `${data.commentOwner.firstName} ${data.commentOwner.lastName}`
+                      }
+                    </Typography>
+                    <Typography variant="subtitle2" color='#575265' ml={1}>
+                      {
+                        new Date(data.createdAt).toDateString()
+                      }
+                    </Typography>
+                  </Box>
+                  <Box mt={1}>
+                    <Typography
+                      variant="body2"
+                      color='white'
+                      sx={{ textTransform: 'capitalize' }}>
+                      {data.comment}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
+          )
+        })
+      )
+    }
+    // eslint-disable-next-line no-else-return
+    else {
+      return (
+        <Box mt={5}>
+          <Typography variant={'subtitle1'} color={'white'} textAlign="center">
+            No comments
+          </Typography>
+        </Box>
+      );
     }
   }
 
@@ -70,61 +149,12 @@ const CommentsModal = (props: IProps): JSX.Element => {
             </Toolbar>
           </AppBar>
           <Box mt={12}>
-            {['', '', '', '', '', '', '', '', '', '', '', '', '', ''].map((i) => (
-              <Box key={i} className={styles.commentCard}>
-                <Box sx={{ display: 'inline-flex' }}>
-                  <Avatar
-                    className={styles.commentAvatar}
-                    alt="Remy Sharp"
-                    src='/static/images/avatar/1.jpg'
-                  />
-                  <Box>
-                    <Box sx={{ display: "inline-flex" }}>
-                      <Typography variant={'body1'} color="white">
-                        Sandeep
-                      </Typography>
-                      <Typography variant="subtitle2" color='#575265' ml={1}>
-                        7m
-                      </Typography>
-                    </Box>
-                    <Box mt={1}>
-                      <Typography
-                        variant="body2"
-                        color='white'
-                        sx={{ textTransform: 'capitalize' }}>
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Box>
-                <Box mt={3} mb={1} sx={{ display: 'inline-flex', color: '#6E767D' }}>
-                  <Box className={styles.commetActionBtn}>
-                    <IconButton className={styles.commetsAction}>
-                      <FavoriteBorderIcon color='disabled' />
-                    </IconButton>
-                    50
-                  </Box>
-                  <Box mx={4} className={styles.commetActionBtn}>
-                    <IconButton className={styles.commetsAction}>
-                      <ChatBubbleOutlineIcon color='disabled' />
-                    </IconButton>
-                    {50}
-                  </Box>
-                  <Box className={styles.commetActionBtn}>
-                    <IconButton className={styles.commetsAction}>
-                      <ShareIcon color='disabled' />
-                    </IconButton>
-                    5
-                  </Box>
-                </Box>
-              </Box>
-            ))}
-
+            {_renderComments()}
           </Box>
           <Box className={styles.commentInputCotainer}>
             <Box className={styles.commentInput}>
               <Box sx={{ display: "inline-flex", alignItems: 'center' }}>
-                <Avatar sx={{ mr: 2, width: 35, height: 35 }} alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                <Avatar sx={{ mr: 2, width: 35, height: 35 }} alt="avatar" src={userAvatar} />
                 <TextField
                   placeholder={`Your comment`}
                   fullWidth
@@ -134,9 +164,9 @@ const CommentsModal = (props: IProps): JSX.Element => {
                   InputProps={{
                     disableUnderline: true,
                   }}
-                  onChange={(event): void =>
-                    setRequest({ comment: event.target.value })
-                  }
+                  onChange={(event): void => {
+                    setComment(event.target.value)
+                  }}
                 />
 
               </Box>

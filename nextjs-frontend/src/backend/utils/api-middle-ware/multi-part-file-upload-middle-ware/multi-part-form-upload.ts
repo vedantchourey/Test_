@@ -1,6 +1,6 @@
 import { NoobApiRouteHandler, PerRequestContext } from '../api-middleware-typings';
 import { NextApiRequest, NextApiResponse } from 'next';
-import busboy, { FieldInfo, FileInfo, Limits } from 'busboy';
+import busboy, { FileInfo, Limits } from 'busboy';
 import { Readable } from 'stream';
 import sharp from 'sharp';
 import { AllowedFileTypes, FitType, gifMimeType, IMultiPartRequest, IUploadedFile, jpegMimeType, pngMimeType, webpMimeType } from './multi-part-definitions';
@@ -63,7 +63,7 @@ export const createMultiPartMiddleWare = (opts: Opts): NoobApiRouteHandler => {
         stream.pipe(sharpStream);
       });
 
-      bb.on('field', (fieldName, val, info: FieldInfo) => {
+      bb.on('field', (fieldName, val) => {
         console.warn(`Field [${fieldName}]: value: %j`, val);
       });
 
