@@ -1,3 +1,6 @@
 drop policy allow_select_for_authenticated_user_to_avatar_folder on storage.objects;
 drop policy allow_insert_for_authenticated_user_to_avatar_folder on storage.objects;
 drop policy allow_update_for_authenticated_user_to_avatar_folder on storage.objects;
+drop policy allow_select_for_authenticated_user_to_posts_folder on storage.objects;
+drop policy allow_insert_for_authenticated_user_to_posts_folder on storage.objects;
+drop policy allow_update_for_authenticated_user_to_posts_folder on storage.objects;
