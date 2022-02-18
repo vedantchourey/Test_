@@ -195,10 +195,10 @@ const PostCard = (props: IProps): JSX.Element => {
           {values.postContent}
         </Typography>
 
-        {imgUrl && (
-          <>
-            {/* Action Button Blur Container */}
-            <Box sx={{ position: 'relative' }}>
+        <>
+          {/* Action Button Blur Container */}
+          <Box sx={{ position: 'relative' }}>
+            {imgUrl && (
               <CardMedia
                 component="img"
                 className={styles.postImage}
@@ -206,8 +206,10 @@ const PostCard = (props: IProps): JSX.Element => {
                 alt="user avatar"
                 key={values.id}
               />
-              {
-                !isFetchingMeta && (
+            )}
+            {
+              !isFetchingMeta && (
+                <>
                   <Box className={styles.actionButtons}>
                     <Box className={styles.blurContainer}>
                       <Box sx={{
@@ -245,18 +247,17 @@ const PostCard = (props: IProps): JSX.Element => {
                       </Box>
                     </Box>
                   </Box>
-                )
-              }
-            </Box>
-
-            <Box mt={5} sx={{ textAlign: 'center' }}>
-              <img width={85} src='images/noobstorm-logo-small.png' />
-            </Box>
-          </>
-        )}
+                </>
+              )
+            }
+          </Box>
+          <Box mt={5} sx={{ textAlign: 'center' }}>
+            <img width={85} src='images/noobstorm-logo-small.png' />
+          </Box>
+        </>
       </Card>
 
-      <CommentsModal isModalOpen={openCommentsModal} handleClose={handleCloseComments} />
+      <CommentsModal isModalOpen={openCommentsModal} handleClose={handleCloseComments} postId={values.id} />
 
     </Grid>
   );

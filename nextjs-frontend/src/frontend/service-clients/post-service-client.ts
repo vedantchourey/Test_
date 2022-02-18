@@ -1,7 +1,7 @@
 import { post, deleteRequest } from "./fetch-api-wrapper";
 import frontendConfig from "../utils/config/front-end-config";
 import { ICreatePostRequest } from "../../backend/services/posts-services/create-post/i-create-post";
-import { IPostsResponse, ILikePostResponse } from "./messages/i-posts-response";
+import { IPostsResponse, ILikePostResponse,IPostCommentResponse } from "./messages/i-posts-response";
 import { NoobPostResponse } from "./messages/common-messages";
 import { getAuthHeader } from "../utils/headers";
 import { frontendSupabase } from "../services/supabase-frontend-service";
@@ -40,6 +40,7 @@ export const checkIsPostLiked = async (payload: { userId: string | undefined; po
       postId: payload.postId,
       likedBy: payload.userId
     })
+    .limit(1)
   if (result.error) throw result.error;
   // eslint-disable-next-line no-unneeded-ternary
   return { isLiked: result.data.length ? true : false };
@@ -98,4 +99,16 @@ export const createComment = async (
   if (result.status === 400 && body.errors.apiError == null)
     return { errors: body.errors, isError: true };
   throw body;
+}
+
+export const getPostComments = async(postId : string):Promise<IPostCommentResponse[]> => {
+  const result = await frontendSupabase.from('post_comments').select(`
+    id,
+    comment,
+    commentOwner : profiles!fk_post_comments_profile_id(id, username, firstName, lastName, avatarUrl),
+    createdAt
+  `)
+  .match({postId});
+  if (result.error) throw result.error;
+  return result.data;
 }
