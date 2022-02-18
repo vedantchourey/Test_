@@ -89,11 +89,11 @@ export const unlikePost = async (postId: string): Promise<NoobPostResponse<unkno
 }
 
 export const createComment = async (
-  request: ICreateCommentRequest
+  payload : {postId : string; comment : string}
 ): Promise<NoobPostResponse<ICreateCommentRequest, IPostsResponse>> => {
-  const endpoint = frontendConfig.noobStormServices.comment.createUrl;
+  const endpoint = frontendConfig.noobStormServices.post.createCommentUrl(payload.postId);
   const header = await getAuthHeader();
-  const result = await post(endpoint, request, header);
+  const result = await post(endpoint, {comment : payload.comment} , header);
   const body = await result.json();
   if (result.status === 200) return body.data;
   if (result.status === 400 && body.errors.apiError == null)
