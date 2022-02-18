@@ -15,7 +15,8 @@ export const getUserPosts = async (): Promise<IPostsResponse[]> => {
         postOwner : profiles!fk_posts_profiles_id(id, username, firstName, lastName, avatarUrl),
         createdAt,
         updatedAt
-  `);
+  `)
+  .order('createdAt', {ascending : false});
   if (result.error) throw result.error;
   return result.data as IPostsResponse[];
 };
@@ -107,7 +108,8 @@ export const getPostComments = async(postId : string):Promise<IPostCommentRespon
     commentOwner : profiles!fk_post_comments_profile_id(id, username, firstName, lastName, avatarUrl),
     createdAt
   `)
-  .match({postId});
+  .match({postId})
+  .order('createdAt', {ascending : false});
   if (result.error) throw result.error;
   return result.data;
 }
