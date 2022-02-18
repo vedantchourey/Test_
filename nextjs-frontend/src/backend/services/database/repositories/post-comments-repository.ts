@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 import { BaseRepository } from './base-repository';
-import { IPostComment } from '../models/i-post-comment';
+import { IPostComment, IPostCommentResponse } from '../models/i-post-comment';
 import { nowAsJsDate } from '../../../../common/utils/date-time-utils';
 
 interface IUpdateComment {
@@ -31,6 +31,13 @@ export class PostCommentsRepository extends BaseRepository<IPostComment> {
                  postId: postId,
                  id: commentId
                })
+               .first();
+  }
+
+  async getCommentByPostIdCommentId(commentId: string): Promise<IPostCommentResponse | undefined> {
+    return this.entities().select('*')
+               .leftJoin('profiles', 'post_comments.commentBy', 'profiles.id')
+               .where("post_comments.id", "=", commentId)
                .first();
   }
 
