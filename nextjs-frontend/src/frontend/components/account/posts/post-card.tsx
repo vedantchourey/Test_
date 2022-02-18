@@ -141,7 +141,7 @@ const PostCard = (props: IProps): JSX.Element => {
               alignItems: 'baseline',
               paddingLeft: "10px"
             }}>
-              <Typography variant={'h3'} fontSize={15}>
+              <Typography variant={'h3'} fontSize={15} fontWeight={400}>
                 {values.postOwner.firstName + " " + values.postOwner.lastName}
               </Typography>
               <Typography variant="subtitle2" color='#575265'>
@@ -170,7 +170,7 @@ const PostCard = (props: IProps): JSX.Element => {
                   <Button
                     fullWidth
                     className={styles.postCardOptionsBtn}
-                    sx={{ color: 'red', margin: '2px 0', borderRadius: '0px' }}
+                    sx={{ color: 'red', margin: '1px 0', borderRadius: '0px' }}
                   >
                     <img src='icons/copy.svg' alt='icon' />
                     Copy Link
@@ -191,7 +191,7 @@ const PostCard = (props: IProps): JSX.Element => {
           </div>
 
         </Box>
-        <Typography my={2} align='left' fontSize={14} fontWeight={100} paragraph>
+        <Typography my={2} align='left' fontSize={14} fontWeight={300} paragraph>
           {values.postContent}
         </Typography>
 
@@ -224,7 +224,9 @@ const PostCard = (props: IProps): JSX.Element => {
                           >
                             <img src='icons/heart.svg' alt='icon' />
                           </IconButton>
-                          {values?.totalLikes || 0}
+                          <Typography>
+                            {values?.totalLikes || 0}
+                          </Typography>
                         </Box>
                         <Box mx={1}>
                           <IconButton
@@ -234,16 +236,17 @@ const PostCard = (props: IProps): JSX.Element => {
                           >
                             <img src='icons/message.svg' alt='icon' />
                           </IconButton>
-                          {values.totalComments || 0}
+                          <Typography>
+                            {values.totalComments || 0}
+                          </Typography>
                         </Box>
-                        <Box>
+                        {/* <Box>
                           <IconButton
                             className={styles.postBtn}
                           >
                             <img src='icons/share.svg' alt='icon' />
                           </IconButton>
-                          5
-                        </Box>
+                        </Box> */}
                       </Box>
                     </Box>
                   </Box>
@@ -259,7 +262,7 @@ const PostCard = (props: IProps): JSX.Element => {
 
       <CommentsModal isModalOpen={openCommentsModal} handleClose={handleCloseComments} postId={values.id} />
 
-    </Grid>
+    </Grid >
   );
 };
 
