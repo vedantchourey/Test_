@@ -25,5 +25,9 @@ export interface IFrontendConfig {
     comment: {
       createUrl: string
     },
+    followActions : {
+      followUser : string;
+      unFollowUser : string;
+    }
   }
 }

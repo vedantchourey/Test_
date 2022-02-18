@@ -27,6 +27,10 @@ const frontendConfig: IFrontendConfig = {
     },
     comment: {
       createUrl: `${baseApiUrl}/api/posts/{POST_ID}/comments`
+    },
+    followActions : {
+      followUser : `${baseApiUrl}/api/followers/following`,
+      unFollowUser : `${baseApiUrl}/api/followers/unfollow`,
     }
   },
   supabase: {
