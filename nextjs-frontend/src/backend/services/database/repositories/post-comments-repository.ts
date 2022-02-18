@@ -62,10 +62,11 @@ export class PostCommentsRepository extends BaseRepository<IPostComment> {
                .del();
   }
 
-  async updateComment(id: string, postId: string, update: IUpdateComment): Promise<number> {
+  async updateComment(id: string, postId: string, commentBy: string, update: IUpdateComment): Promise<number> {
     return this.entities()
                .where({
                  id: id,
+                 commentBy: commentBy,
                  postId: postId
                })
                .update({
