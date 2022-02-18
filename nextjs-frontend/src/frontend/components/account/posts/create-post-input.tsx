@@ -25,6 +25,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../../redux-store/redux-store";
+import { avatarImageBlobUrlSelector, userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
 import { ICreatePostRequest } from "../../../../backend/services/posts-services/create-post/i-create-post";
 import CloseIcon from "@mui/icons-material/Close";
 import styles from "./post.module.css";
@@ -43,11 +44,10 @@ interface IProps {
 }
 
 export default function CreatePostInput(props: IProps): JSX.Element {
-  const {setPosts} = props;
+  const { setPosts } = props;
   const appDispatch = useAppDispatch();
-  const userProfile = useAppSelector(
-    (state) => state.authentication.userProfile
-  );
+  const userProfile = useAppSelector(userProfileSelector);
+  const userAvatar = useAppSelector(avatarImageBlobUrlSelector);
   const [isUploading, setIsUploading] = useState(false);
 
   const [media, setMedia] = useState<Array<mediaInterface>>([]);
@@ -65,7 +65,7 @@ export default function CreatePostInput(props: IProps): JSX.Element {
   function generateFileUrl(prefix: string, file: File): string {
     if (userProfile == null) throw new Error("user cannot be null");
     const fileExt = file.name.split(".").pop()
-    ?.toLowerCase();
+      ?.toLowerCase();
     return `posts/${prefix}${userProfile.id}${v4()}.${fileExt}`;
   }
 
@@ -86,8 +86,8 @@ export default function CreatePostInput(props: IProps): JSX.Element {
       const response = await createPost(request as ICreatePostRequest);
 
       if (!response.isError) {
-        setPosts((prevState :[]) => {
-          return [...prevState, response];
+        setPosts((prevState: []) => {
+          return [response, ...prevState];
         })
         setMedia([]);
         setRequest({
@@ -133,7 +133,7 @@ export default function CreatePostInput(props: IProps): JSX.Element {
           padding: "20px",
         }}
       >
-        <Avatar alt={"user avatar"} src={userProfile?.avatarUrl} />
+        <Avatar alt={"user avatar"} src={userAvatar} />
         <TextField
           placeholder={`What's happening?`}
           fullWidth
@@ -175,7 +175,6 @@ export default function CreatePostInput(props: IProps): JSX.Element {
                   if (fileType === "image") {
                     createImageThumb(file);
                   }
-
                   setRequest((pre) => {
                     return {
                       ...pre,

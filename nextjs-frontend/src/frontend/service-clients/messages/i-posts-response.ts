@@ -5,7 +5,7 @@ export interface IPostsResponse {
   createdAt: string;
   updatedAt: string;
   postOwner: {
-    id : string;
+    id ?: string;
     username : string;
     firstName : string;
     lastName : string;
@@ -14,4 +14,10 @@ export interface IPostsResponse {
   totalLikes : number;
   totalComments : number;
   isLiked : boolean;
+}
+export interface ILikePostResponse {
+  id: string;
+  postId: string;
+  likedBy: string;
+  createdAt: string;
 }

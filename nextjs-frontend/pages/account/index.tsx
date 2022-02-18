@@ -15,6 +15,7 @@ import CreatePostInput from "../../src/frontend/components/account/posts/create-
 import PostCard from "../../src/frontend/components/account/posts/post-card";
 import { getUserPosts } from "../../src/frontend/service-clients/post-service-client";
 import { IPostsResponse } from "../../src/frontend/service-clients/messages/i-posts-response";
+import { withProtected } from '../../src/frontend/components/auth-wrapper/auth-wrapper';
 
 type TabsProps = "posts" | "about" | "activity";
 
@@ -28,7 +29,7 @@ const tabStyles: SxProps = {
   border: "none",
 };
 
-export default function Account(): JSX.Element {
+function Account(): JSX.Element {
   const router = useRouter();
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const checkStatus = useAppSelector(authCheckStatusSelector);
@@ -63,10 +64,10 @@ export default function Account(): JSX.Element {
   const _renderPosts = (): JSX.Element | React.ReactNode => {
     if (isFetchingPosts) {
       return new Array(5).fill("")
-      .map((data, i) => <h1 key={i}>sf</h1>);
+        .map((data, i) => <h1 key={i}>sf</h1>);
     }
     const jsx = posts.map((postData, i) => {
-      return <PostCard key={i} data={postData} />;
+      return <PostCard key={Date.now() + i} data={postData} />;
     });
     return jsx;
   };
@@ -123,3 +124,5 @@ export default function Account(): JSX.Element {
     </NoobPage>
   );
 }
+
+export default withProtected(Account);

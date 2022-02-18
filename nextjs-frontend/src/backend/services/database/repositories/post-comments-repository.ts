@@ -34,6 +34,11 @@ export class PostCommentsRepository extends BaseRepository<IPostComment> {
                .first();
   }
 
+  async countCommentByPostId(postId: string): Promise<number>{
+    const result = await this.entities().where({postId: postId})
+                             .count('id');
+    return parseInt(result[0].count, 10);
+  }
 
   async countCommentById(id: string): Promise<number> {
     const result = await this.entities().whereRaw("id = ?", [id])

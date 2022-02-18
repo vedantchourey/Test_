@@ -30,6 +30,12 @@ export class PostLikesRepository extends BaseRepository<ILike> {
       .del();
   }
 
+  async countLikesByPostId(postId: string): Promise<number>{
+    const result = await this.entities().where({postId: postId})
+                             .count('id');
+    return parseInt(result[0].count, 10);
+  }
+
   async isLiked(postId: string, userId: string | undefined): Promise<boolean> {
     const like = await this.entities()
                             .select('*')

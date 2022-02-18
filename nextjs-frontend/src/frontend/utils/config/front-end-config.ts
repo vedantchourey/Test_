@@ -20,8 +20,13 @@ const frontendConfig: IFrontendConfig = {
       createUrl: `${baseApiUrl}/api/tournaments`,
       getById: `${baseApiUrl}/api/tournaments/{id}`,
     },
-    post :{
-      createUrl : `${baseApiUrl}/api/posts`,
+    post: {
+      createUrl: `${baseApiUrl}/api/posts`,
+      likePostUrl: (postId: string): string => `${baseApiUrl}/api/posts/${postId}/likes`,
+      unlikePostUrl: (postId: string): string => `${baseApiUrl}/api/posts/${postId}/likes`
+    },
+    comment: {
+      createUrl: `${baseApiUrl}/api/posts/{POST_ID}/comments`
     }
   },
   supabase: {
