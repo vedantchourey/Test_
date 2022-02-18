@@ -11,8 +11,17 @@ CREATE TABLE blocked_users
         REFERENCES profiles (id)
 );
 
-ALTER TABLE blocked_users
-    ADD CONSTRAINT blocked_users_blocked_by_blocked_user UNIQUE ("blockedBy", "blockedUser");
-
 alter table blocked_users
     enable row level security;
+
+create
+    policy authenticated_read_blocked_users on blocked_users
+    for
+    select
+    using (auth.role() = 'authenticated');
+
+create 
+    policy authenticated_insert_blocked_users on blocked_users
+    for
+    insert with check
+    (auth.role() = 'authenticated');

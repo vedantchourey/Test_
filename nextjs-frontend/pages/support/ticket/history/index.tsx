@@ -66,7 +66,7 @@ const NoobTicketHistoryPage = ({ tickets }: Props): JSX.Element => {
   )
 }
 
-export async function getServerSideProps(): Promise<{[i: string]: unknown}> {
+export async function getServerSideProps(): Promise<{ [i: string]: unknown }> {
   try {
     // todo make an api call here
     return {

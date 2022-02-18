@@ -4,9 +4,9 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import commonStyles from '../../../styles/common.module.css'
 
 interface Props {
-    icon?: React.ReactNode | boolean,
-    children: React.ReactChild,
-    style?: React.CSSProperties
+  icon?: React.ReactNode | boolean,
+  children: React.ReactChild,
+  style?: React.CSSProperties
 }
 
 const MessageContainer = ({

@@ -1,0 +1,178 @@
+.postCard {
+    background: none !important;
+    border: 2px solid #201736;
+    padding: 18px 28px 8px 28px;
+}
+
+.postCardOptionsContainer {
+    position: absolute;
+    width: 200px;
+    right: 64px;
+    margin-top: 4px;
+    padding: 0;
+    box-shadow: 24;
+    border-radius: 16px !important;
+    background-color: #dedede;
+    z-index: 4;
+}
+.postCardOptionsBtn img{
+    margin-right: 10px;
+}
+.postCardOptionsBtn {
+    font-weight: 700;
+    text-transform: capitalize !important;
+    padding: 8px 10px;
+    background-color: white !important;
+}
+
+
+.flexRow {
+    display: inline-flex;
+}
+
+.postImage {
+    width: 100%;
+    height: 300px;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.actionButtons{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    bottom: -25px;
+}
+.blurContainer{
+    backdrop-filter: blur(5px);
+    background-color: rgba(0,0,0, 0.4);
+    padding: 6px 12px;
+    border-radius: 10px;
+}
+.blurContainer div{
+    display: flex;
+    align-items: center;
+}
+
+
+
+.postBtn:hover{
+    background-color: transparent;
+}
+.postBtn span:focus-visible {
+    outline: none;
+}
+
+.postVideo {
+    height: 300px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.previewImageCancel {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background-color: rgba(0, 0, 0, 1);
+    padding: 2px !important;
+}
+
+.previewImageStyle {
+    border-radius: 2px;
+    width: 100px;
+    max-height: 100px;
+    object-fit: cover;
+}
+.customTextArea{
+    margin: 10px 0;
+    border-radius: 15px;
+    padding: 22px 0 22px 12px;
+    background-color: none !important;
+}
+.textArea{
+    padding: 5px 0 ;
+}
+.textArea ::placeholder{
+    color: #4D465E;
+    font-weight: 500;
+}
+
+.commentsContainer{
+    height: 600px;
+    overflow: auto;
+    position: relative;
+    padding-bottom: 80px;
+}
+.commentsContainer::-webkit-scrollbar {
+    width: 8px;
+}
+.commentsContainer::-webkit-scrollbar-thumb {
+    background: #211933; 
+    border-radius: 10px;
+}
+
+.appBar{
+    background-image: none !important;
+    box-shadow: none;
+    padding-right: 0 !important;
+    background-color: #08001C;
+}
+.customToolBar{
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+    border-bottom: 1px solid #211933;
+    margin: 0 16px;
+}
+.commentCard{
+    margin-top: 80px;
+    margin: 25px 20px;
+    border-bottom: 1px solid #211933;
+}
+.commentAvatar{
+    border: 2px solid #6932f9;
+    width: 60px;
+    height: 60px;
+    margin-right: 16px;
+}
+.commetActionBtn{
+    display: flex;
+    align-items: center;
+}
+.commentInputCotainer{
+    width: 100%;
+    padding: 0 20px 20px 20px;
+    position: fixed;
+    bottom: 0;
+    background-color: #08001C;
+}
+.commentInput{
+    padding:  12px;
+    border-radius: 10px;
+    background-color: #100626;
+    /* background-color: #6932f9; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@media screen and (max-width: 600px) {
+    .mainModalContainer{
+        width: -webkit-fill-available;
+        top: 60%;
+        padding: 1px;
+    }
+    .commentsContainer{
+        height: 692px;
+        padding-bottom: 112px;
+    }
+    .commentInputCotainer{
+        padding-bottom: 40px;
+    }
+    .postCardOptionsContainer {
+        margin: auto;
+        width: 80%;
+    }
+}

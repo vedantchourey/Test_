@@ -7,7 +7,7 @@ import YoutubeIcon from '../icons/youtube-icon';
 import TwitchIcon from '../icons/twitch-icon';
 import DiscordIcon from '../icons/discord-icon';
 
-export default function NoobMobileFooter():JSX.Element {
+export default function NoobMobileFooter(): JSX.Element {
   const theme = useTheme();
   const router = useRouter()
   const { pathname } = router;
@@ -58,8 +58,8 @@ export default function NoobMobileFooter():JSX.Element {
         </Grid>
         <Grid item xs={12}>
           <Typography color={"default"} variant="h3">
-                        Copyright © 2021. All Rights Reserved By <Button variant="text" onClick={gotoHomePage}>
-                            NOOBSTORM
+            Copyright © 2021. All Rights Reserved By <Button variant="text" onClick={gotoHomePage}>
+              NOOBSTORM
             </Button>
           </Typography>
         </Grid>

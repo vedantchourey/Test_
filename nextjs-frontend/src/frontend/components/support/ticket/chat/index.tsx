@@ -60,38 +60,40 @@ export default function TicketChats({ ticketNumber, ticketSubject, chats }: Prop
           <CardContent className={styles.paperContainer}>
             <Typography variant='h3' align='left'>
               #{ticketNumber} - {ticketSubject}
-            </Typography>
+            </Typography >
             <IconButton color="default" sx={{
               backgroundColor: "orange",
               borderRadius: 0
             }} component="span">
               <DoneIcon />
             </IconButton>
-          </CardContent>
+          </CardContent >
 
 
-          {chats.map((_, i) => (
-            <Fragment key={i}>
-              <CardContent className={styles.paperContainer} style={{ borderTop: '1px solid #FFFFFF1A' }}>
-                <Box className={styles.paperContainer}>
-                  <Avatar alt='user profile image' />
-                  <Typography align='left' ml={2} variant="h3" color="default">
-                    {_.userName}
+          {
+            chats.map((_, i) => (
+              <Fragment key={i}>
+                <CardContent className={styles.paperContainer} style={{ borderTop: '1px solid #FFFFFF1A' }}>
+                  <Box className={styles.paperContainer}>
+                    <Avatar alt='user profile image' />
+                    <Typography align='left' ml={2} variant="h3" color="default">
+                      {_.userName}
+                    </Typography>
+                  </Box>
+                  <Typography align='left' variant="body1" color="text.secondary">
+                    {_.created_at}
                   </Typography>
-                </Box>
-                <Typography align='left' variant="body1" color="text.secondary">
-                  {_.created_at}
-                </Typography>
-              </CardContent>
-              <CardContent className={styles.paperContainer}>
-                <Typography align='left' variant="body1" color="text.secondary">
-                  {_.comment}
-                </Typography>
-              </CardContent>
-            </Fragment>
-          ))}
-        </Card>
-      </Paper>
-    </Fragment>
+                </CardContent>
+                <CardContent className={styles.paperContainer}>
+                  <Typography align='left' variant="body1" color="text.secondary">
+                    {_.comment}
+                  </Typography>
+                </CardContent>
+              </Fragment>
+            ))
+          }
+        </Card >
+      </Paper >
+    </Fragment >
   )
 }

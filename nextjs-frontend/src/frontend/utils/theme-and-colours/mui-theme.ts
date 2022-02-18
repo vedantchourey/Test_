@@ -16,7 +16,7 @@ const noobTheme = createTheme({
     },
     background: {
       default: '#08001C',
-      paper: '#160C30',
+      paper: '#100626'
     },
     text: {
       primary: '#ffffff',
@@ -27,6 +27,9 @@ const noobTheme = createTheme({
       main: 'rgba(255, 0, 0, 0.62)',
     },
     divider: '#B39DDB',
+    common: {
+      white: '#fff'
+    }
   },
   typography: {
     fontFamily: 'Inter',
@@ -61,6 +64,13 @@ const noobTheme = createTheme({
     },
   },
   components: {
+    MuiIconButton: {
+      styleOverrides: {
+        colorSecondary: {
+          color: '#2B243A'
+        }
+      }
+    },
     MuiLink: {
       defaultProps: {
         style: {

@@ -13,7 +13,7 @@ const PasswordResetSuccessfully = (): JSX.Element => {
             <ErrorOutlineIcon />
           </Icon>
           <Typography variant="h3" color="default">
-                        Password updated successfully.
+            Password updated successfully.
           </Typography>
         </Grid>
       </Fragment>

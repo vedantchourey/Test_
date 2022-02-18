@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import styles from './mainBannerHeading.module.css'
 
 interface Props {
-    heading: string
+  heading: string
 }
 
 const MainBannerHeading = ({ heading }: Props): JSX.Element => {

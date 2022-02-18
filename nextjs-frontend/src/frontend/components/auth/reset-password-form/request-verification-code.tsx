@@ -37,8 +37,7 @@ const ResetPasswordRequestCode = ({ onResetHandler }: Props): JSX.Element => {
         setErrors(response.errors);
       }
     } catch (err) {
-      console.error(err);
-      setErrors({ email: "Error occurred" });
+      setErrors({ email:  "Error occured" });
     } finally {
       appDispatch(setIsLoading(false));
     }
@@ -61,13 +60,13 @@ const ResetPasswordRequestCode = ({ onResetHandler }: Props): JSX.Element => {
         <Grid item xs={12}>
           <Typography align='left' variant={"h3"}>
             Please enter your phone number or email address. You will receive a code to create a new password via email.
-          </Typography>
-        </Grid>
+          </Typography >
+        </Grid >
 
         <Grid item xs={12}>
           <Typography align='left' mb={1} variant={"h3"}>
             E-mail
-          </Typography>
+          </Typography >
           <TextField
             id="email"
             variant="filled"
@@ -86,7 +85,7 @@ const ResetPasswordRequestCode = ({ onResetHandler }: Props): JSX.Element => {
               }
             }}
           />
-        </Grid>
+        </Grid >
 
         <Grid item xs={12}>
           <Button className={commonStyles.actionButton} variant="contained" type='submit'>
@@ -94,8 +93,8 @@ const ResetPasswordRequestCode = ({ onResetHandler }: Props): JSX.Element => {
           </Button>
         </Grid>
 
-      </Grid>
-    </form>
+      </Grid >
+    </form >
   )
 }
 

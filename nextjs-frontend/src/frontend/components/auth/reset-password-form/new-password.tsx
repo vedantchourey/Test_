@@ -37,8 +37,7 @@ const SetNewPassword = ({ onResetHandler }: Props): JSX.Element => {
         setErrors(response.errors);
       }
     } catch (err) {
-      console.error(err);
-      setErrors({ password: 'Error occurred' });
+      setErrors({ password: "Error occured" });
     } finally {
       appDispatch(setIsLoading(false));
     }

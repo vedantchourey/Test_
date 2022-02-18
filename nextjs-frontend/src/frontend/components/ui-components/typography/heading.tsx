@@ -5,10 +5,10 @@ import { useAppSelector } from "../../../redux-store/redux-store";
 import styles from "./heading.module.css";
 
 interface Props {
-    heading?: string,
-    divider?: boolean,
-    backgroundImage?: boolean,
-    backgroundImageUrl?: string
+  heading?: string,
+  divider?: boolean,
+  backgroundImage?: boolean,
+  backgroundImageUrl?: string
 }
 
 export default function Heading({ heading, divider, backgroundImage, backgroundImageUrl }: Props): JSX.Element {

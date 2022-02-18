@@ -1,4 +1,22 @@
 .footerContainer {
     flex-grow: 1;
     padding: 30px;
+    background-color: #0F0526;
+}
+.heading{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.headingBorder{
+    width: 400px;
+    background-color: #3A324D;
+    height: 2px;
+    margin-bottom: 15px; 
+}
+.customeDivider{
+    width: 1.8px;
+    background: white;
+    margin: 0 20px;
+    height: 20px;
 }

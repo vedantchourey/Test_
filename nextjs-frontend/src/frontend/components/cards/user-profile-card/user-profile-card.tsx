@@ -29,7 +29,6 @@ export default function UserProfileCard(): JSX.Element {
   const theme = useTheme();
   const avatarUrl = userProfile?.avatarUrl;
   const backgroundImageUrl = userProfile?.profileBackgroundImageUrl;
-
   function showUploadBackgroundPicker(): void {
     backgroundInputRef.current?.click();
   }
@@ -39,14 +38,14 @@ export default function UserProfileCard(): JSX.Element {
     if (prefix === 'avatar' && avatarUrl != null) return avatarUrl;
     if (prefix === 'avatarBackground' && backgroundImageUrl != null) return backgroundImageUrl;
     const fileExt = file.name
-                        .split('.')
-                        .pop()
-                        ?.toLowerCase();
+      .split('.')
+      .pop()
+      ?.toLowerCase();
     return `avatars/${prefix}${userProfile.id}${v4()}.${fileExt}`;
   }
 
   async function updateUserProfile(fileUrl: string, file: File, imageType: ProfileImageTypes): Promise<void> {
-    const response = await updateProfileImages({url: fileUrl, imageType: imageType});
+    const response = await updateProfileImages({ url: fileUrl, imageType: imageType });
     if (response.isError) return console.error(response);
     appDispatch(setUserProfile(response));
   }
@@ -102,23 +101,24 @@ export default function UserProfileCard(): JSX.Element {
       display: 'flex',
       flexDirection: 'column',
       backgroundColor: backgroundColor,
-      backgroundImage: backgroundImage
+      backgroundImage: backgroundImage,
+      margin: 'auto'
     }}>
       <div className={styles.imageBackgroundContainer}>
         <Fab color="primary" aria-label="edit" size="small" className={styles.editBackgroundButton} onClick={showUploadBackgroundPicker}>
-          <AddPhotoAlternateOutlinedIcon/>
+          <AddPhotoAlternateOutlinedIcon />
         </Fab>
         <Fab color="primary" aria-label="edit" size="small" className={styles.editAvatarButton} onClick={showUploadAvatarPicker}>
-          <AddPhotoAlternateOutlinedIcon/>
+          <AddPhotoAlternateOutlinedIcon />
         </Fab>
         <Avatar alt="Remy Sharp"
-          sx={{width: 156, height: 156}}
+          sx={{ width: 156, height: 156 }}
           className={styles.userProfilePic}
-          src={avatarImageBlobUrl || "/images/default-user-profile-background.jpg"}/>
-        <div style={{overflow: 'hidden', flexGrow: 1}}>
+          src={avatarImageBlobUrl || "/images/default-user-profile-background.jpg"} />
+        <div style={{ overflow: 'hidden', flexGrow: 1 }}>
           <img className={styles.imageBackground}
             src={avatarBackgroundImageBlobUrl || "/images/default-user-profile-background.jpg"}
-            alt="profile background"/>
+            alt="profile background" />
         </div>
       </div>
       <div className={styles.userDetailsContainer}>
@@ -130,7 +130,7 @@ export default function UserProfileCard(): JSX.Element {
             <Typography className={styles.value}>{userProfile?.username}</Typography>
           </div>
         </div>
-        <Divider className={styles.userDetailsRow}/>
+        <Divider className={styles.userDetailsRow} />
         <div className={styles.userDetailsRow}>
           <div className={styles.userDetailKey}>
             <Typography className={styles.heading}>Elo Rating</Typography>
@@ -139,7 +139,7 @@ export default function UserProfileCard(): JSX.Element {
             <Typography className={styles.value}>{userProfile?.username}</Typography>
           </div>
         </div>
-        <Divider className={styles.userDetailsRow}/>
+        <Divider className={styles.userDetailsRow} />
         <div className={styles.userDetailsRow}>
           <div className={styles.userDetailKey}>
             <Typography className={styles.heading}>Team</Typography>
@@ -148,7 +148,7 @@ export default function UserProfileCard(): JSX.Element {
             <Typography className={styles.value}>{userProfile?.username}</Typography>
           </div>
         </div>
-        <Divider className={styles.userDetailsRow}/>
+        <Divider className={styles.userDetailsRow} />
         <div className={styles.userDetailsRow}>
           <div className={styles.userDetailKey}>
             <Typography className={styles.heading}>Joined</Typography>
@@ -157,7 +157,7 @@ export default function UserProfileCard(): JSX.Element {
             <Typography className={styles.value}>{toLocalDDMMYYYY(userProfile?.createdAt)}</Typography>
           </div>
         </div>
-        <Divider className={styles.userDetailsRow}/>
+        <Divider className={styles.userDetailsRow} />
         <div className={styles.userDetailsRow}>
           <div className={styles.userDetailKey}>
             <Typography className={styles.heading}>Tournament Wins</Typography>
@@ -167,8 +167,8 @@ export default function UserProfileCard(): JSX.Element {
           </div>
         </div>
       </div>
-      <input type="file" ref={backgroundInputRef} style={{display: 'none'}} onChange={onUploadBackground} accept=".jpeg,.jpg,.png"/>
-      <input type="file" ref={avatarInputRef} style={{display: 'none'}} onChange={onUploadAvatar} accept=".jpeg,.jpg,.png"/>
+      <input type="file" ref={backgroundInputRef} style={{ display: 'none' }} onChange={onUploadBackground} accept=".jpeg,.jpg,.png" />
+      <input type="file" ref={avatarInputRef} style={{ display: 'none' }} onChange={onUploadAvatar} accept=".jpeg,.jpg,.png" />
     </Card>
   )
 }
