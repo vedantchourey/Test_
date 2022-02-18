@@ -52,10 +52,11 @@ const CommentsModal = (props: IProps): JSX.Element => {
       alert('Please enter you comment');
       return;
     }
-    await createComment({
+    const result = await createComment({
       postId: props.postId,
       comment: comment
     });
+    if (!result.isError) setComments((prevState: IPostCommentResponse[]) => [result, ...prevState]);
     setComment('');
   }
 
@@ -88,7 +89,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
                 <Avatar
                   className={styles.commentAvatar}
                   alt="Remy Sharp"
-                  src={data.commentOwner.avatarUrl}
+                  src={''}
                 />
                 <Box>
                   <Box sx={{ display: "inline-flex" }}>
@@ -153,7 +154,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
           <Box className={styles.commentInputCotainer}>
             <Box className={styles.commentInput}>
               <Box sx={{ display: "inline-flex", alignItems: 'center' }}>
-                <Avatar sx={{ mr: 2, width: 35, height: 35 }} alt="Remy Sharp" src={userAvatar} />
+                <Avatar sx={{ mr: 2, width: 35, height: 35 }} alt="avatar" src={userAvatar} />
                 <TextField
                   placeholder={`Your comment`}
                   fullWidth
@@ -163,9 +164,9 @@ const CommentsModal = (props: IProps): JSX.Element => {
                   InputProps={{
                     disableUnderline: true,
                   }}
-                  onChange={(event): void =>
+                  onChange={(event): void => {
                     setComment(event.target.value)
-                  }
+                  }}
                 />
 
               </Box>
