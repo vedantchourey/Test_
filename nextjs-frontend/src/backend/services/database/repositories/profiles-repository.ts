@@ -27,6 +27,7 @@ export class ProfilesRepository extends BaseRepository<IProfile> {
                .select('createdAt')
                .select('updatedAt')
                .select('avatarUrl')
+               .select('isprivate')
                .select('profileBackgroundImageUrl')
                .where({id: id})
                .first();

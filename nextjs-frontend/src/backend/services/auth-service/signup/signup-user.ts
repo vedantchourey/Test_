@@ -17,6 +17,7 @@ function mapToProfile(user: User, request: SignupRequest): IProfile {
     countryId: request.countryId,
     stateId: request.stateId,
     agreeToTnc: request.agreeToTnc,
+    isPrivate: request.isPrivate,
     dateOfBirth: request.dateOfBirth,
     firstName: request.firstName,
     lastName: request.lastName,
@@ -26,11 +27,11 @@ function mapToProfile(user: User, request: SignupRequest): IProfile {
   };
 }
 
-type Metadata = { data: { firstName: string; lastName: string; agreeToTnc: boolean; stateId: string; dateOfBirth: string; countryId: string; username: string } };
+type Metadata = { data: { firstName: string; lastName: string; agreeToTnc: boolean; isPrivate: boolean; stateId: string; dateOfBirth: string; countryId: string; username: string } };
 type SignupParams = { password: string; phone: string; provider: "facebook" | "apple" | "google" | undefined; email: string };
 
 function mapRequiredParams(request: SignupRequest): { metaData: Metadata; signupParams: SignupParams } {
-  const {password, phone, email, provider, countryId, stateId, agreeToTnc, dateOfBirth, firstName, lastName, username} = request;
+  const {password, phone, email, provider, countryId, stateId, agreeToTnc, isPrivate, dateOfBirth, firstName, lastName, username} = request;
   const signupParams = {
     password: password,
     phone: phone,
@@ -42,10 +43,11 @@ function mapRequiredParams(request: SignupRequest): { metaData: Metadata; signup
       countryId,
       stateId,
       agreeToTnc,
+      isPrivate,
       dateOfBirth,
       firstName,
       lastName,
-      username
+      username,
     }
   };
   return {signupParams, metaData};

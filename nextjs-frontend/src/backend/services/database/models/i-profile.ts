@@ -7,6 +7,7 @@ export interface IProfile {
   countryId: string;
   stateId: string;
   agreeToTnc: boolean;
+  isPrivate: boolean;
   createdAt: string;
   updatedAt: string;
   avatarUrl?: string;
