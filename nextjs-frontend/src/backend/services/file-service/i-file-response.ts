@@ -1,5 +1,7 @@
+import { AllowedBuckets } from '../../../models/constants';
+
 export interface IFileResponse {
-  bucket: string;
+  bucket: AllowedBuckets;
   url: string;
-  publicUrl?: string;
+  publicUrl: string | null;
 }

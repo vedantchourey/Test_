@@ -1,6 +1,6 @@
 import { Avatar, Card, Divider, Fab, Typography, useTheme } from '@mui/material';
 import { ChangeEvent, useRef } from 'react';
-import { updateImage, uploadImage } from '../../../service-clients/image-service-client';
+import { updateAvatar, updateImage, uploadImage } from '../../../service-clients/image-service-client';
 import { useAppDispatch, useAppSelector } from '../../../redux-store/redux-store';
 import { avatarBackgroundImageBlobUrlSelector, avatarImageBlobUrlSelector, isLoggedInSelector, userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
 import styles from './user-profile-card.module.css';
@@ -9,7 +9,7 @@ import { toLocalDDMMYYYY } from '../../../../common/utils/date-time-utils';
 import { setIsLoading } from '../../../redux-store/screen-animations/screen-animation-slice';
 import { v4 } from 'uuid';
 import { updateProfileImages } from '../../../service-clients/profile-service-client';
-import { forceFetchAvatarBackgroundImageBlob, forceFetchAvatarImageBlob, setUserProfile } from '../../../redux-store/authentication/authentication-slice';
+import { fetchUserProfileThunk, forceFetchAvatarBackgroundImageBlob, forceFetchAvatarImageBlob, setUserProfile } from '../../../redux-store/authentication/authentication-slice';
 import { ProfileImageTypes } from '../../../../backend/services/profile-service/profile-image-types';
 import { isDeviceTypeSelector } from '../../../redux-store/layout/layout-selectors';
 import { deviceTypes } from '../../../redux-store/layout/device-types';
@@ -29,6 +29,7 @@ export default function UserProfileCard(): JSX.Element {
   const theme = useTheme();
   const avatarUrl = userProfile?.avatarUrl;
   const backgroundImageUrl = userProfile?.profileBackgroundImageUrl;
+
   function showUploadBackgroundPicker(): void {
     backgroundInputRef.current?.click();
   }
@@ -38,9 +39,9 @@ export default function UserProfileCard(): JSX.Element {
     if (prefix === 'avatar' && avatarUrl != null) return avatarUrl;
     if (prefix === 'avatarBackground' && backgroundImageUrl != null) return backgroundImageUrl;
     const fileExt = file.name
-      .split('.')
-      .pop()
-      ?.toLowerCase();
+                        .split('.')
+                        .pop()
+                        ?.toLowerCase();
     return `avatars/${prefix}${userProfile.id}${v4()}.${fileExt}`;
   }
 
@@ -52,10 +53,16 @@ export default function UserProfileCard(): JSX.Element {
   }
 
   async function onUploadAvatar(event: ChangeEvent<HTMLInputElement>): Promise<void> {
-    if (!event.target.files || event.target.files.length === 0) return;
-    const file = event.target.files[0];
-    await uploadImageAndLinkToProfile('avatar', file, ProfileImageTypes.avatar);
-    appDispatch(forceFetchAvatarImageBlob());
+    const files = event.target.files;
+    if (files == null || files.length === 0) return;
+    try {
+      appDispatch(setIsLoading(true));
+      await updateAvatar(files[0])
+      appDispatch(fetchUserProfileThunk());
+      appDispatch(forceFetchAvatarImageBlob());
+    } finally {
+      appDispatch(setIsLoading(false));
+    }
   }
 
   async function updateOrUploadImage(fileUrl: string, file: File, type: ImagePrefix): Promise<{ data: { Key: string } | null; error: Error | null }> {
@@ -107,19 +114,19 @@ export default function UserProfileCard(): JSX.Element {
     }}>
       <div className={styles.imageBackgroundContainer}>
         <Fab color="primary" aria-label="edit" size="small" className={styles.editBackgroundButton} onClick={showUploadBackgroundPicker}>
-          <AddPhotoAlternateOutlinedIcon />
+          <AddPhotoAlternateOutlinedIcon/>
         </Fab>
         <Fab color="primary" aria-label="edit" size="small" className={styles.editAvatarButton} onClick={showUploadAvatarPicker}>
-          <AddPhotoAlternateOutlinedIcon />
+          <AddPhotoAlternateOutlinedIcon/>
         </Fab>
         <Avatar alt="Remy Sharp"
-          sx={{ width: 156, height: 156 }}
+          sx={{width: 156, height: 156}}
           className={styles.userProfilePic}
-          src={avatarImageBlobUrl || "/images/default-user-profile-background.jpg"} />
-        <div style={{ overflow: 'hidden', flexGrow: 1 }}>
+          src={avatarImageBlobUrl || "/images/default-user-profile-background.jpg"}/>
+        <div style={{overflow: 'hidden', flexGrow: 1}}>
           <img className={styles.imageBackground}
             src={avatarBackgroundImageBlobUrl || "/images/default-user-profile-background.jpg"}
-            alt="profile background" />
+            alt="profile background"/>
         </div>
       </div>
       <div className={styles.userDetailsContainer}>
@@ -131,7 +138,7 @@ export default function UserProfileCard(): JSX.Element {
             <Typography className={styles.value}>{userProfile?.username}</Typography>
           </div>
         </div>
-        <Divider className={styles.userDetailsRow} />
+        <Divider className={styles.userDetailsRow}/>
         <div className={styles.userDetailsRow}>
           <div className={styles.userDetailKey}>
             <Typography className={styles.heading}>Elo Rating</Typography>
@@ -140,7 +147,7 @@ export default function UserProfileCard(): JSX.Element {
             <Typography className={styles.value}>{userProfile?.username}</Typography>
           </div>
         </div>
-        <Divider className={styles.userDetailsRow} />
+        <Divider className={styles.userDetailsRow}/>
         <div className={styles.userDetailsRow}>
           <div className={styles.userDetailKey}>
             <Typography className={styles.heading}>Team</Typography>
@@ -149,7 +156,7 @@ export default function UserProfileCard(): JSX.Element {
             <Typography className={styles.value}>{userProfile?.username}</Typography>
           </div>
         </div>
-        <Divider className={styles.userDetailsRow} />
+        <Divider className={styles.userDetailsRow}/>
         <div className={styles.userDetailsRow}>
           <div className={styles.userDetailKey}>
             <Typography className={styles.heading}>Joined</Typography>
@@ -158,7 +165,7 @@ export default function UserProfileCard(): JSX.Element {
             <Typography className={styles.value}>{toLocalDDMMYYYY(userProfile?.createdAt)}</Typography>
           </div>
         </div>
-        <Divider className={styles.userDetailsRow} />
+        <Divider className={styles.userDetailsRow}/>
         <div className={styles.userDetailsRow}>
           <div className={styles.userDetailKey}>
             <Typography className={styles.heading}>Tournament Wins</Typography>
@@ -168,8 +175,8 @@ export default function UserProfileCard(): JSX.Element {
           </div>
         </div>
       </div>
-      <input type="file" ref={backgroundInputRef} style={{ display: 'none' }} onChange={onUploadBackground} accept=".jpeg,.jpg,.png" />
-      <input type="file" ref={avatarInputRef} style={{ display: 'none' }} onChange={onUploadAvatar} accept=".jpeg,.jpg,.png" />
+      <input type="file" ref={backgroundInputRef} style={{display: 'none'}} onChange={onUploadBackground} accept=".jpeg,.jpg,.png"/>
+      <input type="file" ref={avatarInputRef} style={{display: 'none'}} onChange={onUploadAvatar} accept=".jpeg,.jpg,.png"/>
     </Card>
   )
 }

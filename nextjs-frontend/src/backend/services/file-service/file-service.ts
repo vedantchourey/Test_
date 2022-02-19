@@ -6,7 +6,9 @@ import { IUploadedFile } from '../../utils/api-middle-ware/multi-part-file-uploa
 
 export async function uploadFile(files: IUploadedFile[], fileType: IFileType): Promise<ServiceResponse<UploadFileRequest, IFileResponse>> {
   const error = fileType.validate(files);
-  if (error != null) return {errors: {files: error}};
+  if (error != null) {
+    return {errors: {files: error}};
+  }
   const supabaseUrl = await fileType.uploadFile(files[0]);
   const publicUrl = await fileType.getPublicUrl(supabaseUrl);
   return {

@@ -28,7 +28,8 @@ export const backendConfig: IBackendConfig = {
   },
   supabase: {
     anonKey: supabaseAnonKey,
-    apiUrl: supabaseUrl
+    apiUrl: supabaseUrl,
+    privateKey: process.env.NOOB_SUPABASE_PRIVATE_KEY as string
   },
   client: {
     cmsApiEndpoint: CMS_API_ENDPOINT || 'API_ENDPOINT',
