@@ -19,7 +19,7 @@
     margin-right: 10px;
 }
 .postCardOptionsBtn {
-    font-weight: 700;
+    font-weight: 500;
     text-transform: capitalize !important;
     padding: 8px 10px;
     background-color: white !important;
@@ -131,8 +131,8 @@
 }
 .commentAvatar {
     border: 2px solid #6932f9;
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
     margin-right: 16px;
 }
 .commetActionBtn {
@@ -144,7 +144,6 @@
     padding: 0 20px 0px 20px;
     bottom: 20px;
     position: fixed;
-    background-color: #08001c;
 }
 .commentInput {
     padding: 12px;

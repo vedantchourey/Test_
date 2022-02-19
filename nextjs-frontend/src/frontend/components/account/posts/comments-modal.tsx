@@ -161,6 +161,11 @@ const CommentsModal = (props: IProps): JSX.Element => {
                   multiline
                   autoFocus
                   variant="standard"
+                  sx={{
+                    '& .MuiInput-root': {
+                      fontWeight: 300
+                    }
+                  }}
                   InputProps={{
                     disableUnderline: true,
                   }}
