@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
 import NoobPage from "../../src/frontend/components/page/noob-page";
 import UserProfileCard from "../../src/frontend/components/cards/user-profile-card/user-profile-card";
-import { Box, Divider, Grid, Tab, SxProps } from "@mui/material";
+import { Box, Divider, Grid, Tab, SxProps, Skeleton, Typography } from "@mui/material";
 import commonStyles from "../../src/frontend/styles/common.module.css";
 import PostCard from "../../src/frontend/components/account/posts/post-card";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { getPostsByUserId } from "../../src/frontend/service-clients/post-service-client";
-import Router from 'next/router';
 import { IPostsResponse } from "../../src/frontend/service-clients/messages/i-posts-response";
 import { IProfileResponse } from "../../src/frontend/service-clients/messages/i-profile";
 import { getUserProfileByUsername } from '../../src/frontend/service-clients/profile-service-client';
+import { useRouter } from 'next/router'
+import { withProtected } from '../../src/frontend/components/auth-wrapper/auth-wrapper';
 
 type TabsProps = "posts" | "about" | "activity";
 
@@ -25,6 +26,7 @@ const tabStyles: SxProps = {
 
 
 function UserAccount(): JSX.Element {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabsProps>("posts");
   const [userData, setUserData] = useState<IProfileResponse | null>(null);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
@@ -38,10 +40,13 @@ function UserAccount(): JSX.Element {
   useEffect(() => {
     try {
       (async (): Promise<void> => {
-        const username = Router.query.username as string;
-        const user = await getUserProfileByUsername(username);
+        const { username } = router.query;
+        const user = await getUserProfileByUsername(username as string);
         if (user) {
           setUserData(user);
+        }
+        else {
+          setIsFetchingPosts(false);
         }
       })();
     } finally {
@@ -55,7 +60,7 @@ function UserAccount(): JSX.Element {
       (async (): Promise<void> => {
         const posts = await getPostsByUserId(userData?.id);
         setPosts(posts);
-      })
+      })()
     }
     finally {
       setIsFetchingPosts(false);
@@ -64,8 +69,16 @@ function UserAccount(): JSX.Element {
 
   const _renderPosts = (): JSX.Element | React.ReactNode => {
     if (isFetchingPosts) {
-      return new Array(5).fill("")
-        .map((data, i) => <h1 key={i}>Skeleton</h1>);
+      return null;
+    }
+    if (!isFetchingPosts && !posts.length) {
+      return (
+        <Box>
+          <Typography>
+            No Posts Available
+          </Typography>
+        </Box>
+      )
     }
     const jsx = posts.map((postData, i) => {
       return <PostCard key={Date.now() + i} data={postData} />;
@@ -80,48 +93,62 @@ function UserAccount(): JSX.Element {
         description: "Noob Storm account page",
       }}>
       <div className={commonStyles.container}>
-        <Grid container my={2} spacing={2}>
-          <Grid item xs={12} md={4}>
-            <UserProfileCard />
-          </Grid>
-          <Grid item xs={12} md={8}>
-            <TabContext value={activeTab}>
-              <Box>
-                <TabList
-                  onChange={handleChange}
-                  TabIndicatorProps={{
-                    style: {
-                      display: "none",
-                    },
-                  }}
-                  sx={{
-                    "& .Mui-selected": {
-                      background: (theme) => theme.palette.primary.main,
-                      color: "white !important",
-                    },
-                  }}
-                >
-                  <Tab label="Posts" value="posts" sx={tabStyles} />
-                  <Tab label="About" value="about" sx={tabStyles} />
-                  <Tab label="Match activity" value="activity" sx={tabStyles} />
-                </TabList>
-              </Box>
+        {
 
-              <Box my={4}>
-                <Divider light />
-              </Box>
+          !isFetchingUserData && userData ? (
+            <>
+              <Grid container my={2} spacing={2}>
+                <Grid item xs={12} md={4}>
+                  <UserProfileCard />
+                </Grid>
+                <Grid item xs={12} md={8}>
+                  <TabContext value={activeTab}>
+                    <Box>
+                      <TabList
+                        onChange={handleChange}
+                        TabIndicatorProps={{
+                          style: {
+                            display: "none",
+                          },
+                        }}
+                        sx={{
+                          "& .Mui-selected": {
+                            background: (theme) => theme.palette.primary.main,
+                            color: "white !important",
+                          },
+                        }}
+                      >
+                        <Tab label="Posts" value="posts" sx={tabStyles} />
+                        <Tab label="About" value="about" sx={tabStyles} />
+                        <Tab label="Match activity" value="activity" sx={tabStyles} />
+                      </TabList>
+                    </Box>
 
-              <TabPanel sx={{ p: 0 }} value="posts">
-                {_renderPosts()}
-              </TabPanel>
-              <TabPanel sx={{ p: 0 }} value="about"></TabPanel>
-              <TabPanel sx={{ p: 0 }} value="activity"></TabPanel>
-            </TabContext>
-          </Grid>
-        </Grid>
+                    <Box my={4}>
+                      <Divider light />
+                    </Box>
+
+                    <TabPanel sx={{ p: 0 }} value="posts">
+                      {_renderPosts()}
+                    </TabPanel>
+                    <TabPanel sx={{ p: 0 }} value="about"></TabPanel>
+                    <TabPanel sx={{ p: 0 }} value="activity"></TabPanel>
+                  </TabContext>
+                </Grid>
+              </Grid>
+            </>
+          ) : !isFetchingUserData && !userData ? (
+            <Typography variant='h3'>
+              No user found
+            </Typography>
+          ) : (
+            <>
+            </>
+          )
+        }
       </div>
     </NoobPage>
   )
 }
 
-export default UserAccount;
+export default withProtected(UserAccount);
