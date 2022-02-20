@@ -1,10 +1,10 @@
-import { IFileType, UploadFileRequest } from './i-file-type';
+import { IUploadFileType, UploadFileRequest } from './i-upload-file-type';
 import { ServiceResponse } from '../common/contracts/service-response';
 import { IFileResponse } from './i-file-response';
 import { IUploadedFile } from '../../utils/api-middle-ware/multi-part-file-upload-middle-ware/multi-part-definitions';
 
 
-export async function uploadFile(files: IUploadedFile[], fileType: IFileType): Promise<ServiceResponse<UploadFileRequest, IFileResponse>> {
+export async function uploadFile(files: IUploadedFile[], fileType: IUploadFileType): Promise<ServiceResponse<UploadFileRequest, IFileResponse>> {
   const error = fileType.validate(files);
   if (error != null) {
     return {errors: {files: error}};

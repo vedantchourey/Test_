@@ -4,7 +4,7 @@ import { v4 } from 'uuid';
 import { sendFiles } from './fetch-api-wrapper';
 import { getAuthHeader } from '../utils/headers';
 import { NoobPostResponse } from './messages/common-messages';
-import { UploadFileRequest } from '../../backend/services/file-service/i-file-type';
+import { UploadFileRequest } from '../../backend/services/file-service/i-upload-file-type';
 import { IFileResponse } from '../../backend/services/file-service/i-file-response';
 import frontendConfig from '../utils/config/front-end-config';
 
@@ -44,3 +44,6 @@ export const updateAvatar = async (file: File): Promise<NoobPostResponse<UploadF
   throw body;
 }
 
+export function getPublicUrl(bucket: string, filename: string): { data: { publicURL: string } | null; error: Error | null; publicURL: string | null } {
+  return frontendSupabase.storage.from(bucket).getPublicUrl(filename);
+}

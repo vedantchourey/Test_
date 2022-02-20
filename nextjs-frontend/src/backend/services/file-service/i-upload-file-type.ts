@@ -3,7 +3,7 @@ import { AllowedBuckets } from '../../../models/constants';
 
 export type UploadFileRequest = { files: IUploadedFile[] };
 
-export interface IFileType {
+export interface IUploadFileType {
   uploadFile(file: IUploadedFile): Promise<string>;
 
   readonly bucket: AllowedBuckets;

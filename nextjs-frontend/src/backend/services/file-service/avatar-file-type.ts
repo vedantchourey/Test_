@@ -1,4 +1,4 @@
-import { IFileType } from './i-file-type';
+import { IUploadFileType } from './i-upload-file-type';
 import { v4 } from 'uuid';
 import { IUploadedFile } from '../../utils/api-middle-ware/multi-part-file-upload-middle-ware/multi-part-definitions';
 import { Knex } from 'knex';
@@ -10,7 +10,7 @@ import { AllowedBuckets } from '../../../models/constants';
 import { FileObject } from '@supabase/storage-js';
 
 
-export class AvatarFileType implements IFileType {
+export class AvatarFileType implements IUploadFileType {
 
   private readonly profilesRepository: ProfilesRepository;
 
@@ -32,14 +32,15 @@ export class AvatarFileType implements IFileType {
     const profile = await this.userProfile();
     const oldAvatar = profile.avatarUrl;
     const newAvatarUrl = `avatars/${profile.id}_${v4()}`;
-    const result = await this.uploadOrUpdateImage(newAvatarUrl, file);
+    const result = await this.uploadImage(newAvatarUrl, file);
     if (result.error != null) throw result.error;
-    await this.profilesRepository.updateAvatar(profile.id, result.data?.Key as string);
-    await this.deleteImage(oldAvatar)
+    await this.profilesRepository.updateAvatar(profile.id, newAvatarUrl);
+    const deleteResult = await this.deleteImage(oldAvatar);
+    if (deleteResult.error != null) throw deleteResult.error;
     return newAvatarUrl;
   }
 
-  private async uploadOrUpdateImage(avatarUrl: string, file: IUploadedFile): Promise<{ data: { Key: string } | null; error: Error | null }> {
+  private async uploadImage(avatarUrl: string, file: IUploadedFile): Promise<{ data: { Key: string } | null; error: Error | null }> {
     return privateBackendSupabase.storage
                                  .from(this.bucket)
                                  .upload(avatarUrl, file.fileContent as Buffer, {

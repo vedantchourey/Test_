@@ -7,7 +7,7 @@ import { authenticatedUserMiddleware } from '../../../src/backend/utils/api-midd
 import { beginTransactionMiddleWare, commitOrRollBackTransactionMiddleWare } from '../../../src/backend/utils/api-middle-ware/transaction-middle-ware';
 import { uploadFile } from '../../../src/backend/services/file-service/file-service';
 import { AvatarFileType } from '../../../src/backend/services/file-service/avatar-file-type';
-import { UploadFileRequest } from '../../../src/backend/services/file-service/i-file-type';
+import { UploadFileRequest } from '../../../src/backend/services/file-service/i-upload-file-type';
 import { IFileResponse } from '../../../src/backend/services/file-service/i-file-response';
 import { PerRequestContext } from '../../../src/backend/utils/api-middle-ware/api-middleware-typings';
 

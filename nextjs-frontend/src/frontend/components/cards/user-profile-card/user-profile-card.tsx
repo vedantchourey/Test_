@@ -1,5 +1,5 @@
 import { Avatar, Card, Divider, Fab, Typography, useTheme } from '@mui/material';
-import { ChangeEvent, useRef } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 import { updateAvatar, updateImage, uploadImage } from '../../../service-clients/image-service-client';
 import { useAppDispatch, useAppSelector } from '../../../redux-store/redux-store';
 import { avatarBackgroundImageBlobUrlSelector, avatarImageBlobUrlSelector, isLoggedInSelector, userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
@@ -13,6 +13,8 @@ import { fetchUserProfileThunk, forceFetchAvatarBackgroundImageBlob, forceFetchA
 import { ProfileImageTypes } from '../../../../backend/services/profile-service/profile-image-types';
 import { isDeviceTypeSelector } from '../../../redux-store/layout/layout-selectors';
 import { deviceTypes } from '../../../redux-store/layout/device-types';
+import NoobFilePicker from '../../utils/noob-file-picker';
+import { allowedImageExtensions } from '../../../../models/constants';
 
 
 type ImagePrefix = 'avatar' | 'avatarBackground';
@@ -20,7 +22,7 @@ type ImagePrefix = 'avatar' | 'avatarBackground';
 export default function UserProfileCard(): JSX.Element {
   const userProfile = useAppSelector(userProfileSelector);
   const backgroundInputRef = useRef<HTMLInputElement>(null);
-  const avatarInputRef = useRef<HTMLInputElement>(null);
+  const [showAvatarPicker, setShowAvatarPicker] = useState(false);
   const appDispatch = useAppDispatch();
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
@@ -52,8 +54,8 @@ export default function UserProfileCard(): JSX.Element {
     appDispatch(setUserProfile(response));
   }
 
-  async function onUploadAvatar(event: ChangeEvent<HTMLInputElement>): Promise<void> {
-    const files = event.target.files;
+  async function onUploadAvatar(files: FileList | null): Promise<void> {
+    setShowAvatarPicker(false);
     if (files == null || files.length === 0) return;
     try {
       appDispatch(setIsLoading(true));
@@ -95,9 +97,7 @@ export default function UserProfileCard(): JSX.Element {
     appDispatch(forceFetchAvatarBackgroundImageBlob());
   }
 
-  function showUploadAvatarPicker(): void {
-    avatarInputRef.current?.click();
-  }
+  const showUploadAvatarPicker = (): void => setShowAvatarPicker(true);
 
   const backgroundColor = isDesktop ? theme.palette.background.paper : theme.palette.background.default;
   const backgroundImage = isDesktop ? '' : 'none';
@@ -176,7 +176,14 @@ export default function UserProfileCard(): JSX.Element {
         </div>
       </div>
       <input type="file" ref={backgroundInputRef} style={{display: 'none'}} onChange={onUploadBackground} accept=".jpeg,.jpg,.png"/>
-      <input type="file" ref={avatarInputRef} style={{display: 'none'}} onChange={onUploadAvatar} accept=".jpeg,.jpg,.png"/>
+      <NoobFilePicker onFileSelected={onUploadAvatar}
+        onError={(error) => console.error(error)}
+        allowedExtensions={allowedImageExtensions}
+        show={showAvatarPicker}
+        maxFiles={1}
+        minFiles={0}
+        maxFileSizeInBytes={1024 * 1204}
+      />
     </Card>
   )
 }
