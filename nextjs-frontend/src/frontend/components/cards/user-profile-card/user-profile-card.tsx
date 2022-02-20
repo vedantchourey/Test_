@@ -60,6 +60,7 @@ export default function UserProfileCard(): JSX.Element {
   return (
     <Card sx={{
       maxWidth: 440,
+      minWidth: 440,
       borderRadius: 0,
       display: 'flex',
       flexDirection: 'column',

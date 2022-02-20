@@ -14,35 +14,36 @@
 }
 
 
+.userProfilePic {
+  position: absolute;
+  bottom: -78px;
+  z-index: 50;
+}
+
+.editAvatarButton {
+  position: absolute;
+  bottom: 10px;
+  z-index: 100;
+}
+
 @media screen and (min-width: 768px) {
   .userProfilePic {
-    position: absolute;
-    bottom: -78px;
     right: 142px;
-    z-index: 50;
   }
 
   .editAvatarButton {
-    position: absolute;
-    bottom: 10px;
     right: 155px;
-    z-index: 100;
   }
 
 }
 
 @media screen and (max-width: 768px) {
   .userProfilePic {
-    position: absolute;
-    bottom: -78px;
     right: calc((100% / 2) - 78px);
   }
 
   .editAvatarButton {
-    position: absolute;
-    bottom: 10px;
     right: calc((100% / 2) - 70px);
-    z-index: 1;
   }
 }
 
