@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import NoobPage from "../../src/frontend/components/page/noob-page";
+import UserProfileCard from "../../src/frontend/components/cards/user-profile-card/user-profile-card";
 import { Box, Divider, Grid, Tab, SxProps } from "@mui/material";
 import commonStyles from "../../src/frontend/styles/common.module.css";
 import PostCard from "../../src/frontend/components/account/posts/post-card";
@@ -28,7 +29,7 @@ function UserAccount(): JSX.Element {
   const [activeTab, setActiveTab] = useState<TabsProps>("posts");
   const [userData, setUserData] = useState<IProfileResponse | null>(null);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
-  const [setIsFetchingUserData] = useState<boolean>(true);
+  const [isFetchingUserData, setIsFetchingUserData] = useState<boolean>(true);
   const [isFetchingPosts, setIsFetchingPosts] = useState<boolean>(true);
 
   const handleChange = (e: unknown, newValue: TabsProps): void => {

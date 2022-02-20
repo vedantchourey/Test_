@@ -195,10 +195,11 @@ const PostCard = (props: IProps): JSX.Element => {
           {values.postContent}
         </Typography>
 
-        <>
-          {/* Action Button Blur Container */}
-          <Box sx={{ position: 'relative' }}>
-            {imgUrl && (
+        <Box sx={{ position: 'relative' }}>
+
+          {imgUrl && (
+            <>
+              {/* Action Button Blur Container */}
               <CardMedia
                 component="img"
                 className={styles.postImage}
@@ -206,58 +207,55 @@ const PostCard = (props: IProps): JSX.Element => {
                 alt="user avatar"
                 key={values.id}
               />
-            )}
-            {
-              !isFetchingMeta && (
-                <>
-                  <Box className={styles.actionButtons}>
-                    <Box className={styles.blurContainer}>
-                      <Box sx={{
-                        display: 'flex',
-                        alignItems: 'center'
-                      }}>
-                        <Box>
-                          <IconButton
-                            onClick={toggleLike}
-                            className={styles.postBtn}
-                            sx={{ padding: '12px' }}
-                          >
-                            <img src='icons/heart.svg' alt='icon' />
-                          </IconButton>
-                          <Typography>
-                            {values?.totalLikes || 0}
-                          </Typography>
-                        </Box>
-                        <Box mx={1}>
-                          <IconButton
-                            className={styles.postBtn}
-                            onClick={handleOpenComments}
-                            sx={{ padding: '15px' }}
-                          >
-                            <img src='icons/message.svg' alt='icon' />
-                          </IconButton>
-                          <Typography>
-                            {values.totalComments || 0}
-                          </Typography>
-                        </Box>
-                        {/* <Box>
-                          <IconButton
-                            className={styles.postBtn}
-                          >
-                            <img src='icons/share.svg' alt='icon' />
-                          </IconButton>
-                        </Box> */}
-                      </Box>
+            </>
+          )}
+
+          {
+            !isFetchingMeta && (
+              <Box className={styles.actionButtons}>
+                <Box className={styles.blurContainer}>
+                  <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}>
+                    <Box>
+                      <IconButton
+                        onClick={toggleLike}
+                        className={styles.postBtn}
+                        sx={{ padding: '12px' }}
+                      >
+                        <img src='icons/heart.svg' alt='icon' />
+                      </IconButton>
+                      {values?.totalLikes || 0}
+                    </Box>
+                    <Box mx={1}>
+                      <IconButton
+                        className={styles.postBtn}
+                        onClick={handleOpenComments}
+                        sx={{ padding: '15px' }}
+                      >
+                        <img src='icons/message.svg' alt='icon' />
+                      </IconButton>
+                      {values.totalComments || 0}
+                    </Box>
+                    <Box>
+                      <IconButton
+                        className={styles.postBtn}
+                      >
+                        <img src='icons/share.svg' alt='icon' />
+                      </IconButton>
+                      5
                     </Box>
                   </Box>
-                </>
-              )
-            }
-          </Box>
+                </Box>
+              </Box>
+            )
+          }
+
           <Box mt={5} sx={{ textAlign: 'center' }}>
             <img width={85} src='images/noobstorm-logo-small.png' />
           </Box>
-        </>
+        </Box>
       </Card>
 
       <CommentsModal isModalOpen={openCommentsModal} handleClose={handleCloseComments} postId={values.id} />
