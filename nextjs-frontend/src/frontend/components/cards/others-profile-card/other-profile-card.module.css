@@ -1,0 +1,27 @@
+.otherProfileCard{
+    background-color: blue;
+    padding: 66px 26px;
+    border-radius: 15px;
+    color: white;
+}
+.profileSection{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.customeDivider{
+    width: 120px;
+    height: 1px;
+    background-color: white;
+}
+.selectImg{
+    position: absolute;
+    bottom: 18px;
+    right: -7px;
+    background-color: blue;
+}
+.verticalDivider{
+    width: 0.5px;
+    height: 38px;
+    background-color: aliceblue;
+}
