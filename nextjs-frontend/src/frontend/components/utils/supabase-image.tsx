@@ -1,12 +1,13 @@
 import Image, { ImageProps } from 'next/image'
 import { useEffect, useState } from 'react';
 import { getImageSignedUrl, getPublicUrl } from '../../service-clients/image-service-client';
+import { AllowedBuckets } from '../../../models/constants';
 
 
-interface Props extends ImageProps {
+interface Props extends Omit<ImageProps,'src'> {
   isPublicBucket: boolean;
   filePath: string;
-  bucket: string;
+  bucket: AllowedBuckets;
 }
 
 export default function SupabaseImage(props: Props): JSX.Element {

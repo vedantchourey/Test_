@@ -29,6 +29,7 @@ export interface IFrontendConfig {
     },
     uploads: {
       setAvatar: string;
+      setProfileBackground: string;
     }
   }
 }

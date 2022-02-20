@@ -10,7 +10,7 @@ import { AllowedBuckets } from '../../../models/constants';
 import { FileObject } from '@supabase/storage-js';
 
 
-export class AvatarFileType implements IUploadFileType {
+export class ProfileBackgroundFileType implements IUploadFileType {
 
   private readonly profilesRepository: ProfilesRepository;
 
@@ -30,30 +30,30 @@ export class AvatarFileType implements IUploadFileType {
 
   async uploadFile(file: IUploadedFile): Promise<string> {
     const profile = await this.userProfile();
-    const oldAvatar = profile.avatarUrl;
-    const newAvatarUrl = `avatars/${profile.id}_${v4()}`;
-    const result = await this.uploadImage(newAvatarUrl, file);
+    const oldProfileBackground = profile.profileBackgroundImageUrl;
+    const newBackgroundUrl = `profile-background/${profile.id}_${v4()}`;
+    const result = await this.uploadImage(newBackgroundUrl, file);
     if (result.error != null) throw result.error;
-    await this.profilesRepository.updateAvatar(profile.id, newAvatarUrl);
-    const deleteResult = await this.deleteImage(oldAvatar);
+    await this.profilesRepository.updateProfileBackground(profile.id, newBackgroundUrl);
+    const deleteResult = await this.deleteImage(oldProfileBackground);
     if (deleteResult.error != null) throw deleteResult.error;
-    return newAvatarUrl;
+    return newBackgroundUrl;
   }
 
-  private async uploadImage(avatarUrl: string, file: IUploadedFile): Promise<{ data: { Key: string } | null; error: Error | null }> {
+  private async uploadImage(backgroundUrl: string, file: IUploadedFile): Promise<{ data: { Key: string } | null; error: Error | null }> {
     return privateBackendSupabase.storage
                                  .from(this.bucket)
-                                 .upload(avatarUrl, file.fileContent as Buffer, {
+                                 .upload(backgroundUrl, file.fileContent as Buffer, {
                                    contentType: file.mimeType,
                                  });
 
   }
 
-  private async deleteImage(avatarUrl: string | undefined): Promise<{ data: FileObject[] | null; error: Error | null }> {
-    if (avatarUrl == null) return {data: [], error: null};
+  private async deleteImage(backgroundUrl: string | undefined): Promise<{ data: FileObject[] | null; error: Error | null }> {
+    if (backgroundUrl == null) return {data: [], error: null};
     return privateBackendSupabase.storage
                                  .from(this.bucket)
-                                 .remove([avatarUrl]);
+                                 .remove([backgroundUrl]);
 
   }
 
@@ -65,7 +65,7 @@ export class AvatarFileType implements IUploadFileType {
 
   validate(files: IUploadedFile[]): string | undefined {
     if (files.some((x) => x.invalidMime || x.limitExceeded)) return 'invalid upload or limit exceeded';
-    if (files.length !== 1) return 'can only have on avatar image';
+    if (files.length !== 1) return 'can only have on profile background image';
   }
 
 }

@@ -7,13 +7,14 @@ import { NoobPostResponse } from './messages/common-messages';
 import { UploadFileRequest } from '../../backend/services/file-service/i-upload-file-type';
 import { IFileResponse } from '../../backend/services/file-service/i-file-response';
 import frontendConfig from '../utils/config/front-end-config';
+import { AllowedBuckets } from '../../models/constants';
 
-export function downloadImage(bucket: string, filename: string, bustCache = false): Promise<{ data: Blob | null; error: Error | null }> {
+export function downloadImage(bucket: AllowedBuckets, filename: string, bustCache = false): Promise<{ data: Blob | null; error: Error | null }> {
   const url = bustCache ? new UrlBuilder(filename).addQueryParam('cacheBustId', v4())
                                                   .build() : filename;
   return frontendSupabase.storage
-                         .from('public')
-                         .download('test.jpeg')
+                         .from(bucket)
+                         .download(url)
 }
 
 export function getImageSignedUrl(bucket: string, filename: string): Promise<{ signedURL: string | null; error: Error | null }> {
@@ -23,21 +24,30 @@ export function getImageSignedUrl(bucket: string, filename: string): Promise<{ s
 
 export function uploadImage(bucket: string, filename: string, file: File): Promise<{ data: { Key: string } | null; error: Error | null }> {
   return frontendSupabase.storage
-                         .from('public')
-                         .upload('test.jpeg', file)
+                         .from(bucket)
+                         .upload(filename, file)
 
 }
 
 export function updateImage(bucket: string, filename: string, file: File): Promise<{ data: { Key: string } | null; error: Error | null }> {
   return frontendSupabase.storage
-                         .from('public')
-                         .update('test.jpeg', file, {upsert: true});
+                         .from(bucket)
+                         .update(filename, file, {upsert: true});
 
 }
 
 export const updateAvatar = async (file: File): Promise<NoobPostResponse<UploadFileRequest, IFileResponse>> => {
   const setAvatarUrl = frontendConfig.noobStormServices.uploads.setAvatar;
   const response = await sendFiles(setAvatarUrl, [file], await getAuthHeader());
+  const body = await response.json();
+  if (response.status === 200) return body.data;
+  if (response.status === 400 && body.errors.apiError == null) return {errors: body.errors, isError: true}
+  throw body;
+}
+
+export const updateProfileBackground = async (file: File): Promise<NoobPostResponse<UploadFileRequest, IFileResponse>> => {
+  const setProfileBackground = frontendConfig.noobStormServices.uploads.setProfileBackground;
+  const response = await sendFiles(setProfileBackground, [file], await getAuthHeader());
   const body = await response.json();
   if (response.status === 200) return body.data;
   if (response.status === 400 && body.errors.apiError == null) return {errors: body.errors, isError: true}
