@@ -42,8 +42,7 @@ export const checkIsPostLiked = async (payload: { userId: string | undefined; po
     })
     .limit(1)
   if (result.error) throw result.error;
-  // eslint-disable-next-line no-unneeded-ternary
-  return { isLiked: result.data.length ? true : false };
+  return { isLiked: result.data.length > 0 };
 }
 
 export const getPostLikesCount = async (postId: string): Promise<{ totalLikes: number | null }> => {
@@ -52,7 +51,6 @@ export const getPostLikesCount = async (postId: string): Promise<{ totalLikes: n
       postId
     })
   if (result.error) throw result.error;
-  // eslint-disable-next-line no-unneeded-ternary
   return { totalLikes: result.count };
 }
 
@@ -62,7 +60,6 @@ export const getPostCommentsCount = async (postId: string): Promise<{ totalComme
       postId
     })
   if (result.error) throw result.error;
-  // eslint-disable-next-line no-unneeded-ternary
   return { totalComments: result.count };
 }
 

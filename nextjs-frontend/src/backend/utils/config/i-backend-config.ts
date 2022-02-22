@@ -15,6 +15,7 @@ export interface IBackendConfig {
   supabase: {
     apiUrl: string;
     anonKey: string;
+    privateKey: string;
   };
   client: {
     cmsApiToken: string;

@@ -20,7 +20,12 @@ export class PerRequestContext {
     return this._param;
   }
 
+  assertIsLoggedIn(): void {
+    if (this.user == null || this.jwt == null) throw new Error('login required');
+  }
+
   user?: User;
+  jwt?: string;
   private _transaction?: Knex.Transaction;
   private _knexConnection?: Knex;
   error: unknown;
