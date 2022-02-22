@@ -7,7 +7,7 @@ import { getAuthHeader } from "../utils/headers";
 import { frontendSupabase } from "../services/supabase-frontend-service";
 import { ICreateCommentRequest } from "../../backend/services/posts-services/create-comment/i-create-comment";
 
-export const getUserPosts = async (): Promise<IPostsResponse[]> => {
+export const getPostsByUserId = async (userid:string): Promise<IPostsResponse[]> => {
   const result = await frontendSupabase.from("posts").select(`
         id,
         postContent,
@@ -16,7 +16,7 @@ export const getUserPosts = async (): Promise<IPostsResponse[]> => {
         createdAt,
         updatedAt
   `)
-  .order('createdAt', {ascending : false});
+  .match({postedBy :userid});
   if (result.error) throw result.error;
   return result.data as IPostsResponse[];
 };

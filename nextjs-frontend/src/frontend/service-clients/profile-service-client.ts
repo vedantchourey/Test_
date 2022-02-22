@@ -39,6 +39,19 @@ export async function fetchUserProfile(): Promise<IProfileResponse> {
   return {...others, userRoles}
 }
 
+export async function getUserProfileByUsername(username:string):Promise<IProfileResponse>{
+  const result = await frontendSupabase.from('profiles').select(`
+   *,
+   state : states(*),
+   country : countries(*)
+  `)
+  .eq('username', username)
+  .single();
+  if(result.error) throw result.body;
+  return result.body;
+
+}
+
 export async function updateProfileImages(request: UpdateProfileImageRequest): Promise<NoobPostResponse<UpdateProfileImageRequest, IProfileResponse>> {
   const header = await getAuthHeader();
   const result = await post(imagesUrl, request, header);

@@ -5,6 +5,7 @@ import { useAppSelector } from "../../src/frontend/redux-store/redux-store";
 import {
   authCheckStatusSelector,
   isLoggedInSelector,
+  userProfileSelector
 } from "../../src/frontend/redux-store/authentication/authentication-selectors";
 import UserProfileCard from "../../src/frontend/components/cards/user-profile-card/user-profile-card";
 import NoobPage from "../../src/frontend/components/page/noob-page";
@@ -13,7 +14,7 @@ import commonStyles from "../../src/frontend/styles/common.module.css";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import CreatePostInput from "../../src/frontend/components/account/posts/create-post-input";
 import PostCard from "../../src/frontend/components/account/posts/post-card";
-import { getUserPosts } from "../../src/frontend/service-clients/post-service-client";
+import { getPostsByUserId } from "../../src/frontend/service-clients/post-service-client";
 import { IPostsResponse } from "../../src/frontend/service-clients/messages/i-posts-response";
 import { withProtected } from '../../src/frontend/components/auth-wrapper/auth-wrapper';
 
@@ -33,6 +34,7 @@ function Account(): JSX.Element {
   const router = useRouter();
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const checkStatus = useAppSelector(authCheckStatusSelector);
+  const user = useAppSelector(userProfileSelector);
 
   const [activeTab, setActiveTab] = useState<TabsProps>("posts");
   const [isFetchingPosts, setIsFetchingPosts] = useState<boolean>(true);
@@ -49,7 +51,7 @@ function Account(): JSX.Element {
   useEffect(() => {
     try {
       (async (): Promise<void> => {
-        const posts = await getUserPosts();
+        const posts = await getPostsByUserId(user?.id || '');
         setPosts(posts);
       })();
     } finally {
@@ -64,7 +66,7 @@ function Account(): JSX.Element {
   const _renderPosts = (): JSX.Element | React.ReactNode => {
     if (isFetchingPosts) {
       return new Array(5).fill("")
-        .map((data, i) => <h1 key={i}>sf</h1>);
+        .map((data, i) => <h1 key={i}>Skeleton</h1>);
     }
     const jsx = posts.map((postData, i) => {
       return <PostCard key={Date.now() + i} data={postData} />;
