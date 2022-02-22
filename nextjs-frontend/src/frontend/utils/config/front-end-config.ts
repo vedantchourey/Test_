@@ -24,7 +24,11 @@ const frontendConfig: IFrontendConfig = {
       createUrl: `${baseApiUrl}/api/posts`,
       likePostUrl: (postId: string): string => `${baseApiUrl}/api/posts/${postId}/likes`,
       unlikePostUrl: (postId: string): string => `${baseApiUrl}/api/posts/${postId}/likes`,
-      createCommentUrl : (postId :string):string => `${baseApiUrl}/api/posts/${postId}/comments` 
+      createCommentUrl: (postId:string) :string => `${baseApiUrl}/api/posts/${postId}/comments`
+    },
+    followActions: {
+      followUser: `${baseApiUrl}/api/followers/following`,
+      unFollowUser: `${baseApiUrl}/api/followers/unfollow`,
     }
   },
   supabase: {
