@@ -1,1 +1,1 @@
-drop policy "users can view their own profile." on profiles;
+drop policy "Users can view their own profile." on profiles;
