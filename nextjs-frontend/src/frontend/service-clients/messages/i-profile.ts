@@ -12,4 +12,10 @@ export interface IProfileResponse {
   avatarUrl?: string;
   profileBackgroundImageUrl?: string;
   userRoles: string[];
+  state? : {
+    displayName : string;
+  };
+  country? : {
+    displayName : string;
+  }
 }

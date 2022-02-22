@@ -238,14 +238,14 @@ const PostCard = (props: IProps): JSX.Element => {
                       </IconButton>
                       {values.totalComments || 0}
                     </Box>
-                    <Box>
+                    {/*  <Box>
                       <IconButton
                         className={styles.postBtn}
                       >
                         <img src='icons/share.svg' alt='icon' />
                       </IconButton>
                       5
-                    </Box>
+                    </Box> */}
                   </Box>
                 </Box>
               </Box>

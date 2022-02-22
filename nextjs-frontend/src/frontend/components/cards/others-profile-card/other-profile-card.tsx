@@ -3,52 +3,38 @@ import { Avatar, Box, Button, Divider, Grid, IconButton, Typography } from '@mui
 import styles from './other-profile-card.module.css'
 import CollectionsIcon from '@mui/icons-material/Collections';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import { IProfileResponse } from "../../../service-clients/messages/i-profile";
 
-const OtherProfileCard = (): unknown => {
+const OtherProfileCard = (props: { userData: IProfileResponse }): JSX.Element => {
+  const {
+    firstName,
+    lastName,
+    state,
+    country
+  } = props.userData;
   return (
     <Box className={styles.otherProfileCard}>
       <Box className={styles.background}>
         <Box className={styles.profileSection}>
           <Box sx={{ position: 'relative' }}>
-            <Avatar sx={{ width: 85, height: 85, marginBottom: 2 }} alt="Remy Sharp" src="https://imagekit.io/blog/content/images/2019/12/image-optimization.jpg" />
+            <Avatar sx={{ width: 85, height: 85, marginBottom: 2 }} alt="Remy Sharp" src="" />
             <IconButton className={styles.selectImg} >
               {/* <img src='icons/gallery.svg' alt='icon' /> */}
               <CollectionsIcon />
             </IconButton>
           </Box>
           <Typography variant='h2' fontSize={24} my={2} sx={{ textTransform: 'capitalize', fontWeight: 600 }}>
-            Zain Vaccaro
+            {`${firstName} ${lastName}`}
           </Typography>
           <Typography variant='h3' fontSize={18} color='#695B6E' >
-            Westheimer Rd. Santa Ana, Illinois
+            {`${state?.displayName}, ${country?.displayName} `}
           </Typography>
-          <Box sx={{ width: "100%", my: 4 }}>
-            <Grid container spacing={3} >
-              <Grid item md={5} sx={{ alignSelf: 'center' }}>
-                <Divider />
-              </Grid>
-              <Grid item md={2}>
-                <Typography variant='h3' fontSize={18} >
-                  About
-                </Typography>
-              </Grid>
-              <Grid item md={5} sx={{ alignSelf: 'center' }}>
-                <Divider />
-              </Grid>
-            </Grid>
-          </Box>
-          <Box>
-            <Typography variant='body2' fontSize={13} sx={{ textAlign: 'center' }} >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, lectus magna fringilla urna, porttitor rhoncus dolor purus non enim praesen
-            </Typography>
-          </Box>
         </Box>
       </Box>
 
       <Box className={styles.bottom}>
         <Box sx={{ width: "100%" }}>
-          <Divider light />
-          <Grid container p={2}>
+          {/* <Grid container p={2}>
             <Grid item md={5} sx={{ textAlign: 'left' }}>
               <Typography variant='caption' fontSize={12}>
                 Team
@@ -71,15 +57,15 @@ const OtherProfileCard = (): unknown => {
                 Nov 1, 2021
               </Typography>
             </Grid>
-          </Grid>
+          </Grid> */}
 
           <Divider sx={{ mb: 3 }} light />
           <Grid container>
             <Grid item md={3} sx={{ textAlign: 'center' }}>
-              <Typography variant='caption' fontSize={12}>
+              <Typography variant='caption' fontSize={14}>
                 Followers
               </Typography>
-              <Typography variant='h3' color='#6931F9' fontSize={14}>
+              <Typography variant='h3' color='#6931F9' fontSize={16}>
                 555 K
               </Typography>
             </Grid>
@@ -87,10 +73,10 @@ const OtherProfileCard = (): unknown => {
               <div className={styles.verticalDivider} />
             </Grid>
             <Grid item md={4} sx={{ textAlign: 'center' }}>
-              <Typography variant='caption' fontSize={12}>
+              <Typography variant='caption' fontSize={14}>
                 Following
               </Typography>
-              <Typography variant='h3' color='#6931F9' fontSize={14}>
+              <Typography variant='h3' color='#6931F9' fontSize={16}>
                 555
               </Typography>
             </Grid>
@@ -98,10 +84,10 @@ const OtherProfileCard = (): unknown => {
               <div className={styles.verticalDivider} />
             </Grid>
             <Grid item md={3} sx={{ textAlign: 'center' }}>
-              <Typography variant='caption' fontSize={12}>
+              <Typography variant='caption' fontSize={14}>
                 Posts
               </Typography>
-              <Typography variant='h3' color='#6931F9' fontSize={14}>
+              <Typography variant='h3' color='#6931F9' fontSize={16}>
                 55
               </Typography>
             </Grid>
