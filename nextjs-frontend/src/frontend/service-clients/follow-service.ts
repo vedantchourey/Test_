@@ -11,20 +11,20 @@ interface IUserFollowerResponse{
     message: string
 }
 
-const followUser = async (followerId: string):Promise<NoobPostResponse <IFollowRequest,IUserFollowerResponse> > => {
-  const endpoint = frontendConfig.noobStormServices.followActions.followUser;
+const followUser = async (userId: string):Promise<NoobPostResponse <IFollowRequest,IUserFollowerResponse> > => {
+  const endpoint = frontendConfig.noobStormServices.followActions.followUserUrl(userId);
   const headers = await getAuthHeader();
-  const result = await post(endpoint, {followerId}, headers);
+  const result = await post(endpoint, null, headers);
   const body = await result.json();
   if (result.status === 200) return body.data;
   if (result.status === 400 && body.errors.apiError == null) return {errors: body.errors, isError: true}
   throw body;
 }
 
-const unFollowUser = async (followerId: string):Promise<NoobPostResponse <IFollowRequest,IUserFollowerResponse> > => {
-  const endpoint = frontendConfig.noobStormServices.followActions.unFollowUser;
+const unFollowUser = async (userId: string):Promise<NoobPostResponse <IFollowRequest,IUserFollowerResponse> > => {
+  const endpoint = frontendConfig.noobStormServices.followActions.unFollowUserUrl(userId);
   const headers = await getAuthHeader();
-  const result = await post(endpoint, {followerId}, headers);
+  const result = await post(endpoint, null, headers);
   const body = await result.json();
   if (result.status === 200) return body.data;
   if (result.status === 400 && body.errors.apiError == null) return {errors: body.errors, isError: true}

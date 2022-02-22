@@ -74,9 +74,17 @@ export async function getUserProfileByUsername(username:string):Promise<IProfile
   `)
   .eq('username', username)
   .single();
+  const followerId = frontendSupabase.auth.user()?.id;
+  const isFollowingRes = await frontendSupabase.from('user_followers').select('id', {count : 'exact'})
+  .match({
+    followerId : followerId,
+    userId : result.body.id
+  });
+  // eslint-disable-next-line no-unneeded-ternary
+  const isFollowing = isFollowingRes.count ? true : false
   const counterData = await getCounterMeta(result.body.id); 
   if(result.error) throw result.body;
-  return {...result.body, counterData};
+  return {...result.body, ...counterData, isFollowing };
 }
 
 export async function updateProfileImages(request: UpdateProfileImageRequest): Promise<NoobPostResponse<UpdateProfileImageRequest, IProfileResponse>> {

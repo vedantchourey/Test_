@@ -18,4 +18,8 @@ export interface IProfileResponse {
   country? : {
     displayName : string;
   }
+  totalFollowers? : number | null;
+  totalPosts? : number | null;
+  totalFollowing? : number | null;
+  isFollowing? : boolean;
 }
