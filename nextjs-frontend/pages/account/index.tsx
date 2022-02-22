@@ -83,10 +83,10 @@ function Account(): JSX.Element {
     >
       <div className={commonStyles.container}>
         <Grid container my={2} spacing={2}>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} lg={4}>
             <UserProfileCard />
           </Grid>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} lg={8}>
             <TabContext value={activeTab}>
               <Box>
                 <TabList
