@@ -26,29 +26,22 @@ function UserAccount(): JSX.Element {
   const username = Router.query.username as string;
 
   useEffect(() => {
-    try {
-      (async (): Promise<void> => {
-        const user = await getUserProfileByUsername(username);
-        if (user) {
-          setUserData(user);
-        }
-      })();
-    } finally {
-      setIsFetchingUserData(false)
-    }
+    (async (): Promise<void> => {
+      const user = await getUserProfileByUsername(username);
+      if (user) {
+        setUserData(user);
+      }
+    })();
   }, []);
 
   useEffect(() => {
     if (!userData) return;
-    try {
-      (async (): Promise<void> => {
-        const posts = await getPostsByUserId(userData?.id);
-        setPosts(posts);
-      })()
-    }
-    finally {
+    (async (): Promise<void> => {
+      const posts = await getPostsByUserId(userData?.id);
+      setPosts(posts);
+      setIsFetchingUserData(false);
       setIsFetchingPosts(false);
-    }
+    })()
   }, [userData])
 
   const _renderPosts = (): JSX.Element | React.ReactNode => {
