@@ -58,5 +58,34 @@
   align-items: center;
   column-gap: 23px;
 }
-
-
+.searchBar {
+  border: 1px solid #6932F9;
+  padding: 5px 12px;
+  display: flex;
+  align-items: center;
+  align-self: center;
+  border-radius: 25px;
+  position: relative;
+  z-index: 2;
+  background-color: #08001c;
+}
+.searchBar input::placeholder{
+  font-weight: 200;
+  font-size: 14px;
+}
+.searchList{
+  color: #6932F9;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  padding-top: 50px;
+}
+.searchList li{
+  padding: 0 !important;
+}
+.listText span{
+  text-align: left !important;
+}
+.listText span p{
+  text-align: left !important;
+}

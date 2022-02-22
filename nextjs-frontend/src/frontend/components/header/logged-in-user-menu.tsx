@@ -1,4 +1,4 @@
-import { Divider, Icon, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, styled, Typography } from "@mui/material";
+import { Avatar, Box, Divider, Icon, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, styled, TextField, Typography } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { signOut } from '../../service-clients/auth-service-client';
 import { useRef, useState } from 'react';
@@ -16,7 +16,9 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import { useRouter } from 'next/router';
-
+import SearchIcon from '@mui/icons-material/Search';
+import { ISearchPeopleByUsername } from "../../service-clients/messages/i-search";
+import { searchPeopleByUsername } from "../../service-clients/search-service-client";
 
 const CustomMenu = styled(Menu)(() => {
   return ({
@@ -33,7 +35,7 @@ export default function LoggedInUserMenu(): JSX.Element {
   const [showMenu, setShowMenu] = useState(false);
   const username = useAppSelector(userNameSelector);
   const avatarUrl = useAppSelector(avatarImageBlobUrlSelector);
-
+  const [userList, setUserList] = useState<ISearchPeopleByUsername[]>([])
 
   function handleClose(): void {
     setShowMenu(false);
@@ -55,18 +57,68 @@ export default function LoggedInUserMenu(): JSX.Element {
   }
 
   function getUserAvatar(): JSX.Element {
-    if (avatarUrl == null) return (<Icon className={styles.userIcon}><PersonIcon className={styles.userIcon}/></Icon>);
-    return <img className={styles.userIcon} src={avatarUrl} alt="avatar"/>
+    if (avatarUrl == null) return (<Icon className={styles.userIcon}><PersonIcon className={styles.userIcon} /></Icon>);
+    return <img className={styles.userIcon} src={avatarUrl} alt="avatar" />
   }
+
+
+  async function searchByUserName(username: string): Promise<void> {
+    const response = await searchPeopleByUsername(username);
+    setUserList(response)
+  }
+
+  // const top100Films = [
+  //   { title: 'The Shawshank Redemption', year: 1994 },
+  //   { title: 'The Godfather', year: 1972 },
+  //   { title: 'The Godfather: Part II', year: 1974 },
+  //   { title: 'The Dark Knight', year: 2008 },
+  //   { title: '12 Angry Men', year: 1957 },
+  //   { title: "Schindler's List", year: 1993 },
+  //   { title: 'Pulp Fiction', year: 1994 },
+  // ];
 
   return (
     <div className={styles.rightMenuGroup}>
+      <Box sx={{ position: 'relative' }}>
+        <Box className={styles.searchBar}>
+          <TextField
+            placeholder="Search anything..."
+            variant="standard"
+            InputProps={{
+              disableUnderline: true,
+            }}
+            onChange={(e): unknown => searchByUserName(e.target.value)}
+          />
+          <SearchIcon color="primary" />
+        </Box>
+        {userList.length ? (
+          <List className={styles.searchList} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+            {userList.map((data, i) => (
+              <ListItem key={Date.now() + i}>
+                <ListItemButton onClick={(): unknown => router.push(`/account/${data.username}`)} sx={{ padding: '2px 18px' }}>
+                  <ListItemAvatar>
+                    <Avatar sx={{ width: 35, height: 35 }} alt="profile image" src='' />
+                  </ListItemAvatar>
+                  <ListItemText className={styles.listText}>
+                    <Typography>
+                      @{data.username}
+                    </Typography>
+                    <Typography variant="caption" color='#F08743'>
+                      {data.firstName} {data.lastName}
+                    </Typography>
+                  </ListItemText>
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        ) : (<></>)}
+      </Box>
       <div className={styles.iconsGroup}>
         <IconButton>
-          <ChatBubbleOutlineOutlinedIcon/>
+          <ChatBubbleOutlineOutlinedIcon />
         </IconButton>
         <IconButton>
-          <NotificationsOutlinedIcon/>
+          <NotificationsOutlinedIcon />
         </IconButton>
       </div>
       <div className={styles.container} ref={containerRef}>
@@ -75,11 +127,11 @@ export default function LoggedInUserMenu(): JSX.Element {
         </div>
         <div className={styles.columnGroup}>
           <Typography className={styles.username}>{username}</Typography>
-          <Typography className={styles.balance}><Icon fontSize="inherit"><CurrencyRupeeIcon fontSize="inherit"/></Icon>600</Typography>
+          <Typography className={styles.balance}><Icon fontSize="inherit"><CurrencyRupeeIcon fontSize="inherit" /></Icon>600</Typography>
         </div>
         <div className={styles.menuGroup}>
           <IconButton aria-label="show user menu" onClick={onDownArrowClick}>
-            <KeyboardArrowDownIcon/>
+            <KeyboardArrowDownIcon />
           </IconButton>
         </div>
         <CustomMenu id="basic-menu"
@@ -90,16 +142,16 @@ export default function LoggedInUserMenu(): JSX.Element {
             'aria-labelledby': 'basic-button',
           }}
         >
-          <MenuItem onClick={handleAccountItem}><ListItemIcon><PersonIcon fontSize="small"/></ListItemIcon><ListItemText>Account</ListItemText></MenuItem>
-          <MenuItem onClick={handleClose}><ListItemIcon><DashboardIcon fontSize="small"/></ListItemIcon><ListItemText>Dashboard</ListItemText></MenuItem>
-          <MenuItem onClick={handleClose}><ListItemIcon><ShoppingBagIcon fontSize="small"/></ListItemIcon><ListItemText>Orders</ListItemText></MenuItem>
-          <MenuItem onClick={handleClose}><ListItemIcon><AccountBalanceWalletIcon fontSize="small"/></ListItemIcon><ListItemText>Wallet</ListItemText></MenuItem>
-          <MenuItem onClick={handleClose}><ListItemIcon><SettingsIcon fontSize="small"/></ListItemIcon><ListItemText>Profile Settings</ListItemText></MenuItem>
-          <MenuItem onClick={handleClose}><ListItemIcon><WatchLaterIcon fontSize="small"/></ListItemIcon><ListItemText>Active Tournaments</ListItemText></MenuItem>
-          <Divider/>
-          <MenuItem onClick={handleSignOut}><ListItemIcon><LogoutIcon fontSize="small"/></ListItemIcon><ListItemText>Logout</ListItemText></MenuItem>
+          <MenuItem onClick={handleAccountItem}><ListItemIcon><PersonIcon fontSize="small" /></ListItemIcon><ListItemText>Account</ListItemText></MenuItem>
+          <MenuItem onClick={handleClose}><ListItemIcon><DashboardIcon fontSize="small" /></ListItemIcon><ListItemText>Dashboard</ListItemText></MenuItem>
+          <MenuItem onClick={handleClose}><ListItemIcon><ShoppingBagIcon fontSize="small" /></ListItemIcon><ListItemText>Orders</ListItemText></MenuItem>
+          <MenuItem onClick={handleClose}><ListItemIcon><AccountBalanceWalletIcon fontSize="small" /></ListItemIcon><ListItemText>Wallet</ListItemText></MenuItem>
+          <MenuItem onClick={handleClose}><ListItemIcon><SettingsIcon fontSize="small" /></ListItemIcon><ListItemText>Profile Settings</ListItemText></MenuItem>
+          <MenuItem onClick={handleClose}><ListItemIcon><WatchLaterIcon fontSize="small" /></ListItemIcon><ListItemText>Active Tournaments</ListItemText></MenuItem>
+          <Divider />
+          <MenuItem onClick={handleSignOut}><ListItemIcon><LogoutIcon fontSize="small" /></ListItemIcon><ListItemText>Logout</ListItemText></MenuItem>
         </CustomMenu>
       </div>
-    </div>
+    </div >
   );
 }
