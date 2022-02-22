@@ -27,8 +27,8 @@ const frontendConfig: IFrontendConfig = {
       createCommentUrl: (postId:string) :string => `${baseApiUrl}/api/posts/${postId}/comments`
     },
     followActions: {
-      followUser: `${baseApiUrl}/api/followers/following`,
-      unFollowUser: `${baseApiUrl}/api/followers/unfollow`,
+      followUserUrl: (userId : string) => `${baseApiUrl}/api/follow-action/following/${userId}`,
+      unFollowUserUrl: (userId : string) => `${baseApiUrl}/api/follow-action/unfollow/${userId}`,
     },
     uploads: {
       setAvatar: `${baseApiUrl}/api/uploads/avatars`,

@@ -6,7 +6,7 @@ import PostCard from "../../src/frontend/components/account/posts/post-card";
 import { getPostsByUserId } from "../../src/frontend/service-clients/post-service-client";
 import Router from 'next/router';
 import { IPostsResponse } from "../../src/frontend/service-clients/messages/i-posts-response";
-import { IProfileResponse } from "../../src/frontend/service-clients/messages/i-profile";
+import { IOthersProfileResponse } from "../../src/frontend/service-clients/messages/i-profile";
 import { getUserProfileByUsername } from '../../src/frontend/service-clients/profile-service-client';
 import OtherProfileCard from '../../src/frontend/components/cards/others-profile-card/other-profile-card'
 import { withProtected } from '../../src/frontend/components/auth-wrapper/auth-wrapper';
@@ -19,36 +19,29 @@ import {
 
 function UserAccount(): JSX.Element {
   const loggedUser = useAppSelector(userProfileSelector);
-  const [userData, setUserData] = useState<IProfileResponse | null>(null);
+  const [userData, setUserData] = useState<IOthersProfileResponse | null>(null);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
   const [isFetchingUserData, setIsFetchingUserData] = useState<boolean>(true);
   const [isFetchingPosts, setIsFetchingPosts] = useState<boolean>(true);
   const username = Router.query.username as string;
 
   useEffect(() => {
-    try {
-      (async (): Promise<void> => {
-        const user = await getUserProfileByUsername(username);
-        if (user) {
-          setUserData(user);
-        }
-      })();
-    } finally {
-      setIsFetchingUserData(false)
-    }
+    (async (): Promise<void> => {
+      const user = await getUserProfileByUsername(username);
+      if (user) {
+        setUserData(user);
+      }
+    })();
   }, []);
 
   useEffect(() => {
     if (!userData) return;
-    try {
-      (async (): Promise<void> => {
-        const posts = await getPostsByUserId(userData?.id);
-        setPosts(posts);
-      })()
-    }
-    finally {
+    (async (): Promise<void> => {
+      const posts = await getPostsByUserId(userData?.id);
+      setPosts(posts);
+      setIsFetchingUserData(false);
       setIsFetchingPosts(false);
-    }
+    })()
   }, [userData])
 
   const _renderPosts = (): JSX.Element | React.ReactNode => {

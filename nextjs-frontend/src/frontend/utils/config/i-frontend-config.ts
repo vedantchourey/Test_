@@ -24,8 +24,8 @@ export interface IFrontendConfig {
       createCommentUrl : (postId: string) => string;
     }
     followActions: {
-      followUser: string;
-      unFollowUser: string;
+      followUserUrl: (userId : string) => string;
+      unFollowUserUrl: (userId : string) => string;
     },
     uploads: {
       setAvatar: string;

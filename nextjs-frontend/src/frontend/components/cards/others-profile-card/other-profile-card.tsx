@@ -1,17 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Avatar, Box, Button, Divider, Grid, IconButton, Typography } from '@mui/material';
+import { CheckOutlined } from '@mui/icons-material'
 import styles from './other-profile-card.module.css'
 import CollectionsIcon from '@mui/icons-material/Collections';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
-import { IProfileResponse } from "../../../service-clients/messages/i-profile";
+import { IOthersProfileResponse } from "../../../service-clients/messages/i-profile";
+import { followUser, unFollowUser } from '../../../service-clients/follow-service';
 
-const OtherProfileCard = (props: { userData: IProfileResponse }): JSX.Element => {
+const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Element => {
+  const [userData, setUserData] = useState(props.userData)
   const {
     firstName,
     lastName,
     state,
-    country
-  } = props.userData;
+    country,
+    totalFollowers,
+    totalPosts,
+    totalFollowing,
+    isFollowing
+  } = userData;
+
+  const followAction = (): void => {
+    if (!isFollowing) {
+      followUser(userData.id);
+      setUserData((prev) => {
+        return {
+          ...prev,
+          isFollowing: true,
+          totalFollowers: totalFollowers + 1
+        }
+      })
+      // eslint-disable-next-line no-useless-return
+      return;
+    }
+    unFollowUser(userData.id);
+    setUserData((prev) => {
+      return {
+        ...prev,
+        isFollowing: false,
+        totalFollowers: totalFollowers - 1
+      }
+    })
+
+  }
+
   return (
     <Box className={styles.otherProfileCard}>
       <Box className={styles.background}>
@@ -66,7 +98,7 @@ const OtherProfileCard = (props: { userData: IProfileResponse }): JSX.Element =>
                 Followers
               </Typography>
               <Typography variant='h3' color='#6931F9' fontSize={16}>
-                555 K
+                {totalFollowers || 0}
               </Typography>
             </Grid>
             <Grid item md={1} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -77,7 +109,7 @@ const OtherProfileCard = (props: { userData: IProfileResponse }): JSX.Element =>
                 Following
               </Typography>
               <Typography variant='h3' color='#6931F9' fontSize={16}>
-                555
+                {totalFollowing || 0}
               </Typography>
             </Grid>
             <Grid item md={1} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -88,15 +120,17 @@ const OtherProfileCard = (props: { userData: IProfileResponse }): JSX.Element =>
                 Posts
               </Typography>
               <Typography variant='h3' color='#6931F9' fontSize={16}>
-                55
+                {totalPosts || 0}
               </Typography>
             </Grid>
           </Grid>
         </Box>
 
         <Box className={styles.btnSection}>
-          <Button className={styles.bottomBtn} startIcon={<PersonAddAltIcon />} variant='contained'>
-            Follow
+          <Button className={styles.bottomBtn} startIcon={isFollowing ? <CheckOutlined /> : <PersonAddAltIcon />} variant='contained' onClick={followAction}>
+            {
+              isFollowing ? 'Following' : 'Follow'
+            }
           </Button>
           <Button className={styles.bottomBtn} variant='outlined'>
             Message
