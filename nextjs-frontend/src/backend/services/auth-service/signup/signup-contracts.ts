@@ -10,6 +10,7 @@ export interface SignupRequest {
   countryId: string;
   stateId: string;
   agreeToTnc: boolean;
+  isPrivate: boolean;
 }
 
 
