@@ -27,6 +27,7 @@ export class ProfilesRepository extends BaseRepository<IProfile> {
                .select('createdAt')
                .select('updatedAt')
                .select('avatarUrl')
+               .select('isPrivate')
                .select('profileBackgroundImageUrl')
                .where({id: id})
                .first();
@@ -50,6 +51,14 @@ export class ProfilesRepository extends BaseRepository<IProfile> {
                .where({id: userId})
   }
 
+  async toggleAccountPrivacy(userId: string, isPrivate: boolean): Promise<boolean>{
+    return this.entities()
+      .where({id: userId})
+      .update({ 
+        isPrivate: isPrivate
+      })
+      .returning('isPrivate');
+  }
 }
 
 export const createProfileRepository = (transaction: Knex.Transaction): ProfilesRepository => new ProfilesRepository(transaction);

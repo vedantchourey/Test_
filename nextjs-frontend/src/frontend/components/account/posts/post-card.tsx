@@ -224,9 +224,11 @@ const PostCard = (props: IProps): JSX.Element => {
                         className={styles.postBtn}
                         sx={{ padding: '12px' }}
                       >
-                        <img src='icons/heart.svg' alt='icon' />
+                        <img src={values.isLiked ? 'icons/heart-filled.svg' : 'icons/heart.svg'} alt='icon' key={values.totalLikes} />
                       </IconButton>
-                      {values?.totalLikes || 0}
+                      <Typography>
+                        {values?.totalLikes || 0}
+                      </Typography>
                     </Box>
                     <Box mx={1}>
                       <IconButton
@@ -236,7 +238,9 @@ const PostCard = (props: IProps): JSX.Element => {
                       >
                         <img src='icons/message.svg' alt='icon' />
                       </IconButton>
-                      {values.totalComments || 0}
+                      <Typography>
+                        {values.totalComments || 0}
+                      </Typography>
                     </Box>
                     {/*  <Box>
                       <IconButton

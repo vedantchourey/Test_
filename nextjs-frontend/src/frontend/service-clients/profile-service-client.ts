@@ -39,6 +39,33 @@ export async function fetchUserProfile(): Promise<IProfileResponse> {
   return {...others, userRoles}
 }
 
+export async function getCounterMeta(userid : string) :Promise<{
+  totalFollowers : number | null;
+  totalPosts : number | null;
+  totalFollowing : number | null; 
+}> {
+  const totalFollowers = await frontendSupabase.from('user_followers').select('*', {count : 'exact'})
+  .match({
+    userId : userid
+  });
+
+  const totalPosts = await frontendSupabase.from('posts').select('*', {count : 'exact'})
+  .match({
+    postedBy : userid
+  });
+
+  const totalFollowing = await frontendSupabase.from('user_followers').select('*', {count : 'exact'})
+  .match({
+    followerId : userid
+  });
+
+  return {
+    totalFollowers : totalFollowers.count,
+    totalPosts : totalPosts.count,
+    totalFollowing : totalFollowing.count 
+  }
+}
+
 export async function getUserProfileByUsername(username:string):Promise<IProfileResponse>{
   const result = await frontendSupabase.from('profiles').select(`
    *,
@@ -47,9 +74,17 @@ export async function getUserProfileByUsername(username:string):Promise<IProfile
   `)
   .eq('username', username)
   .single();
+  const followerId = frontendSupabase.auth.user()?.id;
+  const isFollowingRes = await frontendSupabase.from('user_followers').select('id', {count : 'exact'})
+  .match({
+    followerId : followerId,
+    userId : result.body.id
+  });
+  // eslint-disable-next-line no-unneeded-ternary
+  const isFollowing = isFollowingRes.count ? true : false
+  const counterData = await getCounterMeta(result.body.id); 
   if(result.error) throw result.body;
-  return result.body;
-
+  return {...result.body, ...counterData, isFollowing };
 }
 
 export async function updateProfileImages(request: UpdateProfileImageRequest): Promise<NoobPostResponse<UpdateProfileImageRequest, IProfileResponse>> {
