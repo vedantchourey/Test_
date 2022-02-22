@@ -40,7 +40,11 @@ export async function fetchUserProfile(): Promise<IProfileResponse> {
 }
 
 export async function getUserProfileByUsername(username:string):Promise<IProfileResponse>{
-  const result = await frontendSupabase.from('profiles').select('*')
+  const result = await frontendSupabase.from('profiles').select(`
+   *,
+   state : states(*),
+   country : countries(*)
+  `)
   .eq('username', username)
   .single();
   if(result.error) throw result.body;

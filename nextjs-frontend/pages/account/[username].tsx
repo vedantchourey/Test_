@@ -1,40 +1,22 @@
 import { useState, useEffect } from 'react';
 import NoobPage from "../../src/frontend/components/page/noob-page";
-import UserProfileCard from "../../src/frontend/components/cards/user-profile-card/user-profile-card";
-import { Box, Divider, Grid, Tab, SxProps } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import commonStyles from "../../src/frontend/styles/common.module.css";
 import PostCard from "../../src/frontend/components/account/posts/post-card";
-import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { getPostsByUserId } from "../../src/frontend/service-clients/post-service-client";
 import Router from 'next/router';
 import { IPostsResponse } from "../../src/frontend/service-clients/messages/i-posts-response";
 import { IProfileResponse } from "../../src/frontend/service-clients/messages/i-profile";
 import { getUserProfileByUsername } from '../../src/frontend/service-clients/profile-service-client';
 import OtherProfileCard from '../../src/frontend/components/cards/others-profile-card/other-profile-card'
-
-type TabsProps = "posts" | "about" | "activity";
-
-const tabStyles: SxProps = {
-  textTransform: "capitalize",
-  fontWeight: 100,
-  marginRight: 2,
-  borderRadius: 2,
-  minHeight: 42,
-  background: "rgba(255,255,255,0.1)",
-  border: "none",
-};
+import { withProtected } from '../../src/frontend/components/auth-wrapper/auth-wrapper';
 
 
 function UserAccount(): JSX.Element {
-  const [activeTab, setActiveTab] = useState<TabsProps>("posts");
   const [userData, setUserData] = useState<IProfileResponse | null>(null);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
   const [isFetchingUserData, setIsFetchingUserData] = useState<boolean>(true);
   const [isFetchingPosts, setIsFetchingPosts] = useState<boolean>(true);
-
-  const handleChange = (e: unknown, newValue: TabsProps): void => {
-    setActiveTab(newValue);
-  };
 
   useEffect(() => {
     try {
@@ -82,48 +64,28 @@ function UserAccount(): JSX.Element {
       }}>
       <div className={commonStyles.container}>
         <Grid container my={2} spacing={2}>
-          <Grid item xs={12} md={4}>
-            {/* <UserProfileCard /> */}
-            <OtherProfileCard />
-          </Grid>
-          <Grid item xs={12} md={8}>
-            <TabContext value={activeTab}>
-              <Box>
-                <TabList
-                  onChange={handleChange}
-                  TabIndicatorProps={{
-                    style: {
-                      display: "none",
-                    },
-                  }}
-                  sx={{
-                    "& .Mui-selected": {
-                      background: (theme) => theme.palette.primary.main,
-                      color: "white !important",
-                    },
-                  }}
-                >
-                  <Tab label="Posts" value="posts" sx={tabStyles} />
-                  <Tab label="About" value="about" sx={tabStyles} />
-                  <Tab label="Match activity" value="activity" sx={tabStyles} />
-                </TabList>
+          {
+            !isFetchingUserData && userData ? (
+              <>
+                <Grid item xs={12} md={4}>
+                  <OtherProfileCard userData={userData} />
+                </Grid>
+                <Grid item xs={12} md={8}>
+                  {_renderPosts()}
+                </Grid>
+              </>
+            ) : (
+              <Box mt={5} textAlign="center">
+                <Typography variant='h3' textAlign={'center'}>
+                  No User Found
+                </Typography>
               </Box>
-
-              <Box my={4}>
-                <Divider light />
-              </Box>
-
-              <TabPanel sx={{ p: 0 }} value="posts">
-                {_renderPosts()}
-              </TabPanel>
-              <TabPanel sx={{ p: 0 }} value="about"></TabPanel>
-              <TabPanel sx={{ p: 0 }} value="activity"></TabPanel>
-            </TabContext>
-          </Grid>
+            )
+          }
         </Grid>
       </div>
     </NoobPage>
   )
 }
 
-export default UserAccount;
+export default withProtected(UserAccount);
