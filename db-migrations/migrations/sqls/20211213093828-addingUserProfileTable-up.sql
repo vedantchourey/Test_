@@ -19,6 +19,8 @@ create table profiles
     constraint fk_profiles_states_id foreign key ("stateId") references states (id)
 );
 
+alter table profiles
+    add "isPrivate" boolean default false not null;
 
 alter table profiles
     enable row level security;
