@@ -1,0 +1,1 @@
+ALTER TABLE profiles drop column "isPrivate";
