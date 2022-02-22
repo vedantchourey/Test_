@@ -74,6 +74,7 @@ export async function getUserProfileByUsername(username:string):Promise<IOthersP
   `)
   .eq('username', username)
   .single();
+  if(result.error) throw result.body;
   const followerId = frontendSupabase.auth.user()?.id;
   const isFollowingRes = await frontendSupabase.from('user_followers').select('id', {count : 'exact'})
   .match({
@@ -83,7 +84,6 @@ export async function getUserProfileByUsername(username:string):Promise<IOthersP
   // eslint-disable-next-line no-unneeded-ternary
   const isFollowing = isFollowingRes.count ? true : false
   const counterData = await getCounterMeta(result.body.id); 
-  if(result.error) throw result.body;
   return {...result.body, ...counterData, isFollowing };
 }
 
