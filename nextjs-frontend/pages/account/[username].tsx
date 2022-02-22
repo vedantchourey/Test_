@@ -10,18 +10,24 @@ import { IProfileResponse } from "../../src/frontend/service-clients/messages/i-
 import { getUserProfileByUsername } from '../../src/frontend/service-clients/profile-service-client';
 import OtherProfileCard from '../../src/frontend/components/cards/others-profile-card/other-profile-card'
 import { withProtected } from '../../src/frontend/components/auth-wrapper/auth-wrapper';
+import TextBanner from '../../src/frontend/components/ui-components/typography/mainBannerHeading';
+import { useAppSelector } from "../../src/frontend/redux-store/redux-store";
+import {
+  userProfileSelector
+} from "../../src/frontend/redux-store/authentication/authentication-selectors";
 
 
 function UserAccount(): JSX.Element {
+  const loggedUser = useAppSelector(userProfileSelector);
   const [userData, setUserData] = useState<IProfileResponse | null>(null);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
   const [isFetchingUserData, setIsFetchingUserData] = useState<boolean>(true);
   const [isFetchingPosts, setIsFetchingPosts] = useState<boolean>(true);
+  const username = Router.query.username as string;
 
   useEffect(() => {
     try {
       (async (): Promise<void> => {
-        const username = Router.query.username as string;
         const user = await getUserProfileByUsername(username);
         if (user) {
           setUserData(user);
@@ -38,7 +44,7 @@ function UserAccount(): JSX.Element {
       (async (): Promise<void> => {
         const posts = await getPostsByUserId(userData?.id);
         setPosts(posts);
-      })
+      })()
     }
     finally {
       setIsFetchingPosts(false);
@@ -47,14 +53,30 @@ function UserAccount(): JSX.Element {
 
   const _renderPosts = (): JSX.Element | React.ReactNode => {
     if (isFetchingPosts) {
-      return new Array(5).fill("")
-        .map((data, i) => <h1 key={i}>Skeleton</h1>);
+      return null;
     }
-    const jsx = posts.map((postData, i) => {
-      return <PostCard key={Date.now() + i} data={postData} />;
-    });
-    return jsx;
+    else if (!isFetchingPosts && posts.length) {
+      return posts.map((postData, i) => {
+        return <PostCard key={Date.now() + i} data={postData} />;
+      });
+    }
+    // eslint-disable-next-line no-else-return
+    else {
+      return (
+        <Box>
+          <Typography variant='h3'>
+            No post available
+          </Typography>
+        </Box>
+      )
+      // eslint-disable-next-line @typescript-eslint/no-extra-semi
+    }
   };
+
+  if (username === loggedUser?.username) {
+    Router.replace('/account')
+    return <> </>;
+  }
 
   return (
     <NoobPage
@@ -62,29 +84,26 @@ function UserAccount(): JSX.Element {
       metaData={{
         description: "Noob Storm account page",
       }}>
-      <div className={commonStyles.container}>
-        <Grid container my={2} spacing={2}>
-          {
-            !isFetchingUserData && userData ? (
-              <>
-                <Grid item xs={12} md={4}>
-                  <OtherProfileCard userData={userData} />
-                </Grid>
-                <Grid item xs={12} md={8}>
-                  {_renderPosts()}
-                </Grid>
-              </>
-            ) : (
-              <Box mt={5} textAlign="center">
-                <Typography variant='h3' textAlign={'center'}>
-                  No User Found
-                </Typography>
-              </Box>
-            )
-          }
-        </Grid>
-      </div>
-    </NoobPage>
+      {
+        !isFetchingUserData && userData ? (
+          <div className={commonStyles.container}>
+            <Grid container my={2} spacing={2}>
+              <Grid item xs={12} md={4}>
+                <OtherProfileCard userData={userData} />
+              </Grid>
+              <Grid item xs={12} md={8}>
+                {_renderPosts()}
+              </Grid>
+            </Grid>
+          </div>
+        ) : isFetchingUserData ? (
+          <>
+          </>
+        ) : (
+          <TextBanner heading='No user found' />
+        )
+      }
+    </NoobPage >
   )
 }
 
