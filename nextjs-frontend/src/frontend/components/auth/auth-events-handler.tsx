@@ -12,7 +12,7 @@ import { refreshSession } from '../../service-clients/auth-service-client';
 import { frontendSupabase } from '../../services/supabase-frontend-service';
 import { setIsLoading } from '../../redux-store/screen-animations/screen-animation-slice';
 import { downloadImage } from '../../service-clients/image-service-client';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 
 export default function AuthEventsHandler(): JSX.Element | null {
   const status = useAppSelector(authCheckStatusSelector);
@@ -21,6 +21,7 @@ export default function AuthEventsHandler(): JSX.Element | null {
   const userProfile = useAppSelector(userProfileSelector);
   const forceFetchAvatar = useAppSelector(forceFetchAvatarImageBlobSelector);
   const forceFetchAvatarBackground = useAppSelector(forceFetchAvatarBackgroundImageBlobSelector);
+  const router = useRouter();
 
   useEffect(() => {
     (async (): Promise<void> => {
@@ -66,7 +67,7 @@ export default function AuthEventsHandler(): JSX.Element | null {
         appDispatch(setIsLoggedIn({ isLoggedIn: session?.user != null, username: session?.user?.user_metadata?.username }));
         appDispatch(fetchUserProfileThunk());
         appDispatch(setCheckLoginStatus('success'));
-        Router.push(`/reset-password?token=${searchQuery['/#access_token']}`)
+        await router.push(`/reset-password?token=${searchQuery['/#access_token']}`)
       }
     });
     return (): void => subscription.data?.unsubscribe()
@@ -75,7 +76,7 @@ export default function AuthEventsHandler(): JSX.Element | null {
   useEffect(() => {
     (async (): Promise<void> => {
       if (userProfile?.avatarUrl == null) return;
-      const usersAvatar = await downloadImage('resources', userProfile.avatarUrl, true);
+      const usersAvatar = await downloadImage('public_files', userProfile.avatarUrl, true);
       if (usersAvatar.data == null) return;
       const objectURL: string = URL.createObjectURL(usersAvatar.data);
       appDispatch(setAvatarBlob(objectURL));
@@ -86,7 +87,7 @@ export default function AuthEventsHandler(): JSX.Element | null {
   useEffect(() => {
     (async (): Promise<void> => {
       if (userProfile?.profileBackgroundImageUrl == null) return;
-      const usersBackground = await downloadImage('resources', userProfile.profileBackgroundImageUrl, true);
+      const usersBackground = await downloadImage('public_files', userProfile.profileBackgroundImageUrl, true);
       if (usersBackground.data == null) return;
       const objectURL: string = URL.createObjectURL(usersBackground.data);
       appDispatch(setAvatarBackgroundBlob(objectURL));

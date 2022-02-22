@@ -1,6 +1,7 @@
 import { FitEnum } from 'sharp';
 import { FileInfo } from 'busboy';
 import { NextApiRequest } from 'next';
+import { UploadFileRequest } from '../../../services/file-service/i-upload-file-type';
 
 export const jpegMimeType = 'image/jpeg';
 export const pngMimeType = 'image/png';
@@ -19,6 +20,5 @@ export interface IUploadedFile extends FileInfo {
   invalidMime?: boolean;
 }
 
-export interface IMultiPartRequest extends NextApiRequest {
-  files: IUploadedFile[];
+export interface IMultiPartRequest extends NextApiRequest, UploadFileRequest {
 }

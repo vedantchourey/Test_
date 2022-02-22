@@ -26,6 +26,10 @@ export interface IFrontendConfig {
     followActions: {
       followUser: string;
       unFollowUser: string;
+    },
+    uploads: {
+      setAvatar: string;
+      setProfileBackground: string;
     }
   }
 }

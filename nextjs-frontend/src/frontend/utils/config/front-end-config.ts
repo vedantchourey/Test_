@@ -29,6 +29,10 @@ const frontendConfig: IFrontendConfig = {
     followActions: {
       followUser: `${baseApiUrl}/api/followers/following`,
       unFollowUser: `${baseApiUrl}/api/followers/unfollow`,
+    },
+    uploads: {
+      setAvatar: `${baseApiUrl}/api/uploads/avatars`,
+      setProfileBackground: `${baseApiUrl}/api/uploads/profile-background`
     }
   },
   supabase: {

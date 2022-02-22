@@ -36,6 +36,7 @@ const authMiddleWare = (opts: Opts): NoobApiRouteHandler => {
     if (user.role !== 'authenticated') return setResponse('Invalid role', context);
     if (!(await isUserAuthorized(user, allowedRoles, context))) return setResponse('unauthorized!', context);
     context.user = user;
+    context.jwt = bearerToken;
   }
 }
 
