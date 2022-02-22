@@ -10,9 +10,9 @@ export async function followUnfollow(context: PerRequestContext): Promise<Servic
   const follow_action = context.getParamValue('follow_action') as string;
   const userId = context.getParamValue('userId') as string;
   if (follow_action === 'following') {
-    await followerRepository.createUserFollower({ followerId: userId, userId: context.user?.id as string });
+    await followerRepository.createUserFollower({ followerId: context.user?.id as string, userId: userId });
     return { data: { message: 'Following' } }
   }
-  await followerRepository.unfollowUser(userId, context.user?.id as string);
+  await followerRepository.unfollowUser(context.user?.id as string, userId);
   return { data: { message: 'Unfollowed' } }
 }
