@@ -20,7 +20,7 @@ export const post = <TRequest>(url: string, payload: TRequest, headers: { [key: 
     method: 'post',
     mode: 'cors',
     body: JSON.stringify(payload),
-    headers: { ...defaultHeaders(), ...headers }
+    headers: {...defaultHeaders(), ...headers}
   });
 };
 
@@ -29,6 +29,19 @@ export const deleteRequest = <TRequest>(url: string, payload: TRequest, headers:
     method: 'delete',
     mode: 'cors',
     body: JSON.stringify(payload),
-    headers: { ...defaultHeaders(), ...headers }
+    headers: {...defaultHeaders(), ...headers}
   });
 };
+
+
+export async function sendFiles(url: string, files: File[], headers: { [key: string]: string } = {}): Promise<Response> {
+  const formData = new FormData();
+  files.forEach((file, index) => formData.append(`file${index}`, file))
+  const requestOptions: RequestInit = {
+    method: 'POST',
+    body: formData,
+    redirect: 'follow',
+    headers: headers
+  };
+  return fetch(url, requestOptions);
+}
