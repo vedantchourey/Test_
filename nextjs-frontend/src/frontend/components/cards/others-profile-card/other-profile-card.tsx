@@ -47,7 +47,7 @@ const OtherProfileCard = (): unknown => {
 
       <Box className={styles.bottom}>
         <Box sx={{ width: "100%" }}>
-          <Divider />
+          <Divider light />
           <Grid container p={2}>
             <Grid item md={5} sx={{ textAlign: 'left' }}>
               <Typography variant='caption' fontSize={12}>
@@ -73,7 +73,7 @@ const OtherProfileCard = (): unknown => {
             </Grid>
           </Grid>
 
-          <Divider sx={{ mb: 3 }} />
+          <Divider sx={{ mb: 3 }} light />
           <Grid container>
             <Grid item md={3} sx={{ textAlign: 'center' }}>
               <Typography variant='caption' fontSize={12}>

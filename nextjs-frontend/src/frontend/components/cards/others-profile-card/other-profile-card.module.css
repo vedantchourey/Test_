@@ -31,9 +31,9 @@
     background-color: blue;
 }
 .verticalDivider{
-    width: 0.5px;
+    width: 1px;
     height: 38px;
-    background-color: aliceblue;
+    background-color: #150C2B;
 }
 .bottom{
     padding: 0 26px !important;
