@@ -4,7 +4,7 @@ import { post } from './fetch-api-wrapper';
 import frontendConfig from '../utils/config/front-end-config';
 import { NoobPostResponse } from './messages/common-messages';
 import { UpdateProfileImageRequest } from '../../backend/services/profile-service/update-profile-image-request';
-import { IProfileResponse } from './messages/i-profile';
+import { IProfileResponse,IOthersProfileResponse } from './messages/i-profile';
 import { getAuthHeader } from '../utils/headers';
 
 const imagesUrl = frontendConfig.noobStormServices.profile.profileImages;
@@ -40,9 +40,9 @@ export async function fetchUserProfile(): Promise<IProfileResponse> {
 }
 
 export async function getCounterMeta(userid : string) :Promise<{
-  totalFollowers : number | null;
-  totalPosts : number | null;
-  totalFollowing : number | null; 
+  totalFollowers : number;
+  totalPosts : number;
+  totalFollowing : number; 
 }> {
   const totalFollowers = await frontendSupabase.from('user_followers').select('*', {count : 'exact'})
   .match({
@@ -60,13 +60,13 @@ export async function getCounterMeta(userid : string) :Promise<{
   });
 
   return {
-    totalFollowers : totalFollowers.count,
-    totalPosts : totalPosts.count,
-    totalFollowing : totalFollowing.count 
+    totalFollowers : totalFollowers.count || 0,
+    totalPosts : totalPosts.count || 0,
+    totalFollowing : totalFollowing.count || 0  
   }
 }
 
-export async function getUserProfileByUsername(username:string):Promise<IProfileResponse>{
+export async function getUserProfileByUsername(username:string):Promise<IOthersProfileResponse>{
   const result = await frontendSupabase.from('profiles').select(`
    *,
    state : states(*),
