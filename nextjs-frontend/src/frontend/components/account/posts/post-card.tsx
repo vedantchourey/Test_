@@ -162,7 +162,7 @@ const PostCard = (props: IProps): JSX.Element => {
                     className={styles.postCardOptionsBtn}
                     sx={{ color: 'red', borderBottomLeftRadius: 0, borderBottomRightRadius: 0, }}
                   >
-                    <img src='icons/error.svg' alt='icon' />
+                    <img src='/icons/error.svg' alt='icon' />
                     Report Post
                   </Button>
                 </ListItem>
@@ -172,7 +172,7 @@ const PostCard = (props: IProps): JSX.Element => {
                     className={styles.postCardOptionsBtn}
                     sx={{ color: 'red', margin: '1px 0', borderRadius: '0px' }}
                   >
-                    <img src='icons/copy.svg' alt='icon' />
+                    <img src='/icons/copy.svg' alt='icon' />
                     Copy Link
                   </Button>
                 </ListItem>
@@ -224,7 +224,7 @@ const PostCard = (props: IProps): JSX.Element => {
                         className={styles.postBtn}
                         sx={{ padding: '12px' }}
                       >
-                        <img src={values.isLiked ? 'icons/heart-filled.svg' : 'icons/heart.svg'} alt='icon' key={values.totalLikes} />
+                        <img src={values.isLiked ? '/icons/heart-filled.svg' : '/icons/heart.svg'} alt='icon' key={values.totalLikes} />
                       </IconButton>
                       <Typography>
                         {values?.totalLikes || 0}
@@ -236,7 +236,7 @@ const PostCard = (props: IProps): JSX.Element => {
                         onClick={handleOpenComments}
                         sx={{ padding: '15px' }}
                       >
-                        <img src='icons/message.svg' alt='icon' />
+                        <img src='/icons/message.svg' alt='icon' />
                       </IconButton>
                       <Typography>
                         {values.totalComments || 0}
@@ -257,7 +257,7 @@ const PostCard = (props: IProps): JSX.Element => {
           }
 
           <Box mt={5} sx={{ textAlign: 'center' }}>
-            <img width={85} src='images/noobstorm-logo-small.png' />
+            <img width={85} src='/images/noobstorm-logo-small.png' />
           </Box>
         </Box>
       </Card>

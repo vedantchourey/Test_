@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { Avatar, Box, Button, Divider, Grid, IconButton, Typography } from '@mui/material';
+import { Avatar, Box, Button, Divider, Grid, IconButton, List, ListItem, Typography } from '@mui/material';
 import { CheckOutlined } from '@mui/icons-material'
 import styles from './other-profile-card.module.css'
 import CollectionsIcon from '@mui/icons-material/Collections';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import { IOthersProfileResponse } from "../../../service-clients/messages/i-profile";
 import { followUser, unFollowUser } from '../../../service-clients/follow-service';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { blockUser, unBlockUser } from '../../../service-clients/block-service';
 
 const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Element => {
   const [userData, setUserData] = useState(props.userData)
+  const [showMenu, setShowMenu] = useState(false);
   const {
     firstName,
     lastName,
@@ -43,10 +46,67 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
     })
 
   }
+  const handleCloseMenu = (): void => setShowMenu(false);
+  const handleToggleMenu = (): void => setShowMenu((pre) => !pre)
+
+  async function block(): Promise<void> {
+    setUserData((pre) => {
+      return {
+        ...pre,
+        isBlocked: true
+      }
+    })
+    await blockUser(userData.id);
+    handleCloseMenu()
+  }
+  async function unBlock(): Promise<void> {
+    setUserData((pre) => {
+      return {
+        ...pre,
+        isBlocked: true
+      }
+    })
+    await unBlockUser(userData.id);
+    handleCloseMenu()
+  }
+
 
   return (
     <Box className={styles.otherProfileCard}>
       <Box className={styles.background}>
+        <Box sx={{ textAlign: 'right', position: 'relative' }}>
+          <IconButton sx={{ padding: '10px' }} onClick={handleToggleMenu} >
+            <MoreVertIcon />
+          </IconButton>
+          {showMenu && (
+            <List className={styles.optionsContainer}>
+              {userData.isBlocked ?
+                <ListItem disablePadding>
+                  <Button
+                    fullWidth
+                    onClick={(): unknown => unBlock()}
+                    className={styles.optionsBtn}
+                    sx={{ color: 'red' }}
+                  >
+                    Unblock
+                  </Button>
+                </ListItem>
+                :
+                <ListItem disablePadding>
+                  <Button
+                    fullWidth
+                    className={styles.optionsBtn}
+                    sx={{ color: 'red' }}
+                    onClick={(): unknown => block()}
+                  >
+                    <img src='/icons/error.svg' alt='icon' />
+                    Block
+                  </Button>
+                </ListItem>
+              }
+            </List>
+          )}
+        </Box>
         <Box className={styles.profileSection}>
           <Box sx={{ position: 'relative' }}>
             <Avatar sx={{ width: 85, height: 85, marginBottom: 2 }} alt="Remy Sharp" src="" />

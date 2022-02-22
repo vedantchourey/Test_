@@ -144,7 +144,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
                 Comments
               </Typography>
               <IconButton onClick={handleClose} >
-                <img src='icons/close.svg' alt='icon' />
+                <img src='/icons/close.svg' alt='icon' />
               </IconButton>
             </Toolbar>
           </AppBar>

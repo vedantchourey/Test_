@@ -24,11 +24,15 @@ const frontendConfig: IFrontendConfig = {
       createUrl: `${baseApiUrl}/api/posts`,
       likePostUrl: (postId: string): string => `${baseApiUrl}/api/posts/${postId}/likes`,
       unlikePostUrl: (postId: string): string => `${baseApiUrl}/api/posts/${postId}/likes`,
-      createCommentUrl: (postId:string) :string => `${baseApiUrl}/api/posts/${postId}/comments`
+      createCommentUrl: (postId: string): string => `${baseApiUrl}/api/posts/${postId}/comments`
     },
     followActions: {
-      followUserUrl: (userId : string) => `${baseApiUrl}/api/follow-action/following/${userId}`,
-      unFollowUserUrl: (userId : string) => `${baseApiUrl}/api/follow-action/unfollow/${userId}`,
+      followUserUrl: (userId: string) => `${baseApiUrl}/api/follow-action/following/${userId}`,
+      unFollowUserUrl: (userId: string) => `${baseApiUrl}/api/follow-action/unfollow/${userId}`,
+    },
+    blockActions: {
+      block: (userId: string) => `${baseApiUrl}/api/block-action/block/${userId}`,
+      unBlock: (userId: string) => `${baseApiUrl}/api/block-action/unblock/${userId}`,
     },
     uploads: {
       setAvatar: `${baseApiUrl}/api/uploads/avatars`,

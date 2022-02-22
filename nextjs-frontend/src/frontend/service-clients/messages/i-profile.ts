@@ -14,7 +14,7 @@ export interface IProfileResponse {
   userRoles: string[];
 }
 
-export interface IOthersProfileResponse{
+export interface IOthersProfileResponse {
   id: string;
   username: string;
   firstName: string;
@@ -28,14 +28,15 @@ export interface IOthersProfileResponse{
   avatarUrl?: string;
   profileBackgroundImageUrl?: string;
   userRoles: string[];
-  state? : {
-    displayName : string;
+  state?: {
+    displayName: string;
   };
-  country? : {
-    displayName : string;
+  country?: {
+    displayName: string;
   }
-  totalFollowers : number;
-  totalPosts : number;
-  totalFollowing : number;
-  isFollowing : boolean;
+  totalFollowers: number;
+  totalPosts: number;
+  totalFollowing: number;
+  isFollowing: boolean;
+  isBlocked: boolean;
 }
