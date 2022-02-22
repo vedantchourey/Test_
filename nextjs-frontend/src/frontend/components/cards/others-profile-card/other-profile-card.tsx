@@ -4,10 +4,10 @@ import { CheckOutlined } from '@mui/icons-material'
 import styles from './other-profile-card.module.css'
 import CollectionsIcon from '@mui/icons-material/Collections';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
-import { IProfileResponse } from "../../../service-clients/messages/i-profile";
+import { IOthersProfileResponse } from "../../../service-clients/messages/i-profile";
 import { followUser, unFollowUser } from '../../../service-clients/follow-service';
 
-const OtherProfileCard = (props: { userData: IProfileResponse }): JSX.Element => {
+const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Element => {
   const [userData, setUserData] = useState(props.userData)
   const {
     firstName,
@@ -26,7 +26,8 @@ const OtherProfileCard = (props: { userData: IProfileResponse }): JSX.Element =>
       setUserData((prev) => {
         return {
           ...prev,
-          isFollowing: true
+          isFollowing: true,
+          totalFollowers: totalFollowers + 1
         }
       })
       // eslint-disable-next-line no-useless-return
@@ -36,7 +37,8 @@ const OtherProfileCard = (props: { userData: IProfileResponse }): JSX.Element =>
     setUserData((prev) => {
       return {
         ...prev,
-        isFollowing: false
+        isFollowing: false,
+        totalFollowers: totalFollowers - 1
       }
     })
 

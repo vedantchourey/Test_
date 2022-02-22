@@ -6,7 +6,7 @@ import PostCard from "../../src/frontend/components/account/posts/post-card";
 import { getPostsByUserId } from "../../src/frontend/service-clients/post-service-client";
 import Router from 'next/router';
 import { IPostsResponse } from "../../src/frontend/service-clients/messages/i-posts-response";
-import { IProfileResponse } from "../../src/frontend/service-clients/messages/i-profile";
+import { IOthersProfileResponse } from "../../src/frontend/service-clients/messages/i-profile";
 import { getUserProfileByUsername } from '../../src/frontend/service-clients/profile-service-client';
 import OtherProfileCard from '../../src/frontend/components/cards/others-profile-card/other-profile-card'
 import { withProtected } from '../../src/frontend/components/auth-wrapper/auth-wrapper';
@@ -19,7 +19,7 @@ import {
 
 function UserAccount(): JSX.Element {
   const loggedUser = useAppSelector(userProfileSelector);
-  const [userData, setUserData] = useState<IProfileResponse | null>(null);
+  const [userData, setUserData] = useState<IOthersProfileResponse | null>(null);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
   const [isFetchingUserData, setIsFetchingUserData] = useState<boolean>(true);
   const [isFetchingPosts, setIsFetchingPosts] = useState<boolean>(true);
