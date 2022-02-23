@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Container, Divider, Grid, Tab, Typography } from "@mui/material";
+import { Box, Container, Divider, Grid, SxProps, Tab, Typography } from "@mui/material";
 import styles from './style.module.css'
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { withProtected } from "../../auth-wrapper/auth-wrapper";
