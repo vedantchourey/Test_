@@ -122,7 +122,7 @@ const PostCard = (props: IProps): JSX.Element => {
 
   return (
     <Grid item md={12}>
-      <Card className={styles.postCard} sx={{ my: 3 }} elevation={0}>
+      <Card className={styles.postCard} sx={{ mb: 3 }} elevation={0}>
         <Box sx={{
           width: "100%",
           display: 'inline-flex',
@@ -191,12 +191,11 @@ const PostCard = (props: IProps): JSX.Element => {
           </div>
 
         </Box>
-        <Typography my={2} align='left' fontSize={14} fontWeight={300} paragraph>
+        <Typography sx={{ marginBottom: !values.postImgUrl ? 10 : 0 }} my={2} align='left' fontSize={14} fontWeight={300} paragraph>
           {values.postContent}
         </Typography>
 
         <Box sx={{ position: 'relative' }}>
-
           {imgUrl && (
             <>
               {/* Action Button Blur Container */}

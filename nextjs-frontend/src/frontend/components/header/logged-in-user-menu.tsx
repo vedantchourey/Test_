@@ -67,7 +67,6 @@ export default function LoggedInUserMenu(): JSX.Element {
     setUserList(response)
   }
 
-
   return (
     <div className={styles.rightMenuGroup}>
       <Box sx={{ position: 'relative' }}>
