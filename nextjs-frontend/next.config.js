@@ -11,5 +11,8 @@ module.exports = {
       use: ['@svgr/webpack', 'url-loader'],
     })
     return config
+  },
+  images: {
+    domains: ['swbpdojioeafkmzrxnxz.supabase.co'],
   }
 }

@@ -42,6 +42,9 @@ const frontendConfig: IFrontendConfig = {
   supabase: {
     anonKey: supabaseAnonKey,
     apiUrl: supabaseUrl
+  },
+  storage : {
+    publicBucket : 'public-files'
   }
 }
 

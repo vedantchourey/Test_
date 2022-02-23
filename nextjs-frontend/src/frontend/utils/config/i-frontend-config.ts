@@ -1,3 +1,5 @@
+import {AllowedBuckets} from '../../../models/constants';
+
 export interface IFrontendConfig {
   baseAppUrl: string;
   supabase: {
@@ -35,5 +37,8 @@ export interface IFrontendConfig {
       block: (userId: string) => string;
       unBlock: (userId: string) => string;
     }
+  },
+  storage : {
+    publicBucket : AllowedBuckets;
   }
 }

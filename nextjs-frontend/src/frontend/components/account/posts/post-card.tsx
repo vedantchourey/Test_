@@ -3,10 +3,8 @@ import React, { useEffect, useState } from "react";
 import {
   IconButton,
   Card,
-  CardMedia,
   Typography,
   Box,
-  Avatar,
   List,
   ListItem,
   Button,
@@ -14,12 +12,13 @@ import {
 } from "@mui/material";
 import styles from "./post.module.css";
 import { IPostsResponse } from "../../../service-clients/messages/i-posts-response";
-import { getImageSignedUrl } from "../../../service-clients/image-service-client";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CommentsModal from './comments-modal'
 import { checkIsPostLiked, likePost, unlikePost, getPostLikesCount, getPostCommentsCount } from '../../../service-clients/post-service-client'
 import { useAppSelector } from '../../../redux-store/redux-store';
 import { userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
+import Image from '../../../components/utils/supabase-image';
+import config from '../../../utils/config/front-end-config';
 
 interface IProps {
   data: IPostsResponse;
@@ -30,31 +29,15 @@ const PostCard = (props: IProps): JSX.Element => {
   const [values, setValues] = useState<IPostsResponse>(props.data);
   const [openCommentsModal, setOpenCommentsModal] = useState<boolean>(false);
   const [showMenu, setShowMenu] = useState(false);
-  const [imgUrl, setImgUrl] = useState<string | null>("");
-  const [avatarUrl, setAvatarUrl] = useState<string | null>("")
   const [isFetchingMeta, setIsFetchingMeta] = useState<boolean>(true);
+
+  const imgUrl = props.data.postImgUrl;
+  const avatarUrl = props.data.postOwner.avatarUrl;
 
   const handleOpenComments = (): void => setOpenCommentsModal((pre) => !pre)
   const handleCloseComments = (): void => setOpenCommentsModal(false);
   const handleCloseMenu = (): void => setShowMenu(false);
   const handleToggleMenu = (): void => setShowMenu((pre) => !pre)
-
-  useEffect(() => {
-    (async (): Promise<void> => {
-      const { signedURL } = await getImageSignedUrl(
-        "resources",
-        values.postImgUrl
-      );
-      setImgUrl(signedURL);
-    })();
-    (async (): Promise<void> => {
-      const { signedURL } = await getImageSignedUrl(
-        "resources",
-        values.postOwner.avatarUrl
-      )
-      setAvatarUrl(signedURL);
-    })()
-  }, []);
 
   useEffect(() => {
     fetchPostData()
@@ -130,11 +113,7 @@ const PostCard = (props: IProps): JSX.Element => {
 
         }}>
           <Box sx={{ display: 'flex' }}>
-            <Avatar
-              className={styles.postAvatar}
-              alt="Remy Sharp"
-              src={avatarUrl || ''}
-            />
+            <Image bucket={config.storage.publicBucket} filePath={avatarUrl || ''} isPublicBucket={true} width={50} height={50} className={styles.postAvatar} />
             <Box sx={{
               display: 'flex',
               flexDirection: 'column',
@@ -199,13 +178,24 @@ const PostCard = (props: IProps): JSX.Element => {
           {imgUrl && (
             <>
               {/* Action Button Blur Container */}
-              <CardMedia
+              <Image
+                bucket={config.storage.publicBucket}
+                filePath={imgUrl || ''}
+                isPublicBucket={true}
+                height={600}
+                width={1400}
+                layout="responsive"
+                objectFit="contain"
+                key={values.id}
+              />
+
+              {/*  <CardMedia
                 component="img"
                 className={styles.postImage}
                 image={imgUrl || ""}
                 alt="user avatar"
-                key={values.id}
-              />
+                
+              /> */}
             </>
           )}
 
