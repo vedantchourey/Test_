@@ -21,15 +21,19 @@ export interface IFrontendConfig {
       createUrl: string,
       likePostUrl: (postId: string) => string;
       unlikePostUrl: (postId: string) => string;
-      createCommentUrl : (postId: string) => string;
+      createCommentUrl: (postId: string) => string;
     }
     followActions: {
-      followUserUrl: (userId : string) => string;
-      unFollowUserUrl: (userId : string) => string;
+      followUserUrl: (userId: string) => string;
+      unFollowUserUrl: (userId: string) => string;
     },
     uploads: {
       setAvatar: string;
       setProfileBackground: string;
+    }
+    blockActions: {
+      block: (userId: string) => string;
+      unBlock: (userId: string) => string;
     }
   }
 }

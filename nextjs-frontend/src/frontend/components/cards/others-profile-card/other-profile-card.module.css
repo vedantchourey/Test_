@@ -49,3 +49,23 @@
     margin-bottom: 16px;
     border-radius: 6px;
 }
+.optionsContainer {
+    position: absolute;
+    width: 153px;
+    right: 12px;
+    margin-top: 4px;
+    padding: 0;
+    box-shadow: 24;
+    border-radius: 16px !important;
+    background-color: #dedede;
+    z-index: 4;
+}
+.optionsBtn img {
+    margin-right: 10px;
+}
+.optionsBtn {
+    font-weight: 500;
+    text-transform: capitalize !important;
+    padding: 8px 10px;
+    background-color: white !important;
+}
