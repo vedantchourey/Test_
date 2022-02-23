@@ -19,7 +19,7 @@ export class AvatarFileType implements IUploadFileType {
   }
 
   get bucket(): AllowedBuckets {
-    return 'public_files';
+    return 'public-files';
   }
 
   async getPublicUrl(url: string): Promise<string | null> {
