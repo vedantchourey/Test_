@@ -1,6 +1,6 @@
 import { frontendSupabase } from '../services/supabase-frontend-service';
 import { authenticatedUser } from './auth-service-client';
-import { post } from './fetch-api-wrapper';
+import { post, patch } from './fetch-api-wrapper';
 import frontendConfig from '../utils/config/front-end-config';
 import { NoobPostResponse } from './messages/common-messages';
 import { UpdateProfileImageRequest } from '../../backend/services/profile-service/update-profile-image-request';
@@ -8,6 +8,8 @@ import { IProfileResponse, IOthersProfileResponse } from './messages/i-profile';
 import { getAuthHeader } from '../utils/headers';
 
 const imagesUrl = frontendConfig.noobStormServices.profile.profileImages;
+const privateProfileUrl = frontendConfig.noobStormServices.profile.privateAction.privateProfileUrl;
+// const publicProfileUrl = frontendConfig.noobStormServices.profile.privateAction.publicProfileUrl;
 
 interface IRawProfile {
   id: string;
@@ -25,6 +27,9 @@ interface IRawProfile {
   user_roles: { id: string, code: string }[]
 }
 
+interface IPrivatePublicProfileResponse{
+  message: string
+}
 
 export async function fetchUserProfile(): Promise<IProfileResponse> {
   const user = await authenticatedUser();
@@ -94,6 +99,24 @@ export async function getUserProfileByUsername(username: string): Promise<IOther
 export async function updateProfileImages(request: UpdateProfileImageRequest): Promise<NoobPostResponse<UpdateProfileImageRequest, IProfileResponse>> {
   const header = await getAuthHeader();
   const result = await post(imagesUrl, request, header);
+  const body = await result.json();
+  if (result.status === 200) return body.data;
+  if (result.status === 400 && body.errors.apiError == null) return { errors: body.errors, isError: true }
+  throw body;
+}
+
+export async function privateAccount(): Promise<NoobPostResponse<null, IPrivatePublicProfileResponse>> {
+  const header = await getAuthHeader();
+  const result = await patch(privateProfileUrl, null, header);
+  const body = await result.json();
+  if (result.status === 200) return body.data;
+  if (result.status === 400 && body.errors.apiError == null) return { errors: body.errors, isError: true }
+  throw body;
+}
+
+export async function publicAccount(): Promise<NoobPostResponse<null, IPrivatePublicProfileResponse>> {
+  const header = await getAuthHeader();
+  const result = await patch(privateProfileUrl, null, header);
   const body = await result.json();
   if (result.status === 200) return body.data;
   if (result.status === 400 && body.errors.apiError == null) return { errors: body.errors, isError: true }

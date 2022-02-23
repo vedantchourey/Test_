@@ -1,10 +1,16 @@
-export const get = (url: string): Promise<Response> => {
+export const get = <TRequest>(url: string, payload: TRequest, headers: { [key: string]: string } = {}): Promise<Response> => {
   return fetch(url, {
     method: 'get',
     mode: 'cors',
-    headers: {
-      'Accept': 'application/json'
-    }
+    headers: {...defaultHeaders(), ...headers}
+  });
+};
+
+export const patch = <TRequest>(url: string, payload: TRequest, headers: { [key: string]: string } = {}): Promise<Response> => {
+  return fetch(url, {
+    method: 'patch',
+    mode: 'cors',
+    headers: {...defaultHeaders(), ...headers}
   });
 };
 

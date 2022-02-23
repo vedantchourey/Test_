@@ -12,6 +12,10 @@ export interface IFrontendConfig {
     };
     profile: {
       profileImages: string;
+      privateAction: {
+        privateProfileUrl: string;
+        publicProfileUrl: string;
+      }
     },
     tournament: {
       createUrl: string,

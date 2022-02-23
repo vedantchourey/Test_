@@ -14,7 +14,11 @@ const frontendConfig: IFrontendConfig = {
       sendResetPasswordLink: `${baseApiUrl}/api/send-reset-password-link`,
     },
     profile: {
-      profileImages: `${baseApiUrl}/api/profile-images`
+      profileImages: `${baseApiUrl}/api/profile-images`,
+      privateAction: {
+        privateProfileUrl: `${baseApiUrl}/api/update-account-privacy/private`,
+        publicProfileUrl: `${baseApiUrl}/api/update-account-privacy/public`
+      }
     },
     tournament: {
       createUrl: `${baseApiUrl}/api/tournaments`,
@@ -40,7 +44,7 @@ const frontendConfig: IFrontendConfig = {
     },
     search: {
       searchUser: `${baseApiUrl}/api/search`
-    }
+    },
   },
   supabase: {
     anonKey: supabaseAnonKey,
