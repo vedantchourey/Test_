@@ -1,4 +1,4 @@
-import { Avatar, Box, Divider, Icon, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, styled, TextField, Typography } from "@mui/material";
+import { Avatar, Box, CircularProgress, Divider, Icon, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, styled, TextField, Typography } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { signOut } from '../../service-clients/auth-service-client';
 import { useRef, useState } from 'react';
@@ -17,8 +17,8 @@ import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutline
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import { useRouter } from 'next/router';
 import SearchIcon from '@mui/icons-material/Search';
-import { ISearchPeopleByUsername } from "../../service-clients/messages/i-search";
-import { searchPeopleByUsername } from "../../service-clients/search-service-client";
+import { ISearchPeopleByUsernameResponse } from "../../service-clients/messages/i-search";
+import { searchPeopleByText } from "../../service-clients/search-service-client";
 
 const CustomMenu = styled(Menu)(() => {
   return ({
@@ -33,9 +33,11 @@ export default function LoggedInUserMenu(): JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const [showMenu, setShowMenu] = useState(false);
+  const [focus, setFocus] = useState(false);
   const username = useAppSelector(userNameSelector);
   const avatarUrl = useAppSelector(avatarImageBlobUrlSelector);
-  const [userList, setUserList] = useState<ISearchPeopleByUsername[]>([])
+  const [userList, setUserList] = useState<ISearchPeopleByUsernameResponse[]>([])
+  const [isFetching, setIsFetching] = useState(true)
 
   function handleClose(): void {
     setShowMenu(false);
@@ -63,8 +65,47 @@ export default function LoggedInUserMenu(): JSX.Element {
 
 
   async function searchByUserName(username: string): Promise<void> {
-    const response = await searchPeopleByUsername(username);
+    const response = await searchPeopleByText({ search: username });
     setUserList(response)
+    setIsFetching(false)
+  }
+
+  const renderResults = (): JSX.Element => {
+    if (focus && isFetching) {
+      return (
+        <List className={styles.searchListLoder} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+          <CircularProgress />
+        </List>
+      )
+    }
+    else if (!isFetching && userList.length) {
+      return (
+        <List className={styles.searchList} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+          {userList.map((data, i) => (
+            <ListItem key={Date.now() + i}>
+              <ListItemButton onClick={(): unknown => router.push(`/account/${data.username}`)} sx={{ padding: '2px 18px' }}>
+                <ListItemAvatar>
+                  <Avatar sx={{ width: 35, height: 35 }} alt="profile image" src='' />
+                </ListItemAvatar>
+                <ListItemText className={styles.listText}>
+                  <Typography>
+                    @{data.username}
+                  </Typography>
+                  <Typography variant="caption" color='#F08743'>
+                    {data.firstName} {data.lastName}
+                  </Typography>
+                </ListItemText>
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      )
+    }
+    else {
+      <List className={styles.searchListLoder} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+        <h1>No data found</h1>
+      </List>
+    }
   }
 
   return (
@@ -79,30 +120,11 @@ export default function LoggedInUserMenu(): JSX.Element {
             }}
             sx={{ '& ::placeholder': { fontWeight: 500, color: 'white', fontFamily: 'Inter' } }}
             onChange={(e): unknown => searchByUserName(e.target.value)}
+          // onFocus={setFocus(true)}
           />
           <SearchIcon color="primary" />
         </Box>
-        {userList.length ? (
-          <List className={styles.searchList} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-            {userList.map((data, i) => (
-              <ListItem key={Date.now() + i}>
-                <ListItemButton onClick={(): unknown => router.push(`/account/${data.username}`)} sx={{ padding: '2px 18px' }}>
-                  <ListItemAvatar>
-                    <Avatar sx={{ width: 35, height: 35 }} alt="profile image" src='' />
-                  </ListItemAvatar>
-                  <ListItemText className={styles.listText}>
-                    <Typography>
-                      @{data.username}
-                    </Typography>
-                    <Typography variant="caption" color='#F08743'>
-                      {data.firstName} {data.lastName}
-                    </Typography>
-                  </ListItemText>
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        ) : (<></>)}
+        {renderResults()}
       </Box>
       <div className={styles.iconsGroup}>
         <IconButton>
