@@ -37,6 +37,9 @@ const frontendConfig: IFrontendConfig = {
     uploads: {
       setAvatar: `${baseApiUrl}/api/uploads/avatars`,
       setProfileBackground: `${baseApiUrl}/api/uploads/profile-background`
+    },
+    search: {
+      searchUser: `${baseApiUrl}/api/search`
     }
   },
   supabase: {

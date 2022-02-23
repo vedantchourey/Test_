@@ -35,5 +35,8 @@ export interface IFrontendConfig {
       block: (userId: string) => string;
       unBlock: (userId: string) => string;
     }
+    search: {
+      searchUser: string; 
+    }
   }
 }
