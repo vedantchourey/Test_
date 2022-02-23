@@ -76,7 +76,7 @@ export default function AuthEventsHandler(): JSX.Element | null {
   useEffect(() => {
     (async (): Promise<void> => {
       if (userProfile?.avatarUrl == null) return;
-      const usersAvatar = await downloadImage('public_files', userProfile.avatarUrl, true);
+      const usersAvatar = await downloadImage('public-files', userProfile.avatarUrl, true);
       if (usersAvatar.data == null) return;
       const objectURL: string = URL.createObjectURL(usersAvatar.data);
       appDispatch(setAvatarBlob(objectURL));
@@ -87,7 +87,7 @@ export default function AuthEventsHandler(): JSX.Element | null {
   useEffect(() => {
     (async (): Promise<void> => {
       if (userProfile?.profileBackgroundImageUrl == null) return;
-      const usersBackground = await downloadImage('public_files', userProfile.profileBackgroundImageUrl, true);
+      const usersBackground = await downloadImage('public-files', userProfile.profileBackgroundImageUrl, true);
       if (usersBackground.data == null) return;
       const objectURL: string = URL.createObjectURL(usersBackground.data);
       appDispatch(setAvatarBackgroundBlob(objectURL));
