@@ -71,6 +71,7 @@ export class ProfilesRepository extends BaseRepository<IProfile> {
     .where('username', 'like', `%${text}%`)
     .orWhere('firstName', 'like', `%${text}%`)
     .orWhere('lastName', 'like', `%${text}%`)
+    .limit(5)
   }
 }
 
