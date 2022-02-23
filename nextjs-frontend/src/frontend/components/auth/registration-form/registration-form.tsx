@@ -22,6 +22,7 @@ export default function RegistrationForm(props: Props): JSX.Element {
   const { onSignUpSuccess } = props;
   const appDispatch = useAppDispatch();
   const [errors, setErrors] = useState<ValidationResult<SignupRequest>>({});
+
   const [request, setRequest] = useState<Partial<SignupRequest>>({
     email: '',
     password: '',
@@ -70,7 +71,7 @@ export default function RegistrationForm(props: Props): JSX.Element {
           value={request.username}
           error={propsHasError(errors, 'username')}
           helperText={getErrorForProp(errors, 'username')}
-          onChange={(event): void => setRequest({...request, username: event.target.value})}
+          onChange={(event): void => setRequest({ ...request, username: event.target.value })}
         />
       </div>
       <div className={styles.inputRow}>
@@ -81,7 +82,7 @@ export default function RegistrationForm(props: Props): JSX.Element {
           value={request.email}
           error={propsHasError(errors, 'email')}
           helperText={getErrorForProp(errors, 'email')}
-          onChange={(event): void => setRequest({...request, email: event.target.value})}
+          onChange={(event): void => setRequest({ ...request, email: event.target.value })}
         />
         <TextField id="mobile"
           label="Mobile"
@@ -90,7 +91,7 @@ export default function RegistrationForm(props: Props): JSX.Element {
           value={request.phone}
           error={propsHasError(errors, 'phone')}
           helperText={getErrorForProp(errors, 'phone')}
-          onChange={(event): void => setRequest({...request, phone: event.target.value})}
+          onChange={(event): void => setRequest({ ...request, phone: event.target.value })}
         />
       </div>
       <div className={styles.inputRow}>
@@ -101,7 +102,7 @@ export default function RegistrationForm(props: Props): JSX.Element {
           value={request.firstName}
           error={propsHasError(errors, 'firstName')}
           helperText={getErrorForProp(errors, 'firstName')}
-          onChange={(event): void => setRequest({...request, firstName: event.target.value})}
+          onChange={(event): void => setRequest({ ...request, firstName: event.target.value })}
         />
         <TextField id="lastName"
           label="Last Name"
@@ -119,7 +120,7 @@ export default function RegistrationForm(props: Props): JSX.Element {
           className={styles.inputRowItem}
           value={dateOfBirth}
           mask={'__/__/____'}
-          onChange={(value: DateTime | null): void => setRequest({...request, dateOfBirth: toISOString(value)})}
+          onChange={(value: DateTime | null): void => setRequest({ ...request, dateOfBirth: toISOString(value) })}
           inputFormat="dd/MM/yyyy"
           renderInput={(params): JSX.Element =>
             <TextField {...params}
@@ -137,12 +138,13 @@ export default function RegistrationForm(props: Props): JSX.Element {
           value={request.password}
           error={propsHasError(errors, 'password')}
           helperText={getErrorForProp(errors, 'password')}
-          onChange={(event): void => setRequest({...request, password: event.target.value})}
+          onChange={(event): void => setRequest({ ...request, password: event.target.value })}
         />
       </div>
       <div className={styles.inputRow}>
-        <StateDropDown value={request.stateId}
-          onChange={(id, state): void => setRequest({...request, stateId: id || '', countryId: state?.countryId})}
+        <StateDropDown
+          value={request.stateId}
+          onChange={(id, state): void => setRequest({ ...request, stateId: id || '', countryId: state?.countryId })}
           countryIsoCode="IND"
           autoCompleteClassName={styles.inputRowItem}
           inputClassName={styles.inputRowItem}
