@@ -1,3 +1,5 @@
+import {AllowedBuckets} from '../../../models/constants';
+
 export interface IFrontendConfig {
   baseAppUrl: string;
   supabase: {
@@ -42,5 +44,8 @@ export interface IFrontendConfig {
     search: {
       searchUser: string; 
     }
+  },
+  storage : {
+    publicBucket : AllowedBuckets;
   }
 }

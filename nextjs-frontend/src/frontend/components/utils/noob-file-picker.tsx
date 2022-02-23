@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default function NoobFilePicker(props: Props): JSX.Element {
-  const {onFileSelected, allowedExtensions, show, maxFileSizeInBytes, minFiles, maxFiles, onError} = props;
+  const { onFileSelected, allowedExtensions, show, maxFileSizeInBytes, minFiles, maxFiles, onError } = props;
   const acceptedExtensions = allowedExtensions.join(',');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -22,12 +22,12 @@ export default function NoobFilePicker(props: Props): JSX.Element {
   }, [show]);
 
   function validate(files: FileList | null): string | undefined {
-    if (minFiles > 0 && (files == null || files.length === 0 )) return `At least ${minFiles} required!`;
+    if (minFiles > 0 && (files == null || files.length === 0)) return `At least ${minFiles} required!`;
     if (files != null && files.length > maxFiles) return `Cannot select more than ${maxFiles} files!`;
     if (files == null) return;
-    for(let i = 0; i < files.length; i ++) {
+    for (let i = 0; i < files.length; i++) {
       if (files[i].size > maxFileSizeInBytes) return `Max allowed file size is ${maxFileSizeInBytes} bytes`;
-      if (allowedExtensions.every((x)=> !files[i].name.endsWith(x))) return `Allowed file types are ${acceptedExtensions}.`;
+      if (allowedExtensions.every((x) => !files[i].name.endsWith(x))) return `Allowed file types are ${acceptedExtensions}.`;
     }
   }
 
@@ -41,5 +41,5 @@ export default function NoobFilePicker(props: Props): JSX.Element {
     }
   }
 
-  return <input type="file" ref={inputRef} style={{display: 'none'}} onChange={onFilesSelected} accept={acceptedExtensions}/>
+  return <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={onFilesSelected} accept={acceptedExtensions} />
 }

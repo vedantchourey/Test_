@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import {
   Button,
   Card,
@@ -32,6 +32,7 @@ import styles from "./post.module.css";
 import { v4 } from "uuid";
 import { uploadImage } from "../../../service-clients/image-service-client";
 import { createPost } from "../../../service-clients/post-service-client";
+import FilePicker from '../../utils/noob-file-picker';
 
 interface mediaInterface {
   contentUrl: string;
@@ -50,6 +51,7 @@ export default function CreatePostInput(props: IProps): JSX.Element {
   const userAvatar = useAppSelector(avatarImageBlobUrlSelector);
   const [isUploading, setIsUploading] = useState(false);
   const [isImgUploaded, setIsImgUploaded] = useState(false);
+  const [showPicker, setShowPicker] = useState(false);
 
   const [media, setMedia] = useState<Array<mediaInterface>>([]);
 
@@ -60,8 +62,6 @@ export default function CreatePostInput(props: IProps): JSX.Element {
   const [errors, setErrors] = useState<ValidationResult<ICreatePostRequest>>(
     {}
   );
-
-  const imageInputRef = useRef<null | HTMLInputElement>(null);
 
   function generateFileUrl(prefix: string, file: File): string {
     if (userProfile == null) throw new Error("user cannot be null");
@@ -74,7 +74,7 @@ export default function CreatePostInput(props: IProps): JSX.Element {
     file: File,
     fileUrl: string
   ): Promise<{ data: { Key: string } | null; error: Error | null }> {
-    return await uploadImage("resources", fileUrl, file);
+    return await uploadImage("public-files", fileUrl, file);
   }
 
   async function onClickCreatePost(): Promise<void> {
@@ -157,46 +157,39 @@ export default function CreatePostInput(props: IProps): JSX.Element {
             disableUnderline: true,
           }}
         />
-        <input
-          type="file"
-          ref={imageInputRef}
-          multiple
-          accept="image/*;video/*;"
-          value=""
-          hidden
-          onChange={(event: React.ChangeEvent<HTMLInputElement>): unknown => {
-            if (!event.target.files) {
-              return null;
-            }
-            const files: FileList = event.target.files;
 
-            if (files.length) {
-              const file = files[0];
-              const fileType = file.type.split("/")[0];
-              const fileUrl = generateFileUrl("post-image", file);
-
-              setIsUploading(true);
-              UploadMedia(file, fileUrl)
-                .then(() => {
-                  if (fileType === "image") {
-                    createImageThumb(file);
-                  }
-                  setRequest((pre) => {
-                    return {
-                      ...pre,
-                      postImgUrl: fileUrl,
-                    };
-                  });
-                  setIsImgUploaded(true)
-                })
-                .catch((error) => {
-                  alert(error);
-                })
-                .finally(() => {
-                  setIsUploading(false);
+        <FilePicker
+          onFileSelected={async (files): Promise<void> => {
+            if (!files) return;
+            const file = files[0];
+            const fileType = file.type.split("/")[0];
+            const fileUrl = generateFileUrl("post-image", file);
+            setIsUploading(true);
+            UploadMedia(file, fileUrl)
+              .then(() => {
+                if (fileType === "image") {
+                  createImageThumb(file);
+                }
+                setRequest((pre) => {
+                  return {
+                    ...pre,
+                    postImgUrl: fileUrl,
+                  };
                 });
-            }
+                setIsImgUploaded(true);
+                setIsUploading(false);
+              })
+              .catch((error) => {
+                alert(error);
+              })
           }}
+          // eslint-disable-next-line no-console
+          onError={(): void => console.log('Error')}
+          allowedExtensions={['.jpeg', '.jpg', '.png']}
+          show={showPicker}
+          maxFiles={1}
+          minFiles={0}
+          maxFileSizeInBytes={1024 * 1204}
         />
       </CardContent>
 
@@ -246,9 +239,7 @@ export default function CreatePostInput(props: IProps): JSX.Element {
             sx={{ bgcolor: "primary.dark", mr: 2 }}
             size="small"
             onClick={(): void => {
-              if (imageInputRef?.current) {
-                imageInputRef.current?.click();
-              }
+              setShowPicker(true);
             }}
           >
             <ImageIcon />
