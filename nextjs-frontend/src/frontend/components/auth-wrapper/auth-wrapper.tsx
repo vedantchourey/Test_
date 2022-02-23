@@ -16,6 +16,7 @@ const withProtected = (Component: React.ElementType): unknown => {
       if (!isLogged && !isLoading) router.replace('/');
       return null
     }
+    return null;
   }
 }
 
