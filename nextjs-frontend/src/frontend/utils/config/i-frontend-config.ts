@@ -47,5 +47,6 @@ export interface IFrontendConfig {
   },
   storage : {
     publicBucket : AllowedBuckets;
+    publicBucketUrl : string;
   }
 }

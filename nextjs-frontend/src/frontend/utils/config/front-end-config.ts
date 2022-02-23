@@ -51,7 +51,8 @@ const frontendConfig: IFrontendConfig = {
     apiUrl: supabaseUrl
   },
   storage : {
-    publicBucket : 'public-files'
+    publicBucket : 'public-files',
+    publicBucketUrl : `${supabaseUrl}/storage/v1/object/public`
   }
 }
 

@@ -8,6 +8,7 @@ import { IOthersProfileResponse } from "../../../service-clients/messages/i-prof
 import { followUser, unFollowUser } from '../../../service-clients/follow-service';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { blockUser, unBlockUser } from '../../../service-clients/block-service';
+import frontendConfig from '../../../utils/config/front-end-config';
 
 const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Element => {
   const [userData, setUserData] = useState(props.userData)
@@ -73,7 +74,9 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
 
   return (
     <Box className={styles.otherProfileCard}>
-      <Box className={styles.background}>
+      <Box className={styles.background} style={{
+        backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 1)), url(${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${userData.avatarUrl})`
+      }}>
         <Box sx={{ textAlign: 'right', position: 'relative' }}>
           <IconButton sx={{ padding: '10px' }} onClick={handleToggleMenu} >
             <MoreVertIcon />
