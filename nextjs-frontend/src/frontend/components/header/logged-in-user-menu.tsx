@@ -33,7 +33,7 @@ export default function LoggedInUserMenu(): JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const [showMenu, setShowMenu] = useState(false);
-  const [focus, setFocus] = useState(false);
+  const [focus] = useState(false);
   const username = useAppSelector(userNameSelector);
   const avatarUrl = useAppSelector(avatarImageBlobUrlSelector);
   const [userList, setUserList] = useState<ISearchPeopleByUsernameResponse[]>([])
@@ -66,7 +66,7 @@ export default function LoggedInUserMenu(): JSX.Element {
 
   async function searchByUserName(username: string): Promise<void> {
     const response = await searchPeopleByText({ search: username });
-    setUserList(response)
+    if (!response.length) setUserList(response);
     setIsFetching(false)
   }
 
@@ -101,11 +101,16 @@ export default function LoggedInUserMenu(): JSX.Element {
         </List>
       )
     }
+
+    // eslint-disable-next-line no-else-return
     else {
-      <List className={styles.searchListLoder} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-        <h1>No data found</h1>
-      </List>
+      return (
+        <List className={styles.searchListLoder} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+          <h1>No data found</h1>
+        </List>
+      )
     }
+
   }
 
   return (
