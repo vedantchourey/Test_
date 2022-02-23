@@ -89,3 +89,14 @@
 .listText span p{
   text-align: left !important;
 }
+.searchListLoder{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #6932F9;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  padding-top: 70px;
+  padding-bottom: 30px;
+}
