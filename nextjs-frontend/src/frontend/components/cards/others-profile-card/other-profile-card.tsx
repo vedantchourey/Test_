@@ -63,7 +63,7 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
     setUserData((pre) => {
       return {
         ...pre,
-        isBlocked: true
+        isBlocked: false
       }
     })
     await unBlockUser(userData.id);
