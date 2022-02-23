@@ -4,14 +4,14 @@ import { getImageSignedUrl, getPublicUrl } from '../../service-clients/image-ser
 import { AllowedBuckets } from '../../../models/constants';
 
 
-interface Props extends Omit<ImageProps,'src'> {
+interface Props extends Omit<ImageProps, 'src'> {
   isPublicBucket: boolean;
   filePath: string;
   bucket: AllowedBuckets;
 }
 
 export default function SupabaseImage(props: Props): JSX.Element {
-  const {isPublicBucket, bucket, filePath, ...others} = props;
+  const { isPublicBucket, bucket, filePath, ...others } = props;
   const [url, setUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -28,5 +28,5 @@ export default function SupabaseImage(props: Props): JSX.Element {
     })()
   }, [isPublicBucket, bucket, filePath])
   if (url == null) return <></>;
-  return <Image {...others} src={url}/>
+  return <Image {...others} src={url} />
 }

@@ -9,6 +9,9 @@ import {
 } from "../../../redux-store/redux-store";
 import { avatarImageBlobUrlSelector } from '../../../redux-store/authentication/authentication-selectors';
 import { createComment, getPostComments } from "../../../service-clients/post-service-client";
+import Image from '../../../components/utils/supabase-image';
+import config from '../../../utils/config/front-end-config';
+
 
 const style = {
   position: 'absolute',
@@ -33,7 +36,6 @@ const CommentsModal = (props: IProps): JSX.Element => {
   const userAvatar = useAppSelector(avatarImageBlobUrlSelector);
   const { isModalOpen, handleClose } = props;
   const [comment, setComment] = useState<string>('');
-
   const [isFetchingComments, setIsFetchingComments] = useState<boolean>(true)
   const [comments, setComments] = useState<IPostCommentResponse[]>([]);
 
@@ -86,11 +88,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
           return (
             <Box key={Date.now() + i} className={styles.commentCard}>
               <Box sx={{ display: 'inline-flex' }}>
-                <Avatar
-                  className={styles.commentAvatar}
-                  alt="Remy Sharp"
-                  src={''}
-                />
+                <Image bucket={config.storage.publicBucket} filePath={data.commentOwner.avatarUrl || ''} isPublicBucket={true} width={50} height={50} className={styles.postAvatar} />
                 <Box>
                   <Box sx={{ display: "inline-flex" }}>
                     <Typography variant={'body1'} color="white">
