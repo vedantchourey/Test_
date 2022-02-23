@@ -16,6 +16,7 @@ export const getPostsByUserId = async (userid:string): Promise<IPostsResponse[]>
         createdAt,
         updatedAt
   `)
+  .order('createdAt', {ascending : false})
   .match({postedBy :userid});
   if (result.error) throw result.error;
   return result.data as IPostsResponse[];
