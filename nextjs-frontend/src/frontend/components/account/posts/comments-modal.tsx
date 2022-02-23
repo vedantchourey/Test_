@@ -88,7 +88,9 @@ const CommentsModal = (props: IProps): JSX.Element => {
           return (
             <Box key={Date.now() + i} className={styles.commentCard}>
               <Box sx={{ display: 'inline-flex' }}>
-                <Image bucket={config.storage.publicBucket} filePath={data.commentOwner.avatarUrl || ''} isPublicBucket={true} width={50} height={50} className={styles.postAvatar} />
+                <Box mr={2}>
+                  <Image bucket={config.storage.publicBucket} filePath={data.commentOwner.avatarUrl || ''} isPublicBucket={true} width={50} height={50} className={styles.commentAvatar} />
+                </Box>
                 <Box>
                   <Box sx={{ display: "inline-flex" }}>
                     <Typography variant={'body1'} color="white">

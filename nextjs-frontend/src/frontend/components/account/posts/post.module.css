@@ -134,10 +134,8 @@
     border-bottom: 1px solid #211933;
 }
 .commentAvatar {
-    border: 2px solid #6932f9;
-    width: 40px;
-    height: 40px;
-    margin-right: 16px;
+    border: 2px solid #6932f9 !important;
+    border-radius: 9999px !important;
 }
 .commetActionBtn {
     display: flex;
