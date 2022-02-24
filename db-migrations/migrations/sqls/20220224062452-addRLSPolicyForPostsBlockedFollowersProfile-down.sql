@@ -1,5 +1,0 @@
-drop policy authenticated_read_posts on posts;
-drop policy authenticated_read_post_comments on post_comments;
-drop policy authenticated_read_post_likes on post_likes;
-drop policy authenticated_read_user_followers on user_followers;
-drop policy authenticated_read_blocked_users on blocked_users;
