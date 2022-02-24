@@ -28,7 +28,9 @@ interface IRawProfile {
 }
 
 interface IPrivatePublicProfileResponse{
-  message: string
+  message: string,
+  errors: string,
+  isError: boolean
 }
 
 export async function fetchUserProfile(): Promise<IProfileResponse> {
@@ -105,7 +107,7 @@ export async function updateProfileImages(request: UpdateProfileImageRequest): P
   throw body;
 }
 
-export async function privateAccount(): Promise<NoobPostResponse<null, IPrivatePublicProfileResponse>> {
+export async function privateAccount(): Promise<Partial<IPrivatePublicProfileResponse>>{
   const header = await getAuthHeader();
   const result = await patch(privateProfileUrl, null, header);
   const body = await result.json();
@@ -114,7 +116,7 @@ export async function privateAccount(): Promise<NoobPostResponse<null, IPrivateP
   throw body;
 }
 
-export async function publicAccount(): Promise<NoobPostResponse<null, IPrivatePublicProfileResponse>> {
+export async function publicAccount(): Promise<Partial<IPrivatePublicProfileResponse>> {
   const header = await getAuthHeader();
   const result = await patch(privateProfileUrl, null, header);
   const body = await result.json();
