@@ -74,6 +74,17 @@
   top: 0px;
   border-radius: 0px;
 }
+.postsContainer{
+  height: 76vh;
+  overflow-y: auto;
+}
+.postsContainer::-webkit-scrollbar {
+  width: 0.1px;
+}
+.postsContainer::-webkit-scrollbar-thumb {
+  background: #211933;
+  border-radius: 10px;
+}
 
 
 @media screen and (min-width: 768px) {

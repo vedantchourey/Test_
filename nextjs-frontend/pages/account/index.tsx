@@ -83,43 +83,45 @@ function Account(): JSX.Element {
     >
       <div className={commonStyles.container}>
         <Grid container my={2} spacing={2}>
-          <Grid item xs={12} lg={4}>
+          <Grid item xs={12} md={4}>
             <UserProfileCard />
           </Grid>
-          <Grid item xs={12} lg={8}>
-            <TabContext value={activeTab}>
-              <Box>
-                <TabList
-                  onChange={handleChange}
-                  TabIndicatorProps={{
-                    style: {
-                      display: "none",
-                    },
-                  }}
-                  sx={{
-                    "& .Mui-selected": {
-                      background: (theme) => theme.palette.primary.main,
-                      color: "white !important",
-                    },
-                  }}
-                >
-                  <Tab label="Posts" value="posts" sx={tabStyles} />
-                  <Tab label="About" value="about" sx={tabStyles} />
-                  <Tab label="Match activity" value="activity" sx={tabStyles} />
-                </TabList>
-              </Box>
+          <Grid item xs={12} md={8}>
+            <Box className={commonStyles.postsContainer}>
+              <TabContext value={activeTab}>
+                <Box>
+                  <TabList
+                    onChange={handleChange}
+                    TabIndicatorProps={{
+                      style: {
+                        display: "none",
+                      },
+                    }}
+                    sx={{
+                      "& .Mui-selected": {
+                        background: (theme) => theme.palette.primary.main,
+                        color: "white !important",
+                      },
+                    }}
+                  >
+                    <Tab label="Posts" value="posts" sx={tabStyles} />
+                    <Tab label="About" value="about" sx={tabStyles} />
+                    <Tab label="Match activity" value="activity" sx={tabStyles} />
+                  </TabList>
+                </Box>
 
-              <Box my={4}>
-                <Divider light />
-              </Box>
+                <Box my={4}>
+                  <Divider light />
+                </Box>
 
-              <TabPanel sx={{ p: 0 }} value="posts">
-                <CreatePostInput setPosts={setPosts} />
-                {_renderPosts()}
-              </TabPanel>
-              <TabPanel sx={{ p: 0 }} value="about"></TabPanel>
-              <TabPanel sx={{ p: 0 }} value="activity"></TabPanel>
-            </TabContext>
+                <TabPanel sx={{ p: 0 }} value="posts">
+                  <CreatePostInput setPosts={setPosts} />
+                  {_renderPosts()}
+                </TabPanel>
+                <TabPanel sx={{ p: 0 }} value="about"></TabPanel>
+                <TabPanel sx={{ p: 0 }} value="activity"></TabPanel>
+              </TabContext>
+            </Box>
           </Grid>
         </Grid>
       </div>
