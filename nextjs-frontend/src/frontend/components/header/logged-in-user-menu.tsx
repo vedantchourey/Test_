@@ -91,9 +91,9 @@ export default function LoggedInUserMenu(): JSX.Element {
                   <Typography>
                     @{data.username}
                   </Typography>
-                  <Typography variant="caption" color='#F08743'>
+                  {/* <Typography variant="caption" color='#F08743'>
                     {data.firstName} {data.lastName}
-                  </Typography>
+                  </Typography> */}
                 </ListItemText>
               </ListItemButton>
             </ListItem>
