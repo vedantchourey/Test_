@@ -1,17 +1,5 @@
 drop policy authenticated_read_posts on posts;
-drop policy authenticated_insert_posts on posts;
-drop policy authenticated_update_posts on posts;
 drop policy authenticated_read_post_comments on post_comments;
-drop policy authenticated_insert_post_comments on post_comments;
-drop policy authenticated_update_post_comments on post_comments;
-drop policy authenticated_delete_post_comments on post_comments;
 drop policy authenticated_read_post_likes on post_likes;
-drop policy authenticated_delete_post_likes on post_likes;
-drop policy authenticated_delete_post_likes on ;
 drop policy authenticated_read_user_followers on user_followers;
-drop policy authenticated_insert_user_followers on user_followers;
-drop policy authenticated_delete_user_followers on user_followers;
 drop policy authenticated_read_blocked_users on blocked_users;
-drop policy authenticated_insert_blocked_users on blocked_users;
-drop policy authenticated_update_blocked_users on blocked_users;
-drop policy auhtenticated_read_profiles on profiles;
