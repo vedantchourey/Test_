@@ -65,8 +65,6 @@ export class ProfilesRepository extends BaseRepository<IProfile> {
     .distinctOn('username')
     .select('id')
     .select('username')
-    .select('firstName')
-    .select('lastName')
     .select('avatarUrl')
     .where('username', 'like', `%${text}%`)
     .orWhere('firstName', 'like', `%${text}%`)
