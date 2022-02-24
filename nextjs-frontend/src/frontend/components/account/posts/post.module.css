@@ -101,15 +101,20 @@
 }
 
 .commentsContainer {
-    height: 600px;
-    overflow: auto;
     position: relative;
     padding-bottom: 80px;
 }
-.commentsContainer::-webkit-scrollbar {
+.renderPosts{
+    display: flex;
+    flex-direction: column-reverse;
+    height: 430px;
+    overflow: auto;
+    margin-top: 70px !important;
+}
+.renderPosts::-webkit-scrollbar {
     width: 8px;
 }
-.commentsContainer::-webkit-scrollbar-thumb {
+.renderPosts::-webkit-scrollbar-thumb {
     background: #211933;
     border-radius: 10px;
 }
@@ -129,9 +134,11 @@
 }
 .commentCard {
     margin-top: 80px;
-    margin: 25px 20px;
-    padding-bottom: 20px;
+    margin: 12px 20px;
+    padding-bottom: 22px;
     border-bottom: 1px solid #211933;
+
+
 }
 .commentAvatar {
     border: 2px solid #6932f9 !important;
@@ -143,9 +150,11 @@
 }
 .commentInputCotainer {
     width: 100%;
-    padding: 0 20px 0px 20px;
-    bottom: 20px;
+    padding: 20px;
+    bottom: 0px;
     position: fixed;
+    background-color: #08001c;
+    padding-top: 0 !important;
 }
 .commentInput {
     padding: 12px;

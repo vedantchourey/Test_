@@ -148,7 +148,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
               </IconButton>
             </Toolbar>
           </AppBar>
-          <Box mt={12}>
+          <Box mt={12} className={styles.renderPosts}>
             {_renderComments()}
           </Box>
           <Box className={styles.commentInputCotainer}>
