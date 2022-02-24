@@ -128,7 +128,7 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
       </Box>
 
       <Box className={styles.bottom}>
-        <Box sx={{ width: "100%" }}>
+        <Box className={styles.detailsContainer} sx={{ width: "100%" }}>
           {/* <Grid container p={2}>
             <Grid item md={5} sx={{ textAlign: 'left' }}>
               <Typography variant='caption' fontSize={12}>
@@ -154,7 +154,7 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
             </Grid>
           </Grid> */}
 
-          <Divider sx={{ mb: 3 }} light />
+          <Divider sx={{ mb: 3 }} light className={styles.divider} />
           <Grid container>
             <Grid item md={3} sx={{ textAlign: 'center' }}>
               <Typography variant='caption' fontSize={14}>

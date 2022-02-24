@@ -1,8 +1,8 @@
-import { Avatar, Card, Divider, Fab, Typography, useTheme } from '@mui/material';
+import { Avatar, Box, Card, Divider, Fab, Typography, useTheme } from '@mui/material';
 import { useState } from 'react';
 import { updateAvatar, updateProfileBackground } from '../../../service-clients/image-service-client';
 import { useAppDispatch, useAppSelector } from '../../../redux-store/redux-store';
-import { avatarBackgroundImageBlobUrlSelector, avatarImageBlobUrlSelector, isLoggedInSelector, userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
+import { avatarImageBlobUrlSelector, isLoggedInSelector, userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
 import styles from './user-profile-card.module.css';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import { toLocalDDMMYYYY } from '../../../../common/utils/date-time-utils';
@@ -12,7 +12,6 @@ import { isDeviceTypeSelector } from '../../../redux-store/layout/layout-selecto
 import { deviceTypes } from '../../../redux-store/layout/device-types';
 import NoobFilePicker from '../../utils/noob-file-picker';
 import { allowedImageExtensions } from '../../../../models/constants';
-import ReduxCachedBlobImage from '../../utils/redux-cached-blob-image';
 
 
 export default function UserProfileCard(): JSX.Element {
@@ -60,31 +59,37 @@ export default function UserProfileCard(): JSX.Element {
   return (
     <Card sx={{
       maxWidth: 440,
-      borderRadius: 0,
+      borderRadius: 4,
       display: 'flex',
       flexDirection: 'column',
       backgroundColor: backgroundColor,
       backgroundImage: backgroundImage,
-      margin: 'auto'
+      margin: 'auto',
     }}>
-      <div className={styles.imageBackgroundContainer}>
+      <div className={styles.imageBackgroundContainer} style={{
+        backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 1)), url('https://d5nunyagcicgy.cloudfront.net/external_assets/hero_examples/hair_beach_v391182663/original.jpeg')`
+      }}>
         <Fab color="primary" aria-label="edit" size="small" className={styles.editBackgroundButton} onClick={showUploadBackgroundPicker}>
           <AddPhotoAlternateOutlinedIcon />
         </Fab>
-        <Fab color="primary" aria-label="edit" size="small" className={styles.editAvatarButton} onClick={showUploadAvatarPicker}>
-          <AddPhotoAlternateOutlinedIcon />
-        </Fab>
-        <Avatar alt="Remy Sharp"
-          sx={{ width: 156, height: 156 }}
-          className={styles.userProfilePic}
-          src={avatarImageBlobUrl || "/images/default-user-profile-background.jpg"} />
-        <div style={{ overflow: 'hidden', flexGrow: 1, zIndex: 1 }}>
+
+        <Box sx={{ position: 'relative', width: "100%", display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Box sx={{ position: 'relative' }}>
+            <Avatar sx={{ width: 85, height: 85, marginBottom: 2 }} alt="Remy Sharp"
+              src={avatarImageBlobUrl || "/images/default-user-profile-background.jpg"} />
+            <Fab className={styles.editAvatarButton} color="primary" aria-label="edit" size="small" onClick={showUploadAvatarPicker}>
+              <AddPhotoAlternateOutlinedIcon />
+            </Fab>
+          </Box>
+        </Box>
+
+        {/* <div style={{ overflow: 'hidden', flexGrow: 1, zIndex: 1 }}>
           <ReduxCachedBlobImage blobSelector={avatarBackgroundImageBlobUrlSelector}
             defaultImage="/images/default-user-profile-background.jpg"
             layout="fill"
             alt="profile background"
           />
-        </div>
+        </div> */}
       </div>
       <div className={styles.userDetailsContainer}>
         <div className={styles.userDetailsRow}>

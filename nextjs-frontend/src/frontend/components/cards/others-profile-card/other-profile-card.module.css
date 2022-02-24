@@ -70,3 +70,14 @@
     padding: 8px 10px;
     background-color: white !important;
 }
+
+
+@media screen and (max-width: 992px) {
+    .detailsContainer div{
+        justify-content: space-between;
+    }
+    .divider{
+         margin-top: 20px;
+    }
+  
+}
