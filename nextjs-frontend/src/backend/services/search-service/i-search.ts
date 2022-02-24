@@ -5,7 +5,5 @@ export interface ISearchRequest{
 export interface ISearchResponse {
   id: string;
   username: string;
-  firstName: string;
-  lastName: string;
   avatarUrl: string;
 }

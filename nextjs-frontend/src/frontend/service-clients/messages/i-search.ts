@@ -4,7 +4,5 @@ export interface ISearchRequest{
 export interface ISearchPeopleByUsernameResponse {
     username: string;
     id: string;
-    firstName: string;
-    lastName: string;
     avatarUrl: string;
 }

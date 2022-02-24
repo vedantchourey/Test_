@@ -17,7 +17,5 @@ export interface IProfile {
 export interface ISearchUser {
   username: string;
   id: string;
-  firstName: string;
-  lastName: string;
   avatarUrl: string;
 }
