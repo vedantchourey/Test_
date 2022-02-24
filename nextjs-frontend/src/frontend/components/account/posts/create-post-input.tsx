@@ -38,7 +38,6 @@ interface mediaInterface {
   contentUrl: string;
   contentType: "image" | "video";
 }
-
 interface IProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setPosts: React.SetStateAction<any>;
@@ -103,6 +102,7 @@ export default function CreatePostInput(props: IProps): JSX.Element {
       appDispatch(setIsLoading(false));
     }
   }
+
 
   const createImageThumb = async (file: MediaSource | Blob): Promise<void> => {
     setMedia(() => {

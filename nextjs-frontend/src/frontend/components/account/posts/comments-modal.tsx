@@ -62,6 +62,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
     setComment('');
   }
 
+
   const _renderComments = (): JSX.Element[] | JSX.Element | void[] => {
     if (isFetchingComments) {
       return (
