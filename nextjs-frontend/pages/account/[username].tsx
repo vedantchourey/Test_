@@ -89,7 +89,7 @@ function UserAccount(): JSX.Element {
               <Grid item xs={12} md={4}>
                 <OtherProfileCard userData={userData} />
               </Grid>
-              <Grid item xs={12} md={8}>
+              <Grid item xs={12} md={8} className={commonStyles.postsContainer}>
                 {_renderPosts()}
               </Grid>
             </Grid>
