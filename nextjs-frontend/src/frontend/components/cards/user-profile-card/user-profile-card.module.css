@@ -63,3 +63,117 @@
 .heading {
   font-weight: bold;
 }
+
+
+.background {
+  padding: 40px 26px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.otherProfileCard {
+  border-radius: 15px;
+  color: white;
+}
+.profileSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.selectImg {
+  position: absolute;
+  bottom: 18px;
+  right: -7px;
+  background-color: blue;
+}
+.verticalDivider {
+  width: 0.5px;
+  height: 38px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.bottom {
+  padding: 0 26px !important;
+  padding-bottom: 30px !important;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+.btnSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 60px;
+}
+.bottomBtn {
+  text-transform: capitalize;
+  width: 216px;
+  padding: 8px 0;
+  font-size: 14px;
+  margin-bottom: 16px;
+  border-radius: 6px;
+}
+.optionsContainer {
+  position: absolute;
+  width: 153px;
+  right: 12px;
+  margin-top: 4px;
+  padding: 0;
+  box-shadow: 24;
+  border-radius: 16px !important;
+  background-color: #dedede;
+  z-index: 4;
+}
+.optionsBtn img {
+  margin-right: 10px;
+}
+.optionsBtn {
+  font-weight: 500;
+  text-transform: capitalize !important;
+  padding: 8px 10px;
+  background-color: white !important;
+}
+.appBar{
+  background-color: white !important;
+  box-shadow: none;
+  border-radius: 10px;
+  padding: 16px;
+}
+.appBar button{
+  color: black !important;
+}
+.userListContainer{
+  height: 440px;
+  overflow: auto;
+}
+.userListContainer::-webkit-scrollbar {
+  width: 4px;
+}
+ 
+/* Handle */
+.userListContainer::-webkit-scrollbar-thumb {
+  background: #08001c; 
+  border-radius: 10px;
+}
+
+.userList{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.followBtn {
+  text-transform: capitalize;
+  width: 120px;
+  border-radius: 8px;
+
+}
+@media screen and (max-width: 992px) {
+  .detailsContainer div {
+      justify-content: space-between;
+  }
+  .divider {
+      margin-top: 20px;
+  }
+}
