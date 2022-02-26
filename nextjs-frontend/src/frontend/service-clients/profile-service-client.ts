@@ -8,8 +8,6 @@ import { IProfileResponse, IOthersProfileResponse } from './messages/i-profile';
 import { getAuthHeader } from '../utils/headers';
 
 const imagesUrl = frontendConfig.noobStormServices.profile.profileImages;
-const privateProfileUrl = frontendConfig.noobStormServices.profile.privateAction.privateProfileUrl;
-// const publicProfileUrl = frontendConfig.noobStormServices.profile.privateAction.publicProfileUrl;
 
 interface IRawProfile {
   id: string;
@@ -23,6 +21,7 @@ interface IRawProfile {
   createdAt: string;
   updatedAt: string;
   avatarUrl?: string;
+  isPrivate : boolean;
   profileBackgroundImageUrl?: string,
   user_roles: { id: string, code: string }[]
 }
@@ -43,7 +42,8 @@ export async function fetchUserProfile(): Promise<IProfileResponse> {
   const rawProfile = profiles.data as IRawProfile;
   const { user_roles, ...others } = rawProfile;
   const userRoles = user_roles.map((x) => x.code);
-  return { ...others, userRoles }
+  const counterData = await getCounterMeta(others.id);
+  return { ...others, userRoles, ...counterData }
 }
 
 export async function getCounterMeta(userid: string): Promise<{
@@ -107,18 +107,20 @@ export async function updateProfileImages(request: UpdateProfileImageRequest): P
   throw body;
 }
 
-export async function privateAccount(): Promise<Partial<IPrivatePublicProfileResponse>>{
+export async function setPrivateAccount(): Promise<Partial<IPrivatePublicProfileResponse>>{
+  const endpoint = frontendConfig.noobStormServices.profile.privacyAction.privateProfileUrl;
   const header = await getAuthHeader();
-  const result = await patch(privateProfileUrl, null, header);
+  const result = await patch(endpoint, null, header);
   const body = await result.json();
   if (result.status === 200) return body.data;
   if (result.status === 400 && body.errors.apiError == null) return { errors: body.errors, isError: true }
   throw body;
 }
 
-export async function publicAccount(): Promise<Partial<IPrivatePublicProfileResponse>> {
+export async function setPublicAccount(): Promise<Partial<IPrivatePublicProfileResponse>> {
+  const endpoint = frontendConfig.noobStormServices.profile.privacyAction.publicProfileUrl;
   const header = await getAuthHeader();
-  const result = await patch(privateProfileUrl, null, header);
+  const result = await patch(endpoint, null, header);
   const body = await result.json();
   if (result.status === 200) return body.data;
   if (result.status === 400 && body.errors.apiError == null) return { errors: body.errors, isError: true }

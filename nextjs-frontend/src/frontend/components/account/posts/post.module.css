@@ -104,7 +104,7 @@
     position: relative;
     padding-bottom: 80px;
 }
-.renderPosts{
+.renderPosts {
     display: flex;
     flex-direction: column-reverse;
     height: 430px;
@@ -137,8 +137,6 @@
     margin: 12px 20px;
     padding-bottom: 22px;
     border-bottom: 1px solid #211933;
-
-
 }
 .commentAvatar {
     border: 2px solid #6932f9 !important;

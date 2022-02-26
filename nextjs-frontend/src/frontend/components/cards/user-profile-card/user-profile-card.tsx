@@ -12,6 +12,7 @@ import { isDeviceTypeSelector } from '../../../redux-store/layout/layout-selecto
 import { deviceTypes } from '../../../redux-store/layout/device-types';
 import NoobFilePicker from '../../utils/noob-file-picker';
 import { allowedImageExtensions } from '../../../../models/constants';
+import frontendConfig from '../../../utils/config/front-end-config';
 
 
 export default function UserProfileCard(): JSX.Element {
@@ -67,7 +68,7 @@ export default function UserProfileCard(): JSX.Element {
       margin: 'auto',
     }}>
       <div className={styles.imageBackgroundContainer} style={{
-        backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 1)), url('https://d5nunyagcicgy.cloudfront.net/external_assets/hero_examples/hair_beach_v391182663/original.jpeg')`
+        backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 1)), url(${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${userProfile?.avatarUrl})`
       }}>
         <Fab color="primary" aria-label="edit" size="small" className={styles.editBackgroundButton} onClick={showUploadBackgroundPicker}>
           <AddPhotoAlternateOutlinedIcon />

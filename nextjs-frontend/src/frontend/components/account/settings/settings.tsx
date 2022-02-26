@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Box, Container, Divider, Grid, SxProps, Tab, Typography } from "@mui/material";
 import styles from './style.module.css'
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import PersonalSettings from './personalSettings'
+import PersonalSettings from './personal-settings';
+import Security from './security';
 type TabsProps = "personal" | "payment" | "preferences" | "security";
 
 const tabStyles: SxProps = {
@@ -17,7 +18,7 @@ const tabStyles: SxProps = {
 
 
 const ProfileSettings = (): JSX.Element => {
-  const [activeTab, setActiveTab] = useState<TabsProps>("personal");
+  const [activeTab, setActiveTab] = useState<TabsProps>("security");
   const handleChange = (e: unknown, newValue: TabsProps): void => {
     setActiveTab(newValue);
   };
@@ -69,7 +70,9 @@ const ProfileSettings = (): JSX.Element => {
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value="payments"></TabPanel>
             <TabPanel sx={{ p: 0 }} value="preferences"></TabPanel>
-            <TabPanel sx={{ p: 0 }} value="security"></TabPanel>
+            <TabPanel sx={{ p: 0 }} value="security">
+              <Security />
+            </TabPanel>
           </TabContext>
         </Box>
       </Container >

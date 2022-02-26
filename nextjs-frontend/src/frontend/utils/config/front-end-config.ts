@@ -15,7 +15,7 @@ const frontendConfig: IFrontendConfig = {
     },
     profile: {
       profileImages: `${baseApiUrl}/api/profile-images`,
-      privateAction: {
+      privacyAction: {
         privateProfileUrl: `${baseApiUrl}/api/update-account-privacy/private`,
         publicProfileUrl: `${baseApiUrl}/api/update-account-privacy/public`
       }
