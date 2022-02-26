@@ -9,6 +9,7 @@ import { followUser, unFollowUser } from '../../../service-clients/follow-servic
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { blockUser, unBlockUser } from '../../../service-clients/block-service';
 import frontendConfig from '../../../utils/config/front-end-config';
+import FollowersListModal from './followers-list-modal';
 
 const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Element => {
   const [userData, setUserData] = useState(props.userData)
@@ -204,6 +205,8 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
           </Button>
         </Box>
       </Box>
+
+      <FollowersListModal userData={userData} />
     </Box >
   )
 }
