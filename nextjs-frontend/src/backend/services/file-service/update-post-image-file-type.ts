@@ -29,7 +29,7 @@ export class UpdatePostImageFileType implements IUploadFileType {
   }
 
   async uploadFile(file: IUploadedFile): Promise<string> {
-    const post = await this.userPost();
+    const post = await this.userPost();    
     const oldPostImgUrl = post.postImgUrl;
     const newPostImgUrl = `posts/${post.id}_${v4()}`;
     const result = await this.uploadImage(newPostImgUrl, file);
@@ -58,7 +58,7 @@ export class UpdatePostImageFileType implements IUploadFileType {
   }
 
   private async userPost(): Promise<IPost> {
-    const post = await this.postsRepository.getPostById(this.context.getParamValue('postId') as string);
+    const post = await this.postsRepository.getPostUsingId(this.context.getParamValue('postId') as string);
     if (post == null) throw new Error('post cannot be null');
     return post;
   }
