@@ -37,7 +37,7 @@ export const config = {
 }
 
 export default createNextJsRouteHandler({
-  post: {
+  patch: {
     handler: async (req: NextApiRequest, res: NextApiResponse<ServiceResponse<UploadFileRequest, IFileResponse>>, context: PerRequestContext): Promise<void> => {
       const multiPartRequest = req as IMultiPartRequest;
       const result = await uploadFile(multiPartRequest.files, new UpdatePostImageFileType(context));
