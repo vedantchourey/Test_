@@ -9,7 +9,7 @@ import { uploadFile } from '../../../src/backend/services/file-service/file-serv
 import { UploadFileRequest } from '../../../src/backend/services/file-service/i-upload-file-type';
 import { IFileResponse } from '../../../src/backend/services/file-service/i-file-response';
 import { PerRequestContext } from '../../../src/backend/utils/api-middle-ware/api-middleware-typings';
-import { PostImageFileType } from '../../../src/backend/services/file-service/post-image-file-type';
+import { CreatePostImageFileType } from '../../../src/backend/services/file-service/create-post-image-file-type';
 
 
 export const config = {
@@ -22,7 +22,7 @@ export default createNextJsRouteHandler({
   post: {
     handler: async (req: NextApiRequest, res: NextApiResponse<ServiceResponse<UploadFileRequest, IFileResponse>>, context: PerRequestContext): Promise<void> => {
       const multiPartRequest = req as IMultiPartRequest;
-      const result = await uploadFile(multiPartRequest.files, new PostImageFileType(context));
+      const result = await uploadFile(multiPartRequest.files, new CreatePostImageFileType(context));
       return res.status(result.errors == null ? 200 : 400).send(result);
     },
     preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware, postImageMiddleware],

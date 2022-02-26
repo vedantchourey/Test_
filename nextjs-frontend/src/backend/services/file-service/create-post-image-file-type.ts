@@ -5,12 +5,10 @@ import { Knex } from 'knex';
 import { PostsRepository } from '../database/repositories/posts-repository';
 import { privateBackendSupabase } from '../common/supabase-backend-client';
 import { PerRequestContext } from '../../utils/api-middle-ware/api-middleware-typings';
-import { IPost } from '../database/models/i-post';
 import { AllowedBuckets } from '../../../models/constants';
-import { FileObject } from '@supabase/storage-js';
 
 
-export class PostImageFileType implements IUploadFileType {
+export class CreatePostImageFileType implements IUploadFileType {
 
   private readonly postsRepository: PostsRepository;
 
@@ -29,14 +27,9 @@ export class PostImageFileType implements IUploadFileType {
   }
 
   async uploadFile(file: IUploadedFile): Promise<string> {
-    const post = await this.userPost();
-    const oldPostImgUrl = post.postImgUrl;
-    const newPostImgUrl = `post-img/${post.id}_${v4()}`;
+    const newPostImgUrl = `post-img/_${v4()}`;
     const result = await this.uploadImage(newPostImgUrl, file);
     if (result.error != null) throw result.error;
-    await this.postsRepository.updatePostImg(post.id as string, newPostImgUrl);
-    const deleteResult = await this.deleteImage(oldPostImgUrl);
-    if (deleteResult.error != null) throw deleteResult.error;
     return newPostImgUrl;
   }
 
@@ -47,20 +40,6 @@ export class PostImageFileType implements IUploadFileType {
                                    contentType: file.mimeType,
                                  });
 
-  }
-
-  private async deleteImage(postImgUrl: string | undefined): Promise<{ data: FileObject[] | null; error: Error | null }> {
-    if (postImgUrl == null) return {data: [], error: null};
-    return privateBackendSupabase.storage
-                                 .from(this.bucket)
-                                 .remove([postImgUrl]);
-
-  }
-
-  private async userPost(): Promise<IPost> {
-    const post = await this.postsRepository.getPostById(this.context.getParamValue('postId') as string);
-    if (post == null) throw new Error('post cannot be null');
-    return post;
   }
 
   validate(files: IUploadedFile[]): string | undefined {
