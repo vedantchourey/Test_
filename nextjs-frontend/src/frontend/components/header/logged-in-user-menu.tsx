@@ -19,6 +19,7 @@ import { useRouter } from 'next/router';
 import SearchIcon from '@mui/icons-material/Search';
 import { ISearchPeopleByUsernameResponse } from "../../service-clients/messages/i-search";
 import { searchPeopleByText } from "../../service-clients/search-service-client";
+import frontendConfig from '../../utils/config/front-end-config';
 
 const CustomMenu = styled(Menu)(() => {
   return ({
@@ -33,11 +34,10 @@ export default function LoggedInUserMenu(): JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const [showMenu, setShowMenu] = useState(false);
-  const [focus] = useState(false);
   const username = useAppSelector(userNameSelector);
   const avatarUrl = useAppSelector(avatarImageBlobUrlSelector);
   const [userList, setUserList] = useState<ISearchPeopleByUsernameResponse[]>([])
-  const [isFetching, setIsFetching] = useState(true)
+  const [isFetching, setIsFetching] = useState(false)
 
   function handleClose(): void {
     setShowMenu(false);
@@ -70,13 +70,19 @@ export default function LoggedInUserMenu(): JSX.Element {
 
 
   async function searchByUserName(username: string): Promise<void> {
+    setIsFetching(true);
+    setUserList([]);
+    if (!username) {
+      setIsFetching(false);
+      return;
+    }
     const response = await searchPeopleByText({ search: username });
-    if (!response.length) setUserList(response);
+    if (response.length) setUserList(response);
     setIsFetching(false)
   }
 
   const renderResults = (): JSX.Element => {
-    if (focus && isFetching) {
+    if (isFetching) {
       return (
         <List className={styles.searchListLoder} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
           <CircularProgress />
@@ -88,9 +94,11 @@ export default function LoggedInUserMenu(): JSX.Element {
         <List className={styles.searchList} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
           {userList.map((data, i) => (
             <ListItem key={Date.now() + i}>
-              <ListItemButton onClick={(): unknown => router.push(`/account/${data.username}`)} sx={{ padding: '2px 18px' }}>
+              <ListItemButton onClick={(): unknown => router.push(`/account/${data.username}`)} sx={{ padding: '2px 18px', my: 1 }}>
                 <ListItemAvatar>
-                  <Avatar sx={{ width: 35, height: 35 }} alt="profile image" src='' />
+                  <Avatar sx={{ width: 35, height: 35 }} alt="profile image" src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${data.avatarUrl}`}>
+                    {data.username.split('')[0].toUpperCase()}
+                  </Avatar>
                 </ListItemAvatar>
                 <ListItemText className={styles.listText}>
                   <Typography>
@@ -110,9 +118,10 @@ export default function LoggedInUserMenu(): JSX.Element {
     // eslint-disable-next-line no-else-return
     else {
       return (
-        <List className={styles.searchListLoder} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-          <h1>No data found</h1>
-        </List>
+        <></>
+        /*  <List className={styles.searchListLoder} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+           <h1>No data found</h1>
+         </List> */
       )
     }
 
@@ -129,8 +138,10 @@ export default function LoggedInUserMenu(): JSX.Element {
               disableUnderline: true,
             }}
             sx={{ '& ::placeholder': { fontWeight: 500, color: 'white', fontFamily: 'Inter' } }}
-            onChange={(e): unknown => searchByUserName(e.target.value)}
-          // onFocus={setFocus(true)}
+            onChange={(e): void => {
+              searchByUserName(e.target.value)
+            }}
+            id="userSearchInput"
           />
           <SearchIcon color="primary" />
         </Box>
