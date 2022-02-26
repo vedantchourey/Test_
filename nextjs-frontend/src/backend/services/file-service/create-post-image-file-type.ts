@@ -27,7 +27,7 @@ export class CreatePostImageFileType implements IUploadFileType {
   }
 
   async uploadFile(file: IUploadedFile): Promise<string> {
-    const newPostImgUrl = `post-img/_${v4()}`;
+    const newPostImgUrl = `posts/_${v4()}`;
     const result = await this.uploadImage(newPostImgUrl, file);
     if (result.error != null) throw result.error;
     return newPostImgUrl;

@@ -31,7 +31,7 @@ export class UpdatePostImageFileType implements IUploadFileType {
   async uploadFile(file: IUploadedFile): Promise<string> {
     const post = await this.userPost();
     const oldPostImgUrl = post.postImgUrl;
-    const newPostImgUrl = `post-img/${post.id}_${v4()}`;
+    const newPostImgUrl = `posts/${post.id}_${v4()}`;
     const result = await this.uploadImage(newPostImgUrl, file);
     if (result.error != null) throw result.error;
     await this.postsRepository.updatePostImg(post.id as string, newPostImgUrl);
