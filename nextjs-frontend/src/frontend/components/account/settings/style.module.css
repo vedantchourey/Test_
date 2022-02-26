@@ -1,0 +1,31 @@
+
+.heading{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+}
+.formContainer{
+    background-color:  #100626;
+    width: 100%;
+    margin: 50px 0;
+    padding: 48px 76px;
+}
+.customInput{
+    background-color: #31274A;
+    padding: 6px 15px;
+    margin-top: 10px;
+}
+.customInput  div::before {
+    border: none !important;
+}
+
+.actionButton {
+    background: linear-gradient(180deg, #EF507E 0%, #F09633 100%);
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    color: white;
+    border-radius: 0;
+    padding: 16px 59px;
+  }
