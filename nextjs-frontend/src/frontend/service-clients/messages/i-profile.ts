@@ -15,6 +15,7 @@ export interface IProfileResponse {
   totalFollowers: number;
   totalPosts: number;
   totalFollowing: number;
+  isPrivate : boolean;
 }
 
 export interface IOthersProfileResponse {

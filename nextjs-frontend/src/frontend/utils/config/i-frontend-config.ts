@@ -14,7 +14,7 @@ export interface IFrontendConfig {
     };
     profile: {
       profileImages: string;
-      privateAction: {
+      privacyAction: {
         privateProfileUrl: string;
         publicProfileUrl: string;
       }
