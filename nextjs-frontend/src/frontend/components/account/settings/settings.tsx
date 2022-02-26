@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Box, Container, Divider, Grid, SxProps, Tab, Typography } from "@mui/material";
 import styles from './style.module.css'
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { withProtected } from "../../auth-wrapper/auth-wrapper";
 import PersonalSettings from './personalSettings'
 type TabsProps = "personal" | "payment" | "preferences" | "security";
 
@@ -33,7 +32,7 @@ const ProfileSettings = (): JSX.Element => {
         </Grid>
         <Grid item md={3} sx={{ textAlign: 'center' }}>
           <Typography variant="h1" fontSize={26}>
-                        Profile Settings
+            Profile Settings
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -77,4 +76,4 @@ const ProfileSettings = (): JSX.Element => {
     </Box >
   );
 };
-export default withProtected(ProfileSettings);
+export default ProfileSettings;
