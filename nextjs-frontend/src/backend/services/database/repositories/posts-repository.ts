@@ -51,4 +51,12 @@ export class PostsRepository extends BaseRepository<IPost> {
                .where({id: id});
   }
 
+  updatePostImg(id: string, postImgUrl: string): Promise<number> {
+    return this.entities()
+               .update({
+                 postImgUrl: postImgUrl
+               })
+               .where({id: id})
+  }
+
 }

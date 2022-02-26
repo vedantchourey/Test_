@@ -21,3 +21,14 @@ export const profileBackgroundImageMiddleware = createMultiPartMiddleWare({
     files: 1
   }
 });
+
+export const postImageMiddleware = createMultiPartMiddleWare({
+  fit: 'inside',
+  allowedWidth: 440 * 2,
+  allowedHeight: 226 * 2,
+  allowedTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+  limits: {
+    fileSize: 1024 * 1024, // 1 MB in bytes
+    files: 1
+  }
+});
