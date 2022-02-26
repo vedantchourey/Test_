@@ -137,7 +137,6 @@ export default function LoggedInUserMenu(): JSX.Element {
             InputProps={{
               disableUnderline: true,
             }}
-            sx={{ '& ::placeholder': { fontWeight: 500, color: 'white', fontFamily: 'Inter' } }}
             onChange={(e): void => {
               searchByUserName(e.target.value)
             }}
