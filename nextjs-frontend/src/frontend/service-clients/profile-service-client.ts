@@ -43,7 +43,8 @@ export async function fetchUserProfile(): Promise<IProfileResponse> {
   const rawProfile = profiles.data as IRawProfile;
   const { user_roles, ...others } = rawProfile;
   const userRoles = user_roles.map((x) => x.code);
-  return { ...others, userRoles }
+  const counterData = await getCounterMeta(others.id);
+  return { ...others, userRoles, ...counterData }
 }
 
 export async function getCounterMeta(userid: string): Promise<{

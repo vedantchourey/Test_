@@ -1,5 +1,7 @@
 .imageBackgroundContainer {
   height: 300px;
+  background-repeat: no-repeat;
+  background-size: cover;
   flex-grow: 1;
   position: relative;
   display: flex;
@@ -11,7 +13,6 @@
   right: 10px;
   z-index: 100;
 }
-
 
 .userProfilePic {
   display: flex;
@@ -27,8 +28,6 @@
   z-index: 100;
   right: -8px;
 }
-
-
 
 .userDetailsContainer {
   display: flex;
@@ -64,5 +63,3 @@
 .heading {
   font-weight: bold;
 }
-
-

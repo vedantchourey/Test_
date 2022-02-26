@@ -74,7 +74,8 @@
   top: 0px;
   border-radius: 0px;
 }
-.postsContainer{
+.postsContainer {
+  position: relative;
   height: 76vh;
   overflow-y: auto;
 }
@@ -86,9 +87,7 @@
   border-radius: 10px;
 }
 
-
 @media screen and (min-width: 768px) {
-  
 }
 
 @media screen and (max-width: 767px) {

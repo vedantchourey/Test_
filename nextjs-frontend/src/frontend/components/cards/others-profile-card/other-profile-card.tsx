@@ -112,7 +112,11 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
         </Box>
         <Box className={styles.profileSection}>
           <Box sx={{ position: 'relative' }}>
-            <Avatar sx={{ width: 85, height: 85, marginBottom: 2 }} alt="Remy Sharp" src="" />
+            <Avatar sx={{ width: 85, height: 85, marginBottom: 2 }} alt="Remy Sharp" src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${userData.avatarUrl}`}>
+              {
+                userData.firstName.split('')[0].toUpperCase()
+              }
+            </Avatar>
             <IconButton className={styles.selectImg} >
               {/* <img src='icons/gallery.svg' alt='icon' /> */}
               <CollectionsIcon />

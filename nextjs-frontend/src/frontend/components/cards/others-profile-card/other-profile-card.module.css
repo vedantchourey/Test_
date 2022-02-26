@@ -71,13 +71,11 @@
     background-color: white !important;
 }
 
-
 @media screen and (max-width: 992px) {
-    .detailsContainer div{
+    .detailsContainer div {
         justify-content: space-between;
     }
-    .divider{
-         margin-top: 20px;
+    .divider {
+        margin-top: 20px;
     }
-  
 }
