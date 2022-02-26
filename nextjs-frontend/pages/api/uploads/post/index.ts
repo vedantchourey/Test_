@@ -9,26 +9,8 @@ import { uploadFile } from '../../../../src/backend/services/file-service/file-s
 import { UploadFileRequest } from '../../../../src/backend/services/file-service/i-upload-file-type';
 import { IFileResponse } from '../../../../src/backend/services/file-service/i-file-response';
 import { PerRequestContext } from '../../../../src/backend/utils/api-middle-ware/api-middleware-typings';
-import { UpdatePostImageFileType } from '../../../../src/backend/services/file-service/update-post-image-file-type';
-import { createQueryParamsMiddleWare } from '../../../../src/backend/utils/api-middle-ware/query-param-middle-ware/query-validator-middle-ware';
-import { uuidType } from '../../../../src/backend/utils/api-middle-ware/query-param-middle-ware/types/uuid-type';
-import { Knex } from 'knex';
-import { PostsRepository } from '../../../../src/backend/services/database/repositories/posts-repository';
+import { CreatePostImageFileType } from '../../../../src/backend/services/file-service/create-post-image-file-type';
 
-const basicQueryParams = createQueryParamsMiddleWare({
-  params: {
-    postId: {
-      type: uuidType
-    }
-  },
-  async validate(params: { [p: string]: string | string[] }, context: PerRequestContext): Promise<string | undefined> {
-    const repository = new PostsRepository(context.transaction as Knex.Transaction);
-    const postId = params['postId'];
-    const post = await repository.getPostById(postId as string);
-    if (post == null) return `Could not find post with postId: ${postId}`;
-    if (post.postedBy !== context.user?.id) return 'You are not allowed to update post';
-  }
-});
 
 export const config = {
   api: {
@@ -40,10 +22,10 @@ export default createNextJsRouteHandler({
   post: {
     handler: async (req: NextApiRequest, res: NextApiResponse<ServiceResponse<UploadFileRequest, IFileResponse>>, context: PerRequestContext): Promise<void> => {
       const multiPartRequest = req as IMultiPartRequest;
-      const result = await uploadFile(multiPartRequest.files, new UpdatePostImageFileType(context));
+      const result = await uploadFile(multiPartRequest.files, new CreatePostImageFileType(context));
       return res.status(result.errors == null ? 200 : 400).send(result);
     },
-    preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware, basicQueryParams, postImageMiddleware],
+    preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware, postImageMiddleware],
     postHooks: [commitOrRollBackTransactionMiddleWare]
   }
 });
