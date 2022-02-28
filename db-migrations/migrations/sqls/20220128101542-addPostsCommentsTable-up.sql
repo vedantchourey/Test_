@@ -15,15 +15,6 @@ CREATE TABLE post_comments
         ON DELETE CASCADE
 );
 
-alter table post_comments
-    enable row level security;
-
-create
-    policy authenticated_read_post_comments_table on post_comments
-    for
-    select
-    using (auth.role() = 'authenticated');
-
 create
     policy authenticated_insert_post_comments_table on post_comments
     for
