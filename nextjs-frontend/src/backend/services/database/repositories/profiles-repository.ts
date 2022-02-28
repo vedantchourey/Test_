@@ -1,5 +1,5 @@
 import { nowAsISOString } from '../../../../common/utils/date-time-utils';
-import { IProfile } from '../models/i-profile';
+import { IProfile, ISearchUser } from '../models/i-profile';
 import { Knex } from 'knex';
 import { BaseRepository } from './base-repository';
 
@@ -58,6 +58,18 @@ export class ProfilesRepository extends BaseRepository<IProfile> {
         isPrivate: isPrivate
       })
       .returning('isPrivate');
+  }
+
+  async searchUser(text: string): Promise<ISearchUser>{
+    return this.entities()
+    .distinctOn('username')
+    .select('id')
+    .select('username')
+    .select('avatarUrl')
+    .where('username', 'like', `%${text}%`)
+    .orWhere('firstName', 'like', `%${text}%`)
+    .orWhere('lastName', 'like', `%${text}%`)
+    .limit(5)
   }
 }
 

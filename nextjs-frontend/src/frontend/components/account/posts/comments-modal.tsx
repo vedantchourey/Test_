@@ -62,6 +62,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
     setComment('');
   }
 
+
   const _renderComments = (): JSX.Element[] | JSX.Element | void[] => {
     if (isFetchingComments) {
       return (
@@ -148,7 +149,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
               </IconButton>
             </Toolbar>
           </AppBar>
-          <Box mt={12}>
+          <Box mt={12} className={styles.renderPosts}>
             {_renderComments()}
           </Box>
           <Box className={styles.commentInputCotainer}>

@@ -244,13 +244,11 @@ const PostCard = (props: IProps): JSX.Element => {
               </Box>
             )
           }
-
-          <Box mt={5} sx={{ textAlign: 'center' }}>
+          {/* <Box mt={5} sx={{ textAlign: 'center' }}>
             <img width={85} src='/images/noobstorm-logo-small.png' />
-          </Box>
+          </Box> */}
         </Box>
       </Card>
-
       <CommentsModal isModalOpen={openCommentsModal} handleClose={handleCloseComments} postId={values.id} />
 
     </Grid >

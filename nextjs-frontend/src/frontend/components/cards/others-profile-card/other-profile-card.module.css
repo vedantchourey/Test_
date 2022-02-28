@@ -1,10 +1,11 @@
 .background {
     /* background-image: linear-gradient(45deg, 
      white, #08001C,), url('https://imagekit.io/blog/content/images/2019/12/image-optimization.jpg') !important; */
-    background-image: linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 1));
     padding: 40px 26px;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 .otherProfileCard {
     /* background-color: #08001C; */
@@ -68,4 +69,13 @@
     text-transform: capitalize !important;
     padding: 8px 10px;
     background-color: white !important;
+}
+
+@media screen and (max-width: 992px) {
+    .detailsContainer div {
+        justify-content: space-between;
+    }
+    .divider {
+        margin-top: 20px;
+    }
 }

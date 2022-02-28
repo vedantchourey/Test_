@@ -14,6 +14,10 @@ export interface IFrontendConfig {
     };
     profile: {
       profileImages: string;
+      privacyAction: {
+        privateProfileUrl: string;
+        publicProfileUrl: string;
+      }
     },
     tournament: {
       createUrl: string,
@@ -37,8 +41,12 @@ export interface IFrontendConfig {
       block: (userId: string) => string;
       unBlock: (userId: string) => string;
     }
+    search: {
+      searchUser: string; 
+    }
   },
   storage : {
     publicBucket : AllowedBuckets;
+    publicBucketUrl : string;
   }
 }

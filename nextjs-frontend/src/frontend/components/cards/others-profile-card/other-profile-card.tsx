@@ -8,6 +8,7 @@ import { IOthersProfileResponse } from "../../../service-clients/messages/i-prof
 import { followUser, unFollowUser } from '../../../service-clients/follow-service';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { blockUser, unBlockUser } from '../../../service-clients/block-service';
+import frontendConfig from '../../../utils/config/front-end-config';
 
 const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Element => {
   const [userData, setUserData] = useState(props.userData)
@@ -73,7 +74,9 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
 
   return (
     <Box className={styles.otherProfileCard}>
-      <Box className={styles.background}>
+      <Box className={styles.background} style={{
+        backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 1)), url(${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${userData.avatarUrl})`
+      }}>
         <Box sx={{ textAlign: 'right', position: 'relative' }}>
           <IconButton sx={{ padding: '10px' }} onClick={handleToggleMenu} >
             <MoreVertIcon />
@@ -109,7 +112,11 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
         </Box>
         <Box className={styles.profileSection}>
           <Box sx={{ position: 'relative' }}>
-            <Avatar sx={{ width: 85, height: 85, marginBottom: 2 }} alt="Remy Sharp" src="" />
+            <Avatar sx={{ width: 85, height: 85, marginBottom: 2 }} alt="Remy Sharp" src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${userData.avatarUrl}`}>
+              {
+                userData.firstName.split('')[0].toUpperCase()
+              }
+            </Avatar>
             <IconButton className={styles.selectImg} >
               {/* <img src='icons/gallery.svg' alt='icon' /> */}
               <CollectionsIcon />
@@ -125,7 +132,7 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
       </Box>
 
       <Box className={styles.bottom}>
-        <Box sx={{ width: "100%" }}>
+        <Box className={styles.detailsContainer} sx={{ width: "100%" }}>
           {/* <Grid container p={2}>
             <Grid item md={5} sx={{ textAlign: 'left' }}>
               <Typography variant='caption' fontSize={12}>
@@ -151,7 +158,7 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
             </Grid>
           </Grid> */}
 
-          <Divider sx={{ mb: 3 }} light />
+          <Divider sx={{ mb: 3 }} light className={styles.divider} />
           <Grid container>
             <Grid item md={3} sx={{ textAlign: 'center' }}>
               <Typography variant='caption' fontSize={14}>

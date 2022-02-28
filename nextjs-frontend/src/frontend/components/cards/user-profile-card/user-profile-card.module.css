@@ -1,6 +1,7 @@
 .imageBackgroundContainer {
-  max-width: 440px;
-  height: 226px;
+  height: 300px;
+  background-repeat: no-repeat;
+  background-size: cover;
   flex-grow: 1;
   position: relative;
   display: flex;
@@ -13,38 +14,19 @@
   z-index: 100;
 }
 
-
 .userProfilePic {
-  position: absolute;
-  bottom: -78px;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  top: 80px;
   z-index: 50;
 }
 
 .editAvatarButton {
   position: absolute;
-  bottom: 10px;
+  bottom: 20px;
   z-index: 100;
-}
-
-@media screen and (min-width: 768px) {
-  .userProfilePic {
-    right: 142px;
-  }
-
-  .editAvatarButton {
-    right: 155px;
-  }
-
-}
-
-@media screen and (max-width: 768px) {
-  .userProfilePic {
-    right: calc((100% / 2) - 78px);
-  }
-
-  .editAvatarButton {
-    right: calc((100% / 2) - 70px);
-  }
+  right: -8px;
 }
 
 .userDetailsContainer {
@@ -52,8 +34,8 @@
   flex-direction: column;
   row-gap: 20px;
   flex-grow: 1;
-  margin-top: 113px;
-  margin-bottom: 30px;
+  padding-bottom: 30px;
+  background-color: #08001c;
 }
 
 .userDetailsRow {
@@ -80,8 +62,4 @@
 
 .heading {
   font-weight: bold;
-}
-
-.value {
-
 }

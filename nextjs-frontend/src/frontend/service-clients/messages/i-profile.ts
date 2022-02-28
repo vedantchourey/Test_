@@ -12,6 +12,10 @@ export interface IProfileResponse {
   avatarUrl?: string;
   profileBackgroundImageUrl?: string;
   userRoles: string[];
+  totalFollowers: number;
+  totalPosts: number;
+  totalFollowing: number;
+  isPrivate : boolean;
 }
 
 export interface IOthersProfileResponse {

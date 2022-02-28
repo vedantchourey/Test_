@@ -13,3 +13,9 @@ export interface IProfile {
   avatarUrl?: string;
   profileBackgroundImageUrl?: string;
 }
+
+export interface ISearchUser {
+  username: string;
+  id: string;
+  avatarUrl: string;
+}
