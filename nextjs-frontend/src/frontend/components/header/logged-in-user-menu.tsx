@@ -94,7 +94,7 @@ export default function LoggedInUserMenu(): JSX.Element {
         <List className={styles.searchList} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
           {userList.map((data, i) => (
             <ListItem key={Date.now() + i}>
-              <ListItemButton onClick={(): unknown => router.push(`/account/${data.username}`)} sx={{ padding: '2px 18px', my: 1 }}>
+              <ListItemButton onClick={(): unknown => router.replace(`/account/${data.username}`)} sx={{ padding: '2px 18px', my: 1 }}>
                 <ListItemAvatar>
                   <Avatar sx={{ width: 35, height: 35 }} alt="profile image" src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${data.avatarUrl}`}>
                     {data.username.split('')[0].toUpperCase()}

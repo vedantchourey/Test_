@@ -59,7 +59,7 @@ const FollowersModal = ({ handleClose, userData, showModal }: IProps): JSX.Eleme
         </AppBar>
         <Divider />
         <Box sx={{ p: 3 }} className={styles.userListContainer}>
-          {list.map((data, i) => (
+          {list.length ? list.map((data, i) => (
             <Box className={styles.userList} key={i}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Avatar sx={{ width: 50, height: 50 }}>
@@ -80,7 +80,13 @@ const FollowersModal = ({ handleClose, userData, showModal }: IProps): JSX.Eleme
                 Follow
               </Button> */}
             </Box>
-          ))}
+          )) : (
+            <Box>
+              <Typography>
+                No Followers
+              </Typography>
+            </Box>
+          )}
         </Box>
       </Box>
     </Modal >

@@ -90,7 +90,7 @@ function UserAccount(): JSX.Element {
             <div className={commonStyles.container}>
               <Grid container my={2} spacing={2}>
                 <Grid item xs={12} md={4}>
-                  <OtherProfileCard userData={userData} />
+                  <OtherProfileCard userData={userData} key={Date.now().toString()} />
                 </Grid>
                 <Grid item xs={12} md={8} className={commonStyles.postsContainer}>
                   {_renderPosts()}
@@ -107,6 +107,14 @@ function UserAccount(): JSX.Element {
       }
     </NoobPage >
   )
+}
+
+export async function getServerSideProps(): Promise<unknown> {
+  return {
+    props: {
+      key: Date.now()
+    }
+  }
 }
 
 export default withProtected(UserAccount);
