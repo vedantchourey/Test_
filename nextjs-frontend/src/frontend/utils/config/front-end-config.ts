@@ -18,7 +18,8 @@ const frontendConfig: IFrontendConfig = {
       privacyAction: {
         privateProfileUrl: `${baseApiUrl}/api/update-account-privacy/private`,
         publicProfileUrl: `${baseApiUrl}/api/update-account-privacy/public`
-      }
+      },
+      searchByUsername : (username : string):string => `${baseApiUrl}/api/search/${username}` 
     },
     tournament: {
       createUrl: `${baseApiUrl}/api/tournaments`,

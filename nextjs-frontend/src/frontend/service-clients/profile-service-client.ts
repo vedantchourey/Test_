@@ -1,6 +1,6 @@
 import { frontendSupabase } from '../services/supabase-frontend-service';
 import { authenticatedUser } from './auth-service-client';
-import { post, patch } from './fetch-api-wrapper';
+import { get, post, patch } from './fetch-api-wrapper';
 import frontendConfig from '../utils/config/front-end-config';
 import { NoobPostResponse } from './messages/common-messages';
 import { UpdateProfileImageRequest } from '../../backend/services/profile-service/update-profile-image-request';
@@ -74,20 +74,17 @@ export async function getCounterMeta(userid: string): Promise<{
   }
 }
 
-export async function getUserProfileByUsername(username: string): Promise<IOthersProfileResponse> {
-  const result = await frontendSupabase.from('profiles').select(`
-   *,
-   state : states(*),
-   country : countries(*)
-  `)
-    .eq('username', username)
-    .single();
-  if (result.error) throw result.body;
+export async function getUserProfileByUsername(username: string): Promise<IOthersProfileResponse | {error : unknown}> {
+  const searchByUsernameUrl = frontendConfig.noobStormServices.profile.searchByUsername(username);
+  const headers = await getAuthHeader();
+  const result = await get(searchByUsernameUrl, null, headers);
+  const body = await result.json();
+  if (result.status !== 200) throw result.body;
   const followerId = frontendSupabase.auth.user()?.id;
   const isFollowingRes = await frontendSupabase.from('user_followers').select('id', { count: 'exact' })
     .match({
       followerId: followerId,
-      userId: result.body.id
+      userId: body.id
     });
   const isBlockedRes = await frontendSupabase.from('blocked_users').select('id', { count: 'exact' });
 
@@ -95,8 +92,8 @@ export async function getUserProfileByUsername(username: string): Promise<IOther
   const isFollowing = isFollowingRes.count ? true : false
   // eslint-disable-next-line no-unneeded-ternary
   const isBlocked = isBlockedRes.count ? true : false;
-  const counterData = await getCounterMeta(result.body.id);
-  return { ...result.body, ...counterData, isFollowing, isBlocked };
+  const counterData = await getCounterMeta(body.id);
+  return { ...body, ...counterData, isFollowing, isBlocked };
 }
 
 export async function updateProfileImages(request: UpdateProfileImageRequest): Promise<NoobPostResponse<UpdateProfileImageRequest, IProfileResponse>> {

@@ -71,6 +71,15 @@ export class ProfilesRepository extends BaseRepository<IProfile> {
     .orWhere('lastName', 'like', `%${text}%`)
     .limit(5)
   }
+
+  async getProfileByUsername(username: string): Promise<ISearchUser>{
+    return this.entities()
+    .select('id')
+    .select('username')
+    .select('avatarUrl')
+    .where({username: username})
+    .first()
+  }
 }
 
 export const createProfileRepository = (transaction: Knex.Transaction): ProfilesRepository => new ProfilesRepository(transaction);
