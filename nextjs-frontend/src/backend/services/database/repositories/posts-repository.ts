@@ -28,6 +28,13 @@ export class PostsRepository extends BaseRepository<IPost> {
                .first()
   }
 
+  async getPostUsingId(id: string): Promise<IPost | undefined> {
+    return await this.entities()
+               .select('*')
+               .where({id: id})
+               .first()
+  }
+
   async countPostById(id: string): Promise<number> {
     const result = await this.entities()
                              .where({id: id})
@@ -49,6 +56,14 @@ export class PostsRepository extends BaseRepository<IPost> {
                  updatedAt: nowAsJsDate()
                })
                .where({id: id});
+  }
+
+  updatePostImg(id: string, postImgUrl: string): Promise<number> {
+    return this.entities()
+               .update({
+                 postImgUrl: postImgUrl
+               })
+               .where({id: id})
   }
 
 }
