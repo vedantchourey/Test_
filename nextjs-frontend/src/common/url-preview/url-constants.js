@@ -1,7 +1,6 @@
-export default {
-  CONSTANTS: {
-    REGEX_VALID_URL: new RegExp(
-      '^' +
+export const CONSTANTS = {
+  REGEX_VALID_URL: new RegExp(
+    '^' +
             // protocol identifier
             '(?:(?:https?|ftp)://)' +
             // user:pass authentication
@@ -35,17 +34,16 @@ export default {
             // resource path
             '(?:[/?#]\\S*)?' +
             '$',
-      'i'
-    ),
+    'i'
+  ),
 
-    REGEX_CONTENT_TYPE_IMAGE: new RegExp('image/.*', 'i'),
+  REGEX_CONTENT_TYPE_IMAGE: new RegExp('image/.*', 'i'),
 
-    REGEX_CONTENT_TYPE_AUDIO: new RegExp('audio/.*', 'i'),
+  REGEX_CONTENT_TYPE_AUDIO: new RegExp('audio/.*', 'i'),
 
-    REGEX_CONTENT_TYPE_VIDEO: new RegExp('video/.*', 'i'),
+  REGEX_CONTENT_TYPE_VIDEO: new RegExp('video/.*', 'i'),
 
-    REGEX_CONTENT_TYPE_TEXT: new RegExp('text/.*', 'i'),
+  REGEX_CONTENT_TYPE_TEXT: new RegExp('text/.*', 'i'),
 
-    REGEX_CONTENT_TYPE_APPLICATION: new RegExp('application/.*', 'i')
-  }
+  REGEX_CONTENT_TYPE_APPLICATION: new RegExp('application/.*', 'i')
 }; 

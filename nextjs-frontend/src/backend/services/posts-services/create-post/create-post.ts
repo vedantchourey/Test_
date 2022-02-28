@@ -2,22 +2,69 @@ import { ICreatePostRequest, ICreatePostResponse, IPostsResponse } from './i-cre
 import { PerRequestContext } from '../../../utils/api-middle-ware/api-middleware-typings';
 import { PostsRepository } from '../../database/repositories/posts-repository';
 import { validatePost } from './create-post-validator';
-import { isThereAnyError } from '../../../../common/utils/validation/validator';
+import { isThereAnyError, isUrl } from '../../../../common/utils/validation/validator';
 import { Knex } from 'knex';
 import { ServiceResponse } from '../../common/contracts/service-response';
+import { getLinkPreview } from '../../../../common/url-preview/url-preview';
 
-export async function createPost(req: ICreatePostRequest, context: PerRequestContext): Promise<ServiceResponse<ICreatePostRequest, ICreatePostResponse>> {
+interface PreviewResponse {
+   url: string; 
+   title: string; 
+   siteName: string; 
+   description: string; 
+   mediaType: string; 
+   contentType: string; 
+   images: string[]; 
+   videos: { url: string; secureUrl: string; type: string; width: string; height: string; }[]; 
+   favicons: string[]; 
+   error?: string; 
+ }
+
+
+export async function createPost(req: ICreatePostRequest, context: PerRequestContext): Promise<ServiceResponse<Partial<ICreatePostRequest>, ICreatePostResponse>> {
   const errors = await validatePost(req);
   if (isThereAnyError(errors)) return {errors: errors}
   const repository = new PostsRepository(context.transaction as Knex.Transaction);
-  const postId = await repository.createPost({...req, postedBy: context.user?.id as string});
+  if(isUrl(req.postContent)){
+    const data = await getLinkPreview(req.postContent) as PreviewResponse;
+    // if(data == null) return {error : 'Request timeout'}
+    const postId = await repository.createPost({
+      postType:'url',
+      postContent: data.description, 
+      postImgUrl:data.images.length ? data.images[0] : data.favicons[0], 
+      postedBy: context.user?.id as string
+    });
+    const createdPost = await repository.getPostById(postId as string);
+    const {updatedAt, createdAt, username, firstName, lastName, avatarUrl, postType, postContent, postImgUrl, id} = createdPost as IPostsResponse;
+    return {
+      data: {
+        id,
+        postContent,
+        postImgUrl,
+        postType,
+        postOwner: {
+          username: username,
+          firstName: firstName,
+          lastName: lastName,
+          avatarUrl: avatarUrl
+        },
+        updatedAt: updatedAt?.toISOString() as string,
+        createdAt: createdAt?.toISOString() as string,
+        totalComments: 0,
+        totalLikes: 0,
+        isLiked: false
+      } as unknown as ICreatePostResponse
+    }
+  }
+  const postId = await repository.createPost({postContent: req.postContent, postImgUrl:req.postImgUrl, postedBy: context.user?.id as string});
   const createdPost = await repository.getPostById(postId as string);
-  const {updatedAt, createdAt, username, firstName, lastName, avatarUrl, postContent, postImgUrl, id} = createdPost as IPostsResponse;
+  const {updatedAt, createdAt, username, firstName, lastName, avatarUrl, postType, postContent, postImgUrl, id} = createdPost as IPostsResponse;
   return {
     data: {
       id,
       postContent,
       postImgUrl,
+      postType,
       postOwner: {
         username: username,
         firstName: firstName,

@@ -7,6 +7,7 @@ export interface IPostsResponse {
     id: string;
     postContent: string;
     postImgUrl: string;
+    postType: string;
     createdAt: Date;
     updatedAt: Date;
     username : string;
@@ -19,6 +20,7 @@ export interface ICreatePostResponse {
     id: string;
     postContent: string;
     postImgUrl: string;
+    postType: string;
     createdAt: Date;
     updatedAt: Date;
     postOwner: {

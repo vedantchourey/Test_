@@ -1,5 +1,6 @@
 export interface IPost {
   id?: string;
+  postType?: string;
   postContent: string;
   postImgUrl: string;
   postedBy: string;
@@ -10,6 +11,7 @@ export interface IPost {
 export interface IUpdatePostResponse {
   id?: string;
   postContent: string;
+  postType: string;
   postImgUrl: string;
   postedBy: string;
   createdAt?: Date;
@@ -20,6 +22,7 @@ export interface IUpdatePostResponse {
 
 export interface IPostResponse {
   id?: string;
+  postType: string;
   postContent: string;
   postImgUrl: string;
   postedBy: string;

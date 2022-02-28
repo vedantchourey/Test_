@@ -7,7 +7,9 @@ import cheerio from 'cheerio';
 import { fetch } from 'cross-fetch';
 import AbortController from 'abort-controller';
 import urlObj from 'url';
-import CONSTANTS from './url-constants';
+import {CONSTANTS} from './url-constants';
+
+
 
 const metaTag = (doc, type, attr) => {
   const nodes = doc(`meta[${attr}='${type}']`);
@@ -337,7 +339,7 @@ async function getPreviewFromContent(response, options) {
 // /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/igm.test('as')
 
 
-module.exports = {
+export {
   getLinkPreview,
   getPreviewFromContent
 };
