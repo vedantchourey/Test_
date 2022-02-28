@@ -6,17 +6,19 @@ import { ProfilesRepository } from '../../database/repositories/profiles-reposit
 interface ISearchProfile {
   id: string,
   username:string,
-  avatarUrl: string
+  avatarUrl: string,
+  isPrivate: string
 }
 
 export async function searchUserByUsername(context: PerRequestContext): Promise<ServiceResponse<null, ISearchProfile>>{
   const repository = new ProfilesRepository(context.transaction as Knex.Transaction);
   const userName = context.getParamValue('username');
   const profile = await repository.getProfileByUsername(userName as string);
-  const { id, username, avatarUrl } = profile;
+  const { id, username, avatarUrl, isPrivate } = profile;
   return {data: {
     id,
     username,
-    avatarUrl
+    avatarUrl,
+    isPrivate
   }}
 }
