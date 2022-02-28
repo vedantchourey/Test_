@@ -1,29 +1,26 @@
-import { Avatar, Box, Divider, Grid, IconButton, Typography, useTheme } from '@mui/material';
+import { Avatar, Box, Divider, Grid, IconButton, Typography } from '@mui/material';
 import { useState } from 'react';
 import { updateAvatar, updateProfileBackground } from '../../../service-clients/image-service-client';
 import { useAppDispatch, useAppSelector } from '../../../redux-store/redux-store';
-import { avatarImageBlobUrlSelector, isLoggedInSelector, userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
+import { avatarBackgroundImageBlobUrlSelector, avatarImageBlobUrlSelector, isLoggedInSelector, userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
 import styles from './user-profile-card.module.css';
 import { setIsLoading } from '../../../redux-store/screen-animations/screen-animation-slice';
 import { fetchUserProfileThunk, forceFetchAvatarBackgroundImageBlob, forceFetchAvatarImageBlob } from '../../../redux-store/authentication/authentication-slice';
-import { isDeviceTypeSelector } from '../../../redux-store/layout/layout-selectors';
-import { deviceTypes } from '../../../redux-store/layout/device-types';
 import NoobFilePicker from '../../utils/noob-file-picker';
 import { allowedImageExtensions } from '../../../../models/constants';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import FollowersModal from '../../followers-list-modal/followers-list-modal';
-
+import { IProfileResponse } from '../../../service-clients/messages/i-profile';
 
 export default function UserProfileCard(): JSX.Element {
-  const userProfile = useAppSelector(userProfileSelector);
+  const userProfile = useAppSelector<IProfileResponse>(userProfileSelector);
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
   const [showBackgroundPicker, setShowBackgroundPicker] = useState(false);
   const appDispatch = useAppDispatch();
   const isLoggedIn = useAppSelector(isLoggedInSelector);
-  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
   const avatarImageBlobUrl = useAppSelector(avatarImageBlobUrlSelector);
-  const theme = useTheme();
+  const avatarBackgroundImageBlobUrl = useAppSelector(avatarBackgroundImageBlobUrlSelector);
   const [openFollowersModal, setOpenFollowersModal] = useState(false)
 
   async function onUploadAvatar(files: FileList | null): Promise<void> {
@@ -55,25 +52,24 @@ export default function UserProfileCard(): JSX.Element {
   const showUploadAvatarPicker = (): void => setShowAvatarPicker(true);
   const showUploadBackgroundPicker = (): void => setShowBackgroundPicker(true);
 
-  const backgroundColor = isDesktop ? theme.palette.background.paper : theme.palette.background.default;
-  const backgroundImage = isDesktop ? '' : 'none';
   if (!isLoggedIn) return (<></>);
 
-  const handleOpenFollowersModal = () => {
+  const handleOpenFollowersModal = (): void => {
     setOpenFollowersModal(true)
   }
-  const handleCloseFollowersModal = () => {
+  const handleCloseFollowersModal = (): void => {
     setOpenFollowersModal(false)
   }
+
 
   return (
     <Box className={styles.otherProfileCard}>
       <Box className={styles.background} style={{
-        backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 1)), url(${avatarImageBlobUrl} || 'https://photoscissors.com/images/samples/3-before.jpg')`
+        backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 1)), url(${avatarBackgroundImageBlobUrl} )`
       }}>
         <Box sx={{ textAlign: 'right', position: 'relative' }}>
-          <IconButton sx={{ padding: '10px' }}>
-            <MoreVertIcon />
+          <IconButton onClick={showUploadBackgroundPicker} sx={{ padding: '10px' }}>
+            <AddPhotoAlternateOutlinedIcon />
           </IconButton>
         </Box>
         <Box className={styles.profileSection}>
@@ -89,7 +85,7 @@ export default function UserProfileCard(): JSX.Element {
             {userProfile?.firstName} {userProfile?.lastName}
           </Typography>
           <Typography variant='h3' fontSize={18} color='#695B6E' >
-            sandeep
+            @{userProfile?.username}
           </Typography>
         </Box>
       </Box>
@@ -128,7 +124,7 @@ export default function UserProfileCard(): JSX.Element {
               <Typography variant='caption' fontSize={14}>
                 Followers
               </Typography>
-              <Typography onClick={handleOpenFollowersModal} variant='h3' color='#6931F9' fontSize={16}>
+              <Typography sx={{ cursor: 'pointer' }} onClick={handleOpenFollowersModal} variant='h3' color='#6931F9' fontSize={16}>
                 {userProfile?.totalFollowers || 0}
               </Typography>
             </Grid>
@@ -165,7 +161,20 @@ export default function UserProfileCard(): JSX.Element {
         minFiles={0}
         maxFileSizeInBytes={1024 * 1204}
       />
-      <FollowersModal handleClose={handleCloseFollowersModal} userData={userProfile} showModal={openFollowersModal} />
+
+      <NoobFilePicker onFileSelected={onUploadBackground}
+        onError={(error): void => console.error(error)}
+        allowedExtensions={allowedImageExtensions}
+        show={showBackgroundPicker}
+        maxFiles={1}
+        minFiles={0}
+        maxFileSizeInBytes={1024 * 1204}
+      />
+      {
+        userProfile && (
+          <FollowersModal handleClose={handleCloseFollowersModal} userData={userProfile} showModal={openFollowersModal} />
+        )
+      }
     </Box >
   )
 }

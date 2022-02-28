@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Modal, AppBar, IconButton, Divider, Avatar, Button, } from '@mui/material';
+import { Box, Typography, Modal, AppBar, IconButton, Divider, Avatar } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import styles from './followers-list-modal.module.css';
-import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import { fetchUserFollowerList } from '../../service-clients/profile-service-client';
 import { IOthersProfileResponse } from "../../service-clients/messages/i-profile";
 import { IFollowersList } from '../../service-clients/messages/i-followers-list-response';
+import { useRouter } from "next/router";
 
 interface IProps {
   userData: IOthersProfileResponse,
@@ -27,6 +27,7 @@ const style = {
 
 const FollowersModal = ({ handleClose, userData, showModal }: IProps): JSX.Element => {
   const [list, setList] = useState<IFollowersList[]>([]);
+  const router = useRouter()
 
   useEffect(() => {
     (async (): Promise<void> => {
@@ -34,6 +35,7 @@ const FollowersModal = ({ handleClose, userData, showModal }: IProps): JSX.Eleme
       setList(result);
     })()
   }, [])
+
 
   return (
     <Modal
@@ -65,18 +67,18 @@ const FollowersModal = ({ handleClose, userData, showModal }: IProps): JSX.Eleme
                     data.follower.firstName.split('')[0].toUpperCase()
                   }
                 </Avatar>
-                <Box>
+                <Box sx={{ cursor: 'pointer' }} onClick={(): unknown => router.push(`/account/${data.follower.username}`)}>
                   <Typography sx={{ ml: 3 }} variant="h3" color='black' fontSize={16}>
-                    {data.follower.firstName}
+                    {data.follower.firstName} {data.follower.lastName}
                   </Typography>
                   <Typography sx={{ ml: 3, fontWeight: 500 }} variant="caption" color='#B5B5B5'>
                     {data.follower.username}
                   </Typography>
                 </Box>
               </Box>
-              <Button className={styles.followBtn} startIcon={<PersonAddAltIcon />} variant='contained'>
+              {/* <Button className={styles.followBtn} startIcon={<PersonAddAltIcon />} variant='contained'>
                 Follow
-              </Button>
+              </Button> */}
             </Box>
           ))}
         </Box>
