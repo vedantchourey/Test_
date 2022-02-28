@@ -12,7 +12,7 @@ import NoobFilePicker from '../../utils/noob-file-picker';
 import { allowedImageExtensions } from '../../../../models/constants';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CollectionsIcon from '@mui/icons-material/Collections';
-import FollowersModal from './followers-list-modal';
+import FollowersModal from '../../followers-list-modal/followers-list-modal';
 
 
 export default function UserProfileCard(): JSX.Element {
@@ -24,7 +24,7 @@ export default function UserProfileCard(): JSX.Element {
   const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
   const avatarImageBlobUrl = useAppSelector(avatarImageBlobUrlSelector);
   const theme = useTheme();
-  const [opneFollowersModal, setOpenFollowersModal] = useState(false)
+  const [openFollowersModal, setOpenFollowersModal] = useState(false)
 
   async function onUploadAvatar(files: FileList | null): Promise<void> {
     setShowAvatarPicker(false);
@@ -165,9 +165,7 @@ export default function UserProfileCard(): JSX.Element {
         minFiles={0}
         maxFileSizeInBytes={1024 * 1204}
       />
-      {opneFollowersModal && (
-        <FollowersModal handleClose={handleCloseFollowersModal} />
-      )}
+      <FollowersModal handleClose={handleCloseFollowersModal} userData={userProfile} showModal={openFollowersModal} />
     </Box >
   )
 }

@@ -64,7 +64,6 @@
   font-weight: bold;
 }
 
-
 .background {
   padding: 40px 26px;
   border-top-left-radius: 12px;
@@ -133,47 +132,11 @@
   padding: 8px 10px;
   background-color: white !important;
 }
-.appBar{
-  background-color: white !important;
-  box-shadow: none;
-  border-radius: 10px;
-  padding: 16px;
-}
-.appBar button{
-  color: black !important;
-}
-.userListContainer{
-  height: 440px;
-  overflow: auto;
-}
-.userListContainer::-webkit-scrollbar {
-  width: 4px;
-}
- 
-/* Handle */
-.userListContainer::-webkit-scrollbar-thumb {
-  background: #08001c; 
-  border-radius: 10px;
-}
-
-.userList{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.followBtn {
-  text-transform: capitalize;
-  width: 120px;
-  border-radius: 8px;
-
-}
 @media screen and (max-width: 992px) {
   .detailsContainer div {
-      justify-content: space-between;
+    justify-content: space-between;
   }
   .divider {
-      margin-top: 20px;
+    margin-top: 20px;
   }
 }

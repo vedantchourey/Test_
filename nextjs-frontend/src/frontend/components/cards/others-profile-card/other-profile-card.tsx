@@ -9,11 +9,12 @@ import { followUser, unFollowUser } from '../../../service-clients/follow-servic
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { blockUser, unBlockUser } from '../../../service-clients/block-service';
 import frontendConfig from '../../../utils/config/front-end-config';
-import FollowersListModal from './followers-list-modal';
+import FollowersModal from '../../followers-list-modal/followers-list-modal';
 
 const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Element => {
   const [userData, setUserData] = useState(props.userData)
   const [showMenu, setShowMenu] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const {
     firstName,
     lastName,
@@ -165,7 +166,7 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
               <Typography variant='caption' fontSize={14}>
                 Followers
               </Typography>
-              <Typography variant='h3' color='#6931F9' fontSize={16}>
+              <Typography variant='h3' color='#6931F9' fontSize={16} onClick={(): void => setShowModal(true)}>
                 {totalFollowers || 0}
               </Typography>
             </Grid>
@@ -176,7 +177,7 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
               <Typography variant='caption' fontSize={14}>
                 Following
               </Typography>
-              <Typography variant='h3' color='#6931F9' fontSize={16}>
+              <Typography variant='h3' color='#6931F9' fontSize={16} >
                 {totalFollowing || 0}
               </Typography>
             </Grid>
@@ -206,7 +207,7 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
         </Box>
       </Box>
 
-      <FollowersListModal userData={userData} />
+      <FollowersModal userData={userData} showModal={showModal} handleClose={(): void => setShowModal(false)} />
     </Box >
   )
 }

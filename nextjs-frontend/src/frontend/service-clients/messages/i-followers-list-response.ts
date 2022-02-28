@@ -1,6 +1,8 @@
 export interface IFollowersList {
-    username : string;
-    id : string;
-    firstName : string;
-    lastName : string;
+    follower: {
+        username: string;
+        id: string;
+        firstName: string;
+        lastName: string;
+    }
 }
