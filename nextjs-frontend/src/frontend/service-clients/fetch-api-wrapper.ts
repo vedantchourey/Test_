@@ -8,7 +8,7 @@ export const get = <TRequest>(url: string, payload: TRequest, headers: { [key: s
 
 export const patch = <TRequest>(url: string, payload: TRequest, headers: { [key: string]: string } = {}): Promise<Response> => {
   return fetch(url, {
-    method: 'patch',
+    method: 'PATCH',
     mode: 'cors',
     headers: {...defaultHeaders(), ...headers}
   });
