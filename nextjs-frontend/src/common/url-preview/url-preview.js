@@ -1,5 +1,6 @@
+/* eslint-disable one-var-declaration-per-line */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* tslint:disable */ 
+/* tslint:disable */
 /* tslint:disable: inferrable-types */
 
 import cheerio from 'cheerio';
@@ -17,7 +18,7 @@ const metaTag = (doc, type, attr) => {
 const metaTagContent = (doc, type, attr) => doc(`meta[${attr}='${type}']`).attr('content');
 function getTitle(doc) {
   let title = metaTagContent(doc, 'og:title', 'property') ||
-        metaTagContent(doc, 'og:title', 'name');
+    metaTagContent(doc, 'og:title', 'name');
   if (!title) {
     title = doc('title').text();
   }
@@ -27,14 +28,14 @@ function getTitle(doc) {
 
 function getSiteName(doc) {
   const siteName = metaTagContent(doc, 'og:site_name', 'property') ||
-        metaTagContent(doc, 'og:site_name', 'name');
+    metaTagContent(doc, 'og:site_name', 'name');
   return siteName;
 }
 
 function getDescription(doc) {
   const description = metaTagContent(doc, 'description', 'name') ||
-        metaTagContent(doc, 'Description', 'name') ||
-        metaTagContent(doc, 'og:description', 'property');
+    metaTagContent(doc, 'Description', 'name') ||
+    metaTagContent(doc, 'og:description', 'property');
   return description;
 }
 
@@ -45,7 +46,7 @@ function getMediaType(doc) {
     return content === 'image' ? 'photo' : content;
   }
   return (metaTagContent(doc, 'og:type', 'property') ||
-        metaTagContent(doc, 'og:type', 'name'));
+    metaTagContent(doc, 'og:type', 'name'));
 }
 
 function getImages(doc, rootUrl, imagesPropertyType) {
@@ -55,8 +56,8 @@ function getImages(doc, rootUrl, imagesPropertyType) {
   let dic = {};
   const imagePropertyType = imagesPropertyType !== null && imagesPropertyType !== void 0 ? imagesPropertyType : 'og';
   nodes =
-        metaTag(doc, `${imagePropertyType}:image`, 'property') ||
-        metaTag(doc, `${imagePropertyType}:image`, 'name');
+    metaTag(doc, `${imagePropertyType}:image`, 'property') ||
+    metaTag(doc, `${imagePropertyType}:image`, 'name');
   if (nodes) {
     nodes.each((_, node) => {
       if (node.type === 'tag') {
@@ -111,17 +112,17 @@ function getVideos(doc) {
   const nodes = metaTag(doc, 'og:video', 'property') || metaTag(doc, 'og:video', 'name');
   if (nodes === null || nodes === void 0 ? void 0 : nodes.length) {
     nodeTypes =
-            metaTag(doc, 'og:video:type', 'property') ||
-            metaTag(doc, 'og:video:type', 'name');
+      metaTag(doc, 'og:video:type', 'property') ||
+      metaTag(doc, 'og:video:type', 'name');
     nodeSecureUrls =
-            metaTag(doc, 'og:video:secure_url', 'property') ||
-            metaTag(doc, 'og:video:secure_url', 'name');
+      metaTag(doc, 'og:video:secure_url', 'property') ||
+      metaTag(doc, 'og:video:secure_url', 'name');
     width =
-            metaTagContent(doc, 'og:video:width', 'property') ||
-            metaTagContent(doc, 'og:video:width', 'name');
+      metaTagContent(doc, 'og:video:width', 'property') ||
+      metaTagContent(doc, 'og:video:width', 'name');
     height =
-            metaTagContent(doc, 'og:video:height', 'property') ||
-            metaTagContent(doc, 'og:video:height', 'name');
+      metaTagContent(doc, 'og:video:height', 'property') ||
+      metaTagContent(doc, 'og:video:height', 'name');
     for (index = 0; index < nodes.length; index += 1) {
       const node = nodes[index];
       if (node.type === 'tag')
@@ -285,9 +286,9 @@ async function getLinkPreview(text, options) {
     throw { code: 0, message: 'INVALID_URL' };
   }
   const detectedUrl = text
-        .replace(/\n/g, ' ')
-        .split(' ')
-        .find((token) => CONSTANTS.REGEX_VALID_URL.test(token));
+    .replace(/\n/g, ' ')
+    .split(' ')
+    .find((token) => CONSTANTS.REGEX_VALID_URL.test(token));
   if (!detectedUrl) {
     throw { code: 0, message: 'INVALID_URL' };
   }
