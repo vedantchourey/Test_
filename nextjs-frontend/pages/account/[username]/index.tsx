@@ -1,20 +1,20 @@
 import { useState, useEffect } from 'react';
-import NoobPage from "../../src/frontend/components/page/noob-page";
+import NoobPage from "../../../src/frontend/components/page/noob-page";
 import { Box, Grid, Typography } from "@mui/material";
-import commonStyles from "../../src/frontend/styles/common.module.css";
-import PostCard from "../../src/frontend/components/account/posts/post-card";
-import { getPostsByUserId } from "../../src/frontend/service-clients/post-service-client";
+import commonStyles from "../../../src/frontend/styles/common.module.css";
+import PostCard from "../../../src/frontend/components/account/posts/post-card";
+import { getPostsByUserId } from "../../../src/frontend/service-clients/post-service-client";
 import Router from 'next/router';
-import { IPostsResponse } from "../../src/frontend/service-clients/messages/i-posts-response";
-import { IOthersProfileResponse } from "../../src/frontend/service-clients/messages/i-profile";
-import { getUserProfileByUsername } from '../../src/frontend/service-clients/profile-service-client';
-import OtherProfileCard from '../../src/frontend/components/cards/others-profile-card/other-profile-card'
-import { withProtected } from '../../src/frontend/components/auth-wrapper/auth-wrapper';
-import TextBanner from '../../src/frontend/components/ui-components/typography/mainBannerHeading';
-import { useAppSelector } from "../../src/frontend/redux-store/redux-store";
+import { IPostsResponse } from "../../../src/frontend/service-clients/messages/i-posts-response";
+import { IOthersProfileResponse } from "../../../src/frontend/service-clients/messages/i-profile";
+import { getUserProfileByUsername } from '../../../src/frontend/service-clients/profile-service-client';
+import OtherProfileCard from '../../../src/frontend/components/cards/others-profile-card/other-profile-card'
+import { withProtected } from '../../../src/frontend/components/auth-wrapper/auth-wrapper';
+import TextBanner from '../../../src/frontend/components/ui-components/typography/mainBannerHeading';
+import { useAppSelector } from "../../../src/frontend/redux-store/redux-store";
 import {
   userProfileSelector
-} from "../../src/frontend/redux-store/authentication/authentication-selectors";
+} from "../../../src/frontend/redux-store/authentication/authentication-selectors";
 
 
 function UserAccount(): JSX.Element {
