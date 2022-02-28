@@ -11,10 +11,9 @@ import { allowedImageExtensions } from '../../../../models/constants';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import FollowersModal from '../../followers-list-modal/followers-list-modal';
-import { IProfileResponse } from '../../../service-clients/messages/i-profile';
 
 export default function UserProfileCard(): JSX.Element {
-  const userProfile = useAppSelector<IProfileResponse>(userProfileSelector);
+  const userProfile = useAppSelector(userProfileSelector);
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
   const [showBackgroundPicker, setShowBackgroundPicker] = useState(false);
   const appDispatch = useAppDispatch();

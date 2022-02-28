@@ -3,12 +3,12 @@ import { Box, Typography, Modal, AppBar, IconButton, Divider, Avatar } from '@mu
 import CloseIcon from '@mui/icons-material/Close';
 import styles from './followers-list-modal.module.css';
 import { fetchUserFollowerList } from '../../service-clients/profile-service-client';
-import { IOthersProfileResponse } from "../../service-clients/messages/i-profile";
+import { IOthersProfileResponse, IProfileResponse } from "../../service-clients/messages/i-profile";
 import { IFollowersList } from '../../service-clients/messages/i-followers-list-response';
 import { useRouter } from "next/router";
 
 interface IProps {
-  userData: IOthersProfileResponse,
+  userData: IOthersProfileResponse | IProfileResponse,
   handleClose: () => void;
   showModal: boolean;
 }
