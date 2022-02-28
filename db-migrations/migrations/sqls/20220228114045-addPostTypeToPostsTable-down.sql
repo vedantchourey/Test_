@@ -1,0 +1,1 @@
+ALTER TABLE posts drop column "postTypes";

@@ -178,16 +178,28 @@ const PostCard = (props: IProps): JSX.Element => {
           {imgUrl && (
             <>
               {/* Action Button Blur Container */}
-              <Image
-                bucket={config.storage.publicBucket}
-                filePath={imgUrl || ''}
-                isPublicBucket={true}
-                height={600}
-                width={1400}
-                layout="responsive"
-                objectFit="contain"
-                key={values.id}
-              />
+              {
+                values.postType === 'url' ? (
+                  <img
+                    className={styles.postImg}
+                    src={values.postImgUrl}
+                    style={{ width: '100%', height: 300, objectFit: 'contain' }}
+                    key={values.id}
+                  />
+                ) : (
+                  <Image
+                    className={styles.postImg}
+                    bucket={config.storage.publicBucket}
+                    filePath={imgUrl || ''}
+                    isPublicBucket={true}
+                    height={600}
+                    width={1400}
+                    layout="responsive"
+                    objectFit="contain"
+                    key={values.id}
+                  />
+                )
+              }
 
               {/*  <CardMedia
                 component="img"
