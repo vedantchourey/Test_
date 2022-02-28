@@ -18,6 +18,7 @@ export interface IFrontendConfig {
         privateProfileUrl: string;
         publicProfileUrl: string;
       }
+      searchByUsername: (username: string) => string;
     },
     tournament: {
       createUrl: string,

@@ -44,3 +44,14 @@ export interface IOthersProfileResponse {
   isFollowing: boolean;
   isBlocked: boolean;
 }
+
+export interface ISearchByUsernameResponse {
+  id: string;
+  username: string;
+  avatarUrl: string;
+  totalFollowers: number;
+  totalPosts: number;
+  totalFollowing: number;
+  isFollowing: boolean;
+  isBlocked: boolean;
+} 
