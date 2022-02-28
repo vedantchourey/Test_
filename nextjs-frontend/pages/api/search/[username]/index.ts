@@ -25,7 +25,7 @@ const basicQueryParams = createQueryParamsMiddleWare({
 
 
 export default createNextJsRouteHandler({
-  post: {
+  get: {
     handler: async (req: NextApiRequest, res: NextApiResponse, context: PerRequestContext) => {
       const result = await searchUserByUsername(context);
       res.status(result.errors ? 400 : 200).send(result);
