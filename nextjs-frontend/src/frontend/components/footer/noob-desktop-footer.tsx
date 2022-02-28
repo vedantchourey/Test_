@@ -103,13 +103,13 @@ export default function NoobDesktopFooter(): JSX.Element {
             </List>
             <Box mt={5}>
               <IconButton color="default" aria-label="Youtube" component="span">
-                <img src='icons/twitter.svg' alt='twitter icon' />
+                <img src='/icons/twitter.svg' alt='twitter icon' />
               </IconButton>
               <IconButton color="default" aria-label="Twitch" component="span">
-                <img src='icons/facebook.svg' alt='twitter icon' />
+                <img src='/icons/facebook.svg' alt='twitter icon' />
               </IconButton>
               <IconButton color="default" aria-label="Discord" component="span">
-                <img src='icons/youtube.svg' alt='twitter icon' />
+                <img src='/icons/youtube.svg' alt='twitter icon' />
               </IconButton>
             </Box>
           </Grid>

@@ -5,6 +5,7 @@ import frontendConfig from '../utils/config/front-end-config';
 import { NoobPostResponse } from './messages/common-messages';
 import { UpdateProfileImageRequest } from '../../backend/services/profile-service/update-profile-image-request';
 import { IProfileResponse, IOthersProfileResponse } from './messages/i-profile';
+import { IFollowersList } from './messages/i-followers-list-response';
 import { getAuthHeader } from '../utils/headers';
 
 const imagesUrl = frontendConfig.noobStormServices.profile.profileImages;
@@ -21,12 +22,12 @@ interface IRawProfile {
   createdAt: string;
   updatedAt: string;
   avatarUrl?: string;
-  isPrivate : boolean;
+  isPrivate: boolean;
   profileBackgroundImageUrl?: string,
   user_roles: { id: string, code: string }[]
 }
 
-interface IPrivatePublicProfileResponse{
+interface IPrivatePublicProfileResponse {
   message: string,
   errors: string,
   isError: boolean
@@ -107,7 +108,7 @@ export async function updateProfileImages(request: UpdateProfileImageRequest): P
   throw body;
 }
 
-export async function setPrivateAccount(): Promise<Partial<IPrivatePublicProfileResponse>>{
+export async function setPrivateAccount(): Promise<Partial<IPrivatePublicProfileResponse>> {
   const endpoint = frontendConfig.noobStormServices.profile.privacyAction.privateProfileUrl;
   const header = await getAuthHeader();
   const result = await patch(endpoint, null, header);
@@ -125,4 +126,16 @@ export async function setPublicAccount(): Promise<Partial<IPrivatePublicProfileR
   if (result.status === 200) return body.data;
   if (result.status === 400 && body.errors.apiError == null) return { errors: body.errors, isError: true }
   throw body;
+}
+
+export async function fetchUserFollowerList(userid: string): Promise<IFollowersList[]> {
+  const result = await frontendSupabase.from('user_followers')
+    .select(`
+   follower: profiles!fk_user_followers_followerid_profiles_id(id,username,firstName,lastName)
+  `)
+    .match({
+      userId: userid
+    });
+  if (result.error) throw result.body;
+  return result.body;
 }

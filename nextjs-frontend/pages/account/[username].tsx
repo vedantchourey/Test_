@@ -84,16 +84,22 @@ function UserAccount(): JSX.Element {
       }}>
       {
         !isFetchingUserData && userData ? (
-          <div className={commonStyles.container}>
-            <Grid container my={2} spacing={2}>
-              <Grid item xs={12} md={4}>
-                <OtherProfileCard userData={userData} />
+          userData.isPrivate && !userData.isFollowing ? (
+            <>
+              <TextBanner heading='User account is private' />
+            </>
+          ) : (
+            <div className={commonStyles.container}>
+              <Grid container my={2} spacing={2}>
+                <Grid item xs={12} md={4}>
+                  <OtherProfileCard userData={userData} />
+                </Grid>
+                <Grid item xs={12} md={8} className={commonStyles.postsContainer}>
+                  {_renderPosts()}
+                </Grid>
               </Grid>
-              <Grid item xs={12} md={8}>
-                {_renderPosts()}
-              </Grid>
-            </Grid>
-          </div>
+            </div>
+          )
         ) : isFetchingUserData ? (
           <>
           </>

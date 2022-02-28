@@ -1,19 +1,16 @@
-import { Avatar, Box, Card, Divider, Fab, Typography, useTheme } from '@mui/material';
+import { Avatar, Box, Divider, Grid, IconButton, Typography } from '@mui/material';
 import { useState } from 'react';
 import { updateAvatar, updateProfileBackground } from '../../../service-clients/image-service-client';
 import { useAppDispatch, useAppSelector } from '../../../redux-store/redux-store';
-import { avatarImageBlobUrlSelector, isLoggedInSelector, userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
+import { avatarBackgroundImageBlobUrlSelector, avatarImageBlobUrlSelector, isLoggedInSelector, userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
 import styles from './user-profile-card.module.css';
-import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
-import { toLocalDDMMYYYY } from '../../../../common/utils/date-time-utils';
 import { setIsLoading } from '../../../redux-store/screen-animations/screen-animation-slice';
 import { fetchUserProfileThunk, forceFetchAvatarBackgroundImageBlob, forceFetchAvatarImageBlob } from '../../../redux-store/authentication/authentication-slice';
-import { isDeviceTypeSelector } from '../../../redux-store/layout/layout-selectors';
-import { deviceTypes } from '../../../redux-store/layout/device-types';
 import NoobFilePicker from '../../utils/noob-file-picker';
 import { allowedImageExtensions } from '../../../../models/constants';
-import frontendConfig from '../../../utils/config/front-end-config';
-
+import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
+import CollectionsIcon from '@mui/icons-material/Collections';
+import FollowersModal from '../../followers-list-modal/followers-list-modal';
 
 export default function UserProfileCard(): JSX.Element {
   const userProfile = useAppSelector(userProfileSelector);
@@ -21,9 +18,9 @@ export default function UserProfileCard(): JSX.Element {
   const [showBackgroundPicker, setShowBackgroundPicker] = useState(false);
   const appDispatch = useAppDispatch();
   const isLoggedIn = useAppSelector(isLoggedInSelector);
-  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
   const avatarImageBlobUrl = useAppSelector(avatarImageBlobUrlSelector);
-  const theme = useTheme();
+  const avatarBackgroundImageBlobUrl = useAppSelector(avatarBackgroundImageBlobUrlSelector);
+  const [openFollowersModal, setOpenFollowersModal] = useState(false)
 
   async function onUploadAvatar(files: FileList | null): Promise<void> {
     setShowAvatarPicker(false);
@@ -54,98 +51,107 @@ export default function UserProfileCard(): JSX.Element {
   const showUploadAvatarPicker = (): void => setShowAvatarPicker(true);
   const showUploadBackgroundPicker = (): void => setShowBackgroundPicker(true);
 
-  const backgroundColor = isDesktop ? theme.palette.background.paper : theme.palette.background.default;
-  const backgroundImage = isDesktop ? '' : 'none';
   if (!isLoggedIn) return (<></>);
+
+  const handleOpenFollowersModal = (): void => {
+    setOpenFollowersModal(true)
+  }
+  const handleCloseFollowersModal = (): void => {
+    setOpenFollowersModal(false)
+  }
+
+
   return (
-    <Card sx={{
-      maxWidth: 440,
-      borderRadius: 4,
-      display: 'flex',
-      flexDirection: 'column',
-      backgroundColor: backgroundColor,
-      backgroundImage: backgroundImage,
-      margin: 'auto',
-    }}>
-      <div className={styles.imageBackgroundContainer} style={{
-        backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 1)), url(${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${userProfile?.avatarUrl})`
+    <Box className={styles.otherProfileCard}>
+      <Box className={styles.background} style={{
+        backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 1)), url(${avatarBackgroundImageBlobUrl} )`
       }}>
-        <Fab color="primary" aria-label="edit" size="small" className={styles.editBackgroundButton} onClick={showUploadBackgroundPicker}>
-          <AddPhotoAlternateOutlinedIcon />
-        </Fab>
-
-        <Box sx={{ position: 'relative', width: "100%", display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <Box sx={{ position: 'relative' }}>
-            <Avatar sx={{ width: 85, height: 85, marginBottom: 2 }} alt="Remy Sharp"
-              src={avatarImageBlobUrl || "/images/default-user-profile-background.jpg"} />
-            <Fab className={styles.editAvatarButton} color="primary" aria-label="edit" size="small" onClick={showUploadAvatarPicker}>
-              <AddPhotoAlternateOutlinedIcon />
-            </Fab>
-          </Box>
+        <Box sx={{ textAlign: 'right', position: 'relative' }}>
+          <IconButton onClick={showUploadBackgroundPicker} sx={{ padding: '10px' }}>
+            <AddPhotoAlternateOutlinedIcon />
+          </IconButton>
         </Box>
+        <Box className={styles.profileSection}>
+          <Box sx={{ position: 'relative' }}>
+            <Avatar sx={{ width: 85, height: 85, marginBottom: 2 }} alt="Remy Sharp" src={avatarImageBlobUrl || "/images/default-user-profile-background.jpg"}>
+            </Avatar>
+            <IconButton className={styles.selectImg} onClick={showUploadAvatarPicker} >
+              {/* <img src='icons/gallery.svg' alt='icon' /> */}
+              <CollectionsIcon />
+            </IconButton>
+          </Box>
+          <Typography variant='h2' fontSize={24} my={2} sx={{ textTransform: 'capitalize', fontWeight: 600 }}>
+            {userProfile?.firstName} {userProfile?.lastName}
+          </Typography>
+          <Typography variant='h3' fontSize={18} color='#695B6E' >
+            @{userProfile?.username}
+          </Typography>
+        </Box>
+      </Box>
 
-        {/* <div style={{ overflow: 'hidden', flexGrow: 1, zIndex: 1 }}>
-          <ReduxCachedBlobImage blobSelector={avatarBackgroundImageBlobUrlSelector}
-            defaultImage="/images/default-user-profile-background.jpg"
-            layout="fill"
-            alt="profile background"
-          />
-        </div> */}
-      </div>
-      <div className={styles.userDetailsContainer}>
-        <div className={styles.userDetailsRow}>
-          <div className={styles.userDetailKey}>
-            <Typography className={styles.heading}>Username</Typography>
-          </div>
-          <div className={styles.userDetailValue}>
-            <Typography className={styles.value}>{userProfile?.username}</Typography>
-          </div>
-        </div>
-        <Divider className={styles.userDetailsRow} />
-        <div className={styles.userDetailsRow}>
-          <div className={styles.userDetailKey}>
-            <Typography className={styles.heading}>Elo Rating</Typography>
-          </div>
-          <div className={styles.userDetailValue}>
-            <Typography className={styles.value}>{userProfile?.username}</Typography>
-          </div>
-        </div>
-        <Divider className={styles.userDetailsRow} />
-        <div className={styles.userDetailsRow}>
-          <div className={styles.userDetailKey}>
-            <Typography className={styles.heading}>Team</Typography>
-          </div>
-          <div className={styles.userDetailValue}>
-            <Typography className={styles.value}>{userProfile?.username}</Typography>
-          </div>
-        </div>
-        <Divider className={styles.userDetailsRow} />
-        <div className={styles.userDetailsRow}>
-          <div className={styles.userDetailKey}>
-            <Typography className={styles.heading}>Joined</Typography>
-          </div>
-          <div className={styles.userDetailValue}>
-            <Typography className={styles.value}>{toLocalDDMMYYYY(userProfile?.createdAt)}</Typography>
-          </div>
-        </div>
-        <Divider className={styles.userDetailsRow} />
-        <div className={styles.userDetailsRow}>
-          <div className={styles.userDetailKey}>
-            <Typography className={styles.heading}>Tournament Wins</Typography>
-          </div>
-          <div className={styles.userDetailValue}>
-            <Typography className={styles.value}>{userProfile?.username}</Typography>
-          </div>
-        </div>
-      </div>
-      <NoobFilePicker onFileSelected={onUploadBackground}
-        onError={(error): void => console.error(error)}
-        allowedExtensions={allowedImageExtensions}
-        show={showBackgroundPicker}
-        maxFiles={1}
-        minFiles={0}
-        maxFileSizeInBytes={1024 * 1204}
-      />
+      <Divider sx={{ mb: 2 }} light className={styles.divider} />
+      <Box className={styles.bottom}>
+        <Box className={styles.detailsContainer} sx={{ width: "100%" }}>
+          <Grid container p={2}>
+            <Grid item md={5} sx={{ textAlign: 'left' }}>
+              <Typography variant='caption' fontSize={12}>
+                Team
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                <Avatar sx={{ mr: 1, width: 35, height: 35 }} alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
+                <Typography variant='h3' fontSize={14}>
+                  Legend Club
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item md={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <div className={styles.verticalDivider} />
+            </Grid>
+            <Grid item md={5} >
+              <Typography variant='caption' fontSize={12}>
+                Member since
+              </Typography>
+              <Typography sx={{ textAlign: 'left', mt: 1 }} variant='h3' fontSize={14}>
+                Nov 1, 2021
+              </Typography>
+            </Grid>
+          </Grid>
+
+          <Divider sx={{ mb: 3 }} light className={styles.divider} />
+          <Grid container>
+            <Grid item md={3} sx={{ textAlign: 'center' }}>
+              <Typography variant='caption' fontSize={14}>
+                Followers
+              </Typography>
+              <Typography sx={{ cursor: 'pointer' }} onClick={handleOpenFollowersModal} variant='h3' color='#6931F9' fontSize={16}>
+                {userProfile?.totalFollowers || 0}
+              </Typography>
+            </Grid>
+            <Grid item md={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+              <div className={styles.verticalDivider} />
+            </Grid>
+            <Grid item md={4} sx={{ textAlign: 'center' }}>
+              <Typography variant='caption' fontSize={14}>
+                Following
+              </Typography>
+              <Typography variant='h3' color='#6931F9' fontSize={16}>
+                {userProfile?.totalFollowing || 0}
+              </Typography>
+            </Grid>
+            <Grid item md={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+              <div className={styles.verticalDivider} />
+            </Grid>
+            <Grid item md={3} sx={{ textAlign: 'center' }}>
+              <Typography variant='caption' fontSize={14}>
+                Posts
+              </Typography>
+              <Typography variant='h3' color='#6931F9' fontSize={16}>
+                {userProfile?.totalPosts || 0}
+              </Typography>
+            </Grid>
+          </Grid>
+        </Box>
+      </Box>
       <NoobFilePicker onFileSelected={onUploadAvatar}
         onError={(error): void => console.error(error)}
         allowedExtensions={allowedImageExtensions}
@@ -154,6 +160,21 @@ export default function UserProfileCard(): JSX.Element {
         minFiles={0}
         maxFileSizeInBytes={1024 * 1204}
       />
-    </Card>
+
+      <NoobFilePicker onFileSelected={onUploadBackground}
+        onError={(error): void => console.error(error)}
+        allowedExtensions={allowedImageExtensions}
+        show={showBackgroundPicker}
+        maxFiles={1}
+        minFiles={0}
+        maxFileSizeInBytes={1024 * 1204}
+      />
+      {
+        userProfile && (
+          <FollowersModal handleClose={handleCloseFollowersModal} userData={userProfile} showModal={openFollowersModal} />
+        )
+      }
+    </Box >
   )
 }
+
