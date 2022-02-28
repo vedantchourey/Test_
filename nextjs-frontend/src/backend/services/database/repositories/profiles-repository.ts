@@ -77,6 +77,7 @@ export class ProfilesRepository extends BaseRepository<IProfile> {
     .select('id')
     .select('username')
     .select('avatarUrl')
+    .select('isPrivate')
     .where({username: username})
     .first()
   }
