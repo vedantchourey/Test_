@@ -13,14 +13,6 @@ CREATE TABLE post_likes
         ON DELETE CASCADE
 );
 
-alter table post_likes
-    enable row level security;
-
-create
-    policy authenticated_read_post_likes_table on post_likes
-    for
-    select
-    using (auth.role() = 'authenticated');
 
 create
     policy authenticated_insert_post_likes_table on post_likes
