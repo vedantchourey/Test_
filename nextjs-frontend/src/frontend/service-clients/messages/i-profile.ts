@@ -27,4 +27,5 @@ export interface IOthersProfileResponse {
   totalFollowing: number;
   isFollowing: boolean;
   isBlocked: boolean;
+  isPrivate : boolean;
 }

@@ -16,10 +16,6 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
   const [showMenu, setShowMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const {
-    firstName,
-    lastName,
-    state,
-    country,
     totalFollowers,
     totalPosts,
     totalFollowing,
@@ -115,21 +111,12 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
         <Box className={styles.profileSection}>
           <Box sx={{ position: 'relative' }}>
             <Avatar sx={{ width: 85, height: 85, marginBottom: 2 }} alt="Remy Sharp" src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${userData.avatarUrl}`}>
-              {
-                userData.firstName.split('')[0].toUpperCase()
-              }
             </Avatar>
             <IconButton className={styles.selectImg} >
               {/* <img src='icons/gallery.svg' alt='icon' /> */}
               <CollectionsIcon />
             </IconButton>
           </Box>
-          <Typography variant='h2' fontSize={24} my={2} sx={{ textTransform: 'capitalize', fontWeight: 600 }}>
-            {`${firstName} ${lastName}`}
-          </Typography>
-          <Typography variant='h3' fontSize={18} color='#695B6E' >
-            {`${state?.displayName}, ${country?.displayName} `}
-          </Typography>
         </Box>
       </Box>
 

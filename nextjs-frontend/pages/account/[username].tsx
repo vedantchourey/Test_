@@ -28,10 +28,8 @@ function UserAccount(): JSX.Element {
   useEffect(() => {
     (async (): Promise<void> => {
       try {
-        const user = await getUserProfileByUsername(username);
-        if (user) {
-          setUserData(user);
-        }
+        const result = await getUserProfileByUsername(username);
+        if (result) setUserData(result);
       }
       catch (err) {
         setIsFetchingUserData(false);

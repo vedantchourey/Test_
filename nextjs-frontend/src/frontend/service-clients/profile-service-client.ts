@@ -74,17 +74,18 @@ export async function getCounterMeta(userid: string): Promise<{
   }
 }
 
-export async function getUserProfileByUsername(username: string): Promise<IOthersProfileResponse | {error : unknown}> {
+export async function getUserProfileByUsername(username: string): Promise<IOthersProfileResponse> {
   const searchByUsernameUrl = frontendConfig.noobStormServices.profile.searchByUsername(username);
   const headers = await getAuthHeader();
   const result = await get(searchByUsernameUrl, null, headers);
   const body = await result.json();
   if (result.status !== 200) throw result.body;
+  const data:IOthersProfileResponse = body.data;
   const followerId = frontendSupabase.auth.user()?.id;
   const isFollowingRes = await frontendSupabase.from('user_followers').select('id', { count: 'exact' })
     .match({
       followerId: followerId,
-      userId: body.id
+      userId: data.id
     });
   const isBlockedRes = await frontendSupabase.from('blocked_users').select('id', { count: 'exact' });
 
@@ -92,8 +93,8 @@ export async function getUserProfileByUsername(username: string): Promise<IOther
   const isFollowing = isFollowingRes.count ? true : false
   // eslint-disable-next-line no-unneeded-ternary
   const isBlocked = isBlockedRes.count ? true : false;
-  const counterData = await getCounterMeta(body.id);
-  return { ...body, ...counterData, isFollowing, isBlocked };
+  const counterData = await getCounterMeta(data.id);
+  return { ...data, ...counterData, isFollowing, isBlocked };
 }
 
 export async function updateProfileImages(request: UpdateProfileImageRequest): Promise<NoobPostResponse<UpdateProfileImageRequest, IProfileResponse>> {
