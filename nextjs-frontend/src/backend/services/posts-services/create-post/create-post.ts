@@ -30,7 +30,7 @@ export async function createPost(req: ICreatePostRequest, context: PerRequestCon
     // if(data == null) return {error : 'Request timeout'}
     const postId = await repository.createPost({
       postType:'url',
-      postContent: data.description, 
+      postContent: data.title ? data.title : data.description ? data.description : req.postContent, 
       postImgUrl:data.images.length ? data.images[0] : data.favicons[0], 
       postedBy: context.user?.id as string
     });
