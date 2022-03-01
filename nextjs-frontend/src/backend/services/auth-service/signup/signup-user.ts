@@ -9,19 +9,30 @@ import { Knex } from 'knex';
 import { PerRequestContext } from '../../../utils/api-middle-ware/api-middleware-typings';
 import { backendSupabase } from '../../common/supabase-backend-client';
 import { IProfile } from '../../database/models/i-profile';
+import { PrivateProfilesRepository } from '../../database/repositories/private-profiles-repository';
+import { IPrivateProfile } from '../../database/models/i-private-profile';
 
 function mapToProfile(user: User, request: SignupRequest): IProfile {
+  const nowAsString = nowAsISOString();
+  return {
+    id: user.id,
+    isPrivate: request.isPrivate,
+    username: request.username,
+    createdAt: nowAsString,
+    updatedAt: nowAsString
+  };
+}
+
+function mapToPrivateProfile(user: User, request: SignupRequest): IPrivateProfile {
   const nowAsString = nowAsISOString();
   return {
     id: user.id,
     countryId: request.countryId,
     stateId: request.stateId,
     agreeToTnc: request.agreeToTnc,
-    isPrivate: request.isPrivate,
     dateOfBirth: request.dateOfBirth,
     firstName: request.firstName,
     lastName: request.lastName,
-    username: request.username,
     createdAt: nowAsString,
     updatedAt: nowAsString
   };
@@ -56,11 +67,20 @@ function mapRequiredParams(request: SignupRequest): { metaData: Metadata; signup
 export default async function signupUser(request: SignupRequest, context: PerRequestContext): Promise<ServiceResponse<SignupRequest, SignupResponse>> {
   const errors = await validateSignUp(request, context);
   if (isThereAnyError(errors)) return {errors: errors};
+
   const {signupParams, metaData} = mapRequiredParams(request);
   const result = await backendSupabase.auth.signUp(signupParams, metaData);
   if (result.error) return {errors: {apiError: result.error}};
-  const profilesRepository = createProfileRepository(context.transaction as Knex.Transaction);
-  await profilesRepository.createProfile(mapToProfile(result.user as User, request));
+
+  const transaction = context.transaction as Knex.Transaction;
+  const profilesRepository = createProfileRepository(transaction);
+  const privateProfilesRepository = new PrivateProfilesRepository(transaction);
+  const user = result.user as User;
+
+  await Promise.all([
+    profilesRepository.createProfile(mapToProfile(user, request)),
+    privateProfilesRepository.createProfile(mapToPrivateProfile(user, request))
+  ])
   return {data: {userId: result.user?.id}};
 }
 

@@ -3,7 +3,7 @@ import { Autocomplete, Button, Divider, FormLabel, Grid, TextField, Typography }
 import { Box } from "@mui/system";
 import { DateTime } from "luxon";
 import React, { useState } from "react";
-import { parseDateTime, toISOString } from "../../../../common/utils/date-time-utils";
+import { parseDateTime } from "../../../../common/utils/date-time-utils";
 import { getErrorForProp, propsHasError } from "../../../../common/utils/validation/validator";
 import { userProfileSelector } from "../../../redux-store/authentication/authentication-selectors";
 import { useAppSelector } from "../../../redux-store/redux-store";
@@ -444,11 +444,11 @@ const PersonalSettings = (): JSX.Element => {
   const userData = useAppSelector(userProfileSelector);
   const [errors] = useState({});
   const [request, setRequest] = useState({
-    firstName: userData?.firstName,
-    lastName: userData?.lastName,
+    firstName: '',
+    lastName: '',
     email: '',
     username: userData?.username,
-    dateOfBirth: userData?.dateOfBirth,
+    dateOfBirth: '',
     country: '',
     city: ''
   });
@@ -511,7 +511,10 @@ const PersonalSettings = (): JSX.Element => {
             className={styles.inputRowItem}
             mask={'__/__/____'}
             value={dateOfBirth}
-            onChange={(value: DateTime | null): void => setRequest({ ...request, dateOfBirth: toISOString(value) })}
+            onChange={(value: DateTime | null): void => {
+              // TODO fetch data from private profile
+              setRequest({...request});
+            }}
             inputFormat="dd/MM/yyyy"
             renderInput={(params): JSX.Element =>
               <TextField {...params}

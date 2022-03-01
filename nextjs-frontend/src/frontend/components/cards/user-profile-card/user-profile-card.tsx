@@ -80,9 +80,6 @@ export default function UserProfileCard(): JSX.Element {
               <CollectionsIcon />
             </IconButton>
           </Box>
-          <Typography variant='h2' fontSize={24} my={2} sx={{ textTransform: 'capitalize', fontWeight: 600 }}>
-            {userProfile?.firstName} {userProfile?.lastName}
-          </Typography>
           <Typography variant='h3' fontSize={18} color='#695B6E' >
             @{userProfile?.username}
           </Typography>

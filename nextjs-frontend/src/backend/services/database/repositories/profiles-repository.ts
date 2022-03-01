@@ -18,12 +18,6 @@ export class ProfilesRepository extends BaseRepository<IProfile> {
     return this.entities()
                .select('id')
                .select('username')
-               .select('firstName')
-               .select('lastName')
-               .select('dateOfBirth')
-               .select('countryId')
-               .select('stateId')
-               .select('agreeToTnc')
                .select('createdAt')
                .select('updatedAt')
                .select('avatarUrl')
@@ -54,7 +48,7 @@ export class ProfilesRepository extends BaseRepository<IProfile> {
   async toggleAccountPrivacy(userId: string, isPrivate: boolean): Promise<boolean>{
     return this.entities()
       .where({id: userId})
-      .update({ 
+      .update({
         isPrivate: isPrivate
       })
       .returning('isPrivate');
@@ -67,8 +61,6 @@ export class ProfilesRepository extends BaseRepository<IProfile> {
     .select('username')
     .select('avatarUrl')
     .where('username', 'like', `%${text}%`)
-    .orWhere('firstName', 'like', `%${text}%`)
-    .orWhere('lastName', 'like', `%${text}%`)
     .limit(5)
   }
 
