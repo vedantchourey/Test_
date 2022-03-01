@@ -25,7 +25,7 @@ export async function updatePost(request: IUpdatePostRequest, context: PerReques
   const commentCount = await postCommentRepository.countCommentByPostId(postId);
   const likeCount = await postLikeRepository.countLikesByPostId(postId);
   const isLiked = await postLikeRepository.isLiked(postId, context.user?.id as string)
-  const {updatedAt, createdAt, username, firstName, lastName, avatarUrl, postContent, postImgUrl, id} = updatedPostFromDb as IPostResponse;
+  const {updatedAt, createdAt, username, avatarUrl, postContent, postImgUrl, id} = updatedPostFromDb as IPostResponse;
   return {
     data: {
       id,
@@ -33,8 +33,6 @@ export async function updatePost(request: IUpdatePostRequest, context: PerReques
       postImgUrl,
       postOwner: {
         username: username,
-        firstName: firstName,
-        lastName: lastName,
         avatarUrl: avatarUrl
       },
       updatedAt: updatedAt?.toISOString() as string,
