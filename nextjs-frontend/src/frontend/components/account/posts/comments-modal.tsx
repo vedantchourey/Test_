@@ -86,37 +86,44 @@ const CommentsModal = (props: IProps): JSX.Element => {
     else if (!isFetchingComments && comments.length) {
       return (
         comments.map((data, i) => {
-          return (
-            <Box key={Date.now() + i} className={styles.commentCard}>
-              <Box sx={{ display: 'inline-flex' }}>
-                <Box mr={2}>
-                  <Image bucket={config.storage.publicBucket} filePath={data.commentOwner.avatarUrl || ''} isPublicBucket={true} width={50} height={50} className={styles.commentAvatar} />
-                </Box>
-                <Box>
-                  <Box sx={{ display: "inline-flex" }}>
-                    <Typography variant={'body1'} color="white">
-                      {
-                        `${data.commentOwner.firstName} ${data.commentOwner.lastName}`
-                      }
-                    </Typography>
-                    <Typography variant="subtitle2" color='#575265' ml={1}>
-                      {
-                        new Date(data.createdAt).toDateString()
-                      }
-                    </Typography>
+          const Comment = (): JSX.Element => {
+            const [isDeleted] = useState<boolean>(false);
+
+            if (isDeleted) return <></>;
+            return (
+              <Box key={Date.now() + i} className={styles.commentCard}>
+                <Box sx={{ display: 'inline-flex' }}>
+                  <Box mr={2}>
+                    <Image bucket={config.storage.publicBucket} filePath={data.commentOwner.avatarUrl || ''} isPublicBucket={true} width={50} height={50} className={styles.commentAvatar} />
                   </Box>
-                  <Box mt={1}>
-                    <Typography
-                      variant="body2"
-                      color='white'
-                      sx={{ textTransform: 'capitalize' }}>
-                      {data.comment}
-                    </Typography>
+                  <Box>
+                    <Box sx={{ display: "inline-flex" }}>
+                      <Typography variant={'body1'} color="white">
+                        {
+                          `${data.commentOwner.firstName} ${data.commentOwner.lastName}`
+                        }
+                      </Typography>
+                      <Typography variant="subtitle2" color='#575265' ml={1}>
+                        {
+                          new Date(data.createdAt).toDateString()
+                        }
+                      </Typography>
+                    </Box>
+                    <Box mt={1}>
+                      <Typography
+                        variant="body2"
+                        color='white'
+                        sx={{ textTransform: 'capitalize' }}>
+                        {data.comment}
+                      </Typography>
+                    </Box>
                   </Box>
                 </Box>
               </Box>
-            </Box>
-          )
+            )
+          }
+          return <Comment key={data.id} />;
+
         })
       )
     }

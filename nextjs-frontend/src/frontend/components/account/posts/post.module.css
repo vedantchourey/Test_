@@ -12,7 +12,6 @@
     padding: 0;
     box-shadow: 24;
     border-radius: 16px !important;
-    background-color: #dedede;
     z-index: 4;
 }
 .postCardOptionsBtn img {
@@ -23,6 +22,11 @@
     text-transform: capitalize !important;
     padding: 8px 10px;
     background-color: white !important;
+    border-bottom: solid 1px #e5e4e5;
+}
+
+.postCardOptionsBtn {
+    border-radius: 0;
 }
 
 .flexRow {
