@@ -96,7 +96,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
                   <Box sx={{ display: "inline-flex" }}>
                     <Typography variant={'body1'} color="white">
                       {
-                        `${data.commentOwner.firstName} ${data.commentOwner.lastName}`
+                        `${data.commentOwner.username}`
                       }
                     </Typography>
                     <Typography variant="subtitle2" color='#575265' ml={1}>

@@ -117,6 +117,9 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
               <CollectionsIcon />
             </IconButton>
           </Box>
+          <Typography variant='h3' fontSize={18} color='#695B6E' >
+            @{userData.username}
+          </Typography>
         </Box>
       </Box>
 
