@@ -13,6 +13,6 @@ module.exports = {
     return config
   },
   images: {
-    domains: ['swbpdojioeafkmzrxnxz.supabase.co'],
+    domains: [process.env.NEXT_PUBLIC_NOOB_SUPABASE_URL?.replace('https://','') || 'localhost:54321'],
   }
 }
