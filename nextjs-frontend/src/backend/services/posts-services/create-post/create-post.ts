@@ -27,7 +27,6 @@ export async function createPost(req: ICreatePostRequest, context: PerRequestCon
   const repository = new PostsRepository(context.transaction as Knex.Transaction);
   if(isUrl(req.postContent)){
     const data = await getLinkPreview(req.postContent) as PreviewResponse;
-    // if(data == null) return {error : 'Request timeout'}
     const postId = await repository.createPost({
       postType:'url',
       postContent: data.title ? data.title : data.description ? data.description : req.postContent, 
@@ -35,7 +34,7 @@ export async function createPost(req: ICreatePostRequest, context: PerRequestCon
       postedBy: context.user?.id as string
     });
     const createdPost = await repository.getPostById(postId as string);
-    const {updatedAt, createdAt, username, firstName, lastName, avatarUrl, postType, postContent, postImgUrl, id} = createdPost as IPostsResponse;
+    const {updatedAt, createdAt, username, avatarUrl, postType, postContent, postImgUrl, id} = createdPost as IPostsResponse;
     return {
       data: {
         id,
@@ -44,8 +43,6 @@ export async function createPost(req: ICreatePostRequest, context: PerRequestCon
         postType,
         postOwner: {
           username: username,
-          firstName: firstName,
-          lastName: lastName,
           avatarUrl: avatarUrl
         },
         updatedAt: updatedAt?.toISOString() as string,
@@ -58,7 +55,7 @@ export async function createPost(req: ICreatePostRequest, context: PerRequestCon
   }
   const postId = await repository.createPost({postContent: req.postContent, postImgUrl:req.postImgUrl, postedBy: context.user?.id as string});
   const createdPost = await repository.getPostById(postId as string);
-  const {updatedAt, createdAt, username, firstName, lastName, avatarUrl, postType, postContent, postImgUrl, id} = createdPost as IPostsResponse;
+  const {updatedAt, createdAt, username, avatarUrl, postType, postContent, postImgUrl, id} = createdPost as IPostsResponse;
   return {
     data: {
       id,
@@ -67,8 +64,6 @@ export async function createPost(req: ICreatePostRequest, context: PerRequestCon
       postType,
       postOwner: {
         username: username,
-        firstName: firstName,
-        lastName: lastName,
         avatarUrl: avatarUrl
       },
       updatedAt: updatedAt?.toISOString() as string,

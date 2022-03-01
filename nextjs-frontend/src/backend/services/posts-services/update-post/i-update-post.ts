@@ -10,8 +10,6 @@ export interface IPostResponse{
     createdAt: Date;
     updatedAt: Date;
     username : string;
-    firstName : string;
-    lastName : string;
     avatarUrl : string;
 }
 
@@ -23,8 +21,6 @@ export interface IUpdatePostResponse {
     updatedAt: Date;
     postOwner: {
         username : string;
-        firstName : string;
-        lastName : string;
         avatarUrl : string;
     }
     totalLikes : number;
