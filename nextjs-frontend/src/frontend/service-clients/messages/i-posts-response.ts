@@ -12,7 +12,9 @@ export interface IPostsResponse {
   totalLikes: number;
   totalComments: number;
   isLiked: boolean;
-  postType: 'default' | 'url'
+  postType: 'default' | 'url',
+  postUrl? :string;
+  urlPostTitle? : string;
 }
 export interface ILikePostResponse {
   id: string;

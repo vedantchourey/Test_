@@ -27,7 +27,7 @@ const basicQueryParams = createQueryParamsMiddleWare({
     const profileRepository = new ProfilesRepository(context.transaction as Knex.Transaction);
     const userId = params['userId'] as string;
     const user = await profileRepository.countUserById(userId);
-    const result = await repository.countFollowerById(userId, context.user?.id as string);
+    const result = await repository.countFollowerById(context.user?.id as string, userId);
     if(result) return `User is already followed`;
     if (!user) return `Could not find user with userId: ${userId}`;
   }
@@ -40,7 +40,7 @@ const deleteQueryParams = createQueryParamsMiddleWare({
     const profileRepository = new ProfilesRepository(context.transaction as Knex.Transaction);
     const userId = params['userId'] as string;
     const user = await profileRepository.countUserById(userId);
-    const result = await repository.countFollowerById(userId, context.user?.id as string);
+    const result = await repository.countFollowerById(context.user?.id as string, userId);
     if(!result) return `User is already unfollowed`;
     if (!user) return `Could not find user with userId: ${userId}`;
   }
