@@ -24,6 +24,9 @@ interface IProps {
   data: IPostsResponse;
 }
 
+// eslint-disable-next-line no-useless-escape
+const URL_REGEX = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
+
 const PostCard = (props: IProps): JSX.Element => {
   const user = useAppSelector(userProfileSelector);
   const [values, setValues] = useState<IPostsResponse>(props.data);
@@ -193,7 +196,9 @@ const PostCard = (props: IProps): JSX.Element => {
 
         </Box>
         <Typography sx={{ marginBottom: !values.postImgUrl ? 10 : 0 }} my={2} align='left' fontSize={14} fontWeight={300} paragraph>
-          {values.postContent}
+          {
+            values.postContent.split(" ").map((part) => URL_REGEX.test(part) ? <a href={part} target="_blank" rel="noreferrer">{part} </a> : part + " ")
+          }
         </Typography>
 
         <Box sx={{ position: 'relative' }}>
@@ -202,12 +207,21 @@ const PostCard = (props: IProps): JSX.Element => {
               {/* Action Button Blur Container */}
               {
                 values.postType === 'url' ? (
-                  <img
-                    className={styles.postImg}
-                    src={values.postImgUrl}
-                    style={{ width: '100%', height: 300, objectFit: 'contain' }}
-                    key={values.id}
-                  />
+                  <div style={{ overflow: 'hidden' }}>
+                    <a href="https://www.google.com" target="_blank" rel="noreferrer">
+                      <img
+                        className={styles.postImg}
+                        src={values.postImgUrl}
+                        style={{ width: '100%', height: 300, objectFit: 'cover' }}
+                        key={values.id}
+                      />
+                      <div style={{ position: 'absolute', width: '100%', background: 'rgba(0,0,0,0.4)', bottom: 80, padding: '10px 0' }}>
+                        <Typography style={{ color: 'white' }}>
+                          Ur post title
+                        </Typography>
+                      </div>
+                    </a>
+                  </div>
                 ) : (
                   <Image
                     className={styles.postImg}
