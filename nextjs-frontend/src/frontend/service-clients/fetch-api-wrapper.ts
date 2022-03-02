@@ -10,7 +10,8 @@ export const patch = <TRequest>(url: string, payload: TRequest, headers: { [key:
   return fetch(url, {
     method: 'PATCH',
     mode: 'cors',
-    headers: {...defaultHeaders(), ...headers}
+    headers: {...defaultHeaders(), ...headers},
+    body : JSON.stringify(payload)
   });
 };
 

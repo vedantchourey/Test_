@@ -7,11 +7,13 @@ import { IPostCommentResponse } from '../../../service-clients/messages/i-posts-
 import {
   useAppSelector,
 } from "../../../redux-store/redux-store";
-import { avatarImageBlobUrlSelector } from '../../../redux-store/authentication/authentication-selectors';
-import { createComment, getPostComments, deleteComment } from "../../../service-clients/post-service-client";
+import { avatarImageBlobUrlSelector, userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
+import { createComment, getPostComments, deleteComment, updateComment } from "../../../service-clients/post-service-client";
 import Image from '../../../components/utils/supabase-image';
 import config from '../../../utils/config/front-end-config';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
 
 const style = {
   position: 'absolute',
@@ -34,6 +36,7 @@ interface IProps {
 
 const CommentsModal = (props: IProps): JSX.Element => {
   const userAvatar = useAppSelector(avatarImageBlobUrlSelector);
+  const user = useAppSelector(userProfileSelector);
   const { isModalOpen, handleClose } = props;
   const [comment, setComment] = useState<string>('');
   const [isFetchingComments, setIsFetchingComments] = useState<boolean>(true)
@@ -88,42 +91,100 @@ const CommentsModal = (props: IProps): JSX.Element => {
         comments.map((data, i) => {
           const Comment = (): JSX.Element => {
             const [isDeleted, setIsDeleted] = useState<boolean>(false);
+            const [commentValues, setCommentValues]
+              = useState(data);
+            const [isEditing, setIsEditing] = useState<boolean>(false);
 
             const removeComment = (): void => {
               setIsDeleted(true);
               deleteComment(props.postId, data.id)
             }
 
+            const editComment = (): void => {
+              updateComment(props.postId, data.id, commentValues.comment);
+              setIsEditing(false);
+            }
+
+
             if (isDeleted) return <></>;
             return (
               <Box key={Date.now() + i} className={styles.commentCard}>
-                <Box sx={{ display: 'inline-flex' }}>
+                <Box sx={{ display: 'inline-flex', width: '100%' }}>
                   <Box mr={2}>
                     <Image bucket={config.storage.publicBucket} filePath={data.commentOwner.avatarUrl || ''} isPublicBucket={true} width={50} height={50} className={styles.commentAvatar} />
                   </Box>
-                  <Box>
-                    <Box sx={{ display: "inline-flex" }}>
-                      <Typography variant={'body1'} color="white">
-                        {
-                          `${data.commentOwner.username}`
-                        }
-                      </Typography>
-                      <Typography variant="subtitle2" color='#575265' ml={1}>
-                        {
-                          new Date(data.createdAt).toDateString()
-                        }
-                      </Typography>
-                      <IconButton onClick={removeComment}>
-                        <DeleteIcon />
-                      </IconButton>
+                  <Box sx={{ width: '100%' }}>
+                    <Box sx={{ display: "inline-flex", width: '100%', justifyContent: 'space-between' }}>
+                      <Box sx={{ display: 'inline-flex' }}>
+                        <Typography variant={'body1'} color="white">
+                          {
+                            `${data.commentOwner.username}`
+                          }
+                        </Typography>
+                        <Typography variant="subtitle2" color='#575265' ml={1}>
+                          {
+                            new Date(data.createdAt).toDateString()
+                          }
+                        </Typography>
+                      </Box>
+
+                      {
+                        user?.id === data.commentOwner.id && (
+                          <Box>
+                            <IconButton onClick={removeComment} size="small">
+                              <DeleteIcon fontSize={'small'} />
+                            </IconButton>
+                            {
+                              isEditing ? (
+                                <IconButton size="small" onClick={editComment}>
+                                  <SaveIcon fontSize={'small'} />
+                                </IconButton>
+                              ) : (
+                                <IconButton size="small" onClick={(): void => setIsEditing(true)}>
+                                  <EditIcon fontSize={'small'} />
+                                </IconButton>
+                              )
+                            }
+
+                          </Box>
+                        )
+                      }
                     </Box>
                     <Box mt={1}>
-                      <Typography
-                        variant="body2"
-                        color='white'
-                        sx={{ textTransform: 'capitalize' }}>
-                        {data.comment}
-                      </Typography>
+                      {
+                        !isEditing ? (
+                          <Typography
+                            variant="body2"
+                            color='white'
+                            sx={{ textTransform: 'capitalize' }}>
+                            {commentValues.comment}
+                          </Typography>
+                        ) : (
+                          <Box className={styles.commentInput}>
+                            <TextField
+                              placeholder={`Your comment`}
+                              fullWidth
+                              autoFocus
+                              variant="standard"
+                              value={commentValues.comment}
+                              sx={{
+                                '& .MuiInput-root': {
+                                  fontWeight: 300
+                                }
+                              }}
+                              InputProps={{
+                                disableUnderline: true,
+                              }}
+                              onChange={(event): void => {
+                                setCommentValues({
+                                  ...commentValues,
+                                  comment: event.target.value
+                                })
+                              }}
+                            />
+                          </Box>
+                        )
+                      }
                     </Box>
                   </Box>
                 </Box>
@@ -174,7 +235,6 @@ const CommentsModal = (props: IProps): JSX.Element => {
                 <TextField
                   placeholder={`Your comment`}
                   fullWidth
-                  multiline
                   autoFocus
                   variant="standard"
                   value={comment}
