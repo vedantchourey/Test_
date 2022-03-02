@@ -29,7 +29,5 @@ export interface IPostResponse {
   createdAt?: Date;
   updatedAt?: Date;
   username : string;
-  firstName : string;
-  lastName : string;
   avatarUrl : string;
 }
