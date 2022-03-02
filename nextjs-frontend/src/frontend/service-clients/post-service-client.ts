@@ -1,7 +1,7 @@
-import { post, deleteRequest } from "./fetch-api-wrapper";
+import { post, deleteRequest, patch } from "./fetch-api-wrapper";
 import frontendConfig from "../utils/config/front-end-config";
 import { ICreatePostRequest } from "../../backend/services/posts-services/create-post/i-create-post";
-import { IPostsResponse, ILikePostResponse, IPostCommentResponse, IPostImageUploadResponse } from "./messages/i-posts-response";
+import { IPostsResponse, ILikePostResponse, IPostCommentResponse, IPostImageUploadResponse, IDeleteCommentResponse } from "./messages/i-posts-response";
 import { NoobPostResponse } from "./messages/common-messages";
 import { getAuthHeader } from "../utils/headers";
 import { frontendSupabase } from "../services/supabase-frontend-service";
@@ -121,4 +121,26 @@ export const getPostComments = async (postId: string): Promise<IPostCommentRespo
     .order('createdAt', { ascending: false });
   if (result.error) throw result.error;
   return result.data;
+}
+
+export const deleteComment = async (postId: string, commentId: string): Promise<NoobPostResponse<unknown, IDeleteCommentResponse>> => {
+  const endpoint = frontendConfig.noobStormServices.post.deleteCommentUrl(postId, commentId);
+  const header = await getAuthHeader();
+  const result = await deleteRequest(endpoint, null, header);
+  const body = await result.json();
+  if (result.status === 200) return body.data;
+  if (result.status === 400 && body.errors.apiError == null)
+    return { errors: body.errors, isError: true };
+  throw body;
+}
+
+export const updatePost = async (postId: string): Promise<NoobPostResponse<unknown, IPostsResponse>> => {
+  const endpoint = frontendConfig.noobStormServices.post.updatePostUrl(postId);
+  const header = await getAuthHeader();
+  const result = await patch(endpoint, null, header);
+  const body = await result.json();
+  if (result.status === 200) return body.data;
+  if (result.status === 400 && body.errors.apiError == null)
+    return { errors: body.errors, isError: true };
+  throw body;
 }
