@@ -1,0 +1,1 @@
+DROP POLICY authenticated_user_read_access_profile_table on profiles;

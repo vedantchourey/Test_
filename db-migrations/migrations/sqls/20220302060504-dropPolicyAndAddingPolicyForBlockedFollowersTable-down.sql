@@ -1,0 +1,2 @@
+DROP POLICY authenticated_read_user_followers on user_followers;
+DROP POLICY authenticated_read_blocked_users on blocked_users;
