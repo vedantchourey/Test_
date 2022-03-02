@@ -145,6 +145,17 @@ export const updatePost = async (postId: string): Promise<NoobPostResponse<unkno
   throw body;
 }
 
+export const updateComment = async (postId: string, commentId: string): Promise<NoobPostResponse<unknown, IPostsResponse>> => {
+  const endpoint = frontendConfig.noobStormServices.post.updateCommentUrl(postId, commentId);
+  const header = await getAuthHeader();
+  const result = await patch(endpoint, null, header);
+  const body = await result.json();
+  if (result.status === 200) return body.data;
+  if (result.status === 400 && body.errors.apiError == null)
+    return { errors: body.errors, isError: true };
+  throw body;
+}
+
 export const deletePost = async (postId: string): Promise<NoobPostResponse<unknown, IDeleteCommentResponse>> => {
   const endpoint = frontendConfig.noobStormServices.post.deletePostUrl(postId);
   const header = await getAuthHeader();
