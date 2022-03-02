@@ -14,7 +14,7 @@ import styles from "./post.module.css";
 import { IPostsResponse } from "../../../service-clients/messages/i-posts-response";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CommentsModal from './comments-modal'
-import { checkIsPostLiked, likePost, unlikePost, getPostLikesCount, getPostCommentsCount } from '../../../service-clients/post-service-client'
+import { checkIsPostLiked, likePost, unlikePost, getPostLikesCount, getPostCommentsCount, deletePost as removePost } from '../../../service-clients/post-service-client'
 import { useAppSelector } from '../../../redux-store/redux-store';
 import { userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
 import Image from '../../../components/utils/supabase-image';
@@ -105,6 +105,7 @@ const PostCard = (props: IProps): JSX.Element => {
   }
 
   const deletePost = (): void => {
+    removePost(values.id);
     setIsDeleted(true);
   }
 
