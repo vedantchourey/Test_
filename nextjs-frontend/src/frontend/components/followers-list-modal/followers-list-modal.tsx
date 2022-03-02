@@ -64,16 +64,16 @@ const FollowersModal = ({ handleClose, userData, showModal }: IProps): JSX.Eleme
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Avatar sx={{ width: 50, height: 50 }}>
                   {
-                    data.follower.firstName.split('')[0].toUpperCase()
+                    data.follower.username.split('')[0].toUpperCase()
                   }
                 </Avatar>
                 <Box sx={{ cursor: 'pointer' }} onClick={(): unknown => router.push(`/account/${data.follower.username}`)}>
                   <Typography sx={{ ml: 3 }} variant="h3" color='black' fontSize={16}>
-                    {data.follower.firstName} {data.follower.lastName}
-                  </Typography>
-                  <Typography sx={{ ml: 3, fontWeight: 500 }} variant="caption" color='#B5B5B5'>
                     {data.follower.username}
                   </Typography>
+                  {/* <Typography sx={{ ml: 3, fontWeight: 500 }} variant="caption" color='#B5B5B5'>
+                    {data.follower.username}
+                  </Typography> */}
                 </Box>
               </Box>
               {/* <Button className={styles.followBtn} startIcon={<PersonAddAltIcon />} variant='contained'>

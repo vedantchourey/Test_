@@ -1,24 +1,24 @@
 import { post, deleteRequest } from "./fetch-api-wrapper";
 import frontendConfig from "../utils/config/front-end-config";
 import { ICreatePostRequest } from "../../backend/services/posts-services/create-post/i-create-post";
-import { IPostsResponse, ILikePostResponse,IPostCommentResponse } from "./messages/i-posts-response";
+import { IPostsResponse, ILikePostResponse, IPostCommentResponse } from "./messages/i-posts-response";
 import { NoobPostResponse } from "./messages/common-messages";
 import { getAuthHeader } from "../utils/headers";
 import { frontendSupabase } from "../services/supabase-frontend-service";
 import { ICreateCommentRequest } from "../../backend/services/posts-services/create-comment/i-create-comment";
 
-export const getPostsByUserId = async (userid:string): Promise<IPostsResponse[]> => {
+export const getPostsByUserId = async (userid: string): Promise<IPostsResponse[]> => {
   const result = await frontendSupabase.from("posts").select(`
         id,
         postContent,
         postImgUrl,
-        postOwner : profiles!fk_posts_profiles_id(id, username, firstName, lastName, avatarUrl),
+        postOwner : profiles!fk_posts_profiles_id(id, username, avatarUrl),
         postType,
         createdAt,
         updatedAt
   `)
-  .order('createdAt', {ascending : false})
-  .match({postedBy :userid});
+    .order('createdAt', { ascending: false })
+    .match({ postedBy: userid });
   if (result.error) throw result.error;
   return result.data as IPostsResponse[];
 };
@@ -88,11 +88,11 @@ export const unlikePost = async (postId: string): Promise<NoobPostResponse<unkno
 }
 
 export const createComment = async (
-  payload : {postId : string; comment : string}
+  payload: { postId: string; comment: string }
 ): Promise<NoobPostResponse<ICreateCommentRequest, IPostCommentResponse>> => {
   const endpoint = frontendConfig.noobStormServices.post.createCommentUrl(payload.postId);
   const header = await getAuthHeader();
-  const result = await post(endpoint, {comment : payload.comment} , header);
+  const result = await post(endpoint, { comment: payload.comment }, header);
   const body = await result.json();
   if (result.status === 200) return body.data;
   if (result.status === 400 && body.errors.apiError == null)
@@ -100,15 +100,15 @@ export const createComment = async (
   throw body;
 }
 
-export const getPostComments = async(postId : string):Promise<IPostCommentResponse[]> => {
+export const getPostComments = async (postId: string): Promise<IPostCommentResponse[]> => {
   const result = await frontendSupabase.from('post_comments').select(`
     id,
     comment,
-    commentOwner : profiles!fk_post_comments_profile_id(id, username, firstName, lastName, avatarUrl),
+    commentOwner : profiles!fk_post_comments_profile_id(id, username, avatarUrl),
     createdAt
   `)
-  .match({postId})
-  .order('createdAt', {ascending : false});
+    .match({ postId })
+    .order('createdAt', { ascending: false });
   if (result.error) throw result.error;
   return result.data;
 }
