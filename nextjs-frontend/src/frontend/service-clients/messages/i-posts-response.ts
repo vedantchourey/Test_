@@ -38,3 +38,7 @@ export interface IPostImageUploadResponse {
   url: string;
   bucket: string;
 }
+
+export interface IDeleteCommentResponse {
+  message: string;
+}
