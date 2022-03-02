@@ -8,10 +8,10 @@ import {
   useAppSelector,
 } from "../../../redux-store/redux-store";
 import { avatarImageBlobUrlSelector } from '../../../redux-store/authentication/authentication-selectors';
-import { createComment, getPostComments } from "../../../service-clients/post-service-client";
+import { createComment, getPostComments, deleteComment } from "../../../service-clients/post-service-client";
 import Image from '../../../components/utils/supabase-image';
 import config from '../../../utils/config/front-end-config';
-
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const style = {
   position: 'absolute',
@@ -87,7 +87,12 @@ const CommentsModal = (props: IProps): JSX.Element => {
       return (
         comments.map((data, i) => {
           const Comment = (): JSX.Element => {
-            const [isDeleted] = useState<boolean>(false);
+            const [isDeleted, setIsDeleted] = useState<boolean>(false);
+
+            const removeComment = (): void => {
+              setIsDeleted(true);
+              deleteComment(props.postId, data.id)
+            }
 
             if (isDeleted) return <></>;
             return (
@@ -108,6 +113,9 @@ const CommentsModal = (props: IProps): JSX.Element => {
                           new Date(data.createdAt).toDateString()
                         }
                       </Typography>
+                      <IconButton onClick={removeComment}>
+                        <DeleteIcon />
+                      </IconButton>
                     </Box>
                     <Box mt={1}>
                       <Typography
