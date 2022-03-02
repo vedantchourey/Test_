@@ -208,7 +208,7 @@ const PostCard = (props: IProps): JSX.Element => {
               {
                 values.postType === 'url' ? (
                   <div style={{ overflow: 'hidden' }}>
-                    <a href="https://www.google.com" target="_blank" rel="noreferrer">
+                    <a href={values.postUrl} target="_blank" rel="noreferrer">
                       <img
                         className={styles.postImg}
                         src={values.postImgUrl}
@@ -216,9 +216,11 @@ const PostCard = (props: IProps): JSX.Element => {
                         key={values.id}
                       />
                       <div style={{ position: 'absolute', width: '100%', background: 'rgba(0,0,0,0.4)', bottom: 80, padding: '10px 0' }}>
-                        <Typography style={{ color: 'white' }}>
-                          Ur post title
-                        </Typography>
+                        {values.urlPostTitle && (
+                          <Typography style={{ color: 'white' }}>
+                            {values.urlPostTitle}
+                          </Typography>
+                        )}
                       </div>
                     </a>
                   </div>

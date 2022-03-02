@@ -16,7 +16,9 @@ export const getPostsByUserId = async (userid: string): Promise<IPostsResponse[]
         postOwner : profiles!fk_posts_profiles_id(id, username, avatarUrl),
         postType,
         createdAt,
-        updatedAt
+        updatedAt,
+        postUrl,
+        urlPostTitle
   `)
     .order('createdAt', { ascending: false })
     .match({ postedBy: userid });
