@@ -1,14 +1,14 @@
 import {ValidationResult } from "../../../../common/utils/validation/validator";
 import { ICreatePostRequest } from '../../../../backend/services/posts-services/create-post/i-create-post';
 
-function validateMessage(obj: Partial<ICreatePostRequest>): undefined | string {
-  if (!obj.postContent && !obj.postImgUrl) return 'Please enter post caption';
+function validateData(obj : ICreatePostRequest) :undefined | string {
+  if(!obj.postContent && !obj.postImgUrl) return 'Please input something';
 }
 
-export function validatePostContent(obj: Partial<ICreatePostRequest>): ValidationResult<ICreatePostRequest> {
+export function validatePostContent(obj: ICreatePostRequest): ValidationResult<ICreatePostRequest> {
   return {
-    postContent: validateMessage(obj),
-    postImgUrl: undefined
+    postContent: validateData(obj),
+    postImgUrl: validateData(obj)
   };
 }
 

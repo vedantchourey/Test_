@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Typography, Modal, AppBar, IconButton, Divider, Avatar } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import styles from './followers-list-modal.module.css';
-import { fetchUserFollowerList } from '../../service-clients/profile-service-client';
+import { fetchUserFollowerList, fetchUserFollowingList } from '../../service-clients/profile-service-client';
 import { IOthersProfileResponse, IProfileResponse } from "../../service-clients/messages/i-profile";
 import { IFollowersList } from '../../service-clients/messages/i-followers-list-response';
 import { useRouter } from "next/router";
@@ -11,6 +11,7 @@ interface IProps {
   userData: IOthersProfileResponse | IProfileResponse,
   handleClose: () => void;
   showModal: boolean;
+  listType: 'followers' | 'following'
 }
 
 
@@ -25,13 +26,13 @@ const style = {
   borderRadius: '10px'
 };
 
-const FollowersModal = ({ handleClose, userData, showModal }: IProps): JSX.Element => {
+const FollowersModal = ({ handleClose, userData, showModal, listType }: IProps): JSX.Element => {
   const [list, setList] = useState<IFollowersList[]>([]);
   const router = useRouter()
 
   useEffect(() => {
     (async (): Promise<void> => {
-      const result = await fetchUserFollowerList(userData.id);
+      const result = listType === 'followers' ? await fetchUserFollowerList(userData.id) : await fetchUserFollowingList(userData.id);
       setList(result);
     })()
   }, [])
@@ -48,7 +49,9 @@ const FollowersModal = ({ handleClose, userData, showModal }: IProps): JSX.Eleme
         <AppBar position="static" className={styles.appBar}>
           <Box sx={{ textAlign: 'center', position: 'relative' }}>
             <Typography variant="h3" color='black' fontSize={20}>
-              Followers
+              {
+                listType === 'followers' ? 'Followers' : 'Following'
+              }
             </Typography>
             <Box sx={{ position: 'absolute', right: 0, top: '-6px' }}>
               <IconButton onClick={handleClose}>
@@ -83,7 +86,9 @@ const FollowersModal = ({ handleClose, userData, showModal }: IProps): JSX.Eleme
           )) : (
             <Box>
               <Typography>
-                No Followers
+                {
+                  listType === 'followers' ? 'No Followers' : 'No Followings'
+                }
               </Typography>
             </Box>
           )}

@@ -26,6 +26,7 @@ export interface IFrontendConfig {
     },
     post: {
       createUrl: string,
+      postImageUploadUrl: string;
       likePostUrl: (postId: string) => string;
       unlikePostUrl: (postId: string) => string;
       createCommentUrl: (postId: string) => string;

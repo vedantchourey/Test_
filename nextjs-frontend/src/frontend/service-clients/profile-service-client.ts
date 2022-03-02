@@ -137,3 +137,15 @@ export async function fetchUserFollowerList(userid: string): Promise<IFollowersL
   if (result.error) throw result.body;
   return result.body;
 }
+
+export async function fetchUserFollowingList(userid :string):Promise<IFollowersList[]>{
+  const result = await frontendSupabase.from('user_followers')
+    .select(`
+   follower: profiles!fk_user_followers_followerid_profiles_id(id,username)
+  `)
+    .match({
+      followerId: userid
+    });
+  if (result.error) throw result.body;
+  return result.body;
+}

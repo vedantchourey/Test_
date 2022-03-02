@@ -1,11 +1,12 @@
 import { post, deleteRequest } from "./fetch-api-wrapper";
 import frontendConfig from "../utils/config/front-end-config";
 import { ICreatePostRequest } from "../../backend/services/posts-services/create-post/i-create-post";
-import { IPostsResponse, ILikePostResponse, IPostCommentResponse } from "./messages/i-posts-response";
+import { IPostsResponse, ILikePostResponse, IPostCommentResponse, IPostImageUploadResponse } from "./messages/i-posts-response";
 import { NoobPostResponse } from "./messages/common-messages";
 import { getAuthHeader } from "../utils/headers";
 import { frontendSupabase } from "../services/supabase-frontend-service";
 import { ICreateCommentRequest } from "../../backend/services/posts-services/create-comment/i-create-comment";
+import { sendFiles } from './fetch-api-wrapper';
 
 export const getPostsByUserId = async (userid: string): Promise<IPostsResponse[]> => {
   const result = await frontendSupabase.from("posts").select(`
@@ -35,6 +36,15 @@ export const createPost = async (
     return { errors: body.errors, isError: true };
   throw body;
 };
+
+export const uploadPostImage = async(file : File): Promise<IPostImageUploadResponse> => {
+  const endpoint = frontendConfig.noobStormServices.post.postImageUploadUrl;
+  const header = await getAuthHeader();
+  const result = await sendFiles(endpoint, [file], header);
+  const body = await result.json();
+  if (result.status === 200) return body.data;
+  throw body;
+}
 
 export const checkIsPostLiked = async (payload: { userId: string | undefined; postId: string }): Promise<{ isLiked?: boolean | undefined, error?: unknown }> => {
   const result = await frontendSupabase.from('post_likes').select('id', { count: 'exact' })
