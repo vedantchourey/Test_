@@ -27,6 +27,7 @@ const frontendConfig: IFrontendConfig = {
     },
     post: {
       createUrl: `${baseApiUrl}/api/posts`,
+      postImageUploadUrl: `${baseApiUrl}/api/uploads/post`,
       likePostUrl: (postId: string): string => `${baseApiUrl}/api/posts/${postId}/likes`,
       unlikePostUrl: (postId: string): string => `${baseApiUrl}/api/posts/${postId}/likes`,
       createCommentUrl: (postId: string): string => `${baseApiUrl}/api/posts/${postId}/comments`

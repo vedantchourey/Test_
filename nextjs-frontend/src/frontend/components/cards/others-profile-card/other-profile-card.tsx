@@ -14,7 +14,9 @@ import FollowersModal from '../../followers-list-modal/followers-list-modal';
 const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Element => {
   const [userData, setUserData] = useState(props.userData)
   const [showMenu, setShowMenu] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [openFollowersModal, setOpenFollowersModal] = useState(false);
+  const [openFollowingModal, setOpenFollowingModal] = useState(false);
+
   const {
     totalFollowers,
     totalPosts,
@@ -47,6 +49,20 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
   }
   const handleCloseMenu = (): void => setShowMenu(false);
   const handleToggleMenu = (): void => setShowMenu((pre) => !pre)
+
+  const handleOpenFollowersModal = (): void => {
+    setOpenFollowersModal(true)
+  }
+  const handleCloseFollowersModal = (): void => {
+    setOpenFollowersModal(false)
+  }
+
+  const handleOpenFollowingModal = (): void => {
+    setOpenFollowingModal(true)
+  }
+  const handleCloseFollowingModal = (): void => {
+    setOpenFollowingModal(false)
+  }
 
   async function block(): Promise<void> {
     setUserData((pre) => {
@@ -117,6 +133,9 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
               <CollectionsIcon />
             </IconButton>
           </Box>
+          <Typography variant='h3' fontSize={18} color='#695B6E' >
+            @{userData.username}
+          </Typography>
         </Box>
       </Box>
 
@@ -153,7 +172,7 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
               <Typography variant='caption' fontSize={14}>
                 Followers
               </Typography>
-              <Typography variant='h3' color='#6931F9' fontSize={16} onClick={(): void => setShowModal(true)}>
+              <Typography onClick={handleOpenFollowersModal} sx={{ cursor: 'pointer' }} variant='h3' color='#6931F9' fontSize={16}>
                 {totalFollowers || 0}
               </Typography>
             </Grid>
@@ -164,7 +183,7 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
               <Typography variant='caption' fontSize={14}>
                 Following
               </Typography>
-              <Typography variant='h3' color='#6931F9' fontSize={16} >
+              <Typography onClick={handleOpenFollowingModal} sx={{ cursor: 'pointer' }} variant='h3' color='#6931F9' fontSize={16}>
                 {totalFollowing || 0}
               </Typography>
             </Grid>
@@ -194,7 +213,11 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
         </Box>
       </Box>
 
-      <FollowersModal userData={userData} showModal={showModal} handleClose={(): void => setShowModal(false)} />
+      <>
+        <FollowersModal handleClose={handleCloseFollowersModal} userData={userData} showModal={openFollowersModal} listType="followers" />
+
+        <FollowersModal handleClose={handleCloseFollowingModal} userData={userData} showModal={openFollowingModal} listType="following" />
+      </>
     </Box >
   )
 }

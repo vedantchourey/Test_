@@ -128,7 +128,7 @@ const PostCard = (props: IProps): JSX.Element => {
               paddingLeft: "10px"
             }}>
               <Typography variant={'h3'} fontSize={15} fontWeight={400}>
-                {values.postOwner.firstName + " " + values.postOwner.lastName}
+                {values.postOwner.username}
               </Typography>
               <Typography variant="subtitle2" color='#575265'>
                 {new Date(values.createdAt).toDateString()}

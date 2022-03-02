@@ -109,12 +109,4 @@ function UserAccount(): JSX.Element {
   )
 }
 
-export async function getServerSideProps(): Promise<unknown> {
-  return {
-    props: {
-      key: Date.now()
-    }
-  }
-}
-
 export default withProtected(UserAccount);

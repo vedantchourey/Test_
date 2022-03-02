@@ -23,8 +23,7 @@ export class PostsRepository extends BaseRepository<IPost> {
   async getPostById(id: string): Promise<IPostResponse | undefined> {
     return await this.entities()
                .select('posts.*')
-               .select('user.username', 'user.avatarUrl', 'user.id as userId' , 'user.firstName')
-               .select('user.lastName')
+               .select('user.username', 'user.avatarUrl', 'user.id as userId')
                .leftJoin('profiles as user', 'posts.postedBy', 'user.id')
                .where("posts.id", "=", id)
                .first()
