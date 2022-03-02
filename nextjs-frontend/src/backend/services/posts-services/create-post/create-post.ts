@@ -29,7 +29,7 @@ export async function createPost(req: ICreatePostRequest, context: PerRequestCon
     const data = await getLinkPreview(req.postContent) as PreviewResponse;
     const postId = await repository.createPost({
       postType:'url',
-      postContent: data.title ? data.title : data.description ? data.description : req.postContent, 
+      postContent: req.postContent, 
       postImgUrl:data.images.length ? data.images[0] : data.favicons[0], 
       postedBy: context.user?.id as string
     });

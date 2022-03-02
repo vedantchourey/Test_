@@ -30,7 +30,11 @@ const frontendConfig: IFrontendConfig = {
       postImageUploadUrl: `${baseApiUrl}/api/uploads/post`,
       likePostUrl: (postId: string): string => `${baseApiUrl}/api/posts/${postId}/likes`,
       unlikePostUrl: (postId: string): string => `${baseApiUrl}/api/posts/${postId}/likes`,
-      createCommentUrl: (postId: string): string => `${baseApiUrl}/api/posts/${postId}/comments`
+      createCommentUrl: (postId: string): string => `${baseApiUrl}/api/posts/${postId}/comments`,
+      deleteCommentUrl: (postId: string, commentId: string) => `${baseApiUrl}/api/posts/${postId}/comments/${commentId}`,
+      updatePostUrl: (postId: string) => `${baseApiUrl}/api/posts/${postId}`,
+      deletePostUrl: (postId: string) => `${baseApiUrl}/api/posts/${postId}`,
+      updateCommentUrl: (postId: string, commentId: string) => `${baseApiUrl}/api/posts/${postId}/comments/${commentId}`
     },
     followActions: {
       followUserUrl: (userId: string) => `${baseApiUrl}/api/follow-action/following/${userId}`,

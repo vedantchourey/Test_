@@ -14,7 +14,7 @@ import styles from "./post.module.css";
 import { IPostsResponse } from "../../../service-clients/messages/i-posts-response";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CommentsModal from './comments-modal'
-import { checkIsPostLiked, likePost, unlikePost, getPostLikesCount, getPostCommentsCount } from '../../../service-clients/post-service-client'
+import { checkIsPostLiked, likePost, unlikePost, getPostLikesCount, getPostCommentsCount, deletePost as removePost } from '../../../service-clients/post-service-client'
 import { useAppSelector } from '../../../redux-store/redux-store';
 import { userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
 import Image from '../../../components/utils/supabase-image';
@@ -30,6 +30,7 @@ const PostCard = (props: IProps): JSX.Element => {
   const [openCommentsModal, setOpenCommentsModal] = useState<boolean>(false);
   const [showMenu, setShowMenu] = useState(false);
   const [isFetchingMeta, setIsFetchingMeta] = useState<boolean>(true);
+  const [isDeleted, setIsDeleted] = useState<boolean>(false);
 
   const imgUrl = props.data.postImgUrl;
   const avatarUrl = props.data.postOwner.avatarUrl;
@@ -103,6 +104,13 @@ const PostCard = (props: IProps): JSX.Element => {
     }
   }
 
+  const deletePost = (): void => {
+    removePost(values.id);
+    setIsDeleted(true);
+  }
+
+  if (isDeleted) return <></>;
+
   return (
     <Grid item md={12}>
       <Card className={styles.postCard} sx={{ mb: 3 }} elevation={0}>
@@ -139,7 +147,7 @@ const PostCard = (props: IProps): JSX.Element => {
                   <Button
                     fullWidth
                     className={styles.postCardOptionsBtn}
-                    sx={{ color: 'red', borderBottomLeftRadius: 0, borderBottomRightRadius: 0, }}
+                    sx={{ color: 'red', borderTopLeftRadius: '5px !important', borderTopRightRadius: '5px !important' }}
                   >
                     <img src='/icons/error.svg' alt='icon' />
                     Report Post
@@ -149,18 +157,32 @@ const PostCard = (props: IProps): JSX.Element => {
                   <Button
                     fullWidth
                     className={styles.postCardOptionsBtn}
-                    sx={{ color: 'red', margin: '1px 0', borderRadius: '0px' }}
+                    sx={{ color: 'red', borderRadius: '0px' }}
                   >
                     <img src='/icons/copy.svg' alt='icon' />
                     Copy Link
                   </Button>
                 </ListItem>
+                {
+                  values.postOwner.id === user?.id && (
+                    <ListItem disablePadding>
+                      <Button
+                        fullWidth
+                        onClick={deletePost}
+                        className={styles.postCardOptionsBtn}
+                        sx={{ color: 'black' }}
+                      >
+                        Delete Post
+                      </Button>
+                    </ListItem>
+                  )
+                }
                 <ListItem disablePadding>
                   <Button
                     fullWidth
                     onClick={handleCloseMenu}
                     className={styles.postCardOptionsBtn}
-                    sx={{ color: 'black', borderTopLeftRadius: 0, borderTopRightRadius: 0, }}
+                    sx={{ color: 'black', borderBottomLeftRadius: '5px !important', borderBottomRightRadius: '5px !important' }}
                   >
                     Cancel
                   </Button>
