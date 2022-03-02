@@ -20,7 +20,8 @@ export default function UserProfileCard(): JSX.Element {
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const avatarImageBlobUrl = useAppSelector(avatarImageBlobUrlSelector);
   const avatarBackgroundImageBlobUrl = useAppSelector(avatarBackgroundImageBlobUrlSelector);
-  const [openFollowersModal, setOpenFollowersModal] = useState(false)
+  const [openFollowersModal, setOpenFollowersModal] = useState(false);
+  const [openFollowingModal, setOpenFollowingModal] = useState(false)
 
   async function onUploadAvatar(files: FileList | null): Promise<void> {
     setShowAvatarPicker(false);
@@ -58,6 +59,13 @@ export default function UserProfileCard(): JSX.Element {
   }
   const handleCloseFollowersModal = (): void => {
     setOpenFollowersModal(false)
+  }
+
+  const handleOpenFollowingModal = (): void => {
+    setOpenFollowingModal(true)
+  }
+  const handleCloseFollowingModal = (): void => {
+    setOpenFollowingModal(false)
   }
 
 
@@ -131,7 +139,7 @@ export default function UserProfileCard(): JSX.Element {
               <Typography variant='caption' fontSize={14}>
                 Following
               </Typography>
-              <Typography variant='h3' color='#6931F9' fontSize={16}>
+              <Typography onClick={handleOpenFollowingModal} sx={{ cursor: 'pointer' }} variant='h3' color='#6931F9' fontSize={16}>
                 {userProfile?.totalFollowing || 0}
               </Typography>
             </Grid>
@@ -168,7 +176,11 @@ export default function UserProfileCard(): JSX.Element {
       />
       {
         userProfile && (
-          <FollowersModal handleClose={handleCloseFollowersModal} userData={userProfile} showModal={openFollowersModal} />
+          <>
+            <FollowersModal handleClose={handleCloseFollowersModal} userData={userProfile} showModal={openFollowersModal} listType="followers" />
+
+            <FollowersModal handleClose={handleCloseFollowingModal} userData={userProfile} showModal={openFollowingModal} listType="following" />
+          </>
         )
       }
     </Box >
