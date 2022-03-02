@@ -3,17 +3,16 @@ import { Autocomplete, Button, Divider, FormLabel, Grid, TextField, Typography }
 import { Box } from "@mui/system";
 import { DateTime } from "luxon";
 import React, { useState } from "react";
-import { parseDateTime } from "../../../../common/utils/date-time-utils";
 import { getErrorForProp, propsHasError } from "../../../../common/utils/validation/validator";
 import { userProfileSelector } from "../../../redux-store/authentication/authentication-selectors";
 import { useAppSelector } from "../../../redux-store/redux-store";
 import styles from './style.module.css'
 
 interface CountryType {
-    code: string;
-    label: string;
-    phone: string;
-    suggested?: boolean;
+  code: string;
+  label: string;
+  phone: string;
+  suggested?: boolean;
 }
 const countries: readonly CountryType[] = [
   { code: 'AD', label: 'Andorra', phone: '376' },
@@ -452,7 +451,7 @@ const PersonalSettings = (): JSX.Element => {
     country: '',
     city: ''
   });
-  const dateOfBirth = request.dateOfBirth == null ? null : parseDateTime(request.dateOfBirth);
+  const dateOfBirth = request.dateOfBirth == null ? null : '';
 
   return (
     <>
@@ -513,7 +512,7 @@ const PersonalSettings = (): JSX.Element => {
             value={dateOfBirth}
             onChange={(value: DateTime | null): void => {
               // TODO fetch data from private profile
-              setRequest({...request});
+              setRequest({ ...request });
             }}
             inputFormat="dd/MM/yyyy"
             renderInput={(params): JSX.Element =>

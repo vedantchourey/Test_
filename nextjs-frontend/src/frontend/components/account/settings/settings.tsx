@@ -18,7 +18,7 @@ const tabStyles: SxProps = {
 
 
 const ProfileSettings = (): JSX.Element => {
-  const [activeTab, setActiveTab] = useState<TabsProps>("security");
+  const [activeTab, setActiveTab] = useState<TabsProps>("personal");
   const handleChange = (e: unknown, newValue: TabsProps): void => {
     setActiveTab(newValue);
   };
