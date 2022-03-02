@@ -141,7 +141,7 @@ export async function fetchUserFollowerList(userid: string): Promise<IFollowersL
 export async function fetchUserFollowingList(userid :string):Promise<IFollowersList[]>{
   const result = await frontendSupabase.from('user_followers')
     .select(`
-   follower: profiles!fk_user_followers_followerid_profiles_id(id,username)
+   follower: profiles!fk_user_followers_userid_profiles_id(id,username)
   `)
     .match({
       followerId: userid
