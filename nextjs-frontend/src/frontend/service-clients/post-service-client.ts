@@ -12,7 +12,7 @@ export const getPostsByUserId = async (userid: string): Promise<IPostsResponse[]
         id,
         postContent,
         postImgUrl,
-        postOwner : profiles!fk_posts_profiles_id(id, username, firstName, lastName, avatarUrl),
+        postOwner : profiles!fk_posts_profiles_id(id, username, avatarUrl),
         postType,
         createdAt,
         updatedAt
