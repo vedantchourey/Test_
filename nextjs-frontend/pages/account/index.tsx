@@ -68,8 +68,8 @@ function Account(): JSX.Element {
       return new Array(5).fill("")
         .map((data, i) => <h1 key={i}>Skeleton</h1>);
     }
-    const jsx = posts.map((postData, i) => {
-      return <PostCard key={i} data={postData} />;
+    const jsx = posts.map((postData) => {
+      return <PostCard key={postData.id} data={postData} />;
     });
     return jsx;
   };
