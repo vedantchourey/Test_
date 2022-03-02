@@ -25,14 +25,13 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../../redux-store/redux-store";
-import { avatarImageBlobUrlSelector, userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
+import { avatarImageBlobUrlSelector } from '../../../redux-store/authentication/authentication-selectors';
 import { ICreatePostRequest } from "../../../../backend/services/posts-services/create-post/i-create-post";
 import CloseIcon from "@mui/icons-material/Close";
 import styles from "./post.module.css";
-import { v4 } from "uuid";
-import { uploadImage } from "../../../service-clients/image-service-client";
-import { createPost } from "../../../service-clients/post-service-client";
+import { createPost, uploadPostImage } from "../../../service-clients/post-service-client";
 import FilePicker from '../../utils/noob-file-picker';
+import { IPostImageUploadResponse } from '../../../service-clients/messages/i-posts-response';
 
 interface mediaInterface {
   contentUrl: string;
@@ -46,7 +45,6 @@ interface IProps {
 export default function CreatePostInput(props: IProps): JSX.Element {
   const { setPosts } = props;
   const appDispatch = useAppDispatch();
-  const userProfile = useAppSelector(userProfileSelector);
   const userAvatar = useAppSelector(avatarImageBlobUrlSelector);
   const [isUploading, setIsUploading] = useState(false);
   const [isImgUploaded, setIsImgUploaded] = useState(false);
@@ -54,7 +52,7 @@ export default function CreatePostInput(props: IProps): JSX.Element {
 
   const [media, setMedia] = useState<Array<mediaInterface>>([]);
 
-  const [request, setRequest] = useState<Partial<ICreatePostRequest>>({
+  const [request, setRequest] = useState<ICreatePostRequest>({
     postContent: "",
     postImgUrl: "",
   });
@@ -62,18 +60,10 @@ export default function CreatePostInput(props: IProps): JSX.Element {
     {}
   );
 
-  function generateFileUrl(prefix: string, file: File): string {
-    if (userProfile == null) throw new Error("user cannot be null");
-    const fileExt = file.name.split(".").pop()
-      ?.toLowerCase();
-    return `posts/${prefix}${userProfile.id}${v4()}.${fileExt}`;
-  }
-
   async function UploadMedia(
-    file: File,
-    fileUrl: string
-  ): Promise<{ data: { Key: string } | null; error: Error | null }> {
-    return await uploadImage("public-files", fileUrl, file);
+    file: File
+  ): Promise<IPostImageUploadResponse> {
+    return await uploadPostImage(file);
   }
 
   async function onClickCreatePost(): Promise<void> {
@@ -163,17 +153,16 @@ export default function CreatePostInput(props: IProps): JSX.Element {
             if (!files) return;
             const file = files[0];
             const fileType = file.type.split("/")[0];
-            const fileUrl = generateFileUrl("post-image", file);
             setIsUploading(true);
-            UploadMedia(file, fileUrl)
-              .then(() => {
+            UploadMedia(file)
+              .then((data) => {
                 if (fileType === "image") {
                   createImageThumb(file);
                 }
                 setRequest((pre) => {
                   return {
                     ...pre,
-                    postImgUrl: fileUrl,
+                    postImgUrl: data.url,
                   };
                 });
                 setIsImgUploaded(true);

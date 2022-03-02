@@ -6,6 +6,7 @@ import { NoobPostResponse } from "./messages/common-messages";
 import { getAuthHeader } from "../utils/headers";
 import { frontendSupabase } from "../services/supabase-frontend-service";
 import { ICreateCommentRequest } from "../../backend/services/posts-services/create-comment/i-create-comment";
+import { sendFiles } from './fetch-api-wrapper';
 
 export const getPostsByUserId = async (userid: string): Promise<IPostsResponse[]> => {
   const result = await frontendSupabase.from("posts").select(`
@@ -36,14 +37,12 @@ export const createPost = async (
   throw body;
 };
 
-export const postImageUpload = async(request: unknown): Promise<NoobPostResponse<unknown, IPostImageUploadResponse>> => {
+export const uploadPostImage = async(file : File): Promise<IPostImageUploadResponse> => {
   const endpoint = frontendConfig.noobStormServices.post.postImageUploadUrl;
   const header = await getAuthHeader();
-  const result = await post(endpoint, request, header);
+  const result = await sendFiles(endpoint, [file], header);
   const body = await result.json();
   if (result.status === 200) return body.data;
-  if (result.status === 400 && body.errors.apiError == null)
-    return { errors: body.errors, isError: true };
   throw body;
 }
 
