@@ -7,8 +7,6 @@ export interface IPostsResponse {
   postOwner: {
     id?: string;
     username: string;
-    firstName: string;
-    lastName: string;
     avatarUrl: string;
   };
   totalLikes: number;
@@ -33,4 +31,10 @@ export interface IPostCommentResponse {
   }
   postId: string;
   createdAt: string;
+}
+
+export interface IPostImageUploadResponse {
+  publicUrl: string;
+  url: string;
+  bucket: string;
 }

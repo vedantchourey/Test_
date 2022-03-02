@@ -1,7 +1,7 @@
 import { post, deleteRequest } from "./fetch-api-wrapper";
 import frontendConfig from "../utils/config/front-end-config";
 import { ICreatePostRequest } from "../../backend/services/posts-services/create-post/i-create-post";
-import { IPostsResponse, ILikePostResponse, IPostCommentResponse } from "./messages/i-posts-response";
+import { IPostsResponse, ILikePostResponse, IPostCommentResponse, IPostImageUploadResponse } from "./messages/i-posts-response";
 import { NoobPostResponse } from "./messages/common-messages";
 import { getAuthHeader } from "../utils/headers";
 import { frontendSupabase } from "../services/supabase-frontend-service";
@@ -35,6 +35,17 @@ export const createPost = async (
     return { errors: body.errors, isError: true };
   throw body;
 };
+
+export const postImageUpload = async(request: unknown): Promise<NoobPostResponse<unknown, IPostImageUploadResponse>> => {
+  const endpoint = frontendConfig.noobStormServices.post.postImageUploadUrl;
+  const header = await getAuthHeader();
+  const result = await post(endpoint, request, header);
+  const body = await result.json();
+  if (result.status === 200) return body.data;
+  if (result.status === 400 && body.errors.apiError == null)
+    return { errors: body.errors, isError: true };
+  throw body;
+}
 
 export const checkIsPostLiked = async (payload: { userId: string | undefined; postId: string }): Promise<{ isLiked?: boolean | undefined, error?: unknown }> => {
   const result = await frontendSupabase.from('post_likes').select('id', { count: 'exact' })
