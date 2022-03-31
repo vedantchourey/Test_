@@ -62,6 +62,15 @@ const noobTheme = createTheme({
       letterSpacing: '-0.011em',
       textAlign: "center",
     },
+    // body2:{
+    //   fontFamily: 'Inter',
+    //   fontSize: '12px',
+    //   fontStyle: 'normal',
+    //   fontWeight: '500',
+    //   lineHeight: '18px',
+    //   letterSpacing: '-0.011em',
+    //   textAlign: "center",
+    // }
   },
   components: {
     MuiIconButton: {
@@ -75,6 +84,27 @@ const noobTheme = createTheme({
       defaultProps: {
         style: {
           textDecorationColor: "transparent"
+        }
+      }
+    },
+    MuiOutlinedInput:{
+      styleOverrides:{
+        root:{
+          borderRadius: "10px",
+        }
+      }
+    },
+    MuiFormControl:{
+      styleOverrides:{
+        root:{
+          marginBottom: "20px",
+        }
+      }
+    },
+    MuiInputBase:{
+      defaultProps:{
+        style:{
+          borderRadius:"10px"
         }
       }
     }
