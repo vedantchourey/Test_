@@ -3,13 +3,11 @@ import NoobPage from "../src/frontend/components/page/noob-page";
 import Heading from "../src/frontend/components/ui-components/typography/heading";
 import SideBar from "../src/frontend/components/ui-components/sidebar";
 import Grid from "@mui/material/Grid";
-import {ReactComponent as Vector} from '../assets/Vector.svg';
-import {ReactComponent as Share} from '../assets/Share.svg';
 import Setup from "../src/frontend/components/setup";
 import Brackets from "../src/frontend/components/brackets";
 const sideBarNav = [
   {
-    icon: (<Vector/>),
+    icon: (<img src="/icons/Vector.svg" alt="icon"/>),
     title: "Create",
     items: [
       {
@@ -31,7 +29,7 @@ const sideBarNav = [
     ],
   },
   {
-    icon: (<Share />),
+    icon: (<img src="/icons/share-alt.svg" alt="icon"/>),
     title: "Share",
     items: [
       {
