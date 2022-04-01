@@ -10,13 +10,11 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Theme,
 } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
-import { createTheme } from "@mui/material/styles";
 import styled from "@emotion/styled";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     listItems: {
       fontFamily: "Poppins",
@@ -30,9 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
     naxText: {
       textAlign: "left",
     },
-  })
-);
-const theme = createTheme();
+  }));
 
 const NoobAccordion = styled(Accordion)(() => ({
   "& .MuiPaper-root": {
@@ -80,8 +76,8 @@ export interface SideBarNavProps {
 const SideBar: React.FC<SideBarNavProps> = ({ nav }) => {
   const classes = useStyles();
 
-  const renderNav = () => {
-    return nav.map(({ icon, title, items }) => {
+  const renderNav = ():JSX.Element[] => {
+    return nav.map(({ icon, title, items }):JSX.Element => {
       return (
         <NoobAccordion key={title} >
           <AccordionSummary

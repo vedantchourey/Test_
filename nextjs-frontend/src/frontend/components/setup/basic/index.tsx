@@ -4,7 +4,6 @@ import Grid from "@mui/material/Grid";
 import {
   OutlinedInput,
   Typography,
-  Theme,
   Checkbox,
   TextField,
 } from "@mui/material";
@@ -19,7 +18,7 @@ import { Box } from "@mui/system";
 import Dropzone from "react-dropzone";
 import { DatePicker } from "@mui/lab";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     inputBox: {
       borderRadius: "10px",
@@ -34,13 +33,12 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: "center",
       flexDirection: "column",
     },
-  })
-);
+  }));
 
-const Basic = () => {
+const Basic = ():JSX.Element => {
   const style = useStyles();
   const [data, setData] = React.useState({ hasTournament: false, from:null, to:null});
-  const changeHandler = (property: string, value: string | boolean | Date | null) => {
+  const changeHandler = (property: string, value: string | boolean | Date | null):void => {
     setData({ ...data, [property]: value });
   };
   return (
@@ -62,8 +60,8 @@ const Basic = () => {
           <Grid item xs={6}>
             <FormControl fullWidth variant="standard">
               <FormLabel label="Start Date(DD/MM/YYYY)"></FormLabel>
-              <DatePicker onChange={(value)=>changeHandler("from",value)} value={data.from} renderInput={
-                (params)=><TextField {...params}/>
+              <DatePicker onChange={(value):void=>changeHandler("from",value)} value={data.from} renderInput={
+                (params):JSX.Element=><TextField {...params}/>
               }/>
               <FormHelperText> Date Displayed in IST </FormHelperText>
             </FormControl>
@@ -71,8 +69,8 @@ const Basic = () => {
           <Grid item xs={6}>
             <FormControl fullWidth variant="standard">
               <FormLabel label="Start Time"></FormLabel>
-              <DatePicker onChange={(value)=>changeHandler("from",value)} value={data.from} renderInput={
-                (params)=><TextField {...params}/>
+              <DatePicker onChange={(value):void=>changeHandler("from",value)} value={data.from} renderInput={
+                (params):JSX.Element=><TextField {...params}/>
               }/>
 
               <FormHelperText> Time Displayed in IST </FormHelperText>
@@ -88,7 +86,7 @@ const Basic = () => {
               <FormLabel label="Select A Tournament To Clone From"></FormLabel>
               <Box>
                 <Checkbox
-                  onChange={(e) =>
+                  onChange={(e):void =>
                     changeHandler("hasTournament", e.target.checked)
                   }
                 />
@@ -117,14 +115,14 @@ const Basic = () => {
             <FormControl fullWidth variant="standard">
               <FormLabel label="Header Banner"></FormLabel>
               <Dropzone>
-                {({ getRootProps, getInputProps }) => (
+                {({ getRootProps, getInputProps }):JSX.Element => (
                   <Box
                     className={style.dropZone}
                     component={"div"}
                     {...getRootProps()}
                   >
                     <input {...getInputProps()} />
-                    <img src="icons/Upload.svg"  alt="upload"/>
+                    <img src="icons/Upload.svg" alt="upload"/>
                     <Typography marginTop={2} variant="subtitle2">
                       1029px - 600px
                     </Typography>

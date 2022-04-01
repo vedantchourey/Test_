@@ -1,9 +1,10 @@
 import { Button } from "@mui/material";
+import React from "react";
 import NavTabs from "../ui-components/navtabs";
 import Create from "./create";
 
-const Brackets = () => {
-  const getNavTabs = () => {
+const Brackets = ():JSX.Element => {
+  const getNavTabs = ():{title:string, component:JSX.Element}[] => {
     const items = [
       {
         title: "Create",

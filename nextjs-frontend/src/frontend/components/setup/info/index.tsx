@@ -10,11 +10,10 @@ import {
   Select,
 } from "@mui/material";
 
-const Info = () => {
+const Info = ():JSX.Element => {
   const [data, setData] = React.useState({ contactOption: "" });
 
-  const changeHandler = (key: string, value: string) => {
-    console.log(key, value);
+  const changeHandler = (key: string, value: string):void => {
     setData({ ...data, [key]: value });
   };
 
@@ -26,7 +25,7 @@ const Info = () => {
             <Select
               displayEmpty
               defaultValue={""}
-              onChange={(e) => changeHandler("contactOption", e.target.value)}
+              onChange={(e):void => changeHandler("contactOption", e.target.value)}
             >
               <MenuItem value="">Select Contact Option</MenuItem>
               <MenuItem value="FaceBook">FaceBook</MenuItem>

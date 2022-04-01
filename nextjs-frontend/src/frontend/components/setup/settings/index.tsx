@@ -15,7 +15,7 @@ import NoobToggleButtonGroup, {
   NoobToggleButton,
 } from "../../ui-components/toggle-button-group";
 
-const Settings = () => {
+const Settings = ():JSX.Element => {
   const [data, setData] = React.useState({
     checkInType: "free",
     checkIn: "true",
@@ -25,7 +25,7 @@ const Settings = () => {
     countryFlagsBrackets: "false",
     registrationRegion: "all",
   });
-  const changeHanlder = (property: string, value: boolean | string) => {
+  const changeHanlder = (property: string, value: boolean | string):void => {
     setData({ ...data, [property]: value });
   };
   return (
@@ -69,7 +69,7 @@ const Settings = () => {
               <NoobToggleButtonGroup
                 exclusive
                 value={data.checkInType}
-                onChange={(e, val) => changeHanlder("checkInType", val)}
+                onChange={(e, val):void => changeHanlder("checkInType", val)}
                 fullWidth
               >
                 <NoobToggleButton value="free">Free</NoobToggleButton>
@@ -93,7 +93,7 @@ const Settings = () => {
               <NoobToggleButtonGroup
                 exclusive
                 value={data.checkIn}
-                onChange={(e, val) => changeHanlder("checkIn", val)}
+                onChange={(e, val):void => changeHanlder("checkIn", val)}
                 fullWidth
               >
                 <NoobToggleButton value="false">Disable</NoobToggleButton>
@@ -102,13 +102,13 @@ const Settings = () => {
             </FormControl>
           </Grid>
           <Grid item xs={6}>
-              <FormControl fullWidth>
-                <FormLabel label="Check-in Start Time"></FormLabel>
-                <Box display="flex" justifyContent={"flex-start"}>
-                  <OutlinedInput placeholder="Bracket Name" />
-                  <FormHelperText>Minutes before registration close</FormHelperText>
-                </Box>
-              </FormControl>
+            <FormControl fullWidth>
+              <FormLabel label="Check-in Start Time"></FormLabel>
+              <Box display="flex" justifyContent={"flex-start"}>
+                <OutlinedInput placeholder="Bracket Name" />
+                <FormHelperText>Minutes before registration close</FormHelperText>
+              </Box>
+            </FormControl>
           </Grid>
           <Grid item xs={6}>
             <FormControl fullWidth>
@@ -116,7 +116,7 @@ const Settings = () => {
               <NoobToggleButtonGroup
                 exclusive
                 value={data.matchScoreReporting}
-                onChange={(e, val) => changeHanlder("matchScoreReporting", val)}
+                onChange={(e, val):void => changeHanlder("matchScoreReporting", val)}
                 fullWidth
               >
                 <NoobToggleButton value="admin-only">
@@ -134,7 +134,7 @@ const Settings = () => {
               <NoobToggleButtonGroup
                 exclusive
                 value={data.requiredScreenShot}
-                onChange={(e, val) => changeHanlder("requiredScreenShot", val)}
+                onChange={(e, val):void => changeHanlder("requiredScreenShot", val)}
                 fullWidth
               >
                 <NoobToggleButton value="false">Not Required</NoobToggleButton>
@@ -155,7 +155,7 @@ const Settings = () => {
               <NoobToggleButtonGroup
                 exclusive
                 value={data.registrationLimit}
-                onChange={(e, val) => changeHanlder("registrationLimit", val)}
+                onChange={(e, val):void => changeHanlder("registrationLimit", val)}
                 fullWidth
               >
                 <NoobToggleButton value="limited">Limited</NoobToggleButton>
@@ -167,7 +167,7 @@ const Settings = () => {
           <Grid item xs={6}>
             <FormControl >
               <FormLabel label="Limit"></FormLabel>
-              <OutlinedInput  />
+              <OutlinedInput />
             </FormControl>
           </Grid>
 
@@ -177,7 +177,7 @@ const Settings = () => {
               <NoobToggleButtonGroup
                 exclusive
                 value={data.countryFlagsBrackets}
-                onChange={(e, val) =>
+                onChange={(e, val):void =>
                   changeHanlder("countryFlagsbrackets", val)
                 }
                 fullWidth
@@ -195,7 +195,7 @@ const Settings = () => {
               <NoobToggleButtonGroup
                 exclusive
                 value={data.registrationRegion}
-                onChange={(e, val) => changeHanlder("registrationRegion", val)}
+                onChange={(e, val):void => changeHanlder("registrationRegion", val)}
                 fullWidth
               >
                 <NoobToggleButton value="all">All</NoobToggleButton>

@@ -1,7 +1,7 @@
 import React from "react";
 import TextField from "@mui/material/TextField";
 import {
-    Button,
+  Button,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -22,7 +22,7 @@ import { Box } from "@mui/system";
 import CardLayout from "../card-layout";
 import NoobReachTextEditor from "../rte";
 
-const CreateBracketForm = () => {
+const CreateBracketForm = (): JSX.Element => {
   const [data, setData] = React.useState({
     hasTournament: false,
     from: null,
@@ -34,7 +34,7 @@ const CreateBracketForm = () => {
   const changeHandler = (
     property: string,
     value: string | boolean | Date | null
-  ) => {
+  ):void => {
     setData({ ...data, [property]: value });
   };
   return (
@@ -52,9 +52,9 @@ const CreateBracketForm = () => {
           <FormControl fullWidth variant="standard">
             <FormLabel label="Start Date(DD/MM/YYYY)"></FormLabel>
             <DatePicker
-              onChange={(value) => changeHandler("from", value)}
+              onChange={(value):void => changeHandler("from", value)}
               value={data.from}
-              renderInput={(params) => <TextField {...params} />}
+              renderInput={(params):JSX.Element => <TextField {...params} />}
             />
             <FormHelperText> Date Displayed in IST </FormHelperText>
           </FormControl>
@@ -64,9 +64,9 @@ const CreateBracketForm = () => {
           <FormControl fullWidth variant="standard">
             <FormLabel label="Start Time"></FormLabel>
             <DatePicker
-              onChange={(value) => changeHandler("from", value)}
+              onChange={(value):void => changeHandler("from", value)}
               value={data.from}
-              renderInput={(params) => <TextField {...params} />}
+              renderInput={(params):JSX.Element => <TextField {...params} />}
             />
 
             <FormHelperText> Time Displayed in IST </FormHelperText>
@@ -78,7 +78,7 @@ const CreateBracketForm = () => {
             <NoobToggleButtonGroup
               exclusive
               value={data.matchCheckIn}
-              onChange={(e, val) => changeHandler("matchCheckIn", val)}
+              onChange={(e, val):void => changeHandler("matchCheckIn", val)}
               fullWidth
             >
               <NoobToggleButton value="false">Off</NoobToggleButton>
@@ -105,7 +105,7 @@ const CreateBracketForm = () => {
             <FormLabel label="Bracket Style" />
             <RadioGroup
               value={data.elimination}
-              onChange={(event) =>
+              onChange={(event):void =>
                 changeHandler("elimination", event.target.value)
               }
             >
@@ -120,7 +120,7 @@ const CreateBracketForm = () => {
                   control={
                     <Checkbox
                       checked={data.thirdPartyMatch}
-                      onChange={(event) =>
+                      onChange={(event):void =>
                         changeHandler("thirdPartyMatch", event.target.checked)
                       }
                     />
@@ -158,28 +158,28 @@ const CreateBracketForm = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-            <FormLabel label="Rounds" />
-            <FormHelperText> Round 1 </FormHelperText>
-            <Box display={"flex"} marginBottom={5} justifyContent="space-between">
-                <Select style={{width:"70%"}} displayEmpty defaultValue={""}>
-                    <MenuItem value="">Select Round </MenuItem>
-                    <MenuItem value="1">Best of 1</MenuItem>
-                    <MenuItem value="2">Best of 2</MenuItem>
-                </Select>
-                <Button style={{width:"25%"}} variant="contained" startIcon={<img src="/icons/delete.svg" alt="delete"/>}>Remove Details</Button>
-            </Box>
-            <NoobReachTextEditor />
+          <FormLabel label="Rounds" />
+          <FormHelperText> Round 1 </FormHelperText>
+          <Box display={"flex"} marginBottom={5} justifyContent="space-between">
+            <Select style={{width:"70%"}} displayEmpty defaultValue={""}>
+              <MenuItem value="">Select Round </MenuItem>
+              <MenuItem value="1">Best of 1</MenuItem>
+              <MenuItem value="2">Best of 2</MenuItem>
+            </Select>
+            <Button style={{width:"25%"}} variant="contained" startIcon={<img src="/icons/delete.svg" alt="delete"/>}>Remove Details</Button>
+          </Box>
+          <NoobReachTextEditor />
         </Grid>
         <Grid item xs={12}>
-            <FormHelperText> Round 2 </FormHelperText>
-            <Box display={"flex"} marginBottom={5} justifyContent="space-between">
-                <Select style={{width:"70%"}} displayEmpty defaultValue={""}>
-                    <MenuItem value="">Select Round </MenuItem>
-                    <MenuItem value="1">Best of 1</MenuItem>
-                    <MenuItem value="2">Best of 2</MenuItem>
-                </Select>
-                <Button style={{width:"25%"}} variant="contained" startIcon={<img src="/icons/Plus.svg" alt="add"/>}>Add Details</Button>
-            </Box>
+          <FormHelperText> Round 2 </FormHelperText>
+          <Box display={"flex"} marginBottom={5} justifyContent="space-between">
+            <Select style={{width:"70%"}} displayEmpty defaultValue={""}>
+              <MenuItem value="">Select Round </MenuItem>
+              <MenuItem value="1">Best of 1</MenuItem>
+              <MenuItem value="2">Best of 2</MenuItem>
+            </Select>
+            <Button style={{width:"25%"}} variant="contained" startIcon={<img src="/icons/Plus.svg" alt="add"/>}>Add Details</Button>
+          </Box>
         </Grid>
       </Grid>
     </CardLayout>

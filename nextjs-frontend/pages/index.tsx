@@ -66,7 +66,7 @@ const Home: NextPage = () => {
           </Grid>
           <Grid item md={9}>
             <Setup/>
-            {/* <Brackets/> */}
+            <Brackets/>
           </Grid>
           
         </Grid>

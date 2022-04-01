@@ -4,8 +4,8 @@ import Basic from "./basic";
 import Info from "./info";
 import Settings from "./settings";
 
-const Setup = () => {
-  const getNavTabs = () => {
+const Setup = ():JSX.Element => {
+  const getNavTabs = ():{title:string, component:JSX.Element}[] => {
     const items = [
       {
         title: "Basic",
