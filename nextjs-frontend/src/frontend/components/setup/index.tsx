@@ -1,32 +1,54 @@
 import React from "react";
 import NavTabs from "../ui-components/navtabs";
-import Basic from "./basic";
-import Info from "./info";
-import Settings from "./settings";
+import Basic, { BasicData } from "./basic";
+import Info, { InfoData } from "./info";
+import Settings, {SettingData} from "./settings";
+import {TournamentContext} from '../tournament';
 
-const Setup = ():JSX.Element => {
-  const getNavTabs = ():{title:string, component:JSX.Element}[] => {
-    const items = [
-      {
-        title: "Basic",
-        component: <Basic />,
-      },
-      {
-        title: "Info",
-        component: <Info />,
-      },
-      {
-        title: "Settings",
-        component: <Settings />,
-      },
-    ];
+interface SetupProps {}
 
-    return items;
-  };
+const Setup:React.FC<SetupProps> = ():JSX.Element => {
+
+  const {data, setData} = React.useContext(TournamentContext);
+
+  const tabs = ["Basic","Info","Settings"];
+  const [current, setCurrent] = React.useState(0);
+
+  const handleBasicSave = (basic:BasicData):void =>{
+    setData({...data,basic})
+    setCurrent(1);
+  }
+
+  const handleInfoSave = (info: InfoData):void =>{
+    setData({...data,info})
+    setCurrent(2);
+  }
+
+  const handleSettingSave = (setting: SettingData):void =>{
+    setData({...data,setting})
+  }
+
+  const goBack = ():void =>{
+    setCurrent(current-1)
+  }
+
+  const renderComponent = (newCurrent:number):JSX.Element| null =>{
+    switch(newCurrent){
+    case 0:
+      return <Basic onSave={handleBasicSave} data={data.basic} />
+    case 1:
+      return <Info onSave={handleInfoSave} data={data.info} onBack={goBack}/>
+    case 2:
+      return <Settings onSave={handleSettingSave} onBack={goBack} />
+    default:
+      return null;
+    } 
+  }
 
   return (
     <React.Fragment>
-      <NavTabs items={getNavTabs()}></NavTabs>
+      <NavTabs items={tabs} current={current} onClick={setCurrent}></NavTabs>
+      {renderComponent(current)}
     </React.Fragment>
   );
 };

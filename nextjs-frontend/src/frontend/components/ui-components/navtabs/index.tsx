@@ -16,36 +16,35 @@ const useStyles = makeStyles((theme: Theme) =>
   }));
 
 interface NavProps {
-  items: {
-    title: string;
-    component: React.ReactElement;
-  }[];
+  items: string[];
   action?: React.ReactElement;
+  current?:number;
+  onClick?:(newCurrent:number)=>void
 }
 
-const NavTabs: React.FC<NavProps> = ({ items = [], action = null }) => {
-  const [value, setValue] = React.useState(0);
-  const [tabs] = React.useState(items.map((item) => item.title));
-  const [components] = React.useState(items.map((item) => item.component));
+const NavTabs: React.FC<NavProps> = ({ items = [], action = null,current =0, onClick }) => {
   const classes = useStyles();
+  
   const handleChange = (event: React.SyntheticEvent, newValue: number):void => {
-    setValue(newValue);
+    if(onClick){
+      onClick(newValue);
+    }
+    
   };
 
   return (
-    <React.Fragment>
+    <React.Fragment >
       <Tabs
-        value={value}
+        value={current}
         classes={{ root: classes.tabs }}
         onChange={handleChange}
         aria-label="nav tabs"
       >
-        {tabs.map((tab) => {
+        {items.map((tab) => {
           return <Tab key={tab} label={tab}></Tab>;
         })}
         {action ? <Box paddingRight={2} width={"100%"} display="flex" alignItems={"center"} justifyContent={"flex-end"}>{action}</Box> : null}
       </Tabs>
-      {components[value]}
     </React.Fragment>
   );
 };

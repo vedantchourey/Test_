@@ -1,13 +1,15 @@
 
 import { createStyles, makeStyles, styled } from '@mui/styles';
 import dynamic from 'next/dynamic'
+// import ReachTextEditor from "mui-rte"; 
 
 const ReachTextEditor = dynamic(() => import("mui-rte"), {
   ssr: false,
 });
 
 const NoobReachTextEditorAlt = styled(ReachTextEditor)(() => ({
-  background:"red"
+  // background:"red"
+  
 }));
 
 const useStyles = makeStyles(() =>
@@ -22,7 +24,7 @@ const useStyles = makeStyles(() =>
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const NoobReachTextEditor:React.FC<any> = (props) =>{
   const classes = useStyles();
-  return <NoobReachTextEditorAlt classes={{root:classes.root}} {...props}/>
+  return <ReachTextEditor classes={{root:classes.root}} {...props}/>
 }
 
 export default NoobReachTextEditor;
