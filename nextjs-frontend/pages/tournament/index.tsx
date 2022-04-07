@@ -1,14 +1,15 @@
 import { Grid } from "@mui/material";
 import React from "react";
-import Brackets from "../brackets";
-import Setup from "../setup";
-import { BasicData } from "../setup/basic";
-import { InfoData } from "../setup/info";
-import SideBar from "../ui-components/sidebar";
+import Brackets from "./brackets";
+import Setup from "./setup";
+import { BasicData } from "../../src/frontend/components/setup/basic";
+import { InfoData } from "../../src/frontend/components/setup/info";
+import SideBar from "../../src/frontend/components/ui-components/sidebar";
 import axios from "axios";
-import { EliminateBracketData } from "../brackets/create/eliminate-bracket";
-import { SettingData } from "../setup/settings";
-import Publish from "../publish";
+import { EliminateBracketData } from "../../src/frontend/components/brackets/create/eliminate-bracket";
+import { SettingData } from "../../src/frontend/components/setup/settings";
+import NoobPage from "../../src/frontend/components/page/noob-page";
+// import Publish from "../publish";
 
 export interface TournamentData {
   basic?: BasicData;
@@ -85,19 +86,26 @@ const Tournament:React.FC = ({children}) => {
   };
 
   return (
-    <Grid container spacing={1}>
-      <Grid item md={3}>
-        <SideBar nav={sideBarNav} />
-      </Grid>
-      <Grid item md={9}>
-        <TournamentContext.Provider value={{ data: data, setData: setData }}>
-          {/* {children} */}
-          <Setup />
+    <NoobPage
+      title="tournament"
+      metaData={{
+        description: "Noob Storm tournament page",
+      }}
+    >
+      <Grid container spacing={1}>
+        <Grid item md={3}>
+          <SideBar nav={sideBarNav} />
+        </Grid>
+        <Grid item md={9}>
+          <TournamentContext.Provider value={{ data: data, setData: setData }}>
+            {/* <Setup />
           <Brackets onSubmit={submitHandler} />
-          <Publish />
-        </TournamentContext.Provider>
+          <Publish /> */}
+          {children}
+          </TournamentContext.Provider>
+        </Grid>
       </Grid>
-    </Grid>
+    </NoobPage>
   );
 };
 
