@@ -1,21 +1,6 @@
-import { TournamentType } from "./tournament-type";
+import { TournamentType } from '../../tournament-service/tournament-type';
 
-export interface ITournamentResponse {
-  id: string;
-  tournamentName: string;
-  gameId: string;
-  mapId: string;
-  platformId: string;
-  bestOfId: string;
-  formatId: string;
-  rules: string;
-  isTeamParticipating: boolean;
-  numberOfParticipants: number;
-  tournamentType: TournamentType;
-  scheduleDate: string;
-}
-
-export interface ITournamentType {
+export interface ITournament {
   id?: string;
   basic?: {
     name: string;
@@ -52,7 +37,7 @@ export interface ITournamentType {
     startDate: Date;
     startTime: Date;
     checkInType: boolean;
-    checkInAmount: 12;
+    checkInAmount: number;
     type: "SINGLE" | "DOUBLE";
     thirdPlace: true;
     playersLimit: number;
