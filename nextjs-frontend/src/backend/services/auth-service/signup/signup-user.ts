@@ -39,13 +39,12 @@ function mapToPrivateProfile(user: User, request: SignupRequest): IPrivateProfil
 }
 
 type Metadata = { data: { firstName: string; lastName: string; agreeToTnc: boolean; isPrivate: boolean; stateId: string; dateOfBirth: string; countryId: string; username: string } };
-type SignupParams = { password: string; phone: string; provider: "facebook" | "apple" | "google" | undefined; email: string };
+type SignupParams = { password: string; phone?: string; provider: "facebook" | "apple" | "google" | undefined; email: string };
 
 function mapRequiredParams(request: SignupRequest): { metaData: Metadata; signupParams: SignupParams } {
   const {password, phone, email, provider, countryId, stateId, agreeToTnc, isPrivate, dateOfBirth, firstName, lastName, username} = request;
   const signupParams = {
     password: password,
-    phone: phone,
     email: email,
     provider: provider
   };
@@ -59,6 +58,7 @@ function mapRequiredParams(request: SignupRequest): { metaData: Metadata; signup
       firstName,
       lastName,
       username,
+      phone
     }
   };
   return {signupParams, metaData};
@@ -69,7 +69,8 @@ export default async function signupUser(request: SignupRequest, context: PerReq
   if (isThereAnyError(errors)) return {errors: errors};
 
   const {signupParams, metaData} = mapRequiredParams(request);
-  const result = await backendSupabase.auth.signUp(signupParams, metaData);
+  const result = await backendSupabase.auth.signUp({...signupParams}, metaData);
+  console.log('result.error -> ', result.error)
   if (result.error) return {errors: {apiError: result.error}};
 
   const transaction = context.transaction as Knex.Transaction;
