@@ -1,9 +1,10 @@
 import React from "react";
-import NavTabs from "../ui-components/navtabs";
-import Basic, { BasicData } from "./basic";
-import Info, { InfoData } from "./info";
-import Settings, {SettingData} from "./settings";
-import {TournamentContext} from '../tournament';
+import NavTabs from "../../../src/frontend/components/ui-components/navtabs";
+import Basic, { BasicData } from "../../../src/frontend/components/setup/basic";
+import Info, { InfoData } from "../../../src/frontend/components/setup/info";
+import Settings, {SettingData} from "../../../src/frontend/components/setup/settings";
+import Tournament, {TournamentContext} from '../../../src/frontend/components/tournament';
+import NoobPage from "../../../src/frontend/components/page/noob-page";
 
 interface SetupProps {}
 
@@ -46,10 +47,17 @@ const Setup:React.FC<SetupProps> = ():JSX.Element => {
   }
 
   return (
-    <React.Fragment>
+    <NoobPage
+      title="setup"
+      metaData={{
+        description: "Noob Storm setup page",
+      }}
+    >
+      <Tournament>
       <NavTabs items={tabs} current={current} onClick={setCurrent}></NavTabs>
       {renderComponent(current)}
-    </React.Fragment>
+      </Tournament>
+      </NoobPage>
   );
 };
 
