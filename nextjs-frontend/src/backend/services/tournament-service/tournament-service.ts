@@ -6,6 +6,7 @@ import { isThereAnyError } from '../../../common/utils/validation/validator';
 import { TournamentRepository } from '../database/repositories/tournament-repository';
 import { TournamentsRepository } from '../database/repositories/tournaments-repository';
 import { Knex } from 'knex';
+import { validatePersistTournament } from './persist-tournament-validator';
 
 export const createTournament: NoobApiService<CreateOrEditTournamentRequest, ITournamentResponse> = async (req, context) => {
   const errors = await validateTournament(req, context);
@@ -18,7 +19,8 @@ export const createTournament: NoobApiService<CreateOrEditTournamentRequest, ITo
 }
  // @ts-ignore
 export const persistTournament: NoobApiService<CreateOrEditTournamentType, ITournamentType> = async (req, context) => {
-  // const errors = await validateTournament(req, context); 
+  const errors = await validatePersistTournament(req);
+  if(errors) return { errors }
   const repository = new TournamentsRepository(context.transaction as Knex.Transaction);
   let tournament;
   if(req.id){
