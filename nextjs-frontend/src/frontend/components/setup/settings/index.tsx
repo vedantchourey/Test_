@@ -11,12 +11,14 @@ import {
   Box,
   FormHelperText,
   Button,
+  TextField,
 } from "@mui/material";
 
 import FormControl from "@mui/material/FormControl";
 import NoobToggleButtonGroup, {
   NoobToggleButton,
 } from "../../ui-components/toggle-button-group";
+import { TimePicker } from "@mui/lab";
 
 interface SettingProps {
   onBack?: () => void;
@@ -32,7 +34,7 @@ export interface SettingData {
   entryFeeAmount: string;
   checkInType: string;
   checkInStartTime: string;
-  scoreReporting: string;
+  ScoreReporting: string;
   screenShots: string;
   limitType: string;
   limit: number;
@@ -45,19 +47,27 @@ const Settings: React.FC<SettingProps> = ({
   onSave,
   data,
 }): JSX.Element => {
-  
   const validationSchema = yup.object({
     server: yup.string().required("Region/Server is required"),
     platform: yup.string().required("Platform is required"),
     tournamentFormat: yup.string().required("Tournament Format is required"),
     entryType: yup.string().required("Entry type is required"),
-    entryFeeAmount: yup.string().required("Fee amount is required"),
+    entryFeeAmount: yup.string().when("entryType", {
+      is: "credit",
+      then: yup.string().required("Fee amount is required"),
+    }),
     checkInType: yup.string().required("check In type is required"),
-    checkInStartTime: yup.string().required("Check in start time required"),
-    scoreReporting: yup.string().required("Score reporting is required"),
-    screenShots: yup.string().required("screenshots are required"),
+    checkInStartTime: yup.string().when("checkInType", {
+      is: "enable",
+      then: yup.string().required("Check in start time required"),
+    }),
+    ScoreReporting: yup.string().required("Score reporting is required"),
+    screenShots: yup.string().required("screenShots are required"),
     limitType: yup.string().required("limit type is required"),
-    limit: yup.number().required("limit number is required"),
+    limit: yup.number().when("limitType", {
+      is: "LIMITED",
+      then: yup.number().required("limit number is required"),
+    }),
     countryFlagOnBrackets: yup.boolean().required("country flag is required"),
     registrationRegion: yup
       .string()
@@ -73,11 +83,11 @@ const Settings: React.FC<SettingProps> = ({
       entryFeeAmount: data?.entryFeeAmount,
       checkInType: data?.checkInType || "disable",
       checkInStartTime: data?.checkInStartTime,
-      scoreReporting: data?.scoreReporting || "admins-players",
-      screenShots: data?.screenShots || "not-required",
-      limitType: data?.limitType || "unlimited",
+      ScoreReporting: data?.ScoreReporting || "ADMIN_PLAYER",
+      screenShots: data?.screenShots || "NOT_REQUIRED",
+      limitType: data?.limitType || "UNLIMITED",
       limit: data?.limit,
-      countryFlagOnBrackets: data?.countryFlagOnBrackets || "on",
+      countryFlagOnBrackets: data?.countryFlagOnBrackets || true,
       registrationRegion: data?.registrationRegion || "all",
     },
     validationSchema: validationSchema,
@@ -149,10 +159,10 @@ const Settings: React.FC<SettingProps> = ({
               </Select>
               {formik.touched.tournamentFormat &&
               Boolean(formik.errors.tournamentFormat) ? (
-                  <FormHelperText>
-                    {formik.errors.tournamentFormat}
-                  </FormHelperText>
-                ) : null}
+                <FormHelperText>
+                  {formik.errors.tournamentFormat}
+                </FormHelperText>
+              ) : null}
             </FormControl>
           </Grid>
           <Grid item xs={6}></Grid>
@@ -162,7 +172,9 @@ const Settings: React.FC<SettingProps> = ({
               <NoobToggleButtonGroup
                 exclusive
                 value={formik.values.entryType}
-                onChange={(val: any): void => changeHandler("entryType", val.target.value)}
+                onChange={(val: any): void =>
+                  changeHandler("entryType", val.target.value)
+                }
                 fullWidth
               >
                 <NoobToggleButton value="free">Free</NoobToggleButton>
@@ -170,24 +182,34 @@ const Settings: React.FC<SettingProps> = ({
               </NoobToggleButtonGroup>
             </FormControl>
           </Grid>
-          <Grid item xs={6} justifyContent={"space-between"}
+          <Grid
+            item
+            xs={6}
+            justifyContent={"space-between"}
             display={"flex"}
-            alignItems="center">
+            alignItems="center"
+          >
             {formik.values.entryType === "credit" ? (
               <React.Fragment>
                 <FormControl fullWidth>
                   <FormLabel label="Credits"></FormLabel>
-                  <Select displayEmpty defaultValue={""}>
+                  <Select
+                    displayEmpty
+                    defaultValue={""}
+                    onChange={(val) => {
+                      changeHandler("entryFeeAmount", val.target.value);
+                    }}
+                  >
                     <MenuItem value="">Select Credits </MenuItem>
                     <MenuItem value="1">1</MenuItem>
                     <MenuItem value="2">2</MenuItem>
                   </Select>
                   {formik.touched.entryFeeAmount &&
                   Boolean(formik.errors.entryFeeAmount) ? (
-                      <FormHelperText>
-                        {formik.errors.entryFeeAmount}
-                      </FormHelperText>
-                    ) : null}
+                    <FormHelperText>
+                      {formik.errors.entryFeeAmount}
+                    </FormHelperText>
+                  ) : null}
                 </FormControl>
               </React.Fragment>
             ) : null}
@@ -198,7 +220,9 @@ const Settings: React.FC<SettingProps> = ({
               <NoobToggleButtonGroup
                 exclusive
                 value={formik.values.checkInType}
-                onChange={(val:any): void => changeHandler("checkInType", val.target.value)}
+                onChange={(val: any): void =>
+                  changeHandler("checkInType", val.target.value)
+                }
                 fullWidth
               >
                 <NoobToggleButton value="disable">Disable</NoobToggleButton>
@@ -206,50 +230,66 @@ const Settings: React.FC<SettingProps> = ({
               </NoobToggleButtonGroup>
             </FormControl>
           </Grid>
-          <Grid item xs={6} >
-              {formik.values.checkInType === "enable" ? (
+          <Grid item xs={6}>
+            {formik.values.checkInType === "enable" ? (
               <React.Fragment>
-            <FormControl fullWidth>
-              <FormLabel label="Check-in Start Time"></FormLabel>
-              <Box display="flex" justifyContent={"flex-start"}>
-                <OutlinedInput
-                  id="checkInStartTime"
-                  placeholder="PlayStation 5"
-                  onChange={formik.handleChange}
-                  value={formik.values.checkInStartTime}
-                  onBlur={formik.handleBlur}
-                  error={
-                    formik.touched.checkInStartTime &&
-                    Boolean(formik.errors.checkInStartTime)
-                  }
-                />
-                {formik.touched.checkInStartTime &&
-                Boolean(formik.errors.checkInStartTime) ? (
-                    <FormHelperText>
-                      {" "}
-                      {formik.errors.checkInStartTime}{" "}
-                    </FormHelperText>
-                  ) : null}
-              </Box>
-            </FormControl>
-            </React.Fragment>
-              ):null}
+                <FormControl fullWidth>
+                  <FormLabel label="Check-in Start Time"></FormLabel>
+                  <Box display="flex" justifyContent={"flex-start"}>
+                    {/* <OutlinedInput
+                      id="checkInStartTime"
+                      placeholder="PlayStation 5"
+                      onChange={formik.handleChange}
+                      value={formik.values.checkInStartTime}
+                      onBlur={formik.handleBlur}
+                      error={
+                        formik.touched.checkInStartTime &&
+                        Boolean(formik.errors.checkInStartTime)
+                      }
+                    /> */}
+                    <TimePicker
+                      inputFormat="HH:MM a"
+                      onChange={(value): void =>
+                        changeHandler("checkInStartTime", value as any)
+                      }
+                      value={formik.values.checkInStartTime}
+                      renderInput={(params): JSX.Element => (
+                        <TextField
+                          id="startTime"
+                          error={
+                            formik.touched.checkInStartTime &&
+                            Boolean(formik.errors.checkInStartTime)
+                          }
+                          onBlur={formik.handleBlur}
+                          {...params}
+                        />
+                      )}
+                    />
+                    {formik.touched.checkInStartTime &&
+                    Boolean(formik.errors.checkInStartTime) ? (
+                      <FormHelperText>
+                        {" "}
+                        {formik.errors.checkInStartTime}{" "}
+                      </FormHelperText>
+                    ) : null}
+                  </Box>
+                </FormControl>
+              </React.Fragment>
+            ) : null}
           </Grid>
           <Grid item xs={6}>
             <FormControl fullWidth>
               <FormLabel label="Match Score Reporting"></FormLabel>
               <NoobToggleButtonGroup
                 exclusive
-                value={formik.values.scoreReporting}
-                onChange={( val:any): void =>
+                value={formik.values.ScoreReporting}
+                onChange={(val: any): void =>
                   changeHandler("ScoreReporting", val.target.value)
                 }
                 fullWidth
               >
-                <NoobToggleButton value="admin-only">
-                  Admin Only
-                </NoobToggleButton>
-                <NoobToggleButton value="admins-players">
+                <NoobToggleButton value="ADMIN">Admin Only</NoobToggleButton>
+                <NoobToggleButton value="ADMIN_PLAYER">
                   Admins & Players
                 </NoobToggleButton>
               </NoobToggleButtonGroup>
@@ -257,17 +297,17 @@ const Settings: React.FC<SettingProps> = ({
           </Grid>
           <Grid item xs={6}>
             <FormControl fullWidth>
-              <FormLabel label="Require ScreenShots"></FormLabel>
+              <FormLabel label="Require screenShots"></FormLabel>
               <NoobToggleButtonGroup
                 exclusive
                 value={formik.values.screenShots}
-                onChange={(e, val): void =>
-                  changeHandler("requiredScreenShot", val)
-                }
+                onChange={(e, val): void => changeHandler("screenShots", val)}
                 fullWidth
               >
-                <NoobToggleButton value="not-required">Not Required</NoobToggleButton>
-                <NoobToggleButton value="required">
+                <NoobToggleButton value="NOT_REQUIRED">
+                  Not Required
+                </NoobToggleButton>
+                <NoobToggleButton value="REQUIRED">
                   Admins & Required
                 </NoobToggleButton>
               </NoobToggleButtonGroup>
@@ -284,26 +324,24 @@ const Settings: React.FC<SettingProps> = ({
               <NoobToggleButtonGroup
                 exclusive
                 value={formik.values.limitType}
-                onChange={(val:any): void =>
+                onChange={(val: any): void =>
                   changeHandler("limitType", val.target.value)
                 }
                 fullWidth
               >
-                <NoobToggleButton value="limited">Limited</NoobToggleButton>
-                <NoobToggleButton value="unlimited">Unlimited</NoobToggleButton>
+                <NoobToggleButton value="LIMITED">Limited</NoobToggleButton>
+                <NoobToggleButton value="UNLIMITED">Unlimited</NoobToggleButton>
               </NoobToggleButtonGroup>
             </FormControl>
           </Grid>
 
           <Grid item xs={6}>
-          {formik.values.limitType === "limited" ? (
-
-            <FormControl>
-              <FormLabel label="Limit"></FormLabel>
-              <OutlinedInput />
-              
-            </FormControl>
-          ):null}
+            {formik.values.limitType === "LIMITED" ? (
+              <FormControl>
+                <FormLabel label="Limit"></FormLabel>
+                <OutlinedInput id="limit" onChange={formik.handleChange} />
+              </FormControl>
+            ) : null}
           </Grid>
 
           <Grid item xs={6}>
@@ -311,9 +349,12 @@ const Settings: React.FC<SettingProps> = ({
               <FormLabel label="Country Flags on Brackets"></FormLabel>
               <NoobToggleButtonGroup
                 exclusive
-                value={formik.values.countryFlagOnBrackets}
-                onChange={(val:any): void =>
-                  changeHandler("countryFlagOnBrackets", val.target.value)
+                value={formik.values.countryFlagOnBrackets ? "on" : "off"}
+                onChange={(val: any): void =>
+                  changeHandler(
+                    "countryFlagOnBrackets",
+                    val.target.value === "on"
+                  )
                 }
                 fullWidth
               >
@@ -330,7 +371,7 @@ const Settings: React.FC<SettingProps> = ({
               <NoobToggleButtonGroup
                 exclusive
                 value={formik.values.registrationRegion}
-                onChange={( val:any): void =>
+                onChange={(val: any): void =>
                   changeHandler("registrationRegion", val.target.value)
                 }
                 fullWidth

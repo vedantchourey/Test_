@@ -11,10 +11,11 @@ import { SettingData } from "../setup/settings";
 import Publish from "../publish";
 
 export interface TournamentData {
+  id?: string;
   basic?: BasicData;
   info?: InfoData;
-  setting?: SettingData;
-  bracket?: EliminateBracketData;
+  settings?: SettingData;
+  bracketsMetadata?: EliminateBracketData;
 }
 
 interface TournamentContextType {
@@ -27,9 +28,10 @@ export const TournamentContext = React.createContext<TournamentContextType>({
   setData: (data) => {},
 });
 
-const Tournament:React.FC = ({children}) => {
+const Tournament: React.FC = ({ children }) => {
   const [data, setData] = React.useState<TournamentData>({});
-
+  const [pageNo, setPageNo] = React.useState<number>(0);
+  const [id, setId] = React.useState<string>("");
   const sideBarNav = [
     {
       icon: <img src="/icons/Vector.svg" alt="icon" />,
@@ -74,10 +76,16 @@ const Tournament:React.FC = ({children}) => {
   ];
 
   const submitHandler = (submitData: TournamentData): void => {
+    if (id != "") submitData.id = id;
+
     axios
-      .post("", submitData)
+      .post("/api/tournaments/create", submitData)
       .then((res) => {
-        console.log(res);
+        if (!res?.data?.errors?.length) {
+          setPageNo(1);
+          setData({});
+          setId(res.data.id);
+        }
       })
       .catch((err) => {
         console.error(err);
@@ -92,9 +100,9 @@ const Tournament:React.FC = ({children}) => {
       <Grid item md={9}>
         <TournamentContext.Provider value={{ data: data, setData: setData }}>
           {/* {children} */}
-          <Setup />
-          <Brackets onSubmit={submitHandler} />
-          <Publish />
+          {pageNo == 0 && <Setup onSubmit={submitHandler} />}
+          {pageNo === 1 && <Brackets onSubmit={submitHandler} />}
+          {pageNo === 2 && <Publish />}
         </TournamentContext.Provider>
       </Grid>
     </Grid>
