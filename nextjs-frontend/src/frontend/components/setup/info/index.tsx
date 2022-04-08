@@ -114,7 +114,7 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
             id="contactDetails"
             onChange={(value: EditorState): void =>
               changeHandler(
-                "Contact Details",
+                "contactDetails",
                 value.getCurrentContent().getPlainText("\u0001")
               )
             }
@@ -133,7 +133,7 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
             id="rules"
             onChange={(value: EditorState): void =>
               changeHandler(
-                "Rules",
+                "rules",
                 value.getCurrentContent().getPlainText("\u0001")
               )
             }
@@ -151,7 +151,7 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
             id="prizes"
             onChange={(value: EditorState): void =>
               changeHandler(
-                "Prizes",
+                "prizes",
                 value.getCurrentContent().getPlainText("\u0001")
               )
             }
@@ -169,7 +169,7 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
             id="schedule"
             onChange={(value: EditorState): void =>
               changeHandler(
-                "Schedule",
+                "schedule",
                 value.getCurrentContent().getPlainText("\u0001")
               )
             }

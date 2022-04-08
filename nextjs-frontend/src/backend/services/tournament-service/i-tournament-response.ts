@@ -34,7 +34,7 @@ export interface ITournamentType {
   };
   settings?: {
     server: string;
-    plateform: string;
+    platform: string;
     tournamentFormat: string;
     entryType: string;
     entryFeeAmount: string;

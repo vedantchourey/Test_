@@ -2,10 +2,19 @@ import Joi from "joi";
 
 export function validatePersistTournament(body: any) {
   let model = Joi.object({
-    status: Joi.string().valid("DRAFT", "PUBLISHED").required(),
-    joinStatus: Joi.string().valid("PRIVATE", "PUBLIC").required(),
-    createTemplateCode: Joi.string().required(),
     id: Joi.string().optional(),
+    status: Joi.string().when("id", {
+      is: "",
+      then: Joi.valid("DRAFT", "PUBLISHED").required(),
+    }),
+    joinStatus: Joi.string().when("id", {
+      is: "",
+      then: Joi.valid("PRIVATE", "PUBLIC").required(),
+    }),
+    createTemplateCode: Joi.string().when("id", {
+      is: "",
+      then: Joi.string().required(),
+    }),
     basic: Joi.object({
       name: Joi.string().required(),
       game: Joi.string().required(),
@@ -23,16 +32,25 @@ export function validatePersistTournament(body: any) {
     }).optional(),
     settings: Joi.object({
       server: Joi.string().required(),
-      plateform: Joi.string().required(),
+      platform: Joi.string().required(),
       tournamentFormat: Joi.string().required(),
       entryType: Joi.string().required(),
-      entryFeeAmount: Joi.string().required(),
+      entryFeeAmount: Joi.string().when("entryType", {
+        is: "credit",
+        then: Joi.string().required(),
+      }),
       checkInType: Joi.string().required(),
-      checkInStartTime: Joi.string().required(),
+      checkInStartTime: Joi.string().when("checkInType", {
+        is: "enable",
+        then: Joi.string().required(),
+      }),
       ScoreReporting: Joi.string().valid("ADMIN", "ADMIN_PLAYER").required(),
       screenShots: Joi.string().valid("NOT_REQUIRED", "REQUIRED").required(),
       limitType: Joi.string().valid("LIMITED", "UNLIMITED").required(),
-      limit: Joi.number().required(),
+      limit: Joi.number().when("limitType", {
+        is: "limited",
+        then: Joi.number().required(),
+      }),
       countryFlagOnBrackets: Joi.boolean().required(),
       registrationRegion: Joi.string().valid("all"),
     }).optional(),
@@ -41,9 +59,12 @@ export function validatePersistTournament(body: any) {
       startDate: Joi.date().required(),
       startTime: Joi.date().required(),
       checkInType: Joi.boolean().required(),
-      checkInAmount: Joi.number().valid(12).required(),
+      checkInAmount: Joi.number().required(),
       type: Joi.string().valid("SINGLE", "DOUBLE").required(),
-      thirdPlace: Joi.boolean().valid(true).required(),
+      thirdPlace: Joi.boolean().when("type", {
+        is: "SINGLE",
+        then: Joi.boolean().valid(true).required(),
+      }),
       playersLimit: Joi.number().required(),
       rounds: Joi.array().items(
         Joi.object({
@@ -61,8 +82,7 @@ export function validatePersistTournament(body: any) {
       )
       .optional(),
   });
-  let errors = model.validate(body, { abortEarly: false });
-  if (errors)
-    return errors.error?.details.map((x) => x.message);
+  let errors = model.validate(body, { abortEarly: false, allowUnknown: true });
+  if (errors) return errors.error?.details.map((x) => x.message);
   return null;
 }

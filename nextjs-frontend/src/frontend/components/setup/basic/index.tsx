@@ -40,6 +40,7 @@ const useStyles = makeStyles(() =>
   }));
 
 export interface BasicData {
+  name: string
   game: string;
   startDate: string | null;
   startTime: string | null;
@@ -57,6 +58,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
   const style = useStyles();
 
   const validationSchema = yup.object({
+    name: yup.string().required("Name is required"),
     game: yup.string().required("Game is required"),
     startDate: yup
       .date()
@@ -79,6 +81,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
   const formik = useFormik({
     initialValues: {
       game: data?.game || "",
+      name: data?.name || "",
       startDate: data?.startDate || null,
       startTime: data?.startTime || null,
       about: data?.about || "",
@@ -106,6 +109,23 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
         <Grid container rowSpacing={1} columnSpacing={5}>
           <Grid item xs={6}>
             <FormControl fullWidth variant="standard">
+              <FormLabel label="Name"></FormLabel>
+              <OutlinedInput
+                id="name"
+                name="name"
+                placeholder="FIFA22"
+                onChange={formik.handleChange}
+                value={formik.values.name}
+                className={style.inputBox}
+                onBlur={formik.handleBlur}
+                error={formik.touched.name && Boolean(formik.errors.name)}
+              />
+              {formik.touched.name && Boolean(formik.errors.name) ? (
+                <FormHelperText> {formik.errors.name} </FormHelperText>
+              ) : null}
+            </FormControl>
+          </Grid>
+          <Grid item xs={6}> <FormControl fullWidth variant="standard">
               <FormLabel label="Select Game"></FormLabel>
               <OutlinedInput
                 id="game"
@@ -120,9 +140,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
               {formik.touched.game && Boolean(formik.errors.game) ? (
                 <FormHelperText> {formik.errors.game} </FormHelperText>
               ) : null}
-            </FormControl>
-          </Grid>
-          <Grid item xs={6}></Grid>
+            </FormControl></Grid>
 
           <Grid item xs={6}>
             <FormControl fullWidth variant="standard">
