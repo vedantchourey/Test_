@@ -26,8 +26,7 @@ export default function NoobPage(props: Props): JSX.Element {
   const theme = useTheme();
   const appHeaderHeight = useAppSelector(getAppHeaderHeightSelector);
   const isDesktop = useAppSelector((x) =>
-    isDeviceTypeSelector(x, deviceTypes.desktop)
-  );
+    isDeviceTypeSelector(x, deviceTypes.desktop));
   const backgroundColor = isDesktop
     ? theme.palette.background.default
     : theme.palette.background.paper;

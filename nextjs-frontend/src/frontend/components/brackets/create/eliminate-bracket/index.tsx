@@ -32,13 +32,11 @@ export interface EliminateBracketData {
   checkInAmount: number;
   type: string;
   thirdPlace: boolean;
-  playersLimit: number;
-  rounds: [
-    {
-      round: string;
-      description: string;
-    }
-  ];
+  playersLimit: number |null;
+  rounds: {
+    round: string;
+    description: string;
+  }[];
 }
 
 interface EliminateBracketProps {
@@ -46,10 +44,10 @@ interface EliminateBracketProps {
   onSave?: (data: EliminateBracketData) => void;
 }
 
-const EliminateBracket: React.FC<EliminateBracketProps> = ({
+const EliminateBracket = React.forwardRef<EliminateBracketRef,EliminateBracketProps>(({
   onSave,
-  data,
-}): JSX.Element => {
+  data
+},ref) => {
   const validationSchema = yup.object({
     name: yup.string().required("A name is required"),
     startDate: yup
@@ -86,13 +84,23 @@ const EliminateBracket: React.FC<EliminateBracketProps> = ({
       type: data?.type || "",
       thirdPlace: data?.thirdPlace || false,
       playersLimit: data?.playersLimit || null,
+      rounds:[]
     },
     validationSchema: validationSchema,
-    onSubmit: (values: any) => {
+    onSubmit: (values: EliminateBracketData) => {
       if (onSave) {
-        onSave({ ...values, rounds: [] });
+        onSave({ ...values });
       }
     },
+  });
+
+  React.useImperativeHandle(ref,()=>{
+    return {
+      // eslint-disable-next-line
+      getFormik:():any=>{
+        return formik;
+      }
+    }
   });
 
   const changeHandler = (
@@ -177,8 +185,8 @@ const EliminateBracket: React.FC<EliminateBracketProps> = ({
               <NoobToggleButtonGroup
                 exclusive
                 value={formik.values.checkInType}
-                onChange={(val: any): void =>
-                  changeHandler("checkInType", val.target.value.toString())
+                onChange={(e: React.MouseEvent<Element, MouseEvent>, val:string): void =>
+                  changeHandler("checkInType", val)
                 }
                 fullWidth
               >
@@ -205,7 +213,7 @@ const EliminateBracket: React.FC<EliminateBracketProps> = ({
                 <OutlinedInput
                   id="checkInAmount"
                   placeholder="Minutes"
-                  onChange={(val: any): void =>
+                  onChange={(val: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void =>
                     changeHandler("checkInAmount", val.target.value)
                   }
                   value={formik.values.checkInAmount}
@@ -217,8 +225,8 @@ const EliminateBracket: React.FC<EliminateBracketProps> = ({
                 />
                 {formik.touched.checkInAmount &&
                 Boolean(formik.errors.checkInAmount) ? (
-                  <FormHelperText>{formik.errors.checkInAmount}</FormHelperText>
-                ) : null}
+                    <FormHelperText>{formik.errors.checkInAmount}</FormHelperText>
+                  ) : null}
               </React.Fragment>
             ) : null}
           </Grid>
@@ -273,8 +281,8 @@ const EliminateBracket: React.FC<EliminateBracketProps> = ({
               />
               {formik.touched.playersLimit &&
               Boolean(formik.errors.playersLimit) ? (
-                <FormHelperText>{formik.errors.playersLimit}</FormHelperText>
-              ) : null}
+                  <FormHelperText>{formik.errors.playersLimit}</FormHelperText>
+                ) : null}
             </FormControl>
           </Grid>
           <Grid item xs={6}></Grid>
@@ -345,6 +353,12 @@ const EliminateBracket: React.FC<EliminateBracketProps> = ({
       </CardLayout>
     </React.Fragment>
   );
-};
+});
+
+export interface EliminateBracketRef{
+  // eslint-disable-next-line
+  getFormik:()=>any
+}
+EliminateBracket.displayName="EliminateBracket";
 
 export default EliminateBracket;

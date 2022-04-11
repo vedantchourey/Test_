@@ -77,21 +77,21 @@ const Settings: React.FC<SettingProps> = ({
   const formik = useFormik({
     initialValues: {
       server: data?.server || "",
-      platform: data?.platform,
-      tournamentFormat: data?.tournamentFormat,
+      platform: data?.platform || "",
+      tournamentFormat: data?.tournamentFormat || "",
       entryType: data?.entryType || "free",
-      entryFeeAmount: data?.entryFeeAmount,
+      entryFeeAmount: data?.entryFeeAmount || "",
       checkInType: data?.checkInType || "disable",
-      checkInStartTime: data?.checkInStartTime,
+      checkInStartTime: data?.checkInStartTime || "",
       ScoreReporting: data?.ScoreReporting || "ADMIN_PLAYER",
       screenShots: data?.screenShots || "NOT_REQUIRED",
       limitType: data?.limitType || "UNLIMITED",
-      limit: data?.limit,
+      limit: data?.limit || -1,
       countryFlagOnBrackets: data?.countryFlagOnBrackets || true,
       registrationRegion: data?.registrationRegion || "all",
     },
     validationSchema: validationSchema,
-    onSubmit: (values: any) => {
+    onSubmit: (values: SettingData) => {
       if (onSave) {
         onSave(values);
       }
@@ -159,10 +159,10 @@ const Settings: React.FC<SettingProps> = ({
               </Select>
               {formik.touched.tournamentFormat &&
               Boolean(formik.errors.tournamentFormat) ? (
-                <FormHelperText>
-                  {formik.errors.tournamentFormat}
-                </FormHelperText>
-              ) : null}
+                  <FormHelperText>
+                    {formik.errors.tournamentFormat}
+                  </FormHelperText>
+                ) : null}
             </FormControl>
           </Grid>
           <Grid item xs={6}></Grid>
@@ -172,8 +172,8 @@ const Settings: React.FC<SettingProps> = ({
               <NoobToggleButtonGroup
                 exclusive
                 value={formik.values.entryType}
-                onChange={(val: any): void =>
-                  changeHandler("entryType", val.target.value)
+                onChange={(e: React.MouseEvent<Element, MouseEvent>, val:string): void =>
+                  changeHandler("entryType", val)
                 }
                 fullWidth
               >
@@ -196,7 +196,7 @@ const Settings: React.FC<SettingProps> = ({
                   <Select
                     displayEmpty
                     defaultValue={""}
-                    onChange={(val) => {
+                    onChange={(val):void => {
                       changeHandler("entryFeeAmount", val.target.value);
                     }}
                   >
@@ -206,10 +206,10 @@ const Settings: React.FC<SettingProps> = ({
                   </Select>
                   {formik.touched.entryFeeAmount &&
                   Boolean(formik.errors.entryFeeAmount) ? (
-                    <FormHelperText>
-                      {formik.errors.entryFeeAmount}
-                    </FormHelperText>
-                  ) : null}
+                      <FormHelperText>
+                        {formik.errors.entryFeeAmount}
+                      </FormHelperText>
+                    ) : null}
                 </FormControl>
               </React.Fragment>
             ) : null}
@@ -220,8 +220,8 @@ const Settings: React.FC<SettingProps> = ({
               <NoobToggleButtonGroup
                 exclusive
                 value={formik.values.checkInType}
-                onChange={(val: any): void =>
-                  changeHandler("checkInType", val.target.value)
+                onChange={(e: React.MouseEvent<Element, MouseEvent>, val:string): void =>
+                  changeHandler("checkInType", val)
                 }
                 fullWidth
               >
@@ -250,7 +250,7 @@ const Settings: React.FC<SettingProps> = ({
                     <TimePicker
                       inputFormat="HH:MM a"
                       onChange={(value): void =>
-                        changeHandler("checkInStartTime", value as any)
+                        changeHandler("checkInStartTime", value as string)
                       }
                       value={formik.values.checkInStartTime}
                       renderInput={(params): JSX.Element => (
@@ -267,11 +267,11 @@ const Settings: React.FC<SettingProps> = ({
                     />
                     {formik.touched.checkInStartTime &&
                     Boolean(formik.errors.checkInStartTime) ? (
-                      <FormHelperText>
-                        {" "}
-                        {formik.errors.checkInStartTime}{" "}
-                      </FormHelperText>
-                    ) : null}
+                        <FormHelperText>
+                          {" "}
+                          {formik.errors.checkInStartTime}{" "}
+                        </FormHelperText>
+                      ) : null}
                   </Box>
                 </FormControl>
               </React.Fragment>
@@ -283,8 +283,8 @@ const Settings: React.FC<SettingProps> = ({
               <NoobToggleButtonGroup
                 exclusive
                 value={formik.values.ScoreReporting}
-                onChange={(val: any): void =>
-                  changeHandler("ScoreReporting", val.target.value)
+                onChange={(e: React.MouseEvent<Element, MouseEvent>, val:string): void =>
+                  changeHandler("ScoreReporting", val)
                 }
                 fullWidth
               >
@@ -324,8 +324,8 @@ const Settings: React.FC<SettingProps> = ({
               <NoobToggleButtonGroup
                 exclusive
                 value={formik.values.limitType}
-                onChange={(val: any): void =>
-                  changeHandler("limitType", val.target.value)
+                onChange={(e: React.MouseEvent<Element, MouseEvent>, val:string): void =>
+                  changeHandler("limitType", val)
                 }
                 fullWidth
               >
@@ -350,10 +350,10 @@ const Settings: React.FC<SettingProps> = ({
               <NoobToggleButtonGroup
                 exclusive
                 value={formik.values.countryFlagOnBrackets ? "on" : "off"}
-                onChange={(val: any): void =>
+                onChange={(e: React.MouseEvent<Element, MouseEvent>, val:string): void =>
                   changeHandler(
                     "countryFlagOnBrackets",
-                    val.target.value === "on"
+                    val === "on"
                   )
                 }
                 fullWidth
@@ -371,8 +371,8 @@ const Settings: React.FC<SettingProps> = ({
               <NoobToggleButtonGroup
                 exclusive
                 value={formik.values.registrationRegion}
-                onChange={(val: any): void =>
-                  changeHandler("registrationRegion", val.target.value)
+                onChange={(e: React.MouseEvent<Element, MouseEvent>, val:string): void =>
+                  changeHandler("registrationRegion", val)
                 }
                 fullWidth
               >

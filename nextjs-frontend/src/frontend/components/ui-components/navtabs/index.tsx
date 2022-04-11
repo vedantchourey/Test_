@@ -18,24 +18,31 @@ const useStyles = makeStyles((theme: Theme) =>
 interface NavProps {
   items: string[];
   action?: React.ReactElement;
-  current?:number;
-  onClick?:(newCurrent:number)=>void
+  current?: string;
+  onClick?: (tab: string) => void;
 }
 
-const NavTabs: React.FC<NavProps> = ({ items = [], action = null,current =0, onClick }) => {
+const NavTabs: React.FC<NavProps> = ({
+  items = [],
+  action = null,
+  current = "",
+  onClick,
+}) => {
   const classes = useStyles();
-  
-  const handleChange = (event: React.SyntheticEvent, newValue: number):void => {
-    if(onClick){
-      onClick(newValue);
+
+  const handleChange = (
+    event: React.SyntheticEvent,
+    newValue: number
+  ): void => {
+    if (onClick) {
+      onClick(items[newValue]);
     }
-    
   };
 
   return (
-    <React.Fragment >
+    <React.Fragment>
       <Tabs
-        value={current}
+        value={items.indexOf(current)||0}
         classes={{ root: classes.tabs }}
         onChange={handleChange}
         aria-label="nav tabs"
@@ -43,7 +50,17 @@ const NavTabs: React.FC<NavProps> = ({ items = [], action = null,current =0, onC
         {items.map((tab) => {
           return <Tab key={tab} label={tab}></Tab>;
         })}
-        {action ? <Box paddingRight={2} width={"100%"} display="flex" alignItems={"center"} justifyContent={"flex-end"}>{action}</Box> : null}
+        {action ? (
+          <Box
+            paddingRight={2}
+            width={"100%"}
+            display="flex"
+            alignItems={"center"}
+            justifyContent={"flex-end"}
+          >
+            {action}
+          </Box>
+        ) : null}
       </Tabs>
     </React.Fragment>
   );

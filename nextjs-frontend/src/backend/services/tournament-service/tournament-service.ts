@@ -17,7 +17,7 @@ export const createTournament: NoobApiService<CreateOrEditTournamentRequest, ITo
   const { id, ...others } = createdTournament;
   return { data: { id: id as string, ...others } };
 }
- // @ts-ignore
+// @ts-ignore
 export const persistTournament: NoobApiService<CreateOrEditTournamentType, ITournamentType> = async (req, context) => {
   const errors = await validatePersistTournament(req);
   if(errors) return { errors }
