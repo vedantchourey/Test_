@@ -1,5 +1,5 @@
 import { NoobApiService } from '../../utils/api-middle-ware/api-middleware-typings';
-import { CreateOrEditTournamentRequest, CreateOrEditTournamentType } from './create-or-edit-tournament-request';
+import { CreateOrEditTournamentRequest } from './create-or-edit-tournament-request';
 import { ITournamentResponse, ITournamentType } from './i-tournament-response';
 import { validateTournament } from './create-tournament-validator';
 import { isThereAnyError } from '../../../common/utils/validation/validator';
@@ -17,17 +17,15 @@ export const createTournament: NoobApiService<CreateOrEditTournamentRequest, ITo
   const { id, ...others } = createdTournament;
   return { data: { id: id as string, ...others } };
 }
-// @ts-ignore
-export const persistTournament: NoobApiService<CreateOrEditTournamentType, ITournamentType> = async (req, context) => {
+ 
+export const persistTournament: NoobApiService<ITournamentType, ITournamentType> = async (req, context) => {
   const errors = await validatePersistTournament(req);
   if(errors) return { errors }
   const repository = new TournamentsRepository(context.transaction as Knex.Transaction);
   let tournament;
   if(req.id){
-    console.log('update -> ')
     tournament = await repository.upadte({ ...req });
   } else{
-    console.log('create -> ')
     tournament = await repository.create({ id: undefined,...req });
   }
   const { id, ...others } = tournament;

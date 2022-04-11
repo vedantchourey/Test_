@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-export function validatePersistTournament(body: any) {
+export function validatePersistTournament(body: any): any {
   const model = Joi.object({
     id: Joi.string().optional(),
     status: Joi.string().when("id", {
@@ -44,15 +44,19 @@ export function validatePersistTournament(body: any) {
         is: "enable",
         then: Joi.string().required(),
       }),
-      ScoreReporting: Joi.string().valid("ADMIN", "ADMIN_PLAYER")
-.required(),
-      screenShots: Joi.string().valid("NOT_REQUIRED", "REQUIRED")
-.required(),
-      limitType: Joi.string().valid("LIMITED", "UNLIMITED")
-.required(),
+      ScoreReporting: Joi.string()
+        .valid("ADMIN", "ADMIN_PLAYER")
+        .required(),
+      screenShots: Joi.string()
+        .valid("NOT_REQUIRED", "REQUIRED")
+        .required(),
+      limitType: Joi.string()
+        .valid("LIMITED", "UNLIMITED").
+        required(),
       limit: Joi.number().when("limitType", {
         is: "limited",
-        then: Joi.number().required(),
+        then: Joi.number()
+          .required(),
       }),
       countryFlagOnBrackets: Joi.boolean().required(),
       registrationRegion: Joi.string().valid("all"),
@@ -63,12 +67,14 @@ export function validatePersistTournament(body: any) {
       startTime: Joi.date().required(),
       checkInType: Joi.boolean().required(),
       checkInAmount: Joi.number().required(),
-      type: Joi.string().valid("SINGLE", "DOUBLE")
-.required(),
+      type: Joi.string()
+        .valid("SINGLE", "DOUBLE")
+        .required(),
       thirdPlace: Joi.boolean().when("type", {
         is: "SINGLE",
-        then: Joi.boolean().valid(true)
-.required(),
+        then: Joi.boolean()
+          .valid(true)
+          .required(),
       }),
       playersLimit: Joi.number().required(),
       rounds: Joi.array().items(

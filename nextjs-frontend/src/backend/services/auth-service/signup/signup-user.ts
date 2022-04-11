@@ -70,7 +70,6 @@ export default async function signupUser(request: SignupRequest, context: PerReq
 
   const {signupParams, metaData} = mapRequiredParams(request);
   const result = await backendSupabase.auth.signUp({...signupParams}, metaData);
-  console.log('result.error -> ', result.error)
   if (result.error) return {errors: {apiError: result.error}};
 
   const transaction = context.transaction as Knex.Transaction;
