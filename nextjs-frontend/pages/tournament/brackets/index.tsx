@@ -11,7 +11,7 @@ export interface BracketProps {
   onSubmit?: (data: TournamentData) => void;
 }
 
-const Brackets: React.FC<BracketProps> = ({ onSubmit }): JSX.Element => {
+const Brackets: React.FC<BracketProps> = (): JSX.Element => {
   const tabs = ["Create"];
   const [current, setCurrent] = React.useState(0);
 

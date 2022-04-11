@@ -20,9 +20,10 @@ interface TournamentContextType {
   setData: (data: TournamentData) => void;
 }
 
-export const TournamentContext = React.createContext<any>({
+export const TournamentContext = React.createContext<TournamentContextType>({
   data: {},
-  setData: (data: any) => {},
+  // @typescript-eslint/no-unused-vars
+  setData: (data: TournamentData) => {},
 });
 
 const Tournament:React.FC = ({children}) => {

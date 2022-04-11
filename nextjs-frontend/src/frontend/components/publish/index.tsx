@@ -1,7 +1,6 @@
 import { Button } from "@mui/material";
 import React from "react";
 import {  TournamentData } from "../tournament";
-import NavTabs from "../ui-components/navtabs";
 import PublishTournament from "./publish-tournament";
 import {ReactComponent as CircleCloseIcon} from '../../../../public/icons/close.svg';
 import { createStyles, makeStyles } from '@mui/styles';
@@ -9,14 +8,11 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AccordionAlt from "../ui-components/accordion";
 import { Box } from "@mui/system";
 
-
-
 const useStyles = makeStyles(() =>
 createStyles({
     icon: {
       borderRadius:"50%",
-    border: "1px solid rgba(255, 255, 255, 0.3)"
-
+      border: "1px solid rgba(255, 255, 255, 0.3)"
     }
   })
 );

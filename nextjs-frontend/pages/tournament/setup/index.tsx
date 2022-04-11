@@ -6,9 +6,7 @@ import Settings, {SettingData} from "../../../src/frontend/components/setup/sett
 import Tournament, {TournamentContext} from '../../../src/frontend/components/tournament';
 import NoobPage from "../../../src/frontend/components/page/noob-page";
 
-interface SetupProps {}
-
-const Setup:React.FC<SetupProps> = ():JSX.Element => {
+const Setup:React.FC<any> = ():JSX.Element => {
 
   const {data, setData} = React.useContext<any>(TournamentContext);
 
