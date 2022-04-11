@@ -33,13 +33,11 @@ export interface EliminateBracketData {
   checkInAmount: number;
   type: string;
   thirdPlace: boolean;
-  playersLimit: number;
-  rounds: [
-    {
-      round: string;
-      description: string;
-    }
-  ];
+  playersLimit: number | null;
+  rounds: {
+    round: string;
+    description: string;
+  }[];
 }
 
 interface EliminateBracketProps {
@@ -47,17 +45,10 @@ interface EliminateBracketProps {
   onSave?: (data: EliminateBracketData) => void;
 }
 
-const template = {
-  round: "",
-  description: "",
-};
-
-const EliminateBracket: React.FC<EliminateBracketProps> = ({
-  onSave,
-  data,
-}): JSX.Element => {
-  const [rounds, setRounds] = useState([template]);
-
+const EliminateBracket = React.forwardRef<
+  EliminateBracketRef,
+  EliminateBracketProps
+>(({ onSave, data }, ref) => {
   const validationSchema = yup.object({
     name: yup.string().required("A name is required"),
     startDate: yup
@@ -94,74 +85,31 @@ const EliminateBracket: React.FC<EliminateBracketProps> = ({
       type: data?.type || "",
       thirdPlace: data?.thirdPlace || false,
       playersLimit: data?.playersLimit || 2,
+      rounds: [],
     },
     validationSchema: validationSchema,
-    onSubmit: (values: any) => {
+    onSubmit: (values: EliminateBracketData) => {
       if (onSave) {
-        onSave({ ...values, rounds: [] });
+        onSave({ ...values });
       }
     },
   });
-  console.log("formik.values.playersLimit", formik.values.playersLimit);
-  console.log(
-    `formik.values.type == "SINGLE" ? 1 : 2`,
-    formik.values.type == "SINGLE" ? 1 : 2
-  );
 
-  var d = new Duel(Number(8), formik.values.type == "SINGLE" ? 1 : 2);
-  let roundsSize = [] as Array<number>;
-  // d.matches = [
-  //   {
-  //     id: {
-  //       s: 1,
-  //       r: 1,
-  //       m: 1,
-  //     },
-  //     p: [1, 4],
-  //   },
-  //   {
-  //     id: {
-  //       s: 1,
-  //       r: 1,
-  //       m: 2,
-  //     },
-  //     p: [3, 2],
-  //   },
-  //   {
-  //     id: {
-  //       s: 1,
-  //       r: 2,
-  //       m: 1,
-  //     },
-  //     p: [0, 0],
-  //   },
-  //   {
-  //     id: {
-  //       s: 2,
-  //       r: 1,
-  //       m: 1,
-  //     },
-  //     p: [0, 0],
-  //   },
-  // ];
-  d.score({ s: 1, r: 1, m: 1 }, [1, 0]);
-  d.matches.forEach((element: any) => {
-    if (!roundsSize.includes(element.id.r)) {
-      roundsSize.push(element.id.r);
-    }
+  React.useImperativeHandle(ref, () => {
+    return {
+      // eslint-disable-next-line
+      getFormik: (): any => {
+        return formik;
+      },
+    };
   });
-  console.log(d.matches);
-  console.log(1111, roundsSize);
 
   const changeHandler = (
     property: string,
     value: string | boolean | Date | null
   ): void => {
     formik.setFieldValue(property, value, true);
-    // setData({ ...data, [property]: value });
   };
-  if (!roundsSize.length) roundsSize.push(1);
-
   return (
     <React.Fragment>
       <CardLayout title="Eliminate Bracket">
@@ -237,9 +185,10 @@ const EliminateBracket: React.FC<EliminateBracketProps> = ({
               <NoobToggleButtonGroup
                 exclusive
                 value={formik.values.checkInType}
-                onChange={(val: any): void =>
-                  changeHandler("checkInType", val.target.value.toString())
-                }
+                onChange={(
+                  e: React.MouseEvent<Element, MouseEvent>,
+                  val: string
+                ): void => changeHandler("checkInType", val)}
                 fullWidth
               >
                 <NoobToggleButton value="false">Off</NoobToggleButton>
@@ -265,9 +214,11 @@ const EliminateBracket: React.FC<EliminateBracketProps> = ({
                 <OutlinedInput
                   id="checkInAmount"
                   placeholder="Minutes"
-                  onChange={(val: any): void =>
-                    changeHandler("checkInAmount", val.target.value)
-                  }
+                  onChange={(
+                    val: React.ChangeEvent<
+                      HTMLTextAreaElement | HTMLInputElement
+                    >
+                  ): void => changeHandler("checkInAmount", val.target.value)}
                   value={formik.values.checkInAmount}
                   onBlur={formik.handleBlur}
                   error={
@@ -403,6 +354,12 @@ const EliminateBracket: React.FC<EliminateBracketProps> = ({
       </CardLayout>
     </React.Fragment>
   );
-};
+});
+
+export interface EliminateBracketRef {
+  // eslint-disable-next-line
+  getFormik: () => any;
+}
+EliminateBracket.displayName = "EliminateBracket";
 
 export default EliminateBracket;

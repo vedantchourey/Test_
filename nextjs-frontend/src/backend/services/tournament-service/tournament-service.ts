@@ -1,7 +1,6 @@
 import { NoobApiService } from "../../utils/api-middle-ware/api-middleware-typings";
 import {
   CreateOrEditTournamentRequest,
-  CreateOrEditTournamentType,
 } from "./create-or-edit-tournament-request";
 import { ITournamentResponse, ITournamentType } from "./i-tournament-response";
 import { validateTournament } from "./create-tournament-validator";
@@ -30,9 +29,9 @@ export const createTournament: NoobApiService<
   const { id, ...others } = createdTournament;
   return { data: { id: id as string, ...others } };
 };
-// @ts-ignore
+
 export const persistTournament: NoobApiService<
-  CreateOrEditTournamentType,
+  ITournamentType,
   ITournamentType
 > = async (req, context) => {
   const errors = await validatePersistTournament(req);
@@ -47,10 +46,8 @@ export const persistTournament: NoobApiService<
   } else {
     tournament = await repository.create({ id: undefined, ...req } as any);
   }
-  console.log();
-
   if (req.bracketsMetadata?.playersLimit && tournament.id) {
-    let bracket = persistBrackets(tournament, context);
+    persistBrackets(tournament, context);
   }
   const { id, ...others } = tournament;
   return { id: id as string, ...others };

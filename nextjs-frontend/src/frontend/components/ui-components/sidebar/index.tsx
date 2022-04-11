@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
 import styled from "@emotion/styled";
+import { useRouter } from "next/router";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -55,18 +56,31 @@ const NoobListItemText = styled(ListItemText)(() => ({
   }
 }));
 
+const NoobListItem = styled(ListItem)(() => ({
+  "&.Mui-selected":{
+    backgroundColor:"transparent",
+    color:"#7265F1"
+  }
+}));
+
 const NoobAccordionDetails = styled(AccordionDetails)(() => ({
   padding:"0px 16px 0px"
 }));
 
+interface NavItems{
+  title: string;
+  url: string;
+  as?:string;
+  // eslint-disable-next-line
+  isActive?:(url:string)=>boolean
+
+}
 
 interface NavProp {
   icon: React.ReactElement | null;
   title: string;
-  items: {
-    title: string;
-    url: string;
-  }[];
+  items: NavItems[];
+  isActive?:(url:string)=>boolean
 }
 
 export interface SideBarNavProps {
@@ -75,11 +89,39 @@ export interface SideBarNavProps {
 
 const SideBar: React.FC<SideBarNavProps> = ({ nav }) => {
   const classes = useStyles();
+  const router = useRouter();
+  const [active,setActive]= React.useState("");
+
+  React.useEffect(()=>{
+
+    const navItem = nav.find(({items,isActive})=>{
+      if(isActive){
+        return isActive(router.asPath);
+      }
+      return items.find((item)=>{
+        return item.url === router.asPath;
+      }) !== undefined
+    })
+
+    if(navItem){
+      setActive(navItem.title);
+    }
+
+  },[router.asPath])
+
+  const changeHandler = (newActive:string):void=>{
+    if(newActive === active){
+      setActive("");
+    }else{
+      setActive(newActive);
+    }
+    
+  }
 
   const renderNav = ():JSX.Element[] => {
     return nav.map(({ icon, title, items }):JSX.Element => {
       return (
-        <NoobAccordion key={title} >
+        <NoobAccordion key={title} expanded={active === title} onChange={():void=>changeHandler(title)}>
           <AccordionSummary
             expandIcon={<img src='/icons/Downarrow.svg' alt='icon' />}
             aria-controls="panel1a-content"
@@ -94,17 +136,17 @@ const SideBar: React.FC<SideBarNavProps> = ({ nav }) => {
           </AccordionSummary>
           <NoobAccordionDetails>
             <List className={classes.listItems}>
-              {items.map(({ title }) => {
+              {items.map(({ title,url, as,isActive}) => {
                 return (
                 
-                  <ListItem key={title}>
+                  <NoobListItem key={`${url}-${as}`} selected={isActive && isActive(router.asPath)}>
                     <NoobListItemIcon>
                       <img src='/icons/Dot.svg' alt='icon' />
                     </NoobListItemIcon>
-                    <NoobListItemText >
+                    <NoobListItemText onClick={():Promise<boolean>=>router.push(url,as,{shallow:true})} style={{cursor:"pointer"}}>
                       {title}
                     </NoobListItemText>
-                  </ListItem>
+                  </NoobListItem>
                   
                 );
               })}

@@ -47,6 +47,7 @@ export interface BasicData {
   about: string;
   cloneTournament: boolean;
   tournamentCloneId?: string;
+  banner?:string
 }
 
 interface BasicPorps {
@@ -126,21 +127,21 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
             </FormControl>
           </Grid>
           <Grid item xs={6}> <FormControl fullWidth variant="standard">
-              <FormLabel label="Select Game"></FormLabel>
-              <OutlinedInput
-                id="game"
-                name="game"
-                placeholder="FIFA22"
-                onChange={formik.handleChange}
-                value={formik.values.game}
-                className={style.inputBox}
-                onBlur={formik.handleBlur}
-                error={formik.touched.game && Boolean(formik.errors.game)}
-              />
-              {formik.touched.game && Boolean(formik.errors.game) ? (
-                <FormHelperText> {formik.errors.game} </FormHelperText>
-              ) : null}
-            </FormControl></Grid>
+            <FormLabel label="Select Game"></FormLabel>
+            <OutlinedInput
+              id="game"
+              name="game"
+              placeholder="FIFA22"
+              onChange={formik.handleChange}
+              value={formik.values.game}
+              className={style.inputBox}
+              onBlur={formik.handleBlur}
+              error={formik.touched.game && Boolean(formik.errors.game)}
+            />
+            {formik.touched.game && Boolean(formik.errors.game) ? (
+              <FormHelperText> {formik.errors.game} </FormHelperText>
+            ) : null}
+          </FormControl></Grid>
 
           <Grid item xs={6}>
             <FormControl fullWidth variant="standard">

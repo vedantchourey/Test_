@@ -1,5 +1,3 @@
-import { TournamentType } from "../../tournament-service/tournament-type";
-
 export interface ITournament {
   id?: string;
   name: string;

@@ -18,6 +18,10 @@ interface AccordionLabelProp {
   title: string;
   subTitle?:string;
   expanded?: boolean;
+  icon?:{
+    expanded?:JSX.Element
+    notExpanded?:JSX.Element
+  }
 }
 
 const NoobAccordionSummaryAlt = styled(AccordionSummary)(() => ({
@@ -40,14 +44,29 @@ const NoobAccordionAlt = styled(Accordion)(() => ({
   boxShadow: "none",
 }));
 
-const AccordionAlt: React.FC<AccordionLabelProp> = ({ title, subTitle, children }) => {
+const AccordionAlt: React.FC<AccordionLabelProp> = ({ title, subTitle, children,icon }) => {
   const classes = useStyles();
   const [isExapnded, setExpanded] = React.useState(false);
+
+  const expandedIcon = ():JSX.Element =>{
+    if(icon){
+      if(icon.expanded && isExapnded){
+        return icon.expanded;
+      }else if(icon.notExpanded && !isExapnded){
+        return icon.notExpanded;
+      }
+    }
+    if(isExapnded){
+      return <img src="/icons/Minus.svg" alt="minus"/>
+    }
+    return <img src="/icons/Plus.svg" alt="plus"/>
+    
+  }
   return (
     <NoobAccordionAlt onChange={(e, expanded):void => setExpanded(expanded)}>
       <NoobAccordionSummaryAlt
         className={classes.accordion}
-        expandIcon={isExapnded ? <img src="icons/Minus.svg" alt="minus"/> : <img src="icons/Plus.svg" alt="plus"/>}
+        expandIcon={expandedIcon()}
       >
         <Box display={"flex"} flexDirection="column" alignItems={"flex-start"}>
           <Typography variant="subtitle1">{title}</Typography>

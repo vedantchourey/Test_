@@ -1,7 +1,7 @@
 import { useTheme } from "@mui/material";
 import { useAppSelector } from "../../redux-store/redux-store";
 import {
-  getAppHeaderHeightSelector,
+  
   isDeviceTypeSelector,
 } from "../../redux-store/layout/layout-selectors";
 import Head from "next/head";
@@ -24,10 +24,7 @@ export default function NoobPage(props: Props): JSX.Element {
   const metaKeys = Object.keys(metaData);
 
   const theme = useTheme();
-  const appHeaderHeight = useAppSelector(getAppHeaderHeightSelector);
-  const isDesktop = useAppSelector((x) =>
-    isDeviceTypeSelector(x, deviceTypes.desktop)
-  );
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
   const backgroundColor = isDesktop
     ? theme.palette.background.default
     : theme.palette.background.paper;
