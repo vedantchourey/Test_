@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import TextField from "@mui/material/TextField";
 import * as yup from "yup";
 import { useFormik } from "formik";
@@ -23,7 +23,6 @@ import NoobToggleButtonGroup, {
 import { Box } from "@mui/system";
 import CardLayout from "../../../ui-components/card-layout";
 import NoobReachTextEditor from "../../../ui-components/rte";
-const Duel = require("tournament/duel");
 
 export interface EliminateBracketData {
   name: string;
@@ -33,7 +32,7 @@ export interface EliminateBracketData {
   checkInAmount: number;
   type: string;
   thirdPlace: boolean;
-  playersLimit: number | null;
+  playersLimit: number |null;
   rounds: {
     round: string;
     description: string;
@@ -45,10 +44,10 @@ interface EliminateBracketProps {
   onSave?: (data: EliminateBracketData) => void;
 }
 
-const EliminateBracket = React.forwardRef<
-  EliminateBracketRef,
-  EliminateBracketProps
->(({ onSave, data }, ref) => {
+const EliminateBracket = React.forwardRef<EliminateBracketRef,EliminateBracketProps>(({
+  onSave,
+  data
+},ref) => {
   const validationSchema = yup.object({
     name: yup.string().required("A name is required"),
     startDate: yup
@@ -84,8 +83,8 @@ const EliminateBracket = React.forwardRef<
       checkInAmount: data?.checkInAmount || 0,
       type: data?.type || "",
       thirdPlace: data?.thirdPlace || false,
-      playersLimit: data?.playersLimit || 2,
-      rounds: [],
+      playersLimit: data?.playersLimit || null,
+      rounds:[]
     },
     validationSchema: validationSchema,
     onSubmit: (values: EliminateBracketData) => {
@@ -95,13 +94,13 @@ const EliminateBracket = React.forwardRef<
     },
   });
 
-  React.useImperativeHandle(ref, () => {
+  React.useImperativeHandle(ref,()=>{
     return {
       // eslint-disable-next-line
-      getFormik: (): any => {
+      getFormik:():any=>{
         return formik;
-      },
-    };
+      }
+    }
   });
 
   const changeHandler = (
@@ -109,6 +108,7 @@ const EliminateBracket = React.forwardRef<
     value: string | boolean | Date | null
   ): void => {
     formik.setFieldValue(property, value, true);
+    // setData({ ...data, [property]: value });
   };
   return (
     <React.Fragment>
@@ -185,10 +185,9 @@ const EliminateBracket = React.forwardRef<
               <NoobToggleButtonGroup
                 exclusive
                 value={formik.values.checkInType}
-                onChange={(
-                  e: React.MouseEvent<Element, MouseEvent>,
-                  val: string
-                ): void => changeHandler("checkInType", val)}
+                onChange={(e: React.MouseEvent<Element, MouseEvent>, val:string): void =>
+                  changeHandler("checkInType", val)
+                }
                 fullWidth
               >
                 <NoobToggleButton value="false">Off</NoobToggleButton>
@@ -214,11 +213,9 @@ const EliminateBracket = React.forwardRef<
                 <OutlinedInput
                   id="checkInAmount"
                   placeholder="Minutes"
-                  onChange={(
-                    val: React.ChangeEvent<
-                      HTMLTextAreaElement | HTMLInputElement
-                    >
-                  ): void => changeHandler("checkInAmount", val.target.value)}
+                  onChange={(val: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void =>
+                    changeHandler("checkInAmount", val.target.value)
+                  }
                   value={formik.values.checkInAmount}
                   onBlur={formik.handleBlur}
                   error={
@@ -228,8 +225,8 @@ const EliminateBracket = React.forwardRef<
                 />
                 {formik.touched.checkInAmount &&
                 Boolean(formik.errors.checkInAmount) ? (
-                  <FormHelperText>{formik.errors.checkInAmount}</FormHelperText>
-                ) : null}
+                    <FormHelperText>{formik.errors.checkInAmount}</FormHelperText>
+                  ) : null}
               </React.Fragment>
             ) : null}
           </Grid>
@@ -284,8 +281,8 @@ const EliminateBracket = React.forwardRef<
               />
               {formik.touched.playersLimit &&
               Boolean(formik.errors.playersLimit) ? (
-                <FormHelperText>{formik.errors.playersLimit}</FormHelperText>
-              ) : null}
+                  <FormHelperText>{formik.errors.playersLimit}</FormHelperText>
+                ) : null}
             </FormControl>
           </Grid>
           <Grid item xs={6}></Grid>
@@ -307,39 +304,41 @@ const EliminateBracket = React.forwardRef<
               <TextField type="number" />
             </FormControl>
           </Grid>
-          {roundsSize.map((x, index) => (
-            <Grid item xs={12}>
-              <FormLabel label="Rounds" />
-              <FormHelperText> Round {index + 1} </FormHelperText>
-              <Box
-                display={"flex"}
-                marginBottom={5}
-                justifyContent="space-between"
-              >
-                <Select style={{ width: "70%" }} displayEmpty defaultValue={""}>
-                  <MenuItem value="">Select Round </MenuItem>
-                  <MenuItem value="1">Best of 1</MenuItem>
-                  <MenuItem value="2">Best of 2</MenuItem>
-                </Select>
-                <Button
-                  style={{ width: "25%" }}
-                  variant="contained"
-                  startIcon={<img src="/icons/delete.svg" alt="delete" />}
-                >
-                  Remove Details
-                </Button>
-              </Box>
-              <NoobReachTextEditor />
-            </Grid>
-          ))}
-
           <Grid item xs={12}>
+            <FormLabel label="Rounds" />
+            <FormHelperText> Round 1 </FormHelperText>
             <Box
               display={"flex"}
               marginBottom={5}
               justifyContent="space-between"
             >
-              <div style={{ width: "70%" }}></div>
+              <Select style={{ width: "70%" }} displayEmpty defaultValue={""}>
+                <MenuItem value="">Select Round </MenuItem>
+                <MenuItem value="1">Best of 1</MenuItem>
+                <MenuItem value="2">Best of 2</MenuItem>
+              </Select>
+              <Button
+                style={{ width: "25%" }}
+                variant="contained"
+                startIcon={<img src="/icons/delete.svg" alt="delete" />}
+              >
+                Remove Details
+              </Button>
+            </Box>
+            <NoobReachTextEditor />
+          </Grid>
+          <Grid item xs={12}>
+            <FormHelperText> Round 2 </FormHelperText>
+            <Box
+              display={"flex"}
+              marginBottom={5}
+              justifyContent="space-between"
+            >
+              <Select style={{ width: "70%" }} displayEmpty defaultValue={""}>
+                <MenuItem value="">Select Round </MenuItem>
+                <MenuItem value="1">Best of 1</MenuItem>
+                <MenuItem value="2">Best of 2</MenuItem>
+              </Select>
               <Button
                 style={{ width: "25%" }}
                 variant="contained"
@@ -356,10 +355,10 @@ const EliminateBracket = React.forwardRef<
   );
 });
 
-export interface EliminateBracketRef {
+export interface EliminateBracketRef{
   // eslint-disable-next-line
-  getFormik: () => any;
+  getFormik:()=>any
 }
-EliminateBracket.displayName = "EliminateBracket";
+EliminateBracket.displayName="EliminateBracket";
 
 export default EliminateBracket;
