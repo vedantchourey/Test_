@@ -10,7 +10,7 @@ interface SetupProps {}
 
 const Setup:React.FC<SetupProps> = ():JSX.Element => {
 
-  const {data, setData} = React.useContext(TournamentContext);
+  const {data, setData} = React.useContext<any>(TournamentContext);
 
   const tabs = ["Basic","Info","Settings"];
   const [current, setCurrent] = React.useState(0);
@@ -26,7 +26,7 @@ const Setup:React.FC<SetupProps> = ():JSX.Element => {
   }
 
   const handleSettingSave = (setting: SettingData):void =>{
-    setData({...data,setting})
+    setData({...data, setting})
   }
 
   const goBack = ():void =>{
