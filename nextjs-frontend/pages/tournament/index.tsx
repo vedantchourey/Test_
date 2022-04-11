@@ -17,13 +17,14 @@ export interface TournamentData {
 
 interface TournamentContextType {
   data: TournamentData;
-  setData: (data: TournamentData) => void;
+  setData: (data: TournamentData) => any;
 }
 
 export const TournamentContext = React.createContext<TournamentContextType>({
   data: {},
-  // @typescript-eslint/no-unused-vars
-  setData: (data: TournamentData) => {},
+  setData: (data: TournamentData) => {
+    return data
+  },
 });
 
 const Tournament:React.FC = ({children}) => {
