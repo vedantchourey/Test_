@@ -1,15 +1,12 @@
 import { Grid } from "@mui/material";
 import React from "react";
-import Brackets from "./brackets";
-import Setup from "./setup";
 import { BasicData } from "../../src/frontend/components/setup/basic";
 import { InfoData } from "../../src/frontend/components/setup/info";
 import SideBar from "../../src/frontend/components/ui-components/sidebar";
-import axios from "axios";
+// import axios from "axios";
 import { EliminateBracketData } from "../../src/frontend/components/brackets/create/eliminate-bracket";
 import { SettingData } from "../../src/frontend/components/setup/settings";
 import NoobPage from "../../src/frontend/components/page/noob-page";
-// import Publish from "../publish";
 
 export interface TournamentData {
   basic?: BasicData;
@@ -23,9 +20,9 @@ interface TournamentContextType {
   setData: (data: TournamentData) => void;
 }
 
-export const TournamentContext = React.createContext<TournamentContextType>({
+export const TournamentContext = React.createContext<any>({
   data: {},
-  setData: (data) => {},
+  setData: (data: any) => {},
 });
 
 const Tournament:React.FC = ({children}) => {
@@ -74,16 +71,16 @@ const Tournament:React.FC = ({children}) => {
     },
   ];
 
-  const submitHandler = (submitData: TournamentData): void => {
-    axios
-      .post("", submitData)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
+  // const submitHandler = (submitData: TournamentData): void => {
+  //   axios
+  //     .post("", submitData)
+  //     .then((res) => {
+  //       console.log(res);
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //     });
+  // };
 
   return (
     <NoobPage
