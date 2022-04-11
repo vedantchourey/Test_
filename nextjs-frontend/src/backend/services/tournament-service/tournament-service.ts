@@ -18,7 +18,7 @@ export const createTournament: NoobApiService<CreateOrEditTournamentRequest, ITo
   return { data: { id: id as string, ...others } };
 }
  // @ts-ignore
-export const persistTournament: NoobApiService<CreateOrEditTournamentType, ITournamentType> = async (req, context) => {
+export const persistTournament: NoobApiService<ITournamentType, ITournamentType> = async (req, context) => {
   const errors = await validatePersistTournament(req);
   if(errors) return { errors }
   const repository = new TournamentsRepository(context.transaction as Knex.Transaction);
