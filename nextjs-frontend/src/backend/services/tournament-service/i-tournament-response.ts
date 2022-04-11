@@ -17,14 +17,12 @@ export interface ITournamentResponse {
 
 export interface ITournamentType {
   id?: string;
-  basic?: {
-    name: string;
-    game: string;
-    startDate: Date;
-    startTime: Date;
-    about: string;
-    banner: string;
-  };
+  name: string;
+  game: string;
+  startDate: Date;
+  startTime: Date;
+  about: string;
+  banner: string;
   info?: {
     contactOption: string;
     contactUrl: string;
@@ -52,7 +50,7 @@ export interface ITournamentType {
     startDate: Date;
     startTime: Date;
     checkInType: boolean;
-    checkInAmount: 12;
+    checkInAmount: number;
     type: "SINGLE" | "DOUBLE";
     thirdPlace: true;
     playersLimit: number;
@@ -67,5 +65,5 @@ export interface ITournamentType {
   }>;
   status: "DRAFT" | "PUBLISHED";
   joinStatus: "PRIVATE" | "PUBLIC";
-  createTemplateCode: string
+  createTemplateCode: string;
 }

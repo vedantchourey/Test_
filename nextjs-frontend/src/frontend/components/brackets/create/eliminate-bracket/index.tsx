@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import * as yup from "yup";
 import { useFormik } from "formik";
@@ -23,6 +23,7 @@ import NoobToggleButtonGroup, {
 import { Box } from "@mui/system";
 import CardLayout from "../../../ui-components/card-layout";
 import NoobReachTextEditor from "../../../ui-components/rte";
+const Duel = require("tournament/duel");
 
 export interface EliminateBracketData {
   name: string;
@@ -46,10 +47,17 @@ interface EliminateBracketProps {
   onSave?: (data: EliminateBracketData) => void;
 }
 
+const template = {
+  round: "",
+  description: "",
+};
+
 const EliminateBracket: React.FC<EliminateBracketProps> = ({
   onSave,
   data,
 }): JSX.Element => {
+  const [rounds, setRounds] = useState([template]);
+
   const validationSchema = yup.object({
     name: yup.string().required("A name is required"),
     startDate: yup
@@ -85,7 +93,7 @@ const EliminateBracket: React.FC<EliminateBracketProps> = ({
       checkInAmount: data?.checkInAmount || 0,
       type: data?.type || "",
       thirdPlace: data?.thirdPlace || false,
-      playersLimit: data?.playersLimit || null,
+      playersLimit: data?.playersLimit || 2,
     },
     validationSchema: validationSchema,
     onSubmit: (values: any) => {
@@ -94,6 +102,56 @@ const EliminateBracket: React.FC<EliminateBracketProps> = ({
       }
     },
   });
+  console.log("formik.values.playersLimit", formik.values.playersLimit);
+  console.log(
+    `formik.values.type == "SINGLE" ? 1 : 2`,
+    formik.values.type == "SINGLE" ? 1 : 2
+  );
+
+  var d = new Duel(Number(8), formik.values.type == "SINGLE" ? 1 : 2);
+  let roundsSize = [] as Array<number>;
+  // d.matches = [
+  //   {
+  //     id: {
+  //       s: 1,
+  //       r: 1,
+  //       m: 1,
+  //     },
+  //     p: [1, 4],
+  //   },
+  //   {
+  //     id: {
+  //       s: 1,
+  //       r: 1,
+  //       m: 2,
+  //     },
+  //     p: [3, 2],
+  //   },
+  //   {
+  //     id: {
+  //       s: 1,
+  //       r: 2,
+  //       m: 1,
+  //     },
+  //     p: [0, 0],
+  //   },
+  //   {
+  //     id: {
+  //       s: 2,
+  //       r: 1,
+  //       m: 1,
+  //     },
+  //     p: [0, 0],
+  //   },
+  // ];
+  d.score({ s: 1, r: 1, m: 1 }, [1, 0]);
+  d.matches.forEach((element: any) => {
+    if (!roundsSize.includes(element.id.r)) {
+      roundsSize.push(element.id.r);
+    }
+  });
+  console.log(d.matches);
+  console.log(1111, roundsSize);
 
   const changeHandler = (
     property: string,
@@ -102,6 +160,8 @@ const EliminateBracket: React.FC<EliminateBracketProps> = ({
     formik.setFieldValue(property, value, true);
     // setData({ ...data, [property]: value });
   };
+  if (!roundsSize.length) roundsSize.push(1);
+
   return (
     <React.Fragment>
       <CardLayout title="Eliminate Bracket">
@@ -296,41 +356,39 @@ const EliminateBracket: React.FC<EliminateBracketProps> = ({
               <TextField type="number" />
             </FormControl>
           </Grid>
-          <Grid item xs={12}>
-            <FormLabel label="Rounds" />
-            <FormHelperText> Round 1 </FormHelperText>
-            <Box
-              display={"flex"}
-              marginBottom={5}
-              justifyContent="space-between"
-            >
-              <Select style={{ width: "70%" }} displayEmpty defaultValue={""}>
-                <MenuItem value="">Select Round </MenuItem>
-                <MenuItem value="1">Best of 1</MenuItem>
-                <MenuItem value="2">Best of 2</MenuItem>
-              </Select>
-              <Button
-                style={{ width: "25%" }}
-                variant="contained"
-                startIcon={<img src="/icons/delete.svg" alt="delete" />}
+          {roundsSize.map((x, index) => (
+            <Grid item xs={12}>
+              <FormLabel label="Rounds" />
+              <FormHelperText> Round {index + 1} </FormHelperText>
+              <Box
+                display={"flex"}
+                marginBottom={5}
+                justifyContent="space-between"
               >
-                Remove Details
-              </Button>
-            </Box>
-            <NoobReachTextEditor />
-          </Grid>
+                <Select style={{ width: "70%" }} displayEmpty defaultValue={""}>
+                  <MenuItem value="">Select Round </MenuItem>
+                  <MenuItem value="1">Best of 1</MenuItem>
+                  <MenuItem value="2">Best of 2</MenuItem>
+                </Select>
+                <Button
+                  style={{ width: "25%" }}
+                  variant="contained"
+                  startIcon={<img src="/icons/delete.svg" alt="delete" />}
+                >
+                  Remove Details
+                </Button>
+              </Box>
+              <NoobReachTextEditor />
+            </Grid>
+          ))}
+
           <Grid item xs={12}>
-            <FormHelperText> Round 2 </FormHelperText>
             <Box
               display={"flex"}
               marginBottom={5}
               justifyContent="space-between"
             >
-              <Select style={{ width: "70%" }} displayEmpty defaultValue={""}>
-                <MenuItem value="">Select Round </MenuItem>
-                <MenuItem value="1">Best of 1</MenuItem>
-                <MenuItem value="2">Best of 2</MenuItem>
-              </Select>
+              <div style={{ width: "70%" }}></div>
               <Button
                 style={{ width: "25%" }}
                 variant="contained"
