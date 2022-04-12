@@ -255,7 +255,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
                     {...getRootProps()}
                   >
                     <input {...getInputProps()} />
-                    <img src="icons/Upload.svg" alt="upload" />
+                    <img src="/icons/Upload.svg" alt="upload" />
                     <Typography marginTop={2} variant="subtitle2">
                       1029px - 600px
                     </Typography>

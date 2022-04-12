@@ -73,9 +73,10 @@ const Streams: React.FC = (): JSX.Element => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      setData({ ...data, streams: {data:values.streams} });
-      router.push(`/tournament/[...slug]`, `/tournament/create/publish`, {
-        shallow: true,
+      setData({ ...data, streams: {data:values.streams} },()=>{
+        router.push(`/tournament/[...slug]`, `/tournament/create/publish`, {
+          shallow: true,
+        });
       });
     },
   });

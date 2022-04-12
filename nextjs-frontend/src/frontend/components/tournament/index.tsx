@@ -30,7 +30,7 @@ export interface TournamentData {
 
 interface TournamentContextType {
   data: TournamentData;
-  setData: (data: TournamentData) => void;
+  setData: (data: TournamentData,callback?:()=>void,doClear?:boolean) => void;
   onSubmit: (data: TournamentData) => void;
 }
 
@@ -113,14 +113,23 @@ const Tournament: React.FC = () => {
     },
   ];
 
-  React.useEffect(()=>{
-    if(Object.keys(data).length>0){
-      submitHandler(data);  
-    }
+  const updateData = (newData:TournamentData, callback?:()=>void,doClear?:boolean):void=>{
     
-  },[data])
+    setData(newData);
+    submitHandler(newData).then((res)=>{
+      if(!res){return false}
+      if(doClear){
+        setData({});
+      }
+      if(callback){
+        callback();
+        setId("");
+      }
+    })
 
-  const submitHandler = (submitData: TournamentData): void => {
+  }
+
+  const submitHandler = (submitData: TournamentData): Promise<boolean> => {
     if (id !== "") submitData.id = id;
 
     const req = {
@@ -131,15 +140,19 @@ const Tournament: React.FC = () => {
     }
     delete req.basic;
 
-    axios
+    return axios
       .post("/api/tournaments/create", req)
       .then((res) => {
         if (!res?.data?.errors?.length) {
           setId(res.data.id);
+          return true;
         }
+          return false
+        
       })
       .catch((err) => {
         console.error(err);
+        return false;
       });
   };
 
@@ -166,7 +179,7 @@ const Tournament: React.FC = () => {
           <SideBar key={"sidebar"} nav={sideBarNav}/>
         </Grid>
         <Grid item md={9}>
-          <TournamentContext.Provider value={{ data: data, setData: setData,onSubmit:submitHandler }}>
+          <TournamentContext.Provider value={{ data: data, setData: updateData,onSubmit:submitHandler }}>
             {renderSection()}
           </TournamentContext.Provider>
         </Grid>
