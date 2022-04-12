@@ -1,6 +1,7 @@
 import {
   Button,
   FormControl,
+  FormHelperText,
   Grid,
   MenuItem,
   OutlinedInput,
@@ -48,7 +49,7 @@ const useStyles = makeStyles(() =>
 
 export interface StreamData {
   provider: string;
-  channelName: string;
+  url: string;
 }
 
 const Streams: React.FC = (): JSX.Element => {
@@ -61,18 +62,18 @@ const Streams: React.FC = (): JSX.Element => {
     streams: yup.array().of(
       yup.object().shape({
         provider: yup.string().required("Please select provider"),
-        channelName: yup.string().required("Channel name is required"),
+        url: yup.string().required("URL is required"),
       })
     ),
   });
 
   const formik = useFormik({
     initialValues: {
-      streams: [...(data.streams || [])],
+      streams: [...(data.streams?.data || [])],
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      setData({ ...data, streams: values.streams });
+      setData({ ...data, streams: {data:values.streams} });
       router.push(`/tournament/[...slug]`, `/tournament/create/publish`, {
         shallow: true,
       });
@@ -92,7 +93,7 @@ const Streams: React.FC = (): JSX.Element => {
   const renderStreams = (helper: FieldArrayRenderProps): JSX.Element[] => {
     return formik.values.streams.map((stream, index) => {
       return (
-        <Box paddingX={"32px"} paddingY={"18px"} key={`${stream.provider}-${stream.channelName}`}>
+        <Box paddingX={"32px"} paddingY={"18px"} key={`${stream.provider}-${stream.url}`}>
           <Typography align="left" gutterBottom>
             New Stream
           </Typography>
@@ -106,31 +107,39 @@ const Streams: React.FC = (): JSX.Element => {
                   defaultValue={stream.provider}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
+                  error={
+                    formik.touched.streams && formik.touched.streams[index].provider && formik.errors.streams !== undefined &&
+                    Boolean((formik.errors.streams[index] as StreamData).provider)
+                  }
                 >
                   <MenuItem value="">Select Provider</MenuItem>
                   <MenuItem value="provider1">Provider 1</MenuItem>
                   <MenuItem value="provider2">Provider 2</MenuItem>
                 </Select>
+                {formik.touched.streams && formik.touched.streams[index].provider && formik.errors.streams !== undefined &&
+                    Boolean((formik.errors.streams[index] as StreamData).provider) ? (
+                  <FormHelperText> {(formik.errors.streams[index] as StreamData).provider} </FormHelperText>
+                ) : null}
               </FormControl>
             </Grid>
             <Grid item md={6}>
               <FormControl fullWidth variant="standard">
                 <OutlinedInput
-                  id={`streams.${index}.channelName`}
-                  name={`streams.${index}.channelName`}
+                  id={`streams.${index}.url`}
+                  name={`streams.${index}.url`}
                   placeholder="Enter your url"
                   onChange={formik.handleChange}
-                  value={stream.channelName}
+                  value={stream.url}
                   onBlur={formik.handleBlur}
-                  //   error={
-                  //     formik.touched.streams && formik.touched.streams[index].channelName && formik.errors.streams &&
-                  //     Boolean(formik.errors.streams[index].channelName)
-                  //   }
+                  error={
+                    formik.touched.streams && formik.touched.streams[index].url && formik.errors.streams !== undefined &&
+                    Boolean((formik.errors.streams[index] as StreamData).url)
+                  }
                 />
-                {/* {formik.touched.streams && formik.touched.streams[index].channelName && formik.errors.streams &&
-                Boolean(formik.errors.streams[index].channelName) ? (
-                  <FormHelperText> {formik.errors.streams[index].channelName} </FormHelperText>
-                ) : null} */}
+                {formik.touched.streams && formik.touched.streams[index].url && formik.errors.streams !== undefined &&
+                    Boolean((formik.errors.streams[index] as StreamData).url) ? (
+                  <FormHelperText> {(formik.errors.streams[index] as StreamData).url} </FormHelperText>
+                ) : null}
               </FormControl>
             </Grid>
             <Grid item md={12} display="flex" justifyContent="flex-end">

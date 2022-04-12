@@ -46,7 +46,7 @@ export interface BasicData {
   startTime: string | null;
   about: string;
   cloneTournament: boolean;
-  tournamentCloneId?: string;
+  createTemplateCode?: string;
   banner?:string
 }
 
@@ -73,7 +73,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
       .transform((v) => (v instanceof Date && !isNaN(v.getTime()) ? v : null)),
     about: yup.string(),
     cloneTournament: yup.boolean(),
-    tournamentCloneId: yup.string().when("cloneTournament", {
+    createTemplateCode: yup.string().when("cloneTournament", {
       is: true,
       then: yup.string().required("Tournament id is require to clone"),
     }),
@@ -86,7 +86,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
       startDate: data?.startDate || null,
       startTime: data?.startTime || null,
       about: data?.about || "",
-      tournamentCloneId: data?.tournamentCloneId || "",
+      createTemplateCode: data?.createTemplateCode || "",
       cloneTournament: data?.cloneTournament || false,
     },
     validationSchema: validationSchema,
@@ -210,22 +210,22 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
               <FormControl fullWidth variant="standard">
                 <FormLabel label={""}></FormLabel>
                 <OutlinedInput
-                  id="tournamentCloneId"
-                  name="tournamentCloneId"
+                  id="createTemplateCode"
+                  name="createTemplateCode"
                   placeholder="Template code"
                   onChange={formik.handleChange}
-                  value={formik.values.tournamentCloneId}
+                  value={formik.values.createTemplateCode}
                   onBlur={formik.handleBlur}
                   error={
-                    formik.touched.tournamentCloneId &&
-                    Boolean(formik.errors.tournamentCloneId)
+                    formik.touched.createTemplateCode &&
+                    Boolean(formik.errors.createTemplateCode)
                   }
                 />
-                {formik.touched.tournamentCloneId &&
-                Boolean(formik.errors.tournamentCloneId) ? (
+                {formik.touched.createTemplateCode &&
+                Boolean(formik.errors.createTemplateCode) ? (
                     <FormHelperText>
                       {" "}
-                      {formik.errors.tournamentCloneId}{" "}
+                      {formik.errors.createTemplateCode}{" "}
                     </FormHelperText>
                   ) : null}
               </FormControl>

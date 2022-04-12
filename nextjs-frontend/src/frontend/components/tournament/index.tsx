@@ -23,7 +23,9 @@ export interface TournamentData {
   settings?: SettingData;
   bracketsMetadata?: EliminateBracketData;
   publishData?:PublishTournamentData;
-  streams?:StreamData[];
+  streams?:{
+    data:StreamData[];
+  }
 }
 
 interface TournamentContextType {
@@ -34,9 +36,9 @@ interface TournamentContextType {
 
 export const TournamentContext = React.createContext<TournamentContextType>({
   data: {},
-  // tslint:disable-next-line:no-empty-function
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   setData: () => {},
-  // tslint:disable-next-line:no-empty-function
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   onSubmit:() => {}
 });
 
@@ -111,15 +113,29 @@ const Tournament: React.FC = () => {
     },
   ];
 
+  React.useEffect(()=>{
+    if(Object.keys(data).length>0){
+      submitHandler(data);  
+    }
+    
+  },[data])
+
   const submitHandler = (submitData: TournamentData): void => {
     if (id !== "") submitData.id = id;
 
+    const req = {
+      ...submitData,
+      status: "PUBLISHED",
+      joinStatus: "PUBLIC",
+      ...(submitData.basic || {})   
+    }
+    delete req.basic;
+
     axios
-      .post("/api/tournaments/create", submitData)
+      .post("/api/tournaments/create", req)
       .then((res) => {
         if (!res?.data?.errors?.length) {
           router.push("/tournament/create/setup/basic")
-          setData({});
           setId(res.data.id);
         }
       })

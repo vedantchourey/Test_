@@ -9,7 +9,7 @@ import { ParsedUrlQuery } from "querystring";
 
 
 const Setup: React.FC = (): JSX.Element => {
-  const { data, setData, onSubmit } = React.useContext(TournamentContext);
+  const { data, setData } = React.useContext(TournamentContext);
 
   const router = useRouter();
   const query: ParsedUrlQuery = router.query;
@@ -32,17 +32,17 @@ const Setup: React.FC = (): JSX.Element => {
 
   const handleSettingSave = (settings: SettingData): void => {
     setData({ ...data, settings });
-    onSubmit({
-      status: "PUBLISHED",
-      joinStatus: "PUBLIC",
-      createTemplateCode: data?.basic?.tournamentCloneId,
-      basic: data.basic && {
-        ...data.basic,
-        banner: "test",
-      },
-      info: data.info,
-      settings,
-    });
+    // onSubmit({
+    //   status: "PUBLISHED",
+    //   joinStatus: "PUBLIC",
+    //   // createTemplateCode: data?.basic?.tournamentCloneId,
+    //   basic: data.basic && {
+    //     ...data.basic,
+    //     banner: "test",
+    //   },
+    //   info: data.info,
+    //   settings,
+    // });
     router.push(`/tournament/[...slug]`,`/tournament/create/brackets/create`, {shallow:true})
   };
 

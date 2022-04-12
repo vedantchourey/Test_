@@ -1,7 +1,12 @@
 import React from "react";
 import TextField from "@mui/material/TextField";
 import * as yup from "yup";
-import { useFormik } from "formik";
+import {
+  FieldArray,
+  FieldArrayRenderProps,
+  FormikProvider,
+  useFormik,
+} from "formik";
 import {
   Button,
   Checkbox,
@@ -14,16 +19,20 @@ import {
   RadioGroup,
   Select,
 } from "@mui/material";
+import { EditorState } from "draft-js";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormLabel from "../../../ui-components/formlabel";
 import { DatePicker, TimePicker } from "@mui/lab";
 import NoobToggleButtonGroup, {
   NoobToggleButton,
 } from "../../../ui-components/toggle-button-group";
-import { Box } from "@mui/system";
 import CardLayout from "../../../ui-components/card-layout";
 import NoobReachTextEditor from "../../../ui-components/rte";
 
+interface RoundData {
+  round: string;
+  description: string;
+}
 export interface EliminateBracketData {
   name: string;
   startDate: string | null;
@@ -32,11 +41,8 @@ export interface EliminateBracketData {
   checkInAmount: number;
   type: string;
   thirdPlace: boolean;
-  playersLimit: number |null;
-  rounds: {
-    round: string;
-    description: string;
-  }[];
+  playersLimit: number | null;
+  rounds: RoundData[];
 }
 
 interface EliminateBracketProps {
@@ -44,10 +50,11 @@ interface EliminateBracketProps {
   onSave?: (data: EliminateBracketData) => void;
 }
 
-const EliminateBracket = React.forwardRef<EliminateBracketRef,EliminateBracketProps>(({
-  onSave,
-  data
-},ref) => {
+const EliminateBracket = React.forwardRef<
+  EliminateBracketRef,
+  EliminateBracketProps
+>(({ onSave, data }, ref) => {
+  const [round, setRound] = React.useState<string>("");
   const validationSchema = yup.object({
     name: yup.string().required("A name is required"),
     startDate: yup
@@ -71,7 +78,12 @@ const EliminateBracket = React.forwardRef<EliminateBracketRef,EliminateBracketPr
       then: yup.boolean().required("Third Place is required"),
     }),
     playersLimit: yup.number(),
-    rounds: yup.string().required("Rounds required"),
+    rounds: yup.array().of(
+      yup.object().shape({
+        round: yup.string().required("Please select round"),
+        description: yup.string().required("Please add description"),
+      })
+    ),
   });
 
   const formik = useFormik({
@@ -84,8 +96,8 @@ const EliminateBracket = React.forwardRef<EliminateBracketRef,EliminateBracketPr
       type: data?.type || "",
       thirdPlace: data?.thirdPlace || false,
       playersLimit: data?.playersLimit || null,
-      rounds:[]
-    },
+      rounds: [],
+    } as EliminateBracketData,
     validationSchema: validationSchema,
     onSubmit: (values: EliminateBracketData) => {
       if (onSave) {
@@ -94,13 +106,13 @@ const EliminateBracket = React.forwardRef<EliminateBracketRef,EliminateBracketPr
     },
   });
 
-  React.useImperativeHandle(ref,()=>{
+  React.useImperativeHandle(ref, () => {
     return {
       // eslint-disable-next-line
-      getFormik:():any=>{
+      getFormik: (): any => {
         return formik;
-      }
-    }
+      },
+    };
   });
 
   const changeHandler = (
@@ -108,7 +120,14 @@ const EliminateBracket = React.forwardRef<EliminateBracketRef,EliminateBracketPr
     value: string | boolean | Date | null
   ): void => {
     formik.setFieldValue(property, value, true);
-    // setData({ ...data, [property]: value });
+  };
+
+  const addRound = (helper: FieldArrayRenderProps): void => {
+    // console.log(round);
+    if (round !== "") {
+      helper.push({ round: round, description: "" });
+      setRound("");
+    }
   };
   return (
     <React.Fragment>
@@ -185,9 +204,10 @@ const EliminateBracket = React.forwardRef<EliminateBracketRef,EliminateBracketPr
               <NoobToggleButtonGroup
                 exclusive
                 value={formik.values.checkInType}
-                onChange={(e: React.MouseEvent<Element, MouseEvent>, val:string): void =>
-                  changeHandler("checkInType", val)
-                }
+                onChange={(
+                  e: React.MouseEvent<Element, MouseEvent>,
+                  val: string
+                ): void => changeHandler("checkInType", val)}
                 fullWidth
               >
                 <NoobToggleButton value="false">Off</NoobToggleButton>
@@ -213,9 +233,11 @@ const EliminateBracket = React.forwardRef<EliminateBracketRef,EliminateBracketPr
                 <OutlinedInput
                   id="checkInAmount"
                   placeholder="Minutes"
-                  onChange={(val: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void =>
-                    changeHandler("checkInAmount", val.target.value)
-                  }
+                  onChange={(
+                    val: React.ChangeEvent<
+                      HTMLTextAreaElement | HTMLInputElement
+                    >
+                  ): void => changeHandler("checkInAmount", val.target.value)}
                   value={formik.values.checkInAmount}
                   onBlur={formik.handleBlur}
                   error={
@@ -225,8 +247,8 @@ const EliminateBracket = React.forwardRef<EliminateBracketRef,EliminateBracketPr
                 />
                 {formik.touched.checkInAmount &&
                 Boolean(formik.errors.checkInAmount) ? (
-                    <FormHelperText>{formik.errors.checkInAmount}</FormHelperText>
-                  ) : null}
+                  <FormHelperText>{formik.errors.checkInAmount}</FormHelperText>
+                ) : null}
               </React.Fragment>
             ) : null}
           </Grid>
@@ -281,8 +303,8 @@ const EliminateBracket = React.forwardRef<EliminateBracketRef,EliminateBracketPr
               />
               {formik.touched.playersLimit &&
               Boolean(formik.errors.playersLimit) ? (
-                  <FormHelperText>{formik.errors.playersLimit}</FormHelperText>
-                ) : null}
+                <FormHelperText>{formik.errors.playersLimit}</FormHelperText>
+              ) : null}
             </FormControl>
           </Grid>
           <Grid item xs={6}></Grid>
@@ -306,59 +328,156 @@ const EliminateBracket = React.forwardRef<EliminateBracketRef,EliminateBracketPr
           </Grid>
           <Grid item xs={12}>
             <FormLabel label="Rounds" />
-            <FormHelperText> Round 1 </FormHelperText>
-            <Box
-              display={"flex"}
-              marginBottom={5}
-              justifyContent="space-between"
-            >
-              <Select style={{ width: "70%" }} displayEmpty defaultValue={""}>
-                <MenuItem value="">Select Round </MenuItem>
-                <MenuItem value="1">Best of 1</MenuItem>
-                <MenuItem value="2">Best of 2</MenuItem>
-              </Select>
-              <Button
-                style={{ width: "25%" }}
-                variant="contained"
-                startIcon={<img src="/icons/delete.svg" alt="delete" />}
-              >
-                Remove Details
-              </Button>
-            </Box>
-            <NoobReachTextEditor />
           </Grid>
-          <Grid item xs={12}>
-            <FormHelperText> Round 2 </FormHelperText>
-            <Box
-              display={"flex"}
-              marginBottom={5}
-              justifyContent="space-between"
-            >
-              <Select style={{ width: "70%" }} displayEmpty defaultValue={""}>
-                <MenuItem value="">Select Round </MenuItem>
-                <MenuItem value="1">Best of 1</MenuItem>
-                <MenuItem value="2">Best of 2</MenuItem>
-              </Select>
-              <Button
-                style={{ width: "25%" }}
-                variant="contained"
-                startIcon={<img src="/icons/Plus.svg" alt="add" />}
-                onClick={formik.submitForm}
-              >
-                Add Details
-              </Button>
-            </Box>
-          </Grid>
+          <FormikProvider value={formik}>
+            <FieldArray
+              name="rounds"
+              render={(helper): JSX.Element => {
+                const renderRound = formik.values.rounds.map((round, index) => {
+                  return (
+                    <React.Fragment key={index}>
+                      <Grid item sm={12}>
+                        <FormHelperText> Round {index + 1} </FormHelperText>
+                      </Grid>
+                      <Grid item xs={8}>
+                        <FormControl fullWidth>
+                          <Select
+                            value={round.round}
+                            displayEmpty
+                            defaultValue={""}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            id={`rounds.${index}.round`}
+                            name={`rounds.${index}.round`}
+                            error={
+                              formik.touched.rounds &&
+                              formik.touched.rounds[index] &&
+                              formik.touched.rounds[index].round &&
+                              formik.errors.rounds !== undefined &&
+                              formik.errors.rounds[index] !== undefined &&
+                              Boolean(
+                                (formik.errors.rounds[index] as RoundData).round
+                              )
+                            }
+                          >
+                            <MenuItem value="">Select Round </MenuItem>
+                            <MenuItem value="1">Best of 1</MenuItem>
+                            <MenuItem value="2">Best of 2</MenuItem>
+                          </Select>
+                          {formik.touched.rounds &&
+                          formik.touched.rounds[index] &&
+                          formik.touched.rounds[index].round &&
+                          formik.errors.rounds !== undefined &&
+                          formik.errors.rounds[index] !== undefined &&
+                          Boolean(
+                            (formik.errors.rounds[index] as RoundData).round
+                          ) ? (
+                            <FormHelperText>
+                              {(formik.errors.rounds[index] as RoundData).round}
+                            </FormHelperText>
+                          ) : null}
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Button
+                          variant="contained"
+                          onClick={(): void => helper.remove(index)}
+                          startIcon={
+                            <img src="/icons/delete.svg" alt="delete" />
+                          }
+                        >
+                          Remove Details
+                        </Button>
+                      </Grid>
+                      <Grid item sm={12}>
+                        <NoobReachTextEditor
+                          id={`rounds.${index}.description`}
+                          name={`rounds.${index}.description`}
+                          onChange={(value: EditorState): void => {
+                            formik.setFieldValue(
+                              `rounds.${index}.description`,
+                              value.getCurrentContent().getPlainText("\u0001")
+                            );
+                          }}
+                          error={
+                            formik.touched.rounds &&
+                            formik.touched.rounds[index] &&
+                            formik.touched.rounds[index].description &&
+                            formik.errors.rounds !== undefined &&
+                            formik.errors.rounds[index] !== undefined &&
+                            Boolean(
+                              (formik.errors.rounds[index] as RoundData)
+                                .description
+                            )
+                          }
+                        />
+                        {formik.touched.rounds &&
+                        formik.touched.rounds[index] &&
+                        formik.touched.rounds[index].description &&
+                        formik.errors.rounds !== undefined &&
+                        formik.errors.rounds[index] !== undefined &&
+                        Boolean(
+                          (formik.errors.rounds[index] as RoundData).description
+                        ) ? (
+                          <FormHelperText>
+                            {
+                              (formik.errors.rounds[index] as RoundData)
+                                .description
+                            }
+                          </FormHelperText>
+                        ) : null}
+                      </Grid>
+                    </React.Fragment>
+                  );
+                });
+
+                return (
+                  <React.Fragment>
+                    {renderRound}
+                    <Grid item xs={12}>
+                      <FormHelperText>
+                        {" "}
+                        Round {formik.values.rounds.length + 1}{" "}
+                      </FormHelperText>
+                    </Grid>
+                    <Grid item xs={8}>
+                      <FormControl fullWidth>
+                        <Select
+                          displayEmpty
+                          value={round}
+                          defaultValue={""}
+                          onChange={(e): void => setRound(e.target.value)}
+                        >
+                          <MenuItem value="">Select Round </MenuItem>
+                          <MenuItem value="1">Best of 1</MenuItem>
+                          <MenuItem value="2">Best of 2</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <Button
+                        variant="contained"
+                        startIcon={<img src="/icons/Plus.svg" alt="add" />}
+                        onClick={(): void => addRound(helper)}
+                      >
+                        Add Details
+                      </Button>
+                    </Grid>
+                  </React.Fragment>
+                );
+              }}
+            />
+          </FormikProvider>
         </Grid>
       </CardLayout>
     </React.Fragment>
   );
 });
 
-export interface EliminateBracketRef{
+export interface EliminateBracketRef {
   // eslint-disable-next-line
-  getFormik:()=>any
+  getFormik: () => any;
 }
-EliminateBracket.displayName="EliminateBracket";
+EliminateBracket.displayName = "EliminateBracket";
 
 export default EliminateBracket;
