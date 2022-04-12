@@ -333,7 +333,7 @@ const EliminateBracket = React.forwardRef<
             <FieldArray
               name="rounds"
               render={(helper): JSX.Element => {
-                const renderRound = formik.values.rounds.map((round, index) => {
+                const renderRound = (formik.values.rounds || []).map((round, index) => {
                   return (
                     <React.Fragment key={index}>
                       <Grid item sm={12}>

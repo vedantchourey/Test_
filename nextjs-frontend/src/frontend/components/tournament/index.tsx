@@ -135,7 +135,6 @@ const Tournament: React.FC = () => {
       .post("/api/tournaments/create", req)
       .then((res) => {
         if (!res?.data?.errors?.length) {
-          router.push("/tournament/create/setup/basic")
           setId(res.data.id);
         }
       })
