@@ -7,13 +7,20 @@ export class BracketsRepository extends BaseRepository<IBracket> {
     super(transaction, "brackets");
   }
 
-  async create(tournament: IBracket): Promise<IBracket> {
-    const createdItems = await this.entities().insert(tournament, ["id"]);
+  async create(bracket: IBracket): Promise<IBracket> {
+    const createdItems = await this.entities().insert(bracket, ["id"]);
     return createdItems[0];
   }
 
-  async upadte(tournament: IBracket): Promise<IBracket> {
-    const updatedItems = await this.entities().update(tournament, ["id"]);
+  async upadte(bracket: IBracket): Promise<IBracket> {    
+    const updatedItems = await this.entities()
+      .where("id", bracket.id)
+      .update(bracket, ["id"]);
     return updatedItems[0];
+  }
+
+  async findById(tournament_id: string) {
+    const items = await this.entities().where("tournament_id", tournament_id);
+    return items[0];
   }
 }
