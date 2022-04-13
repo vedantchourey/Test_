@@ -84,14 +84,14 @@ export function validatePersistTournament(body: any): any {
         })
       ),
     }).optional(),
-    streams: Joi.array()
+    streams: Joi.object({data: Joi.array()
       .items(
         Joi.object({
           provider: Joi.string().required(),
           url: Joi.string().required(),
         })
       )
-      .optional(),
+      .optional()}).optional(),
   });
   const errors = model.validate(body, { abortEarly: false, allowUnknown: true });
   if (errors) return errors.error?.details.map((x) => x.message);

@@ -12,6 +12,7 @@ import Create from "./create";
 import { ParsedUrlQuery } from "querystring";
 import { PublishTournamentData } from "../publish/publish-tournament";
 import { StreamData } from "./create/streams";
+import moment from 'moment'
 
 export interface TournamentData {
   id?: string;
@@ -114,7 +115,6 @@ const Tournament: React.FC = () => {
   ];
 
   const updateData = (newData:TournamentData, callback?:()=>void,doClear?:boolean):void=>{
-    
     setData(newData);
     submitHandler(newData).then((res)=>{
       if(!res){return false}
@@ -138,10 +138,20 @@ const Tournament: React.FC = () => {
       joinStatus: "PUBLIC",
       ...(submitData.basic || {})   
     }
-    delete req.basic;
+    let formData = {...req}
+    // @ts-ignore: Unreachable code error
+    delete formData.cloneTournament;
+    // @ts-ignore: Unreachable code error
+    formData.startDate = moment(formData.startDate).format("YYYY-MM-DD")
+    // @ts-ignore: Unreachable code error
+    formData.startTime = moment(formData.startTime).format("HH:mm:ss")
+    formData.status = submitData.publishData?.registration || "PUBLISHED";
+    formData.joinStatus = submitData.publishData?.society || "PRIVATE";
+    delete formData.publishData
+    delete formData.basic;
 
     return axios
-      .post("/api/tournaments/create", req)
+      .post("/api/tournaments/create", formData)
       .then((res) => {
         if (!res?.data?.errors?.length) {
           setId(res.data.id);
