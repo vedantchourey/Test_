@@ -13,6 +13,8 @@ import { ParsedUrlQuery } from "querystring";
 import { PublishTournamentData } from "../publish/publish-tournament";
 import { StreamData } from "./create/streams";
 import moment from 'moment'
+import Share from "./share";
+import { InvitePlayerData } from "./share/invitePlayer";
 
 export interface TournamentData {
   id?: string;
@@ -27,6 +29,7 @@ export interface TournamentData {
   streams?:{
     data:StreamData[];
   }
+  invitePlayer?:InvitePlayerData;
 }
 
 interface TournamentContextType {
@@ -93,13 +96,20 @@ const Tournament: React.FC = () => {
     {
       icon: <img src="/icons/share-alt.svg" alt="icon" />,
       title: "Share",
-      isActive:():boolean=>{
-        return false;
+      isActive:(url:string):boolean=>{
+        return url.indexOf("/tournament/share")>-1;
       },
+      // isActive:():boolean=>{
+      //   return false;
+      // },
       items: [
         {
           title: "Invite Player",
-          url: "",
+          url: "/tournament/[...slug]",
+          as: "/tournament/share/invitePlayer",
+          isActive: (url:string):boolean =>{
+            return url.indexOf("/tournament/share/invitePlayer")>-1
+          }
         },
         {
           title: "Embed Codes",
@@ -164,6 +174,8 @@ const Tournament: React.FC = () => {
     switch(query.slug[0]){
     case 'create':
       return <Create/>
+    case 'share':
+      return <Share />
     default :
       return null;
     }
