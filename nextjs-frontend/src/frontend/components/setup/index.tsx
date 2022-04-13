@@ -9,7 +9,7 @@ import { ParsedUrlQuery } from "querystring";
 
 
 const Setup: React.FC = (): JSX.Element => {
-  const { data, setData, onSubmit } = React.useContext(TournamentContext);
+  const { data, setData } = React.useContext(TournamentContext);
 
   const router = useRouter();
   const query: ParsedUrlQuery = router.query;
@@ -17,13 +17,16 @@ const Setup: React.FC = (): JSX.Element => {
   const tabs = ["Basic", "Info", "Settings"];
 
   const handleBasicSave = (basic: BasicData): void => {
-    setData({ ...data, basic });
-    onTabClick("info")
+    setData({ ...data, basic },()=>{
+      onTabClick("info")
+    });
+    
   };
 
   const handleInfoSave = (info: InfoData): void => {
-    setData({ ...data, info });
-    onTabClick("settings")
+    setData({ ...data, info },()=>{
+      onTabClick("settings")
+    });
   };
 
   const onTabClick = (tab:string):void=>{
@@ -31,19 +34,10 @@ const Setup: React.FC = (): JSX.Element => {
   }
 
   const handleSettingSave = (settings: SettingData): void => {
-    setData({ ...data, settings });
-    onSubmit({
-      status: "PUBLISHED",
-      joinStatus: "PUBLIC",
-      createTemplateCode: data?.basic?.tournamentCloneId,
-      basic: data.basic && {
-        ...data.basic,
-        banner: "test",
-      },
-      info: data.info,
-      settings,
+    setData({ ...data, settings },()=>{
+      router.push(`/tournament/[...slug]`,`/tournament/create/brackets/create`, {shallow:true})
     });
-    router.push(`/tournament/[...slug]`,`/tournament/create/brackets/create`, {shallow:true})
+    
   };
 
   const goBack = (): void => {

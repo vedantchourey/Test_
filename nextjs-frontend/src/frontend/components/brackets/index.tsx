@@ -33,7 +33,7 @@ const Brackets: React.FC = (): JSX.Element => {
       <NavTabs
         items={tabs}
         action={action}
-        current={query.slug[2]}
+        current={query?.slug?.[2]}
         onClick={onTabClick}
       ></NavTabs>
       {renderComponent()}

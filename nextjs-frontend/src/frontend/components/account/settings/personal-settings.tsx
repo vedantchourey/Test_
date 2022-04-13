@@ -510,6 +510,7 @@ const PersonalSettings = (): JSX.Element => {
             className={styles.inputRowItem}
             mask={'__/__/____'}
             value={dateOfBirth}
+              // eslint-disable-next-line
             onChange={(value: DateTime | null): void => {
               // TODO fetch data from private profile
               setRequest({ ...request });

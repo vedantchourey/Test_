@@ -14,9 +14,10 @@ const Create: React.FC = (): JSX.Element => {
   const ref = React.useRef<EliminateBracketRef>(null);
 
   const handleBracketSave = (bracketsMetadata: EliminateBracketData): void => {
-    setData({ ...data, bracketsMetadata });
-    router.push(`/tournament/[...slug]`, `/tournament/create/streams`, {
-      shallow: true,
+    setData({ ...data, bracketsMetadata },()=>{
+      router.push(`/tournament/[...slug]`, `/tournament/create/streams`, {
+        shallow: true,
+      });
     });
   };
 

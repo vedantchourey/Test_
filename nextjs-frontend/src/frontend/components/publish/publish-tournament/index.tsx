@@ -42,9 +42,8 @@ const PublishPage: React.FC<PublishTournamentProps> = ({
     registration: yup.string().required("Registration field required"),
     society: yup.string().required("society field required"),
   });
-  // });
-
-  const formik = useFormik({
+  
+ const formik = useFormik({
     initialValues: {
       registration: data?.registration || "published",
       society: data?.society || "private",

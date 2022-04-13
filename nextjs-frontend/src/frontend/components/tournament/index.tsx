@@ -12,6 +12,7 @@ import Create from "./create";
 import { ParsedUrlQuery } from "querystring";
 import { PublishTournamentData } from "../publish/publish-tournament";
 import { StreamData } from "./create/streams";
+import moment from 'moment'
 
 export interface TournamentData {
   id?: string;
@@ -23,20 +24,22 @@ export interface TournamentData {
   settings?: SettingData;
   bracketsMetadata?: EliminateBracketData;
   publishData?:PublishTournamentData;
-  streams?:StreamData[];
+  streams?:{
+    data:StreamData[];
+  }
 }
 
 interface TournamentContextType {
   data: TournamentData;
-  setData: (data: TournamentData) => void;
+  setData: (data: TournamentData,callback?:()=>void,doClear?:boolean) => void;
   onSubmit: (data: TournamentData) => void;
 }
 
 export const TournamentContext = React.createContext<TournamentContextType>({
   data: {},
-  // tslint:disable-next-line:no-empty-function
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   setData: () => {},
-  // tslint:disable-next-line:no-empty-function
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   onSubmit:() => {}
 });
 
@@ -111,20 +114,55 @@ const Tournament: React.FC = () => {
     },
   ];
 
-  const submitHandler = (submitData: TournamentData): void => {
+  const updateData = (newData:TournamentData, callback?:()=>void,doClear?:boolean):void=>{
+    setData(newData);
+    submitHandler(newData).then((res)=>{
+      if(!res){return false}
+      if(doClear){
+        setData({});
+      }
+      if(callback){
+        callback();
+        setId("");
+      }
+    })
+
+  }
+
+  const submitHandler = (submitData: TournamentData): Promise<boolean> => {
     if (id !== "") submitData.id = id;
 
-    axios
-      .post("/api/tournaments/create", submitData)
+    const req = {
+      ...submitData,
+      status: "PUBLISHED",
+      joinStatus: "PUBLIC",
+      ...(submitData.basic || {})   
+    }
+    let formData = {...req}
+    // @ts-ignore: Unreachable code error
+    delete formData.cloneTournament;
+    // @ts-ignore: Unreachable code error
+    formData.startDate = moment(formData.startDate).format("YYYY-MM-DD")
+    // @ts-ignore: Unreachable code error
+    formData.startTime = moment(formData.startTime).format("HH:mm:ss")
+    formData.status = submitData.publishData?.registration || "PUBLISHED";
+    formData.joinStatus = submitData.publishData?.society || "PRIVATE";
+    delete formData.publishData
+    delete formData.basic;
+
+    return axios
+      .post("/api/tournaments/create", formData)
       .then((res) => {
         if (!res?.data?.errors?.length) {
-          router.push("/tournament/create/setup/basic")
-          setData({});
           setId(res.data.id);
+          return true;
         }
+          return false
+        
       })
       .catch((err) => {
         console.error(err);
+        return false;
       });
   };
 
@@ -151,7 +189,7 @@ const Tournament: React.FC = () => {
           <SideBar key={"sidebar"} nav={sideBarNav}/>
         </Grid>
         <Grid item md={9}>
-          <TournamentContext.Provider value={{ data: data, setData: setData,onSubmit:submitHandler }}>
+          <TournamentContext.Provider value={{ data: data, setData: updateData,onSubmit:submitHandler }}>
             {renderSection()}
           </TournamentContext.Provider>
         </Grid>

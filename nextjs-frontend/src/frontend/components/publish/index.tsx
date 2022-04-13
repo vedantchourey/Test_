@@ -8,8 +8,9 @@ const Publish:React.FC = (): JSX.Element => {
   const { data, setData } = React.useContext(TournamentContext);
 
   const handleSave = (newData:PublishTournamentData):void=>{
-    setData({...data,publishData:newData});
-    router.push(`/tournament/[...slug]`,`/tournament/create/setup/basic`, {shallow:true})
+    setData({...data,publishData:newData},()=>{
+      router.push(`/tournament/[...slug]`,`/tournament/create/setup/basic`, {shallow:true})
+    },true);
   }
 
   const goBack = ():void =>{
