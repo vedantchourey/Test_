@@ -43,6 +43,7 @@ export interface EliminateBracketData {
   thirdPlace: boolean;
   playersLimit: number | null;
   rounds: RoundData[];
+  scoringFormat:string
 }
 
 interface EliminateBracketProps {
@@ -77,6 +78,7 @@ const EliminateBracket = React.forwardRef<
       is: "SINGLE",
       then: yup.boolean().required("Third Place is required"),
     }),
+    scoringFormat:yup.string(),
     playersLimit: yup.number(),
     rounds: yup.array().of(
       yup.object().shape({
@@ -96,7 +98,8 @@ const EliminateBracket = React.forwardRef<
       type: data?.type || "",
       thirdPlace: data?.thirdPlace || false,
       playersLimit: data?.playersLimit || null,
-      rounds: [],
+      rounds: data?.rounds || [],
+      scoringFormat:data?.scoringFormat || '',
     } as EliminateBracketData,
     validationSchema: validationSchema,
     onSubmit: (values: EliminateBracketData) => {
@@ -178,7 +181,7 @@ const EliminateBracket = React.forwardRef<
             <FormControl fullWidth variant="standard">
               <FormLabel label="Start Time"></FormLabel>
               <TimePicker
-                inputFormat="HH:MM a"
+                inputFormat="HH:mm a"
                 onChange={(value): void => changeHandler("startTime", value)}
                 value={formik.values.startTime}
                 renderInput={(params): JSX.Element => (
@@ -312,8 +315,9 @@ const EliminateBracket = React.forwardRef<
             <FormControl fullWidth>
               <FormLabel label="Scoring Format" />
               <OutlinedInput
-                id="rounds"
+                id="scoringFormat"
                 placeholder="Best Of"
+                disabled
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />

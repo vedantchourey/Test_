@@ -109,7 +109,7 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
           ) : null}
         </Grid>
 
-        <AccordionAlt title="Contact Details">
+        <AccordionAlt title="Contact Details" >
           <NoobReachTextEditor
             id="contactDetails"
             onChange={(value: any): void => {

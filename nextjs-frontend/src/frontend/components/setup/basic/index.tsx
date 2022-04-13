@@ -175,7 +175,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
             <FormControl fullWidth variant="standard">
               <FormLabel label="Start Time"></FormLabel>
               <TimePicker
-                inputFormat="HH:MM a"
+                inputFormat="HH:mm a"
                 onChange={(value): void => changeHandler("startTime", value)}
                 value={formik.values.startTime}
                 renderInput={(params): JSX.Element => (

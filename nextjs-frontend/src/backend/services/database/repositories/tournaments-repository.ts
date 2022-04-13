@@ -25,9 +25,11 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
   }
 
   async upadte(tournament: ITournament): Promise<ITournament> {
+    const id = tournament.id;
+    const data = {...tournament};
+    delete data.id;
     const updatedItems = await this.entities()
-      .update(tournament, [
-        'id',
+      .update(data, [
         'basic',
         'info',
         'settings',
@@ -36,7 +38,8 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
         'status',
         'joinStatus',
         'createTemplateCode',
-      ]);
+      ])
+.where({id});
     return updatedItems[0];
   }
 
