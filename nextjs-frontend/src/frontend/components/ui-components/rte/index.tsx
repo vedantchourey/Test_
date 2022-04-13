@@ -1,6 +1,7 @@
 import { createStyles, makeStyles } from "@mui/styles";
 import dynamic from "next/dynamic";
 // import ReachTextEditor from "mui-rte";
+import Editor from 'material-ui-editor'
 
 const ReachTextEditor = dynamic(() => import("mui-rte"), {
   ssr: false,
@@ -19,7 +20,7 @@ const useStyles = makeStyles(() =>
 const NoobReachTextEditor: React.FC<any> = (props) => {
   const classes = useStyles();
   return (
-    <ReachTextEditor
+    <Editor
       label="Type here..."
       classes={{ root: classes.root }}
       {...props}

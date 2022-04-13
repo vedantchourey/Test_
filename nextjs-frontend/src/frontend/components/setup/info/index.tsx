@@ -102,8 +102,8 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
                 />
                 {formik.touched.contactUrl &&
                 Boolean(formik.errors.contactUrl) ? (
-                    <FormHelperText> {formik.errors.contactUrl} </FormHelperText>
-                  ) : null}
+                  <FormHelperText> {formik.errors.contactUrl} </FormHelperText>
+                ) : null}
               </FormControl>
             </Grid>
           ) : null}
@@ -112,12 +112,9 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
         <AccordionAlt title="Contact Details">
           <NoobReachTextEditor
             id="contactDetails"
-            onChange={(value: EditorState): void =>
-              changeHandler(
-                "contactDetails",
-                value.getCurrentContent().getPlainText("\u0001")
-              )
-            }
+            onChange={(value: any): void => {
+              changeHandler("contactDetails", value);
+            }}
             error={
               formik.touched.contactDetails &&
               Boolean(formik.errors.contactDetails)
@@ -125,62 +122,38 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
           />
           {formik.touched.contactDetails &&
           Boolean(formik.errors.contactDetails) ? (
-              <FormHelperText> {formik.errors.contactDetails} </FormHelperText>
-            ) : null}
+            <FormHelperText> {formik.errors.contactDetails} </FormHelperText>
+          ) : null}
         </AccordionAlt>
         <AccordionAlt title="Rules">
-          <NoobReachTextEditor 
+          <NoobReachTextEditor
             id="rules"
-            onChange={(value: EditorState): void =>
-              changeHandler(
-                "rules",
-                value.getCurrentContent().getPlainText("\u0001")
-              )
-            }
-            error={
-              formik.touched.rules &&
-            Boolean(formik.errors.rules)
-            } />
-          {formik.touched.rules &&
-          Boolean(formik.errors.rules) ? (
-              <FormHelperText> {formik.errors.rules} </FormHelperText>
-            ) : null}
+            onChange={(value: any): void => changeHandler("rules", value)}
+            error={formik.touched.rules && Boolean(formik.errors.rules)}
+          />
+          {formik.touched.rules && Boolean(formik.errors.rules) ? (
+            <FormHelperText> {formik.errors.rules} </FormHelperText>
+          ) : null}
         </AccordionAlt>
         <AccordionAlt title="Prizes">
-          <NoobReachTextEditor 
+          <NoobReachTextEditor
             id="prizes"
-            onChange={(value: EditorState): void =>
-              changeHandler(
-                "prizes",
-                value.getCurrentContent().getPlainText("\u0001")
-              )
-            }
-            error={
-              formik.touched.prizes &&
-            Boolean(formik.errors.prizes)
-            }/>
-          {formik.touched.prizes &&
-          Boolean(formik.errors.prizes) ? (
-              <FormHelperText> {formik.errors.prizes} </FormHelperText>
-            ) : null}
+            onChange={(value: any): void => changeHandler("prizes", value)}
+            error={formik.touched.prizes && Boolean(formik.errors.prizes)}
+          />
+          {formik.touched.prizes && Boolean(formik.errors.prizes) ? (
+            <FormHelperText> {formik.errors.prizes} </FormHelperText>
+          ) : null}
         </AccordionAlt>
         <AccordionAlt title="Schedule">
-          <NoobReachTextEditor 
+          <NoobReachTextEditor
             id="schedule"
-            onChange={(value: EditorState): void =>
-              changeHandler(
-                "schedule",
-                value.getCurrentContent().getPlainText("\u0001")
-              )
-            }
-            error={
-              formik.touched.schedule &&
-            Boolean(formik.errors.schedule)
-            }/>
-          {formik.touched.schedule &&
-          Boolean(formik.errors.schedule) ? (
-              <FormHelperText> {formik.errors.schedule} </FormHelperText>
-            ) : null}
+            onChange={(value: any): void => changeHandler("schedule", value)}
+            error={formik.touched.schedule && Boolean(formik.errors.schedule)}
+          />
+          {formik.touched.schedule && Boolean(formik.errors.schedule) ? (
+            <FormHelperText> {formik.errors.schedule} </FormHelperText>
+          ) : null}
         </AccordionAlt>
       </CardLayout>
       <Box display="flex" justifyContent={"space-between"}>
