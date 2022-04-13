@@ -39,10 +39,15 @@ const NavTabs: React.FC<NavProps> = ({
     }
   };
 
+  const getSelected = ():number =>{
+    const newItem = items.find((item)=>item.toLowerCase() === current);
+    return items.indexOf(newItem || "");
+  }
+  
   return (
     <React.Fragment>
       <Tabs
-        value={items.indexOf(current)||0}
+        value={getSelected()}
         classes={{ root: classes.tabs }}
         onChange={handleChange}
         aria-label="nav tabs"
