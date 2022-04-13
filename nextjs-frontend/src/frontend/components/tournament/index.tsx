@@ -98,17 +98,13 @@ const Tournament: React.FC = () => {
       },
       items: [
         {
-          title: "Facebook",
+          title: "Invite Player",
           url: "",
         },
         {
-          title: "Whatsapp",
+          title: "Embed Codes",
           url: "",
-        },
-        {
-          title: "Twitter",
-          url: "",
-        },
+        }
       ],
     },
   ];
