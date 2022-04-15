@@ -1,7 +1,8 @@
-import { NoobApiService } from "../../utils/api-middle-ware/api-middleware-typings";
 import {
-  CreateOrEditTournamentRequest,
-} from "./create-or-edit-tournament-request";
+  NoobApiService,
+  PerRequestContext,
+} from "../../utils/api-middle-ware/api-middleware-typings";
+import { CreateOrEditTournamentRequest } from "./create-or-edit-tournament-request";
 import { ITournamentResponse, ITournamentType } from "./i-tournament-response";
 import { validateTournament } from "./create-tournament-validator";
 import { isThereAnyError } from "../../../common/utils/validation/validator";
@@ -10,6 +11,9 @@ import { TournamentsRepository } from "../database/repositories/tournaments-repo
 import { Knex } from "knex";
 import { validatePersistTournament } from "./persist-tournament-validator";
 import { persistBrackets } from "../brackets-service/brackets-service";
+import { ServiceResponse } from "../common/contracts/service-response";
+import { ITournament } from "../database/models/i-tournaments";
+import { ListTournamentType } from "./list-tournaments-request";
 
 export const createTournament: NoobApiService<
   CreateOrEditTournamentRequest,
@@ -52,3 +56,17 @@ export const persistTournament: NoobApiService<
   const { id, ...others } = tournament;
   return { id: id as string, ...others };
 };
+
+export async function listTournaments(
+  params: ListTournamentType,
+  context: PerRequestContext
+): Promise<ServiceResponse<null, ITournament[]>> {
+  const repository = new TournamentsRepository(
+    context.transaction as Knex.Transaction
+  );
+  const tournaments = await repository.getTournaments(params);
+
+  return {
+    data: tournaments,
+  };
+}
