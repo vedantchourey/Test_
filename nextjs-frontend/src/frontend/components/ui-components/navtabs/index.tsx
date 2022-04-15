@@ -9,10 +9,17 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     tabs: {
       width: "100%",
-      borderRadius: "10px",
+      borderRadius: ({altNav}:any)=>altNav?'0':"10px",
       background: theme.palette.background.paper,
       marginBottom: theme.spacing(1),
     },
+    selectedAlt:{
+      background:"rgba(105, 50, 249, 1)",
+      color:"white!important"
+      // "& .MuiTab-textColorPrimary":{
+      //   color:"white"
+      // }
+    }
   }));
 
 interface NavProps {
@@ -20,6 +27,7 @@ interface NavProps {
   action?: React.ReactElement;
   current?: string;
   onClick?: (tab: string) => void;
+  altNav?:boolean
 }
 
 const NavTabs: React.FC<NavProps> = ({
@@ -27,8 +35,9 @@ const NavTabs: React.FC<NavProps> = ({
   action = null,
   current = "",
   onClick,
+  altNav=false
 }) => {
-  const classes = useStyles();
+  const classes = useStyles({altNav});
 
   const handleChange = (
     event: React.SyntheticEvent,
@@ -53,7 +62,7 @@ const NavTabs: React.FC<NavProps> = ({
         aria-label="nav tabs"
       >
         {items.map((tab) => {
-          return <Tab key={tab} label={tab}></Tab>;
+          return <Tab key={tab} label={tab} classes={{selected:((altNav && classes.selectedAlt)?classes.selectedAlt:'')}}></Tab>;
         })}
         {action ? (
           <Box

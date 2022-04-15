@@ -107,6 +107,17 @@ const noobTheme = createTheme({
           borderRadius:"10px"
         }
       }
+    },
+    MuiLinearProgress:{
+      styleOverrides:{
+        root:{
+          height:"8px",
+          borderRadius:"4px"
+        },
+        bar:{
+          borderRadius:"4px"
+        }
+      }
     }
   }
 });

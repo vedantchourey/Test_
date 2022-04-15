@@ -3,7 +3,7 @@
     flex-direction: column;
     flex-grow: 1;
     background-color: #160C30;
-    row-gap: 24px;
+    row-gap: 24px;  
   }
 
 .mainBannerText {
@@ -21,20 +21,27 @@
 
   .heroContainer {
     position: relative;
-    margin-top: -20px !important;
-    height: 500px !important;
+    /* margin-top: -20px !important; */
+    min-height: 500px !important;
     /* background: url('/images/partner-with-us.png'); */
     background-repeat: no-repeat !important;
     background-clip: border-box !important;
     background-size: cover !important;
     background-origin: border-box !important;
+    display: "flex";
+    padding: 0px 70px;
+    width: "100%";
 }
 
 .heading {
-    position: absolute;
-    bottom: 30px;
-    left: 70px;
-    width: 50%;
+    padding-top: 200px;
+    /* bottom: 30px;
+    left: 70px; */
+    /* width: 50%; */
+}
+
+.childContainer{
+  width: 100%;
 }
 
 @media screen and (max-width: 600px) {

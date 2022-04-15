@@ -49,7 +49,7 @@ const InvitePlayer: React.FC = (): JSX.Element => {
   });
 
   const onBack = (): void => {
-    router.push(`/tournament/[...slug]`, `/tournament/create/brackets/create`, {
+    router.push(`/tournament/[...slug]`, `/tournament/create/publish`, {
       shallow: true,
     });
   };
