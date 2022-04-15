@@ -3,22 +3,18 @@ import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import { createStyles, makeStyles } from "@mui/styles";
-import { Theme } from "@mui/material";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     tabs: {
       width: "100%",
-      borderRadius: ({altNav}:any)=>altNav?'0':"10px",
-      background: theme.palette.background.paper,
-      marginBottom: theme.spacing(1),
+      borderRadius: "10px",
+      background: "#100626",
+      marginBottom: "10px",
     },
     selectedAlt:{
       background:"rgba(105, 50, 249, 1)",
       color:"white!important"
-      // "& .MuiTab-textColorPrimary":{
-      //   color:"white"
-      // }
     }
   }));
 
@@ -37,7 +33,7 @@ const NavTabs: React.FC<NavProps> = ({
   onClick,
   altNav=false
 }) => {
-  const classes = useStyles({altNav});
+  const classes = useStyles();
 
   const handleChange = (
     event: React.SyntheticEvent,

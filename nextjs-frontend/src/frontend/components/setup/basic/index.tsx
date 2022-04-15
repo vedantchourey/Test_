@@ -20,13 +20,13 @@ import Dropzone from "react-dropzone";
 import { DatePicker, TimePicker } from "@mui/lab";
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { EditorState } from "draft-js";
 
 const useStyles = makeStyles(() =>
   createStyles({
     inputBox: {
       borderRadius: "10px",
       marginBottom: "20px",
+      padding: "10px",
     },
     dropZone: {
       border: "1px solid rgba(255, 255, 255, 0.3)",
@@ -126,22 +126,25 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
               ) : null}
             </FormControl>
           </Grid>
-          <Grid item xs={6}> <FormControl fullWidth variant="standard">
-            <FormLabel label="Select Game"></FormLabel>
-            <OutlinedInput
-              id="game"
-              name="game"
-              placeholder="FIFA22"
-              onChange={formik.handleChange}
-              value={formik.values.game}
-              className={style.inputBox}
-              onBlur={formik.handleBlur}
-              error={formik.touched.game && Boolean(formik.errors.game)}
-            />
-            {formik.touched.game && Boolean(formik.errors.game) ? (
-              <FormHelperText> {formik.errors.game} </FormHelperText>
-            ) : null}
-          </FormControl></Grid>
+          <Grid item xs={6}>
+            {" "}
+            <FormControl fullWidth variant="standard">
+              <FormLabel label="Select Game"></FormLabel>
+              <OutlinedInput
+                id="game"
+                name="game"
+                placeholder="FIFA22"
+                onChange={formik.handleChange}
+                value={formik.values.game}
+                className={style.inputBox}
+                onBlur={formik.handleBlur}
+                error={formik.touched.game && Boolean(formik.errors.game)}
+              />
+              {formik.touched.game && Boolean(formik.errors.game) ? (
+                <FormHelperText> {formik.errors.game} </FormHelperText>
+              ) : null}
+            </FormControl>
+          </Grid>
 
           <Grid item xs={6}>
             <FormControl fullWidth variant="standard">
@@ -150,12 +153,17 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
                 inputFormat="dd/MM/yyyy"
                 onChange={(value): void => changeHandler("startDate", value)}
                 value={formik.values.startDate}
-                renderInput={(params): JSX.Element => <TextField id="startDate"
-                  error={
-                    formik.touched.startDate &&
-                  Boolean(formik.errors.startDate)
-                  }
-                  onBlur={formik.handleBlur} {...params} />}
+                renderInput={(params): JSX.Element => (
+                  <TextField
+                    id="startDate"
+                    error={
+                      formik.touched.startDate &&
+                      Boolean(formik.errors.startDate)
+                    }
+                    onBlur={formik.handleBlur}
+                    {...params}
+                  />
+                )}
               />
               {formik.touched.startDate && Boolean(formik.errors.startDate) ? (
                 <FormHelperText> {formik.errors.startDate} </FormHelperText>
@@ -223,23 +231,21 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
                 />
                 {formik.touched.createTemplateCode &&
                 Boolean(formik.errors.createTemplateCode) ? (
-                    <FormHelperText>
-                      {" "}
-                      {formik.errors.createTemplateCode}{" "}
-                    </FormHelperText>
-                  ) : null}
+                  <FormHelperText>
+                    {" "}
+                    {formik.errors.createTemplateCode}{" "}
+                  </FormHelperText>
+                ) : null}
               </FormControl>
             ) : null}
           </Grid>
           <Grid item xs={12}>
             <AccordionAlt title="About">
               <NoobReachTextEditor
-                onChange={(value: EditorState): void =>
-                  changeHandler(
-                    "about",
-                    value.getCurrentContent().getPlainText("\u0001")
-                  )
-                }
+                content={formik.values.about}
+                onChange={(value: any): void => {
+                  changeHandler("about", value);
+                }}
               />
             </AccordionAlt>
           </Grid>
