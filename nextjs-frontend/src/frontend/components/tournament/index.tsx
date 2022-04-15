@@ -13,6 +13,8 @@ import { ParsedUrlQuery } from "querystring";
 import { PublishTournamentData } from "../publish/publish-tournament";
 import { StreamData } from "./create/streams";
 import moment from 'moment'
+import Share from "./share";
+import { InvitePlayerData } from "./share/invitePlayer";
 
 export interface TournamentData {
   id?: string;
@@ -27,6 +29,7 @@ export interface TournamentData {
   streams?:{
     data:StreamData[];
   }
+  invitePlayer?:InvitePlayerData;
 }
 
 interface TournamentContextType {
@@ -45,7 +48,6 @@ export const TournamentContext = React.createContext<TournamentContextType>({
 
 const Tournament: React.FC = () => {
   const [data, setData] = React.useState<TournamentData>({});
-  const [id, setId] = React.useState<string>("");
   const router = useRouter();
   const query: ParsedUrlQuery = router.query;
 
@@ -94,22 +96,25 @@ const Tournament: React.FC = () => {
     {
       icon: <img src="/icons/share-alt.svg" alt="icon" />,
       title: "Share",
-      isActive:():boolean=>{
-        return false;
+      isActive:(url:string):boolean=>{
+        return url.indexOf("/tournament/share")>-1;
       },
+      // isActive:():boolean=>{
+      //   return false;
+      // },
       items: [
         {
-          title: "Facebook",
-          url: "",
+          title: "Invite Player",
+          url: "/tournament/[...slug]",
+          as: "/tournament/share/invitePlayer",
+          isActive: (url:string):boolean =>{
+            return url.indexOf("/tournament/share/invitePlayer")>-1
+          }
         },
         {
-          title: "Whatsapp",
+          title: "Embed Codes",
           url: "",
-        },
-        {
-          title: "Twitter",
-          url: "",
-        },
+        }
       ],
     },
   ];
@@ -123,38 +128,35 @@ const Tournament: React.FC = () => {
       }
       if(callback){
         callback();
-        setId("");
       }
     })
 
   }
 
   const submitHandler = (submitData: TournamentData): Promise<boolean> => {
-    if (id !== "") submitData.id = id;
-
+    const requestData = Object.assign({},submitData)
     const req = {
-      ...submitData,
+      ...requestData,
       status: "PUBLISHED",
       joinStatus: "PUBLIC",
-      ...(submitData.basic || {})   
+      ...(requestData.basic || {})   
     }
-    let formData = {...req}
-    // @ts-ignore: Unreachable code error
-    delete formData.cloneTournament;
-    // @ts-ignore: Unreachable code error
-    formData.startDate = moment(formData.startDate).format("YYYY-MM-DD")
-    // @ts-ignore: Unreachable code error
-    formData.startTime = moment(formData.startTime).format("HH:mm:ss")
-    formData.status = submitData.publishData?.registration || "PUBLISHED";
-    formData.joinStatus = submitData.publishData?.society || "PRIVATE";
-    delete formData.publishData
-    delete formData.basic;
+    // eslint-disable-next-line
+    delete req.cloneTournament;
+    // eslint-disable-next-line
+    req.startDate = moment(req.startDate).format("YYYY-MM-DD")
+    // eslint-disable-next-line
+    req.startTime = moment(req.startTime).format("HH:mm:ss")
+    req.status = req.publishData?.registration || "PUBLISHED";
+    req.joinStatus = req.publishData?.society || "PRIVATE";
+    delete req.publishData
+    delete req.basic;
 
     return axios
-      .post("/api/tournaments/create", formData)
+      .post("/api/tournaments/create", req)
       .then((res) => {
         if (!res?.data?.errors?.length) {
-          setId(res.data.id);
+          setData({...submitData,id:res.data.id});
           return true;
         }
           return false
@@ -172,6 +174,8 @@ const Tournament: React.FC = () => {
     switch(query.slug[0]){
     case 'create':
       return <Create/>
+    case 'share':
+      return <Share />
     default :
       return null;
     }

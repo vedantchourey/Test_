@@ -28,22 +28,27 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
   }
 
   async upadte(tournament: ITournament): Promise<ITournament> {
-    const updatedItems = await this.entities().update(tournament, [
-      "id",
-      "name",
-      "game",
-      "startDate",
-      "startTime",
-      "about",
-      "banner",
-      "info",
-      "settings",
-      "bracketsMetadata",
-      "streams",
-      "status",
-      "joinStatus",
-      "createTemplateCode",
-    ]);
+    const id = tournament.id;
+    const data = { ...tournament };
+    delete data.id;
+    const updatedItems = await this.entities()
+      .update(tournament, [
+        "id",
+        "name",
+        "game",
+        "startDate",
+        "startTime",
+        "about",
+        "banner",
+        "info",
+        "settings",
+        "bracketsMetadata",
+        "streams",
+        "status",
+        "joinStatus",
+        "createTemplateCode",
+      ])
+      .where({ id });
     return updatedItems[0];
   }
 }

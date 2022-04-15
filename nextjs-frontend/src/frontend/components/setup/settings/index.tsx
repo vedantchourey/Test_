@@ -236,19 +236,8 @@ const Settings: React.FC<SettingProps> = ({
                 <FormControl fullWidth>
                   <FormLabel label="Check-in Start Time"></FormLabel>
                   <Box display="flex" justifyContent={"flex-start"}>
-                    {/* <OutlinedInput
-                      id="checkInStartTime"
-                      placeholder="PlayStation 5"
-                      onChange={formik.handleChange}
-                      value={formik.values.checkInStartTime}
-                      onBlur={formik.handleBlur}
-                      error={
-                        formik.touched.checkInStartTime &&
-                        Boolean(formik.errors.checkInStartTime)
-                      }
-                    /> */}
                     <TimePicker
-                      inputFormat="HH:MM a"
+                      inputFormat="HH:mm a"
                       onChange={(value): void =>
                         changeHandler("checkInStartTime", value as string)
                       }

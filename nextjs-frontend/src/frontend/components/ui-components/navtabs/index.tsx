@@ -3,15 +3,15 @@ import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import { createStyles, makeStyles } from "@mui/styles";
-import { Theme } from "@mui/material";
+import { Theme, useTheme } from "@mui/material";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     tabs: {
       width: "100%",
       borderRadius: "10px",
-      background: theme.palette.background.paper,
-      marginBottom: theme.spacing(1),
+      background: "#100626",
+      marginBottom: "10px",
     },
   }));
 
@@ -28,6 +28,7 @@ const NavTabs: React.FC<NavProps> = ({
   current = "",
   onClick,
 }) => {
+  const theme = useTheme();
   const classes = useStyles();
 
   const handleChange = (

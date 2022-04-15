@@ -43,6 +43,7 @@ export interface EliminateBracketData {
   thirdPlace: boolean;
   playersLimit: number | null;
   rounds: RoundData[];
+  scoringFormat:string
 }
 
 interface EliminateBracketProps {
@@ -77,6 +78,7 @@ const EliminateBracket = React.forwardRef<
       is: "SINGLE",
       then: yup.boolean().required("Third Place is required"),
     }),
+    scoringFormat:yup.string(),
     playersLimit: yup.number(),
     rounds: yup.array().of(
       yup.object().shape({
@@ -96,7 +98,8 @@ const EliminateBracket = React.forwardRef<
       type: data?.type || "",
       thirdPlace: data?.thirdPlace || false,
       playersLimit: data?.playersLimit || null,
-      rounds: [],
+      rounds: data?.rounds || [],
+      scoringFormat:data?.scoringFormat || '',
     } as EliminateBracketData,
     validationSchema: validationSchema,
     onSubmit: (values: EliminateBracketData) => {
@@ -178,7 +181,7 @@ const EliminateBracket = React.forwardRef<
             <FormControl fullWidth variant="standard">
               <FormLabel label="Start Time"></FormLabel>
               <TimePicker
-                inputFormat="HH:MM a"
+                inputFormat="HH:mm a"
                 onChange={(value): void => changeHandler("startTime", value)}
                 value={formik.values.startTime}
                 renderInput={(params): JSX.Element => (
@@ -312,8 +315,9 @@ const EliminateBracket = React.forwardRef<
             <FormControl fullWidth>
               <FormLabel label="Scoring Format" />
               <OutlinedInput
-                id="rounds"
+                id="scoringFormat"
                 placeholder="Best Of"
+                disabled
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
@@ -333,103 +337,110 @@ const EliminateBracket = React.forwardRef<
             <FieldArray
               name="rounds"
               render={(helper): JSX.Element => {
-                const renderRound = (formik.values.rounds || []).map((round, index) => {
-                  return (
-                    <React.Fragment key={index}>
-                      <Grid item sm={12}>
-                        <FormHelperText> Round {index + 1} </FormHelperText>
-                      </Grid>
-                      <Grid item xs={8}>
-                        <FormControl fullWidth>
-                          <Select
-                            value={round.round}
-                            displayEmpty
-                            defaultValue={""}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            id={`rounds.${index}.round`}
-                            name={`rounds.${index}.round`}
-                            error={
-                              formik.touched.rounds &&
-                              formik.touched.rounds[index] &&
-                              formik.touched.rounds[index].round &&
-                              formik.errors.rounds !== undefined &&
-                              formik.errors.rounds[index] !== undefined &&
-                              Boolean(
-                                (formik.errors.rounds[index] as RoundData).round
-                              )
-                            }
-                          >
-                            <MenuItem value="">Select Round </MenuItem>
-                            <MenuItem value="1">Best of 1</MenuItem>
-                            <MenuItem value="2">Best of 2</MenuItem>
-                          </Select>
-                          {formik.touched.rounds &&
-                          formik.touched.rounds[index] &&
-                          formik.touched.rounds[index].round &&
-                          formik.errors.rounds !== undefined &&
-                          formik.errors.rounds[index] !== undefined &&
-                          Boolean(
-                            (formik.errors.rounds[index] as RoundData).round
-                          ) ? (
-                            <FormHelperText>
-                              {(formik.errors.rounds[index] as RoundData).round}
-                            </FormHelperText>
-                          ) : null}
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={4}>
-                        <Button
-                          variant="contained"
-                          onClick={(): void => helper.remove(index)}
-                          startIcon={
-                            <img src="/icons/delete.svg" alt="delete" />
-                          }
-                        >
-                          Remove Details
-                        </Button>
-                      </Grid>
-                      <Grid item sm={12}>
-                        <NoobReachTextEditor
-                          id={`rounds.${index}.description`}
-                          name={`rounds.${index}.description`}
-                          onChange={(value: EditorState): void => {
-                            formik.setFieldValue(
-                              `rounds.${index}.description`,
-                              value.getCurrentContent().getPlainText("\u0001")
-                            );
-                          }}
-                          error={
-                            formik.touched.rounds &&
+                const renderRound = (formik.values.rounds || []).map(
+                  (round, index) => {
+                    return (
+                      <React.Fragment key={index}>
+                        <Grid item sm={12}>
+                          <FormHelperText> Round {index + 1} </FormHelperText>
+                        </Grid>
+                        <Grid item xs={8}>
+                          <FormControl fullWidth>
+                            <Select
+                              value={round.round}
+                              displayEmpty
+                              defaultValue={""}
+                              onChange={formik.handleChange}
+                              onBlur={formik.handleBlur}
+                              id={`rounds.${index}.round`}
+                              name={`rounds.${index}.round`}
+                              error={
+                                formik.touched.rounds &&
+                                formik.touched.rounds[index] &&
+                                formik.touched.rounds[index].round &&
+                                formik.errors.rounds !== undefined &&
+                                formik.errors.rounds[index] !== undefined &&
+                                Boolean(
+                                  (formik.errors.rounds[index] as RoundData)
+                                    .round
+                                )
+                              }
+                            >
+                              <MenuItem value="">Select Round </MenuItem>
+                              <MenuItem value="1">Best of 1</MenuItem>
+                              <MenuItem value="2">Best of 2</MenuItem>
+                            </Select>
+                            {formik.touched.rounds &&
                             formik.touched.rounds[index] &&
-                            formik.touched.rounds[index].description &&
+                            formik.touched.rounds[index].round &&
                             formik.errors.rounds !== undefined &&
                             formik.errors.rounds[index] !== undefined &&
                             Boolean(
-                              (formik.errors.rounds[index] as RoundData)
-                                .description
-                            )
-                          }
-                        />
-                        {formik.touched.rounds &&
-                        formik.touched.rounds[index] &&
-                        formik.touched.rounds[index].description &&
-                        formik.errors.rounds !== undefined &&
-                        formik.errors.rounds[index] !== undefined &&
-                        Boolean(
-                          (formik.errors.rounds[index] as RoundData).description
-                        ) ? (
-                          <FormHelperText>
-                            {
-                              (formik.errors.rounds[index] as RoundData)
-                                .description
+                              (formik.errors.rounds[index] as RoundData).round
+                            ) ? (
+                              <FormHelperText>
+                                {
+                                  (formik.errors.rounds[index] as RoundData)
+                                    .round
+                                }
+                              </FormHelperText>
+                            ) : null}
+                          </FormControl>
+                        </Grid>
+                        <Grid item xs={4}>
+                          <Button
+                            variant="contained"
+                            onClick={(): void => helper.remove(index)}
+                            startIcon={
+                              <img src="/icons/delete.svg" alt="delete" />
                             }
-                          </FormHelperText>
-                        ) : null}
-                      </Grid>
-                    </React.Fragment>
-                  );
-                });
+                          >
+                            Remove Details
+                          </Button>
+                        </Grid>
+                        <Grid item sm={12}>
+                          <NoobReachTextEditor
+                            id={`rounds.${index}.description`}
+                            name={`rounds.${index}.description`}
+                            onChange={(value: any): void => {
+                              formik.setFieldValue(
+                                `rounds.${index}.description`,
+                                value
+                              );
+                            }}
+                            error={
+                              formik.touched.rounds &&
+                              formik.touched.rounds[index] &&
+                              formik.touched.rounds[index].description &&
+                              formik.errors.rounds !== undefined &&
+                              formik.errors.rounds[index] !== undefined &&
+                              Boolean(
+                                (formik.errors.rounds[index] as RoundData)
+                                  .description
+                              )
+                            }
+                          />
+                          {formik.touched.rounds &&
+                          formik.touched.rounds[index] &&
+                          formik.touched.rounds[index].description &&
+                          formik.errors.rounds !== undefined &&
+                          formik.errors.rounds[index] !== undefined &&
+                          Boolean(
+                            (formik.errors.rounds[index] as RoundData)
+                              .description
+                          ) ? (
+                            <FormHelperText>
+                              {
+                                (formik.errors.rounds[index] as RoundData)
+                                  .description
+                              }
+                            </FormHelperText>
+                          ) : null}
+                        </Grid>
+                      </React.Fragment>
+                    );
+                  }
+                );
 
                 return (
                   <React.Fragment>
