@@ -88,6 +88,25 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
         .limit(limit);
     }
 
+    result = await this.entities()
+      .select(
+        "id",
+        "name",
+        "game",
+        "startDate",
+        "startTime",
+        "about",
+        "banner",
+        "info",
+        "settings",
+        "bracketsMetadata",
+        "streams",
+        "status",
+        "joinStatus",
+        "createTemplateCode"
+      )
+      .where(options ? options : {})
+      .limit(limit);
     return result;
   }
 }
