@@ -77,6 +77,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
       is: true,
       then: yup.string().required("Tournament id is require to clone"),
     }),
+    banner:yup.string()
   });
 
   const formik = useFormik({
@@ -88,6 +89,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
       about: data?.about || "",
       createTemplateCode: data?.createTemplateCode || "",
       cloneTournament: data?.cloneTournament || false,
+      banner:''
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
