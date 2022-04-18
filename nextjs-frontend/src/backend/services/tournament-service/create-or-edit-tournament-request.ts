@@ -1,15 +1,13 @@
-import { TournamentType } from './tournament-type';
+import { TournamentType } from "./tournament-type";
 
 export interface CreateOrEditTournamentType {
   id?: string;
-  basic?: {
-    name: string;
-    game: string;
-    startDate: Date;
-    startTime: Date;
-    about: string;
-    banner: string;
-  };
+  name: string;
+  game: string;
+  startDate: Date;
+  startTime: Date;
+  about: string;
+  banner: string;
   info?: {
     contactOption: string;
     contactUrl: string;
@@ -52,7 +50,7 @@ export interface CreateOrEditTournamentType {
   }>;
   status: "DRAFT" | "PUBLISHED";
   joinStatus: "PRIVATE" | "PUBLIC";
-  createTemplateCode: string
+  createTemplateCode: string;
 }
 export interface CreateOrEditTournamentRequest {
   id?: string;
@@ -68,5 +66,3 @@ export interface CreateOrEditTournamentRequest {
   tournamentType: TournamentType;
   scheduleDate: string;
 }
-
-

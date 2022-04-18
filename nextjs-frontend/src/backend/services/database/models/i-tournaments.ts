@@ -1,13 +1,11 @@
 export interface ITournament {
   id?: string;
-  basic?: {
-    name: string;
-    game: string;
-    startDate: Date;
-    startTime: Date;
-    about: string;
-    banner: string;
-  };
+  name: string;
+  game: string;
+  startDate: Date;
+  startTime: Date;
+  about: string;
+  banner: string;
   info?: {
     contactOption: string;
     contactUrl: string;
@@ -50,5 +48,5 @@ export interface ITournament {
   }>;
   status: "DRAFT" | "PUBLISHED";
   joinStatus: "PRIVATE" | "PUBLIC";
-  createTemplateCode: string
+  createTemplateCode: string;
 }
