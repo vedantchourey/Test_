@@ -18,6 +18,7 @@ import moment from "moment";
 import { TournamentData } from "../tournament";
 import { BasicData } from "../setup/basic";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 export interface TournamentType
   extends Omit<TournamentData, "basic">,
@@ -30,6 +31,7 @@ const TournamentMaster: React.FC = () => {
   const [filter, setFilter] = React.useState<{ status: string }>({
     status: "",
   });
+  const router = useRouter();
 
   const fetchTournaments = (): void => {
     axios
@@ -142,14 +144,18 @@ const TournamentMaster: React.FC = () => {
     },
     {
       title: "Action",
-      renderCell: (): any => {
+      renderCell: (row): JSX.Element => {
         return (
           <Chip
             label={"View"}
+            onClick={()=>{
+              router.push("/tournament/[...slug]",`/tournament/create/setup/basic?id=${row.id}`,{shallow:true})
+            }}
             style={{
               textTransform: "capitalize",
               background: "#FBAF40",
               padding: "0px 10px",
+              cursor:"pointer"
             }}
           />
         );

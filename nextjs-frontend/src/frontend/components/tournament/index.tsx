@@ -50,7 +50,7 @@ const Tournament: React.FC = () => {
   const [data, setData] = React.useState<TournamentData>({});
   const router = useRouter();
   const query: ParsedUrlQuery = router.query;
-
+  
   const sideBarNav = [
     {
       icon: <img src="/icons/Vector.svg" alt="icon" />,
@@ -99,9 +99,6 @@ const Tournament: React.FC = () => {
       isActive:(url:string):boolean=>{
         return url.indexOf("/tournament/share")>-1;
       },
-      // isActive:():boolean=>{
-      //   return false;
-      // },
       items: [
         {
           title: "Invite Player",
@@ -151,7 +148,6 @@ const Tournament: React.FC = () => {
     req.joinStatus = req.publishData?.society || "PRIVATE";
     delete req.publishData
     delete req.basic;
-
     return axios
       .post("/api/tournaments/create", req)
       .then((res) => {

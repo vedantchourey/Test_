@@ -84,14 +84,18 @@ const TournamentDashboardTable: React.FC = () => {
     },
     {
       title: "Action",
-      renderCell: (): any => {
+      renderCell: (row): JSX.Element => {
         return (
           <Chip
             label={"View"}
+            onClick={()=>{
+              router.push("/tournament/[...slug]",`/tournament/create/setup/basic?id=${row.id}`,{shallow:true})
+            }}
             style={{
               textTransform: "capitalize",
               background: "#FBAF40",
               padding: "0px 10px",
+              cursor:"pointer"
             }}
           />
         );

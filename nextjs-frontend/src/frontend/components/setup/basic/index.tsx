@@ -94,7 +94,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       if (onSave) {
-        onSave(values);
+        onSave({...values,banner:'Test Banner'});
       }
     },
   });
