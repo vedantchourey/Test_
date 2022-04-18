@@ -2372,6 +2372,11 @@ attr-accept@^2.2.2:
   resolved "https://registry.yarnpkg.com/attr-accept/-/attr-accept-2.2.2.tgz#646613809660110749e92f2c10833b70968d929b"
   integrity sha512-7prDjvt9HmqiZ0cl5CRjtS84sEyhsHP2coDkaZKRKVfCDo9s7iw7ChVmar78Gu9pC4SoR/28wFu/G5JJhTnqEg==
 
+autonomy@~0.5.0:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/autonomy/-/autonomy-0.5.2.tgz#25286e4f1b0093b8065ebf3eed8df49fdc344a84"
+  integrity sha1-JShuTxsAk7gGXr8+7Y30n9w0SoQ=
+
 available-typed-arrays@^1.0.5:
   version "1.0.5"
   resolved "https://registry.npmjs.org/available-typed-arrays/-/available-typed-arrays-1.0.5.tgz"
@@ -4391,6 +4396,15 @@ ini@~1.3.0:
   resolved "https://registry.npmjs.org/ini/-/ini-1.3.8.tgz"
   integrity sha512-JV/yugV2uzW5iMRSiZAyDtQd+nxtUnjeLt0acNdw98kKLrvuRVyB80tsREOE7yvGVgalhZ6RNXCmEHkUKBKxew==
 
+interlude@~1.0.2:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/interlude/-/interlude-1.0.3.tgz#cf2e534f0609f8ce4dc8ad7192ef1cbdb0c6adc3"
+  integrity sha1-zy5TTwYJ+M5NyK1xku8cvbDGrcM=
+  dependencies:
+    autonomy "~0.5.0"
+    operators "~0.1.3"
+    subset "~0.1.3"
+
 internal-slot@^1.0.3:
   version "1.0.3"
   resolved "https://registry.npmjs.org/internal-slot/-/internal-slot-1.0.3.tgz"
@@ -5392,6 +5406,11 @@ once@^1.3.0, once@^1.3.1, once@^1.4.0:
   integrity sha1-WDsap3WWHUsROsF9nFC6753Xa9E=
   dependencies:
     wrappy "1"
+
+operators@~0.1.3:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/operators/-/operators-0.1.7.tgz#8c7fc9a8159f2814401231fcbc1ff899d60bafa9"
+  integrity sha1-jH/JqBWfKBRAEjH8vB/4mdYLr6k=
 
 optionator@^0.9.1:
   version "0.9.1"
@@ -6593,6 +6612,11 @@ stylis@4.0.13:
   resolved "https://registry.npmjs.org/stylis/-/stylis-4.0.13.tgz"
   integrity sha512-xGPXiFVl4YED9Jh7Euv2V220mriG9u4B2TA6Ybjc1catrstKD2PpIdU3U0RKpkVBC2EhmL/F0sPCr9vrFTNRag==
 
+subset@~0.1.3:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/subset/-/subset-0.1.7.tgz#67870a3337c5e90c78a71264de2861242a9eca5e"
+  integrity sha1-Z4cKMzfF6Qx4pxJk3ihhJCqeyl4=
+
 supports-color@8.1.1, supports-color@^8.0.0:
   version "8.1.1"
   resolved "https://registry.npmjs.org/supports-color/-/supports-color-8.1.1.tgz"
@@ -6738,6 +6762,13 @@ toposort@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/toposort/-/toposort-2.0.2.tgz#ae21768175d1559d48bef35420b2f4962f09c330"
   integrity sha1-riF2gXXRVZ1IvvNUILL0li8JwzA=
+
+tournament@^0.11.1:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/tournament/-/tournament-0.11.1.tgz#693e2149214e32a1272a913ec6283551f0792f1f"
+  integrity sha1-aT4hSSFOMqEnKpE+xig1UfB5Lx8=
+  dependencies:
+    interlude "~1.0.2"
 
 tr46@^1.0.1:
   version "1.0.1"

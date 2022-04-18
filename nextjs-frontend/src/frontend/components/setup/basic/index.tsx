@@ -20,7 +20,6 @@ import Dropzone from "react-dropzone";
 import { DatePicker, TimePicker } from "@mui/lab";
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { EditorState } from "draft-js";
 
 const useStyles = makeStyles(() =>
   createStyles({

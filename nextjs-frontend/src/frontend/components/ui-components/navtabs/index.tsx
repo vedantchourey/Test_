@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import { createStyles, makeStyles } from "@mui/styles";
-import { Theme, useTheme } from "@mui/material";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -28,7 +27,6 @@ const NavTabs: React.FC<NavProps> = ({
   current = "",
   onClick,
 }) => {
-  const theme = useTheme();
   const classes = useStyles();
 
   const handleChange = (

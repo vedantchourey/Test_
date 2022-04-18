@@ -4,7 +4,6 @@ import CardLayout from "../../ui-components/card-layout";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import FormHelperText from "@mui/material/FormHelperText";
-import { EditorState } from "draft-js";
 import NoobReachTextEditor from "../../ui-components/rte";
 import {
   Box,
