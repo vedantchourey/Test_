@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 
 interface CardLayoutProp {
   title?: string;
+  styles?:object
 }
 
 const NoobCardHeader = styled(CardHeader)(() => ({
@@ -15,7 +16,7 @@ const NoobCard = styled(Card)(() => ({
   marginBottom: "15px",
 }));
 
-const CardLayout: React.FC<CardLayoutProp> = ({ title, children }) => {
+const CardLayout: React.FC<CardLayoutProp> = ({ title, children,styles={} }) => {
   return (
     <NoobCard>
       {title ? (
@@ -24,7 +25,7 @@ const CardLayout: React.FC<CardLayoutProp> = ({ title, children }) => {
         />
       ) : null}
 
-      <CardContent>{children}</CardContent>
+      <CardContent sx={{...styles}}>{children}</CardContent>
     </NoobCard>
   );
 };

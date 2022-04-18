@@ -170,7 +170,7 @@ const ViewTournament: React.FC = () => {
           <HeadSubSection/>
         </Heading>
         <ViewCard>
-          <Grid container md={12}>
+          <Grid container >
             <Grid item md={6}>
               <RainbowIcon />
             </Grid>
