@@ -118,4 +118,26 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
       tournaments: result,
     };
   }
+
+  async getTournament(tournamentId: string): Promise<ITournament> {
+    const result: ITournament = await this.entities()
+      .first(
+        "id",
+        "name",
+        "game",
+        "startDate",
+        "startTime",
+        "about",
+        "banner",
+        "info",
+        "settings",
+        "bracketsMetadata",
+        "streams",
+        "status",
+        "joinStatus",
+        "createTemplateCode"
+      )
+      .where({ id: tournamentId });
+    return result;
+  }
 }

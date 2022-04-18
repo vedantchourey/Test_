@@ -17,6 +17,7 @@ import { validatePersistTournament } from "./persist-tournament-validator";
 import { persistBrackets } from "../brackets-service/brackets-service";
 import { ServiceResponse } from "../common/contracts/service-response";
 import { ListTournamentType } from "./list-tournaments-request";
+import { ITournament } from "../database/models/i-tournaments";
 
 export const createTournament: NoobApiService<
   CreateOrEditTournamentRequest,
@@ -70,4 +71,16 @@ export async function listTournaments(
   const tournaments = await repository.getTournaments(params);
 
   return { data: tournaments };
+}
+
+export async function listTournament(
+  context: PerRequestContext
+): Promise<ServiceResponse<null, ITournament>> {
+  const repository = new TournamentsRepository(
+    context.transaction as Knex.Transaction
+  );
+  const tournamentId = context.getParamValue("tournamentId");
+  const tournament = await repository.getTournament(tournamentId as string);
+
+  return { data: tournament };
 }
