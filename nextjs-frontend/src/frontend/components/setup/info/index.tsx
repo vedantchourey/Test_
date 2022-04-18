@@ -23,11 +23,11 @@ interface InfoProps {
 
 export interface InfoData {
   contactOption: string;
-  contactUrl: string;
+  contactUrl?: string;
   contactDetails: string;
   rules: string;
   prizes: string;
-  schedule?: string;
+  schedule: string;
 }
 
 const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
@@ -61,6 +61,12 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
       }
     },
   });
+
+  React.useEffect(()=>{
+    if(data){
+      formik.setValues({...data,contactUrl:data.contactUrl?data.contactUrl:''});
+    }
+  },[data]);
 
   const changeHandler = (key: string, value: string): void => {
     formik.setFieldValue(key, value, true);
@@ -114,6 +120,7 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
             onChange={(value: any): void => {
               changeHandler("contactDetails", value);
             }}
+            content={formik.values.contactDetails}
             error={
               formik.touched.contactDetails &&
               Boolean(formik.errors.contactDetails)
@@ -129,6 +136,7 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
             id="rules"
             onChange={(value: any): void => changeHandler("rules", value)}
             error={formik.touched.rules && Boolean(formik.errors.rules)}
+            content={formik.values.rules}
           />
           {formik.touched.rules && Boolean(formik.errors.rules) ? (
             <FormHelperText> {formik.errors.rules} </FormHelperText>
@@ -139,6 +147,7 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
             id="prizes"
             onChange={(value: any): void => changeHandler("prizes", value)}
             error={formik.touched.prizes && Boolean(formik.errors.prizes)}
+            content={formik.values.prizes}
           />
           {formik.touched.prizes && Boolean(formik.errors.prizes) ? (
             <FormHelperText> {formik.errors.prizes} </FormHelperText>
@@ -149,6 +158,7 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
             id="schedule"
             onChange={(value: any): void => changeHandler("schedule", value)}
             error={formik.touched.schedule && Boolean(formik.errors.schedule)}
+            content={formik.values.schedule}
           />
           {formik.touched.schedule && Boolean(formik.errors.schedule) ? (
             <FormHelperText> {formik.errors.schedule} </FormHelperText>

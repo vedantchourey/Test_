@@ -113,8 +113,9 @@ const Settings: React.FC<SettingProps> = ({
                 onChange={(e): void => changeHandler("server", e.target.value)}
               >
                 <MenuItem value="">Select Region/ Server </MenuItem>
+                <MenuItem value="all">All</MenuItem>
                 <MenuItem value="Australia">Australia</MenuItem>
-                <MenuItem value="Russia">Australia</MenuItem>
+                <MenuItem value="Russia">Russia</MenuItem>
                 <MenuItem value="Canada">Canada</MenuItem>
               </Select>
               {formik.touched.server && Boolean(formik.errors.server) ? (

@@ -9,15 +9,17 @@ import EliminateBracket, {
 } from "./eliminate-bracket";
 
 const Create: React.FC = (): JSX.Element => {
-  const { data, setData } = React.useContext(TournamentContext);
+  const { data, setData,type,id } = React.useContext(TournamentContext);
   const router = useRouter();
   const ref = React.useRef<EliminateBracketRef>(null);
 
   const handleBracketSave = (bracketsMetadata: EliminateBracketData): void => {
     setData({ ...data, bracketsMetadata },()=>{
-      router.push(`/tournament/[...slug]`, `/tournament/create/streams`, {
-        shallow: true,
-      });
+      if(type==='new'){
+        router.push(`/tournament/new/[...slug]`,`/tournament/new/create/streams`, {shallow:true})
+      }else{
+        router.push(`/tournament/update/[id]/[...slug]`,`/tournament/update/${id}/create/streams`, {shallow:true})
+      }
     });
   };
 

@@ -28,6 +28,7 @@ const TournamentMaster: React.FC = () => {
   const [data, setData] = React.useState<TournamentType[]>([]);
   const recordsPerPage = 10;
   const [page, setPage] = React.useState<number>(1);
+  const [totalRecords,setTotalRecords] = React.useState<number>(0);
   const [filter, setFilter] = React.useState<{ status: string }>({
     status: "",
   });
@@ -43,7 +44,10 @@ const TournamentMaster: React.FC = () => {
         },
       })
       .then((res) => {
-        setData(res.data.data);
+        if(res.data.data && res.data.data.tournaments){
+          setData(res.data.data.tournaments);
+          setTotalRecords(parseInt(res.data.data.total))
+        }
       })
       .catch((err) => {
         console.error(err);
@@ -148,8 +152,8 @@ const TournamentMaster: React.FC = () => {
         return (
           <Chip
             label={"View"}
-            onClick={()=>{
-              router.push("/tournament/[...slug]",`/tournament/create/setup/basic?id=${row.id}`,{shallow:true})
+            onClick={():void=>{
+              router.push("/tournament/update/[id]/[...slug]",`/tournament/update/${row.id}/create/setup/basic/`,{shallow:true})
             }}
             style={{
               textTransform: "capitalize",
@@ -270,6 +274,7 @@ const TournamentMaster: React.FC = () => {
               <NoobTable
                 colConf={conf}
                 data={data}
+                totalRecords={totalRecords}
                 paginate={{
                   currentPage: page,
                   onPageChange: setPage,

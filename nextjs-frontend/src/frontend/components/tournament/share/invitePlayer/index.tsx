@@ -31,7 +31,7 @@ export interface InvitePlayerData {
 
 const InvitePlayer: React.FC = (): JSX.Element => {
   const router = useRouter();
-  const { data, setData } = React.useContext(TournamentContext);
+  const { data, setData ,id,type} = React.useContext(TournamentContext);
 
   const validationSchema = yup.object({
     url: yup.string().required("URL field required"),
@@ -44,14 +44,22 @@ const InvitePlayer: React.FC = (): JSX.Element => {
     validationSchema: validationSchema,
 
     onSubmit: (values) => {
-      setData({ ...data, invitePlayer: values });
+      setData({ ...data, invitePlayer: values },()=>{
+        if(type==='new'){
+          router.push(`/tournament/new/[...slug]`,`/tournament/new/create/basic/info`, {shallow:true})
+        }else{
+          router.push(`/tournament/update/[id]/[...slug]`,`/tournament/update/${id}/create/create/basic/info`, {shallow:true})
+        }
+      });
     }
   });
 
   const onBack = (): void => {
-    router.push(`/tournament/[...slug]`, `/tournament/create/publish`, {
-      shallow: true,
-    });
+    if(type==='new'){
+      router.push(`/tournament/new/[...slug]`,`/tournament/new/create/publish`, {shallow:true})
+    }else{
+      router.push(`/tournament/update/[id]/[...slug]`,`/tournament/update/${id}/create/publish`, {shallow:true})
+    }
   };
 
   const [copySuccess, setCopySuccess] = useState("");

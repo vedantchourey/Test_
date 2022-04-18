@@ -15,7 +15,10 @@ const TournamentDashboardTable: React.FC = () => {
     axios
       .get("/api/tournaments/list")
       .then((res) => {
-        setData(res.data.data);
+        if(res.data.data && res.data.data.tournaments){
+          setData(res.data.data.tournaments);
+        }
+        
       })
       .catch((err) => {
         console.error(err);
@@ -88,8 +91,8 @@ const TournamentDashboardTable: React.FC = () => {
         return (
           <Chip
             label={"View"}
-            onClick={()=>{
-              router.push("/tournament/[...slug]",`/tournament/create/setup/basic?id=${row.id}`,{shallow:true})
+            onClick={():void=>{
+              router.push("/tournament/update/[id]/[...slug]",`/tournament/update/${row.id}/create/setup/basic/`,{shallow:true})
             }}
             style={{
               textTransform: "capitalize",

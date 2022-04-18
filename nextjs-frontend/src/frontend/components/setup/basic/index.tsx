@@ -57,7 +57,7 @@ interface BasicPorps {
 
 const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
   const style = useStyles();
-
+  
   const validationSchema = yup.object({
     name: yup.string().required("Name is required"),
     game: yup.string().required("Game is required"),
@@ -73,11 +73,14 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
       .transform((v) => (v instanceof Date && !isNaN(v.getTime()) ? v : null)),
     about: yup.string(),
     cloneTournament: yup.boolean(),
-    createTemplateCode: yup.string().when("cloneTournament", {
+    createTemplateCode: yup.string().nullable()
+.notRequired()
+.when("cloneTournament", {
       is: true,
       then: yup.string().required("Tournament id is require to clone"),
     }),
-    banner:yup.string()
+    banner:yup.string().nullable()
+.notRequired()
   });
 
   const formik = useFormik({
@@ -98,6 +101,12 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
       }
     },
   });
+
+  React.useEffect(()=>{
+    if(data){
+      formik.setValues({...data,createTemplateCode:data.createTemplateCode?data.createTemplateCode:'',banner:data.banner?data.banner:''});
+    }
+  },[data]);
 
   const changeHandler = (
     property: string,

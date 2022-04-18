@@ -33,62 +33,118 @@ export interface TournamentData {
 }
 
 interface TournamentContextType {
+  type:'new'|'update',
+  id:string,
   data: TournamentData;
   setData: (data: TournamentData,callback?:()=>void,doClear?:boolean) => void;
   onSubmit: (data: TournamentData) => void;
 }
 
 export const TournamentContext = React.createContext<TournamentContextType>({
+  type:'new',
   data: {},
+  id:'',
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setData: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onSubmit:() => {}
 });
 
-const Tournament: React.FC = () => {
+interface TournamentType {
+  type:'new'|'update'
+}
+
+const Tournament: React.FC<TournamentType> = ({type}) => {
   const [data, setData] = React.useState<TournamentData>({});
   const router = useRouter();
   const query: ParsedUrlQuery = router.query;
+
+  let url = "/tournament/new/[...slug]";
+  if(type === 'update'){
+    url = "/tournament/update/[id]/[...slug]";
+  }
+  
+  React.useEffect(()=>{
+    
+      if(router.query.id!==undefined){
+        axios.get(`/api/tournaments/${router.query.id}`).then((res)=>{
+          if(res.data.data){
+            const tournamentData = res.data.data;
+            Object.keys(tournamentData).forEach((key)=>{
+              if(tournamentData[key]=== null){
+                delete tournamentData[key];
+              }
+            })
+            
+            setData({
+              ...tournamentData,
+              basic:{
+                name:tournamentData.name,
+                about:tournamentData.about,
+                game:tournamentData.game,
+                startDate:tournamentData.startDate,
+                startTime:moment(tournamentData.startTime,"hh:mm:ss").toDate(),
+                banner:tournamentData.banner,
+                createTemplateCode:tournamentData.createTemplateCode,
+                cloneTournament:tournamentData.createTemplateCode !== undefined
+              }
+            } as TournamentData)
+          }
+          
+        })
+.catch((err)=>{
+          console.error(err);
+        })
+      }
+  },[])
+
+  const getAS = (slug:string):string =>{
+    let prefix = "/tournament/new";
+    if(type === 'update'){
+      prefix = `/tournament/update/${router.query.id}`;
+    }
+
+    return `${prefix}${slug}`;
+  }
   
   const sideBarNav = [
     {
       icon: <img src="/icons/Vector.svg" alt="icon" />,
       title: "Create",
       isActive:(url:string):boolean=>{
-        return url.indexOf("/tournament/create")>-1;
+        return url.indexOf("/create")>-1;
       },
       items: [
         {
           title: "Setup",
-          url:"/tournament/[...slug]",
-          as: "/tournament/create/setup/basic",
+          url:url,
+          as: getAS("/create/setup/basic"),
           isActive:(url:string):boolean=>{
-            return url.indexOf("/tournament/create/setup")>-1
+            return url.indexOf("/setup")>-1
           }
         },
         {
           title: "Brackets",
-          url:"/tournament/[...slug]",
-          as: "/tournament/create/brackets/create",
+          url:url,
+          as: getAS("/create/brackets/create"),
           isActive:(url:string):boolean=>{
-            return url.indexOf("/tournament/create/brackets")>-1
+            return url.indexOf("/brackets")>-1
           }
         },
         {
           title: "Streams",
-          url:"/tournament/[...slug]",
-          as: "/tournament/create/streams",
+          url:url,
+          as: getAS("/create/streams"),
           isActive:(url:string):boolean=>{
-            return url.indexOf("/tournament/create/streams")>-1
+            return url.indexOf("/streams")>-1
           }
         },
         {
           title: "Publish",
-          url:"/tournament/[...slug]",
-          as: "/tournament/create/publish",
+          url:url,
+          as: getAS("/create/publish"),
           isActive:(url:string):boolean=>{
-            return url.indexOf("/tournament/create/publish")>-1
+            return url.indexOf("/publish")>-1
           }
         },
       ],
@@ -97,20 +153,16 @@ const Tournament: React.FC = () => {
       icon: <img src="/icons/share-alt.svg" alt="icon" />,
       title: "Share",
       isActive:(url:string):boolean=>{
-        return url.indexOf("/tournament/share")>-1;
+        return url.indexOf("/share")>-1;
       },
       items: [
         {
           title: "Invite Player",
-          url: "/tournament/[...slug]",
-          as: "/tournament/share/invitePlayer",
+          url:url,
+          as: getAS("/share/invitePlayer"),
           isActive: (url:string):boolean =>{
-            return url.indexOf("/tournament/share/invitePlayer")>-1
+            return url.indexOf("/invitePlayer")>-1
           }
-        },
-        {
-          title: "Embed Codes",
-          url: "",
         }
       ],
     },
@@ -189,7 +241,7 @@ const Tournament: React.FC = () => {
           <SideBar key={"sidebar"} nav={sideBarNav}/>
         </Grid>
         <Grid item md={9}>
-          <TournamentContext.Provider value={{ data: data, setData: updateData,onSubmit:submitHandler }}>
+          <TournamentContext.Provider value={{id:router.query.id?router.query.id:'', type,data: data, setData: updateData,onSubmit:submitHandler }}>
             {renderSection()}
           </TournamentContext.Provider>
         </Grid>
