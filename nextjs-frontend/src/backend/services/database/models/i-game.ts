@@ -10,3 +10,10 @@ export interface IGame {
   displayName: string;
   code: string;
 }
+
+export interface IGamePaltform {
+  gameId: string;
+  platformId: string;
+  gameName: string;
+  platformName: string;
+}
