@@ -2,6 +2,7 @@ import { BaseRepository } from "./base-repository";
 import { Knex } from "knex";
 import { ITournament } from "../models/i-tournaments";
 import { ListTournamentType } from "../../tournament-service/list-tournaments-request";
+import { IListTournamentResponse } from "../../tournament-service/i-tournament-response";
 
 export class TournamentsRepository extends BaseRepository<ITournament> {
   constructor(transaction: Knex.Transaction) {
@@ -53,7 +54,9 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
     return updatedItems[0];
   }
 
-  async getTournaments(params: ListTournamentType): Promise<ITournament[]> {
+  async getTournaments(
+    params: ListTournamentType
+  ): Promise<IListTournamentResponse> {
     let result;
     let options: { game?: string; status?: string } | null = null;
     params.game
@@ -107,6 +110,34 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
       )
       .where(options ? options : {})
       .limit(limit);
+
+    const count = await this.entities().count();
+
+    return {
+      total: count[0].count,
+      tournaments: result,
+    };
+  }
+
+  async getTournament(tournamentId: string): Promise<ITournament> {
+    const result: ITournament = await this.entities()
+      .first(
+        "id",
+        "name",
+        "game",
+        "startDate",
+        "startTime",
+        "about",
+        "banner",
+        "info",
+        "settings",
+        "bracketsMetadata",
+        "streams",
+        "status",
+        "joinStatus",
+        "createTemplateCode"
+      )
+      .where({ id: tournamentId });
     return result;
   }
 }

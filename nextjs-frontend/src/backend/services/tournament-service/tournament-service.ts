@@ -3,7 +3,11 @@ import {
   PerRequestContext,
 } from "../../utils/api-middle-ware/api-middleware-typings";
 import { CreateOrEditTournamentRequest } from "./create-or-edit-tournament-request";
-import { ITournamentResponse, ITournamentType } from "./i-tournament-response";
+import {
+  IListTournamentResponse,
+  ITournamentResponse,
+  ITournamentType,
+} from "./i-tournament-response";
 import { validateTournament } from "./create-tournament-validator";
 import { isThereAnyError } from "../../../common/utils/validation/validator";
 import { TournamentRepository } from "../database/repositories/tournament-repository";
@@ -12,8 +16,8 @@ import { Knex } from "knex";
 import { validatePersistTournament } from "./persist-tournament-validator";
 import { persistBrackets } from "../brackets-service/brackets-service";
 import { ServiceResponse } from "../common/contracts/service-response";
-import { ITournament } from "../database/models/i-tournaments";
 import { ListTournamentType } from "./list-tournaments-request";
+import { ITournament } from "../database/models/i-tournaments";
 
 export const createTournament: NoobApiService<
   CreateOrEditTournamentRequest,
@@ -60,13 +64,23 @@ export const persistTournament: NoobApiService<
 export async function listTournaments(
   params: ListTournamentType,
   context: PerRequestContext
-): Promise<ServiceResponse<null, ITournament[]>> {
+): Promise<ServiceResponse<null, IListTournamentResponse>> {
   const repository = new TournamentsRepository(
     context.transaction as Knex.Transaction
   );
   const tournaments = await repository.getTournaments(params);
 
-  return {
-    data: tournaments,
-  };
+  return { data: tournaments };
+}
+
+export async function listTournament(
+  context: PerRequestContext
+): Promise<ServiceResponse<null, ITournament>> {
+  const repository = new TournamentsRepository(
+    context.transaction as Knex.Transaction
+  );
+  const tournamentId = context.getParamValue("tournamentId");
+  const tournament = await repository.getTournament(tournamentId as string);
+
+  return { data: tournament };
 }
