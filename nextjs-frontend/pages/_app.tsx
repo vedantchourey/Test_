@@ -1,7 +1,6 @@
 import '../src/frontend/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { Provider } from 'react-redux';
-import { useRouter } from 'next/router';
 import { ThemeProvider } from '@mui/material/styles';
 import AdapterLuxonFns from '@mui/lab/AdapterLuxon';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -21,7 +20,6 @@ interface MyAppProps extends AppProps {
 // https://github.com/mui-org/material-ui/tree/ce5332fbcd11308be7f898511a3da5c7f2726e6b/examples/nextjs-with-typescript
 function MyApp(props: MyAppProps): JSX.Element {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
-  const router = useRouter();
   return (
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={noobTheme}>
@@ -30,7 +28,7 @@ function MyApp(props: MyAppProps): JSX.Element {
             <LayoutChangeDetector />
             <LoadingIndicator />
             <AuthEventsHandler />
-            <Component {...pageProps} key={router.asPath} />
+            <Component {...pageProps} />
           </LocalizationProvider>
         </Provider>
       </ThemeProvider>
