@@ -15,90 +15,160 @@ import { ReactComponent as GameIcon } from "../../../../public/icons/GameIcon.sv
 import CardLayout from "../ui-components/card-layout";
 import NoobTable, { NoobColumnConf } from "../ui-components/table";
 import moment from "moment";
+import { TournamentData } from "../tournament";
+import { BasicData } from "../setup/basic";
+import axios from "axios";
 
-const tournamentObj = {
-  title: "FIFA 2021",
-  tournament: "Asia Esport Throphy",
-  start: new Date(),
-  end: new Date(),
-  format: "1v1",
-  assigned: "Admin",
-  participant: 256,
-  status: "active",
-};
+export interface TournamentType
+  extends Omit<TournamentData, "basic">,
+    BasicData {}
 
-const TournamentMaster:React.FC = () => {
-  const data: any[] = [];
+const TournamentMaster: React.FC = () => {
+  const [data, setData] = React.useState<TournamentType[]>([]);
+  const recordsPerPage = 10;
+  const [page, setPage] = React.useState<number>(1);
+  const [filter, setFilter] = React.useState<{ status: string }>({
+    status: "",
+  });
 
-  for (let i = 0; i < 100; i++) {
-    data.push({ ...tournamentObj,index:i+1 });
-  }
+  const fetchTournaments = (): void => {
+    axios
+      .get(`/api/tournaments/list`, {
+        params: {
+          page: page,
+          limit: recordsPerPage,
+          ...filter,
+        },
+      })
+      .then((res) => {
+        setData(res.data.data);
+      })
+      .catch((err) => {
+        console.error(err);
+        setData([]);
+      });
+  };
 
-  const conf:NoobColumnConf[] = [{
-      title:"",
-      renderCell:(row):any=>{
-        return <Typography color="white">{row.index}</Typography>
+  React.useEffect(() => {
+    fetchTournaments();
+  }, [page]);
+
+  const conf: NoobColumnConf<TournamentType>[] = [
+    {
+      title: "",
+      renderCell: (row, index): JSX.Element => {
+        return <Typography color="white">{index + 1}</Typography>;
       },
-      width:"10%"
-  },{
-    title:"Game Title",
-    renderCell:(row):string=>{
-      return row.title
+      width: "10%",
     },
-    width:"10%"
-},{
-    title:"Tournament",
-    renderCell:(row):string=>{
-      return row.tournament
+    {
+      title: "Game Title",
+      renderCell: (row): string => {
+        return row.name;
+      },
+      width: "10%",
     },
-    width:"10%"
-},{
-    title:"Start",
-    renderCell:(row):any=>{
-      return moment(row.start).format("DD/MM/YYYY hh:mm a")
+    {
+      title: "Tournament",
+      renderCell: (row): string => {
+        return row.game;
+      },
+      width: "10%",
     },
-    width:"10%"
-},{
-    title:"End",
-    renderCell:(row):any=>{
-      return moment(row.end).format("DD/MM/YYYY hh:mm a")
+    {
+      title: "Start",
+      renderCell: (row): any => {
+        return (
+          <Typography textAlign={"left"}>
+            {moment(row.startDate).format("DD/MM/YYYY")}{" "}
+            {moment(row.startTime, "hh:mm:ss").format("hh:mm a")}
+          </Typography>
+        );
+      },
+      width: "10%",
     },
-    width:"10%"
-},{
-    title:"Tournament Format",
-    renderCell:(row):string=>{
-      return row.format;
+    {
+      title: "End",
+      renderCell: (row): any => {
+        return (
+          <Typography textAlign={"left"}>
+            {moment(row.startDate).format("DD/MM/YYYY")}{" "}
+            {moment(row.startTime, "hh:mm:ss").format("hh:mm a")}
+          </Typography>
+        );
+      },
+      width: "10%",
     },
-    width:"10%"
-},{
-    title:"Assigned Admin",
-    renderCell:(row):string=>{
-      return row.assigned;
+    {
+      title: "Tournament Format",
+      renderCell: (row): string => {
+        return row.settings?.tournamentFormat || "-";
+      },
+      width: "10%",
     },
-    width:"10%"
-},{
-    title:"Participant",
-    renderCell:(row):string=>{
-      return row.participant;
+    {
+      title: "Assigned Admin",
+      renderCell: (): string => {
+        return "Admin";
+      },
+      width: "10%",
     },
-    width:"10%"
-},{
-    title:"Status",
-    renderCell:(row):any=>{
-      let color = "#28D89C";
-        if(row.status === "deactive"){
-          color="#D52D3E"
+    {
+      title: "Participant",
+      renderCell: (): string => {
+        return "150";
+      },
+      width: "10%",
+    },
+    {
+      title: "Status",
+      renderCell: (row): any => {
+        let color = "#28D89C";
+        if (row.status === "DRAFTED") {
+          color = "#D52D3E";
         }
-        return <Chip label={row.status} style={{textTransform:"capitalize", background:color,padding:"0px 10px"}} />;
+        return (
+          <Chip
+            label={row.status}
+            style={{
+              textTransform: "capitalize",
+              background: color,
+              padding: "0px 10px",
+            }}
+          />
+        );
+      },
+      width: "10%",
     },
-    width:"10%"
-},{
-    title:"Action",
-    renderCell:():any=>{
-      return <Chip label={"View"} style={{textTransform:"capitalize", background:"#FBAF40",padding:"0px 10px"}}/>;
+    {
+      title: "Action",
+      renderCell: (): any => {
+        return (
+          <Chip
+            label={"View"}
+            style={{
+              textTransform: "capitalize",
+              background: "#FBAF40",
+              padding: "0px 10px",
+            }}
+          />
+        );
+      },
+      width: "10%",
     },
-    width:"10%"
-}]
+  ];
+
+  const onFilterChangeHandler = (propKey: string, value: string): void => {
+    setFilter({ ...filter, [propKey]: value });
+  };
+
+  const onSearch = (): void => {
+    if (page !== 1) {
+      setPage(1);
+    } else {
+      fetchTournaments();
+    }
+  };
 
   return (
     <NoobPage
@@ -112,7 +182,7 @@ const TournamentMaster:React.FC = () => {
           <DashboardSideBar />
         </Grid>
         <Grid item md={9} lg={10} paddingRight={2}>
-          <Grid container columnSpacing={2} >
+          <Grid container columnSpacing={2}>
             <Grid item md={12}>
               <CardLayout>
                 <Box
@@ -145,10 +215,16 @@ const TournamentMaster:React.FC = () => {
                   </Grid>
                   <Grid item md={2.4}>
                     <FormControl fullWidth>
-                      <Select displayEmpty value={""}>
+                      <Select
+                        displayEmpty
+                        value={filter.status}
+                        onChange={(e):void =>
+                          onFilterChangeHandler("status", e.target.value)
+                        }
+                      >
                         <MenuItem value="">Select Status</MenuItem>
-                        <MenuItem value="FIFA 2021">FIFA 2021</MenuItem>
-                        <MenuItem value="FIFA 2022">FIFA 2022</MenuItem>
+                        <MenuItem value="PUBLISHED">Published</MenuItem>
+                        <MenuItem value="DRAFT">Draft</MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>
@@ -176,6 +252,7 @@ const TournamentMaster:React.FC = () => {
                       sx={{ height: 56 }}
                       size="large"
                       variant="contained"
+                      onClick={onSearch}
                     >
                       Search
                     </Button>
@@ -184,7 +261,15 @@ const TournamentMaster:React.FC = () => {
               </CardLayout>
             </Grid>
             <Grid item md={12}>
-                <NoobTable colConf={conf} data={data}></NoobTable>
+              <NoobTable
+                colConf={conf}
+                data={data}
+                paginate={{
+                  currentPage: page,
+                  onPageChange: setPage,
+                  recordsPerPage,
+                }}
+              ></NoobTable>
             </Grid>
           </Grid>
         </Grid>

@@ -5,9 +5,9 @@ import DashboardSideBar from "../ui-components/dashboard-sidebar";
 import NoobPage from "../page/noob-page";
 import DashboardCard from "../ui-components/dashboard-card";
 import CelebrationIcon from "@mui/icons-material/Celebration";
-import TournamentDashboardTable from "../ui-components/tournament-table";
+import TournamentDashboardTable from "./tournament-table";
 
-const TournamentDashboard:React.FC = () => {
+const TournamentDashboard: React.FC = () => {
   return (
     <NoobPage
       title=" "
@@ -143,7 +143,11 @@ const TournamentDashboard:React.FC = () => {
                       </Typography>
                       <Box marginY={0.5}>
                         <Button
-                          style={{ borderRadius: "90px", padding: "3px 20px",background:"rgba(229, 229, 229, 0.5)" }}
+                          style={{
+                            borderRadius: "90px",
+                            padding: "3px 20px",
+                            background: "rgba(229, 229, 229, 0.5)",
+                          }}
                           variant="contained"
                           size="small"
                         >
@@ -186,7 +190,11 @@ const TournamentDashboard:React.FC = () => {
                       </Typography>
                       <Box marginY={0.5}>
                         <Button
-                          style={{ borderRadius: "90px", padding: "3px 20px",background:"rgba(229, 229, 229, 0.5)" }}
+                          style={{
+                            borderRadius: "90px",
+                            padding: "3px 20px",
+                            background: "rgba(229, 229, 229, 0.5)",
+                          }}
                           variant="contained"
                           size="small"
                         >
@@ -229,7 +237,11 @@ const TournamentDashboard:React.FC = () => {
                       </Typography>
                       <Box marginY={0.5}>
                         <Button
-                          style={{ borderRadius: "90px", padding: "3px 20px",background:"rgba(229, 229, 229, 0.5)" }}
+                          style={{
+                            borderRadius: "90px",
+                            padding: "3px 20px",
+                            background: "rgba(229, 229, 229, 0.5)",
+                          }}
                           variant="contained"
                           size="small"
                         >

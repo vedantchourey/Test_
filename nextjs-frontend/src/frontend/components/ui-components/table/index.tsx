@@ -12,24 +12,24 @@ import {
 import React from "react";
 import CardLayout from "../card-layout";
 
-// const useStyles = makeStyles(() =>
-//   createStyles({
-//     tableContainerRoot: {
-//       background: "none",
-//     },
-//   }));
-
-export interface NoobColumnConf {
+export interface NoobColumnConf<Type> {
   title: string;
-  renderCell: (row: any, index: number) => string | JSX.Element | null;
+  renderCell: (row: Type, index: number) => string | JSX.Element | null;
   width: string | number;
 }
 
-export interface NoobTableProp {
-  colConf: NoobColumnConf[];
-  data: any[];
-  paginate?: boolean;
-  title?:string
+export interface PageProps{
+  recordsPerPage:number
+  currentPage:number
+  onPageChange:(newPage:number)=>void
+}
+
+export interface NoobTableProp<Type> {
+  colConf: NoobColumnConf<Type>[];
+  data: Type[];
+  totalRecords?:number;
+  paginate?: PageProps;
+  title?:string;
 }
 
 const NoobTableCell = styled(TableCell)(() => ({
@@ -62,18 +62,21 @@ const NoobTableRow = styled(TableRow)(() => ({
   },
 }));
 
-const NoobTable: React.FC<NoobTableProp> = ({
+const NoobTable: <Type>(props:NoobTableProp<Type>)=>JSX.Element = ({
   colConf = [],
   data = [],
-  paginate = true,
-  title
+  paginate,
+  title,
+  totalRecords = data.length
 }) => {
-  const [page, setPage] = React.useState(1);
-  const handlePageChange:any = (
+  const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     value: number
-  ) => {
-    setPage(value);
+  ):void => {
+    if(paginate){
+      paginate.onPageChange(value);
+    }
+    
   };
 
   const renderHeader = (): JSX.Element => {
@@ -84,14 +87,16 @@ const NoobTable: React.FC<NoobTableProp> = ({
   };
 
   const renderRow = (): JSX.Element[] => {
-    const rows = [...data]
-      .slice((page - 1) * 10, page * 10)
-      .map((item, index) => {
-        const row = colConf.map((conf) => {
-          return <NoobTableCell key={item.index}>{conf.renderCell(item, index)}</NoobTableCell>;
+    const rows = data.map((item, index) => {
+      let rowIndex = index;
+      if(paginate){
+        rowIndex = paginate.currentPage*paginate.recordsPerPage+index;
+      }
+        const row = colConf.map((conf, colIndex) => {
+          const key = `${conf.title}-${rowIndex}-${colIndex}`;
+          return <NoobTableCell key={key}>{conf.renderCell(item, index)}</NoobTableCell>;
         });
-
-        return <NoobTableRow key={item.index}>{row}</NoobTableRow>;
+        return <NoobTableRow key={rowIndex}>{row}</NoobTableRow>;
       });
 
     return rows;
@@ -119,8 +124,8 @@ const NoobTable: React.FC<NoobTableProp> = ({
         <CardLayout>
           <Box display={"flex"} justifyContent="center">
           <Pagination
-            count={data.length / 10}
-            page={page}
+            count={totalRecords / paginate.recordsPerPage}
+            page={paginate.currentPage}
             onChange={handlePageChange}
             variant="outlined"
             shape="rounded"
