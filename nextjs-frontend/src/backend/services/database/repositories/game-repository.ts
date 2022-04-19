@@ -1,5 +1,5 @@
 import { BaseRepository } from "./base-repository";
-import { IGame, IGamePaltform } from "../models/i-game";
+import { IGame } from "../models/i-game";
 import { Knex } from "knex";
 
 export class GameRepository extends BaseRepository<IGame> {
