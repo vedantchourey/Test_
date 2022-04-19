@@ -2,6 +2,7 @@ import { Button } from "@mui/material";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 import React from "react";
+import { TournamentContext } from "../tournament";
 import NavTabs from "../ui-components/navtabs";
 import Create from "./create";
 
@@ -9,6 +10,7 @@ const Brackets: React.FC = (): JSX.Element => {
   const tabs = ["Create"];
   const router = useRouter();
   const query: ParsedUrlQuery = router.query;
+  const { type,id } = React.useContext(TournamentContext); 
 
   const renderComponent = (): JSX.Element | null => {
     if(!query.slug || query.slug.length<3) return null;
@@ -22,7 +24,11 @@ const Brackets: React.FC = (): JSX.Element => {
   };
 
   const onTabClick = (tab:string):void=>{
-    router.push(`/tournament/[...slug]`,`/tournament/create/brackets/${tab.toLowerCase()}`, {shallow:true})
+    if(type==='new'){
+      router.push(`/tournament/new/[...slug]`,`/tournament/new/create/brackets/${tab.toLowerCase()}`, {shallow:true})
+    }else{
+      router.push(`/tournament/update/[id]/[...slug]`,`/tournament/update/${id}/create/brackets/${tab.toLowerCase()}`, {shallow:true})
+    }
   }
   
 

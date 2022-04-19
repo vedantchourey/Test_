@@ -6,14 +6,14 @@ import {
   beginTransactionMiddleWare,
   commitOrRollBackTransactionMiddleWare,
 } from "../../../src/backend/utils/api-middle-ware/transaction-middle-ware";
-import { ITournament } from "../../../src/backend/services/database/models/i-tournaments";
 import { listTournaments } from "../../../src/backend/services/tournament-service/tournament-service";
+import { IListTournamentResponse } from "../../../src/backend/services/tournament-service/i-tournament-response";
 
 export default createNextJsRouteHandler({
   get: {
     handler: async (
       req: NextApiRequest,
-      res: NextApiResponse<ServiceResponse<null, ITournament[]>>,
+      res: NextApiResponse<ServiceResponse<null, IListTournamentResponse>>,
       context: PerRequestContext
     ) => {
       const result = await listTournaments(req.query, context);

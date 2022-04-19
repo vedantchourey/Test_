@@ -1,11 +1,16 @@
-import { useAppDispatch, useAppSelector } from '../../redux-store/redux-store';
-import { useEffect, useState } from 'react';
-import { Autocomplete, CircularProgress, TextField } from '@mui/material';
-import { gamesByPlatformSelector, gamesFetchStatusSelector } from '../../redux-store/games/game-selectors';
-import { fetchAllGamesThunk } from '../../redux-store/games/game-slice';
-import { IGameResponse } from '../../service-clients/messages/i-game-response';
+import { useAppDispatch, useAppSelector } from "../../redux-store/redux-store";
+import { useEffect, useState } from "react";
+import { Autocomplete, CircularProgress, TextField } from "@mui/material";
+import {
+  gamesByPlatformSelector,
+  gamesFetchStatusSelector,
+} from "../../redux-store/games/game-selectors";
+import { fetchAllGamesThunk } from "../../redux-store/games/game-slice";
+import { IGameResponse } from "../../service-clients/messages/i-game-response";
 
 interface Props {
+  id?: string;
+  name?: string;
   platformId?: string;
   onChange?: (id: string | undefined, state: IGameResponse | null) => void;
   value?: string;
@@ -18,15 +23,26 @@ interface Props {
 }
 
 export default function GameDropDown(props: Props): JSX.Element {
-  const {value, onChange, autoCompleteClassName, inputClassName, error, helperText, label, platformId, placeholder} = props;
+  const {
+    value,
+    onChange,
+    autoCompleteClassName,
+    inputClassName,
+    error,
+    helperText,
+    label,
+    platformId,
+    placeholder,
+    ...restProps
+  } = props;
   const appDispatch = useAppDispatch();
   const games = useAppSelector((x) => gamesByPlatformSelector(x, platformId));
   const gamesFetchStatus = useAppSelector(gamesFetchStatusSelector);
   const [selectedGame, setSelectedGame] = useState<IGameResponse | null>(null);
-  const isLoading = gamesFetchStatus === 'loading';
+  const isLoading = gamesFetchStatus === "loading";
 
   useEffect(() => {
-    if (gamesFetchStatus !== 'idle') return;
+    if (gamesFetchStatus !== "idle") return;
     appDispatch(fetchAllGamesThunk());
   }, [appDispatch, gamesFetchStatus]);
 
@@ -36,39 +52,46 @@ export default function GameDropDown(props: Props): JSX.Element {
     setSelectedGame(matchingGame || null);
   }, [games, selectedGame?.id, value]);
 
-
-  const onInputChange = (event: unknown, newValue: IGameResponse | null): void => {
-    setSelectedGame(newValue)
+  const onInputChange = (
+    event: unknown,
+    newValue: IGameResponse | null
+  ): void => {
+    setSelectedGame(newValue);
     onChange?.(newValue?.id, newValue || null);
   };
 
   return (
-    <Autocomplete disablePortal
+    <Autocomplete
+      disablePortal
+      {...restProps}
       className={autoCompleteClassName}
       options={games}
       getOptionLabel={(x): string => x.displayName}
       loading={isLoading}
-      renderInput={(params): JSX.Element => <TextField {...params}
-        label={label}
-        variant="filled"
-        className={inputClassName}
-        error={error}
-        placeholder={placeholder}
-        helperText={helperText}
-        InputProps={{
-          ...params.InputProps,
-          endAdornment: (
-            <div>
-              {isLoading ? <CircularProgress color="inherit" size={20}/> : null}
-              {params.InputProps.endAdornment}
-            </div>
-          )
-        }}
-      />}
+      renderInput={(params): JSX.Element => (
+        <TextField
+          {...params}
+          label={label}
+          variant="filled"
+          className={inputClassName}
+          error={error}
+          placeholder={placeholder}
+          helperText={helperText}
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <div>
+                {isLoading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </div>
+            ),
+          }}
+        />
+      )}
       value={selectedGame}
       onChange={onInputChange}
     />
-  )
-
-
+  );
 }

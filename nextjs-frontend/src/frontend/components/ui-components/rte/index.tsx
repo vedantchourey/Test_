@@ -1,10 +1,5 @@
 import { createStyles, makeStyles } from "@mui/styles";
-// import ReachTextEditor from "mui-rte";
 import Editor from 'material-ui-editor'
-
-// const ReachTextEditor = dynamic(() => import("mui-rte"), {
-//   ssr: false,
-// });
 
 const useStyles = makeStyles(() =>
   createStyles({

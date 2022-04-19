@@ -40,7 +40,8 @@ export default function NoobPage(props: Props): JSX.Element {
       </Head>
       <NoobHeader />
       <main className={commonStyles.main}>
-        <div className={styles.container} style={{ marginTop: "138px" }}>
+      {/*  */}
+        <div className={styles.container} style={{ marginTop: "155px" }}>
           {children}
         </div>
       </main>

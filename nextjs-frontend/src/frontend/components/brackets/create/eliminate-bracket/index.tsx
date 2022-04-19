@@ -108,6 +108,12 @@ const EliminateBracket = React.forwardRef<
     },
   });
 
+  React.useEffect(()=>{
+    if(data){
+      formik.setValues(data);
+    }
+  },[data]);
+
   React.useImperativeHandle(ref, () => {
     return {
       // eslint-disable-next-line
@@ -401,6 +407,7 @@ const EliminateBracket = React.forwardRef<
                           <NoobReachTextEditor
                             id={`rounds.${index}.description`}
                             name={`rounds.${index}.description`}
+                            content={round.description}
                             onChange={(value: any): void => {
                               formik.setFieldValue(
                                 `rounds.${index}.description`,

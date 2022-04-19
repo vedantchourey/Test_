@@ -20,6 +20,7 @@ import Dropzone from "react-dropzone";
 import { DatePicker, TimePicker } from "@mui/lab";
 import * as yup from "yup";
 import { useFormik } from "formik";
+import GameDropDown from "../../drop-downs/game-drop-down";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -40,24 +41,25 @@ const useStyles = makeStyles(() =>
   }));
 
 export interface BasicData {
-  name: string
+  name: string;
   game: string;
   startDate: string | null;
   startTime: string | null;
   about: string;
   cloneTournament: boolean;
   createTemplateCode?: string;
-  banner?:string
+  banner?: string;
 }
 
 interface BasicPorps {
   data?: BasicData;
   onSave?: (data: BasicData) => void;
+  setPlatformIds?: any;
 }
 
-const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
+const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
   const style = useStyles();
-
+  
   const validationSchema = yup.object({
     name: yup.string().required("Name is required"),
     game: yup.string().required("Game is required"),
@@ -73,10 +75,14 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
       .transform((v) => (v instanceof Date && !isNaN(v.getTime()) ? v : null)),
     about: yup.string(),
     cloneTournament: yup.boolean(),
-    createTemplateCode: yup.string().when("cloneTournament", {
+    createTemplateCode: yup.string().nullable()
+.notRequired()
+.when("cloneTournament", {
       is: true,
       then: yup.string().required("Tournament id is require to clone"),
     }),
+    banner:yup.string().nullable()
+.notRequired()
   });
 
   const formik = useFormik({
@@ -88,14 +94,21 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
       about: data?.about || "",
       createTemplateCode: data?.createTemplateCode || "",
       cloneTournament: data?.cloneTournament || false,
+      banner:''
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       if (onSave) {
-        onSave(values);
+        onSave({...values,banner:'Test Banner'});
       }
     },
   });
+
+  React.useEffect(()=>{
+    if(data){
+      formik.setValues({...data,createTemplateCode:data.createTemplateCode?data.createTemplateCode:'',banner:data.banner?data.banner:''});
+    }
+  },[data]);
 
   const changeHandler = (
     property: string,
@@ -130,15 +143,22 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data }) => {
             {" "}
             <FormControl fullWidth variant="standard">
               <FormLabel label="Select Game"></FormLabel>
-              <OutlinedInput
+              <GameDropDown
+                label="Game"
                 id="game"
                 name="game"
-                placeholder="FIFA22"
-                onChange={formik.handleChange}
-                value={formik.values.game}
-                className={style.inputBox}
-                onBlur={formik.handleBlur}
+                placeholder="Select Game"
                 error={formik.touched.game && Boolean(formik.errors.game)}
+                onChange={(id, selectedGame): void => {
+                  setPlatformIds(selectedGame?.platformIds);
+                  formik.handleChange({
+                    target: {
+                      name: "game",
+                      value: id,
+                    },
+                  });
+                }}
+                value={formik.values.game}
               />
               {formik.touched.game && Boolean(formik.errors.game) ? (
                 <FormHelperText> {formik.errors.game} </FormHelperText>
