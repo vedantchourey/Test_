@@ -80,6 +80,7 @@ const noobTheme = createTheme({
         }
       }
     },
+    
     MuiLink: {
       defaultProps: {
         style: {
@@ -88,6 +89,9 @@ const noobTheme = createTheme({
       }
     },
     MuiOutlinedInput:{
+      defaultProps:{
+        size: "small"
+      },
       styleOverrides:{
         root:{
           borderRadius: "10px",

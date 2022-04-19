@@ -57,7 +57,8 @@ export default function PlatformDropDown(props: Props): JSX.Element {
       isOptionEqualToValue={(option: IPlatformResponse, value1: IPlatformResponse): boolean => option.id === value1.id}
       renderInput={(params): JSX.Element => <TextField {...params}
         label={label}
-        variant="filled"
+        variant="outlined"
+        size='medium'
         className={inputClassName}
         error={error}
         placeholder={placeholder}

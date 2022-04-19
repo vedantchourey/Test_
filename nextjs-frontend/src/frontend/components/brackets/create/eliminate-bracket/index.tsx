@@ -407,11 +407,11 @@ const EliminateBracket = React.forwardRef<
                           <NoobReachTextEditor
                             id={`rounds.${index}.description`}
                             name={`rounds.${index}.description`}
-                            content={round.description}
-                            onChange={(value: any): void => {
+                            value={round.description}
+                            onChange={(value) => {
                               formik.setFieldValue(
                                 `rounds.${index}.description`,
-                                value
+                                value.getCurrentContent().getPlainText()
                               );
                             }}
                             error={

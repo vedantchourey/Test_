@@ -2,6 +2,8 @@ import { createStyles, makeStyles, styled } from "@mui/styles";
 import dynamic from "next/dynamic";
 import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "@mui/styles";
+import { TMUIRichTextEditorProps } from "mui-rte";
+
 
 const myTheme = createTheme({
   // Set up your custom MUI theme here
@@ -29,8 +31,12 @@ const useStyles = makeStyles(() =>
   })
 );
 
+interface INoobReachTextEditor extends TMUIRichTextEditorProps {
+  name?: string
+}
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const NoobReachTextEditor: React.FC<any> = (props) => {
+const NoobReachTextEditor: React.FC<INoobReachTextEditor> = (props) => {
   const classes = useStyles();
 
   return (

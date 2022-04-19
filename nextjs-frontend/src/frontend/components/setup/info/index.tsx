@@ -118,9 +118,9 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
           <NoobReachTextEditor
             id="contactDetails"
             onChange={(value: any): void => {
-              changeHandler("contactDetails", value);
+              changeHandler("contactDetails", value.getCurrentContent().getPlainText());
             }}
-            content={formik.values.contactDetails}
+            value={formik.values.contactDetails}
             error={
               formik.touched.contactDetails &&
               Boolean(formik.errors.contactDetails)
@@ -134,9 +134,9 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
         <AccordionAlt title="Rules">
           <NoobReachTextEditor
             id="rules"
-            onChange={(value: any): void => changeHandler("rules", value)}
+            onChange={(value: any): void => changeHandler("rules", value.getCurrentContent().getPlainText())}
             error={formik.touched.rules && Boolean(formik.errors.rules)}
-            content={formik.values.rules}
+            value={formik.values.rules}
           />
           {formik.touched.rules && Boolean(formik.errors.rules) ? (
             <FormHelperText> {formik.errors.rules} </FormHelperText>
@@ -145,9 +145,9 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
         <AccordionAlt title="Prizes">
           <NoobReachTextEditor
             id="prizes"
-            onChange={(value: any): void => changeHandler("prizes", value)}
+            onChange={(value: any): void => changeHandler("prizes", value.getCurrentContent().getPlainText())}
             error={formik.touched.prizes && Boolean(formik.errors.prizes)}
-            content={formik.values.prizes}
+            value={formik.values.prizes}
           />
           {formik.touched.prizes && Boolean(formik.errors.prizes) ? (
             <FormHelperText> {formik.errors.prizes} </FormHelperText>
@@ -156,9 +156,9 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
         <AccordionAlt title="Schedule">
           <NoobReachTextEditor
             id="schedule"
-            onChange={(value: any): void => changeHandler("schedule", value)}
+            onChange={(value: any): void => changeHandler("schedule", value.getCurrentContent().getPlainText())}
             error={formik.touched.schedule && Boolean(formik.errors.schedule)}
-            content={formik.values.schedule}
+            value={formik.values.schedule}
           />
           {formik.touched.schedule && Boolean(formik.errors.schedule) ? (
             <FormHelperText> {formik.errors.schedule} </FormHelperText>

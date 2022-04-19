@@ -21,13 +21,13 @@ import { DatePicker, TimePicker } from "@mui/lab";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import GameDropDown from "../../drop-downs/game-drop-down";
+// import { convertToRaw } from "draft-js";
 
 const useStyles = makeStyles(() =>
   createStyles({
     inputBox: {
       borderRadius: "10px",
       marginBottom: "20px",
-      padding: "10px",
     },
     dropZone: {
       border: "1px solid rgba(255, 255, 255, 0.3)",
@@ -175,6 +175,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
                 value={formik.values.startDate}
                 renderInput={(params): JSX.Element => (
                   <TextField
+                    size="medium"
                     id="startDate"
                     error={
                       formik.touched.startDate &&
@@ -262,9 +263,10 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
           <Grid item xs={12}>
             <AccordionAlt title="About">
               <NoobReachTextEditor
-                content={formik.values.about}
+                value={formik?.values?.about || ""}
                 onChange={(value: any): void => {
-                  changeHandler("about", value);
+                  // let rteContent = convertToRaw(value.getCurrentContent())
+                  changeHandler("about", "");
                 }}
               />
             </AccordionAlt>

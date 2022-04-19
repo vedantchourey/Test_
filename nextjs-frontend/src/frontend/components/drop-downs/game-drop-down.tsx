@@ -72,7 +72,8 @@ export default function GameDropDown(props: Props): JSX.Element {
         <TextField
           {...params}
           label={label}
-          variant="filled"
+          variant="outlined"
+          size="medium"
           className={inputClassName}
           error={error}
           placeholder={placeholder}
