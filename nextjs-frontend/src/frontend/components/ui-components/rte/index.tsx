@@ -28,8 +28,7 @@ const useStyles = makeStyles(() =>
       padding: 10,
       paddingLeft: 40
     }
-  })
-);
+  }));
 
 interface INoobReachTextEditor extends TMUIRichTextEditorProps {
   name?: string
