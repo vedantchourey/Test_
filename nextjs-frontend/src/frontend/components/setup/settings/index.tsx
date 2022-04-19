@@ -19,10 +19,12 @@ import NoobToggleButtonGroup, {
   NoobToggleButton,
 } from "../../ui-components/toggle-button-group";
 import { TimePicker } from "@mui/lab";
+import PlatformDropDown from "../../drop-downs/platform-drop-down";
 
 interface SettingProps {
   onBack?: () => void;
   data?: SettingData;
+  allowedPlatforms?: string[];
   onSave?: (data: SettingData) => void;
 }
 
@@ -46,6 +48,7 @@ const Settings: React.FC<SettingProps> = ({
   onBack,
   onSave,
   data,
+  allowedPlatforms,
 }): JSX.Element => {
   const validationSchema = yup.object({
     server: yup.string().required("Region/Server is required"),
@@ -126,18 +129,24 @@ const Settings: React.FC<SettingProps> = ({
           <Grid item xs={6}>
             <FormControl fullWidth>
               <FormLabel label="Platform"></FormLabel>
-              <Select
-                displayEmpty
-                defaultValue={""}
-                onChange={(e): void =>
-                  changeHandler("platform", e.target.value)
+              <PlatformDropDown
+                label="Platform"
+                allowedPlatformIds={allowedPlatforms || []}
+                placeholder="Select Platform"
+                disabled={false}
+                onChange={(id): void => {
+                  formik.handleChange({
+                    target: {
+                      name: "platform",
+                      value: id,
+                    },
+                  });
+                }}
+                value={formik.values.platform}
+                error={
+                  formik.touched.platform && Boolean(formik.errors.platform)
                 }
-              >
-                <MenuItem value="">Select Platform </MenuItem>
-                <MenuItem value="Playstation4">PlayStation 4</MenuItem>
-                <MenuItem value="Playstation2">PlayStation 2</MenuItem>
-                <MenuItem value="Playstation3">PlayStation 3</MenuItem>
-              </Select>
+              />
               {formik.touched.server && Boolean(formik.errors.server) ? (
                 <FormHelperText>{formik.errors.server}</FormHelperText>
               ) : null}
@@ -160,10 +169,10 @@ const Settings: React.FC<SettingProps> = ({
               </Select>
               {formik.touched.tournamentFormat &&
               Boolean(formik.errors.tournamentFormat) ? (
-                  <FormHelperText>
-                    {formik.errors.tournamentFormat}
-                  </FormHelperText>
-                ) : null}
+                <FormHelperText>
+                  {formik.errors.tournamentFormat}
+                </FormHelperText>
+              ) : null}
             </FormControl>
           </Grid>
           <Grid item xs={6}></Grid>
@@ -173,9 +182,10 @@ const Settings: React.FC<SettingProps> = ({
               <NoobToggleButtonGroup
                 exclusive
                 value={formik.values.entryType}
-                onChange={(e: React.MouseEvent<Element, MouseEvent>, val:string): void =>
-                  changeHandler("entryType", val)
-                }
+                onChange={(
+                  e: React.MouseEvent<Element, MouseEvent>,
+                  val: string
+                ): void => changeHandler("entryType", val)}
                 fullWidth
               >
                 <NoobToggleButton value="free">Free</NoobToggleButton>
@@ -197,7 +207,7 @@ const Settings: React.FC<SettingProps> = ({
                   <Select
                     displayEmpty
                     defaultValue={""}
-                    onChange={(val):void => {
+                    onChange={(val): void => {
                       changeHandler("entryFeeAmount", val.target.value);
                     }}
                   >
@@ -207,10 +217,10 @@ const Settings: React.FC<SettingProps> = ({
                   </Select>
                   {formik.touched.entryFeeAmount &&
                   Boolean(formik.errors.entryFeeAmount) ? (
-                      <FormHelperText>
-                        {formik.errors.entryFeeAmount}
-                      </FormHelperText>
-                    ) : null}
+                    <FormHelperText>
+                      {formik.errors.entryFeeAmount}
+                    </FormHelperText>
+                  ) : null}
                 </FormControl>
               </React.Fragment>
             ) : null}
@@ -221,9 +231,10 @@ const Settings: React.FC<SettingProps> = ({
               <NoobToggleButtonGroup
                 exclusive
                 value={formik.values.checkInType}
-                onChange={(e: React.MouseEvent<Element, MouseEvent>, val:string): void =>
-                  changeHandler("checkInType", val)
-                }
+                onChange={(
+                  e: React.MouseEvent<Element, MouseEvent>,
+                  val: string
+                ): void => changeHandler("checkInType", val)}
                 fullWidth
               >
                 <NoobToggleButton value="disable">Disable</NoobToggleButton>
@@ -257,11 +268,11 @@ const Settings: React.FC<SettingProps> = ({
                     />
                     {formik.touched.checkInStartTime &&
                     Boolean(formik.errors.checkInStartTime) ? (
-                        <FormHelperText>
-                          {" "}
-                          {formik.errors.checkInStartTime}{" "}
-                        </FormHelperText>
-                      ) : null}
+                      <FormHelperText>
+                        {" "}
+                        {formik.errors.checkInStartTime}{" "}
+                      </FormHelperText>
+                    ) : null}
                   </Box>
                 </FormControl>
               </React.Fragment>
@@ -273,9 +284,10 @@ const Settings: React.FC<SettingProps> = ({
               <NoobToggleButtonGroup
                 exclusive
                 value={formik.values.ScoreReporting}
-                onChange={(e: React.MouseEvent<Element, MouseEvent>, val:string): void =>
-                  changeHandler("ScoreReporting", val)
-                }
+                onChange={(
+                  e: React.MouseEvent<Element, MouseEvent>,
+                  val: string
+                ): void => changeHandler("ScoreReporting", val)}
                 fullWidth
               >
                 <NoobToggleButton value="ADMIN">Admin Only</NoobToggleButton>
@@ -314,9 +326,10 @@ const Settings: React.FC<SettingProps> = ({
               <NoobToggleButtonGroup
                 exclusive
                 value={formik.values.limitType}
-                onChange={(e: React.MouseEvent<Element, MouseEvent>, val:string): void =>
-                  changeHandler("limitType", val)
-                }
+                onChange={(
+                  e: React.MouseEvent<Element, MouseEvent>,
+                  val: string
+                ): void => changeHandler("limitType", val)}
                 fullWidth
               >
                 <NoobToggleButton value="LIMITED">Limited</NoobToggleButton>
@@ -340,12 +353,10 @@ const Settings: React.FC<SettingProps> = ({
               <NoobToggleButtonGroup
                 exclusive
                 value={formik.values.countryFlagOnBrackets ? "on" : "off"}
-                onChange={(e: React.MouseEvent<Element, MouseEvent>, val:string): void =>
-                  changeHandler(
-                    "countryFlagOnBrackets",
-                    val === "on"
-                  )
-                }
+                onChange={(
+                  e: React.MouseEvent<Element, MouseEvent>,
+                  val: string
+                ): void => changeHandler("countryFlagOnBrackets", val === "on")}
                 fullWidth
               >
                 <NoobToggleButton value="off">Off</NoobToggleButton>
@@ -361,9 +372,10 @@ const Settings: React.FC<SettingProps> = ({
               <NoobToggleButtonGroup
                 exclusive
                 value={formik.values.registrationRegion}
-                onChange={(e: React.MouseEvent<Element, MouseEvent>, val:string): void =>
-                  changeHandler("registrationRegion", val)
-                }
+                onChange={(
+                  e: React.MouseEvent<Element, MouseEvent>,
+                  val: string
+                ): void => changeHandler("registrationRegion", val)}
                 fullWidth
               >
                 <NoobToggleButton value="all">All</NoobToggleButton>
