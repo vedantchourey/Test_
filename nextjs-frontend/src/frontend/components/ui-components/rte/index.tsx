@@ -1,5 +1,19 @@
-import { createStyles, makeStyles } from "@mui/styles";
-import Editor from 'material-ui-editor'
+import { createStyles, makeStyles, styled } from "@mui/styles";
+import dynamic from "next/dynamic";
+import { createTheme } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/styles";
+
+const myTheme = createTheme({
+  // Set up your custom MUI theme here
+});
+
+const ReachTextEditor = dynamic(() => import("mui-rte"), {
+  ssr: false,
+});
+
+const NoobReachTextEditorAlt = styled(ReachTextEditor)(() => ({
+  background: "red",
+}));
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -8,17 +22,20 @@ const useStyles = makeStyles(() =>
       minHeight: 100,
       borderRadius: "10px",
     },
-  }));
+    editor: {
+      padding: 10
+    }
+  })
+);
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const NoobReachTextEditor: React.FC<any> = (props) => {
   const classes = useStyles();
+
   return (
-    <Editor
-      label="Type here..."
-      classes={{ root: classes.root }}
-      {...props}
-    />
+    <ThemeProvider theme={myTheme}>
+      <ReachTextEditor classes={{root:classes.root, editor: classes.editor}} {...props}/>
+    </ThemeProvider>
   );
 };
 

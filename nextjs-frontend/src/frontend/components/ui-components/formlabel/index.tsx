@@ -1,5 +1,6 @@
 import React from 'react';
 import { createStyles, makeStyles } from "@mui/styles";
+import {FormLabel as MuiLabel} from '@mui/material'
 
 
 const useFormLabelStyles = makeStyles(() =>
@@ -20,9 +21,9 @@ interface FormLabelProp {
 const FormLabel: React.FC<FormLabelProp> = ({ label, htmlFor }) => {
   const classes = useFormLabelStyles();
   return (
-    <label className={classes.root} htmlFor={htmlFor}>
+    <MuiLabel className={classes.root} style={{textAlign: "left"}} htmlFor={htmlFor}>
       {label}
-    </label>
+    </MuiLabel>
   );
 };
 
