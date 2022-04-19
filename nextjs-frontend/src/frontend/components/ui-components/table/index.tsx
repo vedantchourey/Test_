@@ -124,7 +124,7 @@ const NoobTable: <Type>(props:NoobTableProp<Type>)=>JSX.Element = ({
         <CardLayout>
           <Box display={"flex"} justifyContent="center">
           <Pagination
-            count={totalRecords / paginate.recordsPerPage}
+            count={Math.ceil(totalRecords / paginate.recordsPerPage)}
             page={paginate.currentPage}
             onChange={handlePageChange}
             variant="outlined"
