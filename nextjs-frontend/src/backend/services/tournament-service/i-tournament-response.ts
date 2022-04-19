@@ -1,4 +1,5 @@
 import { TournamentType } from "./tournament-type";
+import { ITournament } from "../database/models/i-tournaments";
 
 export interface ITournamentResponse {
   id: string;
@@ -66,4 +67,9 @@ export interface ITournamentType {
   status: "DRAFT" | "PUBLISHED";
   joinStatus: "PRIVATE" | "PUBLIC";
   createTemplateCode: string;
+}
+
+export interface IListTournamentResponse {
+  tournaments: ITournament[];
+  total: number;
 }
