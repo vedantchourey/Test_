@@ -4,7 +4,8 @@ import { IRegisterTournament } from "../database/models/i-register-tournament";
 import { ITournament } from "../database/models/i-tournaments";
 import { BracketsRepository } from "../database/repositories/brackets-repository";
 import { ProfilesRepository } from "../database/repositories/profiles-repository";
-import Duel from "tournament/duel";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const Duel = require ("tournament/duel");
 
 export const persistBrackets = async (req: ITournament, context: any): Promise<any> => {
   const roundsSize: number[] = [];
