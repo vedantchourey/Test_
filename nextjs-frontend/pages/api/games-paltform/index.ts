@@ -18,7 +18,7 @@ export default createNextJsRouteHandler({
       context: PerRequestContext
     ) => {
       try {
-        let result = await fetchGames(req, context);
+        const result = await fetchGames(req, context);
         const groupByGame = _.groupBy(result, "gameName") as any;
         const formatResult: IGamePaltform[] = Object.keys(groupByGame).map(
           (x): IGamePaltform => ({
