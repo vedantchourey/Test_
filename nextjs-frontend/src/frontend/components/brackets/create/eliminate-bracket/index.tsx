@@ -3,21 +3,17 @@ import TextField from "@mui/material/TextField";
 import * as yup from "yup";
 import {
   FieldArray,
-  FieldArrayRenderProps,
   FormikProvider,
   useFormik,
 } from "formik";
 import {
-  Button,
   Checkbox,
   FormControl,
   FormControlLabel,
   Grid,
-  MenuItem,
   OutlinedInput,
   Radio,
   RadioGroup,
-  Select,
 } from "@mui/material";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormLabel from "../../../ui-components/formlabel";
@@ -27,7 +23,8 @@ import NoobToggleButtonGroup, {
 } from "../../../ui-components/toggle-button-group";
 import CardLayout from "../../../ui-components/card-layout";
 import NoobReachTextEditor from "../../../ui-components/rte";
-
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const Duel = require ("tournament/duel");
 interface RoundData {
   round: string;
   description: string;
@@ -42,7 +39,7 @@ export interface EliminateBracketData {
   thirdPlace: boolean;
   playersLimit: number | null;
   rounds: RoundData[];
-  scoringFormat:string
+  scoringFormat: string;
 }
 
 interface EliminateBracketProps {
@@ -54,7 +51,6 @@ const EliminateBracket = React.forwardRef<
   EliminateBracketRef,
   EliminateBracketProps
 >(({ onSave, data }, ref) => {
-  const [round, setRound] = React.useState<string>("");
   const validationSchema = yup.object({
     name: yup.string().required("A name is required"),
     startDate: yup
@@ -77,7 +73,7 @@ const EliminateBracket = React.forwardRef<
       is: "SINGLE",
       then: yup.boolean().required("Third Place is required"),
     }),
-    scoringFormat:yup.string(),
+    scoringFormat: yup.string(),
     playersLimit: yup.number(),
     rounds: yup.array().of(
       yup.object().shape({
@@ -98,7 +94,7 @@ const EliminateBracket = React.forwardRef<
       thirdPlace: data?.thirdPlace || false,
       playersLimit: data?.playersLimit || null,
       rounds: data?.rounds || [],
-      scoringFormat:data?.scoringFormat || '',
+      scoringFormat: data?.scoringFormat || "",
     } as EliminateBracketData,
     validationSchema: validationSchema,
     onSubmit: (values: EliminateBracketData) => {
@@ -108,11 +104,11 @@ const EliminateBracket = React.forwardRef<
     },
   });
 
-  React.useEffect(()=>{
-    if(data){
+  React.useEffect(() => {
+    if (data) {
       formik.setValues(data);
     }
-  },[data]);
+  }, [data]);
 
   React.useImperativeHandle(ref, () => {
     return {
@@ -130,13 +126,19 @@ const EliminateBracket = React.forwardRef<
     formik.setFieldValue(property, value, true);
   };
 
-  const addRound = (helper: FieldArrayRenderProps): void => {
-    // console.log(round);
-    if (round !== "") {
-      helper.push({ round: round, description: "" });
-      setRound("");
-    }
-  };
+  const rounds: any[] = []
+  if (formik.values.playersLimit && formik.values.playersLimit > 0) {
+    const brackets = new Duel(
+      Number(formik.values.playersLimit),
+      formik.values.type === "SINGLE" ? 1 : 2
+    );
+    brackets.matches = brackets.matches.map((element: any) => {
+      if (!rounds.includes(element.id.r)) {
+        rounds.push(element.id.r);
+      }
+      return element;
+    });
+  }
   return (
     <React.Fragment>
       <CardLayout title="Eliminate Bracket">
@@ -341,74 +343,20 @@ const EliminateBracket = React.forwardRef<
           <FormikProvider value={formik}>
             <FieldArray
               name="rounds"
-              render={(helper): JSX.Element => {
-                const renderRound = (formik.values.rounds || []).map(
+              render={(): JSX.Element => {
+                const renderRound = (rounds || []).map(
                   (round, index) => {
                     return (
                       <React.Fragment key={index}>
                         <Grid item sm={12}>
                           <FormHelperText> Round {index + 1} </FormHelperText>
                         </Grid>
-                        <Grid item xs={8}>
-                          <FormControl fullWidth>
-                            <Select
-                              value={round.round}
-                              displayEmpty
-                              defaultValue={""}
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              id={`rounds.${index}.round`}
-                              name={`rounds.${index}.round`}
-                              error={
-                                formik.touched.rounds &&
-                                formik.touched.rounds[index] &&
-                                formik.touched.rounds[index].round &&
-                                formik.errors.rounds !== undefined &&
-                                formik.errors.rounds[index] !== undefined &&
-                                Boolean(
-                                  (formik.errors.rounds[index] as RoundData)
-                                    .round
-                                )
-                              }
-                            >
-                              <MenuItem value="">Select Round </MenuItem>
-                              <MenuItem value="1">Best of 1</MenuItem>
-                              <MenuItem value="2">Best of 2</MenuItem>
-                            </Select>
-                            {formik.touched.rounds &&
-                            formik.touched.rounds[index] &&
-                            formik.touched.rounds[index].round &&
-                            formik.errors.rounds !== undefined &&
-                            formik.errors.rounds[index] !== undefined &&
-                            Boolean(
-                              (formik.errors.rounds[index] as RoundData).round
-                            ) ? (
-                              <FormHelperText>
-                                {
-                                  (formik.errors.rounds[index] as RoundData)
-                                    .round
-                                }
-                              </FormHelperText>
-                            ) : null}
-                          </FormControl>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Button
-                            variant="contained"
-                            onClick={(): void => helper.remove(index)}
-                            startIcon={
-                              <img src="/icons/delete.svg" alt="delete" />
-                            }
-                          >
-                            Remove Details
-                          </Button>
-                        </Grid>
                         <Grid item sm={12}>
                           <NoobReachTextEditor
                             id={`rounds.${index}.description`}
                             name={`rounds.${index}.description`}
                             value={round.description}
-                            onChange={(value) => {
+                            onChange={(value): void => {
                               formik.setFieldValue(
                                 `rounds.${index}.description`,
                                 value.getCurrentContent().getPlainText()
@@ -448,40 +396,7 @@ const EliminateBracket = React.forwardRef<
                   }
                 );
 
-                return (
-                  <React.Fragment>
-                    {renderRound}
-                    <Grid item xs={12}>
-                      <FormHelperText>
-                        {" "}
-                        Round {formik.values.rounds.length + 1}{" "}
-                      </FormHelperText>
-                    </Grid>
-                    <Grid item xs={8}>
-                      <FormControl fullWidth>
-                        <Select
-                          displayEmpty
-                          value={round}
-                          defaultValue={""}
-                          onChange={(e): void => setRound(e.target.value)}
-                        >
-                          <MenuItem value="">Select Round </MenuItem>
-                          <MenuItem value="1">Best of 1</MenuItem>
-                          <MenuItem value="2">Best of 2</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={4}>
-                      <Button
-                        variant="contained"
-                        startIcon={<img src="/icons/Plus.svg" alt="add" />}
-                        onClick={(): void => addRound(helper)}
-                      >
-                        Add Details
-                      </Button>
-                    </Grid>
-                  </React.Fragment>
-                );
+                return <React.Fragment>{renderRound}</React.Fragment>;
               }}
             />
           </FormikProvider>

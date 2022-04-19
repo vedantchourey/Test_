@@ -1,4 +1,4 @@
-import { createStyles, makeStyles, styled } from "@mui/styles";
+import { createStyles, makeStyles } from "@mui/styles";
 import dynamic from "next/dynamic";
 import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "@mui/styles";
@@ -13,10 +13,6 @@ const ReachTextEditor = dynamic(() => import("mui-rte"), {
   ssr: false,
 });
 
-const NoobReachTextEditorAlt = styled(ReachTextEditor)(() => ({
-  background: "red",
-}));
-
 const useStyles = makeStyles(() =>
   createStyles({
     root: {
@@ -28,8 +24,7 @@ const useStyles = makeStyles(() =>
       padding: 10,
       paddingLeft: 40
     }
-  })
-);
+  }));
 
 interface INoobReachTextEditor extends TMUIRichTextEditorProps {
   name?: string

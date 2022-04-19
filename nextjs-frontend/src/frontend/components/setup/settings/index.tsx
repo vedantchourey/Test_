@@ -378,8 +378,8 @@ const Settings: React.FC<SettingProps> = ({
                 ): void => changeHandler("registrationRegion", val)}
                 fullWidth
               >
-                <NoobToggleButton value="all">All</NoobToggleButton>
-                <NoobToggleButton value="specific-region">
+                <NoobToggleButton value="ALL">All</NoobToggleButton>
+                <NoobToggleButton value="SPECIFIC-REGION">
                   Specific Region
                 </NoobToggleButton>
               </NoobToggleButtonGroup>

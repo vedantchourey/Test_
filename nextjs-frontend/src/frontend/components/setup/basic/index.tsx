@@ -264,7 +264,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
             <AccordionAlt title="About">
               <NoobReachTextEditor
                 value={formik?.values?.about || ""}
-                onChange={(value: any): void => {
+                onChange={(): void => {
                   // let rteContent = convertToRaw(value.getCurrentContent())
                   changeHandler("about", "");
                 }}

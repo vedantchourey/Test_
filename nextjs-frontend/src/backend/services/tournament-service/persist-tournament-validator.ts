@@ -57,7 +57,7 @@ export function validatePersistTournament(body: any): any {
           .required(),
       }),
       countryFlagOnBrackets: Joi.boolean().required(),
-      registrationRegion: Joi.string().valid("all"),
+      registrationRegion: Joi.string().required(),
     }).optional(),
     bracketsMetadata: Joi.object({
       name: Joi.string().required(),
