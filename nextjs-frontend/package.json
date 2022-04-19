@@ -34,7 +34,7 @@
     "luxon": "^2.1.1",
     "material-ui-editor": "^1.0.6",
     "moment": "^2.29.1",
-    "mui-rte": "git+https://github.com/iNeelPatel/mui-rte.git",
+    "mui-rte": "^2.0.1",
     "next": "12.0.4",
     "pg": "^8.7.1",
     "react": "17.0.2",
