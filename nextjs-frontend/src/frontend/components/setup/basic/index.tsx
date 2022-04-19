@@ -59,7 +59,7 @@ interface BasicPorps {
 
 const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
   const style = useStyles();
-
+  
   const validationSchema = yup.object({
     name: yup.string().required("Name is required"),
     game: yup.string().required("Game is required"),
@@ -75,10 +75,14 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
       .transform((v) => (v instanceof Date && !isNaN(v.getTime()) ? v : null)),
     about: yup.string(),
     cloneTournament: yup.boolean(),
-    createTemplateCode: yup.string().when("cloneTournament", {
+    createTemplateCode: yup.string().nullable()
+.notRequired()
+.when("cloneTournament", {
       is: true,
       then: yup.string().required("Tournament id is require to clone"),
     }),
+    banner:yup.string().nullable()
+.notRequired()
   });
 
   const formik = useFormik({
@@ -90,14 +94,21 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
       about: data?.about || "",
       createTemplateCode: data?.createTemplateCode || "",
       cloneTournament: data?.cloneTournament || false,
+      banner:''
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       if (onSave) {
-        onSave(values);
+        onSave({...values,banner:'Test Banner'});
       }
     },
   });
+
+  React.useEffect(()=>{
+    if(data){
+      formik.setValues({...data,createTemplateCode:data.createTemplateCode?data.createTemplateCode:'',banner:data.banner?data.banner:''});
+    }
+  },[data]);
 
   const changeHandler = (
     property: string,

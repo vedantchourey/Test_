@@ -56,7 +56,7 @@ const Streams: React.FC = (): JSX.Element => {
   const classes = useStyles();
 
   const router = useRouter();
-  const { data, setData } = React.useContext(TournamentContext);
+  const { data, setData, id, type } = React.useContext(TournamentContext);
 
   const validationSchema = yup.object({
     streams: yup.array().of(
@@ -74,17 +74,21 @@ const Streams: React.FC = (): JSX.Element => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       setData({ ...data, streams: {data:values.streams} },()=>{
-        router.push(`/tournament/[...slug]`, `/tournament/create/publish`, {
-          shallow: true,
-        });
+        if(type==='new'){
+          router.push(`/tournament/new/[...slug]`,`/tournament/new/create/publish`, {shallow:true})
+        }else{
+          router.push(`/tournament/update/[id]/[...slug]`,`/tournament/update/${id}/create/publish`, {shallow:true})
+        }
       });
     },
   });
 
   const onBack = ():void => {
-    router.push(`/tournament/[...slug]`, `/tournament/create/brackets/create`, {
-      shallow: true,
-    });
+    if(type==='new'){
+      router.push(`/tournament/new/[...slug]`,`/tournament/new/create/brackets/create`, {shallow:true})
+    }else{
+      router.push(`/tournament/update/[id]/[...slug]`,`/tournament/update/${id}/create/brackets/create`, {shallow:true})
+    }
   };
 
   const addStreamHandler = (helper: FieldArrayRenderProps):void => {

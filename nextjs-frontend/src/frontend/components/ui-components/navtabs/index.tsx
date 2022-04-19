@@ -12,6 +12,10 @@ const useStyles = makeStyles(() =>
       background: "#100626",
       marginBottom: "10px",
     },
+    selectedAlt:{
+      background:"rgba(105, 50, 249, 1)",
+      color:"white!important"
+    }
   }));
 
 interface NavProps {
@@ -19,6 +23,7 @@ interface NavProps {
   action?: React.ReactElement;
   current?: string;
   onClick?: (tab: string) => void;
+  altNav?:boolean
 }
 
 const NavTabs: React.FC<NavProps> = ({
@@ -26,6 +31,7 @@ const NavTabs: React.FC<NavProps> = ({
   action = null,
   current = "",
   onClick,
+  altNav=false
 }) => {
   const classes = useStyles();
 
@@ -52,7 +58,7 @@ const NavTabs: React.FC<NavProps> = ({
         aria-label="nav tabs"
       >
         {items.map((tab) => {
-          return <Tab key={tab} label={tab}></Tab>;
+          return <Tab key={tab} label={tab} classes={{selected:((altNav && classes.selectedAlt)?classes.selectedAlt:'')}}></Tab>;
         })}
         {action ? (
           <Box
