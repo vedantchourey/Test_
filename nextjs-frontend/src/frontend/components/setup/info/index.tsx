@@ -14,6 +14,7 @@ import {
   OutlinedInput,
   Select,
 } from "@mui/material";
+import { convertToRaw } from "draft-js";
 
 interface InfoProps {
   onBack?: () => void;
@@ -62,11 +63,14 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
     },
   });
 
-  React.useEffect(()=>{
-    if(data){
-      formik.setValues({...data,contactUrl:data.contactUrl?data.contactUrl:''});
+  React.useEffect(() => {
+    if (data) {
+      formik.setValues({
+        ...data,
+        contactUrl: data.contactUrl ? data.contactUrl : "",
+      });
     }
-  },[data]);
+  }, [data]);
 
   const changeHandler = (key: string, value: string): void => {
     formik.setFieldValue(key, value, true);
@@ -114,13 +118,16 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
           ) : null}
         </Grid>
 
-        <AccordionAlt title="Contact Details" >
+        <AccordionAlt title="Contact Details">
           <NoobReachTextEditor
             id="contactDetails"
-            onChange={(value: any): void => {
-              changeHandler("contactDetails", value.getCurrentContent().getPlainText());
+            value={formik?.values?.contactDetails || undefined}
+            onChange={(value): void => {
+              let rteContent = JSON.stringify(
+                convertToRaw(value.getCurrentContent())
+              );
+              changeHandler("contactDetails", rteContent);
             }}
-            value={formik.values.contactDetails}
             error={
               formik.touched.contactDetails &&
               Boolean(formik.errors.contactDetails)
@@ -134,9 +141,14 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
         <AccordionAlt title="Rules">
           <NoobReachTextEditor
             id="rules"
-            onChange={(value: any): void => changeHandler("rules", value.getCurrentContent().getPlainText())}
             error={formik.touched.rules && Boolean(formik.errors.rules)}
-            value={formik.values.rules}
+            value={formik?.values?.rules || undefined}
+            onChange={(value): void => {
+              let rteContent = JSON.stringify(
+                convertToRaw(value.getCurrentContent())
+              );
+              changeHandler("rules", rteContent);
+            }}
           />
           {formik.touched.rules && Boolean(formik.errors.rules) ? (
             <FormHelperText> {formik.errors.rules} </FormHelperText>
@@ -145,9 +157,14 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
         <AccordionAlt title="Prizes">
           <NoobReachTextEditor
             id="prizes"
-            onChange={(value: any): void => changeHandler("prizes", value.getCurrentContent().getPlainText())}
             error={formik.touched.prizes && Boolean(formik.errors.prizes)}
-            value={formik.values.prizes}
+            value={formik?.values?.prizes || undefined}
+            onChange={(value): void => {
+              let rteContent = JSON.stringify(
+                convertToRaw(value.getCurrentContent())
+              );
+              changeHandler("prizes", rteContent);
+            }}
           />
           {formik.touched.prizes && Boolean(formik.errors.prizes) ? (
             <FormHelperText> {formik.errors.prizes} </FormHelperText>
@@ -156,9 +173,14 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
         <AccordionAlt title="Schedule">
           <NoobReachTextEditor
             id="schedule"
-            onChange={(value: any): void => changeHandler("schedule", value.getCurrentContent().getPlainText())}
             error={formik.touched.schedule && Boolean(formik.errors.schedule)}
-            value={formik.values.schedule}
+            value={formik?.values?.schedule || undefined}
+            onChange={(value): void => {
+              let rteContent = JSON.stringify(
+                convertToRaw(value.getCurrentContent())
+              );
+              changeHandler("schedule", rteContent);
+            }}
           />
           {formik.touched.schedule && Boolean(formik.errors.schedule) ? (
             <FormHelperText> {formik.errors.schedule} </FormHelperText>

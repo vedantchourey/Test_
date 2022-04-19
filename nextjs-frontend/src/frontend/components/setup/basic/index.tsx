@@ -21,7 +21,7 @@ import { DatePicker, TimePicker } from "@mui/lab";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import GameDropDown from "../../drop-downs/game-drop-down";
-// import { convertToRaw } from "draft-js";
+import { convertToRaw } from "draft-js";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -263,10 +263,10 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
           <Grid item xs={12}>
             <AccordionAlt title="About">
               <NoobReachTextEditor
-                value={formik?.values?.about || ""}
-                onChange={(): void => {
-                  // let rteContent = convertToRaw(value.getCurrentContent())
-                  changeHandler("about", "");
+                value={formik?.values?.about || undefined}
+                onChange={(value): void => {
+                  let rteContent = JSON.stringify(convertToRaw(value.getCurrentContent()))
+                  changeHandler("about", rteContent);
                 }}
               />
             </AccordionAlt>

@@ -1,11 +1,7 @@
 import React from "react";
 import TextField from "@mui/material/TextField";
 import * as yup from "yup";
-import {
-  FieldArray,
-  FormikProvider,
-  useFormik,
-} from "formik";
+import { FieldArray, FormikProvider, useFormik } from "formik";
 import {
   Checkbox,
   FormControl,
@@ -23,8 +19,9 @@ import NoobToggleButtonGroup, {
 } from "../../../ui-components/toggle-button-group";
 import CardLayout from "../../../ui-components/card-layout";
 import NoobReachTextEditor from "../../../ui-components/rte";
+import { convertToRaw } from "draft-js";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const Duel = require ("tournament/duel");
+const Duel = require("tournament/duel");
 interface RoundData {
   round: string;
   description: string;
@@ -126,7 +123,7 @@ const EliminateBracket = React.forwardRef<
     formik.setFieldValue(property, value, true);
   };
 
-  const rounds: any[] = []
+  const rounds: any[] = [];
   if (formik.values.playersLimit && formik.values.playersLimit > 0) {
     const brackets = new Duel(
       Number(formik.values.playersLimit),
@@ -344,57 +341,58 @@ const EliminateBracket = React.forwardRef<
             <FieldArray
               name="rounds"
               render={(): JSX.Element => {
-                const renderRound = (rounds || []).map(
-                  (round, index) => {
-                    return (
-                      <React.Fragment key={index}>
-                        <Grid item sm={12}>
-                          <FormHelperText> Round {index + 1} </FormHelperText>
-                        </Grid>
-                        <Grid item sm={12}>
-                          <NoobReachTextEditor
-                            id={`rounds.${index}.description`}
-                            name={`rounds.${index}.description`}
-                            value={round.description}
-                            onChange={(value): void => {
-                              formik.setFieldValue(
-                                `rounds.${index}.description`,
-                                value.getCurrentContent().getPlainText()
-                              );
-                            }}
-                            error={
-                              formik.touched.rounds &&
-                              formik.touched.rounds[index] &&
-                              formik.touched.rounds[index].description &&
-                              formik.errors.rounds !== undefined &&
-                              formik.errors.rounds[index] !== undefined &&
-                              Boolean(
-                                (formik.errors.rounds[index] as RoundData)
-                                  .description
-                              )
+                const renderRound = (rounds || []).map((round, index) => {
+                  return (
+                    <React.Fragment key={index}>
+                      <Grid item sm={12}>
+                        <FormHelperText> Round {index + 1} </FormHelperText>
+                      </Grid>
+                      <Grid item sm={12}>
+                        <NoobReachTextEditor
+                          id={`rounds.${index}.description`}
+                          name={`rounds.${index}.description`}
+                          value={round.description}
+                          onChange={(value): void => {
+                            let rteContent = JSON.stringify(
+                              convertToRaw(value.getCurrentContent())
+                            );
+                            changeHandler("about", rteContent);
+                            formik.setFieldValue(
+                              `rounds.${index}.description`,
+                              rteContent
+                            );
+                          }}
+                          error={
+                            formik.touched.rounds &&
+                            formik.touched.rounds[index] &&
+                            formik.touched.rounds[index].description &&
+                            formik.errors.rounds !== undefined &&
+                            formik.errors.rounds[index] !== undefined &&
+                            Boolean(
+                              (formik.errors.rounds[index] as RoundData)
+                                .description
+                            )
+                          }
+                        />
+                        {formik.touched.rounds &&
+                        formik.touched.rounds[index] &&
+                        formik.touched.rounds[index].description &&
+                        formik.errors.rounds !== undefined &&
+                        formik.errors.rounds[index] !== undefined &&
+                        Boolean(
+                          (formik.errors.rounds[index] as RoundData).description
+                        ) ? (
+                          <FormHelperText>
+                            {
+                              (formik.errors.rounds[index] as RoundData)
+                                .description
                             }
-                          />
-                          {formik.touched.rounds &&
-                          formik.touched.rounds[index] &&
-                          formik.touched.rounds[index].description &&
-                          formik.errors.rounds !== undefined &&
-                          formik.errors.rounds[index] !== undefined &&
-                          Boolean(
-                            (formik.errors.rounds[index] as RoundData)
-                              .description
-                          ) ? (
-                            <FormHelperText>
-                              {
-                                (formik.errors.rounds[index] as RoundData)
-                                  .description
-                              }
-                            </FormHelperText>
-                          ) : null}
-                        </Grid>
-                      </React.Fragment>
-                    );
-                  }
-                );
+                          </FormHelperText>
+                        ) : null}
+                      </Grid>
+                    </React.Fragment>
+                  );
+                });
 
                 return <React.Fragment>{renderRound}</React.Fragment>;
               }}
