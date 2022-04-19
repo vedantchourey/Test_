@@ -15,7 +15,7 @@ export class GameRepository extends BaseRepository<IGame> {
       .where({ id: id })
       .first();
   }
-  getGamesPlatform(): Promise<IGamePaltform> {
+  getGamesPlatform(): Promise<any> {
     return this.entities()
       .select("games.displayName as gameName")
       .select("games.id as gameId")
