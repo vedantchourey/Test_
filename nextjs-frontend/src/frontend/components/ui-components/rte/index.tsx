@@ -23,7 +23,8 @@ const useStyles = makeStyles(() =>
       borderRadius: "10px",
     },
     editor: {
-      padding: 10
+      padding: 10,
+      paddingLeft: 40
     }
   })
 );
