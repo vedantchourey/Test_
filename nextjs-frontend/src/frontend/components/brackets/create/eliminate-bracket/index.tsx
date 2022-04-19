@@ -22,6 +22,7 @@ import NoobToggleButtonGroup, {
   NoobToggleButton,
 } from "../../../ui-components/toggle-button-group";
 import CardLayout from "../../../ui-components/card-layout";
+import {convertToRaw} from 'draft-js';
 import NoobReachTextEditor from "../../../ui-components/rte";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Duel = require ("tournament/duel");
@@ -355,11 +356,12 @@ const EliminateBracket = React.forwardRef<
                           <NoobReachTextEditor
                             id={`rounds.${index}.description`}
                             name={`rounds.${index}.description`}
-                            value={round.description}
+                            defaultValue={round.description}
                             onChange={(value): void => {
+                              const row=convertToRaw(value.getCurrentContent());
                               formik.setFieldValue(
                                 `rounds.${index}.description`,
-                                value.getCurrentContent().getPlainText()
+                                JSON.stringify(row)
                               );
                             }}
                             error={

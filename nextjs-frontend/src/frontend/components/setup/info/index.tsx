@@ -5,6 +5,7 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import FormHelperText from "@mui/material/FormHelperText";
 import NoobReachTextEditor from "../../ui-components/rte";
+import {convertToRaw} from 'draft-js';
 import {
   Box,
   Button,
@@ -117,10 +118,11 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
         <AccordionAlt title="Contact Details" >
           <NoobReachTextEditor
             id="contactDetails"
-            onChange={(value: any): void => {
-              changeHandler("contactDetails", value.getCurrentContent().getPlainText());
+            onChange={(value): void => {
+              const row=convertToRaw(value.getCurrentContent());
+              changeHandler("contactDetails", JSON.stringify(row));
             }}
-            value={formik.values.contactDetails}
+            defaultValue={formik.values.contactDetails}
             error={
               formik.touched.contactDetails &&
               Boolean(formik.errors.contactDetails)
@@ -134,9 +136,12 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
         <AccordionAlt title="Rules">
           <NoobReachTextEditor
             id="rules"
-            onChange={(value: any): void => changeHandler("rules", value.getCurrentContent().getPlainText())}
+            onChange={(value) => {
+              const row=convertToRaw(value.getCurrentContent());
+              changeHandler("rules", JSON.stringify(row));
+            }}
             error={formik.touched.rules && Boolean(formik.errors.rules)}
-            value={formik.values.rules}
+            defaultValue={formik.values.rules}
           />
           {formik.touched.rules && Boolean(formik.errors.rules) ? (
             <FormHelperText> {formik.errors.rules} </FormHelperText>
@@ -145,9 +150,12 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
         <AccordionAlt title="Prizes">
           <NoobReachTextEditor
             id="prizes"
-            onChange={(value: any): void => changeHandler("prizes", value.getCurrentContent().getPlainText())}
+            onChange={(value): void =>{ 
+              const row=convertToRaw(value.getCurrentContent());
+              changeHandler("prizes", JSON.stringify(row));
+            }}
             error={formik.touched.prizes && Boolean(formik.errors.prizes)}
-            value={formik.values.prizes}
+            defaultValue={formik.values.prizes}
           />
           {formik.touched.prizes && Boolean(formik.errors.prizes) ? (
             <FormHelperText> {formik.errors.prizes} </FormHelperText>
@@ -156,9 +164,12 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
         <AccordionAlt title="Schedule">
           <NoobReachTextEditor
             id="schedule"
-            onChange={(value: any): void => changeHandler("schedule", value.getCurrentContent().getPlainText())}
+            onChange={(value): void => {
+              const row=convertToRaw(value.getCurrentContent());
+              changeHandler("schedule", JSON.stringify(row));
+            }}
             error={formik.touched.schedule && Boolean(formik.errors.schedule)}
-            value={formik.values.schedule}
+            defaultValue={formik.values.schedule}
           />
           {formik.touched.schedule && Boolean(formik.errors.schedule) ? (
             <FormHelperText> {formik.errors.schedule} </FormHelperText>
