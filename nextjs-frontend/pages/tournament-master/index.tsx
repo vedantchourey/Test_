@@ -4,7 +4,7 @@ import AuthGuard from "../../src/frontend/components/auth/auth-guard";
 import NotFound from "../../src/frontend/components/not-found/not-found";
 import TournamentMaster from "../../src/frontend/components/tournament-master";
 
-const requiredRoles: NoobUserRole[] = ["admin"];
+const requiredRoles: NoobUserRole[] = [];
 const TournamentMasterPage: React.FC<void> = () => {
   return (
     <AuthGuard

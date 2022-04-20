@@ -1,1 +1,1 @@
-export type NoobUserRole = 'noob-admin' | 'admin';
+export type NoobUserRole = 'noob-admin';
