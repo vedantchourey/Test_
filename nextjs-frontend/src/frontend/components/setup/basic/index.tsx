@@ -263,10 +263,10 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
           <Grid item xs={12}>
             <AccordionAlt title="About">
               <NoobReachTextEditor
-                defaultValue={formik?.values?.about || ""}
+                value={formik?.values?.about || undefined}
                 onChange={(value): void => {
-                  let row = convertToRaw(value.getCurrentContent());
-                  changeHandler("about", JSON.stringify(row));
+                  let rteContent = JSON.stringify(convertToRaw(value.getCurrentContent()))
+                  changeHandler("about", rteContent);
                 }}
               />
             </AccordionAlt>
