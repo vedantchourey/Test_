@@ -40,6 +40,8 @@ export interface ITournament {
     rounds: Array<{
       round: string;
       description: string;
+      map?: string;
+      isMap?: boolean;
     }>;
   };
   streams?: Array<{

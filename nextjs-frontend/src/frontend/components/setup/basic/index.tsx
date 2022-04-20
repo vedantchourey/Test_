@@ -21,7 +21,6 @@ import { DatePicker, TimePicker } from "@mui/lab";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import GameDropDown from "../../drop-downs/game-drop-down";
-import { convertToRaw } from "draft-js";
 
 const useStyles = makeStyles(() =>
   createStyles({

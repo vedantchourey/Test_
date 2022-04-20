@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import * as yup from "yup";
 import { FieldArray, FormikProvider, useFormik } from "formik";
@@ -18,13 +18,14 @@ import NoobToggleButtonGroup, {
   NoobToggleButton,
 } from "../../../ui-components/toggle-button-group";
 import CardLayout from "../../../ui-components/card-layout";
-import {convertToRaw} from 'draft-js';
 import NoobReachTextEditor from "../../../ui-components/rte";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Duel = require("tournament/duel");
 interface RoundData {
   round: string;
   description: string;
+  map: string;
+  isMap?: boolean;
 }
 export interface EliminateBracketData {
   name: string;
@@ -68,6 +69,7 @@ const EliminateBracket = React.forwardRef<
       yup.object().shape({
         round: yup.string().required("Please select round"),
         description: yup.string().required("Please add description"),
+        mao: yup.string(),
       })
     ),
   });
@@ -92,13 +94,14 @@ const EliminateBracket = React.forwardRef<
       }
     },
   });
-
+  const [rounds, setRounds] = useState([1]);
   React.useEffect(() => {
     if (data) {
       formik.setValues(data);
     }
   }, [data]);
 
+  React;
   React.useImperativeHandle(ref, () => {
     return {
       // eslint-disable-next-line
@@ -115,20 +118,33 @@ const EliminateBracket = React.forwardRef<
     formik.setFieldValue(property, value, true);
   };
 
-  const rounds: any[] = [];
-  if (formik.values.playersLimit && formik.values.playersLimit > 0) {
-    const brackets = new Duel(
-      Number(formik.values.playersLimit),
-      formik.values.type === "SINGLE" ? 1 : 2
-    );
-    brackets.matches = brackets.matches.map((element: any) => {
-      if (!rounds.includes(element.id.r)) {
-        rounds.push(element.id.r);
-      }
-      return element;
+  React.useEffect(() => {
+    const rounds: any[] = [];
+    if (formik.values.playersLimit && formik.values.playersLimit > 0) {
+      const brackets = new Duel(
+        Number(formik.values.playersLimit),
+        formik.values.type === "SINGLE" ? 1 : 2
+      );
+      brackets.matches = brackets.matches.map((element: any) => {
+        if (!rounds.includes(element.id.r)) {
+          rounds.push(element.id.r);
+        }
+        return element;
+      });
+    }
+    if (!rounds?.length) rounds.push(1);
+    setRounds(rounds);
+    formik.values.rounds = formik.values.rounds.slice(0, rounds.length);
+    rounds.forEach((x, i) => {
+      formik.values.rounds[i] = {
+        round: `${i + 1}`,
+        description: formik.values.rounds[i]?.description || "",
+        isMap: formik.values.rounds[i]?.isMap || false,
+        map: formik.values.rounds[i]?.map || "",
+      };
     });
-  }
-  if (!rounds?.length) rounds.push(1);
+  }, [formik.values.playersLimit]);
+
   return (
     <React.Fragment>
       <CardLayout title="Eliminate Bracket">
@@ -381,6 +397,80 @@ const EliminateBracket = React.forwardRef<
                             }
                           </FormHelperText>
                         ) : null}
+                      </Grid>
+                      {index != 0 && (
+                        <Grid item sm={4}>
+                          <FormControl variant="standard">
+                            <TimePicker
+                              label="Start Time"
+                              inputFormat="HH:mm a"
+                              onChange={(
+                                date: React.SyntheticEvent<
+                                  Element,
+                                  Event
+                                > | null
+                              ): void => {
+                                formik.setFieldValue(
+                                  `rounds.${index}.startTime`,
+                                  date
+                                );
+                              }}
+                              value={formik.values.startTime}
+                              renderInput={(params): JSX.Element => (
+                                <TextField
+                                  id="startTime"
+                                  error={
+                                    formik.touched.startTime &&
+                                    Boolean(formik.errors.startTime)
+                                  }
+                                  {...params}
+                                />
+                              )}
+                            />
+                            {formik.touched.startTime &&
+                            Boolean(formik.errors.startTime) ? (
+                              <FormHelperText>
+                                {formik.errors.startTime}{" "}
+                              </FormHelperText>
+                            ) : null}
+                          </FormControl>
+                        </Grid>
+                      )}
+                      <Grid item sm={6}>
+                        <React.Fragment>
+                          <FormControlLabel
+                            value={true}
+                            label="Map Required"
+                            control={<Checkbox />}
+                            onChange={(
+                              event: React.SyntheticEvent<Element, Event>,
+                              checked: boolean
+                            ): void => {
+                              formik.setFieldValue(
+                                `rounds.${index}.isMap`,
+                                checked
+                              );
+                            }}
+                          />
+                          {formik.values?.rounds[index]?.isMap && (
+                            <OutlinedInput
+                              id="map"
+                              placeholder="Map name"
+                              onChange={(
+                                val: React.ChangeEvent<
+                                  HTMLTextAreaElement | HTMLInputElement
+                                >
+                              ): void => {
+                                formik.setFieldValue(
+                                  `rounds.${index}.map`,
+                                  val.target.value
+                                );
+                              }}
+                              value={formik.values?.rounds[index]?.map}
+                              onBlur={formik.handleBlur}
+                            />
+                          )}
+                        </React.Fragment>
                       </Grid>
                     </React.Fragment>
                   );
