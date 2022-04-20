@@ -62,7 +62,6 @@ const EliminateBracket = React.forwardRef<
       .transform((v) => (v instanceof Date && !isNaN(v.getTime()) ? v : null)),
     checkInType: yup.string().required(),
     type: yup.string().required("type is required"),
-    scoringFormat: yup.string(),
     playersLimit: yup.number(),
     rounds: yup.array().of(
       yup.object().shape({
