@@ -3,18 +3,6 @@ import Joi from "joi";
 export function validatePersistTournament(body: any): any {
   const model = Joi.object({
     id: Joi.string().optional(),
-    status: Joi.string().when("id", {
-      is: "",
-      then: Joi.valid("DRAFT", "PUBLISHED").required(),
-    }),
-    joinStatus: Joi.string().when("id", {
-      is: "",
-      then: Joi.valid("PRIVATE", "PUBLIC").required(),
-    }),
-    createTemplateCode: Joi.string().when("id", {
-      is: "",
-      then: Joi.string().required(),
-    }),
     name: Joi.string().required(),
     game: Joi.string().required(),
     startDate: Joi.date().required(),
@@ -33,15 +21,7 @@ export function validatePersistTournament(body: any): any {
       platform: Joi.string().required(),
       tournamentFormat: Joi.string().required(),
       entryType: Joi.string().required(),
-      entryFeeAmount: Joi.string().when("entryType", {
-        is: "credit",
-        then: Joi.string().required(),
-      }),
       checkInType: Joi.string().required(),
-      checkInStartTime: Joi.string().when("checkInType", {
-        is: "enable",
-        then: Joi.string().required(),
-      }),
       ScoreReporting: Joi.string()
         .valid("ADMIN", "ADMIN_PLAYER")
         .required(),
@@ -51,11 +31,6 @@ export function validatePersistTournament(body: any): any {
       limitType: Joi.string()
         .valid("LIMITED", "UNLIMITED").
         required(),
-      limit: Joi.number().when("limitType", {
-        is: "limited",
-        then: Joi.number()
-          .required(),
-      }),
       countryFlagOnBrackets: Joi.boolean().required(),
       registrationRegion: Joi.string().required(),
     }).optional(),
@@ -68,12 +43,6 @@ export function validatePersistTournament(body: any): any {
       type: Joi.string()
         .valid("SINGLE", "DOUBLE")
         .required(),
-      thirdPlace: Joi.boolean().when("type", {
-        is: "SINGLE",
-        then: Joi.boolean()
-          .valid(true)
-          .required(),
-      }),
       playersLimit: Joi.number().required(),
       rounds: Joi.array().items(
         Joi.object({

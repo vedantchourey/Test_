@@ -5,6 +5,7 @@ import { ReactComponent as PersonIcon } from "../../../../../public/icons/Person
 import { ReactComponent as LogIcon } from "../../../../../public/icons/LogIcon.svg";
 import { Avatar, Button, Card, CardContent, Grid } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
+import { useRouter } from "next/router";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -42,6 +43,7 @@ const useStyles = makeStyles(() =>
 
 const DashboardSideBar:React.FC = () => {
   const classes = useStyles();
+  const router = useRouter();
   return (
     <React.Fragment>
       <Grid container rowSpacing={2} direction={"column"}>
@@ -52,6 +54,7 @@ const DashboardSideBar:React.FC = () => {
             fullWidth
             classes={{ root: classes.button }}
             startIcon={<DashHomeIcon />}
+            onClick={():Promise<boolean>=>router.push("/tournament-dashboard",undefined,{shallow:true})}
           >
             Dashboard
           </Button>
@@ -61,6 +64,7 @@ const DashboardSideBar:React.FC = () => {
             variant="contained"
             component={"a"}
             fullWidth
+            onClick={():Promise<boolean>=>router.push("/tournament-master",undefined,{shallow:true})}
             classes={{ root: classes.button }}
             startIcon={<GameIcon />}
           >
@@ -75,6 +79,7 @@ const DashboardSideBar:React.FC = () => {
                 fullWidth
                 classes={{ root: classes.altButton }}
                 startIcon={<DashHomeIcon />}
+                onClick={():Promise<boolean>=>router.push("/tournament/new/create/setup/basic",undefined,{shallow:true})}
               >
                 Create New
               </Button>

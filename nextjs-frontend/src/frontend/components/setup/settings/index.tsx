@@ -55,22 +55,10 @@ const Settings: React.FC<SettingProps> = ({
     platform: yup.string().required("Platform is required"),
     tournamentFormat: yup.string().required("Tournament Format is required"),
     entryType: yup.string().required("Entry type is required"),
-    entryFeeAmount: yup.string().when("entryType", {
-      is: "credit",
-      then: yup.string().required("Fee amount is required"),
-    }),
     checkInType: yup.string().required("check In type is required"),
-    checkInStartTime: yup.string().when("checkInType", {
-      is: "enable",
-      then: yup.string().required("Check in start time required"),
-    }),
     ScoreReporting: yup.string().required("Score reporting is required"),
     screenShots: yup.string().required("screenShots are required"),
     limitType: yup.string().required("limit type is required"),
-    limit: yup.number().when("limitType", {
-      is: "LIMITED",
-      then: yup.number().required("limit number is required"),
-    }),
     countryFlagOnBrackets: yup.boolean().required("country flag is required"),
     registrationRegion: yup
       .string()
@@ -79,7 +67,7 @@ const Settings: React.FC<SettingProps> = ({
 
   const formik = useFormik({
     initialValues: {
-      server: data?.server || "",
+      server: "India",
       platform: data?.platform || "",
       tournamentFormat: data?.tournamentFormat || "",
       entryType: data?.entryType || "free",
@@ -116,10 +104,7 @@ const Settings: React.FC<SettingProps> = ({
                 onChange={(e): void => changeHandler("server", e.target.value)}
               >
                 <MenuItem value="">Select Region/ Server </MenuItem>
-                <MenuItem value="all">All</MenuItem>
-                <MenuItem value="Australia">Australia</MenuItem>
-                <MenuItem value="Russia">Russia</MenuItem>
-                <MenuItem value="Canada">Canada</MenuItem>
+                <MenuItem value="India">India</MenuItem>
               </Select>
               {formik.touched.server && Boolean(formik.errors.server) ? (
                 <FormHelperText>{formik.errors.server}</FormHelperText>
@@ -164,8 +149,16 @@ const Settings: React.FC<SettingProps> = ({
               >
                 <MenuItem value=""> Select Tournament Formate </MenuItem>
                 <MenuItem value="formate1">1v1</MenuItem>
-                <MenuItem value="formate2">2v1</MenuItem>
-                <MenuItem value="formate3">3v1</MenuItem>
+                <MenuItem value="formate2">2v2</MenuItem>
+                <MenuItem value="formate3">3v3</MenuItem>
+                <MenuItem value="formate3">4v4</MenuItem>
+                <MenuItem value="formate3">5v5</MenuItem>
+                <MenuItem value="formate3">6v6</MenuItem>
+                <MenuItem value="formate3">7v7</MenuItem>
+                <MenuItem value="formate3">8v8</MenuItem>
+                <MenuItem value="formate3">9v9</MenuItem>
+                <MenuItem value="formate3">10v10</MenuItem>
+                <MenuItem value="formate3">11v11</MenuItem>
               </Select>
               {formik.touched.tournamentFormat &&
               Boolean(formik.errors.tournamentFormat) ? (
@@ -202,26 +195,17 @@ const Settings: React.FC<SettingProps> = ({
           >
             {formik.values.entryType === "credit" ? (
               <React.Fragment>
-                <FormControl fullWidth>
-                  <FormLabel label="Credits"></FormLabel>
-                  <Select
-                    displayEmpty
-                    defaultValue={""}
-                    onChange={(val): void => {
-                      changeHandler("entryFeeAmount", val.target.value);
-                    }}
-                  >
-                    <MenuItem value="">Select Credits </MenuItem>
-                    <MenuItem value="1">1</MenuItem>
-                    <MenuItem value="2">2</MenuItem>
-                  </Select>
-                  {formik.touched.entryFeeAmount &&
-                  Boolean(formik.errors.entryFeeAmount) ? (
-                    <FormHelperText>
-                      {formik.errors.entryFeeAmount}
-                    </FormHelperText>
-                  ) : null}
-                </FormControl>
+                <OutlinedInput
+                fullWidth
+                id="entryFeeAmount"
+                name="entryFeeAmount"
+                placeholder="credit"
+                type="number"
+                onChange={formik.handleChange}
+                value={formik.values.entryFeeAmount}
+                onBlur={formik.handleBlur}
+                error={formik.touched.entryFeeAmount && Boolean(formik.errors.entryFeeAmount)}
+              />
               </React.Fragment>
             ) : null}
           </Grid>
@@ -257,10 +241,10 @@ const Settings: React.FC<SettingProps> = ({
                       renderInput={(params): JSX.Element => (
                         <TextField
                           id="startTime"
-                          error={
-                            formik.touched.checkInStartTime &&
-                            Boolean(formik.errors.checkInStartTime)
-                          }
+                          // error={
+                          //   formik.touched.checkInStartTime &&
+                          //   Boolean(formik.errors.checkInStartTime)
+                          // }
                           onBlur={formik.handleBlur}
                           {...params}
                         />

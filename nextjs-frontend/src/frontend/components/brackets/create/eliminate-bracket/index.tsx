@@ -18,8 +18,8 @@ import NoobToggleButtonGroup, {
   NoobToggleButton,
 } from "../../../ui-components/toggle-button-group";
 import CardLayout from "../../../ui-components/card-layout";
+import {convertToRaw} from 'draft-js';
 import NoobReachTextEditor from "../../../ui-components/rte";
-import { convertToRaw } from "draft-js";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Duel = require("tournament/duel");
 interface RoundData {
@@ -61,15 +61,7 @@ const EliminateBracket = React.forwardRef<
       .nullable()
       .transform((v) => (v instanceof Date && !isNaN(v.getTime()) ? v : null)),
     checkInType: yup.string().required(),
-    checkInAmount: yup.number().when("checkInType", {
-      is: "true",
-      then: yup.number().required("Minutes are required"),
-    }),
     type: yup.string().required("type is required"),
-    thirdPlace: yup.boolean().when("type", {
-      is: "SINGLE",
-      then: yup.boolean().required("Third Place is required"),
-    }),
     scoringFormat: yup.string(),
     playersLimit: yup.number(),
     rounds: yup.array().of(
@@ -351,15 +343,14 @@ const EliminateBracket = React.forwardRef<
                         <NoobReachTextEditor
                           id={`rounds.${index}.description`}
                           name={`rounds.${index}.description`}
-                          value={round.description}
+                          // value={round.description}
                           onChange={(value): void => {
-                            let rteContent = JSON.stringify(
-                              convertToRaw(value.getCurrentContent())
-                            );
-                            changeHandler("about", rteContent);
+                            // const rteContent = JSON.stringify(
+                            //   convertToRaw(value.getCurrentContent())
+                            // );
                             formik.setFieldValue(
                               `rounds.${index}.description`,
-                              rteContent
+                              value.getCurrentContent().getPlainText()
                             );
                           }}
                           error={

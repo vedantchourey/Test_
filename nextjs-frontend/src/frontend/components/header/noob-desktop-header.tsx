@@ -52,7 +52,7 @@ export default function NoobDesktopHeader(): JSX.Element {
 
   async function gotoHomePage(): Promise<void> {
     await router.push('/')
-  }
+    }
 
   function onSuccessfulLogin(): void {
     setShowLoginModal(false);

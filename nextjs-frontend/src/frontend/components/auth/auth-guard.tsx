@@ -25,7 +25,6 @@ export default function AuthGuard(props: Props): React.ReactElement {
   const userRoles = useAppSelector(userRolesSelector) || [];
   const authCheckStatus = useAppSelector(authCheckStatusSelector);
   const router = useRouter();
-
   useEffect(() => {
     (async (): Promise<void> => {
       if (authCheckStatus !== 'success') return;

@@ -75,12 +75,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
       .transform((v) => (v instanceof Date && !isNaN(v.getTime()) ? v : null)),
     about: yup.string(),
     cloneTournament: yup.boolean(),
-    createTemplateCode: yup.string().nullable()
-.notRequired()
-.when("cloneTournament", {
-      is: true,
-      then: yup.string().required("Tournament id is require to clone"),
-    }),
+    createTemplateCode: yup.string(),
     banner:yup.string().nullable()
 .notRequired()
   });
@@ -263,10 +258,10 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
           <Grid item xs={12}>
             <AccordionAlt title="About">
               <NoobReachTextEditor
-                value={formik?.values?.about || undefined}
+                // value={formik?.values?.about || undefined}
                 onChange={(value): void => {
-                  let rteContent = JSON.stringify(convertToRaw(value.getCurrentContent()))
-                  changeHandler("about", rteContent);
+                  // const rteContent = JSON.stringify(convertToRaw(value.getCurrentContent()))
+                  changeHandler("about", value.getCurrentContent().getPlainText());
                 }}
               />
             </AccordionAlt>

@@ -5,6 +5,7 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import FormHelperText from "@mui/material/FormHelperText";
 import NoobReachTextEditor from "../../ui-components/rte";
+import {convertToRaw} from 'draft-js';
 import {
   Box,
   Button,
@@ -14,7 +15,6 @@ import {
   OutlinedInput,
   Select,
 } from "@mui/material";
-import { convertToRaw } from "draft-js";
 
 interface InfoProps {
   onBack?: () => void;
@@ -38,12 +38,6 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
     rules: yup.string().required("Rules are required"),
     prizes: yup.string().required("Prizes are required"),
     schedule: yup.string().required("Schedule is required"),
-    contactUrl: yup.string().when("contactOption", {
-      is: (option: string) => {
-        return option !== undefined;
-      },
-      then: yup.string().required("Contact Url is required"),
-    }),
   });
 
   const formik = useFormik({
@@ -121,12 +115,12 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
         <AccordionAlt title="Contact Details">
           <NoobReachTextEditor
             id="contactDetails"
-            value={formik?.values?.contactDetails || undefined}
+            // value={formik?.values?.contactDetails || undefined}
             onChange={(value): void => {
-              let rteContent = JSON.stringify(
-                convertToRaw(value.getCurrentContent())
-              );
-              changeHandler("contactDetails", rteContent);
+              // const rteContent = JSON.stringify(
+              //   convertToRaw(value.getCurrentContent())
+              // );
+              changeHandler("contactDetails", value.getCurrentContent().getPlainText());
             }}
             error={
               formik.touched.contactDetails &&
@@ -142,12 +136,12 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
           <NoobReachTextEditor
             id="rules"
             error={formik.touched.rules && Boolean(formik.errors.rules)}
-            value={formik?.values?.rules || undefined}
+            // value={formik?.values?.rules || undefined}
             onChange={(value): void => {
-              let rteContent = JSON.stringify(
-                convertToRaw(value.getCurrentContent())
-              );
-              changeHandler("rules", rteContent);
+              // const rteContent = JSON.stringify(
+              //   convertToRaw(value.getCurrentContent())
+              // );
+              changeHandler("rules", value.getCurrentContent().getPlainText());
             }}
           />
           {formik.touched.rules && Boolean(formik.errors.rules) ? (
@@ -158,12 +152,12 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
           <NoobReachTextEditor
             id="prizes"
             error={formik.touched.prizes && Boolean(formik.errors.prizes)}
-            value={formik?.values?.prizes || undefined}
+            // value={formik?.values?.prizes || undefined}
             onChange={(value): void => {
-              let rteContent = JSON.stringify(
-                convertToRaw(value.getCurrentContent())
-              );
-              changeHandler("prizes", rteContent);
+              // const rteContent = JSON.stringify(
+              //   convertToRaw(value.getCurrentContent())
+              // );
+              changeHandler("prizes", value.getCurrentContent().getPlainText());
             }}
           />
           {formik.touched.prizes && Boolean(formik.errors.prizes) ? (
@@ -174,12 +168,12 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
           <NoobReachTextEditor
             id="schedule"
             error={formik.touched.schedule && Boolean(formik.errors.schedule)}
-            value={formik?.values?.schedule || undefined}
+            // value={formik?.values?.schedule || undefined}
             onChange={(value): void => {
-              let rteContent = JSON.stringify(
-                convertToRaw(value.getCurrentContent())
-              );
-              changeHandler("schedule", rteContent);
+              // const rteContent = JSON.stringify(
+              //   convertToRaw(value.getCurrentContent())
+              // );
+              changeHandler("schedule", value.getCurrentContent().getPlainText());
             }}
           />
           {formik.touched.schedule && Boolean(formik.errors.schedule) ? (
