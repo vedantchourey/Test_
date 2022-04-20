@@ -265,7 +265,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
               <NoobReachTextEditor
                 value={formik?.values?.about || undefined}
                 onChange={(value): void => {
-                  let rteContent = JSON.stringify(convertToRaw(value.getCurrentContent()))
+                  const rteContent = JSON.stringify(convertToRaw(value.getCurrentContent()))
                   changeHandler("about", rteContent);
                 }}
               />

@@ -353,7 +353,7 @@ const EliminateBracket = React.forwardRef<
                           name={`rounds.${index}.description`}
                           value={round.description}
                           onChange={(value): void => {
-                            let rteContent = JSON.stringify(
+                            const rteContent = JSON.stringify(
                               convertToRaw(value.getCurrentContent())
                             );
                             changeHandler("about", rteContent);

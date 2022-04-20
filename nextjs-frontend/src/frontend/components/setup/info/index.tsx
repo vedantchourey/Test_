@@ -123,7 +123,7 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
             id="contactDetails"
             value={formik?.values?.contactDetails || undefined}
             onChange={(value): void => {
-              let rteContent = JSON.stringify(
+              const rteContent = JSON.stringify(
                 convertToRaw(value.getCurrentContent())
               );
               changeHandler("contactDetails", rteContent);
@@ -144,7 +144,7 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
             error={formik.touched.rules && Boolean(formik.errors.rules)}
             value={formik?.values?.rules || undefined}
             onChange={(value): void => {
-              let rteContent = JSON.stringify(
+              const rteContent = JSON.stringify(
                 convertToRaw(value.getCurrentContent())
               );
               changeHandler("rules", rteContent);
@@ -160,7 +160,7 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
             error={formik.touched.prizes && Boolean(formik.errors.prizes)}
             value={formik?.values?.prizes || undefined}
             onChange={(value): void => {
-              let rteContent = JSON.stringify(
+              const rteContent = JSON.stringify(
                 convertToRaw(value.getCurrentContent())
               );
               changeHandler("prizes", rteContent);
@@ -176,7 +176,7 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
             error={formik.touched.schedule && Boolean(formik.errors.schedule)}
             value={formik?.values?.schedule || undefined}
             onChange={(value): void => {
-              let rteContent = JSON.stringify(
+              const rteContent = JSON.stringify(
                 convertToRaw(value.getCurrentContent())
               );
               changeHandler("schedule", rteContent);

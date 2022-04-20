@@ -51,7 +51,12 @@ export default function NoobDesktopHeader(): JSX.Element {
   }
 
   async function gotoHomePage(): Promise<void> {
-    await router.push('/')
+    if(isLoggedIn){
+      await router.push('/tournament-dashboard')
+    }else{
+      await router.push('/')
+    }
+    
   }
 
   function onSuccessfulLogin(): void {
