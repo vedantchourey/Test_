@@ -54,7 +54,7 @@ const DashboardSideBar:React.FC = () => {
             fullWidth
             classes={{ root: classes.button }}
             startIcon={<DashHomeIcon />}
-            onClick={():void=>router.push("/tournament-dashboard")}
+            onClick={():Promise<boolean>=>router.push("/tournament-dashboard",undefined,{shallow:true})}
           >
             Dashboard
           </Button>
@@ -64,7 +64,7 @@ const DashboardSideBar:React.FC = () => {
             variant="contained"
             component={"a"}
             fullWidth
-            onClick={():void=>router.push("/tournament-master")}
+            onClick={():Promise<boolean>=>router.push("/tournament-master",undefined,{shallow:true})}
             classes={{ root: classes.button }}
             startIcon={<GameIcon />}
           >
@@ -79,7 +79,7 @@ const DashboardSideBar:React.FC = () => {
                 fullWidth
                 classes={{ root: classes.altButton }}
                 startIcon={<DashHomeIcon />}
-                onClick={():void=>router.push("/tournament/new/create/setup/basic")}
+                onClick={():Promise<boolean>=>router.push("/tournament/new/create/setup/basic",undefined,{shallow:true})}
               >
                 Create New
               </Button>
