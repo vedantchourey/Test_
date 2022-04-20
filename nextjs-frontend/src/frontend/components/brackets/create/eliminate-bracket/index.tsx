@@ -136,6 +136,7 @@ const EliminateBracket = React.forwardRef<
       return element;
     });
   }
+  if (!rounds?.length) rounds.push(1);
   return (
     <React.Fragment>
       <CardLayout title="Eliminate Bracket">
