@@ -5,7 +5,6 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import FormHelperText from "@mui/material/FormHelperText";
 import NoobReachTextEditor from "../../ui-components/rte";
-import {convertToRaw} from 'draft-js';
 import {
   Box,
   Button,

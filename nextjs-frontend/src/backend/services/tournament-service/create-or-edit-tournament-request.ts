@@ -42,6 +42,8 @@ export interface CreateOrEditTournamentType {
     rounds: Array<{
       round: string;
       description: string;
+      map?: string;
+      isMap?: boolean;
     }>;
   };
   streams?: Array<{
