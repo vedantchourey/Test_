@@ -56,6 +56,12 @@ const PublishPage: React.FC<PublishTournamentProps> = ({
     },
   });
 
+  React.useEffect(()=>{
+    if(data){
+      formik.setValues({...data});
+    }
+  },[data]);
+
   const changeHandler = (
     property: string,
     value: string | boolean | Date | null

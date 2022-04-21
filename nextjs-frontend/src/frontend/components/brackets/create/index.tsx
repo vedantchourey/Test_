@@ -24,11 +24,11 @@ const Create: React.FC = (): JSX.Element => {
   };
 
   const goBack = ():void => {
-    router.push(
-      `/tournament/[...slug]`,
-      `/tournament/create/setup/settings`,
-      { shallow: true }
-    );
+    if(type==='new'){
+      router.push(`/tournament/new/[...slug]`,`/tournament/new/create/setup/settings`, {shallow:true})
+    }else{
+      router.push(`/tournament/update/[id]/[...slug]`,`/tournament/update/${id}/create/setup/settings`, {shallow:true})
+    }
   };
 
   const submitForm = ():void =>{

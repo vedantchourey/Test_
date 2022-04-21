@@ -312,6 +312,7 @@ const EliminateBracket = React.forwardRef<
               <FormLabel label="Bracket Size(# of Players)"></FormLabel>
               <TextField
                 type="number"
+                value={formik.values.playersLimit}
                 onChange={(event): void =>
                   changeHandler("playersLimit", event.target.value)
                 }
@@ -330,6 +331,7 @@ const EliminateBracket = React.forwardRef<
                 id="scoringFormat"
                 placeholder="Best Of"
                 disabled
+                values={formik.values.scoringFormat}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
@@ -397,7 +399,7 @@ const EliminateBracket = React.forwardRef<
                           </FormHelperText>
                         ) : null}
                       </Grid>
-                      {index != 0 && (
+                      {index !== 0 && (
                         <Grid item sm={4}>
                           <FormControl variant="standard">
                             <TimePicker
