@@ -148,17 +148,17 @@ const Settings: React.FC<SettingProps> = ({
                 }
               >
                 <MenuItem value=""> Select Tournament Formate </MenuItem>
-                <MenuItem value="formate1">1v1</MenuItem>
-                <MenuItem value="formate2">2v2</MenuItem>
-                <MenuItem value="formate3">3v3</MenuItem>
-                <MenuItem value="formate3">4v4</MenuItem>
-                <MenuItem value="formate3">5v5</MenuItem>
-                <MenuItem value="formate3">6v6</MenuItem>
-                <MenuItem value="formate3">7v7</MenuItem>
-                <MenuItem value="formate3">8v8</MenuItem>
-                <MenuItem value="formate3">9v9</MenuItem>
-                <MenuItem value="formate3">10v10</MenuItem>
-                <MenuItem value="formate3">11v11</MenuItem>
+                <MenuItem value="1v1">1v1</MenuItem>
+                <MenuItem value="2v2">2v2</MenuItem>
+                <MenuItem value="3v3">3v3</MenuItem>
+                <MenuItem value="4v4">4v4</MenuItem>
+                <MenuItem value="5v5">5v5</MenuItem>
+                <MenuItem value="6v6">6v6</MenuItem>
+                <MenuItem value="7v7">7v7</MenuItem>
+                <MenuItem value="8v8">8v8</MenuItem>
+                <MenuItem value="9v9">9v9</MenuItem>
+                <MenuItem value="10v10">10v10</MenuItem>
+                <MenuItem value="11v11">11v11</MenuItem>
               </Select>
               {formik.touched.tournamentFormat &&
               Boolean(formik.errors.tournamentFormat) ? (
