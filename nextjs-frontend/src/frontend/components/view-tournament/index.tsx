@@ -13,11 +13,14 @@ import ViewCard from "../ui-components/view-card";
 import Details from "./details";
 import Participants from "./participants";
 import Rules from "./rules";
-import Bracket from "./brackets";
+import Bracket, { RoundStatusData } from "./brackets";
 import { ReactComponent as RainbowIcon } from "../../../../public/icons/RainbowIcon.svg";
 import Prizes from "./prizes";
 import Image from "next/image";
 import ActionButton from "../ui-components/action-button";
+import { TournamentData } from "../tournament";
+import axios from "axios";
+import moment from "moment";
 
 const HeadSubSection:React.FC = () => {
   return (
@@ -50,9 +53,56 @@ const actionItem = [[{
 }]]
 
 const ViewTournament: React.FC = () => {
+  const [data, setData] = React.useState<TournamentData>({});
   const router = useRouter();
   const query: ParsedUrlQuery = router.query;
   const tournamentBasePath = "/view-tournament";
+  React.useEffect(() => {
+    console.log()
+    if (router.query.id && router.query.id) {
+      axios
+        .get(`/api/tournaments/${router.query.id}`)
+        .then((res) => {
+          if (res.data.data) {
+            const tournamentData = res.data.data;
+            Object.keys(tournamentData).forEach((key) => {
+              if (tournamentData[key] === null) {
+                delete tournamentData[key];
+              }
+            });
+
+            setData({
+              ...tournamentData,
+              basic: {
+                name: tournamentData.name,
+                about: tournamentData.about,
+                game: tournamentData.game,
+                startDate: tournamentData.startDate,
+                startTime: moment(
+                  tournamentData.startTime,
+                  "hh:mm:ss"
+                ).toDate(),
+                banner: tournamentData.banner,
+                createTemplateCode: tournamentData.createTemplateCode,
+                cloneTournament:
+                  tournamentData.createTemplateCode !== undefined,
+              },
+              publishData:{
+                society:tournamentData.joinStatus,
+                registration:tournamentData.status
+              }
+            } as TournamentData);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }, [router.query.id]);
+
+  React.useEffect(()=>{
+    console.log(data);
+  },[data]);
   
 
   const getAsURL = (endPath: string): string => {
@@ -62,12 +112,12 @@ const ViewTournament: React.FC = () => {
       Array.isArray(query.slug) &&
       query.slug.length > 0
     ) {
-      return `${tournamentBasePath}/${query.slug[0]}/${endPath}`;
+      return `${tournamentBasePath}/${router.query.id}/${endPath}`;
     }
     return tournamentBasePath;
   };
   const getUrl = (): string => {
-    return `${tournamentBasePath}/[...slug]`;
+    return `${tournamentBasePath}/[id]/[...slug]`;
   };
   const items = [
     {
@@ -125,22 +175,32 @@ const ViewTournament: React.FC = () => {
       query &&
       query.slug &&
       Array.isArray(query.slug) &&
-      query.slug.length > 1
+      query.slug.length > 0
     ) {
-      return query.slug[1];
+      return query.slug[0];
     }
     return "";
   };
+
+  const getBracketProps = ():RoundStatusData[] =>{
+    return (data?.bracketsMetadata?.rounds || []).map((round,index)=>{
+      return {
+        type:"Fracture",
+        isFinished:true,
+        round:index+1,
+      } as RoundStatusData
+    })
+  }
 
   const renderComponent = (): JSX.Element => {
     const current = getCurrent();
     switch (current) {
       case "details":
-        return <Details />;
+        return <Details data={data}/>;
       case "participants":
         return <Participants />;
       case "rules":
-        return <Rules />;
+        return <Rules data={data} />;
       case "prizes":
         return <Prizes />;
       case "bracket":

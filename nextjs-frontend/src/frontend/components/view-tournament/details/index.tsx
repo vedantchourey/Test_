@@ -9,6 +9,7 @@ import {
 import React from "react";
 import ViewCard from "../../ui-components/view-card";
 import { createStyles, makeStyles } from "@mui/styles";
+import { TournamentData } from "../../tournament";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -25,9 +26,14 @@ const useStyles = makeStyles(() =>
     subTitle: {
       color: "rgba(255, 255, 255, 1)",
     },
-  }));
+  })
+);
 
-const Details: React.FC = () => {
+interface DetailsProps {
+  data: TournamentData;
+}
+
+const Details: React.FC<DetailsProps> = ({ data }) => {
   const classes = useStyles();
 
   return (
@@ -37,19 +43,7 @@ const Details: React.FC = () => {
           <Grid item xs={12}>
             <FormControl fullWidth>
               <Typography align="left" marginBottom="5px">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ex in
-                dignissimos sunt excepturi laboriosam, amet, rerum consectetur
-                doloremque dolorum quae voluptates eligendi aperiam odit
-                quisquam fugit dolore ea perspiciatis dolorem incidunt aliquid.
-                Eum ab voluptatum autem possimus ullam laboriosam magni
-                similique, laborum optio nesciunt ut nihil quisquam ex, beatae
-                officiis?
-              </Typography>
-              <Typography align="left">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae
-                dicta voluptates nemo, quia, quasi ipsum quos consectetur
-                ducimus totam, enim illo! Optio a quibusdam nobis distinctio
-                alias sunt aliquid quidem.
+                {data.basic?.about}
               </Typography>
               <Divider style={{ marginBottom: "30px", marginTop: "30px" }} />
               <Grid container rowSpacing={1} columnSpacing={5}>
@@ -96,9 +90,14 @@ const Details: React.FC = () => {
                     {" "}
                     Tournament Type
                   </Typography>
-                  <Typography className={classes.subTitle}>
+                  <Typography
+                    className={classes.subTitle}
+                    textTransform={"capitalize"}
+                  >
                     {" "}
-                    Single Elimination{" "}
+                    {data?.bracketsMetadata?.type
+                      ? `${data?.bracketsMetadata?.type} Elimination`
+                      : "-"}{" "}
                   </Typography>
                 </Grid>
                 <Grid item md={2}>
@@ -110,7 +109,10 @@ const Details: React.FC = () => {
                 </Grid>
                 <Grid item md={1}>
                   <Typography className={classes.title}> Platform </Typography>
-                  <Typography className={classes.subTitle}> PC </Typography>
+                  <Typography className={classes.subTitle}>
+                    {" "}
+                    {data?.settings?.platform || "-"}{" "}
+                  </Typography>
                 </Grid>
                 <Grid item md={3} display="flex" justifyContent={"flex-end"}>
                   <Typography marginRight={1}>

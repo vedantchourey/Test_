@@ -65,7 +65,7 @@ const RoundStatus:React.FC<RoundStatusData> = ({round, isFinished,type}) =>{
     )
 }
 
-interface RoundStatusData{
+export interface RoundStatusData{
     type:string
     round:number
     isFinished:boolean
@@ -73,7 +73,7 @@ interface RoundStatusData{
     startTime?:string
 }
 
-interface BracketProps {
+export interface BracketProps {
     rounds?:RoundStatusData[]
 }
 
