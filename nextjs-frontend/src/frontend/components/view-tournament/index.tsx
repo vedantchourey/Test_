@@ -58,7 +58,6 @@ const ViewTournament: React.FC = () => {
   const query: ParsedUrlQuery = router.query;
   const tournamentBasePath = "/view-tournament";
   React.useEffect(() => {
-    console.log()
     if (router.query.id && router.query.id) {
       axios
         .get(`/api/tournaments/${router.query.id}`)
@@ -99,11 +98,6 @@ const ViewTournament: React.FC = () => {
         });
     }
   }, [router.query.id]);
-
-  React.useEffect(()=>{
-    console.log(data);
-  },[data]);
-  
 
   const getAsURL = (endPath: string): string => {
     if (
@@ -182,12 +176,45 @@ const ViewTournament: React.FC = () => {
     return "";
   };
 
+  const getMomentDate = (date:string,time:string):{
+    dateStr:string,
+    date:moment.Moment,
+    startDate:string,
+    startTime:string
+  }=>{
+    const mDate = moment(date).format("DD/MM/YYYY");
+    const mTime = moment(time).format("hh:mm A");
+    const dateStr = `${mDate} ${mTime}`;
+    const mDateTime = moment(dateStr,"DD/MM/YYYY hh:mm: A");
+    return {
+      dateStr:dateStr,
+      date:mDateTime,
+      startDate:mDate,
+      startTime: mTime
+    }
+  }
+
   const getBracketProps = ():RoundStatusData[] =>{
-    return (data?.bracketsMetadata?.rounds || []).map((round,index)=>{
+    if(!data.bracketsMetadata || data.bracketsMetadata===null || data.bracketsMetadata.startDate ===null || !data.bracketsMetadata.startDate || !data.bracketsMetadata.startTime || data.bracketsMetadata.startTime===null){
+      return [];
+    }
+    const startDate = data.bracketsMetadata.startDate;
+    const startTime = data.bracketsMetadata.startTime;
+    const now = moment();
+    return (data.bracketsMetadata.rounds || []).map((round,index)=>{
+      let timing
+      if(parseInt(round.round) === 1){
+        timing = getMomentDate(startDate, startTime);
+      }else{
+        timing = getMomentDate(startDate, round.startTime || startTime);
+      }
+      
       return {
         type:"Fracture",
-        isFinished:true,
+        isFinished:timing.date.isBefore(now),
         round:index+1,
+        startDate:timing.startDate,
+        startTime: timing.startTime
       } as RoundStatusData
     })
   }
@@ -204,7 +231,7 @@ const ViewTournament: React.FC = () => {
       case "prizes":
         return <Prizes />;
       case "bracket":
-        return <Bracket />;
+        return <Bracket rounds={getBracketProps()}/>;
       default:
         return <Typography color={"white"}>Not found</Typography>;
     }

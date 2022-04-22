@@ -26,6 +26,7 @@ interface RoundData {
   description: string;
   map: string;
   isMap?: boolean;
+  startTime?:string
 }
 export interface EliminateBracketData {
   name: string;
@@ -68,7 +69,8 @@ const EliminateBracket = React.forwardRef<
       yup.object().shape({
         round: yup.string().required("Please select round"),
         description: yup.string().required("Please add description"),
-        mao: yup.string(),
+        map: yup.string(),
+        startTime: yup.string()
       })
     ),
   });
@@ -140,6 +142,7 @@ const EliminateBracket = React.forwardRef<
         description: formik.values.rounds[i]?.description || "",
         isMap: formik.values.rounds[i]?.isMap || false,
         map: formik.values.rounds[i]?.map || "",
+        startTime: formik.values.rounds[i]?.startTime
       };
     });
   }, [formik.values.playersLimit]);
@@ -331,7 +334,7 @@ const EliminateBracket = React.forwardRef<
                 id="scoringFormat"
                 placeholder="Best Of"
                 disabled
-                values={formik.values.scoringFormat}
+                value={formik.values.scoringFormat}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
@@ -416,7 +419,7 @@ const EliminateBracket = React.forwardRef<
                                   date
                                 );
                               }}
-                              value={formik.values.startTime}
+                              value={formik.values.rounds[index].startTime}
                               renderInput={(params): JSX.Element => (
                                 <TextField
                                   id="startTime"
