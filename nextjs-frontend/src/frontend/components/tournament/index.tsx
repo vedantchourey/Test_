@@ -30,6 +30,7 @@ export interface TournamentData {
     data: StreamData[];
   };
   invitePlayer?: InvitePlayerData;
+  banner: string;
 }
 
 interface TournamentContextType {
