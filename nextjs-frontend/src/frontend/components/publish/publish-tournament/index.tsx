@@ -27,8 +27,7 @@ const useStyles = makeStyles(() =>
       border: "1px solid rgba(255, 255, 255, 0.3)",
       width: "50%",
     },
-  })
-);
+  }));
 
 export interface PublishTournamentData {
   registration: string;

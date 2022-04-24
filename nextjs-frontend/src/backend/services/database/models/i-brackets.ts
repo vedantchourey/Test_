@@ -9,9 +9,6 @@ export interface IData {
 export interface IBracket {
   id?: string;
   tournament_id?: string;
-  players: {
-    list: string[];
-  };
   brackets: {
     numPlayers: number;
     p: number;

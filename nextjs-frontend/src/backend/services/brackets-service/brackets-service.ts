@@ -1,13 +1,19 @@
 import { Knex } from "knex";
 import { IBracket } from "../database/models/i-brackets";
 import { IRegisterTournament } from "../database/models/i-register-tournament";
+import { ITournamentUsers } from "../database/models/i-tournament-users";
 import { ITournament } from "../database/models/i-tournaments";
 import { BracketsRepository } from "../database/repositories/brackets-repository";
 import { ProfilesRepository } from "../database/repositories/profiles-repository";
+import { TournamentUsersRepository } from "../database/repositories/tournament-users-repository";
+import { TournamentsRepository } from "../database/repositories/tournaments-repository";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const Duel = require ("tournament/duel");
+const Duel = require("tournament/duel");
 
-export const persistBrackets = async (req: ITournament, context: any): Promise<any> => {
+export const persistBrackets = async (
+  req: ITournament,
+  context: Knex
+): Promise<any> => {
   const roundsSize: number[] = [];
   const brackets = new Duel(
     Number(req?.bracketsMetadata?.playersLimit),
@@ -19,12 +25,9 @@ export const persistBrackets = async (req: ITournament, context: any): Promise<a
     }
     return { ...element, p: [0, 0] };
   });
-  const repository = new BracketsRepository(
-    context.transaction as Knex.Transaction
-  );
+  const repository = new BracketsRepository(context as Knex);
   const bracket = await repository.create({
     tournament_id: req.id,
-    players: { list: [] },
     brackets,
     rounds: roundsSize.length,
   } as any);
@@ -33,24 +36,23 @@ export const persistBrackets = async (req: ITournament, context: any): Promise<a
 
 export const registerTournament = async (
   req: IRegisterTournament,
-  context: any
+  knexConnection: Knex
 ): Promise<any> => {
-  if (!(await validateUser(req.userId, context))) {
+  if (!(await validateUser(req.userId, knexConnection))) {
     return { message: "Invalid user id" };
   }
+  if (!(await validateTournament(req.tournamentId, knexConnection))) {
+    return { message: "Invalid Tournament id" };
+  }
+  if (await checkUserRegister(req, knexConnection)) {
+    return { message: "User Already register" };
+  }
   try {
-    const repository = new BracketsRepository(
-      context.transaction as Knex.Transaction
-    );
-    const bracket: IBracket = await repository.findById(req.tournamentId);
-    if (Array.isArray(bracket.players.list)) {
-      if (bracket.players.list.includes(req.userId))
-        return { message: "User already registered" };
-      bracket.players.list.push(req.userId);
-    } else {
-      bracket.players.list = [req.userId];
-    }
-    await repository.upadte(bracket);
+    const repository = new TournamentUsersRepository(knexConnection);
+    await repository.create({
+      tournamentId: req.tournamentId,
+      userId: req.userId,
+    });
     return { message: "User register in successfull" };
   } catch (ex) {
     return { message: "Invalid tournament id" };
@@ -59,19 +61,21 @@ export const registerTournament = async (
 
 export const checkInTournament = async (
   req: IRegisterTournament,
-  context: any
+  knexConnection: Knex
 ): Promise<any> => {
-  if (!(await validateUser(req.userId, context))) {
+  if (!(await validateUser(req.userId, knexConnection))) {
     return { message: "Invalid user id" };
   }
+  if (!(await validateTournament(req.tournamentId, knexConnection))) {
+    return { message: "Invalid Tournament id" };
+  }
   try {
-    const repository = new BracketsRepository(
-      context.transaction as Knex.Transaction
-    );
+    const repository = new BracketsRepository(knexConnection);
     const data: IBracket = await repository.findById(req.tournamentId);
-    if (Array.isArray(data.players.list)) {
-      if (!data.players.list.includes(req.userId))
-        return { message: "User not registered for the tournament" };
+    if (!(await checkUserRegister(req, knexConnection))) {
+      return { message: "User not registered for the tournament" };
+    }
+    if (Array.isArray(data.brackets.matches)) {
       for (let i = 0; i < data.brackets.matches?.length; i++) {
         if (
           data.brackets.matches[i].p[0] === req.userId ||
@@ -89,21 +93,57 @@ export const checkInTournament = async (
         }
       }
     }
+    const tournamentUsersRepo = new TournamentUsersRepository(knexConnection);
+    Promise.all([
+      tournamentUsersRepo.upadte({ checkedIn: true } as ITournamentUsers, {
+        ...req,
+      }),
+      repository.upadte(data),
+    ]);
 
-    await repository.upadte(data);
     return { message: "User check in successfull" };
   } catch (ex) {
     return { message: "Invalid tournament id" };
   }
 };
 
-export const validateUser = async (id: string, context: any): Promise<any> => {
+export const validateUser = async (
+  id: string,
+  knexConnection: Knex
+): Promise<boolean> => {
   try {
-    const repository = new ProfilesRepository(
-      context.transaction as Knex.Transaction
-    );
+    const repository = new ProfilesRepository(knexConnection);
     await repository.getProfileById(id);
     return true;
+  } catch (ex) {
+    return false;
+  }
+};
+
+export const validateTournament = async (
+  id: string,
+  knexConnection: Knex
+): Promise<boolean> => {
+  try {
+    const repository = new TournamentsRepository(knexConnection);
+    await repository.getTournament(id);
+    return true;
+  } catch (ex) {
+    return false;
+  }
+};
+
+export const checkUserRegister = async (
+  req: IRegisterTournament,
+  transaction: Knex
+): Promise<boolean> => {
+  try {
+    const tournamentUserRespo = new TournamentUsersRepository(transaction);
+    const data = await tournamentUserRespo.findAll({
+      userId: req.userId,
+      tournamentId: req.tournamentId,
+    });
+    return Boolean(data.length);
   } catch (ex) {
     return false;
   }

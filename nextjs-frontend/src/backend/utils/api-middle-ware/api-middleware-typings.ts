@@ -35,6 +35,10 @@ export class PerRequestContext {
     return this._transaction;
   }
 
+  get knexConnection(): Knex | undefined {
+    return this._knexConnection;
+  }
+
   async createTransaction(knexConnection: Knex): Promise<void> {
     this._knexConnection = knexConnection;
     this._transaction = await knexConnection.transaction();
