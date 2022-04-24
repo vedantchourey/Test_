@@ -48,7 +48,6 @@ const Settings: React.FC<SettingProps> = ({
   onBack,
   onSave,
   data,
-  allowedPlatforms,
 }): JSX.Element => {
   const validationSchema = yup.object({
     server: yup.string().required("Region/Server is required"),
