@@ -397,7 +397,7 @@ const EliminateBracket = React.forwardRef<
                           </FormHelperText>
                         ) : null}
                       </Grid>
-                      {index != 0 && (
+                      {index !== 0 && (
                         <Grid item sm={4}>
                           <FormControl variant="standard">
                             <TimePicker
