@@ -20,7 +20,7 @@ import { BasicData } from "../setup/basic";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector } from "../../redux-store/redux-store";
-import { allGamesSelector, gamesByPlatformSelector, gamesFetchStatusSelector } from "../../redux-store/games/game-selectors";
+import { allGamesSelector, gamesFetchStatusSelector } from "../../redux-store/games/game-selectors";
 import { fetchAllGamesThunk } from "../../redux-store/games/game-slice";
 import { IGameResponse } from "../../service-clients/messages/i-game-response";
 

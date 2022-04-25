@@ -18,8 +18,7 @@ const useStyles = makeStyles(() =>
       padding: 10,
       paddingLeft: 40,
     },
-  })
-);
+  }));
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 interface INoobRichTextEditor {
