@@ -48,7 +48,6 @@ const Settings: React.FC<SettingProps> = ({
   onBack,
   onSave,
   data,
-  allowedPlatforms,
 }): JSX.Element => {
   const validationSchema = yup.object({
     server: yup.string().required("Region/Server is required"),
@@ -127,7 +126,7 @@ const Settings: React.FC<SettingProps> = ({
               <FormLabel label="Platform"></FormLabel>
               <PlatformDropDown
                 label="Platform"
-                allowedPlatformIds={allowedPlatforms || []}
+                allowAll={true}
                 placeholder="Select Platform"
                 disabled={false}
                 onChange={(id): void => {
@@ -208,16 +207,19 @@ const Settings: React.FC<SettingProps> = ({
             {formik.values.entryType === "credit" ? (
               <React.Fragment>
                 <OutlinedInput
-                fullWidth
-                id="entryFeeAmount"
-                name="entryFeeAmount"
-                placeholder="credit"
-                type="number"
-                onChange={formik.handleChange}
-                value={formik.values.entryFeeAmount}
-                onBlur={formik.handleBlur}
-                error={formik.touched.entryFeeAmount && Boolean(formik.errors.entryFeeAmount)}
-              />
+                  fullWidth
+                  id="entryFeeAmount"
+                  name="entryFeeAmount"
+                  placeholder="credit"
+                  type="number"
+                  onChange={formik.handleChange}
+                  value={formik.values.entryFeeAmount}
+                  onBlur={formik.handleBlur}
+                  error={
+                    formik.touched.entryFeeAmount &&
+                    Boolean(formik.errors.entryFeeAmount)
+                  }
+                />
               </React.Fragment>
             ) : null}
           </Grid>

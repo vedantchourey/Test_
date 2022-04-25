@@ -1,6 +1,13 @@
 import React from "react";
 import { createStyles, makeStyles } from "@mui/styles";
-import { Box, Button, Checkbox, FormControl, FormControlLabel, Grid } from "@mui/material";
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  Grid,
+} from "@mui/material";
 import FormLabel from "../../ui-components/formlabel";
 import NoobToggleButtonGroup, {
   NoobToggleButton,
@@ -9,7 +16,9 @@ import CardLayout from "../../ui-components/card-layout";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import AccordionAlt from "../../ui-components/accordion";
-import {ReactComponent as CircleCloseIcon} from '../../../../../public/icons/close.svg';
+import { ReactComponent as CircleCloseIcon } from "../../../../../public/icons/close.svg";
+import { useRouter } from "next/router";
+import { TournamentContext } from "../../tournament";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -37,13 +46,14 @@ const PublishPage: React.FC<PublishTournamentProps> = ({
   data,
 }): JSX.Element => {
   const classes = useStyles();
-
   const validationSchema = yup.object({
     registration: yup.string().required("Registration field required"),
     society: yup.string().required("society field required"),
   });
-  
- const formik = useFormik({
+  const router = useRouter();
+  const { id } = React.useContext(TournamentContext);
+
+  const formik = useFormik({
     initialValues: {
       registration: data?.registration || "published",
       society: data?.society || "private",
@@ -71,7 +81,22 @@ const PublishPage: React.FC<PublishTournamentProps> = ({
 
   return (
     <React.Fragment>
-      <AccordionAlt title="Publish Tournament" icon={{expanded:<CircleCloseIcon/>}}>
+      <div
+        style={{ display: "flex", flexWrap: "wrap", justifyContent: "right" }}
+      >
+        <Button
+          variant="contained"
+          onClick={(): void => {
+            router.push(`/view-tournament/${id}/details`);
+          }}
+        >
+          Preview
+        </Button>
+      </div>
+      <AccordionAlt
+        title="Publish Tournament"
+        icon={{ expanded: <CircleCloseIcon /> }}
+      >
         <CardLayout title="Publish">
           <Grid container rowSpacing={1} columnSpacing={5}>
             <Grid item xs={12}>
@@ -87,7 +112,9 @@ const PublishPage: React.FC<PublishTournamentProps> = ({
                   fullWidth
                 >
                   <NoobToggleButton value="draft">Draft</NoobToggleButton>
-                  <NoobToggleButton value="published">Published</NoobToggleButton>
+                  <NoobToggleButton value="published">
+                    Published
+                  </NoobToggleButton>
                 </NoobToggleButtonGroup>
               </FormControl>
             </Grid>

@@ -5,7 +5,7 @@ import { ListTournamentType } from "../../tournament-service/list-tournaments-re
 import { IListTournamentResponse } from "../../tournament-service/i-tournament-response";
 
 export class TournamentsRepository extends BaseRepository<ITournament> {
-  constructor(transaction: Knex.Transaction) {
+  constructor(transaction: Knex.Transaction | Knex) {
     super(transaction, "tournamentsData");
   }
 

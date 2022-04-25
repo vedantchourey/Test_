@@ -41,12 +41,10 @@ export const createTournament: NoobApiService<
 export const persistTournament: NoobApiService<
   ITournamentType,
   ITournamentType
-> = async (req, context) => {
+> = async (req, { knexConnection }) => {
   const errors = await validatePersistTournament(req);
   if (errors) return { errors };
-  const repository = new TournamentsRepository(
-    context.transaction as Knex.Transaction
-  );
+  const repository = new TournamentsRepository(knexConnection as Knex);
   let tournament;
 
   if (req.id) {
@@ -55,7 +53,7 @@ export const persistTournament: NoobApiService<
     tournament = await repository.create({ id: undefined, ...req } as any);
   }
   if (req.bracketsMetadata?.playersLimit && tournament.id) {
-    persistBrackets(tournament, context);
+    persistBrackets(tournament, knexConnection as Knex);
   }
   const { id, ...others } = tournament;
   return { id: id as string, ...others };

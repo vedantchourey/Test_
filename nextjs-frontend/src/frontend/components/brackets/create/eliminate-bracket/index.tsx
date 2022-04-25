@@ -26,7 +26,7 @@ interface RoundData {
   description: string;
   map: string;
   isMap?: boolean;
-  startTime?:string
+  startTime?: string;
 }
 export interface EliminateBracketData {
   name: string;
@@ -39,6 +39,7 @@ export interface EliminateBracketData {
   playersLimit: number | null;
   rounds: RoundData[];
   scoringFormat: string;
+  bestOf: number;
 }
 
 interface EliminateBracketProps {
@@ -65,12 +66,17 @@ const EliminateBracket = React.forwardRef<
     checkInType: yup.string().required(),
     type: yup.string().required("type is required"),
     playersLimit: yup.number(),
+    bestOf: yup.number(),
     rounds: yup.array().of(
       yup.object().shape({
         round: yup.string().required("Please select round"),
         description: yup.string().required("Please add description"),
         map: yup.string(),
-        startTime: yup.string()
+        startTime: yup.date().when("round", (data) => {
+          return data !== "1"
+            ? yup.date().required("Start time is required")
+            : yup.date();
+        }),
       })
     ),
   });
@@ -85,6 +91,7 @@ const EliminateBracket = React.forwardRef<
       type: data?.type || "",
       thirdPlace: data?.thirdPlace || false,
       playersLimit: data?.playersLimit || null,
+      bestOf: data?.bestOf || 0,
       rounds: data?.rounds || [],
       scoringFormat: data?.scoringFormat || "",
     } as EliminateBracketData,
@@ -142,7 +149,12 @@ const EliminateBracket = React.forwardRef<
         description: formik.values.rounds[i]?.description || "",
         isMap: formik.values.rounds[i]?.isMap || false,
         map: formik.values.rounds[i]?.map || "",
-        startTime: formik.values.rounds[i]?.startTime
+        startTime:
+          i === 0
+            ? ""
+            : formik.values.rounds[i]?.startTime
+            ? formik.values.rounds[i]?.startTime
+            : new Date().toISOString(),
       };
     });
   }, [formik.values.playersLimit]);
@@ -344,7 +356,13 @@ const EliminateBracket = React.forwardRef<
           <Grid item xs={6}>
             <FormControl fullWidth>
               <FormLabel label="Best of For All Round" />
-              <TextField type="number" />
+              <TextField
+                type="number"
+                value={formik.values.bestOf}
+                onChange={(event): void =>
+                  changeHandler("bestOf", event.target.value)
+                }
+              />
             </FormControl>
           </Grid>
           <Grid item xs={12}>
@@ -364,7 +382,6 @@ const EliminateBracket = React.forwardRef<
                         <NoobReachTextEditor
                           id={`rounds.${index}.description`}
                           name={`rounds.${index}.description`}
-                          // value={round.description}
                           onChange={(value): void => {
                             // const rteContent = JSON.stringify(
                             //   convertToRaw(value.getCurrentContent())
@@ -419,33 +436,40 @@ const EliminateBracket = React.forwardRef<
                                   date
                                 );
                               }}
-                              value={formik.values.rounds[index].startTime}
+                              value={
+                                (formik.values.rounds[index] as RoundData)
+                                  .startTime
+                              }
                               renderInput={(params): JSX.Element => (
                                 <TextField
                                   id="startTime"
                                   error={
                                     formik.touched.startTime &&
-                                    Boolean(formik.errors.startTime)
+                                    Boolean(
+                                      formik.errors.rounds &&
+                                        (
+                                          formik.values.rounds[
+                                            index
+                                          ] as RoundData
+                                        ).startTime
+                                    )
                                   }
                                   {...params}
                                 />
                               )}
                             />
-                            {formik.touched.startTime &&
-                            Boolean(formik.errors.startTime) ? (
-                              <FormHelperText>
-                                {formik.errors.startTime}{" "}
-                              </FormHelperText>
-                            ) : null}
                           </FormControl>
                         </Grid>
                       )}
                       <Grid item sm={6}>
                         <React.Fragment>
                           <FormControlLabel
-                            value={true}
                             label="Map Required"
-                            control={<Checkbox />}
+                            control={
+                              <Checkbox
+                                checked={formik.values?.rounds[index]?.isMap}
+                              />
+                            }
                             onChange={(
                               event: React.SyntheticEvent<Element, Event>,
                               checked: boolean
@@ -479,7 +503,6 @@ const EliminateBracket = React.forwardRef<
                     </React.Fragment>
                   );
                 });
-
                 return <React.Fragment>{renderRound}</React.Fragment>;
               }}
             />
