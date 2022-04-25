@@ -10,6 +10,7 @@ import React from "react";
 import ViewCard from "../../ui-components/view-card";
 import { createStyles, makeStyles } from "@mui/styles";
 import { TournamentData } from "../../tournament";
+import ReactHtmlParser from "react-html-parser";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -41,9 +42,9 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
         <Grid container rowSpacing={1} columnSpacing={5}>
           <Grid item xs={12}>
             <FormControl fullWidth>
-              <Typography align="left" marginBottom="5px">
-                {data.basic?.about}
-              </Typography>
+              <div style={{ fontFamily: "Inter" }}>
+                {ReactHtmlParser(data.basic?.about)}
+              </div>
               <Divider style={{ marginBottom: "30px", marginTop: "30px" }} />
               <Grid container rowSpacing={1} columnSpacing={5}>
                 <Grid item md={4}>

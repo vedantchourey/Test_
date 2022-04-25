@@ -53,7 +53,7 @@ const TournamentDashboardTable: React.FC = () => {
     {
       title: "Game Title",
       renderCell: (row): string => {
-        return gameMap[row.game]?.displayName || '-';;
+        return gameMap[row.game]?.displayName || '-';
       },
       width: "20%",
     },
