@@ -5,7 +5,7 @@ import { BaseRepository } from './base-repository';
 
 export class ProfilesRepository extends BaseRepository<IProfile> {
 
-  constructor(transaction: Knex.Transaction) {
+  constructor(transaction: Knex | Knex.Transaction) {
     super(transaction, 'profiles');
   }
 

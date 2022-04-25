@@ -21,11 +21,9 @@ const basicQueryParams = createQueryParamsMiddleWare({
   params: paramsConfig,
   async validate(
     params: { [p: string]: string | string[] },
-    context: PerRequestContext
+    { knexConnection }: PerRequestContext
   ): Promise<string | undefined> {
-    const repository = new TournamentsRepository(
-      context.transaction as Knex.Transaction
-    );
+    const repository = new TournamentsRepository(knexConnection as Knex);
 
     const tournamentId = params["tournamentId"];
     const tournament = await repository.getTournament(tournamentId as string);

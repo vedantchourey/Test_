@@ -3,7 +3,7 @@ import { Knex } from "knex";
 import { IBracket } from "../models/i-brackets";
 
 export class BracketsRepository extends BaseRepository<IBracket> {
-  constructor(transaction: Knex.Transaction) {
+  constructor(transaction: Knex.Transaction | Knex) {
     super(transaction, "brackets");
   }
 
@@ -12,7 +12,7 @@ export class BracketsRepository extends BaseRepository<IBracket> {
     return createdItems[0];
   }
 
-  async upadte(bracket: IBracket): Promise<IBracket> {    
+  async upadte(bracket: IBracket): Promise<IBracket> {
     const updatedItems = await this.entities()
       .where("id", bracket.id)
       .update(bracket, ["id"]);

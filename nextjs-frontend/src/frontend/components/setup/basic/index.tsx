@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import Grid from "@mui/material/Grid";
 
 import {
@@ -58,7 +58,7 @@ interface BasicPorps {
 
 const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
   const style = useStyles();
-  
+
   const validationSchema = yup.object({
     name: yup.string().required("Name is required"),
     game: yup.string().required("Game is required"),
@@ -75,8 +75,8 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
     about: yup.string(),
     cloneTournament: yup.boolean(),
     createTemplateCode: yup.string(),
-    banner:yup.string().nullable()
-.notRequired()
+    banner: yup.string().nullable()
+.notRequired(),
   });
 
   const formik = useFormik({
@@ -88,21 +88,27 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
       about: data?.about || "",
       createTemplateCode: data?.createTemplateCode || "",
       cloneTournament: data?.cloneTournament || false,
-      banner:''
+      banner: data?.banner || "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       if (onSave) {
-        onSave({...values,banner:'Test Banner'});
+        onSave(values);
       }
     },
   });
 
-  React.useEffect(()=>{
-    if(data){
-      formik.setValues({...data,createTemplateCode:data.createTemplateCode?data.createTemplateCode:'',banner:data.banner?data.banner:''});
+  React.useEffect(() => {
+    if (data) {
+      formik.setValues({
+        ...data,
+        createTemplateCode: data.createTemplateCode
+          ? data.createTemplateCode
+          : "",
+        banner: data?.banner ? data?.banner : "",
+      });
     }
-  },[data]);
+  }, [data]);
 
   const changeHandler = (
     property: string,
@@ -110,7 +116,16 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
   ): void => {
     formik.setFieldValue(property, value, true);
   };
-
+  const onDrop = useCallback((acceptedFiles: File[]): void => {
+    acceptedFiles.forEach((file: Blob): void => {
+      const reader = new FileReader();
+      reader.onload = (): void => {
+        const binaryStr = reader.result;
+        formik.setFieldValue("banner", binaryStr);
+      };
+      reader.readAsDataURL(file);
+    });
+  }, []);
   return (
     <React.Fragment>
       <CardLayout title="Required Fields">
@@ -257,10 +272,9 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
           <Grid item xs={12}>
             <AccordionAlt title="About">
               <NoobReachTextEditor
-                // value={formik?.values?.about || undefined}
-                onChange={(value): void => {
-                  // const rteContent = JSON.stringify(convertToRaw(value.getCurrentContent()))
-                  changeHandler("about", value.getCurrentContent().getPlainText());
+                value={formik.values.about}
+                onChange={(value: any): void => {
+                  changeHandler("about", value);
                 }}
               />
             </AccordionAlt>
@@ -269,7 +283,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
           <Grid item xs={12}>
             <FormControl fullWidth variant="standard">
               <FormLabel label="Header Banner"></FormLabel>
-              <Dropzone>
+              <Dropzone onDrop={onDrop}>
                 {({ getRootProps, getInputProps }): JSX.Element => (
                   <Box
                     className={style.dropZone}

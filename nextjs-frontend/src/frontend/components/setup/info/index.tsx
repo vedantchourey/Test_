@@ -114,12 +114,9 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
         <AccordionAlt title="Contact Details">
           <NoobReachTextEditor
             id="contactDetails"
-            // value={formik?.values?.contactDetails || undefined}
+            value={formik?.values?.contactDetails || undefined}
             onChange={(value): void => {
-              // const rteContent = JSON.stringify(
-              //   convertToRaw(value.getCurrentContent())
-              // );
-              changeHandler("contactDetails", value.getCurrentContent().getPlainText());
+              changeHandler("contactDetails", value);
             }}
             error={
               formik.touched.contactDetails &&
@@ -135,12 +132,9 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
           <NoobReachTextEditor
             id="rules"
             error={formik.touched.rules && Boolean(formik.errors.rules)}
-            // value={formik?.values?.rules || undefined}
+            value={formik?.values?.rules || undefined}
             onChange={(value): void => {
-              // const rteContent = JSON.stringify(
-              //   convertToRaw(value.getCurrentContent())
-              // );
-              changeHandler("rules", value.getCurrentContent().getPlainText());
+              changeHandler("rules", value);
             }}
           />
           {formik.touched.rules && Boolean(formik.errors.rules) ? (
@@ -151,12 +145,9 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
           <NoobReachTextEditor
             id="prizes"
             error={formik.touched.prizes && Boolean(formik.errors.prizes)}
-            // value={formik?.values?.prizes || undefined}
+            value={formik?.values?.prizes || undefined}
             onChange={(value): void => {
-              // const rteContent = JSON.stringify(
-              //   convertToRaw(value.getCurrentContent())
-              // );
-              changeHandler("prizes", value.getCurrentContent().getPlainText());
+              changeHandler("prizes", value);
             }}
           />
           {formik.touched.prizes && Boolean(formik.errors.prizes) ? (
@@ -165,14 +156,10 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
         </AccordionAlt>
         <AccordionAlt title="Schedule">
           <NoobReachTextEditor
-            id="schedule"
             error={formik.touched.schedule && Boolean(formik.errors.schedule)}
-            // value={formik?.values?.schedule || undefined}
+            value={formik?.values?.schedule || undefined}
             onChange={(value): void => {
-              // const rteContent = JSON.stringify(
-              //   convertToRaw(value.getCurrentContent())
-              // );
-              changeHandler("schedule", value.getCurrentContent().getPlainText());
+              changeHandler("schedule", value);
             }}
           />
           {formik.touched.schedule && Boolean(formik.errors.schedule) ? (
