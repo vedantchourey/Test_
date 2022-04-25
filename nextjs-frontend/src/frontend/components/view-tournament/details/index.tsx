@@ -10,6 +10,16 @@ import React from "react";
 import ViewCard from "../../ui-components/view-card";
 import { createStyles, makeStyles } from "@mui/styles";
 import { TournamentData } from "../../tournament";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../redux-store/redux-store";
+import {
+  getAllPlatformsSelector,
+  getAllPlatformsStatusSelector,
+} from "../../../redux-store/platforms/platform-selectors";
+import { IPlatformResponse } from "../../../service-clients/messages/i-platform-response";
+import { fetchAllPlatformsThunk } from "../../../redux-store/platforms/platform-slice";
 import ReactHtmlParser from "react-html-parser";
 
 const useStyles = makeStyles(() =>
@@ -27,7 +37,8 @@ const useStyles = makeStyles(() =>
     subTitle: {
       color: "rgba(255, 255, 255, 1)",
     },
-  }));
+  })
+);
 
 interface DetailsProps {
   data: TournamentData;
@@ -35,6 +46,23 @@ interface DetailsProps {
 
 const Details: React.FC<DetailsProps> = ({ data }) => {
   const classes = useStyles();
+  const appDispatch = useAppDispatch();
+  const platforms = useAppSelector(getAllPlatformsSelector);
+  const platformsFetchStatus = useAppSelector(getAllPlatformsStatusSelector);
+  const [selectedPlatform, setSelectedPlatform] =
+    React.useState<IPlatformResponse | null>(null);
+
+  React.useEffect(() => {
+    if (platformsFetchStatus !== "idle") return;
+    appDispatch(fetchAllPlatformsThunk());
+  }, [appDispatch, platformsFetchStatus]);
+
+  React.useEffect(() => {
+    const matchingPlatform = platforms.filter(
+      (x) => x.id === data.settings?.platform
+    )[0];
+    setSelectedPlatform(matchingPlatform || null);
+  }, [platforms]);
 
   return (
     <React.Fragment>
@@ -111,7 +139,7 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                   <Typography className={classes.title}> Platform </Typography>
                   <Typography className={classes.subTitle}>
                     {" "}
-                    {data?.settings?.platform || "-"}{" "}
+                    {selectedPlatform?.displayName || "-"}{" "}
                   </Typography>
                 </Grid>
                 <Grid item md={3} display="flex" justifyContent={"flex-end"}>
