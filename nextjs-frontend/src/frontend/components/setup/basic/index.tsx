@@ -301,6 +301,16 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
                   </Box>
                 )}
               </Dropzone>
+              <Box display="flex" flexDirection={"column"}>
+                {formik?.values?.banner !== "" && (
+                  <>
+                    <Typography style={{ textAlign: "left", margin:"10px 0px" }}>
+                      Preview
+                    </Typography>
+                    <img src={formik.values.banner} width="30%" />
+                  </>
+                )}
+              </Box>
             </FormControl>
           </Grid>
         </Grid>
