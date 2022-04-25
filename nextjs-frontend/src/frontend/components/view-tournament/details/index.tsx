@@ -43,7 +43,7 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
           <Grid item xs={12}>
             <FormControl fullWidth>
               <div style={{ fontFamily: "Inter" }}>
-                {ReactHtmlParser(data.basic?.about)}
+                {ReactHtmlParser(data.basic?.about || "")}
               </div>
               <Divider style={{ marginBottom: "30px", marginTop: "30px" }} />
               <Grid container rowSpacing={1} columnSpacing={5}>
