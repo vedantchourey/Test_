@@ -78,6 +78,7 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
               <Select
                 displayEmpty
                 defaultValue={""}
+                value={formik.values.contactOption}
                 onChange={(e): void =>
                   changeHandler("contactOption", e.target.value)
                 }

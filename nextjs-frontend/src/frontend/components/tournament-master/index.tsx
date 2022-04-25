@@ -19,6 +19,10 @@ import { TournamentData } from "../tournament";
 import { BasicData } from "../setup/basic";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { useAppDispatch, useAppSelector } from "../../redux-store/redux-store";
+import { allGamesSelector, gamesByPlatformSelector, gamesFetchStatusSelector } from "../../redux-store/games/game-selectors";
+import { fetchAllGamesThunk } from "../../redux-store/games/game-slice";
+import { IGameResponse } from "../../service-clients/messages/i-game-response";
 
 export interface TournamentType
   extends Omit<TournamentData, "basic">,
@@ -33,6 +37,25 @@ const TournamentMaster: React.FC = () => {
     status: "",
   });
   const router = useRouter();
+  
+  const [gameMap,setGameMap] = React.useState<{[key:string]:IGameResponse}>({});
+  const appDispatch = useAppDispatch();
+  const games = useAppSelector(allGamesSelector);
+  const gamesFetchStatus = useAppSelector(gamesFetchStatusSelector);
+  
+
+  React.useEffect(() => {
+    if (gamesFetchStatus !== "idle") return;
+    appDispatch(fetchAllGamesThunk());
+  }, [appDispatch, gamesFetchStatus]);
+
+  React.useEffect(()=>{
+    const map = games.reduce((obj,game)=>{
+      obj[game.id] = game;
+      return obj;
+    },{} as {[key:string]:IGameResponse})
+    setGameMap(map);
+  },[games])
 
   const fetchTournaments = (): void => {
     axios
@@ -77,7 +100,7 @@ const TournamentMaster: React.FC = () => {
     {
       title: "Tournament",
       renderCell: (row): string => {
-        return row.game;
+        return gameMap[row.game]?.displayName || '-';
       },
       width: "10%",
     },

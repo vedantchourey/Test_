@@ -97,6 +97,10 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
                 cloneTournament:
                   tournamentData.createTemplateCode !== undefined,
               },
+              publishData:{
+                society:tournamentData.joinStatus,
+                registration:tournamentData.status
+              }
             } as TournamentData);
           }
         })

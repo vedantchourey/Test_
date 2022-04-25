@@ -77,7 +77,7 @@ const Settings: React.FC<SettingProps> = ({
       screenShots: data?.screenShots || "NOT_REQUIRED",
       limitType: data?.limitType || "UNLIMITED",
       limit: data?.limit || -1,
-      countryFlagOnBrackets: data?.countryFlagOnBrackets || true,
+      countryFlagOnBrackets: (data?.countryFlagOnBrackets === true),
       registrationRegion: data?.registrationRegion || "all",
     },
     validationSchema: validationSchema,
@@ -87,6 +87,16 @@ const Settings: React.FC<SettingProps> = ({
       }
     },
   });
+
+  React.useEffect(() => {
+    if (data) {
+      formik.setValues({
+        ...data,
+        countryFlagOnBrackets:data.countryFlagOnBrackets
+      });
+    }
+  }, [data]);
+  
   const changeHandler = (property: string, value: boolean | string): void => {
     formik.setFieldValue(property, value, true);
   };
@@ -100,6 +110,7 @@ const Settings: React.FC<SettingProps> = ({
               <Select
                 displayEmpty
                 defaultValue={""}
+                value={formik.values.server}
                 onChange={(e): void => changeHandler("server", e.target.value)}
               >
                 <MenuItem value="">Select Region/ Server </MenuItem>
@@ -142,6 +153,7 @@ const Settings: React.FC<SettingProps> = ({
               <Select
                 displayEmpty
                 defaultValue={""}
+                value={formik.values.tournamentFormat}
                 onChange={(e): void =>
                   changeHandler("tournamentFormat", e.target.value)
                 }
@@ -328,7 +340,7 @@ const Settings: React.FC<SettingProps> = ({
             {formik.values.limitType === "LIMITED" ? (
               <FormControl>
                 <FormLabel label="Limit"></FormLabel>
-                <OutlinedInput id="limit" onChange={formik.handleChange} />
+                <OutlinedInput value={formik.values.limit} id="limit" onChange={formik.handleChange} />
               </FormControl>
             ) : null}
           </Grid>

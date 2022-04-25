@@ -13,11 +13,14 @@ import ViewCard from "../ui-components/view-card";
 import Details from "./details";
 import Participants from "./participants";
 import Rules from "./rules";
-import Bracket from "./brackets";
+import Bracket, { RoundStatusData } from "./brackets";
 import { ReactComponent as RainbowIcon } from "../../../../public/icons/RainbowIcon.svg";
 import Prizes from "./prizes";
 import Image from "next/image";
 import ActionButton from "../ui-components/action-button";
+import { TournamentData } from "../tournament";
+import axios from "axios";
+import moment from "moment";
 
 const HeadSubSection:React.FC = () => {
   return (
@@ -50,10 +53,51 @@ const actionItem = [[{
 }]]
 
 const ViewTournament: React.FC = () => {
+  const [data, setData] = React.useState<TournamentData>({});
   const router = useRouter();
   const query: ParsedUrlQuery = router.query;
   const tournamentBasePath = "/view-tournament";
-  
+  React.useEffect(() => {
+    if (router.query.id && router.query.id) {
+      axios
+        .get(`/api/tournaments/${router.query.id}`)
+        .then((res) => {
+          if (res.data.data) {
+            const tournamentData = res.data.data;
+            Object.keys(tournamentData).forEach((key) => {
+              if (tournamentData[key] === null) {
+                delete tournamentData[key];
+              }
+            });
+
+            setData({
+              ...tournamentData,
+              basic: {
+                name: tournamentData.name,
+                about: tournamentData.about,
+                game: tournamentData.game,
+                startDate: tournamentData.startDate,
+                startTime: moment(
+                  tournamentData.startTime,
+                  "hh:mm:ss"
+                ).toDate(),
+                banner: tournamentData.banner,
+                createTemplateCode: tournamentData.createTemplateCode,
+                cloneTournament:
+                  tournamentData.createTemplateCode !== undefined,
+              },
+              publishData:{
+                society:tournamentData.joinStatus,
+                registration:tournamentData.status
+              }
+            } as TournamentData);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }, [router.query.id]);
 
   const getAsURL = (endPath: string): string => {
     if (
@@ -62,12 +106,12 @@ const ViewTournament: React.FC = () => {
       Array.isArray(query.slug) &&
       query.slug.length > 0
     ) {
-      return `${tournamentBasePath}/${query.slug[0]}/${endPath}`;
+      return `${tournamentBasePath}/${router.query.id}/${endPath}`;
     }
     return tournamentBasePath;
   };
   const getUrl = (): string => {
-    return `${tournamentBasePath}/[...slug]`;
+    return `${tournamentBasePath}/[id]/[...slug]`;
   };
   const items = [
     {
@@ -125,26 +169,69 @@ const ViewTournament: React.FC = () => {
       query &&
       query.slug &&
       Array.isArray(query.slug) &&
-      query.slug.length > 1
+      query.slug.length > 0
     ) {
-      return query.slug[1];
+      return query.slug[0];
     }
     return "";
   };
+
+  const getMomentDate = (date:string,time:string):{
+    dateStr:string,
+    date:moment.Moment,
+    startDate:string,
+    startTime:string
+  }=>{
+    const mDate = moment(date).format("DD/MM/YYYY");
+    const mTime = moment(time).format("hh:mm A");
+    const dateStr = `${mDate} ${mTime}`;
+    const mDateTime = moment(dateStr,"DD/MM/YYYY hh:mm: A");
+    return {
+      dateStr:dateStr,
+      date:mDateTime,
+      startDate:mDate,
+      startTime: mTime
+    }
+  }
+
+  const getBracketProps = ():RoundStatusData[] =>{
+    if(!data.bracketsMetadata || data.bracketsMetadata===null || data.bracketsMetadata.startDate ===null || !data.bracketsMetadata.startDate || !data.bracketsMetadata.startTime || data.bracketsMetadata.startTime===null){
+      return [];
+    }
+    const startDate = data.bracketsMetadata.startDate;
+    const startTime = data.bracketsMetadata.startTime;
+    const now = moment();
+    return (data.bracketsMetadata.rounds || []).map((round,index)=>{
+      let timing
+      if(parseInt(round.round) === 1){
+        timing = getMomentDate(startDate, startTime);
+      }else{
+        timing = getMomentDate(startDate, round.startTime || startTime);
+      }
+      
+      return {
+        type:"Fracture",
+        isFinished:timing.date.isBefore(now),
+        round:index+1,
+        startDate:timing.startDate,
+        startTime: timing.startTime
+      } as RoundStatusData
+    })
+  }
 
   const renderComponent = (): JSX.Element => {
     const current = getCurrent();
     switch (current) {
       case "details":
-        return <Details />;
+        return <Details data={data}/>;
       case "participants":
         return <Participants />;
       case "rules":
-        return <Rules />;
+        return <Rules data={data} />;
       case "prizes":
         return <Prizes />;
       case "bracket":
-        return <Bracket />;
+        return <Bracket rounds={getBracketProps()}/>;
       default:
         return <Typography color={"white"}>Not found</Typography>;
     }

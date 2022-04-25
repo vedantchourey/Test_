@@ -1,5 +1,5 @@
 import React from "react";
-import ViewTournament from "../../src/frontend/components/view-tournament";
+import ViewTournament from "../../../src/frontend/components/view-tournament";
 
 const ViewTournamentPage: React.FC<void> = () => {
   return (

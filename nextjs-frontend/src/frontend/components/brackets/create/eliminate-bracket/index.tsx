@@ -346,6 +346,7 @@ const EliminateBracket = React.forwardRef<
                 id="scoringFormat"
                 placeholder="Best Of"
                 disabled
+                value={formik.values.scoringFormat}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />

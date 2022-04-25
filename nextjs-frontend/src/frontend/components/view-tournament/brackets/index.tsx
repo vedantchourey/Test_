@@ -1,6 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material"
 import { createStyles, makeStyles } from "@mui/styles";
-import moment from "moment"
 import React from "react"
 
 const useRoundStatusStyles = makeStyles(() =>
@@ -40,13 +39,13 @@ const useRoundStatusStyles = makeStyles(() =>
     }
   }));
 
-const RoundStatus:React.FC<RoundStatusData> = ({round, isFinished,type}) =>{
+const RoundStatus:React.FC<RoundStatusData> = ({round, isFinished,type,startDate,startTime}) =>{
     const styles = useRoundStatusStyles();
     const getRoundStatus = ():string=>{
         if(isFinished){
             return "Finished"
         }
-        return moment().format("DD/MM/YYYY hh:mm");
+        return `${startDate} ${startTime}`;
     }
     return(
         <Box>
@@ -65,7 +64,7 @@ const RoundStatus:React.FC<RoundStatusData> = ({round, isFinished,type}) =>{
     )
 }
 
-interface RoundStatusData{
+export interface RoundStatusData{
     type:string
     round:number
     isFinished:boolean
@@ -73,26 +72,12 @@ interface RoundStatusData{
     startTime?:string
 }
 
-interface BracketProps {
+export interface BracketProps {
     rounds?:RoundStatusData[]
 }
 
 
-const Bracket:React.FC<BracketProps> = () =>{
-    const rounds:RoundStatusData[] = [{
-        type:"Fracture",
-        isFinished:true,
-        round:1
-    },{
-        type:"Breeze",
-        isFinished:true,
-        round:2
-    },{
-        type:"Icebox",
-        isFinished:false,
-        round:3
-    }]
-
+const Bracket:React.FC<BracketProps> = ({rounds=[]}) =>{
     const renderStatus = ():JSX.Element[] =>{
         return rounds.map((round)=>{
             return (

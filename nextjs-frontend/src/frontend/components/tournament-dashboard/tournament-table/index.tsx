@@ -6,6 +6,10 @@ import CardLayout from "../../ui-components/card-layout";
 import { TournamentType } from "../../tournament-master";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { IGameResponse } from "../../../service-clients/messages/i-game-response";
+import { useAppDispatch, useAppSelector } from "../../../redux-store/redux-store";
+import { allGamesSelector, gamesFetchStatusSelector } from "../../../redux-store/games/game-selectors";
+import { fetchAllGamesThunk } from "../../../redux-store/games/game-slice";
 
 const TournamentDashboardTable: React.FC = () => {
   const [data, setData] = React.useState<TournamentType[]>([]);
@@ -26,11 +30,30 @@ const TournamentDashboardTable: React.FC = () => {
       });
   }, []);
 
+  const [gameMap,setGameMap] = React.useState<{[key:string]:IGameResponse}>({});
+  const appDispatch = useAppDispatch();
+  const games = useAppSelector(allGamesSelector);
+  const gamesFetchStatus = useAppSelector(gamesFetchStatusSelector);
+  
+
+  React.useEffect(() => {
+    if (gamesFetchStatus !== "idle") return;
+    appDispatch(fetchAllGamesThunk());
+  }, [appDispatch, gamesFetchStatus]);
+
+  React.useEffect(()=>{
+    const map = games.reduce((obj,game)=>{
+      obj[game.id] = game;
+      return obj;
+    },{} as {[key:string]:IGameResponse})
+    setGameMap(map);
+  },[games])
+
   const conf: NoobColumnConf<TournamentType>[] = [
     {
       title: "Game Title",
       renderCell: (row): string => {
-        return row.game;
+        return gameMap[row.game]?.displayName || '-';;
       },
       width: "20%",
     },

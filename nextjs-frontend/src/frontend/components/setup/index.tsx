@@ -78,6 +78,7 @@ const Setup: React.FC = (): JSX.Element => {
             allowedPlatforms={allowedPlatforms}
             onSave={handleSettingSave}
             onBack={goBack}
+            data={data.settings}
           />
         );
       default:
