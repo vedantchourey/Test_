@@ -2,15 +2,9 @@ import { createStyles, makeStyles } from "@mui/styles";
 import dynamic from "next/dynamic";
 import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "@mui/styles";
-import { TMUIRichTextEditorProps } from "mui-rte";
-
-
+import "react-quill/dist/quill.snow.css";
 const myTheme = createTheme({
   // Set up your custom MUI theme here
-});
-
-const ReachTextEditor = dynamic(() => import("mui-rte"), {
-  ssr: false,
 });
 
 const useStyles = makeStyles(() =>
@@ -22,21 +16,37 @@ const useStyles = makeStyles(() =>
     },
     editor: {
       padding: 10,
-      paddingLeft: 40
-    }
-  }));
+      paddingLeft: 40,
+    },
+  })
+);
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
-interface INoobReachTextEditor extends TMUIRichTextEditorProps {
-  name?: string
+interface INoobRichTextEditor {
+  onChange: (val: string) => void;
+  value?: string;
+  error?: boolean;
+  name?: string;
+  id?: string;
 }
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const NoobReachTextEditor: React.FC<INoobReachTextEditor> = (props) => {
+const NoobReachTextEditor = ({
+  onChange,
+  value = "",
+  error = false,
+  ...restProps
+}: INoobRichTextEditor): JSX.Element => {
   const classes = useStyles();
 
   return (
     <ThemeProvider theme={myTheme}>
-      <ReachTextEditor classes={{root:classes.root, editor: classes.editor}} {...props}/>
+      <ReactQuill
+        {...restProps}
+        className={classes.root}
+        value={value}
+        onChange={onChange}
+        style={{ borderColor: error ? "red" : "" }}
+      />
     </ThemeProvider>
   );
 };

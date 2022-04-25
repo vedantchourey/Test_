@@ -379,15 +379,12 @@ const EliminateBracket = React.forwardRef<
                       </Grid>
                       <Grid item sm={12}>
                         <NoobReachTextEditor
-                          id={`rounds.${index}.description`}
+                          value={`rounds.${index}.description`}
                           name={`rounds.${index}.description`}
                           onChange={(value): void => {
-                            // const rteContent = JSON.stringify(
-                            //   convertToRaw(value.getCurrentContent())
-                            // );
                             formik.setFieldValue(
                               `rounds.${index}.description`,
-                              value.getCurrentContent().getPlainText()
+                              value
                             );
                           }}
                           error={
