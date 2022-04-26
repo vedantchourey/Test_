@@ -109,7 +109,7 @@ export const checkInTournament = async (
 
 export const validateUser = async (
   id: string,
-  knexConnection: Knex
+  knexConnection: Knex | Knex.Transaction
 ): Promise<boolean> => {
   try {
     const repository = new ProfilesRepository(knexConnection);
