@@ -12,7 +12,7 @@ export class TransactionRepository extends BaseRepository<ITransaction> {
     return createdItems[0];
   }
 
-  async upadte(
+  async update(
     transaction: ITransaction,
     where: ITransaction
   ): Promise<ITransaction> {

@@ -17,7 +17,7 @@ export class TournamentUsersRepository extends BaseRepository<ITournamentUsers> 
     return createdItems[0];
   }
 
-  async upadte(
+  async update(
     tournametUsers: ITournamentUsers,
     where: ITournamentUsers
   ): Promise<ITournamentUsers> {

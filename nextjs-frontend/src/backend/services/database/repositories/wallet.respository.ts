@@ -22,10 +22,10 @@ export class WalletRepository extends BaseRepository<IWallet> {
       .first();
   }
 
-  async upadte(wallet: IWallet, where: IWallet): Promise<IWallet> {
+  async update(wallet: IWallet, where: IWallet): Promise<IWallet> {
     const updatedItems = await this.entities()
       .where(where)
-      .update(wallet, ["id","balance"]);
+      .update(wallet, ["id", "userId", "balance"]);
     return updatedItems[0];
   }
 }

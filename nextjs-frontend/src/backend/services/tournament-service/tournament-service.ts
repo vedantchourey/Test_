@@ -48,7 +48,7 @@ export const persistTournament: NoobApiService<
   let tournament;
 
   if (req.id) {
-    tournament = await repository.upadte({ ...req } as any);
+    tournament = await repository.update({ ...req } as any);
   } else {
     tournament = await repository.create({ id: undefined, ...req } as any);
   }
