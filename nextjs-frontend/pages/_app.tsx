@@ -2,7 +2,7 @@ import '../src/frontend/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { Provider } from 'react-redux';
 import { ThemeProvider } from '@mui/material/styles';
-import AdapterLuxonFns from '@mui/lab/AdapterLuxon';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import noobTheme from '../src/frontend/utils/theme-and-colours/mui-theme';
 import reduxStore from '../src/frontend/redux-store/redux-store';
@@ -24,7 +24,7 @@ function MyApp(props: MyAppProps): JSX.Element {
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={noobTheme}>
         <Provider store={reduxStore}>
-          <LocalizationProvider dateAdapter={AdapterLuxonFns}>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
             <LayoutChangeDetector />
             <LoadingIndicator />
             <AuthEventsHandler />

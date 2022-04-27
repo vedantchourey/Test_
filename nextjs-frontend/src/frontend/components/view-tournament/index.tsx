@@ -70,11 +70,47 @@ const actionItem = [
   ],
 ];
 
+const calculateDuration = (
+  eventTime: moment.Moment,
+  now: moment.Moment = moment()
+): moment.Duration => moment.duration(eventTime.diff(now), "milliseconds");
+
 const ViewTournament: React.FC = () => {
   const [data, setData] = React.useState<TournamentData>({});
   const router = useRouter();
   const query: ParsedUrlQuery = router.query;
   const tournamentBasePath = "/view-tournament";
+  const timerRef = React.useRef(0);
+  const [countDown, setCountDown] = React.useState("00:00:00");
+
+  const timerCallback = React.useCallback(() => {
+    if (data.basic) {
+      const mDate = moment(data.basic.startDate);
+      const mTime = moment(data.basic.startTime);
+      mDate.set({
+        hours: mTime.get("hours"),
+        minutes: mTime.get("minutes"),
+        seconds: mTime.get("seconds"),
+      });
+      const now = moment();
+      let diff = mDate.diff(now);
+      if (diff <= 0) {
+        setCountDown("00:00:00");
+      } else {
+        diff = mDate.diff(now, "hours");
+        if (diff > 24) {
+          diff = mDate.diff(now, "days");
+          setCountDown(`${diff} days`);
+        } else {
+          const timer = calculateDuration(mDate, now);
+          setCountDown(
+            `${timer.hours()}:${timer.minutes()}:${timer.seconds()}`
+          );
+        }
+      }
+    }
+  }, [data]);
+
   React.useEffect(() => {
     if (router.query.id && router.query.id) {
       axios
@@ -116,6 +152,15 @@ const ViewTournament: React.FC = () => {
         });
     }
   }, [router.query.id]);
+
+  React.useEffect(() => {
+    if (data.basic) {
+      timerRef.current = window.setInterval(timerCallback, 1000);
+    }
+    return () => {
+      clearInterval(timerRef.current);
+    };
+  }, [data]);
 
   const getAsURL = (endPath: string): string => {
     if (
@@ -298,15 +343,15 @@ const ViewTournament: React.FC = () => {
             >
               <Box marginRight="42px">
                 <Typography>
-                  <span style={{ color: "#FF0000" }}> Round 2 begins in :</span>{" "}
-                  00.15.54
+                  <span style={{ color: "#FF0000" }}> Round 1 begins in :</span>{" "}
+                  {countDown}
                 </Typography>
               </Box>
               {data.settings?.entryType === "credit" ? (
                 <Box marginRight="16px">
                   <Typography>
                     {" "}
-                    Entry Fee :
+                    Credits :
                     <span style={{ color: "rgba(105,50,249,1)" }}>
                       $ {data.settings?.entryFeeAmount} USD{" "}
                     </span>
