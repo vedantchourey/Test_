@@ -101,5 +101,4 @@ export async function listTournament(
       },
     },
   } as any;
-  return { data: {} as any };
 }
