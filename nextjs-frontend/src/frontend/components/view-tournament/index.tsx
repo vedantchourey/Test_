@@ -1,7 +1,4 @@
-import {
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
@@ -22,35 +19,56 @@ import { TournamentData } from "../tournament";
 import axios from "axios";
 import moment from "moment";
 
-const HeadSubSection:React.FC = () => {
+const HeadSubSection: React.FC = () => {
   return (
-    <Grid container >
+    <Grid container>
       <Grid item md={4} display="flex">
         <Typography color={"#F08743"}>10 Oct 2018 14:35 PM</Typography>
       </Grid>
-      <Grid item md={8} display="flex" justifyContent={"flex-end"} alignItems={"center"}>
+      <Grid
+        item
+        md={8}
+        display="flex"
+        justifyContent={"flex-end"}
+        alignItems={"center"}
+      >
         <Box style={{ cursor: "pointer" }} display="flex" marginRight={2}>
           <Image src="/icons/CalenderIcon.svg" height="18px" width="18px" />
-          <Typography color={"white"} marginLeft={1}>Add to calendar</Typography>
+          <Typography color={"white"} marginLeft={1}>
+            Add to calendar
+          </Typography>
         </Box>
         <Box style={{ cursor: "pointer" }} display="flex" marginRight={2}>
           <Image src="/icons/ShareIcon.svg" height="18px" width="18px" />
-          <Typography color={"white"} marginLeft={1}>Share Tournament</Typography>
+          <Typography color={"white"} marginLeft={1}>
+            Share Tournament
+          </Typography>
         </Box>
       </Grid>
     </Grid>
   );
 };
 
-const actionItem = [[{
-  title:"Select Team",
-}],[{
-  title:"Fight Club",
-},{
-  title:"Legend Club",
-}],[{
-  title:"Create Team",
-}]]
+const actionItem = [
+  [
+    {
+      title: "Select Team",
+    },
+  ],
+  [
+    {
+      title: "Fight Club",
+    },
+    {
+      title: "Legend Club",
+    },
+  ],
+  [
+    {
+      title: "Create Team",
+    },
+  ],
+];
 
 const ViewTournament: React.FC = () => {
   const [data, setData] = React.useState<TournamentData>({});
@@ -86,10 +104,10 @@ const ViewTournament: React.FC = () => {
                 cloneTournament:
                   tournamentData.createTemplateCode !== undefined,
               },
-              publishData:{
-                society:tournamentData.joinStatus,
-                registration:tournamentData.status
-              }
+              publishData: {
+                society: tournamentData.joinStatus,
+                registration: tournamentData.status,
+              },
             } as TournamentData);
           }
         })
@@ -176,54 +194,64 @@ const ViewTournament: React.FC = () => {
     return "";
   };
 
-  const getMomentDate = (date:string,time:string):{
-    dateStr:string,
-    date:moment.Moment,
-    startDate:string,
-    startTime:string
-  }=>{
+  const getMomentDate = (
+    date: string,
+    time: string
+  ): {
+    dateStr: string;
+    date: moment.Moment;
+    startDate: string;
+    startTime: string;
+  } => {
     const mDate = moment(date).format("DD/MM/YYYY");
     const mTime = moment(time).format("hh:mm A");
     const dateStr = `${mDate} ${mTime}`;
-    const mDateTime = moment(dateStr,"DD/MM/YYYY hh:mm: A");
+    const mDateTime = moment(dateStr, "DD/MM/YYYY hh:mm: A");
     return {
-      dateStr:dateStr,
-      date:mDateTime,
-      startDate:mDate,
-      startTime: mTime
-    }
-  }
+      dateStr: dateStr,
+      date: mDateTime,
+      startDate: mDate,
+      startTime: mTime,
+    };
+  };
 
-  const getBracketProps = ():RoundStatusData[] =>{
-    if(!data.bracketsMetadata || data.bracketsMetadata===null || data.bracketsMetadata.startDate ===null || !data.bracketsMetadata.startDate || !data.bracketsMetadata.startTime || data.bracketsMetadata.startTime===null){
+  const getBracketProps = (): RoundStatusData[] => {
+    if (
+      !data.bracketsMetadata ||
+      data.bracketsMetadata === null ||
+      data.bracketsMetadata.startDate === null ||
+      !data.bracketsMetadata.startDate ||
+      !data.bracketsMetadata.startTime ||
+      data.bracketsMetadata.startTime === null
+    ) {
       return [];
     }
     const startDate = data.bracketsMetadata.startDate;
     const startTime = data.bracketsMetadata.startTime;
     const now = moment();
-    return (data.bracketsMetadata.rounds || []).map((round,index)=>{
-      let timing
-      if(parseInt(round.round) === 1){
+    return (data.bracketsMetadata.rounds || []).map((round, index) => {
+      let timing;
+      if (parseInt(round.round) === 1) {
         timing = getMomentDate(startDate, startTime);
-      }else{
+      } else {
         timing = getMomentDate(startDate, round.startTime || startTime);
       }
-      
+
       return {
-        type:"Fracture",
-        isFinished:timing.date.isBefore(now),
-        round:index+1,
-        startDate:timing.startDate,
-        startTime: timing.startTime
-      } as RoundStatusData
-    })
-  }
+        type: "Fracture",
+        isFinished: timing.date.isBefore(now),
+        round: index + 1,
+        startDate: timing.startDate,
+        startTime: timing.startTime,
+      } as RoundStatusData;
+    });
+  };
 
   const renderComponent = (): JSX.Element => {
     const current = getCurrent();
     switch (current) {
       case "details":
-        return <Details data={data}/>;
+        return <Details data={data} />;
       case "participants":
         return <Participants />;
       case "rules":
@@ -231,7 +259,7 @@ const ViewTournament: React.FC = () => {
       case "prizes":
         return <Prizes />;
       case "bracket":
-        return <Bracket rounds={getBracketProps()}/>;
+        return <Bracket rounds={getBracketProps()} />;
       default:
         return <Typography color={"white"}>Not found</Typography>;
     }
@@ -254,30 +282,38 @@ const ViewTournament: React.FC = () => {
           backgroundImage
           backgroundImageUrl="/images/view-tournament.svg"
         >
-          <HeadSubSection/>
+          <HeadSubSection />
         </Heading>
         <ViewCard>
-          <Grid container >
+          <Grid container>
             <Grid item md={6}>
               <RainbowIcon />
             </Grid>
-            <Grid item md={6} display="flex" alignItems="center" justifyContent={"flex-end"}>
+            <Grid
+              item
+              md={6}
+              display="flex"
+              alignItems="center"
+              justifyContent={"flex-end"}
+            >
               <Box marginRight="42px">
                 <Typography>
                   <span style={{ color: "#FF0000" }}> Round 2 begins in :</span>{" "}
                   00.15.54
                 </Typography>
               </Box>
-              <Box marginRight="16px">
-                <Typography>
-                  {" "}
-                  Entry Fee :
-                  <span style={{ color: "rgba(105,50,249,1)" }}>
-                    $ 450 USD{" "}
-                  </span>
-                </Typography>
-              </Box>
-              <ActionButton items={actionItem} id={"action-item"}/>
+              {data.settings?.entryType === "credit" ? (
+                <Box marginRight="16px">
+                  <Typography>
+                    {" "}
+                    Entry Fee :
+                    <span style={{ color: "rgba(105,50,249,1)" }}>
+                      $ {data.settings?.entryFeeAmount} USD{" "}
+                    </span>
+                  </Typography>
+                </Box>
+              ) : null}
+              <ActionButton items={actionItem} id={"action-item"} />
             </Grid>
           </Grid>
         </ViewCard>

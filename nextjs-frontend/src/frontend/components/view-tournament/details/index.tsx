@@ -37,8 +37,7 @@ const useStyles = makeStyles(() =>
     subTitle: {
       color: "rgba(255, 255, 255, 1)",
     },
-  })
-);
+  }));
 
 interface DetailsProps {
   data: TournamentData;
