@@ -132,7 +132,7 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                   <Typography className={classes.title}> Prize Pool</Typography>
                   <Typography className={classes.subTitle}>
                     {" "}
-                    450$ USD{" "}
+                    {data?.pricingDetails?.pricePool}$ USD{" "}
                   </Typography>
                 </Grid>
                 <Grid item md={1}>

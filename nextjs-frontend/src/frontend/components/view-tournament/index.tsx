@@ -273,7 +273,7 @@ const ViewTournament: React.FC = () => {
                   {" "}
                   Entry Fee :
                   <span style={{ color: "rgba(105,50,249,1)" }}>
-                    $ 450 USD{" "}
+                  {" "}${data?.settings?.entryFeeAmount} USD{" "}
                   </span>
                 </Typography>
               </Box>
