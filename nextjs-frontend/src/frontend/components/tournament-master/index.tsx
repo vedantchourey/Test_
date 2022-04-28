@@ -20,44 +20,46 @@ import { BasicData } from "../setup/basic";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector } from "../../redux-store/redux-store";
-import { allGamesSelector, gamesFetchStatusSelector } from "../../redux-store/games/game-selectors";
+import {
+  allGamesSelector,
+  gamesFetchStatusSelector,
+} from "../../redux-store/games/game-selectors";
 import { fetchAllGamesThunk } from "../../redux-store/games/game-slice";
 import { IGameResponse } from "../../service-clients/messages/i-game-response";
 
 export interface TournamentType
   extends Omit<TournamentData, "basic">,
-    BasicData {
-      playerList:any[]
-    }
+    BasicData {}
 
 const TournamentMaster: React.FC = () => {
   const [data, setData] = React.useState<TournamentType[]>([]);
   const recordsPerPage = 10;
   const [page, setPage] = React.useState<number>(1);
-  const [totalRecords,setTotalRecords] = React.useState<number>(0);
+  const [totalRecords, setTotalRecords] = React.useState<number>(0);
   const [filter, setFilter] = React.useState<{ status: string }>({
     status: "",
   });
   const router = useRouter();
-  
-  const [gameMap,setGameMap] = React.useState<{[key:string]:IGameResponse}>({});
+
+  const [gameMap, setGameMap] = React.useState<{
+    [key: string]: IGameResponse;
+  }>({});
   const appDispatch = useAppDispatch();
   const games = useAppSelector(allGamesSelector);
   const gamesFetchStatus = useAppSelector(gamesFetchStatusSelector);
-  
 
   React.useEffect(() => {
     if (gamesFetchStatus !== "idle") return;
     appDispatch(fetchAllGamesThunk());
   }, [appDispatch, gamesFetchStatus]);
 
-  React.useEffect(()=>{
-    const map = games.reduce((obj,game)=>{
+  React.useEffect(() => {
+    const map = games.reduce((obj, game) => {
       obj[game.id] = game;
       return obj;
-    },{} as {[key:string]:IGameResponse})
+    }, {} as { [key: string]: IGameResponse });
     setGameMap(map);
-  },[games])
+  }, [games]);
 
   const fetchTournaments = (): void => {
     axios
@@ -69,9 +71,9 @@ const TournamentMaster: React.FC = () => {
         },
       })
       .then((res) => {
-        if(res.data.data && res.data.data.tournaments){
+        if (res.data.data && res.data.data.tournaments) {
           setData(res.data.data.tournaments);
-          setTotalRecords(parseInt(res.data.data.total))
+          setTotalRecords(parseInt(res.data.data.total));
         }
       })
       .catch((err) => {
@@ -102,7 +104,7 @@ const TournamentMaster: React.FC = () => {
     {
       title: "Tournament",
       renderCell: (row): string => {
-        return gameMap[row.game]?.displayName || '-';
+        return gameMap[row.game]?.displayName || "-";
       },
       width: "10%",
     },
@@ -147,7 +149,7 @@ const TournamentMaster: React.FC = () => {
     {
       title: "Participant",
       renderCell: (row): number => {
-        return (row.playerList||[]).length;
+        return (row.playerList || []).length;
       },
       width: "10%",
     },
@@ -177,14 +179,18 @@ const TournamentMaster: React.FC = () => {
         return (
           <Chip
             label={"View"}
-            onClick={():void=>{
-              router.push("/tournament/update/[id]/[...slug]",`/tournament/update/${row.id}/create/setup/basic/`,{shallow:true})
+            onClick={(): void => {
+              router.push(
+                "/tournament/update/[id]/[...slug]",
+                `/tournament/update/${row.id}/create/setup/basic/`,
+                { shallow: true }
+              );
             }}
             style={{
               textTransform: "capitalize",
               background: "#FBAF40",
               padding: "0px 10px",
-              cursor:"pointer"
+              cursor: "pointer",
             }}
           />
         );
@@ -253,7 +259,7 @@ const TournamentMaster: React.FC = () => {
                       <Select
                         displayEmpty
                         value={filter.status}
-                        onChange={(e):void =>
+                        onChange={(e): void =>
                           onFilterChangeHandler("status", e.target.value)
                         }
                       >
