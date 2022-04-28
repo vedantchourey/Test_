@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Divider,
   FormControl,
   Grid,
@@ -37,8 +38,7 @@ const useStyles = makeStyles(() =>
     subTitle: {
       color: "rgba(255, 255, 255, 1)",
     },
-  })
-);
+  }));
 
 interface DetailsProps {
   data: TournamentData;
@@ -64,6 +64,12 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
     setSelectedPlatform(matchingPlatform || null);
   }, [platforms]);
 
+  const contactOn = ():void=>{
+    if(data.info?.contactUrl){
+      window.open(data.info?.contactUrl,"_blank");
+    }
+  }
+
   return (
     <React.Fragment>
       <ViewCard title="About the tournament">
@@ -73,6 +79,12 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
               <div style={{ fontFamily: "Inter" }}>
                 {ReactHtmlParser(data.basic?.about || "")}
               </div>
+              {data.info?.contactOption?(
+                <Box display={"flex"} alignItems="center">
+                <Typography component={"span"} variant={"body2"} color={"rgba(105,50,249,1)"}>{data.info?.contactOption} :</Typography>
+                <Button style={{textTransform:"lowercase"}} onClick={contactOn}>{data.info?.contactUrl || "-"}</Button>
+              </Box>
+              ):null}
               <Divider style={{ marginBottom: "30px", marginTop: "30px" }} />
               <Grid container rowSpacing={1} columnSpacing={5}>
                 <Grid item md={4}>
