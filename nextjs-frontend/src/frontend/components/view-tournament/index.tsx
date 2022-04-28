@@ -353,7 +353,7 @@ const ViewTournament: React.FC = () => {
                     {" "}
                     Credits :
                     <span style={{ color: "rgba(105,50,249,1)" }}>
-                      $ {data.settings?.entryFeeAmount} USD{" "}
+                      {data.settings?.entryFeeAmount} 
                     </span>
                   </Typography>
                 </Box>
