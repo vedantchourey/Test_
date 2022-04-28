@@ -12,7 +12,7 @@ export class BracketsRepository extends BaseRepository<IBracket> {
     return createdItems[0];
   }
 
-  async upadte(bracket: IBracket): Promise<IBracket> {
+  async update(bracket: IBracket): Promise<IBracket> {
     const updatedItems = await this.entities()
       .where("id", bracket.id)
       .update(bracket, ["id"]);

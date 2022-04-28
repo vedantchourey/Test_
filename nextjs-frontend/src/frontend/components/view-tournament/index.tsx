@@ -341,7 +341,14 @@ const ViewTournament: React.FC = () => {
               alignItems="center"
               justifyContent={"flex-end"}
             >
-              <Box marginRight="42px">
+              <Box marginRight="16px">
+                <Typography>
+                  {" "}
+                  Entry Fee :
+                  <span style={{ color: "rgba(105,50,249,1)" }}>
+                  {" "}${data?.settings?.entryFeeAmount} USD{" "}
+                  </span>
+                </Typography>
                 <Typography>
                   <span style={{ color: "#FF0000" }}> Round 1 begins in :</span>{" "}
                   {countDown}

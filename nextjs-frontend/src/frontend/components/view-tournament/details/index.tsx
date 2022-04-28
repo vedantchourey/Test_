@@ -87,7 +87,7 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
               ):null}
               <Divider style={{ marginBottom: "30px", marginTop: "30px" }} />
               <Grid container rowSpacing={1} columnSpacing={5}>
-                <Grid item md={4}>
+                <Grid item md={3}>
                   <Box marginTop={1}>
                     <LinearProgress
                       variant="determinate"
@@ -144,7 +144,14 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                   <Typography className={classes.title}> Prize Pool</Typography>
                   <Typography className={classes.subTitle}>
                     {" "}
-                    450$ USD{" "}
+                    {data?.pricingDetails?.pricePool}$ USD{" "}
+                  </Typography>
+                </Grid>
+                <Grid item md={2}>
+                  <Typography className={classes.title}> Current Prize Pool</Typography>
+                  <Typography className={classes.subTitle}>
+                    {" "}
+                    {data?.pricingDetails?.currentPricePool}$ USD{" "}
                   </Typography>
                 </Grid>
                 <Grid item md={1}>
@@ -154,7 +161,7 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                     {selectedPlatform?.displayName || "-"}{" "}
                   </Typography>
                 </Grid>
-                <Grid item md={3} display="flex" justifyContent={"flex-end"}>
+                <Grid item md={2} display="flex" justifyContent={"flex-end"}>
                   <Typography marginRight={1}>
                     Tournament Entry Status:
                   </Typography>
