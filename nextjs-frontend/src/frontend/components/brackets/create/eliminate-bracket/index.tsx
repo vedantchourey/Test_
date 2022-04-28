@@ -482,6 +482,7 @@ const EliminateBracket = React.forwardRef<
                           new Array(5).fill(5).map((x, i) => (
                             <OutlinedInput
                               id="map"
+                              key={x}
                               placeholder={`Map ${i + 1}`}
                               onChange={(
                                 val: React.ChangeEvent<
