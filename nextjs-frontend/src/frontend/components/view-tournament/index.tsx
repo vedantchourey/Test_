@@ -114,7 +114,7 @@ const ViewTournament: React.FC = () => {
   React.useEffect(() => {
     if (router.query.id && router.query.id) {
       axios
-        .get(`/api/tournaments/${router.query.id}`)
+        .get(`/api/tournaments/${router.query.id}/details`)
         .then((res) => {
           if (res.data.data) {
             const tournamentData = res.data.data;
@@ -346,7 +346,8 @@ const ViewTournament: React.FC = () => {
                   {" "}
                   Entry Fee :
                   <span style={{ color: "rgba(105,50,249,1)" }}>
-                  {" "}${data?.settings?.entryFeeAmount} USD{" "}
+                    {" "}
+                    ${data?.settings?.entryFeeAmount} USD{" "}
                   </span>
                 </Typography>
                 <Typography>
@@ -360,7 +361,7 @@ const ViewTournament: React.FC = () => {
                     {" "}
                     Credits :
                     <span style={{ color: "rgba(105,50,249,1)" }}>
-                      {data.settings?.entryFeeAmount} 
+                      {data.settings?.entryFeeAmount}
                     </span>
                   </Typography>
                 </Box>

@@ -88,6 +88,24 @@ export async function listTournament(
   });
 
   return {
+    data: tournament,
+  } as any;
+}
+
+export async function tournamentDetails(
+  context: PerRequestContext
+): Promise<ServiceResponse<null, ITournament>> {
+  const { data: tournament } = await listTournament(context);
+
+  const tournamentUsersRepo = new TournamentUsersRepository(
+    context.transaction as Knex.Transaction
+  );
+  const tournamentId = context.getParamValue("tournamentId");
+  const users = await tournamentUsersRepo.getUsersDetaisl({
+    tournamentId: tournamentId,
+  });
+
+  return {
     data: {
       ...tournament,
       playerList: users,
