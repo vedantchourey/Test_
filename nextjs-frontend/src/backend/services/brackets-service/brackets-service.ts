@@ -71,7 +71,7 @@ export const checkInTournament = async (
   }
   try {
     const repository = new BracketsRepository(knexConnection);
-    const data: IBracket = await repository.findById(req.tournamentId);
+    const data: IBracket = await repository.findByTournamentId(req.tournamentId);
     if (!(await checkUserRegister(req, knexConnection))) {
       return { message: "User not registered for the tournament" };
     }

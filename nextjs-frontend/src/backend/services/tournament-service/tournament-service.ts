@@ -78,15 +78,8 @@ export async function listTournament(
   const repository = new TournamentsRepository(
     context.transaction as Knex.Transaction
   );
-  const tournamentUsersRepo = new TournamentUsersRepository(
-    context.transaction as Knex.Transaction
-  );
   const tournamentId = context.getParamValue("tournamentId");
   const tournament = await repository.getTournament(tournamentId as string);
-  const users = await tournamentUsersRepo.getUsersDetaisl({
-    tournamentId: tournamentId,
-  });
-
   return {
     data: tournament,
   } as any;
@@ -95,12 +88,14 @@ export async function listTournament(
 export async function tournamentDetails(
   context: PerRequestContext
 ): Promise<ServiceResponse<null, ITournament>> {
-  const { data: tournament } = await listTournament(context);
-
+  const tournamentId = context.getParamValue("tournamentId");
+  const repository = new TournamentsRepository(
+    context.transaction as Knex.Transaction
+  );
+  const tournament = await repository.getTournamentWithBrackets(tournamentId as string);
   const tournamentUsersRepo = new TournamentUsersRepository(
     context.transaction as Knex.Transaction
   );
-  const tournamentId = context.getParamValue("tournamentId");
   const users = await tournamentUsersRepo.getUsersDetaisl({
     tournamentId: tournamentId,
   });
