@@ -26,7 +26,9 @@ import { IGameResponse } from "../../service-clients/messages/i-game-response";
 
 export interface TournamentType
   extends Omit<TournamentData, "basic">,
-    BasicData {}
+    BasicData {
+      playerList:any[]
+    }
 
 const TournamentMaster: React.FC = () => {
   const [data, setData] = React.useState<TournamentType[]>([]);
@@ -144,8 +146,8 @@ const TournamentMaster: React.FC = () => {
     },
     {
       title: "Participant",
-      renderCell: (): string => {
-        return "150";
+      renderCell: (row): number => {
+        return (row.playerList||[]).length;
       },
       width: "10%",
     },

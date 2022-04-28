@@ -42,7 +42,7 @@ const useStyles = makeStyles(() =>
 export interface BasicData {
   name: string;
   game: string;
-  startDate: Date | null;
+  startDate: string | null;
   startTime: string | null;
   about: string;
   cloneTournament: boolean;

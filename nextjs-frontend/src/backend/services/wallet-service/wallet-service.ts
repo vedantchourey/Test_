@@ -25,7 +25,7 @@ export const creditBalance = async (
     if (!wallet) {
       return { errors: ["Wallet not found"] };
     }
-    let data = await createTransaction(
+    const data = await createTransaction(
       { ...req, wallet_id: wallet.id },
       context
     );
@@ -33,7 +33,7 @@ export const creditBalance = async (
     wallet.balance = wallet.balance
       ? Number(wallet.balance) + Number(req.amount)
       : req.amount;
-    let updated_data = await walletRepo.update(wallet, { id: wallet.id });
+    const updated_data = await walletRepo.update(wallet, { id: wallet.id });
     return {
       ...updated_data,
       transaction_id: data?.id,
@@ -67,7 +67,7 @@ export const debitBalance = async (
         errors: ["Insufficient balance"],
       };
     }
-    let data = await createTransaction(
+    const data = await createTransaction(
       { ...req, wallet_id: wallet.id },
       context
     );
@@ -75,7 +75,7 @@ export const debitBalance = async (
     wallet.balance = wallet.balance
       ? Number(wallet.balance) - Number(req.amount)
       : req.amount;
-    let updated_data = await walletRepo.update(wallet, { id: wallet.id });
+    const updated_data = await walletRepo.update(wallet, { id: wallet.id });
     return {
       ...updated_data,
       transaction_id: data?.id,

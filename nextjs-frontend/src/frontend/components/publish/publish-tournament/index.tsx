@@ -8,7 +8,7 @@ import {
   FormControlLabel,
   Grid,
   Chip,
-  Tooltip
+  Tooltip,
 } from "@mui/material";
 import FormLabel from "../../ui-components/formlabel";
 import NoobToggleButtonGroup, {
@@ -22,12 +22,13 @@ import { ReactComponent as CircleCloseIcon } from "../../../../../public/icons/c
 import { useRouter } from "next/router";
 import { TournamentContext } from "../../tournament";
 
-const randomString = (length:number):string=> {
-  const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-  let result = '';
-  for (let i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+const randomString = (length: number): string => {
+  const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let result = "";
+  for (let i = length; i > 0; --i)
+    result += chars[Math.floor(Math.random() * chars.length)];
   return result;
-}
+};
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -41,7 +42,7 @@ const useStyles = makeStyles(() =>
 export interface PublishTournamentData {
   registration: string;
   society: string;
-  joinCode:string | null;
+  joinCode: string | null;
 }
 
 interface PublishTournamentProps {
@@ -59,17 +60,17 @@ const PublishPage: React.FC<PublishTournamentProps> = ({
   const validationSchema = yup.object({
     registration: yup.string().required("Registration field required"),
     society: yup.string().required("society field required"),
-    joinCode: yup.string().notRequired()
+    joinCode: yup.string().notRequired(),
   });
   const router = useRouter();
   const { id } = React.useContext(TournamentContext);
-  const [isCopied,setCopied] = React.useState(false);
-
+  const [isCopied, setCopied] = React.useState(false);
+  
   const formik = useFormik({
     initialValues: {
       registration: data?.registration || "published",
       society: data?.society || "private",
-      joinCode: data?.joinCode || null
+      joinCode: data?.joinCode || null,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -79,11 +80,11 @@ const PublishPage: React.FC<PublishTournamentProps> = ({
     },
   });
 
-  React.useEffect(()=>{
-    if(data){
-      formik.setValues({...data});
+  React.useEffect(() => {
+    if (data) {
+      formik.setValues({ ...data });
     }
-  },[data]);
+  }, [data]);
 
   const changeHandler = (
     property: string,
@@ -92,22 +93,22 @@ const PublishPage: React.FC<PublishTournamentProps> = ({
     formik.setFieldValue(property, value, true);
   };
 
-  const changeJoinCode = (isJoinViaCode:boolean):void=>{
-    if(isJoinViaCode){
+  const changeJoinCode = (isJoinViaCode: boolean): void => {
+    if (isJoinViaCode) {
       const code = randomString(6);
-      changeHandler("joinCode",code);
-    }else{
-      changeHandler("joinCode",null);
+      changeHandler("joinCode", code);
+    } else {
+      changeHandler("joinCode", null);
     }
-  }
+  };
 
-  const copyJoinCode = ():void =>{
-    navigator.clipboard.writeText(formik.values.joinCode || '');
+  const copyJoinCode = (): void => {
+    navigator.clipboard.writeText(formik.values.joinCode || "");
     setCopied(true);
-    setTimeout(()=>{
+    setTimeout(() => {
       setCopied(false);
-    },1000)
-  }
+    }, 1000);
+  };
 
   return (
     <React.Fragment>
@@ -168,14 +169,24 @@ const PublishPage: React.FC<PublishTournamentProps> = ({
             <Grid item xs={6}>
               <FormControl fullWidth>
                 <FormLabel label="You can control who enter your tournament with join codes."></FormLabel>
-                {!formik.values.joinCode?(
+                {!formik.values.joinCode ? (
                   <FormControlLabel
-                  className={classes.checkbox}
-                  onChange={(e,checked):void=>changeJoinCode(checked)}
-                  control={<Checkbox style={{ marginRight: "26px" }} />}
-                  label="Use Join Codes"
-                />
-                ):<Tooltip title={"Copied!"} open={isCopied}><Chip style={{width:"110px"}} label={formik.values.joinCode} onClick={copyJoinCode} variant={"outlined"} onDelete={():void=>changeHandler("joinCode",null)}/></Tooltip>}
+                    className={classes.checkbox}
+                    onChange={(e, checked): void => changeJoinCode(checked)}
+                    control={<Checkbox style={{ marginRight: "26px" }} />}
+                    label="Use Join Codes"
+                  />
+                ) : (
+                  <Tooltip title={"Copied!"} open={isCopied}>
+                    <Chip
+                      style={{ width: "110px" }}
+                      label={formik.values.joinCode}
+                      onClick={copyJoinCode}
+                      variant={"outlined"}
+                      onDelete={(): void => changeHandler("joinCode", null)}
+                    />
+                  </Tooltip>
+                )}
               </FormControl>
             </Grid>
           </Grid>
