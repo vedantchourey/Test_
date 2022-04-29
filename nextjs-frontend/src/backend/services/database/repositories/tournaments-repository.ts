@@ -140,4 +140,29 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
       .where({ id: tournamentId });
     return result;
   }
+
+  async getTournamentWithBrackets(tournamentId: string): Promise<ITournament> {
+    const result: ITournament = await this.entities()
+      .first(
+        "tournamentsData.id",
+        "tournamentsData.name",
+        "tournamentsData.game",
+        "tournamentsData.startDate",
+        "tournamentsData.startTime",
+        "tournamentsData.about",
+        "tournamentsData.banner",
+        "tournamentsData.info",
+        "tournamentsData.settings",
+        "tournamentsData.bracketsMetadata",
+        "tournamentsData.streams",
+        "tournamentsData.status",
+        "tournamentsData.joinStatus",
+        "tournamentsData.createTemplateCode",
+        "brackets.brackets",
+        "brackets.rounds"
+      )
+      .join("brackets", "brackets.tournament_id", "tournamentsData.id")
+      .where({ "tournamentsData.id": tournamentId });
+    return result;
+  }
 }

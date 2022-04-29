@@ -15,6 +15,7 @@ export const persistBrackets = async (
   context: Knex
 ): Promise<any> => {
   const roundsSize: number[] = [];
+  let bracket: any;
   const brackets = new Duel(
     Number(req?.bracketsMetadata?.playersLimit),
     req?.bracketsMetadata?.type === "SINGLE" ? 1 : 2
@@ -26,11 +27,18 @@ export const persistBrackets = async (
     return { ...element, p: [0, 0] };
   });
   const repository = new BracketsRepository(context as Knex);
-  const bracket = await repository.create({
+  let existingBracket = await repository.findByTournamentId(req?.id || "");
+  let data = {
     tournament_id: req.id,
     brackets,
     rounds: roundsSize.length,
-  } as any);
+  };
+  if (!existingBracket) {
+    bracket = await repository.create(data);
+  } else {
+    bracket = await repository.update({ ...existingBracket, ...data });
+  }
+
   return { id: bracket.id };
 };
 
@@ -71,7 +79,9 @@ export const checkInTournament = async (
   }
   try {
     const repository = new BracketsRepository(knexConnection);
-    const data: IBracket = await repository.findById(req.tournamentId);
+    const data: IBracket = await repository.findByTournamentId(
+      req.tournamentId
+    );
     if (!(await checkUserRegister(req, knexConnection))) {
       return { message: "User not registered for the tournament" };
     }
