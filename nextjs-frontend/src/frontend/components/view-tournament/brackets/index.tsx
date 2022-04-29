@@ -88,11 +88,165 @@ const Bracket:React.FC<BracketProps> = ({rounds=[]}) =>{
         })
     }
     return(
+      <>
         <Box marginX={"70px"} marginY={2} >
             <Grid container columnSpacing={2} rowSpacing={1}>
                 {renderStatus()}
             </Grid>   
         </Box>
+        <Box marginX={"70px"} marginY={2} >
+          <Grid container columnSpacing={2} rowSpacing={1}>
+            <div className="bracket">
+              <section className="round quarterfinals">
+              <div className="winners">
+                <div className="matchups">
+                  <div className="matchup">
+                    <div className="participants">
+                      <div className="participant">
+                      <span className="span">1 - </span>
+                        <span className="span">
+                          <img className="img" src="/icons/Brawl_Icon 1.png"/>Legend Club</span>
+                        <span className="span">-</span>
+                      </div>
+                      <div className="participant">
+                      <span className="span">1 - </span>
+                        <span className="span">
+                          <img className="img" src="/icons/dragon-icon.png"/>Dragon Club</span>
+                        <span className="span">-</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="matchup">
+                    <div className="participants">
+                    <div className="participant">
+                      <span className="span">1 - </span>
+                        <span className="span">
+                          <img className="img" src="/icons/Brawl_Icon 1.png"/>Legend Club</span>
+                        <span className="span">-</span>
+                      </div>
+                      <div className="participant">
+                      <span className="span">1 - </span>
+                        <span className="span">
+                          <img className="img" src="/icons/dragon-icon.png"/>Dragon Club</span>
+                        <span className="span">-</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="connector">
+                  <div className="merger"></div>
+                  <div className="line"></div>
+                </div>
+              </div>
+              <div className="winners">
+                <div className="matchups">
+                  <div className="matchup">
+                    <div className="participants">
+                    <div className="participant">
+                      <span className="span">1 - </span>
+                        <span className="span">
+                          <img className="img" src="/icons/Brawl_Icon 1.png"/>Legend Club</span>
+                        <span className="span">-</span>
+                      </div>
+                      <div className="participant">
+                      <span className="span">1 - </span>
+                        <span className="span">
+                          <img className="img" src="/icons/dragon-icon.png"/>Dragon Club</span>
+                        <span className="span">-</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="matchup">
+                    <div className="participants">
+                    <div className="participant">
+                      <span className="span">1 - </span>
+                        <span className="span">
+                          <img className="img" src="/icons/Brawl_Icon 1.png"/>Legend Club</span>
+                        <span className="span">-</span>
+                      </div>
+                      <div className="participant">
+                      <span className="span">1 - </span>
+                        <span className="span">
+                          <img className="img" src="/icons/dragon-icon.png"/>Dragon Club</span>
+                        <span className="span">-</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="connector">
+                  <div className="merger"></div>
+                  <div className="line"></div>
+                </div>
+              </div>
+            </section>
+            <section className="round semifinals">
+              <div className="winners">
+                <div className="matchups">
+                  <div className="matchup">
+                    <div className="participants">
+                    <div className="participant">
+                      <span className="span">1 - </span>
+                        <span className="span">
+                          <img className="img" src="/icons/Brawl_Icon 1.png"/>Legend Club</span>
+                        <span className="span">-</span>
+                      </div>
+                      <div className="participant">
+                      <span className="span">1 - </span>
+                        <span className="span">
+                          <img className="img" src="/icons/dragon-icon.png"/>Dragon Club</span>
+                        <span className="span">-</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="matchup">
+                    <div className="participants">
+                    <div className="participant">
+                      <span className="span">1 - </span>
+                        <span className="span">
+                          <img className="img" src="/icons/Brawl_Icon 1.png"/>Legend Club</span>
+                        <span className="span">-</span>
+                      </div>
+                      <div className="participant">
+                      <span className="span">1 - </span>
+                        <span className="span">
+                          <img className="img" src="/icons/dragon-icon.png"/>Dragon Club</span>
+                        <span className="span">-</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="connector">
+                  <div className="merger"></div>
+                  <div className="line"></div>
+                </div>
+              </div>
+            </section>
+            <section className="round finals">
+              <div className="winners">
+                <div className="matchups">
+                  <div className="matchup">
+                    <div className="participants">
+                    <div className="participant">
+                      <span className="span">1 - </span>
+                        <span className="span">
+                          <img className="img" src="/icons/Brawl_Icon 1.png"/>Legend Club</span>
+                        <span className="span">-</span>
+                      </div>
+                      <div className="participant">
+                      <span className="span">1 - </span>
+                        <span className="span">
+                          <img className="img" src="/icons/dragon-icon.png"/>Dragon Club</span>
+                        <span className="span">-</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </Grid>
+      </Box>
+      </>
     )
 }
 
