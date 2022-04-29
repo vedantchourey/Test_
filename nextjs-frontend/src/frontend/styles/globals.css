@@ -65,6 +65,9 @@ a:hover {
   overflow: hidden;
 }
 .bracket .round .winners > div.matchups .matchup .participants .participant {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   box-sizing: border-box;
   color: white;
   /*border-left: 0.25rem solid #858585;*/
@@ -72,6 +75,13 @@ a:hover {
   width: 300px;
   height: 3rem;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
+}
+
+.bracket .round .winners > div.matchups .matchup .participants .participant span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
 }
 .spanclass{
   padding: 14px;
