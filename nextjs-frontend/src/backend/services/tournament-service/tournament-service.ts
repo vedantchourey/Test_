@@ -18,6 +18,7 @@ import { persistBrackets } from "../brackets-service/brackets-service";
 import { ServiceResponse } from "../common/contracts/service-response";
 import { ListTournamentType } from "./list-tournaments-request";
 import { ITournament } from "../database/models/i-tournaments";
+import { TournamentUsersRepository } from "../database/repositories/tournament-users-repository";
 
 export const createTournament: NoobApiService<
   CreateOrEditTournamentRequest,
@@ -48,7 +49,7 @@ export const persistTournament: NoobApiService<
   let tournament;
 
   if (req.id) {
-    tournament = await repository.upadte({ ...req } as any);
+    tournament = await repository.update({ ...req } as any);
   } else {
     tournament = await repository.create({ id: undefined, ...req } as any);
   }
@@ -77,8 +78,45 @@ export async function listTournament(
   const repository = new TournamentsRepository(
     context.transaction as Knex.Transaction
   );
+  const tournamentUsersRepo = new TournamentUsersRepository(
+    context.transaction as Knex.Transaction
+  );
   const tournamentId = context.getParamValue("tournamentId");
   const tournament = await repository.getTournament(tournamentId as string);
+  const users = await tournamentUsersRepo.getUsersDetaisl({
+    tournamentId: tournamentId,
+  });
 
-  return { data: tournament };
+  return {
+    data: tournament,
+  } as any;
+}
+
+export async function tournamentDetails(
+  context: PerRequestContext
+): Promise<ServiceResponse<null, ITournament>> {
+  const { data: tournament } = await listTournament(context);
+
+  const tournamentUsersRepo = new TournamentUsersRepository(
+    context.transaction as Knex.Transaction
+  );
+  const tournamentId = context.getParamValue("tournamentId");
+  const users = await tournamentUsersRepo.getUsersDetaisl({
+    tournamentId: tournamentId,
+  });
+
+  return {
+    data: {
+      ...tournament,
+      playerList: users,
+      pricingDetails: {
+        pricePool:
+          Number(tournament?.bracketsMetadata?.playersLimit) *
+          Number(tournament?.settings?.entryFeeAmount),
+        currentPricePool: users.length
+          ? users.length * Number(tournament?.settings?.entryFeeAmount)
+          : 0,
+      },
+    },
+  } as any;
 }

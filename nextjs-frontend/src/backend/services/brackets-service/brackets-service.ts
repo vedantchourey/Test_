@@ -95,10 +95,10 @@ export const checkInTournament = async (
     }
     const tournamentUsersRepo = new TournamentUsersRepository(knexConnection);
     Promise.all([
-      tournamentUsersRepo.upadte({ checkedIn: true } as ITournamentUsers, {
+      tournamentUsersRepo.update({ checkedIn: true } as ITournamentUsers, {
         ...req,
       }),
-      repository.upadte(data),
+      repository.update(data),
     ]);
 
     return { message: "User check in successfull" };
@@ -109,7 +109,7 @@ export const checkInTournament = async (
 
 export const validateUser = async (
   id: string,
-  knexConnection: Knex
+  knexConnection: Knex | Knex.Transaction
 ): Promise<boolean> => {
   try {
     const repository = new ProfilesRepository(knexConnection);

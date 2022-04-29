@@ -30,6 +30,11 @@ export interface TournamentData {
     data: StreamData[];
   };
   invitePlayer?: InvitePlayerData;
+  playerList?: [];
+  pricingDetails?: {
+    pricePool: number;
+    currentPricePool: number;
+  };
 }
 
 interface TournamentContextType {
@@ -97,10 +102,10 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
                 cloneTournament:
                   tournamentData.createTemplateCode !== undefined,
               },
-              publishData:{
-                society:tournamentData.joinStatus,
-                registration:tournamentData.status
-              }
+              publishData: {
+                society: tournamentData.joinStatus,
+                registration: tournamentData.status,
+              },
             } as TournamentData);
           }
         })

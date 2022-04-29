@@ -51,4 +51,5 @@ export interface ITournament {
   status: "DRAFT" | "PUBLISHED";
   joinStatus: "PRIVATE" | "PUBLIC";
   createTemplateCode: string;
+  [extrsProps: string]: any;
 }

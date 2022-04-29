@@ -29,7 +29,7 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
     return createdItems[0];
   }
 
-  async upadte(tournament: ITournament): Promise<ITournament> {
+  async update(tournament: ITournament): Promise<ITournament> {
     const id = tournament.id;
     const data = { ...tournament };
     delete data.id;
