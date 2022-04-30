@@ -10,7 +10,7 @@ import ViewCard from "../ui-components/view-card";
 import Details from "./details";
 import Participants from "./participants";
 import Rules from "./rules";
-import Bracket, { RoundStatusData } from "./brackets";
+import Bracket from "./brackets";
 import { ReactComponent as RainbowIcon } from "../../../../public/icons/RainbowIcon.svg";
 import Prizes from "./prizes";
 import Image from "next/image";
@@ -18,6 +18,7 @@ import ActionButton from "../ui-components/action-button";
 import { TournamentData } from "../tournament";
 import axios from "axios";
 import moment from "moment";
+import { RoundStatusData } from "./brackets/BracketsInterface";
 
 const HeadSubSection: React.FC = () => {
   return (
@@ -281,7 +282,6 @@ const ViewTournament: React.FC = () => {
       } else {
         timing = getMomentDate(startDate, round.startTime || startTime);
       }
-
       return {
         type: "Fracture",
         isFinished: timing.date.isBefore(now),
@@ -304,7 +304,13 @@ const ViewTournament: React.FC = () => {
       case "prizes":
         return <Prizes />;
       case "bracket":
-        return <Bracket rounds={getBracketProps()} />;
+        return (
+          <Bracket
+            rounds={getBracketProps()}
+            brackets={data?.brackets}
+            type={data?.bracketsMetadata?.type || ""}
+          />
+        );
       default:
         return <Typography color={"white"}>Not found</Typography>;
     }

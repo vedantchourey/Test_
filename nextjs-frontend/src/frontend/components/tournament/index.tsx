@@ -35,6 +35,7 @@ export interface TournamentData {
     pricePool: number;
     currentPricePool: number;
   };
+  brackets?: any;
 }
 
 interface TournamentContextType {
