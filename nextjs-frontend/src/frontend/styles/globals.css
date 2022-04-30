@@ -39,12 +39,7 @@ a:hover {
 }
 
 .bracket {
-  display: inline-block;
-  margin-left: 35%;
-  margin-top: 20%;
-  transform: translate(-50%, -50%);
-  white-space: nowrap;
-  font-size: 0;
+
 }
 .img{
   padding-right: 18px;
