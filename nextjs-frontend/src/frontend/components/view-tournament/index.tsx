@@ -21,11 +21,17 @@ import moment from "moment";
 import { RoundStatusData } from "./brackets/BracketsInterface";
 import ReactHtmlParser from "react-html-parser";
 
-const HeadSubSection: React.FC = () => {
+
+interface HeadSubSectionProps {
+  time: string;
+}
+
+
+const HeadSubSection = ({time}: HeadSubSectionProps) => {
   return (
     <Grid container>
       <Grid item md={4} display="flex">
-        <Typography color={"#F08743"}>10 Oct 2018 14:35 PM</Typography>
+        <Typography color={"#F08743"}>{time}</Typography>
       </Grid>
       <Grid
         item
@@ -339,12 +345,12 @@ const ViewTournament: React.FC = () => {
       
       <React.Fragment>
         <Heading
-          heading="EndPointGG Vs CEX Esports[2]"
+          heading={data.basic?.name}
           backgroundImage
           backgroundImageUrl={data?.basic?.banner||""}
         >
           
-          <HeadSubSection />
+          <HeadSubSection time={moment(data.basic?.startDate).format("DD/MM/YYYY HH:MM A")} />
         </Heading>
         <ViewCard>
           <Grid container>
