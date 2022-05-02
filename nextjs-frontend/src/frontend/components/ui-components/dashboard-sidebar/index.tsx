@@ -86,7 +86,7 @@ const DashboardSideBar:React.FC = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item marginX={2}>
+        {/* <Grid item marginX={2}>
           <Card className={classes.card}>
             <CardContent>
               <Button
@@ -107,7 +107,7 @@ const DashboardSideBar:React.FC = () => {
               </Button>
             </CardContent>
           </Card>
-        </Grid>
+        </Grid> */}
         <Grid item marginX={2}>
           <Button
             variant="contained"
