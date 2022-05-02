@@ -20,6 +20,7 @@ export class b_match extends BaseRepository<IBMatch> {
   }
 
   async create(participants: IBMatch): Promise<IBMatch> {
-    return await this.entities().insert(participants, keys).first();
+    return await this.entities().insert(participants, keys)
+.first();
   }
 }

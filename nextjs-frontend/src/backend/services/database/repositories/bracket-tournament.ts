@@ -10,10 +10,12 @@ export class BTournament extends BaseRepository<IBTournament> {
   }
 
   async create(participants: IBTournament): Promise<IBTournament> {
-    return await this.entities().insert(participants, keys).first();
+    return await this.entities().insert(participants, keys)
+.first();
   }
   async select(data: any): Promise<IBTournament> {
-    let result = await this.entities().where(data, keys).first();
+    const result = await this.entities().where(data, keys)
+.first();
     return result ? result : [];
   }
 }

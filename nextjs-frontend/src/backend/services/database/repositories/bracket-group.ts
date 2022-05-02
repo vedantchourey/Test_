@@ -8,6 +8,7 @@ export class BGroup extends BaseRepository<IBGroup> {
   }
 
   async create(group: IBGroup): Promise<IBGroup> {
-    return await this.entities().insert(group, keys).first();
+    return await this.entities().insert(group, keys)
+.first();
   }
 }

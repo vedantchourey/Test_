@@ -8,11 +8,13 @@ export class BParticipants extends BaseRepository<IBParticipants> {
   }
 
   async create(participants: IBParticipants): Promise<IBParticipants> {
-    return await this.entities().insert(participants, keys).first();
+    return await this.entities().insert(participants, keys)
+.first();
   }
 
   async select(data: any): Promise<IBParticipants> {
-    let result = await this.entities().select(data, keys).first();
+    const result = await this.entities().select(data, keys)
+.first();
     return result ? result : [];
   }
 

@@ -10,6 +10,7 @@ export class BStage extends BaseRepository<IBStage> {
   }
 
   async create(participants: IBStage): Promise<IBStage> {
-    return await this.entities().insert(participants, keys).first();
+    return await this.entities().insert(participants, keys)
+.first();
   }
 }

@@ -8,6 +8,7 @@ export class BRound extends BaseRepository<IBRound> {
   }
 
   async create(group: IBRound): Promise<IBRound> {
-    return await this.entities().insert(group, keys).first();
+    return await this.entities().insert(group, keys)
+.first();
   }
 }
