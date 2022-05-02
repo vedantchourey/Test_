@@ -10,22 +10,23 @@ const Component = ({ brackets }: { brackets: any }) => {
 
     (async function () {
       const data = brackets;
-
+      // @ts-ignore
       window.bracketsViewer.addLocale("ru", {
         common: {
           "round-name": "раунд {{roundNumber}}",
         },
       });
-
+      // @ts-ignore
       // This is optional. You must do it before render().
       window.bracketsViewer.setParticipantImages(
+        // @ts-ignore
         data.participant.map((participant) => ({
           participantId: participant.id,
         }))
       );
-
+      // @ts-ignore
       window.bracketsViewer.onMatchClicked = (match) => console.log(match);
-
+      // @ts-ignore
       window.bracketsViewer
         .render(
           {
@@ -46,7 +47,6 @@ const Component = ({ brackets }: { brackets: any }) => {
         .then(() => console.log("Render finished"));
     })();
   }, [brackets]);
-  //....
   return (
     <>
       <div className="bracket">
