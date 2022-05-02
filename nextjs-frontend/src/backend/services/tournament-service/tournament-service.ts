@@ -19,7 +19,10 @@ import { ServiceResponse } from "../common/contracts/service-response";
 import { ListTournamentType } from "./list-tournaments-request";
 import { ITournament } from "../database/models/i-tournaments";
 import { TournamentUsersRepository } from "../database/repositories/tournament-users-repository";
-
+import BracketsCrud from "../brackets-service/brackets-crud";
+import { createKnexConnection } from "../database/knex";
+import { BTournament } from "../database/repositories/bracket-tournament";
+const { BracketsManager } = require("brackets-manager");
 export const createTournament: NoobApiService<
   CreateOrEditTournamentRequest,
   ITournamentResponse
@@ -92,14 +95,28 @@ export async function tournamentDetails(
   const repository = new TournamentsRepository(
     context.transaction as Knex.Transaction
   );
-  const tournament = await repository.getTournamentWithBrackets(tournamentId as string);
+  let tournament = await repository.getTournamentWithBrackets(
+    tournamentId as string
+  );
   const tournamentUsersRepo = new TournamentUsersRepository(
     context.transaction as Knex.Transaction
   );
   const users = await tournamentUsersRepo.getUsersDetails({
     tournamentId: tournamentId,
   });
-
+  const bracketTournamentRepo = new BTournament(
+    context.transaction as Knex.Transaction
+  );
+  const bracketT = await bracketTournamentRepo.select({
+    tournament_uuid: tournamentId,
+  });
+  if (bracketT) {
+    let connect = createKnexConnection();
+    const manager = new BracketsManager(new BracketsCrud(connect as any));
+    let brackets = await manager.get.tournamentData(bracketT.id);
+    tournament = { ...tournament, brackets };
+    await connect.destroy();
+  }
   return {
     data: {
       ...tournament,

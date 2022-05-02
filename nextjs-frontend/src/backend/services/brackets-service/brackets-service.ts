@@ -1,4 +1,5 @@
 import { Knex } from "knex";
+import { createKnexConnection } from "../database/knex";
 import { IBracket } from "../database/models/i-brackets";
 import { IRegisterTournament } from "../database/models/i-register-tournament";
 import { ITournamentUsers } from "../database/models/i-tournament-users";
@@ -7,6 +8,9 @@ import { BracketsRepository } from "../database/repositories/brackets-repository
 import { ProfilesRepository } from "../database/repositories/profiles-repository";
 import { TournamentUsersRepository } from "../database/repositories/tournament-users-repository";
 import { TournamentsRepository } from "../database/repositories/tournaments-repository";
+import BracketsCrud from "./brackets-crud";
+import { BracketsManager } from "brackets-manager";
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Duel = require("tournament/duel");
 
@@ -156,5 +160,42 @@ export const checkUserRegister = async (
     return Boolean(data.length);
   } catch (ex) {
     return false;
+  }
+};
+
+export const createBrackets = async (
+  req: IRegisterTournament,
+  context: Knex
+): Promise<any> => {
+  // const knexC = createKnexConnection();
+  // let data = knexC.select("*").from("b_participant").first();
+  // console.log(111, data);
+  // await knexC("b_participant").insert({ tournament_id: 1, name: "test" });
+
+  try {
+    const example = {
+      name: "Example",
+      tournamentId: 1,
+      type: "double_elimination",
+      seeding: [
+        "Team 1",
+        "Team 2",
+        "Team 3",
+        "Team 4",
+        "Team 5",
+        "Team 6",
+        "Team 7",
+        "Team 8",
+      ],
+      settings: { seedOrdering: ["natural"] },
+    };
+    let connection = createKnexConnection();
+    const manager = new BracketsManager(
+      new BracketsCrud(connection as any) as any
+    );
+    await manager.create(example as any);
+    await connection.destroy();
+  } catch (ex) {
+    console.log(ex);
   }
 };

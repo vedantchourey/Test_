@@ -2,7 +2,7 @@ import { Box, Grid, Typography } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
 import React from "react";
 import SingleElimination from "./SingleElimination";
-import DoubleElimination from "./Double";
+import DoubleElimination from "./DoubleElimination";
 import { BracketProps, RoundStatusData } from "./BracketsInterface";
 import style from "./style";
 const useRoundStatusStyles = makeStyles(() => createStyles(style));
