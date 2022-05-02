@@ -118,8 +118,8 @@ const Streams: React.FC = (): JSX.Element => {
                   }
                 >
                   <MenuItem value="">Select Provider</MenuItem>
-                  <MenuItem value="provider1">Provider 1</MenuItem>
-                  <MenuItem value="provider2">Provider 2</MenuItem>
+                  <MenuItem value="youtube">Youtube</MenuItem>
+                  
                 </Select>
                 {formik.touched.streams && formik.touched.streams[index].provider && formik.errors.streams !== undefined &&
                     Boolean((formik.errors.streams[index] as StreamData).provider) ? (

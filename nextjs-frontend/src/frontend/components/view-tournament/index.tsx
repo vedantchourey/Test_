@@ -327,12 +327,14 @@ const ViewTournament: React.FC = () => {
         description: "Noob Storm tournament page",
       }}
     >
+      
       <React.Fragment>
         <Heading
           heading="EndPointGG Vs CEX Esports[2]"
           backgroundImage
-          backgroundImageUrl="/images/view-tournament.svg"
+          backgroundImageUrl={data?.basic?.banner||""}
         >
+          
           <HeadSubSection />
         </Heading>
         <ViewCard>
@@ -349,29 +351,21 @@ const ViewTournament: React.FC = () => {
             >
               <Box marginRight="16px">
                 <Typography>
-                  {" "}
-                  Entry Fee :
-                  <span style={{ color: "rgba(105,50,249,1)" }}>
-                    {" "}
-                    ${data?.settings?.entryFeeAmount} USD{" "}
-                  </span>
-                </Typography>
-                <Typography>
                   <span style={{ color: "#FF0000" }}> Round 1 begins in :</span>{" "}
                   {countDown}
                 </Typography>
               </Box>
-              {data.settings?.entryType === "credit" ? (
-                <Box marginRight="16px">
-                  <Typography>
-                    {" "}
-                    Credits :
-                    <span style={{ color: "rgba(105,50,249,1)" }}>
-                      {data.settings?.entryFeeAmount}
-                    </span>
-                  </Typography>
-                </Box>
-              ) : null}
+              
+              <Box marginRight="16px">
+                <Typography>
+                  {" "}
+                  Credits :
+                  <span style={{ color: "rgba(105,50,249,1)", paddingLeft:"5px" }}>
+                    ${data.settings?.entryFeeAmount || 0}
+                  </span>
+                </Typography>
+              </Box>
+              
               <ActionButton items={actionItem} id={"action-item"} />
             </Grid>
           </Grid>

@@ -77,8 +77,8 @@ const Settings: React.FC<SettingProps> = ({
       screenShots: data?.screenShots || "NOT_REQUIRED",
       limitType: data?.limitType || "UNLIMITED",
       limit: data?.limit || -1,
-      countryFlagOnBrackets: (data?.countryFlagOnBrackets === true),
-      registrationRegion: data?.registrationRegion || "all",
+      countryFlagOnBrackets: (data?.countryFlagOnBrackets || true) === true,
+      registrationRegion: data?.registrationRegion || "ALL",
     },
     validationSchema: validationSchema,
     onSubmit: (values: SettingData) => {
