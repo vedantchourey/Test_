@@ -68,7 +68,7 @@ const Bracket: React.FC<BracketProps> = ({
           rowSpacing={1}
         >
           <div className="bracket">
-            {type == "SINGLE" ? (
+            {type === "SINGLE" ? (
               <SingleElimination brackets={brackets} players={players as any} />
             ) : (
               <DoubleElimination brackets={brackets} />

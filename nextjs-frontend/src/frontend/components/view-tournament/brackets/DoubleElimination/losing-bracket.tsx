@@ -6,7 +6,7 @@ interface LosingProps {
 }
 
 const LosingBracket: React.FC<LosingProps> = ({ rounds: losing }) => {
-  const RenderLosingSeed = ({ breakpoint, roundIndex, seed }: RenderSeedProps) => {
+  const RenderLosingSeed = ({ breakpoint, roundIndex, seed }: RenderSeedProps): any => {
     const isLineConnector = losing[roundIndex].seeds.length === losing[roundIndex + 1]?.seeds.length;
     const Wrapper = isLineConnector ? SingleLineSeed : Seed;
     return (

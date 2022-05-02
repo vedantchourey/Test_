@@ -20,7 +20,8 @@ export class BracketsRepository extends BaseRepository<IBracket> {
   }
 
   async findByTournamentId(tournament_id: string): Promise<any> {
-    const items = await this.entities().where("tournament_id", tournament_id).first();
+    const items = await this.entities().where("tournament_id", tournament_id)
+.first();
     return items;
   }
 }

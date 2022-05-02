@@ -6,7 +6,7 @@ interface LosingProps {
 }
 
 const WiningBracket: React.FC<LosingProps> = ({ rounds: wining }) => {
-  const RenderSeed = ({ seed, breakpoint }: RenderSeedProps) => {
+  const RenderSeed = ({ seed, breakpoint }: RenderSeedProps): any => {
     return (
       <Seed
         style={{

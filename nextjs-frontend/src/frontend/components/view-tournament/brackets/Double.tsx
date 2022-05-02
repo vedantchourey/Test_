@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {
-  Bracket,
-  Seed,
-  SeedItem,
-  RoundProps,
-  RenderSeedProps,
-} from "react-brackets";
+import { Bracket, Seed, SeedItem, RenderSeedProps } from "react-brackets";
 import { IAny, IBrackets, IMatch } from "./BracketsInterface";
 
-const Player = ({ name }: { name: string }) => {
+const Player = ({ name }: { name: string }): any => {
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
       <div
@@ -28,7 +22,7 @@ const Player = ({ name }: { name: string }) => {
     </div>
   );
 };
-const RenderSeed = ({ breakpoint, seed }: RenderSeedProps) => {
+const RenderSeed = ({ breakpoint, seed }: RenderSeedProps): any => {
   return (
     <Seed mobileBreakpoint={breakpoint}>
       <SeedItem style={{ width: "100%" }}>
@@ -42,19 +36,18 @@ const RenderSeed = ({ breakpoint, seed }: RenderSeedProps) => {
   );
 };
 
-const SingleElimination = ({ brackets }: { brackets: IBrackets }) => {
+const SingleElimination = ({ brackets }: { brackets: IBrackets }): any => {
   const [sideOne, setSideOne] = useState([] as any);
   const [sideTwo, setSideTwo] = useState([] as any);
   useEffect(() => {
-    let r1: any[] = [];
-    let r2: any[] = [];
-    let rd1: IAny = {};
-    let rd2: IAny = {};
+    const r1: any[] = [];
+    const r2: any[] = [];
+    const rd1: IAny = {};
+    const rd2: IAny = {};
     if (brackets?.matches && brackets.matches.length) {
-      brackets?.matches.forEach((x: IMatch) => {
+      brackets?.matches.forEach((x: IMatch): any => {
         if (x.id.s === 1) {
-          console.log(`${x.id.r}.${x.id.s}`);
-          let round = `${x.id.r}.${x.id.s}`;
+          const round = `${x.id.r}.${x.id.s}`;
           if (rd1[round]) {
             rd1[round].push(x.p);
           } else {
@@ -62,9 +55,7 @@ const SingleElimination = ({ brackets }: { brackets: IBrackets }) => {
             rd1[round] = [x.p];
           }
         } else {
-          console.log(`${x.id.r}.${x.id.s}`);
-
-          let round = `${x.id.r}.${x.id.s}`;
+          const round = `${x.id.r}.${x.id.s}`;
           if (rd2[round]) {
             rd2[round].push(x.p);
           } else {
@@ -73,7 +64,7 @@ const SingleElimination = ({ brackets }: { brackets: IBrackets }) => {
           }
         }
       });
-      let a: any[] = Object.keys(rd1)?.map((x) => {
+      const a: any[] = Object.keys(rd1)?.map((x): any => {
         return {
           title: "",
           seeds: rd1[x].map((y: any, i: number) => ({
@@ -81,7 +72,7 @@ const SingleElimination = ({ brackets }: { brackets: IBrackets }) => {
           })),
         };
       });
-      let a1: any[] = Object.keys(rd2)?.map((x) => {
+      const a1: any[] = Object.keys(rd2)?.map((x) => {
         return {
           title: "",
           seeds: rd2[x].map((y: any, i: number) => ({
@@ -89,8 +80,6 @@ const SingleElimination = ({ brackets }: { brackets: IBrackets }) => {
           })),
         };
       });
-      console.log(a1);
-
       setSideOne(a);
       setSideTwo(a1);
     }

@@ -35,12 +35,7 @@ const rounds: RoundProps[] = [
     ],
   },
 ];
-const CustomSeed = ({
-  seed,
-  breakpoint,
-  roundIndex,
-  seedIndex,
-}: RenderSeedProps) => {
+const CustomSeed = ({ seed, breakpoint, roundIndex }: RenderSeedProps): any => {
   // ------ assuming rounds is the losers brackets rounds ------
   // losers rounds usually got some identical seeds amount like (2 - 2 - 1 - 1)
 
@@ -64,7 +59,7 @@ const CustomSeed = ({
   );
 };
 
-const Component = () => {
+const Component = (): any => {
   //....
   return <Bracket rounds={rounds} renderSeedComponent={CustomSeed} />;
 };

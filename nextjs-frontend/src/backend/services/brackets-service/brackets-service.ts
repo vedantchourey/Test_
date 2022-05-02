@@ -27,8 +27,8 @@ export const persistBrackets = async (
     return { ...element, p: [0, 0] };
   });
   const repository = new BracketsRepository(context as Knex);
-  let existingBracket = await repository.findByTournamentId(req?.id || "");
-  let data = {
+  const existingBracket = await repository.findByTournamentId(req?.id || "");
+  const data = {
     tournament_id: req.id,
     brackets,
     rounds: roundsSize.length,

@@ -4,7 +4,6 @@ import {
   Bracket,
   Seed,
   SeedItem,
-  RoundProps,
   RenderSeedProps,
 } from "react-brackets";
 import { IAny, IBrackets, IMatch, IPlayers } from "./BracketsInterface";
@@ -15,15 +14,15 @@ const SingleElimination = ({
 }: {
   brackets: IBrackets;
   players: IPlayers[];
-}) => {
+}): any => {
   const [rounds, setRounds] = useState([] as any);
-  useEffect(() => {
-    let r: any[] = [];
-    let rd: IAny = {};
+  useEffect((): void => {
+    const r: any[] = [];
+    const rd: IAny = {};
     if (brackets?.matches && brackets.matches.length) {
       brackets?.matches.forEach((x: IMatch) => {
         if (x.id.s === 1) {
-          let round = `${x.id.r}.${x.id.s}`;
+          const round = `${x.id.r}.${x.id.s}`;
           if (rd[round]) {
             rd[round].push(x.p);
           } else {
@@ -32,7 +31,7 @@ const SingleElimination = ({
           }
         }
       });
-      let a: any[] = Object.keys(rd)?.map((x) => {
+      const a: any[] = Object.keys(rd)?.map((x) => {
         return {
           title: "",
           seeds: rd[x].map((y: any, i: number) => ({
@@ -43,9 +42,9 @@ const SingleElimination = ({
       setRounds(a);
     }
   }, [brackets]);
-  const Player = ({ id }: { id: string }) => {
+  const Player = ({ id }: { id: string }) : any => {
     let player = { username: "TBD" };
-    let p = players.find((x) => x.id == id);
+    const p = players.find((x) => x.id === id);
     if (p) player = p;
     return (
       <div style={{ display: "flex", alignItems: "center" }}>
@@ -69,9 +68,7 @@ const SingleElimination = ({
       </div>
     );
   };
-  const RenderSeed = ({ breakpoint, seed }: RenderSeedProps) => {
-    console.log("reached");
-
+  const RenderSeed = ({ breakpoint, seed }: RenderSeedProps): any => {
     return (
       <Seed mobileBreakpoint={breakpoint}>
         <SeedItem style={{ width: "100%" }}>
