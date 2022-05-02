@@ -25,11 +25,23 @@ const RoundStatus: React.FC<RoundStatusData> = ({
     <Box>
       <Box className={styles.statusContainer}>
         <Typography color={"white"}>Round {round}</Typography>
-        <Box className={styles.status}>{getRoundStatus()}</Box>
+        <Box className={styles.status}>
+          <Typography
+            color={"white"}
+            textTransform={"uppercase"}
+            variant="caption"
+          >
+            {getRoundStatus()}
+          </Typography>
+        </Box>
       </Box>
       <Box marginTop={2} className={styles.typeContainer}>
         <Box className={styles.type}>
-          <Typography color={"white"} textTransform={"uppercase"}>
+          <Typography
+            color={"white"}
+            textTransform={"uppercase"}
+            variant="caption"
+          >
             {type}
           </Typography>
         </Box>

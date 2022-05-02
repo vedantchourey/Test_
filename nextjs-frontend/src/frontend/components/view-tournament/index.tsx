@@ -19,6 +19,7 @@ import { TournamentData } from "../tournament";
 import axios from "axios";
 import moment from "moment";
 import { RoundStatusData } from "./brackets/BracketsInterface";
+import ReactHtmlParser from "react-html-parser";
 
 const HeadSubSection: React.FC = () => {
   return (
@@ -283,7 +284,7 @@ const ViewTournament: React.FC = () => {
         timing = getMomentDate(startDate, round.startTime || startTime);
       }
       return {
-        type: "Fracture",
+        type: (round.map || []).length ? round.map.join(", ") : "No Map provieded",
         isFinished: timing.date.isBefore(now),
         round: index + 1,
         startDate: timing.startDate,
@@ -298,11 +299,11 @@ const ViewTournament: React.FC = () => {
       case "details":
         return <Details data={data} />;
       case "participants":
-        return <Participants />;
+        return <Participants data={data} />;
       case "rules":
         return <Rules data={data} />;
       case "prizes":
-        return <Prizes />;
+        return <Prizes data={data} />;
       case "bracket":
         return (
           <Bracket
@@ -313,7 +314,14 @@ const ViewTournament: React.FC = () => {
           />
         );
       default:
-        return <Typography color={"white"}>Not found</Typography>;
+        return (
+          <ViewCard title="Contact Details">
+            <div style={{ fontFamily: "Inter" }}>
+              {ReactHtmlParser(data.info?.contactDetails || "")}
+            </div>
+          </ViewCard>
+          
+        );
     }
   };
 
@@ -362,7 +370,7 @@ const ViewTournament: React.FC = () => {
                   {" "}
                   Credits :
                   <span style={{ color: "rgba(105,50,249,1)", paddingLeft:"5px" }}>
-                    ${data.settings?.entryFeeAmount || 0}
+                    {data.settings?.entryFeeAmount || 0}
                   </span>
                 </Typography>
               </Box>

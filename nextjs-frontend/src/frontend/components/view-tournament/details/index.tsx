@@ -70,6 +70,9 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
     }
   }
 
+  const totalSlots = data?.settings?.limit || 0;
+  const currentSlot = (data?.playerList || []).length;
+
   return (
     <React.Fragment>
       <ViewCard title="About the tournament">
@@ -92,7 +95,7 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                     <LinearProgress
                       variant="determinate"
                       color={"secondary"}
-                      value={80}
+                      value={(currentSlot*100) / totalSlots}
                     />
                   </Box>
                   <Box
@@ -102,7 +105,7 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                     justifyContent="space-between"
                   >
                     <Box width={"45%"} display="flex">
-                      <Typography marginRight={1}>50</Typography>
+                      <Typography marginRight={1}>{totalSlots}</Typography>
                       <Typography
                         color={"#5A5A5A"}
                         fontWeight={600}
@@ -113,7 +116,7 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                       </Typography>
                     </Box>
                     <Box width={"45%"} display="flex">
-                      <Typography marginRight={1}>12</Typography>
+                      <Typography marginRight={1}>{totalSlots - currentSlot}</Typography>
                       <Typography
                         color={"#5A5A5A"}
                         fontWeight={600}
@@ -144,14 +147,13 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                   <Typography className={classes.title}> Prize Pool</Typography>
                   <Typography className={classes.subTitle}>
                     {" "}
-                    $ {data?.pricingDetails?.pricePool} {" "}
+                    {data?.pricingDetails?.pricePool} Credits
                   </Typography>
                 </Grid>
                 <Grid item md={2}>
                   <Typography className={classes.title}> Current Prize Pool</Typography>
                   <Typography className={classes.subTitle}>
-                    {" "}
-                    $ {data?.pricingDetails?.currentPricePool}{" "}
+                    {data?.pricingDetails?.currentPricePool} Credits
                   </Typography>
                 </Grid>
                 <Grid item md={1}>
