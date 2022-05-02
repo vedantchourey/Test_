@@ -33,11 +33,12 @@ export class TournamentUsersRepository extends BaseRepository<ITournamentUsers> 
     return data;
   }
 
-  async getUsersDetaisl(params: any): Promise<ITournamentUsers[]> {
+  async getUsersDetails(params: any): Promise<ITournamentUsers[]> {
     let data = [];    
     data = await this.entities()
       .join("profiles", "profiles.id", "tournament_users.userId")
-      .select("username")
+      .select("profiles.username")
+      .select("profiles.id")
       .where(params);
     return data;
   }

@@ -96,7 +96,7 @@ export async function tournamentDetails(
   const tournamentUsersRepo = new TournamentUsersRepository(
     context.transaction as Knex.Transaction
   );
-  const users = await tournamentUsersRepo.getUsersDetaisl({
+  const users = await tournamentUsersRepo.getUsersDetails({
     tournamentId: tournamentId,
   });
 

@@ -436,7 +436,7 @@ const EliminateBracket = React.forwardRef<
                               }}
                               value={
                                 (formik.values.rounds[index] as RoundData)
-                                  .startTime
+                                  ?.startTime
                               }
                               renderInput={(params): JSX.Element => (
                                 <TextField
@@ -449,7 +449,7 @@ const EliminateBracket = React.forwardRef<
                                           formik.values.rounds[
                                             index
                                           ] as RoundData
-                                        ).startTime
+                                        )?.startTime
                                     )
                                   }
                                   {...params}
