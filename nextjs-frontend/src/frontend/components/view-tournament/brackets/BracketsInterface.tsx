@@ -8,6 +8,11 @@ export interface IMatch {
   p: number[];
   m?: number[];
 }
+
+export interface IPlayers {
+  id: string;
+  username: string;
+}
 export interface IBrackets {
   matches: IMatch[];
 }
@@ -23,8 +28,10 @@ export interface RoundStatusData {
   startDate?: string;
   startTime?: string;
 }
+
 export interface BracketProps {
   rounds?: RoundStatusData[];
   brackets: IBrackets;
   type: string;
+  players: IPlayers[]
 }

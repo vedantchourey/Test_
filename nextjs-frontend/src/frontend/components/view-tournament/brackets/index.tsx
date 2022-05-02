@@ -2,7 +2,7 @@ import { Box, Grid, Typography } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
 import React from "react";
 import SingleElimination from "./SingleElimination";
-import DoubleElimination from "./DoubleElimination";
+import DoubleElimination from "./Double";
 import { BracketProps, RoundStatusData } from "./BracketsInterface";
 import style from "./style";
 const useRoundStatusStyles = makeStyles(() => createStyles(style));
@@ -38,7 +38,12 @@ const RoundStatus: React.FC<RoundStatusData> = ({
   );
 };
 
-const Bracket: React.FC<BracketProps> = ({ rounds = [], brackets, type }) => {
+const Bracket: React.FC<BracketProps> = ({
+  rounds = [],
+  brackets,
+  type,
+  players,
+}) => {
   const renderStatus = (): JSX.Element[] => {
     return rounds.map((round) => {
       return (
@@ -56,12 +61,17 @@ const Bracket: React.FC<BracketProps> = ({ rounds = [], brackets, type }) => {
         </Grid>
       </Box>
       <Box marginX={"70px"} marginY={2}>
-        <Grid container columnSpacing={2} rowSpacing={1}>
+        <Grid
+          container
+          style={{ overflow: "scroll" }}
+          columnSpacing={2}
+          rowSpacing={1}
+        >
           <div className="bracket">
             {type == "SINGLE" ? (
-              <SingleElimination brackets={brackets} />
+              <SingleElimination brackets={brackets} players={players as any} />
             ) : (
-              <DoubleElimination />
+              <DoubleElimination brackets={brackets} />
             )}
           </div>
         </Grid>

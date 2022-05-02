@@ -308,6 +308,7 @@ const ViewTournament: React.FC = () => {
           <Bracket
             rounds={getBracketProps()}
             brackets={data?.brackets}
+            players={data?.playerList as any}
             type={data?.bracketsMetadata?.type || ""}
           />
         );

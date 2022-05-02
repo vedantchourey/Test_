@@ -1,3 +1,4 @@
+import { Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import {
   Bracket,
@@ -6,43 +7,15 @@ import {
   RoundProps,
   RenderSeedProps,
 } from "react-brackets";
-import { IAny, IBrackets, IMatch } from "./BracketsInterface";
+import { IAny, IBrackets, IMatch, IPlayers } from "./BracketsInterface";
 
-const Player = ({ name }: { name: string }) => {
-  return (
-    <div style={{ display: "flex", alignItems: "center" }}>
-      <div
-        style={{
-          width: 200,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-around",
-        }}
-      >
-        <span>1</span>
-        <span>-</span>
-        <img className="img" src="/icons/Brawl_Icon 1.png" width={50} />
-        {name}
-      </div>
-      <div style={{ width: 50, background: "#0F0526", padding: "18px" }}>-</div>
-    </div>
-  );
-};
-const RenderSeed = ({ breakpoint, seed }: RenderSeedProps) => {
-  return (
-    <Seed mobileBreakpoint={breakpoint}>
-      <SeedItem style={{ width: "100%" }}>
-        <div style={{ background: "#19122C" }}>
-          <Player name={seed.teams?.[0] !== 0 ? seed.teams?.[0] : "TBD"} />
-          <div style={{ height: 1, backgroundColor: "#707070" }}></div>
-          <Player name={seed.teams?.[1] !== 0 ? seed.teams?.[0] : "TBD"} />
-        </div>
-      </SeedItem>
-    </Seed>
-  );
-};
-
-const SingleElimination = ({ brackets }: { brackets: IBrackets }) => {
+const SingleElimination = ({
+  brackets,
+  players = [],
+}: {
+  brackets: IBrackets;
+  players: IPlayers[];
+}) => {
   const [rounds, setRounds] = useState([] as any);
   useEffect(() => {
     let r: any[] = [];
@@ -70,6 +43,47 @@ const SingleElimination = ({ brackets }: { brackets: IBrackets }) => {
       setRounds(a);
     }
   }, [brackets]);
+  const Player = ({ id }: { id: string }) => {
+    let player = { username: "TBD" };
+    let p = players.find((x) => x.id == id);
+    if (p) player = p;
+    return (
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <div
+          style={{
+            width: 200,
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <div style={{ width: 50 }}>
+            <span style={{ marginLeft: 20 }}>1</span>
+            <span>&nbsp;-&nbsp;</span>
+          </div>
+          <img className="img" src="/icons/Brawl_Icon 1.png" width={50} />
+          <Typography> {player?.username}</Typography>
+        </div>
+        <div style={{ width: 50, background: "#0F0526", padding: "18px" }}>
+          -
+        </div>
+      </div>
+    );
+  };
+  const RenderSeed = ({ breakpoint, seed }: RenderSeedProps) => {
+    console.log("reached");
+
+    return (
+      <Seed mobileBreakpoint={breakpoint}>
+        <SeedItem style={{ width: "100%" }}>
+          <div style={{ background: "#19122C" }}>
+            <Player id={seed.teams?.[0]} />
+            <div style={{ height: 1, backgroundColor: "#707070" }}></div>
+            <Player id={seed.teams?.[1]} />
+          </div>
+        </SeedItem>
+      </Seed>
+    );
+  };
 
   return (
     <Bracket
