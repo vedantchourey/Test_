@@ -22,7 +22,7 @@ const RoundStatus: React.FC<RoundStatusData> = ({
     return `${startDate} ${startTime}`;
   };
   return (
-    <Box>
+    <Box minWidth={325}>
       <Box className={styles.statusContainer}>
         <Typography color={"white"}>Round {round}</Typography>
         <Box className={styles.status}>
@@ -68,7 +68,7 @@ const Bracket: React.FC<BracketProps> = ({
   return (
     <>
       <Box marginX={"70px"} marginY={2}>
-        <Grid container columnSpacing={2} rowSpacing={1}>
+        <Grid container columnSpacing={2} rowSpacing={1} overflow={"scroll"} flexWrap={"nowrap"}>
           {renderStatus()}
         </Grid>
       </Box>
