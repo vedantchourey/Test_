@@ -10,15 +10,8 @@ import { TournamentUsersRepository } from "../database/repositories/tournament-u
 import { TournamentsRepository } from "../database/repositories/tournaments-repository";
 import BracketsCrud from "./brackets-crud";
 import { BracketsManager } from "brackets-manager";
-import { BTournament } from "../database/repositories/bracket-tournament";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Duel = require("tournament/duel");
-
-export const persistBrackets = async (
-  req: ITournament,
-  context: Knex
-): Promise<any> => {
+export const persistBrackets = async (req: ITournament): Promise<any> => {
   const connection = createKnexConnection();
   try {
     let tournament: any = await connection("b_tournament")
@@ -34,23 +27,6 @@ export const persistBrackets = async (
     playerCount = nextPowerOf2(playerCount);
     if (tournament && tournament.length) {
       await deleteBracket(connection, tournament[0].id, tournament[0].stage_id);
-      //       const stage = await connection("b_stage")
-      //         .where({
-      //           id: tournament[0].stage_id,
-      //         })
-      //         .first();
-      //       await connection("b_stage").update({
-      //         ...stage,
-      //         settings: {
-      //           ...stage.settings,
-      //           size: playerCount,
-      //         },
-      //       });
-      //       await manager.update.seeding(
-      //         Number(tournament[0].stage_id),
-      //         new Array(playerCount).fill(0)
-      // .map((x, i) => `${i}`)
-      //       );
     } else {
       tournament = await connection("b_tournament")
         .insert({
@@ -65,13 +41,14 @@ export const persistBrackets = async (
         req?.bracketsMetadata?.type === "SINGLE"
           ? "single_elimination"
           : "double_elimination",
-      seeding: new Array(playerCount).fill(0).map((x, i) => `${i}`),
+      seeding: new Array(playerCount).fill(0)
+.map((x, i) => `${i}`),
       settings: { seedOrdering: ["natural"] },
     };
 
     await manager.create(data as any);
   } catch (ex) {
-    console.log(ex);
+    console.error(ex);
   } finally {
     await connection.destroy();
   }
@@ -194,13 +171,22 @@ export const checkUserRegister = async (
   }
 };
 
-const deleteBracket = (connection: Knex, tournament_id: any, stage_id: any) => {
-  let all = [
-    connection("b_stage").delete().where({ tournament_id }),
-    connection("b_participant").delete().where({ tournament_id }),
-    connection("b_round").delete().where({ stage_id }),
-    connection("b_match").delete().where({ stage_id }),
-    connection("b_group").delete().where({ stage_id }),
+const deleteBracket = (
+  connection: Knex,
+  tournament_id: any,
+  stage_id: any
+): Promise<any> => {
+  const all = [
+    connection("b_stage").delete()
+.where({ tournament_id }),
+    connection("b_participant").delete()
+.where({ tournament_id }),
+    connection("b_round").delete()
+.where({ stage_id }),
+    connection("b_match").delete()
+.where({ stage_id }),
+    connection("b_group").delete()
+.where({ stage_id }),
   ];
   return Promise.all(all);
 };
@@ -208,7 +194,7 @@ const deleteBracket = (connection: Knex, tournament_id: any, stage_id: any) => {
 function nextPowerOf2(n: number): number {
   let count = 0;
   if (n && !(n & (n - 1))) return n;
-  while (n != 0) {
+  while (n !== 0) {
     n >>= 1;
     count += 1;
   }

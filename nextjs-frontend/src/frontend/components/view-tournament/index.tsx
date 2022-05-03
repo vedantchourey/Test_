@@ -27,7 +27,7 @@ interface HeadSubSectionProps {
 }
 
 
-const HeadSubSection = ({time}: HeadSubSectionProps) => {
+const HeadSubSection = ({time}: HeadSubSectionProps): any => {
   return (
     <Grid container>
       <Grid item md={4} display="flex">

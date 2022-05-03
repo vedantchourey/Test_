@@ -1,32 +1,29 @@
 import { useEffect } from "react";
-const Component = ({ brackets }: { brackets: any }) => {
+const Component = ({ brackets }: { brackets: any }): any => {
   useEffect(() => {
-    console.log(1, brackets);
-
     if (!brackets) return;
-    // manager.create(example as any).then((data) => {
-    //   console.log(data);
-    // });
 
-    (async function () {
+    (async function (): Promise<any> {
       const data = brackets;
-      // @ts-ignore
+      // @ts-expect-error: ignore
       window.bracketsViewer.addLocale("ru", {
         common: {
           "round-name": "раунд {{roundNumber}}",
         },
       });
-      // @ts-ignore
+      // @ts-expect-error: ignore
       // This is optional. You must do it before render().
       window.bracketsViewer.setParticipantImages(
-        // @ts-ignore
+        // @ts-expect-error: ignore
         data.participant.map((participant) => ({
           participantId: participant.id,
         }))
       );
-      // @ts-ignore
-      window.bracketsViewer.onMatchClicked = (match) => console.log(match);
-      // @ts-ignore
+      // @ts-expect-error: ignore
+      window.bracketsViewer.onMatchClicked = (match): any => {
+        match;
+      };
+      // @ts-expect-error: ignore
       window.bracketsViewer
         .render(
           {
@@ -44,12 +41,14 @@ const Component = ({ brackets }: { brackets: any }) => {
             highlightParticipantOnHover: true,
           }
         )
-        .then(() => console.log("Render finished"));
+        .then(() => {
+          //render finish
+        });
     })();
   }, [brackets]);
   return (
     <>
-      <div className="bracket" style={{ maxHeight: 600, overflow: "scroll"}}>
+      <div className="bracket" style={{ maxHeight: 600, overflow: "scroll" }}>
         <div id="example" className="brackets-viewer"></div>
       </div>
     </>

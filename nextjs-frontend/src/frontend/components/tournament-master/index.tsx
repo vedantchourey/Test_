@@ -23,8 +23,13 @@ import { useAppDispatch, useAppSelector } from "../../redux-store/redux-store";
 import {
   allGamesSelector,
   gamesFetchStatusSelector,
+  allFormatsSelector,
+  formatsFetchStatusSelector,
 } from "../../redux-store/games/game-selectors";
-import { fetchAllGamesThunk } from "../../redux-store/games/game-slice";
+import {
+  fetchAllGamesThunk,
+  fetchAllFormats,
+} from "../../redux-store/games/game-slice";
 import { IGameResponse } from "../../service-clients/messages/i-game-response";
 
 export interface TournamentType
@@ -36,9 +41,18 @@ const TournamentMaster: React.FC = () => {
   const recordsPerPage = 10;
   const [page, setPage] = React.useState<number>(1);
   const [totalRecords, setTotalRecords] = React.useState<number>(0);
-  const [filter, setFilter] = React.useState<{ status: string }>({
+  const [filter, setFilter] = React.useState<{
+    status: string;
+    game: string;
+    format: string;
+    assgined: string;
+  }>({
     status: "",
+    game: "",
+    format: "",
+    assgined: "",
   });
+
   const router = useRouter();
 
   const [gameMap, setGameMap] = React.useState<{
@@ -48,18 +62,35 @@ const TournamentMaster: React.FC = () => {
   const games = useAppSelector(allGamesSelector);
   const gamesFetchStatus = useAppSelector(gamesFetchStatusSelector);
 
+  const formats = useAppSelector(allFormatsSelector);
+  const formatsFetchStatus = useAppSelector(formatsFetchStatusSelector);
+
   React.useEffect(() => {
     if (gamesFetchStatus !== "idle") return;
     appDispatch(fetchAllGamesThunk());
   }, [appDispatch, gamesFetchStatus]);
 
   React.useEffect(() => {
-    const map = games.reduce((obj, game) => {
+    if (formatsFetchStatus !== "idle") return;
+    appDispatch(fetchAllFormats());
+  }, [appDispatch, formatsFetchStatus]);
+
+  React.useEffect(() => {
+    const map = (games || []).reduce((obj, game) => {
       obj[game.id] = game;
       return obj;
     }, {} as { [key: string]: IGameResponse });
     setGameMap(map);
   }, [games]);
+
+  // React.useEffect(() => {
+
+  //   // const map = games.reduce((obj, game) => {
+  //   //   obj[game.id] = game;
+  //   //   return obj;
+  //   // }, {} as { [key: string]: IGameResponse });
+  //   // setGameMap(map);
+  // }, [formats]);
 
   const fetchTournaments = (): void => {
     axios
@@ -84,7 +115,7 @@ const TournamentMaster: React.FC = () => {
 
   React.useEffect(() => {
     fetchTournaments();
-  }, [page]);
+  }, [page, filter]);
 
   const conf: NoobColumnConf<TournamentType>[] = [
     {
@@ -247,10 +278,22 @@ const TournamentMaster: React.FC = () => {
                 <Grid container columnSpacing={1}>
                   <Grid item md={2.4}>
                     <FormControl fullWidth>
-                      <Select displayEmpty value={""}>
+                      <Select
+                        displayEmpty
+                        value={filter.game}
+                        onChange={(e): void =>
+                          onFilterChangeHandler("game", e.target.value)
+                        }
+                      >
                         <MenuItem value="">Select Game</MenuItem>
-                        <MenuItem value="FIFA 2021">FIFA 2021</MenuItem>
-                        <MenuItem value="FIFA 2022">FIFA 2022</MenuItem>
+                        {games &&
+                          games.map((game, i: number) => {
+                            return (
+                              <MenuItem value={game.id} key={i}>
+                                {game.displayName}
+                              </MenuItem>
+                            );
+                          })}
                       </Select>
                     </FormControl>
                   </Grid>
@@ -271,19 +314,29 @@ const TournamentMaster: React.FC = () => {
                   </Grid>
                   <Grid item md={2.4}>
                     <FormControl fullWidth>
-                      <Select displayEmpty value={""}>
+                      <Select
+                        displayEmpty
+                        value={filter.format}
+                        onChange={(e): void =>
+                          onFilterChangeHandler("format", e.target.value)
+                        }
+                      >
                         <MenuItem value="">Select Tournament Format</MenuItem>
-                        <MenuItem value="FIFA 2021">FIFA 2021</MenuItem>
-                        <MenuItem value="FIFA 2022">FIFA 2022</MenuItem>
+                        {(formats || []).map((format, i) => {
+                          return (
+                            <MenuItem value={format} key={i}>
+                              {format}
+                            </MenuItem>
+                          );
+                        })}
                       </Select>
                     </FormControl>
                   </Grid>
                   <Grid item md={2.4}>
                     <FormControl fullWidth>
-                      <Select displayEmpty value={""}>
+                      <Select value={"ADMIN"}>
                         <MenuItem value="">Select Assigned Admin</MenuItem>
-                        <MenuItem value="FIFA 2021">FIFA 2021</MenuItem>
-                        <MenuItem value="FIFA 2022">FIFA 2022</MenuItem>
+                        <MenuItem value="ADMIN">ADMIN</MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>

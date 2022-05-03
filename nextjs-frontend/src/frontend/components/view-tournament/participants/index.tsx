@@ -29,13 +29,18 @@ const data = [
   },
   {
     image: <Avatar />,
-    title: "Guy Hawkins"
-  }
+    title: "Guy Hawkins",
+  },
 ];
 
 const imageText = data.map((newData) => {
   return (
-    <Grid key={newData.title} item md={6} border={"1px solid rgba(255, 255, 255, 0.1)"}>
+    <Grid
+      key={newData.title}
+      item
+      md={6}
+      border={"1px solid rgba(255, 255, 255, 0.1)"}
+    >
       <Box display="flex" alignItems="center" padding={2}>
         <Avatar alt="Guy hawkins" />
         <Typography marginLeft={"16px"}>{newData.title}</Typography>
@@ -48,7 +53,7 @@ interface ParticipantsProps {
   data: TournamentData;
 }
 
-const Participants:React.FC<ParticipantsProps> = ({ data }) => {
+const Participants: React.FC<ParticipantsProps> = () => {
   return (
     <React.Fragment>
       <ViewCard>
