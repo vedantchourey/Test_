@@ -83,15 +83,6 @@ const TournamentMaster: React.FC = () => {
     setGameMap(map);
   }, [games]);
 
-  // React.useEffect(() => {
-
-  //   // const map = games.reduce((obj, game) => {
-  //   //   obj[game.id] = game;
-  //   //   return obj;
-  //   // }, {} as { [key: string]: IGameResponse });
-  //   // setGameMap(map);
-  // }, [formats]);
-
   const fetchTournaments = (): void => {
     axios
       .get(`/api/tournaments/list`, {
@@ -115,7 +106,7 @@ const TournamentMaster: React.FC = () => {
 
   React.useEffect(() => {
     fetchTournaments();
-  }, [page, filter]);
+  }, [page]);
 
   const conf: NoobColumnConf<TournamentType>[] = [
     {
