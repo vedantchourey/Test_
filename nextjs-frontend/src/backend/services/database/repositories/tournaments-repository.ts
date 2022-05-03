@@ -103,6 +103,7 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
         "tournamentsData.bracketsMetadata",
         "tournamentsData.streams",
         "tournamentsData.status",
+        "tournamentsData.sponsor",
         "tournamentsData.joinStatus",
         "tournamentsData.createTemplateCode",
         "brackets.brackets",

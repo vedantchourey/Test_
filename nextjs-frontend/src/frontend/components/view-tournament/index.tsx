@@ -131,7 +131,7 @@ const ViewTournament: React.FC = () => {
                 delete tournamentData[key];
               }
             });
-
+            
             setData({
               ...tournamentData,
               basic: {
@@ -144,6 +144,7 @@ const ViewTournament: React.FC = () => {
                   "hh:mm:ss"
                 ).toDate(),
                 banner: tournamentData.banner,
+                sponsor: tournamentData.sponsor,
                 createTemplateCode: tournamentData.createTemplateCode,
                 cloneTournament:
                   tournamentData.createTemplateCode !== undefined,
@@ -331,6 +332,8 @@ const ViewTournament: React.FC = () => {
     }
   };
 
+  console.log('data -> ', data.basic)
+
   const onTabClick = (tab: string): void => {
     if (!tab || tab === "") return;
     router.push(getUrl(), getAsURL(tab.toLowerCase()), { shallow: true });
@@ -355,7 +358,8 @@ const ViewTournament: React.FC = () => {
         <ViewCard>
           <Grid container>
             <Grid item md={6}>
-              <RainbowIcon />
+              {data.basic?.sponsor && <img src={data.basic?.sponsor} style={{height: 80, width: 200}} /> }
+              
             </Grid>
             <Grid
               item
