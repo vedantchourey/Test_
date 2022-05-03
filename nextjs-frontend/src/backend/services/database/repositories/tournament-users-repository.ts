@@ -17,7 +17,7 @@ export class TournamentUsersRepository extends BaseRepository<ITournamentUsers> 
     return createdItems[0];
   }
 
-  async upadte(
+  async update(
     tournametUsers: ITournamentUsers,
     where: ITournamentUsers
   ): Promise<ITournamentUsers> {
@@ -30,6 +30,16 @@ export class TournamentUsersRepository extends BaseRepository<ITournamentUsers> 
   async findAll(params: any): Promise<ITournamentUsers[]> {
     let data = [];
     data = await this.entities().where(params);
+    return data;
+  }
+
+  async getUsersDetails(params: any): Promise<ITournamentUsers[]> {
+    let data = [];    
+    data = await this.entities()
+      .join("profiles", "profiles.id", "tournament_users.userId")
+      .select("profiles.username")
+      .select("profiles.id")
+      .where(params);
     return data;
   }
 }

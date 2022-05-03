@@ -84,8 +84,7 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
                 }
               >
                 <MenuItem value="">Select Contact Option</MenuItem>
-                <MenuItem value="FaceBook">FaceBook</MenuItem>
-                <MenuItem value="Google">Google</MenuItem>
+                <MenuItem value="Discord">Discord</MenuItem>
               </Select>
             </FormControl>
           </Grid>

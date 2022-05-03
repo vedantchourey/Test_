@@ -83,8 +83,8 @@ const TournamentDashboardTable: React.FC = () => {
     },
     {
       title: "Participant",
-      renderCell: (): string => {
-        return "150";
+      renderCell: (row): number => {
+        return (row.playerList||[]).length;
       },
       width: "10%",
     },

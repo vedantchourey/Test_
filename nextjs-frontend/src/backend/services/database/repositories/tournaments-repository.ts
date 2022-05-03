@@ -29,7 +29,7 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
     return createdItems[0];
   }
 
-  async upadte(tournament: ITournament): Promise<ITournament> {
+  async update(tournament: ITournament): Promise<ITournament> {
     const id = tournament.id;
     const data = { ...tournament };
     delete data.id;
@@ -138,6 +138,31 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
         "createTemplateCode"
       )
       .where({ id: tournamentId });
+    return result;
+  }
+
+  async getTournamentWithBrackets(tournamentId: string): Promise<ITournament> {
+    const result: ITournament = await this.entities()
+      .first(
+        "tournamentsData.id",
+        "tournamentsData.name",
+        "tournamentsData.game",
+        "tournamentsData.startDate",
+        "tournamentsData.startTime",
+        "tournamentsData.about",
+        "tournamentsData.banner",
+        "tournamentsData.info",
+        "tournamentsData.settings",
+        "tournamentsData.bracketsMetadata",
+        "tournamentsData.streams",
+        "tournamentsData.status",
+        "tournamentsData.joinStatus",
+        "tournamentsData.createTemplateCode",
+        "brackets.brackets",
+        "brackets.rounds"
+      )
+      .join("brackets", "brackets.tournament_id", "tournamentsData.id")
+      .where({ "tournamentsData.id": tournamentId });
     return result;
   }
 }

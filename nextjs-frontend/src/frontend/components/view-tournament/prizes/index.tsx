@@ -8,6 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import ViewCard from "../../ui-components/view-card";
 import Image from "next/image";
 import { Box, Typography } from "@mui/material";
+import { TournamentData } from "../../tournament";
 
 const CreateData = (
   prizes: string,
@@ -16,15 +17,19 @@ const CreateData = (
   return { prizes, reward };
 };
 
-const rows = [
-  CreateData("Place 1:", "5000$"),
-  CreateData("Place 2:", "2500$"),
-  CreateData("Place 3:", "3000$"),
-  CreateData("Place 4:", "PC Case"),
-  CreateData("Place 5:", "Cooling Kit"),
-];
 
-const Prizes: React.FC = () => {
+
+interface PrizesProps {
+  data: TournamentData;
+}
+
+const Prizes: React.FC<PrizesProps> = ({ data }) => {
+  const pricePool = data?.pricingDetails?.pricePool;
+  const rows = [
+    CreateData("Place 1:", `${pricePool ? pricePool*0.60 : 0}`),
+    CreateData("Place 2:", `${pricePool ? pricePool*0.30 : 0}`),
+    CreateData("Place 3:", `${pricePool ? pricePool*0.10 : 0}`)
+  ];
   return (
     <ViewCard>
       <TableContainer>

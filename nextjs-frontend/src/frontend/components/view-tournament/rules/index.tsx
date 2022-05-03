@@ -2,12 +2,14 @@ import { FormControl, Grid, Typography } from "@mui/material";
 import React from "react";
 import { TournamentData } from "../../tournament";
 import ViewCard from "../../ui-components/view-card";
+import ReactHtmlParser from "react-html-parser";
 
 interface RulesProps {
   data: TournamentData;
 }
 
-const Rules: React.FC<RulesProps> = ({data}) => {
+const Rules: React.FC<RulesProps> = ({ data }) => {
+  console.log("data.brackets -> ", data);
   return (
     <React.Fragment>
       <ViewCard title="Rules the tournament">
@@ -15,8 +17,18 @@ const Rules: React.FC<RulesProps> = ({data}) => {
           <Grid item xs={6}>
             <FormControl fullWidth>
               <Typography align="left" marginBottom="5px">
-                {data?.info?.rules || '-'}
+                {ReactHtmlParser(data?.info?.rules || "") || "-"}
               </Typography>
+              {(data.bracketsMetadata?.rounds || []).map((r: any) => (
+                <div style={{marginLeft: 10}}>
+                  <Typography align="left" marginBottom="5px" variant="caption">
+                    Round {r.round}
+                  </Typography>
+                  <div style={{ fontFamily: "Inter", marginLeft: 10 }}>
+                    {ReactHtmlParser(r.description || "")}
+                  </div>
+                </div>
+              ))}
             </FormControl>
           </Grid>
         </Grid>

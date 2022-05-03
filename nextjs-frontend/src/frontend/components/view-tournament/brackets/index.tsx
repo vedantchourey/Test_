@@ -1,99 +1,95 @@
-import { Box, Grid, Typography } from "@mui/material"
+import { Box, Grid, Typography } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
-import React from "react"
+import React from "react";
+import SingleElimination from "./SingleElimination";
+import DoubleElimination from "./Double";
+import { BracketProps, RoundStatusData } from "./BracketsInterface";
+import style from "./style";
+const useRoundStatusStyles = makeStyles(() => createStyles(style));
 
-const useRoundStatusStyles = makeStyles(() =>
-  createStyles({
-    statusContainer: {
-      display:"flex",
-      padding:"5px 5px 5px 32px",
-      border: "2px solid #6931F9",
-      justifyContent:"space-between",
-      borderRadius:"12px",
-      alignItems:"center"
-    },
-    status:{
-        background:"#6931F9",
-        color:"white",
-        borderRadius:"7px",
-        padding:"10px 18px"
-    },
-    typeContainer:{
-        height:130,
-        background:"linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)),url('/images/status-background.png')",
-        backgroundRepeat:"no-repeat",
-        backgroundPosition:"center",
-        display:"flex",
-        justifyContent:"center",
-        alignItems:"center",
-        borderRadius:"12px",
-    },
-    type:{
-        width:"90%",
-        height:42,
-        borderRadius:"12px",
-        backgroundColor:"#0F0526",
-        display:"flex",
-        alignItems:"center",
-        justifyContent:"center"
+const RoundStatus: React.FC<RoundStatusData> = ({
+  round,
+  isFinished,
+  type,
+  startDate,
+  startTime,
+}) => {
+  const styles = useRoundStatusStyles();
+  const getRoundStatus = (): string => {
+    if (isFinished) {
+      return "Finished";
     }
-  }));
-
-const RoundStatus:React.FC<RoundStatusData> = ({round, isFinished,type,startDate,startTime}) =>{
-    const styles = useRoundStatusStyles();
-    const getRoundStatus = ():string=>{
-        if(isFinished){
-            return "Finished"
-        }
-        return `${startDate} ${startTime}`;
-    }
-    return(
-        <Box>
-            <Box className={styles.statusContainer}>
-                <Typography color={"white"}>Round {round}</Typography>
-                <Box className={styles.status}>{getRoundStatus()}</Box>
-            </Box>
-            <Box marginTop={2} className={styles.typeContainer}>
-                <Box className={styles.type}>
-                    <Typography color={"white"} textTransform={"uppercase"}>
-                        {type}
-                    </Typography>
-                </Box>
-            </Box>
+    return `${startDate} ${startTime}`;
+  };
+  return (
+    <Box>
+      <Box className={styles.statusContainer}>
+        <Typography color={"white"}>Round {round}</Typography>
+        <Box className={styles.status}>
+          <Typography
+            color={"white"}
+            textTransform={"uppercase"}
+            variant="caption"
+          >
+            {getRoundStatus()}
+          </Typography>
         </Box>
-    )
-}
-
-export interface RoundStatusData{
-    type:string
-    round:number
-    isFinished:boolean
-    startDate?:string
-    startTime?:string
-}
-
-export interface BracketProps {
-    rounds?:RoundStatusData[]
-}
-
-
-const Bracket:React.FC<BracketProps> = ({rounds=[]}) =>{
-    const renderStatus = ():JSX.Element[] =>{
-        return rounds.map((round)=>{
-            return (
-                <Grid key={round.round} item md={3}>
-                    <RoundStatus {...round}/>
-                </Grid>
-            )
-        })
-    }
-    return(
-        <Box marginX={"70px"} marginY={2} >
-            <Grid container columnSpacing={2} rowSpacing={1}>
-                {renderStatus()}
-            </Grid>   
+      </Box>
+      <Box marginTop={2} className={styles.typeContainer}>
+        <Box className={styles.type}>
+          <Typography
+            color={"white"}
+            textTransform={"uppercase"}
+            variant="caption"
+          >
+            {type}
+          </Typography>
         </Box>
-    )
-}
+      </Box>
+    </Box>
+  );
+};
+
+const Bracket: React.FC<BracketProps> = ({
+  rounds = [],
+  brackets,
+  type,
+  players,
+}) => {
+  const renderStatus = (): JSX.Element[] => {
+    return rounds.map((round) => {
+      return (
+        <Grid key={round.round} item md={3}>
+          <RoundStatus {...round} />
+        </Grid>
+      );
+    });
+  };
+  return (
+    <>
+      <Box marginX={"70px"} marginY={2}>
+        <Grid container columnSpacing={2} rowSpacing={1}>
+          {renderStatus()}
+        </Grid>
+      </Box>
+      <Box marginX={"70px"} marginY={2}>
+        <Grid
+          container
+          style={{ overflow: "scroll" }}
+          columnSpacing={2}
+          rowSpacing={1}
+        >
+          <div className="bracket">
+            {type === "SINGLE" ? (
+              <SingleElimination brackets={brackets} players={players as any} />
+            ) : (
+              <DoubleElimination brackets={brackets} />
+            )}
+          </div>
+        </Grid>
+      </Box>
+    </>
+  );
+};
 
 export default Bracket;

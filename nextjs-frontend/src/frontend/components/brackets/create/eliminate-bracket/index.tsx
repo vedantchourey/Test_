@@ -24,7 +24,7 @@ const Duel = require("tournament/duel");
 interface RoundData {
   round: string;
   description: string;
-  map: string;
+  map: string[];
   isMap?: boolean;
   startTime?: string;
 }
@@ -71,7 +71,8 @@ const EliminateBracket = React.forwardRef<
       yup.object().shape({
         round: yup.string().required("Please select round"),
         description: yup.string().required("Please add description"),
-        map: yup.string(),
+        map: yup.array().of(yup.string())
+.nullable(),
         startTime: yup.date().when("round", (data) => {
           return data !== "1"
             ? yup.date().required("Start time is required")
@@ -380,7 +381,7 @@ const EliminateBracket = React.forwardRef<
                       </Grid>
                       <Grid item sm={12}>
                         <NoobReachTextEditor
-                          value={`rounds.${index}.description`}
+                          value={formik.values?.rounds[index]?.description}
                           name={`rounds.${index}.description`}
                           onChange={(value): void => {
                             formik.setFieldValue(
@@ -435,7 +436,7 @@ const EliminateBracket = React.forwardRef<
                               }}
                               value={
                                 (formik.values.rounds[index] as RoundData)
-                                  .startTime
+                                  ?.startTime
                               }
                               renderInput={(params): JSX.Element => (
                                 <TextField
@@ -448,7 +449,7 @@ const EliminateBracket = React.forwardRef<
                                           formik.values.rounds[
                                             index
                                           ] as RoundData
-                                        ).startTime
+                                        )?.startTime
                                     )
                                   }
                                   {...params}
@@ -458,44 +459,47 @@ const EliminateBracket = React.forwardRef<
                           </FormControl>
                         </Grid>
                       )}
-                      <Grid item sm={6}>
-                        <React.Fragment>
-                          <FormControlLabel
-                            label="Map Required"
-                            control={
-                              <Checkbox
-                                checked={formik.values?.rounds[index]?.isMap}
-                              />
-                            }
-                            onChange={(
-                              event: React.SyntheticEvent<Element, Event>,
-                              checked: boolean
-                            ): void => {
-                              formik.setFieldValue(
-                                `rounds.${index}.isMap`,
-                                checked
-                              );
-                            }}
-                          />
-                          {formik.values?.rounds[index]?.isMap && (
+                      <Grid item sm={12}>
+                        <FormControlLabel
+                          label="Map Required"
+                          control={
+                            <Checkbox
+                              checked={formik.values?.rounds[index]?.isMap}
+                            />
+                          }
+                          onChange={(
+                            event: React.SyntheticEvent<Element, Event>,
+                            checked: boolean
+                          ): void => {
+                            formik.setFieldValue(
+                              `rounds.${index}.isMap`,
+                              checked
+                            );
+                          }}
+                        />
+                      </Grid>
+                      <Grid item sm={12}>
+                        {formik.values?.rounds[index]?.isMap &&
+                          new Array(5).fill(5)
+.map((x, i) => (
                             <OutlinedInput
                               id="map"
-                              placeholder="Map name"
+                              key={x}
+                              placeholder={`Map ${i + 1}`}
                               onChange={(
                                 val: React.ChangeEvent<
                                   HTMLTextAreaElement | HTMLInputElement
                                 >
                               ): void => {
                                 formik.setFieldValue(
-                                  `rounds.${index}.map`,
+                                  `rounds.${index}.map.${i}`,
                                   val.target.value
                                 );
                               }}
-                              value={formik.values?.rounds[index]?.map}
+                              value={formik.values?.rounds[index]?.map[i]}
                               onBlur={formik.handleBlur}
                             />
-                          )}
-                        </React.Fragment>
+                          ))}
                       </Grid>
                     </React.Fragment>
                   );

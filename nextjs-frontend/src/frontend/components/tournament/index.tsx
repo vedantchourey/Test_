@@ -30,6 +30,12 @@ export interface TournamentData {
     data: StreamData[];
   };
   invitePlayer?: InvitePlayerData;
+  playerList?: [];
+  pricingDetails?: {
+    pricePool: number;
+    currentPricePool: number;
+  };
+  brackets?: any;
 }
 
 interface TournamentContextType {
@@ -40,7 +46,7 @@ interface TournamentContextType {
     data: TournamentData,
     callback?: () => void,
     doClear?: boolean
-  ) => void;
+  ) => Promise<boolean>;
   onSubmit: (data: TournamentData) => void;
 }
 
@@ -49,7 +55,7 @@ export const TournamentContext = React.createContext<TournamentContextType>({
   data: {},
   id: "" || [],
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setData: () => {},
+  setData: () => {return new Promise(()=> false)},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onSubmit: () => {},
 });
@@ -97,10 +103,10 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
                 cloneTournament:
                   tournamentData.createTemplateCode !== undefined,
               },
-              publishData:{
-                society:tournamentData.joinStatus,
-                registration:tournamentData.status
-              }
+              publishData: {
+                society: tournamentData.joinStatus,
+                registration: tournamentData.status,
+              },
             } as TournamentData);
           }
         })
@@ -184,9 +190,9 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
     newData: TournamentData,
     callback?: () => void,
     doClear?: boolean
-  ): void => {
+  ): Promise<boolean> => {
     setData(newData);
-    submitHandler(newData).then((res) => {
+    return submitHandler(newData).then((res) => {
       if (!res) {
         return false;
       }
@@ -196,6 +202,8 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
       if (callback) {
         callback();
       }
+
+      return true;
     });
   };
 

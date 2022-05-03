@@ -2,6 +2,7 @@ import { Grid, Typography } from "@mui/material";
 import React from "react";
 import ViewCard from "../../ui-components/view-card";
 import Avatar from "@mui/material/Avatar";
+import { TournamentData } from "../../tournament";
 
 import { Box } from "@mui/system";
 
@@ -43,7 +44,11 @@ const imageText = data.map((newData) => {
   );
 });
 
-const Participants:React.FC = () => {
+interface ParticipantsProps {
+  data: TournamentData;
+}
+
+const Participants:React.FC<ParticipantsProps> = ({ data }) => {
   return (
     <React.Fragment>
       <ViewCard>

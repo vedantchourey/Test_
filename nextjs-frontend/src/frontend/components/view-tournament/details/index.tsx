@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Divider,
   FormControl,
   Grid,
@@ -37,8 +38,7 @@ const useStyles = makeStyles(() =>
     subTitle: {
       color: "rgba(255, 255, 255, 1)",
     },
-  })
-);
+  }));
 
 interface DetailsProps {
   data: TournamentData;
@@ -64,6 +64,15 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
     setSelectedPlatform(matchingPlatform || null);
   }, [platforms]);
 
+  const contactOn = ():void=>{
+    if(data.info?.contactUrl){
+      window.open(data.info?.contactUrl,"_blank");
+    }
+  }
+
+  const totalSlots = data?.settings?.limit || 0;
+  const currentSlot = (data?.playerList || []).length;
+
   return (
     <React.Fragment>
       <ViewCard title="About the tournament">
@@ -73,14 +82,20 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
               <div style={{ fontFamily: "Inter" }}>
                 {ReactHtmlParser(data.basic?.about || "")}
               </div>
+              {data.info?.contactOption?(
+                <Box display={"flex"} alignItems="center">
+                <Typography component={"span"} variant={"body2"} color={"rgba(105,50,249,1)"}>{data.info?.contactOption} :</Typography>
+                <Button style={{textTransform:"lowercase"}} onClick={contactOn}>{data.info?.contactUrl || "-"}</Button>
+              </Box>
+              ):null}
               <Divider style={{ marginBottom: "30px", marginTop: "30px" }} />
               <Grid container rowSpacing={1} columnSpacing={5}>
-                <Grid item md={4}>
+                <Grid item md={3}>
                   <Box marginTop={1}>
                     <LinearProgress
                       variant="determinate"
                       color={"secondary"}
-                      value={80}
+                      value={(currentSlot*100) / totalSlots}
                     />
                   </Box>
                   <Box
@@ -90,7 +105,7 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                     justifyContent="space-between"
                   >
                     <Box width={"45%"} display="flex">
-                      <Typography marginRight={1}>50</Typography>
+                      <Typography marginRight={1}>{totalSlots}</Typography>
                       <Typography
                         color={"#5A5A5A"}
                         fontWeight={600}
@@ -101,7 +116,7 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                       </Typography>
                     </Box>
                     <Box width={"45%"} display="flex">
-                      <Typography marginRight={1}>12</Typography>
+                      <Typography marginRight={1}>{totalSlots - currentSlot}</Typography>
                       <Typography
                         color={"#5A5A5A"}
                         fontWeight={600}
@@ -132,7 +147,13 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                   <Typography className={classes.title}> Prize Pool</Typography>
                   <Typography className={classes.subTitle}>
                     {" "}
-                    450$ USD{" "}
+                    {data?.pricingDetails?.pricePool} Credits
+                  </Typography>
+                </Grid>
+                <Grid item md={2}>
+                  <Typography className={classes.title}> Current Prize Pool</Typography>
+                  <Typography className={classes.subTitle}>
+                    {data?.pricingDetails?.currentPricePool} Credits
                   </Typography>
                 </Grid>
                 <Grid item md={1}>
@@ -142,7 +163,7 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                     {selectedPlatform?.displayName || "-"}{" "}
                   </Typography>
                 </Grid>
-                <Grid item md={3} display="flex" justifyContent={"flex-end"}>
+                <Grid item md={2} display="flex" justifyContent={"flex-end"}>
                   <Typography marginRight={1}>
                     Tournament Entry Status:
                   </Typography>

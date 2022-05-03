@@ -12,15 +12,16 @@ export class BracketsRepository extends BaseRepository<IBracket> {
     return createdItems[0];
   }
 
-  async upadte(bracket: IBracket): Promise<IBracket> {
+  async update(bracket: IBracket): Promise<IBracket> {
     const updatedItems = await this.entities()
       .where("id", bracket.id)
       .update(bracket, ["id"]);
     return updatedItems[0];
   }
 
-  async findById(tournament_id: string): Promise<any> {
-    const items = await this.entities().where("tournament_id", tournament_id);
-    return items[0];
+  async findByTournamentId(tournament_id: string): Promise<any> {
+    const items = await this.entities().where("tournament_id", tournament_id)
+.first();
+    return items;
   }
 }
