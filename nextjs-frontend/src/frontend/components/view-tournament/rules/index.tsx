@@ -9,7 +9,7 @@ interface RulesProps {
 }
 
 const Rules: React.FC<RulesProps> = ({ data }) => {
-  console.log("data.brackets -> ", data);
+  
   return (
     <React.Fragment>
       <ViewCard title="Rules the tournament">
@@ -20,7 +20,7 @@ const Rules: React.FC<RulesProps> = ({ data }) => {
                 {ReactHtmlParser(data?.info?.rules || "") || "-"}
               </Typography>
               {(data.bracketsMetadata?.rounds || []).map((r: any) => (
-                <div style={{marginLeft: 10}}>
+                <div key={r.round} style={{marginLeft: 10}}>
                   <Typography align="left" marginBottom="5px" variant="caption">
                     Round {r.round}
                   </Typography>

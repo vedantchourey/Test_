@@ -1,7 +1,7 @@
 import { Box, Card, Divider, Grid, Typography } from "@mui/material";
 import React from "react";
 
-const CartDetails = () => {
+const CartDetails:React.FC = () => {
   return (
     <React.Fragment>
       <Card style={{ height: "100%", border:"1px solid rgba(255,255,255,0.1)"}}>

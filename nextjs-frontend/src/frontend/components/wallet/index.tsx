@@ -1,40 +1,40 @@
-import {  Grid } from "@mui/material";
 import React from "react";
 import NoobPage from "../page/noob-page";
-import WalletCard from "../ui-components/wallet-card";
 import AddCredit from "./add-credit";
-import Balance from "./balance";
-import Success from "./success";
-import Transactions from "./transactions";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
-import WalletInfo from './info';
+import WalletInfo from "./info";
 import Noob404Page from "../../../../pages/404";
+import Success from "./success";
+import Failed from "./failed";
 
-const Wallet = () => {
+const Wallet:React.FC = () => {
   const router = useRouter();
-  const query:ParsedUrlQuery = router.query;
+  const query: ParsedUrlQuery = router.query;
 
-  const renderComponent = ():JSX.Element =>{
+  const renderComponent = (): JSX.Element => {
     let page;
-    if(query.slug){
-      if(Array.isArray(query.slug)){
+    if (query.slug) {
+      if (Array.isArray(query.slug)) {
         page = (query.slug || []).join("/");
-      }else{
+      } else {
         page = query.slug;
       }
     }
-    switch(page){
+    switch (page) {
       case "info":
-        return (<WalletInfo />)
+        return <WalletInfo />;
       case "credit/add":
-        return (<AddCredit/>)
+        return <AddCredit />;
       case "credit/success":
-        return (<Success/>)
+        return <Success />;
+      case "credit/failed":
+        return <Failed />;
+
       default:
-        return <Noob404Page/>;
+        return <Noob404Page />;
     }
-  }
+  };
 
   return (
     <NoobPage
@@ -44,18 +44,6 @@ const Wallet = () => {
       }}
     >
       {renderComponent()}
-      {/* <React.Fragment>
-        <WalletCard>
-          <Grid container>
-            <Grid item md={12}>
-              <AddCredit />
-            </Grid>
-            <Grid item md={12}>
-              <Success />
-            </Grid>
-          </Grid>
-        </WalletCard>
-      </React.Fragment> */}
     </NoobPage>
   );
 };

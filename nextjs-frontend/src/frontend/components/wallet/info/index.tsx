@@ -6,7 +6,7 @@ import Transactions from "../transactions";
 const WalletInfo: React.FC = () => {
   return (
     <WalletCard>
-      <Grid container columnSpacing={2}>
+      <Grid container columnSpacing={2} rowSpacing={2}>
         <Grid item xs={12} md={7}>
           <Balance />
         </Grid>

@@ -1,8 +1,14 @@
 import { Box, Button, Card, Grid, Typography } from "@mui/material";
 import React from "react";
 import { ReactComponent as DoneIcon } from "../../../../../public/icons/DoneIcon.svg";
+import { ReactComponent as ShapeIcon } from "../../../../../public/icons/ShapeIcon.svg";
+import { ReactComponent as ArrowLeftIcon } from "../../../../../public/icons/arrowLeftIcon.svg";
 
-const WalletMessage = () => {
+interface WalletMessageProps {
+  isSuccess: boolean;
+}
+
+const WalletMessage: React.FC<WalletMessageProps> = ({ isSuccess }) => {
   return (
     <React.Fragment>
       <Card
@@ -22,14 +28,20 @@ const WalletMessage = () => {
                 margin: "60px 0px 60px 0px",
               }}
             >
-              <DoneIcon style={{}} />
+              {isSuccess ? <DoneIcon /> : <ShapeIcon />}
             </Box>
           </Grid>
 
           <Grid item>
             <Box>
-              <Typography>Thank you for your order</Typography>
-              <Typography style={{marginTop:"15px"}}>
+              {isSuccess ? (
+                <Typography>Thank you for your order</Typography>
+              ) : (
+                <Typography>
+                  Something went wrong. Please try to checkout again
+                </Typography>
+              )}
+              <Typography style={{ marginTop: "15px" }}>
                 Lorem ipsum, dolor sit amet consectetur adipisicing elit. Harum
                 eaque rem nisi veritatis laboriosam? Dolor mollitia cupiditate
                 laborum aspernatur ducimus.
@@ -39,16 +51,22 @@ const WalletMessage = () => {
 
           <Grid item>
             <Box style={{ marginTop: "30px" }}>
-              <Button
-                style={{
-                  color: "#ffffff",
-                  padding: "16px, 59px, 16px, 59px",
-                  border: "1px solid #6932F9",
-                }}
-              >
-                {" "}
-                Home Page
-              </Button>
+              {isSuccess ? (
+                <Button
+                  style={{
+                    color: "#ffffff",
+                    padding: "16px, 59px, 16px, 59px",
+                    border: "1px solid #6932F9",
+                  }}
+                >
+                  {" "}
+                  Home Page
+                </Button>
+              ) : (
+                <Button startIcon={<ArrowLeftIcon />}>
+                   Return to checkout
+                </Button>
+              )}
             </Box>
           </Grid>
         </Grid>

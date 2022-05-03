@@ -1,4 +1,4 @@
-import { Box, Button, Card, Grid, Typography } from "@mui/material";
+import { Box, Button, Card, Typography } from "@mui/material";
 import React from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -8,7 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import moment from "moment";
 
-function createData(action: string, amount: string, date: string) {
+function createData(action: string, amount: string, date: string):{action: string, amount: string, date: string} {
   return { action, amount, date };
 }
 
@@ -47,29 +47,27 @@ const rows = [
   ),
 ];
 
-const Transactions = () => {
+const Transactions:React.FC = () => {
   return (
     <React.Fragment>
       <Card >
         <Box
           display={"flex"}
           justifyContent={"space-between"}
-          marginTop={"34px"}
-          marginBottom={"24px"}
-          marginLeft={"30px"}
-          marginRight="30px"
+          margin={2}
         >
           <Typography color={"white"} variant="h5">
             Transactions
           </Typography>
           <Box display={"flex"} justifyContent="flex-end">
             <Button
-              style={{ marginRight: "1px", color: "rgba(255, 255, 255, 1)" }}
+            fullWidth
+              style={{color: "rgba(255, 255, 255, 1)" }}
             >
               {" "}
               Older{" "}
             </Button>
-            <Button style={{ color: "rgba(255, 255, 255, 0.2)" }}>
+            <Button style={{ color: "rgba(255, 255, 255, 0.2)" }} fullWidth>
               {" "}
               Previous{" "}
             </Button>
@@ -80,17 +78,17 @@ const Transactions = () => {
             <Table>
               <TableHead>
                 <TableRow style={{ backgroundColor: "#201146" }}>
-                  <TableCell>Action</TableCell>
-                  <TableCell>Amount</TableCell>
-                  <TableCell>Date</TableCell>
+                  <TableCell width={"33%"}>Action</TableCell>
+                  <TableCell width={"33%"}>Amount</TableCell>
+                  <TableCell width={"33%"}>Date</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {rows.map((row) => (
                   <TableRow key={row.action}>
-                    <TableCell>{row.action}</TableCell>
-                    <TableCell>{row.amount}</TableCell>
-                    <TableCell>{row.date}</TableCell>
+                    <TableCell width={"33%"}>{row.action}</TableCell>
+                    <TableCell width={"33%"}>{row.amount}</TableCell>
+                    <TableCell width={"33%"}>{row.date}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

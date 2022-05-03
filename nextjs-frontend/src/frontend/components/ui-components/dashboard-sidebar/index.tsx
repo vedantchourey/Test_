@@ -3,7 +3,7 @@ import { ReactComponent as DashHomeIcon } from "../../../../../public/icons/Dash
 import { ReactComponent as GameIcon } from "../../../../../public/icons/GameIcon.svg";
 import { ReactComponent as PersonIcon } from "../../../../../public/icons/PersonIcon.svg";
 import { ReactComponent as LogIcon } from "../../../../../public/icons/LogIcon.svg";
-import { Avatar, Button, Card, CardContent, Grid } from "@mui/material";
+import { Button, Card, CardContent, Grid } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
 import { useRouter } from "next/router";
 
