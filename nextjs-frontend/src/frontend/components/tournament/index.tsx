@@ -21,6 +21,7 @@ export interface TournamentData {
   status?: string;
   joinStatus?: string;
   createTemplateCode?: string;
+  templateCode?: string;
   basic?: BasicData;
   info?: InfoData;
   settings?: SettingData;
@@ -47,7 +48,7 @@ interface TournamentContextType {
     callback?: () => void,
     doClear?: boolean
   ) => Promise<boolean>;
-  onSubmit: (data: TournamentData) => void;
+  onSubmit: (data: TournamentData) => Promise<boolean>;
 }
 
 export const TournamentContext = React.createContext<TournamentContextType>({
@@ -55,9 +56,13 @@ export const TournamentContext = React.createContext<TournamentContextType>({
   data: {},
   id: "" || [],
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setData: () => {return new Promise(()=> false)},
+  setData: () => {
+    return new Promise(() => false);
+  },
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onSubmit: () => {},
+  onSubmit: () => {
+    return new Promise(() => false);
+  },
 });
 
 interface TournamentType {
@@ -102,6 +107,7 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
                 createTemplateCode: tournamentData.createTemplateCode,
                 cloneTournament:
                   tournamentData.createTemplateCode !== undefined,
+                templateCode: tournamentData.templateCode,
               },
               publishData: {
                 society: tournamentData.joinStatus,
@@ -191,7 +197,6 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
     callback?: () => void,
     doClear?: boolean
   ): Promise<boolean> => {
-    setData(newData);
     return submitHandler(newData).then((res) => {
       if (!res) {
         return false;
@@ -223,13 +228,14 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
     req.startTime = moment(req.startTime).format("HH:mm:ss");
     req.status = req.publishData?.registration || "PUBLISHED";
     req.joinStatus = req.publishData?.society || "PRIVATE";
+    req.templateCode = req.publishData?.templateCode || "";
     delete req.publishData;
     delete req.basic;
     return axios
       .post("/api/tournaments/create", req)
-      .then((res) => {
+      .then((res: any) => {
         if (!res?.data?.errors?.length) {
-          setData({ ...submitData, id: res.data.id });
+          setData({ ...res?.data, ...submitData, id: res.data.id });
           return true;
         }
         return false;

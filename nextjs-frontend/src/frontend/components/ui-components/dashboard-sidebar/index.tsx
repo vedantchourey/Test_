@@ -3,7 +3,7 @@ import { ReactComponent as DashHomeIcon } from "../../../../../public/icons/Dash
 import { ReactComponent as GameIcon } from "../../../../../public/icons/GameIcon.svg";
 import { ReactComponent as PersonIcon } from "../../../../../public/icons/PersonIcon.svg";
 import { ReactComponent as LogIcon } from "../../../../../public/icons/LogIcon.svg";
-import { Avatar, Button, Card, CardContent, Grid } from "@mui/material";
+import { Button, Card, CardContent, Grid } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
 import { useRouter } from "next/router";
 
@@ -39,9 +39,10 @@ const useStyles = makeStyles(() =>
       justifyContent: "flex-start",
       padding: 20,
     },
-  }));
+  })
+);
 
-const DashboardSideBar:React.FC = () => {
+const DashboardSideBar: React.FC = () => {
   const classes = useStyles();
   const router = useRouter();
   return (
@@ -54,7 +55,9 @@ const DashboardSideBar:React.FC = () => {
             fullWidth
             classes={{ root: classes.button }}
             startIcon={<DashHomeIcon />}
-            onClick={():Promise<boolean>=>router.push("/tournament-dashboard",undefined,{shallow:true})}
+            onClick={(): Promise<boolean> =>
+              router.push("/tournament-dashboard", undefined, { shallow: true })
+            }
           >
             Dashboard
           </Button>
@@ -64,7 +67,9 @@ const DashboardSideBar:React.FC = () => {
             variant="contained"
             component={"a"}
             fullWidth
-            onClick={():Promise<boolean>=>router.push("/tournament-master",undefined,{shallow:true})}
+            onClick={(): Promise<boolean> =>
+              router.push("/tournament-master", undefined, { shallow: true })
+            }
             classes={{ root: classes.button }}
             startIcon={<GameIcon />}
           >
@@ -79,7 +84,11 @@ const DashboardSideBar:React.FC = () => {
                 fullWidth
                 classes={{ root: classes.altButton }}
                 startIcon={<DashHomeIcon />}
-                onClick={():Promise<boolean>=>router.push("/tournament/new/create/setup/basic",undefined,{shallow:true})}
+                onClick={(): Promise<boolean> =>
+                  router.push("/tournament/new/create/setup/basic", undefined, {
+                    shallow: true,
+                  })
+                }
               >
                 Create New
               </Button>

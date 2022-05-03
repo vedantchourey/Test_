@@ -118,7 +118,13 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
       tournaments: result,
     };
   }
-
+  async select(query: any): Promise<ITournament | any> {
+    const result: ITournament | any = await this.entities()
+      .where(query)
+      .select("*")
+      .first();
+    return result;
+  }
   async getTournament(tournamentId: string): Promise<ITournament> {
     const result: ITournament = await this.entities()
       .first(
