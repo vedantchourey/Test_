@@ -25,7 +25,7 @@ export default function Heading({
     <Fragment>
       <div
         className={styles.mainBanner}
-        style={{ marginTop: appHeaderHeight, marginBottom: 20 }}
+        style={{ marginTop: appHeaderHeight - 100, marginBottom: 20 }}
       >
         <Typography variant="h1">{heading}</Typography>
       </div>

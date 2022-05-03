@@ -1,4 +1,5 @@
 import { Knex } from "knex";
+import { createKnexConnection } from "../database/knex";
 import { IBracket } from "../database/models/i-brackets";
 import { IRegisterTournament } from "../database/models/i-register-tournament";
 import { ITournamentUsers } from "../database/models/i-tournament-users";
@@ -7,6 +8,10 @@ import { BracketsRepository } from "../database/repositories/brackets-repository
 import { ProfilesRepository } from "../database/repositories/profiles-repository";
 import { TournamentUsersRepository } from "../database/repositories/tournament-users-repository";
 import { TournamentsRepository } from "../database/repositories/tournaments-repository";
+import BracketsCrud from "./brackets-crud";
+import { BracketsManager } from "brackets-manager";
+import { BTournament } from "../database/repositories/bracket-tournament";
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Duel = require("tournament/duel");
 
@@ -14,32 +19,62 @@ export const persistBrackets = async (
   req: ITournament,
   context: Knex
 ): Promise<any> => {
-  const roundsSize: number[] = [];
-  let bracket: any;
-  const brackets = new Duel(
-    Number(req?.bracketsMetadata?.playersLimit),
-    req?.bracketsMetadata?.type === "SINGLE" ? 1 : 2
-  );
-  brackets.matches = brackets.matches.map((element: any) => {
-    if (!roundsSize.includes(element.id.r)) {
-      roundsSize.push(element.id.r);
-    }
-    return { ...element, p: [0, 0] };
-  });
-  const repository = new BracketsRepository(context as Knex);
-  const existingBracket = await repository.findByTournamentId(req?.id || "");
-  const data = {
-    tournament_id: req.id,
-    brackets,
-    rounds: roundsSize.length,
-  };
-  if (!existingBracket) {
-    bracket = await repository.create(data);
-  } else {
-    bracket = await repository.update({ ...existingBracket, ...data });
-  }
+  const connection = createKnexConnection();
+  try {
+    let tournament: any = await connection("b_tournament")
+      .join("b_stage", "b_stage.tournament_id", "b_tournament.id")
+      .where({ tournament_uuid: req.id })
+      .select("b_stage.id as stage_id")
+      .select("b_tournament.id as id");
 
-  return { id: bracket.id };
+    const manager = new BracketsManager(
+      new BracketsCrud(connection as any) as any
+    );
+    let playerCount = Number(req?.bracketsMetadata?.playersLimit);
+    playerCount = nextPowerOf2(playerCount);
+    if (tournament && tournament.length) {
+      await deleteBracket(connection, tournament[0].id, tournament[0].stage_id);
+      //       const stage = await connection("b_stage")
+      //         .where({
+      //           id: tournament[0].stage_id,
+      //         })
+      //         .first();
+      //       await connection("b_stage").update({
+      //         ...stage,
+      //         settings: {
+      //           ...stage.settings,
+      //           size: playerCount,
+      //         },
+      //       });
+      //       await manager.update.seeding(
+      //         Number(tournament[0].stage_id),
+      //         new Array(playerCount).fill(0)
+      // .map((x, i) => `${i}`)
+      //       );
+    } else {
+      tournament = await connection("b_tournament")
+        .insert({
+          tournament_uuid: req.id,
+        })
+        .returning("*");
+    }
+    const data = {
+      name: req?.bracketsMetadata?.type,
+      tournamentId: Number(tournament[0].id),
+      type:
+        req?.bracketsMetadata?.type === "SINGLE"
+          ? "single_elimination"
+          : "double_elimination",
+      seeding: new Array(playerCount).fill(0).map((x, i) => `${i}`),
+      settings: { seedOrdering: ["natural"] },
+    };
+
+    await manager.create(data as any);
+  } catch (ex) {
+    console.log(ex);
+  } finally {
+    await connection.destroy();
+  }
 };
 
 export const registerTournament = async (
@@ -158,3 +193,24 @@ export const checkUserRegister = async (
     return false;
   }
 };
+
+const deleteBracket = (connection: Knex, tournament_id: any, stage_id: any) => {
+  let all = [
+    connection("b_stage").delete().where({ tournament_id }),
+    connection("b_participant").delete().where({ tournament_id }),
+    connection("b_round").delete().where({ stage_id }),
+    connection("b_match").delete().where({ stage_id }),
+    connection("b_group").delete().where({ stage_id }),
+  ];
+  return Promise.all(all);
+};
+
+function nextPowerOf2(n: number): number {
+  let count = 0;
+  if (n && !(n & (n - 1))) return n;
+  while (n != 0) {
+    n >>= 1;
+    count += 1;
+  }
+  return 1 << count;
+}
