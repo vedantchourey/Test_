@@ -1,5 +1,4 @@
 import { Knex } from "knex";
-import { createKnexConnection } from "../database/knex";
 import { IBracket } from "../database/models/i-brackets";
 import { IRegisterTournament } from "../database/models/i-register-tournament";
 import { ITournamentUsers } from "../database/models/i-tournament-users";
@@ -11,8 +10,8 @@ import { TournamentsRepository } from "../database/repositories/tournaments-repo
 import BracketsCrud from "./brackets-crud";
 import { BracketsManager } from "brackets-manager";
 
-export const persistBrackets = async (req: ITournament): Promise<any> => {
-  const connection = createKnexConnection();
+export const persistBrackets = async (req: ITournament, knexConnection: Knex): Promise<any> => {
+  const connection = knexConnection;//createKnexConnection();
   try {
     let tournament: any = await connection("b_tournament")
       .join("b_stage", "b_stage.tournament_id", "b_tournament.id")
@@ -42,7 +41,7 @@ export const persistBrackets = async (req: ITournament): Promise<any> => {
           ? "single_elimination"
           : "double_elimination",
       seeding: new Array(playerCount).fill(0)
-.map((x, i) => `${i}`),
+        .map((x, i) => `${i}`),
       settings: { seedOrdering: ["natural"] },
     };
 
@@ -50,7 +49,7 @@ export const persistBrackets = async (req: ITournament): Promise<any> => {
   } catch (ex) {
     console.error(ex);
   } finally {
-    await connection.destroy();
+    // await connection.destroy();
   }
 };
 
@@ -178,15 +177,15 @@ const deleteBracket = (
 ): Promise<any> => {
   const all = [
     connection("b_stage").delete()
-.where({ tournament_id }),
+      .where({ tournament_id }),
     connection("b_participant").delete()
-.where({ tournament_id }),
+      .where({ tournament_id }),
     connection("b_round").delete()
-.where({ stage_id }),
+      .where({ stage_id }),
     connection("b_match").delete()
-.where({ stage_id }),
+      .where({ stage_id }),
     connection("b_group").delete()
-.where({ stage_id }),
+      .where({ stage_id }),
   ];
   return Promise.all(all);
 };

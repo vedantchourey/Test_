@@ -56,7 +56,7 @@ export const persistTournament: NoobApiService<
     tournament = await repository.create({ id: undefined, ...req } as any);
   }
   if (req.bracketsMetadata?.playersLimit && tournament?.id) {
-    await persistBrackets(tournament);
+    await persistBrackets(tournament, knexConnection as Knex);
   }
   const { id, ...others } = tournament;
   return { id: id as string, ...others };
