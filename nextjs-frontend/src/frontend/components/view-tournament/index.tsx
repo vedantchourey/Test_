@@ -21,11 +21,17 @@ import moment from "moment";
 import { RoundStatusData } from "./brackets/BracketsInterface";
 import ReactHtmlParser from "react-html-parser";
 
-const HeadSubSection: React.FC = () => {
+
+interface HeadSubSectionProps {
+  time: string;
+}
+
+
+const HeadSubSection = ({time}: HeadSubSectionProps): any => {
   return (
     <Grid container>
       <Grid item md={4} display="flex">
-        <Typography color={"#F08743"}>10 Oct 2018 14:35 PM</Typography>
+        <Typography color={"#F08743"}>{time}</Typography>
       </Grid>
       <Grid
         item
@@ -125,7 +131,7 @@ const ViewTournament: React.FC = () => {
                 delete tournamentData[key];
               }
             });
-
+            
             setData({
               ...tournamentData,
               basic: {
@@ -138,6 +144,7 @@ const ViewTournament: React.FC = () => {
                   "hh:mm:ss"
                 ).toDate(),
                 banner: tournamentData.banner,
+                sponsor: tournamentData.sponsor,
                 createTemplateCode: tournamentData.createTemplateCode,
                 cloneTournament:
                   tournamentData.createTemplateCode !== undefined,
@@ -325,6 +332,8 @@ const ViewTournament: React.FC = () => {
     }
   };
 
+  console.log('data -> ', data.basic)
+
   const onTabClick = (tab: string): void => {
     if (!tab || tab === "") return;
     router.push(getUrl(), getAsURL(tab.toLowerCase()), { shallow: true });
@@ -339,17 +348,18 @@ const ViewTournament: React.FC = () => {
       
       <React.Fragment>
         <Heading
-          heading="EndPointGG Vs CEX Esports[2]"
+          heading={data.basic?.name}
           backgroundImage
           backgroundImageUrl={data?.basic?.banner||""}
         >
           
-          <HeadSubSection />
+          <HeadSubSection time={moment(data.basic?.startDate).format("DD/MM/YYYY HH:MM A")} />
         </Heading>
         <ViewCard>
           <Grid container>
             <Grid item md={6}>
-              <RainbowIcon />
+              {data.basic?.sponsor && <img src={data.basic?.sponsor} style={{height: 80, width: 200}} /> }
+              
             </Grid>
             <Grid
               item

@@ -19,7 +19,10 @@ import { ServiceResponse } from "../common/contracts/service-response";
 import { ListTournamentType } from "./list-tournaments-request";
 import { ITournament } from "../database/models/i-tournaments";
 import { TournamentUsersRepository } from "../database/repositories/tournament-users-repository";
-
+import BracketsCrud from "../brackets-service/brackets-crud";
+import { createKnexConnection } from "../database/knex";
+import { BTournament } from "../database/repositories/bracket-tournament";
+import { BracketsManager } from "brackets-manager";
 export const createTournament: NoobApiService<
   CreateOrEditTournamentRequest,
   ITournamentResponse
@@ -47,13 +50,12 @@ export const persistTournament: NoobApiService<
   if (errors) return { errors };
   const repository = new TournamentsRepository(knexConnection as Knex);
   let tournament;
-
   if (req.id) {
     tournament = await repository.update({ ...req } as any);
   } else {
     tournament = await repository.create({ id: undefined, ...req } as any);
   }
-  if (req.bracketsMetadata?.playersLimit && tournament.id) {
+  if (req.bracketsMetadata?.playersLimit && tournament?.id) {
     await persistBrackets(tournament, knexConnection as Knex);
   }
   const { id, ...others } = tournament;
@@ -92,14 +94,30 @@ export async function tournamentDetails(
   const repository = new TournamentsRepository(
     context.transaction as Knex.Transaction
   );
-  const tournament = await repository.getTournamentWithBrackets(tournamentId as string);
+  let tournament = await repository.getTournamentWithBrackets(
+    tournamentId as string
+  );
   const tournamentUsersRepo = new TournamentUsersRepository(
     context.transaction as Knex.Transaction
   );
   const users = await tournamentUsersRepo.getUsersDetails({
     tournamentId: tournamentId,
   });
-
+  const bracketTournamentRepo = new BTournament(
+    context.transaction as Knex.Transaction
+  );
+  const bracketT = await bracketTournamentRepo.select({
+    tournament_uuid: tournamentId,
+  });
+  if (bracketT) {
+    const connect = createKnexConnection();
+    const manager = new BracketsManager(
+      new BracketsCrud(connect as any) as any
+    );
+    const brackets = await manager.get.tournamentData(bracketT.id);
+    tournament = { ...tournament, brackets };
+    await connect.destroy();
+  }
   return {
     data: {
       ...tournament,

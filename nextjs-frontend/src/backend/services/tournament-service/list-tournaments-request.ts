@@ -3,4 +3,5 @@ export interface ListTournamentType {
   limit?: number;
   game?: string;
   status?: string;
+  [key: string]: any;
 }

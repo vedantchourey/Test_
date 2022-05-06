@@ -1,14 +1,14 @@
 import { Knex } from "knex";
-import { IProfile } from "../../database/models/i-profile";
-import { ProfilesRepository } from "../../database/repositories/profiles-repository";
+import { IPrivateProfile } from "../../database/models/i-private-profile";
+import { PrivateProfilesRepository } from "../../database/repositories/private-profiles-repository";
 
 export const fetchUserById = async (
   id: string,
   connection: Knex | Knex.Transaction
-): Promise<IProfile | undefined> => {
-  let data: IProfile | undefined = undefined;
+): Promise<IPrivateProfile | undefined> => {
+  let data: IPrivateProfile | undefined = undefined;
   try {
-    const repository = new ProfilesRepository(connection);
+    const repository = new PrivateProfilesRepository(connection as Knex);
     data = await repository.getProfileById(id);
   } catch (ex) {
     return undefined;

@@ -22,7 +22,7 @@
   .heroContainer {
     position: relative;
     /* margin-top: -20px !important; */
-    min-height: 500px !important;
+    min-height: 400px !important;
     /* background: url('/images/partner-with-us.png'); */
     background-repeat: no-repeat !important;
     background-clip: border-box !important;

@@ -41,7 +41,7 @@ const useStyles = makeStyles(() =>
     },
   }));
 
-const DashboardSideBar:React.FC = () => {
+const DashboardSideBar: React.FC = () => {
   const classes = useStyles();
   const router = useRouter();
   return (
@@ -54,7 +54,9 @@ const DashboardSideBar:React.FC = () => {
             fullWidth
             classes={{ root: classes.button }}
             startIcon={<DashHomeIcon />}
-            onClick={():Promise<boolean>=>router.push("/tournament-dashboard",undefined,{shallow:true})}
+            onClick={(): Promise<boolean> =>
+              router.push("/tournament-dashboard", undefined, { shallow: true })
+            }
           >
             Dashboard
           </Button>
@@ -64,7 +66,9 @@ const DashboardSideBar:React.FC = () => {
             variant="contained"
             component={"a"}
             fullWidth
-            onClick={():Promise<boolean>=>router.push("/tournament-master",undefined,{shallow:true})}
+            onClick={(): Promise<boolean> =>
+              router.push("/tournament-master", undefined, { shallow: true })
+            }
             classes={{ root: classes.button }}
             startIcon={<GameIcon />}
           >
@@ -79,7 +83,11 @@ const DashboardSideBar:React.FC = () => {
                 fullWidth
                 classes={{ root: classes.altButton }}
                 startIcon={<DashHomeIcon />}
-                onClick={():Promise<boolean>=>router.push("/tournament/new/create/setup/basic",undefined,{shallow:true})}
+                onClick={(): Promise<boolean> =>
+                  router.push("/tournament/new/create/setup/basic", undefined, {
+                    shallow: true,
+                  })
+                }
               >
                 Create New
               </Button>

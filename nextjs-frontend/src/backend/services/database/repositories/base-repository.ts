@@ -6,7 +6,7 @@ export class BaseRepository<T> {
     protected tableName: string
   ) {}
 
-  protected entities(): Knex.QueryBuilder<T> {
+  protected entities(): Knex.QueryBuilder<T> {    
     return this.transaction(this.tableName);
   }
 }
