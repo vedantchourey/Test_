@@ -58,6 +58,12 @@ export default function LoggedInUserMenu(): JSX.Element {
     await router.push('/account')
   }
 
+  async function handleWallet(): Promise<void> {
+    handleClose();
+    await router.push('/wallet/info')
+  }
+
+
   async function handleDashboard(): Promise<void>{
     handleClose();
     await router.push('/tournament-dashboard');
@@ -183,7 +189,7 @@ export default function LoggedInUserMenu(): JSX.Element {
           <MenuItem onClick={handleAccountItem}><ListItemIcon><PersonIcon fontSize="small" /></ListItemIcon><ListItemText>Account</ListItemText></MenuItem>
           <MenuItem onClick={handleDashboard}><ListItemIcon><DashboardIcon fontSize="small" /></ListItemIcon><ListItemText>Dashboard</ListItemText></MenuItem>
           <MenuItem onClick={handleClose}><ListItemIcon><ShoppingBagIcon fontSize="small" /></ListItemIcon><ListItemText>Orders</ListItemText></MenuItem>
-          <MenuItem onClick={handleClose}><ListItemIcon><AccountBalanceWalletIcon fontSize="small" /></ListItemIcon><ListItemText>Wallet</ListItemText></MenuItem>
+          <MenuItem onClick={handleWallet}><ListItemIcon><AccountBalanceWalletIcon fontSize="small" /></ListItemIcon><ListItemText>Wallet</ListItemText></MenuItem>
           <MenuItem onClick={handleSettings}><ListItemIcon><SettingsIcon fontSize="small" /></ListItemIcon><ListItemText>Profile Settings</ListItemText></MenuItem>
           <MenuItem onClick={handleClose}><ListItemIcon><WatchLaterIcon fontSize="small" /></ListItemIcon><ListItemText>Active Tournaments</ListItemText></MenuItem>
           <Divider />
