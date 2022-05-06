@@ -1,14 +1,8 @@
-import {
-  Box,
-  Button,
-  Card,
-  Divider,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Card, Divider, Grid, Typography } from "@mui/material";
+import Router from "next/router";
 import React from "react";
 
-const Balance:React.FC = () => {
+const Balance: React.FC = () => {
   return (
     <React.Fragment>
       <Card>
@@ -77,6 +71,9 @@ const Balance:React.FC = () => {
                 height: 56,
                 backgroundColor: "#6932F9",
                 color: "#ffffff",
+              }}
+              onClick={() => {
+                Router.replace("credit/add");
               }}
             >
               Add Credits
