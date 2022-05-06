@@ -1,8 +1,10 @@
 import { Box, Button, Card, Divider, Grid, Typography } from "@mui/material";
 import Router from "next/router";
 import React from "react";
-
-const Balance: React.FC = () => {
+interface BalanceProps {
+  wallet: any;
+}
+const Balance = ({ wallet }: BalanceProps): any => {
   return (
     <React.Fragment>
       <Card>
@@ -37,7 +39,7 @@ const Balance: React.FC = () => {
                 justifyContent={"center"}
                 alignItems={"center"}
               >
-                125 Credits
+                {wallet?.balance} Credits
               </Typography>
             </Box>
           </Grid>

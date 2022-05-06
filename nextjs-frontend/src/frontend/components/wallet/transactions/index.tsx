@@ -8,7 +8,11 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import moment from "moment";
 
-function createData(action: string, amount: string, date: string):{action: string, amount: string, date: string} {
+function createData(
+  action: string,
+  amount: string,
+  date: string
+): { action: string; amount: string; date: string } {
   return { action, amount, date };
 }
 
@@ -47,23 +51,16 @@ const rows = [
   ),
 ];
 
-const Transactions:React.FC = () => {
+const Transactions = ({ transaction = [] }: any) => {
   return (
     <React.Fragment>
-      <Card >
-        <Box
-          display={"flex"}
-          justifyContent={"space-between"}
-          margin={2}
-        >
+      <Card>
+        <Box display={"flex"} justifyContent={"space-between"} margin={2}>
           <Typography color={"white"} variant="h5">
             Transactions
           </Typography>
           <Box display={"flex"} justifyContent="flex-end">
-            <Button
-            fullWidth
-              style={{color: "rgba(255, 255, 255, 1)" }}
-            >
+            <Button fullWidth style={{ color: "rgba(255, 255, 255, 1)" }}>
               {" "}
               Older{" "}
             </Button>
@@ -84,11 +81,13 @@ const Transactions:React.FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
+                {transaction.map((row: any) => (
                   <TableRow key={row.action}>
-                    <TableCell width={"33%"}>{row.action}</TableCell>
-                    <TableCell width={"33%"}>{row.amount}</TableCell>
-                    <TableCell width={"33%"}>{row.date}</TableCell>
+                    <TableCell width={"33%"}>{row.type}</TableCell>
+                    <TableCell width={"33%"}>
+                      {row.credit != 0 ? `+${row.credit}` : `-${row.debit}`}
+                    </TableCell>
+                    <TableCell width={"33%"}>{row.created_at}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
