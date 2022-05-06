@@ -1,20 +1,70 @@
 import {
-  
   Button,
   Card,
   Container,
   FormControl,
+  FormHelperText,
   Grid,
-  
   OutlinedInput,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import WalletCard from "../../ui-components/wallet-card";
 import { ReactComponent as Paypal } from "../../../../../public/icons/Paypal.svg";
 import FormLabel from "../../ui-components/formlabel";
+import { getAuthHeader } from "../../../utils/headers";
+import axios from "axios";
 
-const AddCredit:React.FC = () => {
+const AddCredit: React.FC = () => {
+  const [amount, setAmount] = useState("0.00");
+  const [razorPay, setRazorPay] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  useEffect((): void => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = (): void => {
+      setRazorPay(true);
+    };
+    script.onerror = (): void => {
+      setRazorPay(false);
+    };
+    document.body.appendChild(script);
+  }, []);
+
+  const addFunds = async (): Promise<void> => {
+    if (amount === "") return setErrorMsg("Please enter amount");
+    if (Number(amount) == 0)
+      return setErrorMsg("Amount should be greater than 1.");
+    if (!razorPay) return setErrorMsg("Something went wrong. Try again later");
+    const headers = await getAuthHeader();
+    axios
+      .post(
+        `/api/payment/create-order`,
+        {
+          amount,
+        },
+        {
+          headers,
+        }
+      )
+      .then(({ data }): void => {
+        const options = {
+          ...data,
+          name: "Learning To Code Online",
+          description: "Test Wallet Transaction",
+          handler: function (response: any): void {
+            axios.post(`/api/payment/update-order`, response, { headers });
+            setErrorMsg("Balance added successfully");
+          },
+        };
+        // @ts-expect-error: ignore
+        const paymentObject = new window.Razorpay(options);
+        paymentObject.open();
+      })
+      .catch((): void => {
+        setErrorMsg("Something went wrong. Try again later");
+      });
+  };
   return (
     <React.Fragment>
       <WalletCard>
@@ -23,7 +73,7 @@ const AddCredit:React.FC = () => {
             border: "1px solid rgba(255, 255, 255, 0.1)",
           }}
         >
-          <Container maxWidth={"sm"} >
+          <Container maxWidth={"sm"}>
             <Grid
               container
               alignItems="center"
@@ -48,7 +98,17 @@ const AddCredit:React.FC = () => {
               <Grid item xs={12} marginTop={1} display="flex">
                 <FormControl fullWidth>
                   <FormLabel label={"Amount"}></FormLabel>
-                  <OutlinedInput defaultValue="0.00" id="input" />
+                  <OutlinedInput
+                    value={amount}
+                    onChange={(e): void => {
+                      setAmount(e.target.value);
+                      if (errorMsg) setErrorMsg("");
+                    }}
+                    id="input"
+                  />
+                  {errorMsg != "" && (
+                    <FormHelperText> {errorMsg} </FormHelperText>
+                  )}
                 </FormControl>
               </Grid>
               <Grid item xs={12}>
@@ -75,8 +135,9 @@ const AddCredit:React.FC = () => {
                     background: "#FFC439",
                     color: "#ffffff",
                   }}
+                  onClick={addFunds}
                 >
-                  <Paypal />
+                  RazorPAy
                 </Button>
               </Grid>
             </Grid>
