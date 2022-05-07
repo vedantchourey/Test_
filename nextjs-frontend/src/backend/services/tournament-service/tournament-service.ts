@@ -20,7 +20,6 @@ import { ListTournamentType } from "./list-tournaments-request";
 import { ITournament } from "../database/models/i-tournaments";
 import { TournamentUsersRepository } from "../database/repositories/tournament-users-repository";
 import BracketsCrud from "../brackets-service/brackets-crud";
-import { createKnexConnection } from "../database/knex";
 import { BTournament } from "../database/repositories/bracket-tournament";
 import { BracketsManager } from "brackets-manager";
 export const createTournament: NoobApiService<
@@ -94,7 +93,7 @@ export async function tournamentDetails(
   const repository = new TournamentsRepository(
     context.transaction as Knex.Transaction
   );
-  let tournament = await repository.getTournamentWithBrackets(
+  let tournament = await repository.getTournament(
     tournamentId as string
   );
   const tournamentUsersRepo = new TournamentUsersRepository(
@@ -110,13 +109,12 @@ export async function tournamentDetails(
     tournament_uuid: tournamentId,
   });
   if (bracketT) {
-    const connect = createKnexConnection();
+    const connect = context.knexConnection;
     const manager = new BracketsManager(
       new BracketsCrud(connect as any) as any
     );
     const brackets = await manager.get.tournamentData(bracketT.id);
     tournament = { ...tournament, brackets };
-    await connect.destroy();
   }
   return {
     data: {
