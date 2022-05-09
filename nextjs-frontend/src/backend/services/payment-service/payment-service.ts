@@ -29,7 +29,10 @@ export const createRazorPayOrder = async (req: IOrderRequest, context: Knex): Pr
     return {
       order_id: response.id,
       currency: response.currency,
-      amount: response.amount,
+      amount,
+      gst,
+      service_charge,
+      total_amount: response.amount,
       key: id.value,
     } as any
   } catch (ex: any) {
