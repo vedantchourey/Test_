@@ -48,6 +48,7 @@ export interface BasicData {
   cloneTournament: boolean;
   createTemplateCode?: string;
   banner?: string;
+  sponsor?: string;
 }
 
 interface BasicPorps {
@@ -75,7 +76,8 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
     about: yup.string(),
     cloneTournament: yup.boolean(),
     createTemplateCode: yup.string(),
-    banner: yup.string().nullable()
+    banner: yup.string().nullable(),
+    sponsor: yup.string().nullable()
 .notRequired(),
   });
 
@@ -89,6 +91,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
       createTemplateCode: data?.createTemplateCode || "",
       cloneTournament: data?.cloneTournament || false,
       banner: data?.banner || "",
+      sponsor: data?.sponsor || "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -106,6 +109,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
           ? data.createTemplateCode
           : "",
         banner: data?.banner ? data?.banner : "",
+        sponsor: data?.sponsor || "",
       });
     }
   }, [data]);
@@ -116,16 +120,17 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
   ): void => {
     formik.setFieldValue(property, value, true);
   };
-  const onDrop = useCallback((acceptedFiles: File[]): void => {
+  const onDrop = useCallback((acceptedFiles: File[], field: string): void => {
     acceptedFiles.forEach((file: Blob): void => {
       const reader = new FileReader();
       reader.onload = (): void => {
         const binaryStr = reader.result;
-        formik.setFieldValue("banner", binaryStr);
+        formik.setFieldValue(field, binaryStr);
       };
       reader.readAsDataURL(file);
     });
   }, []);
+
   return (
     <React.Fragment>
       <CardLayout title="Required Fields">
@@ -283,7 +288,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
           <Grid item xs={12}>
             <FormControl fullWidth variant="standard">
               <FormLabel label="Header Banner"></FormLabel>
-              <Dropzone onDrop={onDrop}>
+              <Dropzone onDrop={(files) => onDrop(files, "banner")}>
                 {({ getRootProps, getInputProps }): JSX.Element => (
                   <Box
                     className={style.dropZone}
@@ -308,6 +313,40 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
                       Preview
                     </Typography>
                     <img src={formik.values.banner} width="30%" />
+                  </>
+                )}
+              </Box>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12}>
+            <FormControl fullWidth variant="standard">
+              <FormLabel label="Sponsor Logo"></FormLabel>
+              <Dropzone onDrop={(files) => onDrop(files, "sponsor")}>
+                {({ getRootProps, getInputProps }): JSX.Element => (
+                  <Box
+                    className={style.dropZone}
+                    component={"div"}
+                    {...getRootProps()}
+                  >
+                    <input {...getInputProps()} />
+                    <img src="/icons/Upload.svg" alt="upload" />
+                    <Typography marginTop={2} variant="subtitle2">
+                      1029px - 600px
+                    </Typography>
+                    <Typography variant="subtitle2">
+                      Click or drag and drop
+                    </Typography>
+                  </Box>
+                )}
+              </Dropzone>
+              <Box display="flex" flexDirection={"column"}>
+                {formik?.values?.sponsor !== "" && (
+                  <>
+                    <Typography style={{ textAlign: "left", margin:"10px 0px" }}>
+                      Preview
+                    </Typography>
+                    <img src={formik.values.sponsor} width="30%" />
                   </>
                 )}
               </Box>

@@ -9,6 +9,7 @@ export function validatePersistTournament(body: any): any {
     startTime: Joi.string().required(),
     about: Joi.string().required(),
     banner: Joi.string().required(),
+    sponsor: Joi.string(),
     info: Joi.object({
       contactOption: Joi.string().required(),
       contactUrl: Joi.string().required(),

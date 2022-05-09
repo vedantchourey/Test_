@@ -70,7 +70,7 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
     }
   }
 
-  const totalSlots = data?.settings?.limit || 0;
+  const totalSlots =data?.bracketsMetadata?.playersLimit || 0;
   const currentSlot = (data?.playerList || []).length;
 
   return (
@@ -95,7 +95,7 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                     <LinearProgress
                       variant="determinate"
                       color={"secondary"}
-                      value={(currentSlot*100) / totalSlots}
+                      value={(currentSlot*100) / parseInt(totalSlots.toString())}
                     />
                   </Box>
                   <Box
@@ -105,7 +105,7 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                     justifyContent="space-between"
                   >
                     <Box width={"45%"} display="flex">
-                      <Typography marginRight={1}>{totalSlots}</Typography>
+                      <Typography marginRight={1}>{parseInt(totalSlots.toString())}</Typography>
                       <Typography
                         color={"#5A5A5A"}
                         fontWeight={600}
@@ -116,7 +116,7 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                       </Typography>
                     </Box>
                     <Box width={"45%"} display="flex">
-                      <Typography marginRight={1}>{totalSlots - currentSlot}</Typography>
+                      <Typography marginRight={1}>{parseInt(totalSlots.toString()) - currentSlot}</Typography>
                       <Typography
                         color={"#5A5A5A"}
                         fontWeight={600}

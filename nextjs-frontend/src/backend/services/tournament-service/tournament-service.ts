@@ -19,7 +19,9 @@ import { ServiceResponse } from "../common/contracts/service-response";
 import { ListTournamentType } from "./list-tournaments-request";
 import { ITournament } from "../database/models/i-tournaments";
 import { TournamentUsersRepository } from "../database/repositories/tournament-users-repository";
-
+import BracketsCrud from "../brackets-service/brackets-crud";
+import { BTournament } from "../database/repositories/bracket-tournament";
+import { BracketsManager } from "brackets-manager";
 export const createTournament: NoobApiService<
   CreateOrEditTournamentRequest,
   ITournamentResponse
@@ -62,8 +64,8 @@ export const persistTournament: NoobApiService<
     }
     tournament = await repository.create({ ...req, id: undefined } as any);
   }
-  if (req.bracketsMetadata?.playersLimit && tournament.id) {
-    await persistBrackets(tournament, knexConnection as Knex);
+  if (req.bracketsMetadata?.playersLimit && tournament?.id) {
+    persistBrackets(tournament, knexConnection as Knex);
   }
   const { id, ...others } = tournament;
   return { id: id as string, ...others };
@@ -101,7 +103,8 @@ export async function tournamentDetails(
   const repository = new TournamentsRepository(
     context.transaction as Knex.Transaction
   );
-  const tournament = await repository.getTournamentWithBrackets(
+
+  const tournament = await repository.getTournament(
     tournamentId as string
   );
   const tournamentUsersRepo = new TournamentUsersRepository(
@@ -110,7 +113,20 @@ export async function tournamentDetails(
   const users = await tournamentUsersRepo.getUsersDetails({
     tournamentId: tournamentId,
   });
-
+  const bracketTournamentRepo = new BTournament(
+    context.transaction as Knex.Transaction
+  );
+  const bracketT = await bracketTournamentRepo.select({
+    tournament_uuid: tournamentId,
+  });
+  if (bracketT) {
+    const connect = context.knexConnection;
+    const manager = new BracketsManager(
+      new BracketsCrud(connect as any) as any
+    );
+    const brackets = await manager.get.tournamentData(bracketT.id);
+    tournament = { ...tournament, brackets };
+  }
   return {
     data: {
       ...tournament,
