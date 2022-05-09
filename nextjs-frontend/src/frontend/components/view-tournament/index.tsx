@@ -332,8 +332,6 @@ const ViewTournament: React.FC = () => {
     }
   };
 
-  console.log('data -> ', data.basic)
-
   const onTabClick = (tab: string): void => {
     if (!tab || tab === "") return;
     router.push(getUrl(), getAsURL(tab.toLowerCase()), { shallow: true });

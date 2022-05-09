@@ -9,9 +9,10 @@ import { TournamentUsersRepository } from "../database/repositories/tournament-u
 import { TournamentsRepository } from "../database/repositories/tournaments-repository";
 import BracketsCrud from "./brackets-crud";
 import { BracketsManager } from "brackets-manager";
+import { createKnexConnection } from "../database/knex";
 
 export const persistBrackets = async (req: ITournament, knexConnection: Knex): Promise<any> => {
-  const connection = knexConnection;//createKnexConnection();
+  const connection = createKnexConnection();
   try {
     let tournament: any = await connection("b_tournament")
       .join("b_stage", "b_stage.tournament_id", "b_tournament.id")
@@ -49,7 +50,7 @@ export const persistBrackets = async (req: ITournament, knexConnection: Knex): P
   } catch (ex) {
     console.error(ex);
   } finally {
-    // await connection.destroy();
+    await connection.destroy();
   }
 };
 
