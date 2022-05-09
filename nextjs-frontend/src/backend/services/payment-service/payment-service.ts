@@ -5,20 +5,23 @@ import { IConfig, IOrderRequest, IOrderResponse, IUpdateOrderRequest, IError, IU
 import { creditBalance } from "../wallet-service/wallet-service";
 import { IUser } from "../database/models/i-user";
 import { PerRequestContext } from "../../utils/api-middle-ware/api-middleware-typings";
-
+import { backendConfig } from "../../utils/config/backend-config"
 
 export const createRazorPayOrder = async (req: IOrderRequest, context: Knex): Promise<IOrderResponse | IError> => {
   try {
     const errors = await validateOrder(req);
     if (errors) return { errors };
     const [id, secret]: IConfig[] = await getRazorPayKeys(context)
-
+    const { credit_config } = backendConfig
+    let amount = req.amount * 100 * credit_config.price_per_credit;
+    let gst = Math.ceil((amount * credit_config.credit_gst_percentage) / 100);
+    let service_charge = Math.ceil((amount * credit_config.credit_service_percentage) / 100);
     const razorpay = new Razorpay({
       key_id: id.value,
       key_secret: secret.value,
     });
     const options = {
-      amount: req.amount * 100,
+      amount: amount + gst + service_charge,
       currency: "INR",
       payment_capture: 1,
     };

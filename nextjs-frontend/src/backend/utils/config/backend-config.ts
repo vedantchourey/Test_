@@ -13,6 +13,9 @@ const {
 } = process.env;
 
 const appUrl = process.env.NEXT_PUBLIC_NOOB_BASE_APP_URL || 'http://localhost:3000';
+const credit_gst_percentage = process.env.CREDIT_GST_PERCENTAGE || "18"
+const credit_service_percentage = process.env.CREDIT_SERVICE_PERCENTAGE || "15"
+const price_per_credit = process.env.PRICE_PER_CREDIT || "100"
 
 export const backendConfig: IBackendConfig = {
   db: {
@@ -35,6 +38,11 @@ export const backendConfig: IBackendConfig = {
     cmsApiEndpoint: CMS_API_ENDPOINT || 'API_ENDPOINT',
     cmsApiToken: CMS_API_TOKEN || 'API_TOKEN',
     appUrl: appUrl
+  },
+  credit_config: {
+    credit_gst_percentage: parseInt(credit_gst_percentage),
+    credit_service_percentage: parseInt(credit_service_percentage),
+    price_per_credit: parseInt(price_per_credit),
   }
 }
 
