@@ -1,22 +1,23 @@
 import { Grid } from "@mui/material";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import {
+  useAppDispatch,
+} from "../../../redux-store/redux-store";
+import { setWalletDetails } from "../../../redux-store/wallet/wallet.-slice";
 import { getAuthHeader } from "../../../utils/headers";
 import WalletCard from "../../ui-components/wallet-card";
 import Balance from "../balance";
 import Transactions from "../transactions";
 
 const WalletInfo: React.FC = () => {
-  const [apiResp, setApiResp] = useState({
-    wallet: {},
-    transaction: [],
-  });
+  const appDispatch = useAppDispatch();
   const fetchWalletDetails = async () => {
     const headers = await getAuthHeader();
     let { data } = await axios.get(`/api/wallet/details`, {
       headers,
     });
-    if (data) setApiResp(data);
+    if (data) appDispatch(setWalletDetails(data));
   };
   useEffect(() => {
     fetchWalletDetails();
@@ -25,10 +26,10 @@ const WalletInfo: React.FC = () => {
     <WalletCard>
       <Grid container columnSpacing={2} rowSpacing={2}>
         <Grid item xs={12} md={7}>
-          <Balance wallet={apiResp.wallet} />
+          <Balance />
         </Grid>
         <Grid item xs={12} md={5}>
-          <Transactions transaction={apiResp.transaction} />
+          <Transactions />
         </Grid>
       </Grid>
     </WalletCard>

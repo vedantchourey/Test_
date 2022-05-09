@@ -10,15 +10,17 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import WalletCard from "../../ui-components/wallet-card";
-import { ReactComponent as Paypal } from "../../../../../public/icons/Paypal.svg";
 import FormLabel from "../../ui-components/formlabel";
 import { getAuthHeader } from "../../../utils/headers";
 import axios from "axios";
-
+import Router from "next/router";
+import { useAppDispatch } from "../../../redux-store/redux-store";
+import { setCartDetails } from "../../../redux-store/wallet/wallet.-slice";
 const AddCredit: React.FC = () => {
   const [amount, setAmount] = useState("0.00");
   const [razorPay, setRazorPay] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const appDispatch = useAppDispatch();
   useEffect((): void => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -48,13 +50,14 @@ const AddCredit: React.FC = () => {
         }
       )
       .then(({ data }): void => {
+        appDispatch(setCartDetails(data));
         const options = {
           ...data,
           name: "Learning To Code Online",
           description: "Test Wallet Transaction",
-          handler: function (response: any): void {
+          handler: async function (response: any): Promise<void> {
             axios.post(`/api/payment/update-order`, response, { headers });
-            setErrorMsg("Balance added successfully");
+            Router.push("credit/success");
           },
         };
         // @ts-expect-error: ignore

@@ -1,10 +1,11 @@
 import { Box, Button, Card, Divider, Grid, Typography } from "@mui/material";
 import Router from "next/router";
 import React from "react";
-interface BalanceProps {
-  wallet: any;
-}
-const Balance = ({ wallet }: BalanceProps): any => {
+import { useAppSelector } from "../../../redux-store/redux-store";
+import { walletDetaislSelector } from "../../../redux-store/wallet/wallet-selector";
+
+const Balance = (): any => {
+  const wallet = useAppSelector(walletDetaislSelector);
   return (
     <React.Fragment>
       <Card>
@@ -75,7 +76,7 @@ const Balance = ({ wallet }: BalanceProps): any => {
                 color: "#ffffff",
               }}
               onClick={() => {
-                Router.replace("credit/add");
+                Router.push("credit/add");
               }}
             >
               Add Credits

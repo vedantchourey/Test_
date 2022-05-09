@@ -13,7 +13,7 @@ export const createRazorPayOrder = async (req: IOrderRequest, context: Knex): Pr
     if (errors) return { errors };
     const [id, secret]: IConfig[] = await getRazorPayKeys(context)
     const { credit_config } = backendConfig
-    let amount = req.amount * 100 * credit_config.price_per_credit;
+    let amount = req.amount * credit_config.price_per_credit;
     let gst = Math.ceil((amount * credit_config.credit_gst_percentage) / 100);
     let service_charge = Math.ceil((amount * credit_config.credit_service_percentage) / 100);
     const razorpay = new Razorpay({
@@ -21,7 +21,7 @@ export const createRazorPayOrder = async (req: IOrderRequest, context: Knex): Pr
       key_secret: secret.value,
     });
     const options = {
-      amount: amount + gst + service_charge,
+      amount: (amount + gst + service_charge) * 100,
       currency: "INR",
       payment_capture: 1,
     };
@@ -32,7 +32,7 @@ export const createRazorPayOrder = async (req: IOrderRequest, context: Knex): Pr
       amount,
       gst,
       service_charge,
-      total_amount: response.amount,
+      total_amount: response.amount / 100,
       key: id.value,
     } as any
   } catch (ex: any) {

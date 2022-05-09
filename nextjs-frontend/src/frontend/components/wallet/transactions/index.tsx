@@ -7,6 +7,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import moment from "moment";
+import { walletDetaislSelector } from "../../../redux-store/wallet/wallet-selector";
+import { useAppSelector } from "../../../redux-store/redux-store";
 
 function createData(
   action: string,
@@ -51,7 +53,8 @@ const rows = [
   ),
 ];
 
-const Transactions = ({ transaction = [] }: any) => {
+const Transactions = () => {
+  const { transaction } = useAppSelector(walletDetaislSelector);
   return (
     <React.Fragment>
       <Card>
@@ -81,7 +84,7 @@ const Transactions = ({ transaction = [] }: any) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {transaction.map((row: any) => (
+                {(transaction || []).map((row: any) => (
                   <TableRow key={row.action}>
                     <TableCell width={"33%"}>{row.type}</TableCell>
                     <TableCell width={"33%"}>
