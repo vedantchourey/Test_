@@ -37,12 +37,14 @@ const useStyles = makeStyles(() =>
       border: "1px solid rgba(255, 255, 255, 0.3)",
       width: "50%",
     },
-  }));
+  })
+);
 
 export interface PublishTournamentData {
   registration: string;
   society: string;
   joinCode: string | null;
+  templateCode?: string | null;
 }
 
 interface PublishTournamentProps {
@@ -60,29 +62,33 @@ const PublishPage: React.FC<PublishTournamentProps> = ({
   const validationSchema = yup.object({
     registration: yup.string().required("Registration field required"),
     society: yup.string().required("society field required"),
-    joinCode: yup.string().notRequired(),
+    joinCode: yup.string().notRequired().nullable(),
   });
   const router = useRouter();
   const { id } = React.useContext(TournamentContext);
   const [isCopied, setCopied] = React.useState(false);
-  
+
   const formik = useFormik({
     initialValues: {
       registration: data?.registration || "published",
       society: data?.society || "private",
-      joinCode: data?.joinCode || null,
+      joinCode: data?.joinCode || "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       if (onSave) {
-        onSave(values);
+        onSave({ ...values, templateCode: randomString(6) });
       }
     },
   });
 
   React.useEffect(() => {
     if (data) {
-      formik.setValues({ ...data });
+      formik.setValues({
+        registration: data.registration,
+        society: data.society,
+        joinCode: data?.joinCode || "",
+      });
     }
   }, [data]);
 

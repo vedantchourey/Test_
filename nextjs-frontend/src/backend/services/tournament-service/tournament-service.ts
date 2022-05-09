@@ -52,7 +52,17 @@ export const persistTournament: NoobApiService<
   if (req.id) {
     tournament = await repository.update({ ...req } as any);
   } else {
-    tournament = await repository.create({ id: undefined, ...req } as any);
+    if (req.createTemplateCode) {
+      const tournament = await repository.select({
+        templateCode: req.createTemplateCode,
+      });
+      req = {
+        ...tournament,
+        ...req,
+        status: "DRAFT",
+      };
+    }
+    tournament = await repository.create({ ...req, id: undefined } as any);
   }
   if (req.bracketsMetadata?.playersLimit && tournament?.id) {
     persistBrackets(tournament, knexConnection as Knex);
@@ -93,7 +103,8 @@ export async function tournamentDetails(
   const repository = new TournamentsRepository(
     context.transaction as Knex.Transaction
   );
-  let tournament = await repository.getTournament(
+
+  const tournament = await repository.getTournament(
     tournamentId as string
   );
   const tournamentUsersRepo = new TournamentUsersRepository(
