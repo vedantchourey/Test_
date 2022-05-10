@@ -33,4 +33,7 @@ export class CrudRepository<T> extends BaseRepository<T> {
         const items = await this.entities().where(key, value).select(fields)
         return items;
     }
+    async delete(query: any): Promise<any> {
+        return await this.entities().delete().where(query)
+    }
 }

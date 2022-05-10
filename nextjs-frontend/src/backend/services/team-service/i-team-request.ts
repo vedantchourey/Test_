@@ -4,3 +4,6 @@ export interface ITeamCreateRequest {
     game_id: string;
 }
 
+export interface ITeamDiscardRequest {
+    id: string;
+}

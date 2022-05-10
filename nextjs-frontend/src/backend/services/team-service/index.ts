@@ -1,14 +1,14 @@
 import { Knex } from "knex";
 import { TABLE_NAMES } from "../../../models/constants";
-import { IError } from "../../utils/common/Interfaces";
+import { IError, ISuccess } from "../../utils/common/Interfaces";
 import { IGame } from "../database/models/i-game";
 import { IPlatform } from "../database/models/i-platform";
 import { ITeams } from "../database/models/i-teams";
 import { CrudRepository } from "../database/repositories/crud-repository";
-import { ITeamCreateRequest } from "./i-team-request";
-import { validateTeamCreation } from "./i-team-validator";
+import { ITeamCreateRequest, ITeamDiscardRequest } from "./i-team-request";
+import { validateTeamCreation, validateTeamDiscard } from "./i-team-validator";
 const fields = ["id", "game_id", "name", "platform_id"]
-export const create = async (req: ITeamCreateRequest,
+export const createTeams = async (req: ITeamCreateRequest,
     connection: Knex.Transaction,
     user: any): Promise<ITeams | IError> => {
     try {
@@ -33,6 +33,24 @@ export const create = async (req: ITeamCreateRequest,
         return { errors: ["Team for platform and game combination already exists"] }
 
 
+    } catch (ex) {
+        return { errors: ["Something went wrong"] }
+    }
+}
+
+export const discardTeams = async (req: ITeamDiscardRequest,
+    connection: Knex.Transaction,
+    user: any): Promise<ISuccess | IError> => {
+    try {
+        const errors = await validateTeamDiscard(req);
+        if (errors) return { errors };
+        const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
+        const existing_team = await teams.findById(req.id)
+        if (existing_team) {
+            await teams.delete({ id: req.id, created_by: user.id })
+            return { message: "Teams discard successfull" }
+        } else
+            return { errors: ["Team for platform and game combination already exists"] }
     } catch (ex) {
         return { errors: ["Something went wrong"] }
     }
