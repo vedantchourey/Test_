@@ -288,7 +288,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
           <Grid item xs={12}>
             <FormControl fullWidth variant="standard">
               <FormLabel label="Header Banner"></FormLabel>
-              <Dropzone onDrop={(files) => onDrop(files, "banner")}>
+              <Dropzone onDrop={(files):void => onDrop(files, "banner")}>
                 {({ getRootProps, getInputProps }): JSX.Element => (
                   <Box
                     className={style.dropZone}
@@ -322,7 +322,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
           <Grid item xs={12}>
             <FormControl fullWidth variant="standard">
               <FormLabel label="Sponsor Logo"></FormLabel>
-              <Dropzone onDrop={(files) => onDrop(files, "sponsor")}>
+              <Dropzone onDrop={(files):void => onDrop(files, "sponsor")}>
                 {({ getRootProps, getInputProps }): JSX.Element => (
                   <Box
                     className={style.dropZone}

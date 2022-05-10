@@ -67,3 +67,14 @@ a:hover {
 .bracket .brackets-viewer {
   background-color: transparent;
 }
+
+/* .slick-slide {
+  margin: 0 27px!important;
+}
+
+.slick-list {
+  margin: 0 -27px!important;
+} */
+
+.slick-list {margin: 0 -5px!important;}
+.slick-slide>div {padding: 0 5px!important;}
