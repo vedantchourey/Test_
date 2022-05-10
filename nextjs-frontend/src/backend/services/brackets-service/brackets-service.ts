@@ -45,7 +45,9 @@ export const persistBrackets = async (req: ITournament, knexConnection: Knex): P
         .map((x, i) => `${i}`),
       settings: { seedOrdering: ["natural"] },
     };
-
+    if (req?.bracketsMetadata?.type === "SINGLE" && req?.bracketsMetadata.thirdPlace) {
+      data.settings = { ...data.settings, consolationFinal: true } as any
+    }
     await manager.create(data as any);
   } catch (ex) {
     console.error(ex);
