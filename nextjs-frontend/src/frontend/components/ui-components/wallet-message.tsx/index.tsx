@@ -41,11 +41,6 @@ const WalletMessage: React.FC<WalletMessageProps> = ({ isSuccess }) => {
                   Something went wrong. Please try to checkout again
                 </Typography>
               )}
-              <Typography style={{ marginTop: "15px" }}>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Harum
-                eaque rem nisi veritatis laboriosam? Dolor mollitia cupiditate
-                laborum aspernatur ducimus.
-              </Typography>
             </Box>
           </Grid>
 
