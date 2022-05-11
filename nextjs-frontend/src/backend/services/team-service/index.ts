@@ -93,7 +93,7 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
 
         if (pending_inivitation.length) return getErrorObject("Some users already have invitation in pending state");
         const data = req.users.map(user => ({
-            teams_id: team_info.id,
+            team_id: team_info.id,
             user_id: user,
             type: "INVITE",
             secret: randomString(15)
