@@ -32,6 +32,12 @@ export const createTeams = async (req: ITeamCreateRequest,
                 created_by: user.id,
                 ...req
             }, fields)
+            const team_players = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
+            await team_players.create({
+                team_id: data.id,
+                user_id: user.id,
+                is_owner: true,
+            })
             return data
         }
         return { errors: ["Team for platform and game combination already exists"] }
