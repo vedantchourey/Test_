@@ -76,5 +76,8 @@ a:hover {
   margin: 0 -27px!important;
 } */
 
-.slick-list {margin: 0 -5px!important;}
+@media screen and (min-width: 700px) {
+  .slick-list {margin: 0 -5px!important;}
 .slick-slide>div {padding: 0 5px!important;}
+}
+

@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
 import {
   Chart,
@@ -68,7 +68,7 @@ const getRandomArbitrary = (min: number, max: number): number => {
   return Math.random() * (max - min) + min;
 };
 
-const getData: React.FC = () => {
+const getData = (): { x: string; y: number }[] => {
   let date = moment().subtract(10, "days");
   const data = [];
   data.push({ x: date.format("DD/MM/YYYY"), y: getRandomArbitrary(200, 700) });
@@ -129,11 +129,24 @@ const players: MemberProp[] = [
 const settings: Settings = {
   slidesToShow: 5,
   slidesToScroll: 1,
-  dots: true,
   infinite: false,
+  responsive: [
+    {
+      breakpoint: 768,
+      settings: {
+        centerMode: false,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: false,
+      },
+    },
+  ],
 };
 
 const TeamMembers: React.FC = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   return (
     <React.Fragment>
       <Box>
@@ -146,43 +159,45 @@ const TeamMembers: React.FC = () => {
               return <Member key={player.name} {...player} />;
             })}
             <Box>
-            <Box
-              border={"4px solid #6931F9"}
-              borderRadius={"10px"}
-              style={{ backgroundColor: "rgba(255, 255, 255, 0.09)" }}
-              minHeight={365}
-              display="flex"
-              alignContent={"center"}
-              flexDirection="column"
-              component={"div"}
-              justifyContent="center"
-            >
-              <Image
-                src={"/icons/PlayerAdd.svg"}
-                height={"45px"}
-                width={"45px"}
-              />
-              <Typography
-              marginY={2}
-              color="white"
-                textTransform={"uppercase"}
-                fontWeight="700"
-                fontSize={"17px"}
-                lineHeight={"18px"}
+              <Box
+                border={"4px solid #6931F9"}
+                borderRadius={"10px"}
+                style={{ backgroundColor: "rgba(255, 255, 255, 0.09)" }}
+                minHeight={365}
+                display="flex"
+                alignContent={"center"}
+                flexDirection="column"
+                component={"div"}
+                justifyContent="center"
               >
-                Add Player
-              </Typography>
-            </Box>
+                <Image
+                  src={"/icons/PlayerAdd.svg"}
+                  height={"45px"}
+                  width={"45px"}
+                />
+                <Typography
+                  marginY={2}
+                  color="white"
+                  textTransform={"uppercase"}
+                  fontWeight="700"
+                  fontSize={"17px"}
+                  lineHeight={"18px"}
+                >
+                  Add Player
+                </Typography>
+              </Box>
             </Box>
           </Slider>
         </Box>
       </Box>
-      <Box>
-        <Typography color={"white"} variant={"h5"}>
-          Team Graph
-        </Typography>
-        <Line options={options} data={data} />
-      </Box>
+      {!isMobile ? (
+        <Box>
+          <Typography color={"white"} variant={"h5"}>
+            Team Graph
+          </Typography>
+          <Line options={options} data={data} />
+        </Box>
+      ) : null}
     </React.Fragment>
   );
 };
