@@ -18,10 +18,12 @@ import { persistBrackets } from "../brackets-service/brackets-service";
 import { ServiceResponse } from "../common/contracts/service-response";
 import { ListTournamentType } from "./list-tournaments-request";
 import { ITournament } from "../database/models/i-tournaments";
-import { TournamentUsersRepository } from "../database/repositories/tournament-users-repository";
 import BracketsCrud from "../brackets-service/brackets-crud";
 import { BTournament } from "../database/repositories/bracket-tournament";
 import { BracketsManager } from "brackets-manager";
+import { TABLE_NAMES } from "../../../models/constants";
+import { CrudRepository } from "../database/repositories/crud-repository";
+import { IBParticipants } from "../database/models/i-b-participant";
 export const createTournament: NoobApiService<
   CreateOrEditTournamentRequest,
   ITournamentResponse
@@ -104,22 +106,24 @@ export async function tournamentDetails(
     context.transaction as Knex.Transaction
   );
 
-  const tournament = await repository.getTournament(
+  let tournament = await repository.getTournament(
     tournamentId as string
   );
-  const tournamentUsersRepo = new TournamentUsersRepository(
-    context.transaction as Knex.Transaction
-  );
-  const users = await tournamentUsersRepo.getUsersDetails({
-    tournamentId: tournamentId,
-  });
+
   const bracketTournamentRepo = new BTournament(
     context.transaction as Knex.Transaction
   );
   const bracketT = await bracketTournamentRepo.select({
     tournament_uuid: tournamentId,
   });
+
+  let players: any = []
   if (bracketT) {
+    const part_repo = new CrudRepository<IBParticipants>(context.knexConnection as any, TABLE_NAMES.B_PARTICIPANT);
+    players = await part_repo.knexObj().where({
+      tournament_id: bracketT.id,
+    })
+      .whereNotNull("user_id")
     const connect = context.knexConnection;
     const manager = new BracketsManager(
       new BracketsCrud(connect as any) as any
@@ -130,13 +134,13 @@ export async function tournamentDetails(
   return {
     data: {
       ...tournament,
-      playerList: users,
+      playerList: players,
       pricingDetails: {
         pricePool:
           Number(tournament?.bracketsMetadata?.playersLimit) *
           Number(tournament?.settings?.entryFeeAmount),
-        currentPricePool: users.length
-          ? users.length * Number(tournament?.settings?.entryFeeAmount)
+        currentPricePool: players.length
+          ? players.length * Number(tournament?.settings?.entryFeeAmount)
           : 0,
       },
     },
