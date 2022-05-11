@@ -45,7 +45,10 @@ export const persistTournament: NoobApiService<
   ITournamentType,
   ITournamentType
 > = async (req, { knexConnection }) => {
+  console.log('req -> ', req)
+  
   const errors = await validatePersistTournament(req);
+  console.log('errors -> ', errors)
   if (errors) return { errors };
   const repository = new TournamentsRepository(knexConnection as Knex);
   let tournament;
@@ -104,7 +107,7 @@ export async function tournamentDetails(
     context.transaction as Knex.Transaction
   );
 
-  const tournament = await repository.getTournament(
+  let tournament = await repository.getTournament(
     tournamentId as string
   );
   const tournamentUsersRepo = new TournamentUsersRepository(
