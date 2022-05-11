@@ -9,8 +9,8 @@ import { ITeams } from "../database/models/i-teams";
 import { ITeamInvitation } from "../database/models/i-teams-invitation";
 import { ITeamPlayers } from "../database/models/i-teams-players";
 import { CrudRepository } from "../database/repositories/crud-repository";
-import { ITeamCreateRequest, ITeamDiscardRequest, ITeamInviteRequest } from "./i-team-request";
-import { validateSendInvite, validateTeamCreation, validateTeamDiscard } from "./i-team-validator";
+import { ITeamCreateRequest, ITeamDiscardRequest, ITeamInviteRequest, ITeamLeaveRequest } from "./i-team-request";
+import { validateLeaveTeam, validateSendInvite, validateTeamCreation, validateTeamDiscard } from "./i-team-validator";
 const fields = ["id", "game_id", "name", "platform_id"]
 export const createTeams = async (req: ITeamCreateRequest,
     connection: Knex.Transaction,
@@ -164,6 +164,26 @@ export const rejectInvite = async (secret: string, connection: Knex.Transaction,
         return getErrorObject("Something went wrong")
     }
 
+}
+
+export const leaveTeam = async (req: ITeamLeaveRequest,
+    connection: Knex.Transaction,
+    user: any): Promise<ISuccess | IError> => {
+    try {
+        const errors = await validateLeaveTeam(req);
+        if (errors) return { errors };
+        const teams_player = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
+        const [existing_player] = await teams_player.find({ "team_id": req.team_id, user_id: user.id })
+        if (!existing_player) return getErrorObject("You are not part of the team.");
+        if (existing_player.is_owner) return getErrorObject("You are the owner of the team so cannot abondon it");
+
+        await teams_player.delete({
+            "team_id": req.team_id, user_id: user.id
+        })
+        return { message: "Team left" } as any
+    } catch (ex) {
+        return { errors: ["Something went wrong"] }
+    }
 }
 export const validateCreationData = async (req: ITeamCreateRequest, connection: Knex.Transaction,) => {
     try {

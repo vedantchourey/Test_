@@ -7,19 +7,19 @@ import {
 import { NextApiRequest, NextApiResponse } from "next";
 import { ServiceResponse } from "../../../src/backend/services/common/contracts/service-response";
 import { PerRequestContext } from "../../../src/backend/utils/api-middle-ware/api-middleware-typings";
-import { discardTeams } from "../../../src/backend/services/team-service";
+import { leaveTeam } from "../../../src/backend/services/team-service";
 import { Knex } from "knex";
-import { ITeamDiscardRequest } from "../../../src/backend/services/team-service/i-team-request";
+import { ITeamLeaveRequest } from "../../../src/backend/services/team-service/i-team-request";
 import { IError, ISuccess } from "../../../src/backend/utils/common/Interfaces";
 
 export default createNextJsRouteHandler({
-    delete: {
+    post: {
         handler: async (
             req: NextApiRequest,
-            res: NextApiResponse<ServiceResponse<ITeamDiscardRequest, ISuccess | IError>>,
+            res: NextApiResponse<ServiceResponse<ITeamLeaveRequest, ISuccess | IError>>,
             context: PerRequestContext
         ) => {
-            const result: any = await discardTeams(req.body, context.transaction as Knex.Transaction, context.user as any);
+            const result: any = await leaveTeam(req.body, context.transaction as Knex.Transaction, context.user as any);
             if (result?.errors?.length)
                 res.status(500).json(result)
             else
