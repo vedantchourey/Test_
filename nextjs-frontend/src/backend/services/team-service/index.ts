@@ -44,6 +44,7 @@ export const createTeams = async (req: ITeamCreateRequest,
 
 
     } catch (ex) {
+        if (ex?.code == 23505) return { errors: ["Team with same name already exists"] }
         return { errors: ["Something went wrong"] }
     }
 }
@@ -175,7 +176,7 @@ export const leaveTeam = async (req: ITeamLeaveRequest,
         const teams_player = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
         const [existing_player] = await teams_player.find({ "team_id": req.team_id, user_id: user.id })
         if (!existing_player) return getErrorObject("You are not part of the team.");
-        if (existing_player.is_owner) return getErrorObject("You are the owner of the team so cannot abondon it");
+        if (existing_player.is_owner) return getErrorObject("You are the owner of the team so cannot leave it");
 
         await teams_player.delete({
             "team_id": req.team_id, user_id: user.id
