@@ -7,6 +7,7 @@ import { IPlatform } from "../database/models/i-platform";
 import { IPrivateProfile } from "../database/models/i-private-profile";
 import { ITeams } from "../database/models/i-teams";
 import { ITeamInvitation } from "../database/models/i-teams-invitation";
+import { ITeamPlayers } from "../database/models/i-teams-players";
 import { CrudRepository } from "../database/repositories/crud-repository";
 import { ITeamCreateRequest, ITeamDiscardRequest, ITeamInviteRequest } from "./i-team-request";
 import { validateSendInvite, validateTeamCreation, validateTeamDiscard } from "./i-team-validator";
@@ -75,10 +76,13 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
         if (!team_info) return getErrorObject("Team id does not exisits");
         if (team_info.created_by !== user.id) return getErrorObject("Not authorises to send invitation");
 
-        const team_invitation = new CrudRepository<ITeamInvitation>(connection, TABLE_NAMES.TEAM_INVITATION);
-        // todo 
-        // check if user already part of the team. once invitation acceptance api is done
+        // checking if users already in the team 
+        const team_players = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
+        const existing_players = await team_players.knexObj().whereIn("user_id", req.users).where("team_id", req.team_id);
+        if (existing_players.length) return getErrorObject("Players already exists in the team.");
 
+        //validating if any pending invitation
+        const team_invitation = new CrudRepository<ITeamInvitation>(connection, TABLE_NAMES.TEAM_INVITATION);
         const pending_inivitation = await team_invitation.knexObj().whereIn("user_id", req.users).where("status", "PENDING")
 
         if (pending_inivitation.length) return getErrorObject("Some users already have invitation in pending state");
@@ -90,6 +94,65 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
         }))
         await team_invitation.create(data)
         return { message: "Invite send successfully" } as any
+
+    } catch (ex) {
+        return getErrorObject("Something went wrong")
+    }
+
+}
+export const acceptInvite = async (secret: string, connection: Knex.Transaction, user: any): Promise<ISuccess | IError> => {
+    try {
+        const team_invitation = new CrudRepository<ITeamInvitation>(connection, TABLE_NAMES.TEAM_INVITATION);
+        const [invite] = await team_invitation.find({
+            secret
+        })
+        if (invite.status === "ACCEPTED") {
+            return getErrorObject("Invitation already accepted")
+        }
+        if (invite.status === "REJECTED") {
+            return getErrorObject("Invitation rejected. Ask team owner to send new invitation")
+        }
+        if (invite.status === "PENDING") {
+            const team_players = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
+            await Promise.all([
+                team_invitation.update({
+                    status: "ACCEPTED"
+                }, {
+                    secret
+                }),
+                team_players.create({
+                    team_id: invite.team_id,
+                    user_id: invite.user_id
+                })
+            ])
+        }
+        return { message: "Invitation accepted" } as any
+
+    } catch (ex) {
+        return getErrorObject("Something went wrong")
+    }
+
+}
+export const rejectInvite = async (secret: string, connection: Knex.Transaction, user: any): Promise<ISuccess | IError> => {
+    try {
+        const team_invitation = new CrudRepository<ITeamInvitation>(connection, TABLE_NAMES.TEAM_INVITATION);
+        const [invite] = await team_invitation.find({
+            secret
+        })
+        if (!invite) return getErrorObject("Invalid secret")
+
+        if (invite.status === "ACCEPTED") return getErrorObject("Invitation already accepted")
+
+        if (invite.status === "REJECTED") return getErrorObject("Invitation already rejected")
+
+        if (invite.status === "PENDING") {
+            await team_invitation.update({
+                status: "REJECTED"
+            }, {
+                secret
+            })
+        }
+        return { message: "Invitation rejected" } as any
 
     } catch (ex) {
         return getErrorObject("Something went wrong")

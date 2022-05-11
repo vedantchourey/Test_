@@ -6,6 +6,7 @@ export const TABLE_NAMES = {
     PLATFORMS: "platforms",
     GAMES: "games",
     PRIVATE_PROFILE: "private_profiles",
-    TEAM_INVITATION: "teams_invitation"
+    TEAM_INVITATION: "teams_invitation",
+    TEAM_PLAYERS: "team_players",
 }
 
