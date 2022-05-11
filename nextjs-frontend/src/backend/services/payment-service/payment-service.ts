@@ -14,8 +14,9 @@ export const createRazorPayOrder = async (req: IOrderRequest, context: Knex): Pr
     const [id, secret]: IConfig[] = await getRazorPayKeys(context)
     const { credit_config } = backendConfig
     let amount = req.amount * credit_config.price_per_credit;
-    let gst = Math.ceil((amount * credit_config.credit_gst_percentage) / 100);
-    let service_charge = Math.ceil((amount * credit_config.credit_service_percentage) / 100);
+    let gst = (amount * credit_config.credit_gst_percentage) / 100;
+    let service_charge = (amount * credit_config.credit_service_percentage) / 100;
+
     const razorpay = new Razorpay({
       key_id: id.value,
       key_secret: secret.value,
@@ -24,6 +25,9 @@ export const createRazorPayOrder = async (req: IOrderRequest, context: Knex): Pr
       amount: (amount + gst + service_charge) * 100,
       currency: "INR",
       payment_capture: 1,
+      notes: {
+        amount: req.amount
+      }
     };
     const response = await razorpay.orders.create(options);
     return {
@@ -49,11 +53,12 @@ export const updateRazorPayOrder = async (req: IUpdateOrderRequest, context: Per
     key_id: id.value,
     key_secret: secret.value,
   });
+  const { credit_config } = backendConfig
   const payment_response: any = await razorpay.payments.fetch(req.razorpay_payment_id);
   if (payment_response?.captured && user) {
     const d = await creditBalance({
       userId: user.id,
-      amount: payment_response.amount / 100,
+      amount: payment_response?.notes?.amount,
       type: "BALANCE_ADD"
 
     }, context.transaction as any, payment_response as any)
