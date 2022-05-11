@@ -4,6 +4,8 @@ export const allowedImageExtensions: AllowedExtensions[] = ['.jpeg', '.jpg', '.p
 export const TABLE_NAMES = {
     TEAMS: "teams",
     PLATFORMS: "platforms",
-    GAMES: "games"
+    GAMES: "games",
+    PRIVATE_PROFILE: "private_profiles",
+    TEAM_INVITATION: "teams_invitation"
 }
 

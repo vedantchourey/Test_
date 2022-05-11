@@ -7,3 +7,8 @@ export interface ITeamCreateRequest {
 export interface ITeamDiscardRequest {
     id: string;
 }
+
+export interface ITeamInviteRequest {
+    team_id: string;
+    users: string[];
+}

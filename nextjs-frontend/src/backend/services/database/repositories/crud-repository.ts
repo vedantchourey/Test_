@@ -12,6 +12,9 @@ export class CrudRepository<T> extends BaseRepository<T> {
         return createdItems[0];
     }
 
+    get knexObj() {
+        return this.entities
+    }
     async update(data: any, query: any, fields: string[] = ["*"]): Promise<T> {
         const updatedItems = await this.entities()
             .where(query)

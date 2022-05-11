@@ -1,12 +1,15 @@
-import { Knex } from "knex";
+import knex, { Knex } from "knex";
 import { TABLE_NAMES } from "../../../models/constants";
 import { IError, ISuccess } from "../../utils/common/Interfaces";
+import { randomString } from "../common/helper/utils.service";
 import { IGame } from "../database/models/i-game";
 import { IPlatform } from "../database/models/i-platform";
+import { IPrivateProfile } from "../database/models/i-private-profile";
 import { ITeams } from "../database/models/i-teams";
+import { ITeamInvitation } from "../database/models/i-teams-invitation";
 import { CrudRepository } from "../database/repositories/crud-repository";
-import { ITeamCreateRequest, ITeamDiscardRequest } from "./i-team-request";
-import { validateTeamCreation, validateTeamDiscard } from "./i-team-validator";
+import { ITeamCreateRequest, ITeamDiscardRequest, ITeamInviteRequest } from "./i-team-request";
+import { validateSendInvite, validateTeamCreation, validateTeamDiscard } from "./i-team-validator";
 const fields = ["id", "game_id", "name", "platform_id"]
 export const createTeams = async (req: ITeamCreateRequest,
     connection: Knex.Transaction,
@@ -56,6 +59,43 @@ export const discardTeams = async (req: ITeamDiscardRequest,
     }
 }
 
+export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Transaction, user: any): Promise<ISuccess | IError> => {
+    try {
+        const errors = await validateSendInvite(req);
+        if (errors) return { errors };
+
+        // validating all the users
+        if (!(await validateUsers(req.users, connection))) return getErrorObject("Invalid user ids")
+
+
+        const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
+        const team_info = await teams.findById(req.team_id);
+
+        // validation team id and whether the requested user is the owner of the team
+        if (!team_info) return getErrorObject("Team id does not exisits");
+        if (team_info.created_by !== user.id) return getErrorObject("Not authorises to send invitation");
+
+        const team_invitation = new CrudRepository<ITeamInvitation>(connection, TABLE_NAMES.TEAM_INVITATION);
+        // todo 
+        // check if user already part of the team. once invitation acceptance api is done
+
+        const pending_inivitation = await team_invitation.knexObj().whereIn("user_id", req.users).where("status", "PENDING")
+
+        if (pending_inivitation.length) return getErrorObject("Some users already have invitation in pending state");
+        const data = req.users.map(user => ({
+            teams_id: team_info.id,
+            user_id: user,
+            type: "INVITE",
+            secret: randomString(15)
+        }))
+        await team_invitation.create(data)
+        return { message: "Invite send successfully" } as any
+
+    } catch (ex) {
+        return getErrorObject("Something went wrong")
+    }
+
+}
 export const validateCreationData = async (req: ITeamCreateRequest, connection: Knex.Transaction,) => {
     try {
         const platforms = new CrudRepository<IPlatform>(connection, TABLE_NAMES.PLATFORMS)
@@ -71,4 +111,15 @@ export const validateCreationData = async (req: ITeamCreateRequest, connection: 
         return ["Something went wrong"]
     }
 
+}
+
+export const validateUsers = async (users: string[], connection: Knex.Transaction): Promise<boolean> => {
+    const user_list = new CrudRepository<IPrivateProfile>(connection, TABLE_NAMES.PRIVATE_PROFILE);
+    let data = await user_list.knexObj().whereIn("id", users)
+    if (data.length != users.length) return false
+    return true
+}
+
+function getErrorObject(msg: string) {
+    return { errors: [msg] }
 }
