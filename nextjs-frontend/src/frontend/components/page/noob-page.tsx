@@ -1,9 +1,6 @@
-import { useTheme } from "@mui/material";
+import { useTheme, Box } from "@mui/material";
 import { useAppSelector } from "../../redux-store/redux-store";
-import {
-  
-  isDeviceTypeSelector,
-} from "../../redux-store/layout/layout-selectors";
+import { isDeviceTypeSelector } from "../../redux-store/layout/layout-selectors";
 import Head from "next/head";
 import NoobHeader from "../header/noob-header";
 import commonStyles from "../../styles/common.module.css";
@@ -30,7 +27,7 @@ export default function NoobPage(props: Props): JSX.Element {
     : theme.palette.background.paper;
 
   return (
-    <div style={{ backgroundColor }}>
+    <div>
       <Head>
         <title>{title}</title>
         {metaKeys.map((key, index) => (
@@ -38,14 +35,14 @@ export default function NoobPage(props: Props): JSX.Element {
         ))}
         <link rel="icon" href={favIcon} />
       </Head>
-      <NoobHeader />
-      <main className={commonStyles.main}>
-      {/*  */}
-        <div className={styles.container} style={{ marginTop: "155px" }}>
-          {children}
-        </div>
-      </main>
-      <NoobFooter />
+      <Box sx={{ display: 'flex' }}>
+        <NoobHeader/>
+          <Box
+            component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}>
+            {children}
+          </Box>
+      </Box>
+      <NoobFooter/>
     </div>
   );
 }
