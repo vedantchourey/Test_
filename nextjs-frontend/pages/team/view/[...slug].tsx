@@ -1,5 +1,5 @@
 import React from "react";
-import Team from "../../src/frontend/components/team";
+import Team from "../../../src/frontend/components/team";
 
 const TeamPage: React.FC<void> = () => {
   return (

@@ -90,11 +90,11 @@ const Team: React.FC = () => {
     if (!tab) {
       return;
     }
-    router.push("/team/[...slug]", `/team/${tab.url}`, { shallow: true });
+    router.push("/team/view/[...slug]", `/team/view/${tab.url}`, { shallow: true });
   };
 
   const changeTabByValue = (tab:string):void=>{
-    router.push("/team/[...slug]", `/team/${tab}`, { shallow: true });
+    router.push("/team/view/[...slug]", `/team/view/${tab}`, { shallow: true });
   }
 
   const renderTabs = (): JSX.Element | JSX.Element[] => {
