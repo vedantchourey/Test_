@@ -9,6 +9,7 @@ import { createKnexConnection } from "../database/knex";
 import { TABLE_NAMES } from "../../../models/constants";
 import { CrudRepository } from "../database/repositories/crud-repository";
 import { IBParticipants } from "../database/models/i-b-participant";
+import { validateRegisterTeam } from "./i-brackets-validator";
 
 export const persistBrackets = async (req: ITournament, knexConnection: Knex): Promise<any> => {
   const connection = createKnexConnection();
@@ -59,6 +60,11 @@ export const registerTournament = async (
   req: IRegisterTournament,
   knexConnection: Knex
 ): Promise<any> => {
+
+  const errors = await validateRegisterTeam(req);
+  if (errors) return { errors };
+
+
   if (!(await validateUser(req.userId, knexConnection))) {
     return { errors: ["Invalid user id"] };
   }

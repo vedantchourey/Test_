@@ -23,7 +23,10 @@ export const fetchTeams = async (
         const data = await teams.knexObj()
             .join(TABLE_NAMES.TEAM_PLAYERS, "team_players.team_id", "teams.id")
             .join(TABLE_NAMES.PRIVATE_PROFILE, "private_profiles.id", "team_players.user_id")
-            .select(["teams.name", "teams.id", "private_profiles.firstName", "private_profiles.lastName", "private_profiles.id as user_id"])
+            .join(TABLE_NAMES.WALLET, "wallet.userId", "private_profiles.id")
+            .select(["teams.name", "teams.id", "private_profiles.firstName", "private_profiles.lastName", "private_profiles.id as user_id", "wallet.balance"])
+            .where("created_by", user.id)
+
         if (!data.length) return getErrorObject("No Teams found")
 
         return {
@@ -36,6 +39,7 @@ export const fetchTeams = async (
                             user_id: data.user_id,
                             lastName: data.lastName,
                             firstName: data.firstName,
+                            balance: data.balance
                         }
                     })
                 };
@@ -59,26 +63,19 @@ export const createTeams = async (req: ITeamCreateRequest,
         const data_errors = await validateCreationData(req, connection);
         if (data_errors) return { errors: data_errors }
         const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
-        const existing_team = await teams.find({
-            created_by: user.id,
-            platform_id: req.platform_id,
-            game_id: req.game_id,
-        }, fields)
-        if (!existing_team.length) {
-            const data = await teams.create({
-                created_by: user.id,
-                ...req
-            }, fields)
-            const team_players = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
-            await team_players.create({
-                team_id: data.id,
-                user_id: user.id,
-                is_owner: true,
-            })
-            return data
-        }
-        return getErrorObject("Team for platform and game combination already exists")
 
+        const data = await teams.create({
+            created_by: user.id,
+            ...req
+        }, fields)
+        
+        const team_players = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
+        await team_players.create({
+            team_id: data.id,
+            user_id: user.id,
+            is_owner: true,
+        })
+        return data
 
     } catch (ex: any) {
         if (ex?.code == 23505) return getErrorObject("Team with same name already exists")
