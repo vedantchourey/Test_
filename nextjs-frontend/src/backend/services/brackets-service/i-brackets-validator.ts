@@ -6,7 +6,8 @@ export function validateRegisterTeam(body: any): any {
         userId: Joi.string().guid()
             .required(),
         is_team_registration: Joi.boolean(),
-        user_list: Joi.array().when("is_team_registration", { is: true, then: Joi.required() })
+        user_list: Joi.array().when("is_team_registration", { is: true, then: Joi.required() }),
+        team_id: Joi.string().when("is_team_registration", { is: true, then: Joi.required() })
     });
     const errors = model.validate(body, {
         abortEarly: false,

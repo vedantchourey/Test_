@@ -11,6 +11,8 @@ export const TABLE_NAMES = {
     B_PARTICIPANT: "b_participant",
     B_TOURNAMENT: "b_tournament",
     USERS: "auth.users",
-    WALLET:"wallet"
+    WALLET: "wallet",
+    NOTIFICATIONS: "notifications",
+    TOURNAMENT_INIVTES: "tournament_invites",
 }
 

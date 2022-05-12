@@ -24,3 +24,7 @@ export const randomString = (length: number): string => {
     result += chars[Math.floor(Math.random() * chars.length)];
   return result;
 };
+
+export function getErrorObject(msg: string = "Something went wrong") {
+  return { errors: [msg] }
+}

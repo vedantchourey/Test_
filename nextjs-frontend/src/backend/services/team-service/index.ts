@@ -1,7 +1,7 @@
-import knex, { Knex } from "knex";
+import { Knex } from "knex";
 import { TABLE_NAMES } from "../../../models/constants";
 import { IError, ISuccess } from "../../utils/common/Interfaces";
-import { randomString } from "../common/helper/utils.service";
+import { getErrorObject, randomString } from "../common/helper/utils.service";
 import { IGame } from "../database/models/i-game";
 import { IPlatform } from "../database/models/i-platform";
 import { IPrivateProfile } from "../database/models/i-private-profile";
@@ -68,7 +68,7 @@ export const createTeams = async (req: ITeamCreateRequest,
             created_by: user.id,
             ...req
         }, fields)
-        
+
         const team_players = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
         await team_players.create({
             team_id: data.id,
@@ -245,6 +245,3 @@ export const fetchUserDetails = async (email: string, connection: Knex.Transacti
     return data
 }
 
-function getErrorObject(msg: string) {
-    return { errors: [msg] }
-}

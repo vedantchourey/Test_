@@ -24,7 +24,7 @@ import { BracketsManager } from "brackets-manager";
 import { TABLE_NAMES } from "../../../models/constants";
 import { CrudRepository } from "../database/repositories/crud-repository";
 import { IBParticipants } from "../database/models/i-b-participant";
-import { join } from "path/posix";
+import { ITournamentInvites } from "../database/models/i-tournament-invites";
 export const createTournament: NoobApiService<
   CreateOrEditTournamentRequest,
   ITournamentResponse
@@ -68,7 +68,7 @@ export const persistTournament: NoobApiService<
     tournament = await repository.create({ ...req, id: undefined } as any);
   }
   if (req.bracketsMetadata?.playersLimit && tournament?.id) {
-    persistBrackets(tournament, knexConnection as Knex);
+    persistBrackets(tournament);
   }
   const { id, ...others } = tournament;
   return { id: id as string, ...others };
@@ -126,7 +126,7 @@ export async function tournamentDetails(
         tournament_id: bracketT.id,
       })
       .whereNotNull("user_id")
-      .select(["private_profiles.firstName", "private_profiles.lastName","private_profiles.id"])
+      .select(["private_profiles.firstName", "private_profiles.lastName", "private_profiles.id"])
     const connect = context.knexConnection;
     const manager = new BracketsManager(
       new BracketsCrud(connect as any) as any
@@ -148,4 +148,9 @@ export async function tournamentDetails(
       },
     },
   } as any;
+}
+
+export const addTournamentInvites = async (data: ITournamentInvites | ITournamentInvites[], knexConnection: Knex) => {
+  const invites = new CrudRepository<ITournamentInvites>(knexConnection, TABLE_NAMES.TOURNAMENT_INIVTES);
+  await invites.create(data)
 }
