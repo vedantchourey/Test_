@@ -10,7 +10,7 @@ export interface ITeamDiscardRequest {
 
 export interface ITeamInviteRequest {
     team_id: string;
-    users: string[];
+    email: string;
 }
 
 export interface ITeamLeaveRequest{

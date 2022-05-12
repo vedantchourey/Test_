@@ -86,7 +86,7 @@ export const registerTournament = async (
       id: data.id
     })
 
-    return { errors: ["User register in successfull"] };
+    return { message: "User register in successfull" };
   } catch (ex) {
     return { errors: ["Invalid tournament id"] };
   }

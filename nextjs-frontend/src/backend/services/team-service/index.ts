@@ -11,7 +11,43 @@ import { ITeamPlayers } from "../database/models/i-teams-players";
 import { CrudRepository } from "../database/repositories/crud-repository";
 import { ITeamCreateRequest, ITeamDiscardRequest, ITeamInviteRequest, ITeamLeaveRequest } from "./i-team-request";
 import { validateLeaveTeam, validateSendInvite, validateTeamCreation, validateTeamDiscard } from "./i-team-validator";
+import _ from "lodash";
+import { IUser } from "../database/models/i-user";
 const fields = ["id", "game_id", "name", "platform_id"]
+
+export const fetchTeams = async (
+    connection: Knex.Transaction,
+    user: any): Promise<ISuccess | IError> => {
+    try {
+        const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
+        const data = await teams.knexObj()
+            .join(TABLE_NAMES.TEAM_PLAYERS, "team_players.team_id", "teams.id")
+            .join(TABLE_NAMES.PRIVATE_PROFILE, "private_profiles.id", "team_players.user_id")
+            .select(["teams.name", "teams.id", "private_profiles.firstName", "private_profiles.lastName", "private_profiles.id as user_id"])
+        if (!data.length) return getErrorObject("No Teams found")
+
+        return {
+            result: _(data).groupBy("name").map(function (items, name) {
+                return {
+                    name,
+                    players: _.map(items, (data) => {
+                        return {
+                            user_id: data.user_id,
+                            lastName: data.lastName,
+                            firstName: data.firstName,
+                        }
+                    })
+                };
+            }).value()
+        };
+
+
+    } catch (ex: any) {
+        if (ex?.code == 23505) return getErrorObject("Team with same name already exists")
+        return getErrorObject("Something went wrong" + ex.message)
+    }
+}
+
 export const createTeams = async (req: ITeamCreateRequest,
     connection: Knex.Transaction,
     user: any): Promise<ITeams | IError> => {
@@ -40,12 +76,12 @@ export const createTeams = async (req: ITeamCreateRequest,
             })
             return data
         }
-        return { errors: ["Team for platform and game combination already exists"] }
+        return getErrorObject("Team for platform and game combination already exists")
 
 
     } catch (ex: any) {
-        if (ex?.code == 23505) return { errors: ["Team with same name already exists"] }
-        return { errors: ["Something went wrong"] }
+        if (ex?.code == 23505) return getErrorObject("Team with same name already exists")
+        return getErrorObject("Something went wrong")
     }
 }
 
@@ -61,9 +97,9 @@ export const discardTeams = async (req: ITeamDiscardRequest,
             await teams.delete({ id: req.id, created_by: user.id })
             return { message: "Teams discard successfull" }
         } else
-            return { errors: ["Team for platform and game combination already exists"] }
+            return getErrorObject("Team for platform and game combination already exists")
     } catch (ex) {
-        return { errors: ["Something went wrong"] }
+        return getErrorObject("Something went wrong")
     }
 }
 
@@ -73,8 +109,8 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
         if (errors) return { errors };
 
         // validating all the users
-        if (!(await validateUsers(req.users, connection))) return getErrorObject("Invalid user ids")
-
+        let player_data: IUser = await fetchUserDetails(req.email, connection)
+        if (!player_data) return getErrorObject("Invalid email address.")
 
         const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
         const team_info = await teams.findById(req.team_id);
@@ -85,20 +121,20 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
 
         // checking if users already in the team 
         const team_players = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
-        const existing_players = await team_players.knexObj().whereIn("user_id", req.users).where("team_id", req.team_id);
+        const existing_players = await team_players.knexObj().where("user_id", player_data.id).where("team_id", req.team_id);
         if (existing_players.length) return getErrorObject("Players already exists in the team.");
 
         //validating if any pending invitation
         const team_invitation = new CrudRepository<ITeamInvitation>(connection, TABLE_NAMES.TEAM_INVITATION);
-        const pending_inivitation = await team_invitation.knexObj().whereIn("user_id", req.users).where("status", "PENDING")
+        const pending_inivitation = await team_invitation.knexObj().where("user_id", player_data.id).where("status", "PENDING")
 
         if (pending_inivitation.length) return getErrorObject("Some users already have invitation in pending state");
-        const data = req.users.map(user => ({
+        const data = {
             team_id: team_info.id,
-            user_id: user,
+            user_id: player_data.id,
             type: "INVITE",
             secret: randomString(15)
-        }))
+        }
         await team_invitation.create(data)
         return { message: "Invite send successfully" } as any
 
@@ -175,7 +211,7 @@ export const leaveTeam = async (req: ITeamLeaveRequest,
         if (errors) return { errors };
         const teams_player = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
         const [existing_player] = await teams_player.find({ "team_id": req.team_id, user_id: user.id })
-        
+
         // validating team id and if the leaving user is owner.
         if (!existing_player) return getErrorObject("You are not part of the team.");
         if (existing_player.is_owner) return getErrorObject("You are the owner of the team so cannot leave it");
@@ -185,7 +221,7 @@ export const leaveTeam = async (req: ITeamLeaveRequest,
         })
         return { message: "Team left" } as any
     } catch (ex) {
-        return { errors: ["Something went wrong"] }
+        return getErrorObject("Something went wrong")
     }
 }
 export const validateCreationData = async (req: ITeamCreateRequest, connection: Knex.Transaction,) => {
@@ -205,11 +241,10 @@ export const validateCreationData = async (req: ITeamCreateRequest, connection: 
 
 }
 
-export const validateUsers = async (users: string[], connection: Knex.Transaction): Promise<boolean> => {
-    const user_list = new CrudRepository<IPrivateProfile>(connection, TABLE_NAMES.PRIVATE_PROFILE);
-    let data = await user_list.knexObj().whereIn("id", users)
-    if (data.length != users.length) return false
-    return true
+export const fetchUserDetails = async (email: string, connection: Knex.Transaction): Promise<IUser> => {
+    const user_list = new CrudRepository<IUser>(connection, TABLE_NAMES.USERS);
+    let data = await user_list.knexObj().where("email", email).first()
+    return data
 }
 
 function getErrorObject(msg: string) {

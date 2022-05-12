@@ -20,10 +20,7 @@ export default createNextJsRouteHandler({
             context: PerRequestContext
         ) => {
             const result: any = await sendInvites(req.body, context.transaction as Knex.Transaction, context.user as any);
-            if (result?.errors?.length)
-                res.status(500).json(result)
-            else
-                res.status(200).json(result);
+            res.status(result?.errors?.length ? 500 : 200).json(result)
         },
         preHooks: [beginTransactionMiddleWare, authenticatedAdminUserMiddleware],
         postHooks: [commitOrRollBackTransactionMiddleWare],

@@ -3,6 +3,7 @@ export interface IError {
 }
 
 export interface ISuccess {
-    message: string
+    message?: string
+    result?: any[]
 }
 
