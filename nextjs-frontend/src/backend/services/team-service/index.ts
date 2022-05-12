@@ -29,6 +29,7 @@ export const fetchTeams = async (
         return {
             result: _(data).groupBy("name").map(function (items, name) {
                 return {
+                    id: items[0].id,
                     name,
                     players: _.map(items, (data) => {
                         return {
