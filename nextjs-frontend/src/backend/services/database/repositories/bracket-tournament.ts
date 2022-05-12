@@ -16,6 +16,6 @@ export class BTournament extends BaseRepository<IBTournament> {
   async select(data: any): Promise<IBTournament> {
     const result = await this.entities().where(data, keys)
 .first();
-    return result ? result : [];
+    return result ? result : undefined;
   }
 }
