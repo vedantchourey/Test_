@@ -8,7 +8,7 @@ import { createKnexConnection } from "../database/knex";
 import { TABLE_NAMES } from "../../../models/constants";
 import { CrudRepository } from "../database/repositories/crud-repository";
 import { IBParticipants } from "../database/models/i-b-participant";
-import { validateRegisterTeam } from "./i-brackets-validator";
+import { validateRegisterSingle, validateRegisterTeam } from "./i-brackets-validator";
 import { IPrivateProfile } from "../database/models/i-private-profile";
 import { addNotifications } from "../notifications-service";
 import { getErrorObject } from "../common/helper/utils.service";
@@ -65,16 +65,19 @@ export const registerTournament = async (
   knexConnection: Knex
 ): Promise<any> => {
   try {
-    const errors = await validateRegisterTeam(req);
-    if (errors) return { errors };
+    let tournamet = await validateTournament(req.tournamentId, knexConnection);
+    if (!tournamet) return { errors: ["Invalid Tournament id"] };
 
-    if (!(await validateTournament(req.tournamentId, knexConnection))) {
-      return { errors: ["Invalid Tournament id"] };
+    if (tournamet?.bracketsMetadata?.type === "SINGLE") {
+      const errors = await validateRegisterSingle(req);
+      if (errors) return { errors };
+    } else {
+      const errors = await validateRegisterTeam(req);
+      if (errors) return { errors };
     }
-    // todo - add validation to verify if tournament is single or team
 
     if (req.is_team_registration) {
-      return await registerTeamTournament(req, knexConnection);
+      return await registerTeamTournament(req, tournamet, knexConnection);
     } else {
       return await registerIndividualTournament(req, knexConnection)
     }
@@ -86,16 +89,30 @@ export const registerTournament = async (
 
 export const registerTeamTournament = async (
   req: IRegisterTournament,
+  tournament: ITournament,
   knexConnection: Knex
 ): Promise<any> => {
   if (!(await validateUser(req.user_list, knexConnection))) {
     return { errors: ["Invalid user ids"] };
   }
-  if (await checkIfInvitationPending(req.user_list, req.tournamentId, req.team_id, knexConnection)) {
+
+  const invites = new CrudRepository<ITournamentInvites>(knexConnection, TABLE_NAMES.TOURNAMENT_INIVTES);
+  const data = await invites.knexObj()
+    .where({ tournament_id: req.tournamentId, team_id: req.team_id })
+    .whereIn("status", ["PENDING", "ACCEPTED"])
+
+  if (data.length == tournament?.bracketsMetadata?.playersLimit) {
+    return getErrorObject(`Tournament registration for per team reached. Cannot add more players`)
+  }
+  let existing_invite = data.find((x: ITournamentInvites) => {
+    return x.status === "PENDING" && req.user_list.includes(x.user_id)
+  })
+  if (existing_invite) {
     return getErrorObject("Some users have invites pending")
   }
+
   let notifications: any = [];
-  let invites: any = [];
+  let new_invites: any = [];
 
   req.user_list.forEach(id => {
     notifications.push({
@@ -108,7 +125,7 @@ export const registerTeamTournament = async (
         team_id: req.team_id
       }
     })
-    invites.push({
+    new_invites.push({
       user_id: id,
       tournament_id: req.tournamentId,
       team_id: req.team_id
@@ -116,7 +133,7 @@ export const registerTeamTournament = async (
   })
   await Promise.all([
     addNotifications(notifications, knexConnection),
-    addTournamentInvites(invites, knexConnection)
+    addTournamentInvites(new_invites, knexConnection)
   ])
   return { message: "Team Registration successfull" }
 }
@@ -160,9 +177,10 @@ export const checkInTournament = async (
   if (!(await validateUser([req.userId], knexConnection))) {
     return { message: "Invalid user id" };
   }
-  if (!(await validateTournament(req.tournamentId, knexConnection))) {
-    return { message: "Invalid Tournament id" };
-  }
+
+  let tournamet = await validateTournament(req.tournamentId, knexConnection);
+  if (!tournamet) return { errors: ["Invalid Tournament id"] };
+
   try {
     const participant = new CrudRepository<IBParticipants>(knexConnection, TABLE_NAMES.B_PARTICIPANT);
     let existing_user = await participant.knexObj()
@@ -200,22 +218,16 @@ export const validateUser = async (
   }
 };
 
-export const checkIfInvitationPending = async (users: string[], tournament_id: string, team_id: string, knexConnection: Knex) => {
-  const invites = new CrudRepository<ITournamentInvites>(knexConnection, TABLE_NAMES.TOURNAMENT_INIVTES);
-  const data = await invites.knexObj().whereIn("user_id", users)
-    .where({ "status": "PENDING", tournament_id, team_id })
-  return !!data.length
-}
 export const validateTournament = async (
   id: string,
   knexConnection: Knex
-): Promise<boolean> => {
+): Promise<ITournament | null> => {
   try {
     const repository = new TournamentsRepository(knexConnection);
     const data = await repository.getTournament(id);
-    return data ? true : false;
+    return data
   } catch (ex) {
-    return false;
+    return null;
   }
 };
 
