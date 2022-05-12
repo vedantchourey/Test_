@@ -11,7 +11,42 @@ import { ITeamPlayers } from "../database/models/i-teams-players";
 import { CrudRepository } from "../database/repositories/crud-repository";
 import { ITeamCreateRequest, ITeamDiscardRequest, ITeamInviteRequest, ITeamLeaveRequest } from "./i-team-request";
 import { validateLeaveTeam, validateSendInvite, validateTeamCreation, validateTeamDiscard } from "./i-team-validator";
+import _ from "lodash";
 const fields = ["id", "game_id", "name", "platform_id"]
+
+export const fetchTeams = async (
+    connection: Knex.Transaction,
+    user: any): Promise<ISuccess | IError> => {
+    try {
+        const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
+        const data = await teams.knexObj()
+            .join(TABLE_NAMES.TEAM_PLAYERS, "team_players.team_id", "teams.id")
+            .join(TABLE_NAMES.PRIVATE_PROFILE, "private_profiles.id", "team_players.user_id")
+            .select(["teams.name", "teams.id", "private_profiles.firstName", "private_profiles.lastName", "private_profiles.id as user_id"])
+        if (!data.length) return getErrorObject("No Teams found")
+
+        return {
+            data: _(data).groupBy("name").map(function (items, name) {
+                return {
+                    name,
+                    players: _.map(items, (data) => {
+                        return {
+                            user_id: data.user_id,
+                            lastName: data.lastName,
+                            firstName: data.firstName,
+                        }
+                    })
+                };
+            }).value()
+        };
+
+
+    } catch (ex: any) {
+        if (ex?.code == 23505) return getErrorObject("Team with same name already exists")
+        return getErrorObject("Something went wrong" + ex.message)
+    }
+}
+
 export const createTeams = async (req: ITeamCreateRequest,
     connection: Knex.Transaction,
     user: any): Promise<ITeams | IError> => {
@@ -40,12 +75,12 @@ export const createTeams = async (req: ITeamCreateRequest,
             })
             return data
         }
-        return { errors: ["Team for platform and game combination already exists"] }
+        return getErrorObject("Team for platform and game combination already exists")
 
 
     } catch (ex: any) {
-        if (ex?.code == 23505) return { errors: ["Team with same name already exists"] }
-        return { errors: ["Something went wrong"] }
+        if (ex?.code == 23505) return getErrorObject("Team with same name already exists")
+        return getErrorObject("Something went wrong")
     }
 }
 
@@ -61,9 +96,9 @@ export const discardTeams = async (req: ITeamDiscardRequest,
             await teams.delete({ id: req.id, created_by: user.id })
             return { message: "Teams discard successfull" }
         } else
-            return { errors: ["Team for platform and game combination already exists"] }
+            return getErrorObject("Team for platform and game combination already exists")
     } catch (ex) {
-        return { errors: ["Something went wrong"] }
+        return getErrorObject("Something went wrong")
     }
 }
 
@@ -175,7 +210,7 @@ export const leaveTeam = async (req: ITeamLeaveRequest,
         if (errors) return { errors };
         const teams_player = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
         const [existing_player] = await teams_player.find({ "team_id": req.team_id, user_id: user.id })
-        
+
         // validating team id and if the leaving user is owner.
         if (!existing_player) return getErrorObject("You are not part of the team.");
         if (existing_player.is_owner) return getErrorObject("You are the owner of the team so cannot leave it");
@@ -185,7 +220,7 @@ export const leaveTeam = async (req: ITeamLeaveRequest,
         })
         return { message: "Team left" } as any
     } catch (ex) {
-        return { errors: ["Something went wrong"] }
+        return getErrorObject("Something went wrong")
     }
 }
 export const validateCreationData = async (req: ITeamCreateRequest, connection: Knex.Transaction,) => {
