@@ -24,6 +24,7 @@ import { BracketsManager } from "brackets-manager";
 import { TABLE_NAMES } from "../../../models/constants";
 import { CrudRepository } from "../database/repositories/crud-repository";
 import { IBParticipants } from "../database/models/i-b-participant";
+import { join } from "path/posix";
 export const createTournament: NoobApiService<
   CreateOrEditTournamentRequest,
   ITournamentResponse
@@ -120,10 +121,12 @@ export async function tournamentDetails(
   let players: any = []
   if (bracketT) {
     const part_repo = new CrudRepository<IBParticipants>(context.knexConnection as any, TABLE_NAMES.B_PARTICIPANT);
-    players = await part_repo.knexObj().where({
-      tournament_id: bracketT.id,
-    })
+    players = await part_repo.knexObj().
+      join(TABLE_NAMES.PRIVATE_PROFILE, "private_profiles.id", "b_participant.user_id").where({
+        tournament_id: bracketT.id,
+      })
       .whereNotNull("user_id")
+      .select(["private_profiles.firstName", "private_profiles.lastName","private_profiles.id"])
     const connect = context.knexConnection;
     const manager = new BracketsManager(
       new BracketsCrud(connect as any) as any

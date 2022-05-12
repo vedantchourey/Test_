@@ -20,7 +20,7 @@ export default createNextJsRouteHandler({
         req.body,
         context.knexConnection as Knex
       );
-      res.status(200).json({ data: result });
+      res.status(result?.errors?.length ? 500 : 200).json(result)
     },
     preHooks: [beginTransactionMiddleWare],
     postHooks: [commitOrRollBackTransactionMiddleWare],
