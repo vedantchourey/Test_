@@ -13,7 +13,7 @@ import { ITeamLeaveRequest } from "../../../src/backend/services/team-service/i-
 import { IError, ISuccess } from "../../../src/backend/utils/common/Interfaces";
 
 export default createNextJsRouteHandler({
-    post: {
+    delete: {
         handler: async (
             req: NextApiRequest,
             res: NextApiResponse<ServiceResponse<ITeamLeaveRequest, ISuccess | IError>>,
