@@ -52,16 +52,31 @@ export function validatePersistTournament(body: any): any {
         })
       ),
     }).optional(),
-    streams: Joi.object({data: Joi.array()
-      .items(
-        Joi.object({
-          provider: Joi.string().required(),
-          url: Joi.string().required(),
-        })
-      )
-      .optional()}).optional(),
+    streams: Joi.object({
+      data: Joi.array()
+        .items(
+          Joi.object({
+            provider: Joi.string().required(),
+            url: Joi.string().required(),
+          })
+        )
+        .optional()
+    }).optional(),
   });
   const errors = model.validate(body, { abortEarly: false, allowUnknown: true });
+  if (errors) return errors.error?.details.map((x) => x.message);
+  return null;
+}
+
+export function fetchInivtesValidator(body: any): any {
+  const model = Joi.object({
+    tournament_id: Joi.string().required(),
+    team_id: Joi.string().when("is_team_registration", { is: true, then: Joi.required() })
+  });
+  const errors = model.validate(body, {
+    abortEarly: false,
+    allowUnknown: true,
+  });
   if (errors) return errors.error?.details.map((x) => x.message);
   return null;
 }
