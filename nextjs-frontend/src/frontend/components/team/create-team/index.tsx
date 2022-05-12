@@ -54,7 +54,7 @@ const [error,setError] = React.useState(undefined);
     },
     validationSchema: validationSchema,
     onSubmit: async(values) => {
-        console.log(values);
+        
         const data={
             name: values.name,
             game_id: values.game,
@@ -127,7 +127,7 @@ const [error,setError] = React.useState(undefined);
               <FormControl fullWidth variant="standard">
                 <FormLabel label="Select Game"></FormLabel>
                 <GameDropDown
-                  label="Choose your Game"
+                //   label="Choose your Game"
                   id="game"
                   name="game"
                   placeholder="Select Game"

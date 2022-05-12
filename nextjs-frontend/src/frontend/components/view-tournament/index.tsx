@@ -13,12 +13,13 @@ import Rules from "./rules";
 import Bracket from "./brackets";
 import Prizes from "./prizes";
 import Image from "next/image";
-import ActionButton from "../ui-components/action-button";
+import ActionButton,  {ActionItem } from "../ui-components/action-button";
 import { TournamentData } from "../tournament";
 import axios from "axios";
 import moment from "moment";
 import { RoundStatusData } from "./brackets/BracketsInterface";
 import ReactHtmlParser from "react-html-parser";
+import { getAuthHeader } from "../../utils/headers";
 
 
 interface HeadSubSectionProps {
@@ -56,27 +57,6 @@ const HeadSubSection = ({time}: HeadSubSectionProps): any => {
   );
 };
 
-const actionItem = [
-  [
-    {
-      title: "Select Team",
-    },
-  ],
-  [
-    {
-      title: "Fight Club",
-    },
-    {
-      title: "Legend Club",
-    },
-  ],
-  [
-    {
-      title: "Create Team",
-    },
-  ],
-];
-
 const calculateDuration = (
   eventTime: moment.Moment,
   now: moment.Moment = moment()
@@ -89,6 +69,58 @@ const ViewTournament: React.FC = () => {
   const tournamentBasePath = "/view-tournament";
   const timerRef = React.useRef(0);
   const [countDown, setCountDown] = React.useState("00:00:00");
+
+  const [teams,setTeams] = React.useState<{name:string,id:string}[]>([]);
+
+  const fetchTeams = async () =>{
+    const headers = await getAuthHeader();
+    axios.get("/api/teams",{headers:{...headers}}).then((res)=>{
+      setTeams(res.data.result);
+    }).catch(err=>{
+      console.error(err);
+    })
+  }
+  React.useEffect(()=>{
+    fetchTeams();
+  },[])
+
+  const getActionItems = ():ActionItem[][] =>{
+
+    const select:ActionItem[] = [
+      {
+        title: "Select Team",
+      },
+    ];
+
+    const create:ActionItem[] = [
+      {
+        title: "Create Team",
+        onClick:()=>{
+          router.push("/team/create",`/team/create`,{shallow:true});
+        }
+      },
+    ]
+
+    const teamItems:ActionItem[] = teams.map(team=>{
+      return {
+        title: team.name,
+        onClick:()=>{
+          router.push("/team/view/[...slug]",`/team/view/${team.id}`,{shallow:true});
+        }
+      }
+    })
+
+    const items:ActionItem[][] = [];
+    items.push(select);
+    if(teamItems.length>0){
+      items.push(teamItems);
+    }
+
+    items.push(create);
+
+    return items;
+
+  }
 
   const timerCallback = React.useCallback(() => {
     if (data.basic) {
@@ -382,7 +414,7 @@ const ViewTournament: React.FC = () => {
                 </Typography>
               </Box>
               
-              <ActionButton items={actionItem} id={"action-item"} />
+              <ActionButton items={getActionItems()} id={"action-item"} />
             </Grid>
           </Grid>
         </ViewCard>

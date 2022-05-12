@@ -16,10 +16,12 @@ const useStyles = makeStyles(() =>
     },
   }));
 
-interface Props {
+export interface ActionItem { title: string; onClick?: () => void }
+
+export interface Props {
   onClick?: () => void;
   id: string;
-  items: { title: string; onClick?: () => void }[][];
+  items: ActionItem[][];
 }
 
 const ActionButton: React.FC<Props> = ({ id, items = [] }) => {
