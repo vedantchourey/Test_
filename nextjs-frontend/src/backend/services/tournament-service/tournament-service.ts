@@ -13,7 +13,7 @@ import { isThereAnyError } from "../../../common/utils/validation/validator";
 import { TournamentRepository } from "../database/repositories/tournament-repository";
 import { TournamentsRepository } from "../database/repositories/tournaments-repository";
 import { Knex } from "knex";
-import { validatePersistTournament } from "./persist-tournament-validator";
+import { fetchInivtesValidator, validatePersistTournament } from "./persist-tournament-validator";
 import { persistBrackets } from "../brackets-service/brackets-service";
 import { ServiceResponse } from "../common/contracts/service-response";
 import { ListTournamentType } from "./list-tournaments-request";
@@ -153,4 +153,16 @@ export async function tournamentDetails(
 export const addTournamentInvites = async (data: ITournamentInvites | ITournamentInvites[], knexConnection: Knex) => {
   const invites = new CrudRepository<ITournamentInvites>(knexConnection, TABLE_NAMES.TOURNAMENT_INIVTES);
   await invites.create(data)
+}
+
+export const fetchTournamentInvites = async (req: any, knexConnection: Knex) => {
+  const errors = await fetchInivtesValidator(req);
+  if (errors) return { errors };
+
+  const invites = new CrudRepository<ITournamentInvites>(knexConnection as Knex, TABLE_NAMES.TOURNAMENT_INIVTES);
+  let data = await invites.find({
+    tournament_id: req.tournament_id,
+    team_id: req.team_id
+  })
+  return { data }
 }
