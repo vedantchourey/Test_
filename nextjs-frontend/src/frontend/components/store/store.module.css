@@ -1,7 +1,8 @@
 .container {
-  width: 310px;
+	width: 343px;
 	height: 448px;
-	border: 1px solid rgba(255, 255, 255, 0.1)
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	margin-bottom: 20px;
 }
 .text {
 	text-align: left;
@@ -9,16 +10,18 @@
 	margin-left: 10px
 }
 .button1 {
-	width: 210px;
+	width: 225px;
 	height: 44px;
 	margin-left: 16px;
 	margin-top: 15px;
 	background: #6932F9;
+	border-radius: 0px;
 	color: white
 }
 .button2 {
 	height: 44px;
-	margin-left: 7px;
+	margin-left: 20px;
 	margin-top: 15px;
-	background: #6932F9
+	background: #6932F9;
+	border-radius: 0px;
 }
