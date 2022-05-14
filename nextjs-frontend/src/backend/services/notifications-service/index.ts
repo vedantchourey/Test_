@@ -1,5 +1,5 @@
 import { Knex } from "knex";
-import { TABLE_NAMES } from "../../../models/constants";
+import { STATUS, TABLE_NAMES } from "../../../models/constants";
 import { getErrorObject } from "../common/helper/utils.service";
 import { INotifications } from "../database/models/i-notifications";
 import { CrudRepository } from "../database/repositories/crud-repository";
@@ -30,7 +30,7 @@ export const submitNotifications = async (req: INotificationRequest, knexConnect
         if (errors) return { errors };
         const notifications = getNotificationObj(knexConnection);
         let [notification]: INotifications[] = await notifications.find({
-            id: req.id, user_id: user.id, "status": "PENDING", is_action_required: true
+            id: req.id, user_id: user.id, status: STATUS.PENDING, is_action_required: true
         })
 
         if (!notification) return getErrorObject("Invalid notification id or notification response already submitted")

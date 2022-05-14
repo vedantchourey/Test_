@@ -17,3 +17,8 @@ export const TABLE_NAMES = {
     TOURNAMENTS: "tournamentsData"
 }
 
+export const STATUS = {
+    PENDING: "PENDING",
+    REJECTED: "REJECTED",
+    ACCEPTED: "ACCEPTED"
+}

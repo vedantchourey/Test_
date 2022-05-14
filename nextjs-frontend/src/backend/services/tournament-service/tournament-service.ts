@@ -21,7 +21,7 @@ import { ITournament } from "../database/models/i-tournaments";
 import BracketsCrud from "../brackets-service/brackets-crud";
 import { BTournament } from "../database/repositories/bracket-tournament";
 import { BracketsManager } from "brackets-manager";
-import { TABLE_NAMES } from "../../../models/constants";
+import { STATUS, TABLE_NAMES } from "../../../models/constants";
 import { CrudRepository } from "../database/repositories/crud-repository";
 import { IBParticipants } from "../database/models/i-b-participant";
 import { ITournamentInvites } from "../database/models/i-tournament-invites";
@@ -167,7 +167,8 @@ export const addTournamentInvites = async (data: ITournamentInvites | ITournamen
 export const updateTournamentInvites = async (data: ITournamentInvites, query: any, knexConnection: Knex) => {
   const invites = getTournamentInviteObj(knexConnection);
   const result = await invites.update(data, query)
-  await handleInviteSubmit(query.tournament_id, query.team_id, knexConnection)
+  if (data.status == STATUS.ACCEPTED)
+    await handleInviteSubmit(query.tournament_id, query.team_id, knexConnection)
   return result
 }
 
