@@ -176,10 +176,7 @@ export const fetchTournamentInvites = async (req: any, knexConnection: Knex) => 
   if (errors) return { errors };
 
   const invites = getTournamentInviteObj(knexConnection);
-  let data = await invites.find({
-    tournament_id: req.tournament_id,
-    team_id: req.team_id
-  })
+  let data = await invites.find({ tournament_id: req.tournament_id, team_id: req.team_id })
   return { data }
 }
 
@@ -187,10 +184,7 @@ export const handleInviteSubmit = async (tournament_id: string, team_id: string,
   const inviteObj = getTournamentInviteObj(knexConnection);
   const tournameObj = getTournamentObj(knexConnection);
   const tournament: ITournament = await tournameObj.findById(tournament_id);
-  const acceptedInvites = await inviteObj.find({
-    team_id,
-    tournament_id
-  })  
+  const acceptedInvites = await inviteObj.find({ team_id, tournament_id })
   if (tournament.bracketsMetadata?.playersLimit == acceptedInvites.length) {
     // todo handle registeration of tournamet. 
   }
