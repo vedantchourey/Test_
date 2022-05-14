@@ -25,6 +25,15 @@ import { TABLE_NAMES } from "../../../models/constants";
 import { CrudRepository } from "../database/repositories/crud-repository";
 import { IBParticipants } from "../database/models/i-b-participant";
 import { ITournamentInvites } from "../database/models/i-tournament-invites";
+
+const getTournamentInviteObj = (knexConnection: Knex) => {
+  return new CrudRepository<ITournamentInvites>(knexConnection, TABLE_NAMES.TOURNAMENT_INIVTES)
+}
+
+const getTournamentObj = (knexConnection: Knex) => {
+  return new CrudRepository<ITournament>(knexConnection, TABLE_NAMES.TOURNAMENTS)
+}
+
 export const createTournament: NoobApiService<
   CreateOrEditTournamentRequest,
   ITournamentResponse
@@ -151,18 +160,38 @@ export async function tournamentDetails(
 }
 
 export const addTournamentInvites = async (data: ITournamentInvites | ITournamentInvites[], knexConnection: Knex) => {
-  const invites = new CrudRepository<ITournamentInvites>(knexConnection, TABLE_NAMES.TOURNAMENT_INIVTES);
-  await invites.create(data)
+  const invites = getTournamentInviteObj(knexConnection);
+  return await invites.create(data)
+}
+
+export const updateTournamentInvites = async (data: ITournamentInvites, query: any, knexConnection: Knex) => {
+  const invites = getTournamentInviteObj(knexConnection);
+  const result = await invites.update(data, query)
+  await handleInviteSubmit(query.tournament_id, query.team_id, knexConnection)
+  return result
 }
 
 export const fetchTournamentInvites = async (req: any, knexConnection: Knex) => {
   const errors = await fetchInivtesValidator(req);
   if (errors) return { errors };
 
-  const invites = new CrudRepository<ITournamentInvites>(knexConnection as Knex, TABLE_NAMES.TOURNAMENT_INIVTES);
+  const invites = getTournamentInviteObj(knexConnection);
   let data = await invites.find({
     tournament_id: req.tournament_id,
     team_id: req.team_id
   })
   return { data }
+}
+
+export const handleInviteSubmit = async (tournament_id: string, team_id: string, knexConnection: Knex) => {
+  const inviteObj = getTournamentInviteObj(knexConnection);
+  const tournameObj = getTournamentObj(knexConnection);
+  const tournament: ITournament = await tournameObj.findById(tournament_id);
+  const acceptedInvites = await inviteObj.find({
+    team_id,
+    tournament_id
+  })  
+  if (tournament.bracketsMetadata?.playersLimit == acceptedInvites.length) {
+    // todo handle registeration of tournamet. 
+  }
 }

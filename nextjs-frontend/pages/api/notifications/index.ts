@@ -9,7 +9,8 @@ import { PerRequestContext } from "../../../src/backend/utils/api-middle-ware/ap
 import { Knex } from "knex";
 import { IError, ISuccess } from "../../../src/backend/utils/common/Interfaces";
 import { authenticatedAdminUserMiddleware } from "../../../src/backend/utils/api-middle-ware/auth-middle-ware";
-import { fetchNotifications } from "../../../src/backend/services/notifications-service";
+import { fetchNotifications, submitNotifications } from "../../../src/backend/services/notifications-service";
+import { INotificationRequest } from "../../../src/backend/services/notifications-service/i-notification-request";
 
 export default createNextJsRouteHandler({
     get: {
@@ -19,6 +20,18 @@ export default createNextJsRouteHandler({
             context: PerRequestContext
         ) => {
             const result: any = await fetchNotifications(context.transaction as Knex.Transaction, context.user as any);
+            res.status(result?.errors?.length ? 500 : 200).json(result)
+        },
+        preHooks: [beginTransactionMiddleWare, authenticatedAdminUserMiddleware],
+        postHooks: [commitOrRollBackTransactionMiddleWare],
+    },
+    post: {
+        handler: async (
+            req: NextApiRequest,
+            res: NextApiResponse<ServiceResponse<INotificationRequest, ISuccess | IError>>,
+            context: PerRequestContext
+        ) => {
+            const result: any = await submitNotifications(req.body, context.transaction as Knex.Transaction, context.user as any);
             res.status(result?.errors?.length ? 500 : 200).json(result)
         },
         preHooks: [beginTransactionMiddleWare, authenticatedAdminUserMiddleware],
