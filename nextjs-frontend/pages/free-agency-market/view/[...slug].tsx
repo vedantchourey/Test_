@@ -3,7 +3,7 @@ import FreeAgencyMarket from "../../../src/frontend/components/free-agency-marke
 
 const FreeAgencyMarketPage: React.FC<void> = () => {
   return (
-    <FreeAgencyMarket key={"team"}></FreeAgencyMarket>
+    <FreeAgencyMarket key={"freeagencymarket"}></FreeAgencyMarket>
   );
 };
 

@@ -127,14 +127,13 @@ const FreeAgencyMarket: React.FC = () => {
         }
       }
       return (
-        <FormControl fullWidth  >
-          <Select value={page} input={<OutlinedInput />} onChange={(e) => changeTabByValue(e.target.value)}>
+          <Select value={page} input={<OutlinedInput />} onChange={(e) => changeTabByValue(e.target.value)}
+          fullWidth  sx={{ m: 1 }}>
             {tabs.map((tab) => {
               console.log(tab.url)
               return <MenuItem key={tab.url} value={tab.url}>{tab.title}</MenuItem>;
             })}
           </Select>
-        </FormControl>
       );
     }
 
@@ -192,9 +191,9 @@ const FreeAgencyMarket: React.FC = () => {
 
   return (
     <NoobPage
-      title="Team"
+      title="Free Agency Market"
       metaData={{
-        description: "Noob Storm team page",
+        description: "Noob Storm Free Agency Market page",
       }}
     >
       <FreeAgencyMarketCard>

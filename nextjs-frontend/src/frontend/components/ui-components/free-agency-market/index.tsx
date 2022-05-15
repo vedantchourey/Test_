@@ -20,15 +20,15 @@ export const NoobButton = styled(Button)(() => ({
 const CardDesktop: React.FC = () => {
   return (
     <Grid container columnSpacing={2}>
-      <Grid item mt={12} md={4} lg={9} display={"flex"} flexDirection={"column"}>
+      <Grid item mt={18} md={4} lg={9} display={"flex"} flexDirection={"column"}>
         <Typography color={"white"} textAlign="left" component="h4" >
           {" "}
           Free Agency Market{" "}
         </Typography>
         <Typography mt={2} color={"white"} textAlign="left" variant="caption">
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem<br/> 
-           Ipsum has been the industry's standard dummy <br/>
-           text ever since the 1500s
+          <Box>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem</Box>
+          <Box> Ipsum has been the industry's standard dummy </Box>
+          <Box> text ever since the 1500s</Box>
         </Typography>
        
       </Grid>
