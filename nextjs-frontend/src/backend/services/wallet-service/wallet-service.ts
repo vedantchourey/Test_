@@ -27,7 +27,7 @@ export const creditBalance = async (
     }
     const data = await createTransaction(
       { ...req, wallet_id: wallet.id },
-      context
+      context.knexConnection as Knex.Transaction
     );
     wallet.last_transaction_id = data?.id;
     wallet.balance = wallet.balance
@@ -46,17 +46,17 @@ export const creditBalance = async (
 
 export const debitBalance = async (
   req: IWalletRequest,
-  context: PerRequestContext
+  knexConnection: Knex.Transaction
 ): Promise<IWalletResponse | undefined> => {
   try {
     const errors = await validateWallet(req);
     if (errors) return { errors };
-    const user = await fetchUserById(req.userId, context.knexConnection as any);
+    const user = await fetchUserById(req.userId, knexConnection as any);
     if (!user) {
       return { errors: ["Invalid User Id"] };
     }
     const walletRepo = new WalletRepository(
-      context.transaction as Knex.Transaction
+      knexConnection as Knex.Transaction
     );
     const wallet = await walletRepo.findByUserId(user.id);
     if (!wallet) {
@@ -69,7 +69,7 @@ export const debitBalance = async (
     }
     const data = await createTransaction(
       { ...req, wallet_id: wallet.id },
-      context
+      knexConnection
     );
     wallet.last_transaction_id = data?.id;
     wallet.balance = wallet.balance
@@ -81,7 +81,7 @@ export const debitBalance = async (
       transaction_id: data?.id,
     };
   } catch (ex) {
-    if (context?.transaction) context?.transaction.rollback();
+    if (knexConnection.rollback) knexConnection.rollback();
     return { errors: ["Something went wrong"] };
   }
 };

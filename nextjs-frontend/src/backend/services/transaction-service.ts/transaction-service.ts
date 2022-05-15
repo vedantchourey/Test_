@@ -6,10 +6,10 @@ import { ITransactionResponse } from "./i-transaction-response";
 
 export const createTransaction = async (
   req: ITransactionRequest,
-  context: PerRequestContext
+  knexConnection: Knex.Transaction | Knex
 ): Promise<ITransactionResponse | undefined> => {
   const transactionRepo = new TransactionRepository(
-    context.transaction as Knex.Transaction
+    knexConnection as Knex.Transaction
   );
   const data = await transactionRepo.create({
     userId: req?.userId,
@@ -17,6 +17,7 @@ export const createTransaction = async (
     credit: req.amount,
     debit: 0,
     type: req.type,
+    data: req.data
   });
 
   return data;

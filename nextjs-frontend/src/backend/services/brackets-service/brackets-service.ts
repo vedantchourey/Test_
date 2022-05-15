@@ -11,9 +11,10 @@ import { IBParticipants } from "../database/models/i-b-participant";
 import { validateRegisterSingle, validateRegisterTeam } from "./i-brackets-validator";
 import { IPrivateProfile } from "../database/models/i-private-profile";
 import { addNotifications } from "../notifications-service";
-import { getErrorObject } from "../common/helper/utils.service";
+import { fetchTournamentById, getErrorObject } from "../common/helper/utils.service";
 import { addTournamentInvites } from "../tournament-service/tournament-service";
 import { ITournamentInvites } from "../database/models/i-tournament-invites";
+import { debitBalance } from "../wallet-service/wallet-service";
 
 export const persistBrackets = async (req: ITournament): Promise<any> => {
   const connection = createKnexConnection();
@@ -157,6 +158,24 @@ export const registerIndividualTournament = async (req: IRegisterTournament, kne
       .select("b_participant.id").first();
     if (!data) return { errors: ["Tournament is full"] };
 
+    const tournament: ITournament | undefined = await fetchTournamentById(req.tournamentId, knexConnection);
+    if (!tournament) return getErrorObject("Invalid tournament Id")
+
+    // Deducting amount from user if entry type as credit
+    if (tournament?.settings?.entryType == "credit") {
+      let wallet_result = await debitBalance({
+        userId: req.userId,
+        amount: Number(tournament.settings?.entryFeeAmount),
+        type: "TOURNAMENT REGISTRATION",
+        data: {
+          tournament_id: tournament?.id
+        }
+      }, knexConnection as Knex.Transaction)
+      if (wallet_result?.errors) {
+        return wallet_result
+      }
+    }
+
     await participant.update({
       user_id: req.userId
     }, {
@@ -192,8 +211,6 @@ export const registerTeamTournament = async (req: IRegisterTournament, knexConne
 
     return { message: "Team register in successfull" };
   } catch (ex) {
-    console.log(ex);
-    
     return { errors: ["Invalid tournament id"] };
   }
 }

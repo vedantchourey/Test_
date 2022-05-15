@@ -12,7 +12,7 @@ import { validateTournament } from "./create-tournament-validator";
 import { isThereAnyError } from "../../../common/utils/validation/validator";
 import { TournamentRepository } from "../database/repositories/tournament-repository";
 import { TournamentsRepository } from "../database/repositories/tournaments-repository";
-import { Knex } from "knex";
+import knex, { Knex } from "knex";
 import { fetchInivtesValidator, validatePersistTournament } from "./persist-tournament-validator";
 import { persistBrackets, registerTeamTournament } from "../brackets-service/brackets-service";
 import { ServiceResponse } from "../common/contracts/service-response";
@@ -27,6 +27,7 @@ import { IBParticipants } from "../database/models/i-b-participant";
 import { ITournamentInvites } from "../database/models/i-tournament-invites";
 import _ from "lodash";
 import { getErrorObject } from "../common/helper/utils.service";
+import { debitBalance } from "../wallet-service/wallet-service";
 
 const getTournamentInviteObj = (knexConnection: Knex) => {
   return new CrudRepository<ITournamentInvites>(knexConnection, TABLE_NAMES.TOURNAMENT_INIVTES)
@@ -189,9 +190,20 @@ export const addTournamentInvites = async (data: ITournamentInvites | ITournamen
 
 export const updateTournamentInvites = async (data: ITournamentInvites, query: any, knexConnection: Knex) => {
   const invites = getTournamentInviteObj(knexConnection);
+  const tournamtObj = getTournamentObj(knexConnection);
+  const tournament: ITournament = await tournamtObj.findById(query.tournament_id);
+
+  if (data.status === STATUS.ACCEPTED && tournament?.settings?.entryType == "credit") {
+    let wallet_result = await debitBalance({
+      userId: query.user_id,
+      amount: Number(tournament.settings?.entryFeeAmount),
+      type: "TOURNAMENT_REGISTRATION",
+    }, knexConnection as Knex.Transaction)
+    if (wallet_result?.errors) {
+      return wallet_result
+    }
+  }
   const result = await invites.update(data, query)
-  if (data.status == STATUS.ACCEPTED)
-    await handleInviteSubmit(query.tournament_id, query.team_id, knexConnection)
   return result
 }
 
