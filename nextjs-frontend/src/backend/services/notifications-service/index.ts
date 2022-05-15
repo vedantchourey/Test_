@@ -41,7 +41,7 @@ export const submitNotifications = async (req: INotificationRequest, knexConnect
 
         return { message: "Notification response updated" }
     } catch (ex) {
-        return getErrorObject(ex.message)
+        return getErrorObject()
     }
 }
 

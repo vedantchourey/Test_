@@ -5,7 +5,7 @@ import { TournamentsRepository } from "../database/repositories/tournaments-repo
 import BracketsCrud from "./brackets-crud";
 import { BracketsManager } from "brackets-manager";
 import { createKnexConnection } from "../database/knex";
-import { TABLE_NAMES } from "../../../models/constants";
+import { STATUS, TABLE_NAMES, TOURNAMENT_TYPE_NUMBER } from "../../../models/constants";
 import { CrudRepository } from "../database/repositories/crud-repository";
 import { IBParticipants } from "../database/models/i-b-participant";
 import { validateRegisterSingle, validateRegisterTeam } from "./i-brackets-validator";
@@ -15,6 +15,7 @@ import { fetchTournamentById, getErrorObject } from "../common/helper/utils.serv
 import { addTournamentInvites } from "../tournament-service/tournament-service";
 import { ITournamentInvites } from "../database/models/i-tournament-invites";
 import { debitBalance } from "../wallet-service/wallet-service";
+import _ from "lodash";
 
 export const persistBrackets = async (req: ITournament): Promise<any> => {
   const connection = createKnexConnection();
@@ -42,12 +43,8 @@ export const persistBrackets = async (req: ITournament): Promise<any> => {
     const data = {
       name: req?.bracketsMetadata?.type,
       tournamentId: Number(tournament[0].id),
-      type:
-        req?.bracketsMetadata?.type === "SINGLE"
-          ? "single_elimination"
-          : "double_elimination",
-      seeding: new Array(playerCount).fill(0)
-        .map((x, i) => `${i}`),
+      type: req?.bracketsMetadata?.type === "SINGLE" ? "single_elimination" : "double_elimination",
+      seeding: new Array(playerCount).fill(0).map((x, i) => `${i}`),
       settings: { seedOrdering: ["natural"] },
     };
     if (req?.bracketsMetadata?.type === "SINGLE" && req?.bracketsMetadata.thirdPlace) {
@@ -94,18 +91,49 @@ export const sendTeamTournamentInvites = async (
   knexConnection: Knex
 ): Promise<any> => {
   if (!(await validateUser(req.user_list, knexConnection))) {
-    return { errors: ["Invalid user ids"] };
+    return getErrorObject("Invalid user ids");
   }
+  let playercount = TOURNAMENT_TYPE_NUMBER[tournament?.settings?.tournamentFormat || "1v1"]
+  if (req.user_list.length != playercount) {
+    return getErrorObject(`Team registration should have ${playercount} players only`)
+  }
+  const participant = new CrudRepository<IBParticipants>(knexConnection, TABLE_NAMES.B_PARTICIPANT);
+
+  // identify if there is empty slot for registration
+  let slots = await participant.knexObj()
+    .join("b_tournament", "b_participant.tournament_id", "b_tournament.id")
+    .where({ "b_tournament.tournament_uuid": req.tournamentId }).whereNull("b_participant.team_id")
+    .select("b_participant.id").first();
+
+  if (!slots) getErrorObject("Tournament is full")
+
+  let existing_user = await participant.knexObj()
+    .join("b_tournament", "b_participant.tournament_id", "b_tournament.id")
+    .where({ "b_tournament.tournament_uuid": req.tournamentId, "b_participant.team_id": req.team_id });
+
+  if (existing_user.length) return getErrorObject("Team already register for tournament")
 
   const invites = new CrudRepository<ITournamentInvites>(knexConnection, TABLE_NAMES.TOURNAMENT_INIVTES);
   const data = await invites.knexObj()
     .where({ tournament_id: req.tournamentId, team_id: req.team_id })
     .whereIn("status", ["PENDING", "ACCEPTED"])
+    .whereIn("user_id", req.user_list)
 
-  if (data.length == tournament?.bracketsMetadata?.playersLimit) {
+  if (data.length == playercount) {
     return getErrorObject(`Tournament registration for per team reached. Cannot add more players`)
   }
-  let existing_invite = data.find((x: ITournamentInvites) => {
+
+  // handle when peviously invite send and one of them got rejected.
+  if (data.length) {
+    data.forEach((x: ITournamentInvites): void => {
+      if (x.status == STATUS.ACCEPTED) {
+        req.user_list = _.remove(req.user_list, (id) => id != x.user_id)
+      }
+    })
+  }
+
+  // handle when some users have invites pending.
+  let existing_invite = data.find((x: ITournamentInvites): boolean => {
     return x.status === "PENDING" && req.user_list.includes(x.user_id)
   })
   if (existing_invite) {
@@ -117,20 +145,10 @@ export const sendTeamTournamentInvites = async (
 
   req.user_list.forEach(id => {
     notifications.push({
-      type: "TOURNAMENT_INVITE",
-      user_id: id,
-      is_action_required: true,
-      data: {
-        tournament_id: req.tournamentId,
-        request_by: req.userId,
-        team_id: req.team_id
-      }
+      type: "TOURNAMENT_INVITE", user_id: id, is_action_required: true,
+      data: { tournament_id: req.tournamentId, request_by: req.userId, team_id: req.team_id }
     })
-    new_invites.push({
-      user_id: id,
-      tournament_id: req.tournamentId,
-      team_id: req.team_id
-    })
+    new_invites.push({ user_id: id, tournament_id: req.tournamentId, team_id: req.team_id })
   })
   await Promise.all([
     addNotifications(notifications, knexConnection),
@@ -154,10 +172,9 @@ export const registerIndividualTournament = async (req: IRegisterTournament, kne
 
     let data = await participant.knexObj()
       .join("b_tournament", "b_participant.tournament_id", "b_tournament.id")
-      .where({ "b_tournament.tournament_uuid": req.tournamentId })
-      .whereNull("b_participant.user_id")
+      .where({ "b_tournament.tournament_uuid": req.tournamentId }).whereNull("b_participant.user_id")
       .select("b_participant.id").first();
-    if (!data) return { errors: ["Tournament is full"] };
+    if (!data) getErrorObject("Tournament is full")
 
     const tournament: ITournament | undefined = await fetchTournamentById(req.tournamentId, knexConnection);
     if (!tournament) return getErrorObject("Invalid tournament Id")
@@ -165,22 +182,15 @@ export const registerIndividualTournament = async (req: IRegisterTournament, kne
     // Deducting amount from user if entry type as credit
     if (tournament?.settings?.entryType == "credit") {
       let wallet_result = await debitBalance({
-        userId: req.userId,
-        amount: Number(5),
-        type: "TOURNAMENT REGISTRATION",
-      }, knexConnection as Knex.Transaction, {
-        tournament_id: tournament?.id
-      })
+        userId: req.userId, amount: Number(tournament?.settings?.entryFeeAmount), type: "TOURNAMENT REGISTRATION",
+      }, knexConnection as Knex.Transaction, { tournament_id: tournament?.id })
+      // handle wallet related errors
       if (wallet_result?.errors) {
         return wallet_result
       }
     }
 
-    await participant.update({
-      user_id: req.userId
-    }, {
-      id: data.id
-    })
+    await participant.update({ user_id: req.userId }, { id: data.id })
 
     return { message: "User register in successfull" };
   } catch (ex) {
@@ -201,13 +211,9 @@ export const registerTeamTournament = async (req: IRegisterTournament, knexConne
       .join("b_tournament", "b_participant.tournament_id", "b_tournament.id")
       .where({ "b_tournament.tournament_uuid": req.tournamentId }).whereNull("b_participant.team_id")
       .select("b_participant.id").first();
-    if (!data) return { errors: ["Tournament is full"] };
+    if (!data) getErrorObject("Tournament is full")
 
-    await participant.update({
-      team_id: req.team_id
-    }, {
-      id: data.id
-    })
+    await participant.update({ team_id: req.team_id }, { id: data.id })
 
     return { message: "Team register in successfull" };
   } catch (ex) {
@@ -230,18 +236,13 @@ export const checkInTournament = async (
     let existing_user = await participant.knexObj()
       .join("b_tournament", "b_participant.tournament_id", "b_tournament.id")
       .where({ "b_tournament.tournament_uuid": req.tournamentId, "b_participant.user_id": req.userId })
-      .select("b_participant.id")
-      .select("b_participant.is_checked_in").first();
+      .select("b_participant.id").select("b_participant.is_checked_in").first();
 
     if (!existing_user) return { errors: ["User not register"] };
 
     if (existing_user.is_checked_in) return { errors: ["User already checked in"] };
 
-    await participant.update({
-      is_checked_in: true
-    }, {
-      id: existing_user.id
-    })
+    await participant.update({ is_checked_in: true }, { id: existing_user.id })
 
     return { message: "User check in successfull" };
   } catch (ex) {
@@ -268,8 +269,7 @@ export const validateTournament = async (
 ): Promise<ITournament | null> => {
   try {
     const repository = new TournamentsRepository(knexConnection);
-    const data = await repository.getTournament(id);
-    return data
+    return await repository.getTournament(id);
   } catch (ex) {
     return null;
   }
@@ -282,16 +282,11 @@ const deleteBracket = (
   stage_id: any
 ): Promise<any> => {
   const all = [
-    connection("b_stage").delete()
-      .where({ tournament_id }),
-    connection("b_participant").delete()
-      .where({ tournament_id }),
-    connection("b_round").delete()
-      .where({ stage_id }),
-    connection("b_match").delete()
-      .where({ stage_id }),
-    connection("b_group").delete()
-      .where({ stage_id }),
+    connection("b_stage").delete().where({ tournament_id }),
+    connection("b_participant").delete().where({ tournament_id }),
+    connection("b_round").delete().where({ stage_id }),
+    connection("b_match").delete().where({ stage_id }),
+    connection("b_group").delete().where({ stage_id }),
   ];
   return Promise.all(all);
 };
