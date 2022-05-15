@@ -18,42 +18,7 @@ function createData(
   return { action, amount, date };
 }
 
-const dateFormate = "DD.MM.YYYY";
-
-const rows = [
-  createData(
-    "Withdraw fee",
-    "-$56.99",
-    moment("1/4/2021", "D/M/YYYY").format(dateFormate)
-  ),
-  createData(
-    "Tournament earn",
-    "+$56.99",
-    moment("5/3/2022", "D/M/YYYY").format(dateFormate)
-  ),
-  createData(
-    "Entry fee",
-    "-$56.99",
-    moment("8/3/2022", "D/M/YYYY").format(dateFormate)
-  ),
-  createData(
-    "Withdraw fee",
-    "-$25",
-    moment("12/3/2022", "D/M/YYYY").format(dateFormate)
-  ),
-  createData(
-    "Tournament earn",
-    "+$55",
-    moment("5/3/2022", "D/M/YYYY").format(dateFormate)
-  ),
-  createData(
-    "Entry fee",
-    "-$10",
-    moment("5/3/2022", "D/M/YYYY").format(dateFormate)
-  ),
-];
-
-const Transactions = () => {
+const Transactions = (): any => {
   const { transaction } = useAppSelector(walletDetaislSelector);
   return (
     <React.Fragment>
@@ -84,11 +49,11 @@ const Transactions = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {(transaction || []).map((row: any) => (
+                {(transaction || []).map((row: any): any => (
                   <TableRow key={row.action}>
                     <TableCell width={"33%"}>{row.type}</TableCell>
                     <TableCell width={"33%"}>
-                      {row.credit != 0 ? `+${row.credit}` : `-${row.debit}`}
+                      {Number(row.credit) !== 0 ? `+${row.credit}` : `-${row.debit}`}
                     </TableCell>
                     <TableCell width={"33%"}>{row.created_at}</TableCell>
                   </TableRow>

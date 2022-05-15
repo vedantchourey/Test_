@@ -1,9 +1,7 @@
 import { Grid } from "@mui/material";
 import axios from "axios";
 import { useEffect } from "react";
-import {
-  useAppDispatch,
-} from "../../../redux-store/redux-store";
+import { useAppDispatch } from "../../../redux-store/redux-store";
 import { setWalletDetails } from "../../../redux-store/wallet/wallet.-slice";
 import { getAuthHeader } from "../../../utils/headers";
 import WalletCard from "../../ui-components/wallet-card";
@@ -12,9 +10,9 @@ import Transactions from "../transactions";
 
 const WalletInfo: React.FC = () => {
   const appDispatch = useAppDispatch();
-  const fetchWalletDetails = async () => {
+  const fetchWalletDetails = async (): Promise<void> => {
     const headers = await getAuthHeader();
-    let { data } = await axios.get(`/api/wallet/details`, {
+    const { data } = await axios.get(`/api/wallet/details`, {
       headers,
     });
     if (data) appDispatch(setWalletDetails(data));

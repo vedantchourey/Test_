@@ -1,5 +1,4 @@
 import { Knex } from "knex";
-import { PerRequestContext } from "../../utils/api-middle-ware/api-middleware-typings";
 import { fetchUserById } from "../common/helper/utils.service";
 import { ITransaction } from "../database/models/i-transaction";
 import { TransactionRepository } from "../database/repositories/transaction-repository";

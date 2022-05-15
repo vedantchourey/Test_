@@ -17,7 +17,7 @@ export default createNextJsRouteHandler({
             res: NextApiResponse<ServiceResponse<any, ISuccess | IError>>,
             context: PerRequestContext
         ) => {
-            const result: any = await acceptInvite(req.query?.invite_key as string, context.transaction as Knex.Transaction, context.user as any);
+            const result: any = await acceptInvite(req.query?.invite_key as string, context.transaction as Knex.Transaction);
             res.status(result?.errors?.length ? 500 : 200).json(result)
         },
         preHooks: [beginTransactionMiddleWare],

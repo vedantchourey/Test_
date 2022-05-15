@@ -8,6 +8,7 @@ import { ServiceResponse } from "../../../src/backend/services/common/contracts/
 import { PerRequestContext } from "../../../src/backend/utils/api-middle-ware/api-middleware-typings";
 import { Knex } from "knex";
 import { fetchTournamentInvites } from "../../../src/backend/services/tournament-service/tournament-service";
+import { authenticatedUserMiddleware } from "../../../src/backend/utils/api-middle-ware/auth-middle-ware";
 
 export default createNextJsRouteHandler({
   post: {
@@ -19,7 +20,7 @@ export default createNextJsRouteHandler({
       const result = await fetchTournamentInvites(req.body, context.knexConnection as Knex);
       res.status(result?.errors?.length ? 500 : 200).json(result)
     },
-    preHooks: [beginTransactionMiddleWare],
+    preHooks: [beginTransactionMiddleWare,authenticatedUserMiddleware],
     postHooks: [commitOrRollBackTransactionMiddleWare],
   },
 });

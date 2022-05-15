@@ -12,7 +12,7 @@ import { validateTournament } from "./create-tournament-validator";
 import { isThereAnyError } from "../../../common/utils/validation/validator";
 import { TournamentRepository } from "../database/repositories/tournament-repository";
 import { TournamentsRepository } from "../database/repositories/tournaments-repository";
-import knex, { Knex } from "knex";
+import { Knex } from "knex";
 import { fetchInivtesValidator, validatePersistTournament } from "./persist-tournament-validator";
 import { persistBrackets, registerTeamTournament } from "../brackets-service/brackets-service";
 import { ServiceResponse } from "../common/contracts/service-response";
@@ -29,11 +29,11 @@ import _ from "lodash";
 import { getErrorObject } from "../common/helper/utils.service";
 import { debitBalance } from "../wallet-service/wallet-service";
 
-const getTournamentInviteObj = (knexConnection: Knex) => {
+const getTournamentInviteObj = (knexConnection: Knex): CrudRepository<ITournamentInvites> => {
   return new CrudRepository<ITournamentInvites>(knexConnection, TABLE_NAMES.TOURNAMENT_INIVTES)
 }
 
-const getTournamentObj = (knexConnection: Knex) => {
+const getTournamentObj = (knexConnection: Knex): CrudRepository<ITournament> => {
   return new CrudRepository<ITournament>(knexConnection, TABLE_NAMES.TOURNAMENTS)
 }
 
@@ -134,10 +134,12 @@ export async function tournamentDetails(
     let players: any = []
     if (bracketT) {
       const part_repo = new CrudRepository<IBParticipants>(context.knexConnection as any, TABLE_NAMES.B_PARTICIPANT);
-      if (tournament?.settings?.tournamentFormat == "1v1") {
+      if (tournament?.settings?.tournamentFormat === "1v1") {
         players = await part_repo.knexObj().
-          join(TABLE_NAMES.PRIVATE_PROFILE, "private_profiles.id", "b_participant.user_id").where({ tournament_id: bracketT.id, })
-          .select(["private_profiles.firstName", "private_profiles.lastName", "private_profiles.id"]).whereNotNull("user_id")
+          join(TABLE_NAMES.PRIVATE_PROFILE, "private_profiles.id", "b_participant.user_id")
+          .where({ tournament_id: bracketT.id, })
+          .select(["private_profiles.firstName", "private_profiles.lastName", "private_profiles.id"])
+          .whereNotNull("user_id")
       } else {
         players = await part_repo.knexObj().select(["private_profiles.firstName", "private_profiles.lastName", "private_profiles.id", "teams.id as team_id", "teams.name as team_name"])
           .join(TABLE_NAMES.B_TOURNAMENT, "b_tournament.id", "b_participant.tournament_id")
@@ -148,7 +150,7 @@ export async function tournamentDetails(
           .where("tournament_invites.tournament_id", tournamentId as string)
           .whereNotNull("b_participant.team_id")
         const grp_team = _.groupBy(players, "team_name")
-        players = _.keys(grp_team).map(k => {
+        players = _.keys(grp_team).map((k) => {
           return {
             team_name: k,
             team_id: grp_team[k][0].team_id,
@@ -183,18 +185,18 @@ export async function tournamentDetails(
   }
 }
 
-export const addTournamentInvites = async (data: ITournamentInvites | ITournamentInvites[], knexConnection: Knex) => {
+export const addTournamentInvites = async (data: ITournamentInvites | ITournamentInvites[], knexConnection: Knex): Promise<any> => {
   const invites = getTournamentInviteObj(knexConnection);
   return await invites.create(data)
 }
 
-export const updateTournamentInvites = async (data: ITournamentInvites, query: any, knexConnection: Knex) => {
+export const updateTournamentInvites = async (data: ITournamentInvites, query: any, knexConnection: Knex): Promise<any> => {
   const invites = getTournamentInviteObj(knexConnection);
   const tournamtObj = getTournamentObj(knexConnection);
   const tournament: ITournament = await tournamtObj.findById(query.tournament_id);
 
-  if (data.status === STATUS.ACCEPTED && tournament?.settings?.entryType == "credit") {
-    let wallet_result = await debitBalance({
+  if (data.status === STATUS.ACCEPTED && tournament?.settings?.entryType === "credit") {
+    const wallet_result = await debitBalance({
       userId: query.user_id,
       amount: Number(tournament.settings?.entryFeeAmount),
       type: "TOURNAMENT_REGISTRATION",
@@ -209,22 +211,22 @@ export const updateTournamentInvites = async (data: ITournamentInvites, query: a
   return result
 }
 
-export const fetchTournamentInvites = async (req: any, knexConnection: Knex) => {
+export const fetchTournamentInvites = async (req: any, knexConnection: Knex): Promise<any> => {
   const errors = await fetchInivtesValidator(req);
   if (errors) return { errors };
 
   const invites = getTournamentInviteObj(knexConnection);
-  let data = await invites.find({ tournament_id: req.tournament_id, team_id: req.team_id })
+  const data = await invites.find({ tournament_id: req.tournament_id, team_id: req.team_id })
   return { data }
 }
 
-export const handleInviteSubmit = async (tournament_id: string, team_id: string, knexConnection: Knex) => {
+export const handleInviteSubmit = async (tournament_id: string, team_id: string, knexConnection: Knex): Promise<any> => {
   const inviteObj = getTournamentInviteObj(knexConnection);
   const tournameObj = getTournamentObj(knexConnection);
   const tournament: ITournament = await tournameObj.findById(tournament_id);
   const acceptedInvites = await inviteObj.find({ team_id, tournament_id, status: STATUS.ACCEPTED })
   const numberOfPlayer: string = tournament?.settings?.tournamentFormat || "1v1"
-  if (TOURNAMENT_TYPE_NUMBER[numberOfPlayer] == acceptedInvites.length) {
+  if (TOURNAMENT_TYPE_NUMBER[numberOfPlayer] === acceptedInvites.length) {
     return await registerTeamTournament({
       tournamentId: tournament_id,
       team_id,

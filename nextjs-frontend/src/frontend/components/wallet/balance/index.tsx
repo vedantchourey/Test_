@@ -75,7 +75,7 @@ const Balance = (): any => {
                 backgroundColor: "#6932F9",
                 color: "#ffffff",
               }}
-              onClick={() => {
+              onClick={(): void => {
                 Router.push("credit/add");
               }}
             >

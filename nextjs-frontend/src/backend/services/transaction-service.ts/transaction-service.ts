@@ -14,8 +14,8 @@ export const createTransaction = async (
   const result = await transactionRepo.create({
     userId: req?.userId,
     walletId: req.wallet_id,
-    credit: type == "credit" ? req.amount : 0,
-    debit: type == "debit" ? req.amount : 0,
+    credit: type === "credit" ? req.amount : 0,
+    debit: type === "debit" ? req.amount : 0,
     type: req.type,
     data: req.data
   });

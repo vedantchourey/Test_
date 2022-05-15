@@ -6,7 +6,8 @@ export function validateNotificationResponse(body: any): any {
         id: Joi.string().guid()
             .required(),
         response: Joi.string()
-            .required().valid(STATUS.ACCEPTED, STATUS.REJECTED),
+            .required()
+            .valid(STATUS.ACCEPTED, STATUS.REJECTED),
     });
     const errors = model.validate(body, {
         abortEarly: false,

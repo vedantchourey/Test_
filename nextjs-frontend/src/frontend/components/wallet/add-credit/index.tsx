@@ -35,7 +35,7 @@ const AddCredit: React.FC = () => {
 
   const addFunds = async (): Promise<void> => {
     if (amount === "") return setErrorMsg("Please enter amount");
-    if (Number(amount) == 0)
+    if (Number(amount) === 0)
       return setErrorMsg("Amount should be greater than 1.");
     if (!razorPay) return setErrorMsg("Something went wrong. Try again later");
     const headers = await getAuthHeader();
@@ -109,7 +109,7 @@ const AddCredit: React.FC = () => {
                     }}
                     id="input"
                   />
-                  {errorMsg != "" && (
+                  {errorMsg !== "" && (
                     <FormHelperText> {errorMsg} </FormHelperText>
                   )}
                 </FormControl>

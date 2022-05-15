@@ -13,9 +13,9 @@ export const createRazorPayOrder = async (req: IOrderRequest, context: Knex): Pr
     if (errors) return { errors };
     const [id, secret]: IConfig[] = await getRazorPayKeys(context)
     const { credit_config } = backendConfig
-    let amount = req.amount * credit_config.price_per_credit;
-    let gst = (amount * credit_config.credit_gst_percentage) / 100;
-    let service_charge = (amount * credit_config.credit_service_percentage) / 100;
+    const amount = req.amount * credit_config.price_per_credit;
+    const gst = (amount * credit_config.credit_gst_percentage) / 100;
+    const service_charge = (amount * credit_config.credit_service_percentage) / 100;
 
     const razorpay = new Razorpay({
       key_id: id.value,
@@ -53,7 +53,6 @@ export const updateRazorPayOrder = async (req: IUpdateOrderRequest, context: Per
     key_id: id.value,
     key_secret: secret.value,
   });
-  const { credit_config } = backendConfig
   const payment_response: any = await razorpay.payments.fetch(req.razorpay_payment_id);
   if (payment_response?.captured && user) {
     const d = await creditBalance({

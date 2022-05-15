@@ -42,6 +42,6 @@ export const randomString = (length: number): string => {
   return result;
 };
 
-export function getErrorObject(msg: string = "Something went wrong") {
+export function getErrorObject(msg = "Something went wrong"): { errors: string[] } {
   return { errors: [msg] }
 }
