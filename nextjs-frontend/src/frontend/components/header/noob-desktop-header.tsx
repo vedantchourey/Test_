@@ -63,6 +63,10 @@ export default function NoobDesktopHeader(): JSX.Element {
     setShowLoginModal(true);
   }
 
+  async function gotoFreeAgencyMarketPage(): Promise<void> {
+    await router.push('/free-agency-market/view/members')
+  }
+
   return (
     <>
       <AppBar position="fixed" color='transparent' className={styles.appHeader} ref={updateDesktopHeight}>
@@ -77,7 +81,7 @@ export default function NoobDesktopHeader(): JSX.Element {
             <Button variant="text" startIcon={<ShoppingCartIcon />} style={{ textTransform: 'none' }}>
               Store
             </Button>
-            <Button variant="text" startIcon={<FlashOnIcon />} style={{ color: theme.palette.secondary.main, textTransform: 'none' }}>
+            <Button variant="text" startIcon={<FlashOnIcon />} style={{ color: theme.palette.secondary.main, textTransform: 'none' }} onClick={gotoFreeAgencyMarketPage}>
               Free Agency Market
             </Button>
           </div>
