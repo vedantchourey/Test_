@@ -154,7 +154,8 @@ export const registerIndividualTournament = async (req: IRegisterTournament, kne
 
     let data = await participant.knexObj()
       .join("b_tournament", "b_participant.tournament_id", "b_tournament.id")
-      .where({ "b_tournament.tournament_uuid": req.tournamentId }).whereNull("b_participant.user_id")
+      .where({ "b_tournament.tournament_uuid": req.tournamentId })
+      .whereNull("b_participant.user_id")
       .select("b_participant.id").first();
     if (!data) return { errors: ["Tournament is full"] };
 
@@ -165,12 +166,11 @@ export const registerIndividualTournament = async (req: IRegisterTournament, kne
     if (tournament?.settings?.entryType == "credit") {
       let wallet_result = await debitBalance({
         userId: req.userId,
-        amount: Number(tournament.settings?.entryFeeAmount),
+        amount: Number(5),
         type: "TOURNAMENT REGISTRATION",
-        data: {
-          tournament_id: tournament?.id
-        }
-      }, knexConnection as Knex.Transaction)
+      }, knexConnection as Knex.Transaction, {
+        tournament_id: tournament?.id
+      })
       if (wallet_result?.errors) {
         return wallet_result
       }

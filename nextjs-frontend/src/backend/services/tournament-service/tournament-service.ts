@@ -198,7 +198,9 @@ export const updateTournamentInvites = async (data: ITournamentInvites, query: a
       userId: query.user_id,
       amount: Number(tournament.settings?.entryFeeAmount),
       type: "TOURNAMENT_REGISTRATION",
-    }, knexConnection as Knex.Transaction)
+    }, knexConnection as Knex.Transaction, {
+      tournament_id: tournament.id
+    })
     if (wallet_result?.errors) {
       return wallet_result
     }
