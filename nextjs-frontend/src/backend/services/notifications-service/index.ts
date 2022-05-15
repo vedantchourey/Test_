@@ -35,7 +35,7 @@ export const submitNotifications = async (req: INotificationRequest, knexConnect
 
         if (!notification) return getErrorObject("Invalid notification id or notification response already submitted")
 
-        let updated = await updateTournamentInvites({ status: req.response }, {
+        let updated = await updateTournamentInvites({ status: req.response } as any, {
             team_id: notification.data.team_id, tournament_id: notification.data.tournament_id, user_id: user.id,
         }, knexConnection)
 

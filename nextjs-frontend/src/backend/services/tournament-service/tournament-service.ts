@@ -14,17 +14,19 @@ import { TournamentRepository } from "../database/repositories/tournament-reposi
 import { TournamentsRepository } from "../database/repositories/tournaments-repository";
 import { Knex } from "knex";
 import { fetchInivtesValidator, validatePersistTournament } from "./persist-tournament-validator";
-import { persistBrackets } from "../brackets-service/brackets-service";
+import { persistBrackets, registerTeamTournament } from "../brackets-service/brackets-service";
 import { ServiceResponse } from "../common/contracts/service-response";
 import { ListTournamentType } from "./list-tournaments-request";
 import { ITournament } from "../database/models/i-tournaments";
 import BracketsCrud from "../brackets-service/brackets-crud";
 import { BTournament } from "../database/repositories/bracket-tournament";
 import { BracketsManager } from "brackets-manager";
-import { STATUS, TABLE_NAMES } from "../../../models/constants";
+import { STATUS, TABLE_NAMES, TOURNAMENT_TYPE_NUMBER } from "../../../models/constants";
 import { CrudRepository } from "../database/repositories/crud-repository";
 import { IBParticipants } from "../database/models/i-b-participant";
 import { ITournamentInvites } from "../database/models/i-tournament-invites";
+import _ from "lodash";
+import { getErrorObject } from "../common/helper/utils.service";
 
 const getTournamentInviteObj = (knexConnection: Knex) => {
   return new CrudRepository<ITournamentInvites>(knexConnection, TABLE_NAMES.TOURNAMENT_INIVTES)
@@ -57,10 +59,7 @@ export const persistTournament: NoobApiService<
   ITournamentType,
   ITournamentType
 > = async (req, { knexConnection }) => {
-  console.log('req -> ', req)
-  
   const errors = await validatePersistTournament(req);
-  console.log('errors -> ', errors)
   if (errors) return { errors };
   const repository = new TournamentsRepository(knexConnection as Knex);
   let tournament;
@@ -114,52 +113,73 @@ export async function listTournament(
 export async function tournamentDetails(
   context: PerRequestContext
 ): Promise<ServiceResponse<null, ITournament>> {
-  const tournamentId = context.getParamValue("tournamentId");
-  const repository = new TournamentsRepository(
-    context.transaction as Knex.Transaction
-  );
-
-  let tournament = await repository.getTournament(
-    tournamentId as string
-  );
-
-  const bracketTournamentRepo = new BTournament(
-    context.transaction as Knex.Transaction
-  );
-  const bracketT = await bracketTournamentRepo.select({
-    tournament_uuid: tournamentId,
-  });
-
-  let players: any = []
-  if (bracketT) {
-    const part_repo = new CrudRepository<IBParticipants>(context.knexConnection as any, TABLE_NAMES.B_PARTICIPANT);
-    players = await part_repo.knexObj().
-      join(TABLE_NAMES.PRIVATE_PROFILE, "private_profiles.id", "b_participant.user_id").where({
-        tournament_id: bracketT.id,
-      })
-      .whereNotNull("user_id")
-      .select(["private_profiles.firstName", "private_profiles.lastName", "private_profiles.id"])
-    const connect = context.knexConnection;
-    const manager = new BracketsManager(
-      new BracketsCrud(connect as any) as any
+  try {
+    const tournamentId = context.getParamValue("tournamentId");
+    const repository = new TournamentsRepository(
+      context.transaction as Knex.Transaction
     );
-    const brackets = await manager.get.tournamentData(bracketT.id);
-    tournament = { ...tournament, brackets };
-  }
-  return {
-    data: {
-      ...tournament,
-      playerList: players,
-      pricingDetails: {
-        pricePool:
-          Number(tournament?.bracketsMetadata?.playersLimit) *
-          Number(tournament?.settings?.entryFeeAmount),
-        currentPricePool: players.length
-          ? players.length * Number(tournament?.settings?.entryFeeAmount)
-          : 0,
+
+    let tournament = await repository.getTournament(
+      tournamentId as string
+    );
+
+    const bracketTournamentRepo = new BTournament(
+      context.transaction as Knex.Transaction
+    );
+    const bracketT = await bracketTournamentRepo.select({
+      tournament_uuid: tournamentId,
+    });
+
+    let players: any = []
+    if (bracketT) {
+      const part_repo = new CrudRepository<IBParticipants>(context.knexConnection as any, TABLE_NAMES.B_PARTICIPANT);
+      if (tournament?.settings?.tournamentFormat == "1v1") {
+        players = await part_repo.knexObj().
+          join(TABLE_NAMES.PRIVATE_PROFILE, "private_profiles.id", "b_participant.user_id").where({ tournament_id: bracketT.id, })
+          .select(["private_profiles.firstName", "private_profiles.lastName", "private_profiles.id"]).whereNotNull("user_id")
+      } else {
+        players = await part_repo.knexObj().select(["private_profiles.firstName", "private_profiles.lastName", "private_profiles.id", "teams.id as team_id", "teams.name as team_name"])
+          .join(TABLE_NAMES.B_TOURNAMENT, "b_tournament.id", "b_participant.tournament_id")
+          .join(TABLE_NAMES.TOURNAMENT_INIVTES, "tournament_invites.team_id", "b_participant.team_id")
+          .join(TABLE_NAMES.TEAMS, "teams.id", "b_participant.team_id")
+          .where({ "b_participant.tournament_id": bracketT.id, })
+          .join(TABLE_NAMES.PRIVATE_PROFILE, "private_profiles.id", "tournament_invites.user_id")
+          .where("tournament_invites.tournament_id", tournamentId as string)
+          .whereNotNull("b_participant.team_id")
+        const grp_team = _.groupBy(players, "team_name")
+        players = _.keys(grp_team).map(k => {
+          return {
+            team_name: k,
+            team_id: grp_team[k][0].team_id,
+            ...grp_team[k]
+          }
+        })
+      }
+
+      const connect = context.knexConnection;
+      const manager = new BracketsManager(
+        new BracketsCrud(connect as any) as any
+      );
+      const brackets = await manager.get.tournamentData(bracketT.id);
+      tournament = { ...tournament, brackets };
+    }
+    return {
+      data: {
+        ...tournament,
+        playerList: players,
+        pricingDetails: {
+          pricePool:
+            Number(tournament?.bracketsMetadata?.playersLimit) *
+            Number(tournament?.settings?.entryFeeAmount),
+          currentPricePool: players.length
+            ? players.length * Number(tournament?.settings?.entryFeeAmount)
+            : 0,
+        },
       },
-    },
-  } as any;
+    } as any;
+  } catch (ex) {
+    return getErrorObject("Something went wrong") as any
+  }
 }
 
 export const addTournamentInvites = async (data: ITournamentInvites | ITournamentInvites[], knexConnection: Knex) => {
@@ -188,8 +208,12 @@ export const handleInviteSubmit = async (tournament_id: string, team_id: string,
   const inviteObj = getTournamentInviteObj(knexConnection);
   const tournameObj = getTournamentObj(knexConnection);
   const tournament: ITournament = await tournameObj.findById(tournament_id);
-  const acceptedInvites = await inviteObj.find({ team_id, tournament_id })
-  if (tournament.bracketsMetadata?.playersLimit == acceptedInvites.length) {
-    // todo handle registeration of tournamet. 
+  const acceptedInvites = await inviteObj.find({ team_id, tournament_id, status: STATUS.ACCEPTED })
+  const numberOfPlayer: string = tournament?.settings?.tournamentFormat || "1v1"
+  if (TOURNAMENT_TYPE_NUMBER[numberOfPlayer] == acceptedInvites.length) {
+    return await registerTeamTournament({
+      tournamentId: tournament_id,
+      team_id,
+    } as any, knexConnection)
   }
 }

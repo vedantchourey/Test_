@@ -22,3 +22,17 @@ export const STATUS = {
     REJECTED: "REJECTED",
     ACCEPTED: "ACCEPTED"
 }
+
+export const TOURNAMENT_TYPE_NUMBER: { [key: string]: number } = {
+    "1v1": 1,
+    "2v2": 2,
+    "3v3": 3,
+    "4v4": 4,
+    "5v5": 5,
+    "6v6": 6,
+    "7v7": 7,
+    "8v8": 8,
+    "9v9": 9,
+    "10v10": 10,
+    "11v11": 10,
+}

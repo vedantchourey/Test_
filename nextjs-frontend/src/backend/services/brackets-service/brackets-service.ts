@@ -77,7 +77,7 @@ export const registerTournament = async (
     }
 
     if (req.is_team_registration) {
-      return await registerTeamTournament(req, tournamet, knexConnection);
+      return await sendTeamTournamentInvites(req, tournamet, knexConnection);
     } else {
       return await registerIndividualTournament(req, knexConnection)
     }
@@ -87,7 +87,7 @@ export const registerTournament = async (
 
 };
 
-export const registerTeamTournament = async (
+export const sendTeamTournamentInvites = async (
   req: IRegisterTournament,
   tournament: ITournament,
   knexConnection: Knex
@@ -138,9 +138,7 @@ export const registerTeamTournament = async (
   return { message: "Team Registration successfull" }
 }
 
-export const registerIndividualTournament = async (req: IRegisterTournament,
-  knexConnection: Knex) => {
-
+export const registerIndividualTournament = async (req: IRegisterTournament, knexConnection: Knex) => {
   if (!(await validateUser([req.userId], knexConnection))) {
     return { errors: ["Invalid user id"] };
   }
@@ -167,6 +165,35 @@ export const registerIndividualTournament = async (req: IRegisterTournament,
 
     return { message: "User register in successfull" };
   } catch (ex) {
+    return { errors: ["Invalid tournament id"] };
+  }
+}
+
+export const registerTeamTournament = async (req: IRegisterTournament, knexConnection: Knex) => {
+  try {
+    const participant = new CrudRepository<IBParticipants>(knexConnection, TABLE_NAMES.B_PARTICIPANT);
+    let existing_user = await participant.knexObj()
+      .join("b_tournament", "b_participant.tournament_id", "b_tournament.id")
+      .where({ "b_tournament.tournament_uuid": req.tournamentId, "b_participant.team_id": req.team_id });
+
+    if (existing_user.length) return { errors: ["Team already register"] };
+
+    let data = await participant.knexObj()
+      .join("b_tournament", "b_participant.tournament_id", "b_tournament.id")
+      .where({ "b_tournament.tournament_uuid": req.tournamentId }).whereNull("b_participant.team_id")
+      .select("b_participant.id").first();
+    if (!data) return { errors: ["Tournament is full"] };
+
+    await participant.update({
+      team_id: req.team_id
+    }, {
+      id: data.id
+    })
+
+    return { message: "Team register in successfull" };
+  } catch (ex) {
+    console.log(ex);
+    
     return { errors: ["Invalid tournament id"] };
   }
 }

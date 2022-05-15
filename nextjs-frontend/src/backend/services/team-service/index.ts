@@ -15,18 +15,20 @@ import _ from "lodash";
 import { IUser } from "../database/models/i-user";
 const fields = ["id", "game_id", "name", "platform_id"]
 
-export const fetchTeams = async (
-    connection: Knex.Transaction,
-    user: any): Promise<ISuccess | IError> => {
+export const fetchTeams = async (connection: Knex.Transaction, user: any, query: any): Promise<ISuccess | IError> => {
     try {
         const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
-        const data = await teams.knexObj()
+        const teamQuery = teams.knexObj()
             .join(TABLE_NAMES.TEAM_PLAYERS, "team_players.team_id", "teams.id")
             .join(TABLE_NAMES.PRIVATE_PROFILE, "private_profiles.id", "team_players.user_id")
             .join(TABLE_NAMES.WALLET, "wallet.userId", "private_profiles.id")
             .select(["teams.name", "teams.id", "private_profiles.firstName", "private_profiles.lastName", "private_profiles.id as user_id", "wallet.balance"])
             .where("created_by", user.id)
 
+        if (query.id) {
+            teamQuery.where("teams.id", query.id)
+        }
+        const data = await teamQuery;
         if (!data.length) return getErrorObject("No Teams found")
 
         return {
@@ -126,7 +128,7 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
         const team_invitation = new CrudRepository<ITeamInvitation>(connection, TABLE_NAMES.TEAM_INVITATION);
         const pending_inivitation = await team_invitation.knexObj().where("user_id", player_data.id).where("status", "PENDING")
 
-        if (pending_inivitation.length) return getErrorObject("Some users already have invitation in pending state");
+        if (pending_inivitation.length) return getErrorObject("Users have invitation pending");
         const data = {
             team_id: team_info.id,
             user_id: player_data.id,
