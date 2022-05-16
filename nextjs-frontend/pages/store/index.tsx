@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import { Container, Grid, Box, Typography, Button, TextField, Checkbox, FormControlLabel } from '@mui/material';
 import Heading from '../../src/frontend/components/ui-components/typography/heading';
 import NoobPage from '../../src/frontend/components/page/noob-page';
-import Store from '../../src/frontend/components/store/store';
+import Product from '../../src/frontend/components/product/product';
 import styles from "./store-sidebar.module.css";
 import SearchIcon from '@mui/icons-material/Search';
 import Accordion from '@mui/material/Accordion';
@@ -22,9 +22,9 @@ const StoreIndex = (): JSX.Element => {
       <Fragment>
         <Container maxWidth="xl">
           <Heading divider heading={"STORE"} />
-          <Grid container>
+          <Grid container spacing={2}>
             <Grid item xs={12} lg={3}>
-            
+
               {isDesktop && <div className={styles.sidebarContainer}>
                 <Typography className={styles.text}>Categories</Typography>
                 <Button variant="text" className={styles.button}>Headsets</Button>
@@ -35,9 +35,7 @@ const StoreIndex = (): JSX.Element => {
                 <Button variant="text" className={styles.button}>Networking</Button>
                 <Button variant="text" className={styles.button}>Gaming Accessories</Button>
                 <Button variant="text" className={styles.button}>Laptops</Button>
-                <Box style={{ display: 'flex' }}>
-                  <span className={styles.border}></span>
-                </Box>              
+                <span className={styles.border}></span>
                 <Typography className={styles.text}>Platform</Typography>
                 <Box className={styles.searchBar}>
                   <TextField style={{ marginTop: '15px' }} placeholder="Search" variant="standard" InputProps={{ disableUnderline: true }} />
@@ -87,16 +85,16 @@ const StoreIndex = (): JSX.Element => {
             </Grid>
             {isDesktop && 
               <Grid item xs={12} lg={9} className={styles.containerDesktop}>
-                <Store />
-                <Store />
-                <Store />
+                <Product img="/images/card.gif" name="250 NoobStorm Credits" description="Use credits for join tournaments and play with other games." price="9.99" />
+                <Product img="/images/card.gif" name="250 NoobStorm Credits" description="Use credits for join tournaments and play with other games." price="9.99" />
+                <Product img="/images/card.gif" name="250 NoobStorm Credits" description="Use credits for join tournaments and play with other games." price="9.99" />
               </Grid>
             }
             {!isDesktop && 
               <Grid item xs={12} lg={9} className={styles.containerMobile}>
-                <Store />
-                <Store />
-                <Store />
+                <Product img="/images/card.gif" name="250 NoobStorm Credits" description="Use credits for join tournaments and play with other games." price="9.99" />
+                <Product img="/images/card.gif" name="250 NoobStorm Credits" description="Use credits for join tournaments and play with other games." price="9.99" />
+                <Product img="/images/card.gif" name="250 NoobStorm Credits" description="Use credits for join tournaments and play with other games." price="9.99" />
               </Grid>
             }
           </Grid>
