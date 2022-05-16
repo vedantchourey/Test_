@@ -148,7 +148,6 @@ const FreeAgencyMarket: React.FC = () => {
 
     const return_controls = (): JSX.Element | JSX.Element[] => {
       if (getActiveTab() == 0 || query.slug == "members") {
-        console.log("mobile: " + isMobile)
         return (
           <>
             <Grid>
@@ -184,10 +183,6 @@ const FreeAgencyMarket: React.FC = () => {
 
     return return_controls()
   };
-
-  if (isMobile) {
-    console.log("mobilemmmm");
-  }
 
   return (
     <NoobPage
