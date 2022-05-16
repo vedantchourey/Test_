@@ -8,15 +8,17 @@ import { createKnexConnection } from "../database/knex";
 import { STATUS, TABLE_NAMES, TOURNAMENT_TYPE_NUMBER } from "../../../models/constants";
 import { CrudRepository } from "../database/repositories/crud-repository";
 import { IBParticipants } from "../database/models/i-b-participant";
-import { validateRegisterSingle, validateRegisterTeam } from "./i-brackets-validator";
+import { validateMatchResult, validateRegisterSingle, validateRegisterTeam } from "./i-brackets-validator";
 import { IPrivateProfile } from "../database/models/i-private-profile";
 import { addNotifications } from "../notifications-service";
 import { fetchTournamentById, getErrorObject } from "../common/helper/utils.service";
 import { addTournamentInvites } from "../tournament-service/tournament-service";
 import { ITournamentInvites } from "../database/models/i-tournament-invites";
 import { debitBalance } from "../wallet-service/wallet-service";
-import _ from "lodash";
+import _, { result } from "lodash";
 import { IError, ISuccess } from "../../utils/common/Interfaces";
+import { IMatchResultRequest } from "./i-brackets-request";
+import { IBMatch } from "../database/models/i-b-match";
 
 export const persistBrackets = async (req: ITournament): Promise<any> => {
   const connection = createKnexConnection();
@@ -247,6 +249,34 @@ export const checkInTournament = async (req: IRegisterTournament, knexConnection
   }
 };
 
+export const submitMatchResult = async (req: IMatchResultRequest, knexConnection: Knex, user: any): Promise<any> => {
+  try {
+    const errors = await validateMatchResult(req);
+    if (errors) return { errors };
+
+    const repo = new CrudRepository<IBMatch>(knexConnection, TABLE_NAMES.B_MATCH);
+    const match: IBMatch = await repo.findById(req.match_id);
+    const manager = new BracketsManager(
+      new BracketsCrud(knexConnection as any) as any
+    );
+    await manager.update.match({
+      id: Number(match.id),
+      opponent1: {
+        id: Number(match.opponent1.id),
+        score: req.opponent1.score,
+        result: req.opponent1.result as any
+      },
+      opponent2: {
+        id: Number(match.opponent2.id),
+        score: req.opponent2.score,
+        result: req.opponent2.result as any
+      }
+    });
+    return match
+  } catch (ex) {
+    return getErrorObject("Something went wrong")
+  }
+}
 export const validateUser = async (
   ids: string[],
   knexConnection: Knex | Knex.Transaction

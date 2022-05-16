@@ -22,7 +22,7 @@ export class CrudRepository<T> extends BaseRepository<T> {
         return updatedItems[0];
     }
 
-    async findById(id: string, fields: string[] = ["*"]): Promise<any> {
+    async findById(id: string | number, fields: string[] = ["*"]): Promise<any> {
         const item = await this.entities().where("id", id)
             .select(fields)
             .first();

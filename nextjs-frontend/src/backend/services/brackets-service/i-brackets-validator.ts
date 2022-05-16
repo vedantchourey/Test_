@@ -21,3 +21,20 @@ export function validateRegisterTeam(body: any): any {
     if (errors) return errors.error?.details.map((x) => x.message);
     return null;
 }
+
+export function validateMatchResult(body: any): any {
+    const model = Joi.object({
+        match_id: Joi.number().required(),
+        opponent1: Joi.object({
+            score: Joi.number().required(),
+            result: Joi.string().required(),
+        }),
+        opponent2: Joi.object({
+            score: Joi.number().required(),
+            result: Joi.string().required(),
+        })
+    });
+    const errors = model.validate(body, { abortEarly: false, allowUnknown: true, });
+    if (errors) return errors.error?.details.map((x) => x.message);
+    return null;
+}

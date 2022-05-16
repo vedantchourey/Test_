@@ -10,6 +10,7 @@ export const TABLE_NAMES = {
     TEAM_PLAYERS: "team_players",
     B_PARTICIPANT: "b_participant",
     B_TOURNAMENT: "b_tournament",
+    B_MATCH:"b_match",
     USERS: "auth.users",
     WALLET: "wallet",
     NOTIFICATIONS: "notifications",
