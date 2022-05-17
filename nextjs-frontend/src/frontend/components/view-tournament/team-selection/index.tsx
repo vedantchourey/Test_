@@ -17,6 +17,7 @@ interface Player {
   firstName: string;
   lastName: string;
   user_id: string;
+  balance:number;
 }
 
 export interface Team {
@@ -31,6 +32,7 @@ interface TeamProps {
   onBack?: () => void;
   onJoin?: (teamId: string, selectedUsers: string[]) => void;
   error?: string;
+  entryFees:number;
 }
 
 const TeamSelection: React.FC<TeamProps> = ({
@@ -39,6 +41,7 @@ const TeamSelection: React.FC<TeamProps> = ({
   onBack,
   onJoin,
   error,
+  entryFees
 }) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -52,6 +55,12 @@ const TeamSelection: React.FC<TeamProps> = ({
     ).length;
     return selected + 1 <= maxPlayer;
   };
+
+  const hasEnoughPlayerSelected = ():boolean =>{
+    return Object.keys(selectedPlayer).filter(
+      (key) => selectedPlayer[key]
+    ).length === maxPlayer;
+  }
 
   const registerTeam = (): void => {
     if (onJoin) {
@@ -81,6 +90,15 @@ const TeamSelection: React.FC<TeamProps> = ({
     }
   };
 
+  const hasEnoughCredit = (credit:number):boolean =>{
+    if(entryFees<=0){
+      return true;
+    }
+
+    const perPlayerFees = entryFees/maxPlayer;
+    return perPlayerFees<=credit;
+  }
+
   return (
     <Grid container rowSpacing={1} columnSpacing={1}>
       <Grid item xs={12}>
@@ -98,7 +116,7 @@ const TeamSelection: React.FC<TeamProps> = ({
               </Typography>
             )}
             {!isSmallScreen ? (
-              <Button variant="contained" onClick={registerTeam} sx={{borderRadius:0}}>
+              <Button disabled={!hasEnoughPlayerSelected()} variant="contained" onClick={registerTeam} sx={{borderRadius:0}}>
                 Join Now
               </Button>
             ) : null}
@@ -111,7 +129,7 @@ const TeamSelection: React.FC<TeamProps> = ({
       </Grid>
       <Grid item xs={12}>
         <Typography padding={2} textAlign={"left"} textTransform={"uppercase"}>
-          Select player to join the game.
+          Select {maxPlayer} player to join the game.
         </Typography>
       </Grid>
       {team.players.map((player) => {
@@ -135,7 +153,7 @@ const TeamSelection: React.FC<TeamProps> = ({
                 </Typography>
               </Box>
               <Box display="Flex" alignItems={"center"} justifyContent="center">
-                <IconButton onClick={():void => onPlayerSelect(player.user_id)}>
+                <IconButton disabled={!hasEnoughCredit(player.balance)} onClick={():void => onPlayerSelect(player.user_id)}>
                   {selectedPlayer[player.user_id] ? (
                     <RemoveIcon height={"14px"} width="14px" />
                   ) : (
@@ -149,7 +167,7 @@ const TeamSelection: React.FC<TeamProps> = ({
       })}
       <Grid item xs={12} display="flex" flexDirection={"column"} alignItems="center">
         {isSmallScreen ? (
-          <Button variant="contained" onClick={registerTeam} sx={{marginY:1,borderRadius:0,width:"200px"}}>
+          <Button disabled={!hasEnoughPlayerSelected()} variant="contained" onClick={registerTeam} sx={{marginY:1,borderRadius:0,width:"200px"}}>
             Join Now
           </Button>
         ) : null}

@@ -80,7 +80,7 @@ const ViewTournament: React.FC = () => {
   const [regError, setRegError] = React.useState();
   const [selectedTeam, setSelectedTeam] = React.useState<Team | undefined>();
 
-  const fetchTeams = async ():void => {
+  const fetchTeams = async ():Promise<void> => {
     const headers = await getAuthHeader();
     axios
       .get("/api/teams", { headers: { ...headers } })
@@ -436,6 +436,7 @@ const ViewTournament: React.FC = () => {
             team={selectedTeam}
             onJoin={onTeamJoin}
             error={regError}
+            entryFees={parseInt(data.settings?.entryFeeAmount || '0') || 0}
           />
         </ViewCard>
       )
