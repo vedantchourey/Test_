@@ -64,10 +64,10 @@ export const persistBrackets = async (req: ITournament): Promise<any> => {
 
 export const registerTournament = async (req: IRegisterTournament, knexConnection: Knex, user: any): Promise<any> => {
   try {
-    const tournamet = await validateTournament(req.tournamentId, knexConnection);
+    const tournamet: ITournament | null = await validateTournament(req.tournamentId, knexConnection);
     if (!tournamet) return { errors: ["Invalid Tournament id"] };
 
-    if (tournamet?.bracketsMetadata?.type === "SINGLE") {
+    if (tournamet?.settings?.tournamentFormat === "1v1") {
       const errors = await validateRegisterSingle(req);
       if (errors) return { errors };
     } else {
