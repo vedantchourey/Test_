@@ -12,6 +12,7 @@ import { ITeamCreateRequest, ITeamDiscardRequest, ITeamInviteRequest, ITeamLeave
 import { validateLeaveTeam, validateSendInvite, validateTeamCreation, validateTeamDiscard } from "./i-team-validator";
 import _ from "lodash";
 import { IUser } from "../database/models/i-user";
+import { ITournament } from "../database/models/i-tournaments";
 const fields = ["id", "game_id", "name", "platform_id"]
 
 export const fetchTeams = async (connection: Knex.Transaction, user: any, query: any): Promise<ISuccess | IError> => {
@@ -26,6 +27,14 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
 
         if (query.id) {
             teamQuery.where("teams.id", query.id)
+        }
+        if (query.tournament_id) {
+            const tour_repo = new CrudRepository<ITournament>(connection, TABLE_NAMES.TOURNAMENTS);
+            const { game, settings } = await tour_repo.findById(query.tournament_id, ["game", "settings"]);
+            if (game && settings) {
+                teamQuery.where("teams.game_id", game)
+                teamQuery.where("teams.platform_id", settings.platform)
+            }
         }
         const data = await teamQuery;
         if (!data.length) return getErrorObject("No Teams found")

@@ -131,7 +131,9 @@ export async function tournamentDetails(
       tournament_uuid: tournamentId,
     });
 
-    let players: any = []
+    let players: any = [];
+    let pricePool = 0
+    let currentPricePool = 0
     if (bracketT) {
       const part_repo = new CrudRepository<IBParticipants>(context.knexConnection as any, TABLE_NAMES.B_PARTICIPANT);
       if (tournament?.settings?.tournamentFormat === "1v1") {
@@ -139,7 +141,9 @@ export async function tournamentDetails(
           join(TABLE_NAMES.PRIVATE_PROFILE, "private_profiles.id", "b_participant.user_id")
           .where({ tournament_id: bracketT.id, })
           .select(["private_profiles.firstName", "private_profiles.lastName", "private_profiles.id"])
-          .whereNotNull("user_id")
+          .whereNotNull("user_id");
+        pricePool = Number(tournament?.bracketsMetadata?.playersLimit) * Number(tournament?.settings?.entryFeeAmount);
+        currentPricePool = players.length ? players.length * Number(tournament?.settings?.entryFeeAmount) : 0;
       } else {
         players = await part_repo.knexObj().select(["private_profiles.firstName", "private_profiles.lastName", "private_profiles.id", "teams.id as team_id", "teams.name as team_name"])
           .join(TABLE_NAMES.B_TOURNAMENT, "b_tournament.id", "b_participant.tournament_id")
@@ -150,13 +154,12 @@ export async function tournamentDetails(
           .where("tournament_invites.tournament_id", tournamentId as string)
           .whereNotNull("b_participant.team_id")
         const grp_team = _.groupBy(players, "team_name")
+        currentPricePool = players.length ? players.length * Number(tournament?.settings?.entryFeeAmount) : 0;
         players = _.keys(grp_team).map((k) => {
-          return {
-            team_name: k,
-            team_id: grp_team[k][0].team_id,
-            ...grp_team[k]
-          }
+          return { team_name: k, team_id: grp_team[k][0].team_id, ...grp_team[k] }
         })
+        const playerCount = TOURNAMENT_TYPE_NUMBER[tournament?.settings?.tournamentFormat || "1v1"]
+        pricePool = Number(tournament?.bracketsMetadata?.playersLimit) * playerCount * Number(tournament?.settings?.entryFeeAmount);
       }
 
       const connect = context.knexConnection;
@@ -170,14 +173,7 @@ export async function tournamentDetails(
       data: {
         ...tournament,
         playerList: players,
-        pricingDetails: {
-          pricePool:
-            Number(tournament?.bracketsMetadata?.playersLimit) *
-            Number(tournament?.settings?.entryFeeAmount),
-          currentPricePool: players.length
-            ? players.length * Number(tournament?.settings?.entryFeeAmount)
-            : 0,
-        },
+        pricingDetails: { pricePool, currentPricePool },
       },
     } as any;
   } catch (ex) {
