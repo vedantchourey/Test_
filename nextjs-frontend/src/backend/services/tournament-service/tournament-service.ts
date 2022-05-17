@@ -122,7 +122,8 @@ export async function tournamentDetails(
   if (bracketT) {
     const part_repo = new CrudRepository<IBParticipants>(context.knexConnection as any, TABLE_NAMES.B_PARTICIPANT);
     players = await part_repo.knexObj().
-      join(TABLE_NAMES.PRIVATE_PROFILE, "private_profiles.id", "b_participant.user_id").where({
+      join(TABLE_NAMES.PRIVATE_PROFILE, "private_profiles.id", "b_participant.user_id")
+.where({
         tournament_id: bracketT.id,
       })
       .whereNotNull("user_id")

@@ -47,7 +47,7 @@ const CardMobile: React.FC = () => {
   return (
     <Grid container>
       <Grid item xs={12} display={"flex"}>
-        <Box  width={"65px"} height={"65px"} position="relative">
+        <Box width={"65px"} height={"65px"} position="relative">
           <Image src={"/icons/Rectangle.svg"} width={"65px"} height={"65px"} />
         </Box>
         <Box marginLeft={2}>

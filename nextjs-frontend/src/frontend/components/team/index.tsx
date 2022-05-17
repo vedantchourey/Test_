@@ -90,7 +90,7 @@ const Team: React.FC = () => {
     if (!tab) {
       return;
     }
-    router.push("/team/view/[...slug]", `/team/view/${tab.url}`, { shallow: true });
+    router.push("/team/view/[id]/[...slug]", `/team/view/${query.id}/${tab.url}`, { shallow: true });
   };
 
   const changeTabByValue = (tab:string):void=>{
@@ -108,10 +108,9 @@ const Team: React.FC = () => {
         }
       }
       return (
-        <FormControl fullWidth  >
-          <Select value={page} input={<OutlinedInput />} onChange={(e)=>changeTabByValue(e.target.value)}>
+        <FormControl fullWidth >
+          <Select value={page} input={<OutlinedInput />} onChange={(e):void=>changeTabByValue(e.target.value)}>
             {tabs.map((tab) => {
-              console.log(tab.url)
               return <MenuItem key={tab.url} value={tab.url}>{tab.title}</MenuItem>;
             })}
           </Select>

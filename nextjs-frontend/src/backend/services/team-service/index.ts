@@ -17,7 +17,8 @@ const fields = ["id", "game_id", "name", "platform_id"]
 
 export const fetchTeams = async (
     connection: Knex.Transaction,
-    user: any): Promise<ISuccess | IError> => {
+    user: any
+): Promise<ISuccess | IError> => {
     try {
         const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
         const data = await teams.knexObj()
@@ -27,7 +28,8 @@ export const fetchTeams = async (
         if (!data.length) return getErrorObject("No Teams found")
 
         return {
-            result: _(data).groupBy("name").map(function (items, name) {
+            result: _(data).groupBy("name")
+.map(function (items, name) {
                 return {
                     id: items[0].id,
                     name,
@@ -39,7 +41,8 @@ export const fetchTeams = async (
                         }
                     })
                 };
-            }).value()
+            })
+.value()
         };
 
 
@@ -97,8 +100,7 @@ export const discardTeams = async (req: ITeamDiscardRequest,
         if (existing_team) {
             await teams.delete({ id: req.id, created_by: user.id })
             return { message: "Teams discard successfull" }
-        } else
-            return getErrorObject("Team for platform and game combination already exists")
+        } return getErrorObject("Team for platform and game combination already exists")
     } catch (ex) {
         return getErrorObject("Something went wrong")
     }
@@ -110,7 +112,7 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
         if (errors) return { errors };
 
         // validating all the users
-        let player_data: IUser = await fetchUserDetails(req.email, connection)
+        const player_data: IUser = await fetchUserDetails(req.email, connection)
         if (!player_data) return getErrorObject("Invalid email address.")
 
         const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
@@ -122,12 +124,14 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
 
         // checking if users already in the team 
         const team_players = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
-        const existing_players = await team_players.knexObj().where("user_id", player_data.id).where("team_id", req.team_id);
+        const existing_players = await team_players.knexObj().where("user_id", player_data.id)
+.where("team_id", req.team_id);
         if (existing_players.length) return getErrorObject("Players already exists in the team.");
 
         //validating if any pending invitation
         const team_invitation = new CrudRepository<ITeamInvitation>(connection, TABLE_NAMES.TEAM_INVITATION);
-        const pending_inivitation = await team_invitation.knexObj().where("user_id", player_data.id).where("status", "PENDING")
+        const pending_inivitation = await team_invitation.knexObj().where("user_id", player_data.id)
+.where("status", "PENDING")
 
         if (pending_inivitation.length) return getErrorObject("Some users already have invitation in pending state");
         const data = {
@@ -244,7 +248,8 @@ export const validateCreationData = async (req: ITeamCreateRequest, connection: 
 
 export const fetchUserDetails = async (email: string, connection: Knex.Transaction): Promise<IUser> => {
     const user_list = new CrudRepository<IUser>(connection, TABLE_NAMES.USERS);
-    let data = await user_list.knexObj().where("email", email).first()
+    const data = await user_list.knexObj().where("email", email)
+.first()
     return data
 }
 

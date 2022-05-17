@@ -13,21 +13,26 @@ import Rules from "./rules";
 import Bracket from "./brackets";
 import Prizes from "./prizes";
 import Image from "next/image";
-import ActionButton,  {ActionItem } from "../ui-components/action-button";
+import ActionButton, { ActionItem } from "../ui-components/action-button";
 import { TournamentData } from "../tournament";
 import axios from "axios";
 import moment from "moment";
 import { RoundStatusData } from "./brackets/BracketsInterface";
 import ReactHtmlParser from "react-html-parser";
 import { getAuthHeader } from "../../utils/headers";
+import { useAppSelector } from "../../redux-store/redux-store";
+import { userProfileSelector } from "../../redux-store/authentication/authentication-selectors";
+import TeamSelection, { Team } from "./team-selection";
 
+interface JoinTeamType{
+  tournamentId:string,userId:string,is_team_registration?:boolean,team_id?:string,user_list?:string[]
+}
 
 interface HeadSubSectionProps {
   time: string;
 }
 
-
-const HeadSubSection = ({time}: HeadSubSectionProps): any => {
+const HeadSubSection = ({ time }: HeadSubSectionProps): any => {
   return (
     <Grid container>
       <Grid item md={4} display="flex">
@@ -63,64 +68,68 @@ const calculateDuration = (
 ): moment.Duration => moment.duration(eventTime.diff(now), "milliseconds");
 
 const ViewTournament: React.FC = () => {
+  const user = useAppSelector(userProfileSelector);
   const [data, setData] = React.useState<TournamentData>({});
   const router = useRouter();
   const query: ParsedUrlQuery = router.query;
   const tournamentBasePath = "/view-tournament";
   const timerRef = React.useRef(0);
   const [countDown, setCountDown] = React.useState("00:00:00");
+  const [playerLimit, setPlayerLimit] = React.useState(0);
+  const [teams, setTeams] = React.useState<Team[]>([]);
+  const [regError, setRegError] = React.useState();
+  const [selectedTeam, setSelectedTeam] = React.useState<Team | undefined>();
 
-  const [teams,setTeams] = React.useState<{name:string,id:string}[]>([]);
-
-  const fetchTeams = async () =>{
+  const fetchTeams = async ():void => {
     const headers = await getAuthHeader();
-    axios.get("/api/teams",{headers:{...headers}}).then((res)=>{
-      setTeams(res.data.result);
-    }).catch(err=>{
-      console.error(err);
-    })
-  }
-  React.useEffect(()=>{
+    axios
+      .get("/api/teams", { headers: { ...headers } })
+      .then((res) => {
+        setTeams(res.data.result);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+  React.useEffect(() => {
     fetchTeams();
-  },[])
+  }, []);
 
-  const getActionItems = ():ActionItem[][] =>{
-
-    const select:ActionItem[] = [
+  const getActionItems = (): ActionItem[][] => {
+    const select: ActionItem[] = [
       {
         title: "Select Team",
       },
     ];
 
-    const create:ActionItem[] = [
+    const create: ActionItem[] = [
       {
         title: "Create Team",
-        onClick:()=>{
-          router.push("/team/create",`/team/create`,{shallow:true});
-        }
+        onClick: ():void => {
+          router.push("/team/create", `/team/create`, { shallow: true });
+        },
       },
-    ]
+    ];
 
-    const teamItems:ActionItem[] = teams.map(team=>{
+    const teamItems: ActionItem[] = teams.map((team) => {
       return {
         title: team.name,
-        onClick:()=>{
-          router.push("/team/view/[...slug]",`/team/view/${team.id}`,{shallow:true});
-        }
-      }
-    })
+        onClick: ():void => {
+          setSelectedTeam(team);
+        },
+      };
+    });
 
-    const items:ActionItem[][] = [];
+    const items: ActionItem[][] = [];
     items.push(select);
-    if(teamItems.length>0){
+    if (teamItems.length > 0) {
       items.push(teamItems);
     }
 
     items.push(create);
 
     return items;
-
-  }
+  };
 
   const timerCallback = React.useCallback(() => {
     if (data.basic) {
@@ -162,7 +171,7 @@ const ViewTournament: React.FC = () => {
                 delete tournamentData[key];
               }
             });
-            
+
             setData({
               ...tournamentData,
               basic: {
@@ -196,6 +205,11 @@ const ViewTournament: React.FC = () => {
   React.useEffect(() => {
     if (data.basic) {
       timerRef.current = window.setInterval(timerCallback, 1000);
+    }
+
+    if (data.settings && data.settings.tournamentFormat) {
+      const tokens = data.settings.tournamentFormat.split("v");
+      setPlayerLimit(parseInt(tokens[0]));
     }
     return () => {
       clearInterval(timerRef.current);
@@ -322,7 +336,9 @@ const ViewTournament: React.FC = () => {
         timing = getMomentDate(startDate, round.startTime || startTime);
       }
       return {
-        type: (round.map || []).length ? round.map.join(", ") : "No Map provieded",
+        type: (round.map || []).length
+          ? round.map.join(", ")
+          : "No Map provieded",
         isFinished: timing.date.isBefore(now),
         round: index + 1,
         startDate: timing.startDate,
@@ -358,7 +374,6 @@ const ViewTournament: React.FC = () => {
               {ReactHtmlParser(data.info?.contactDetails || "")}
             </div>
           </ViewCard>
-          
         );
     }
   };
@@ -367,28 +382,81 @@ const ViewTournament: React.FC = () => {
     if (!tab || tab === "") return;
     router.push(getUrl(), getAsURL(tab.toLowerCase()), { shallow: true });
   };
-  return (
-    <NoobPage
-      title="ViewTournament"
-      metaData={{
-        description: "Noob Storm tournament page",
-      }}
-    >
-      
-      <React.Fragment>
-        <Heading
-          heading={data.basic?.name}
-          backgroundImage
-          backgroundImageUrl={data?.basic?.banner||""}
+
+  const onJoinTeam = (payload:JoinTeamType): void => {
+    if (!payload) {
+      return;
+    }
+
+    axios
+      .post("/api/tournaments/register", payload)
+      .then(() => {
+        //TODO: peding res
+      })
+      .catch((err) => {
+        console.error(err);
+        setRegError(err.response.data.errors[0]);
+      });
+  };
+
+  const onSinglePlayerJoin = (): void => {
+    if (!user || !data.id) {
+      return;
+    }
+    const payload:JoinTeamType = {
+      tournamentId: data.id,
+      userId: user.id,
+    };
+    onJoinTeam(payload);
+  };
+
+  const onTeamJoin = (teamId:string, players:string[]): void => {
+    if (!user || !data.id) {
+      return;
+    }
+    const payload:JoinTeamType = {
+      tournamentId: data.id,
+      userId: user.id,
+      is_team_registration:true,
+      team_id:teamId,
+      user_list:players
+    };
+    onJoinTeam(payload);
+  };
+
+  const renderTeamSelection = (): JSX.Element | undefined => {
+    return (
+      selectedTeam && (
+        <ViewCard
+          contentProps={{ sx: { padding: 0, paddingBottom: "0!important" } }}
         >
-          
-          <HeadSubSection time={moment(data.basic?.startDate).format("DD/MM/YYYY HH:MM A")} />
-        </Heading>
+          <TeamSelection
+            onBack={():void => setSelectedTeam(undefined)}
+            maxPlayer={playerLimit}
+            team={selectedTeam}
+            onJoin={onTeamJoin}
+            error={regError}
+          />
+        </ViewCard>
+      )
+    );
+  };
+
+  const renderTournament = (): JSX.Element | undefined => {
+    if (selectedTeam) {
+      return renderTeamSelection();
+    }
+    return (
+      <React.Fragment>
         <ViewCard>
           <Grid container>
             <Grid item md={6}>
-              {data.basic?.sponsor && <img src={data.basic?.sponsor} style={{height: 80, width: 200}} /> }
-              
+              {data.basic?.sponsor && (
+                <img
+                  src={data.basic?.sponsor}
+                  style={{ height: 80, width: 200 }}
+                />
+              )}
             </Grid>
             <Grid
               item
@@ -403,18 +471,26 @@ const ViewTournament: React.FC = () => {
                   {countDown}
                 </Typography>
               </Box>
-              
+
               <Box marginRight="16px">
                 <Typography>
                   {" "}
                   Credits :
-                  <span style={{ color: "rgba(105,50,249,1)", paddingLeft:"5px" }}>
+                  <span
+                    style={{ color: "rgba(105,50,249,1)", paddingLeft: "5px" }}
+                  >
                     {data.settings?.entryFeeAmount || 0}
                   </span>
                 </Typography>
               </Box>
-              
-              <ActionButton items={getActionItems()} id={"action-item"} />
+
+              <ActionButton
+                error={regError}
+                onClick={onSinglePlayerJoin}
+                buttonOnly={playerLimit === 1}
+                items={getActionItems()}
+                id={"action-item"}
+              />
             </Grid>
           </Grid>
         </ViewCard>
@@ -427,6 +503,28 @@ const ViewTournament: React.FC = () => {
           />
         </Box>
         {renderComponent()}
+      </React.Fragment>
+    );
+  };
+
+  return (
+    <NoobPage
+      title="ViewTournament"
+      metaData={{
+        description: "Noob Storm tournament page",
+      }}
+    >
+      <React.Fragment>
+        <Heading
+          heading={data.basic?.name}
+          backgroundImage
+          backgroundImageUrl={data?.basic?.banner || ""}
+        >
+          <HeadSubSection
+            time={moment(data.basic?.startDate).format("DD/MM/YYYY HH:MM A")}
+          />
+        </Heading>
+        {renderTournament()}
       </React.Fragment>
     </NoobPage>
   );

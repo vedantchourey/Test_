@@ -68,16 +68,18 @@ export const registerTournament = async (
 
   try {
     const participant = new CrudRepository<IBParticipants>(knexConnection, TABLE_NAMES.B_PARTICIPANT);
-    let existing_user = await participant.knexObj()
+    const existing_user = await participant.knexObj()
       .join("b_tournament", "b_participant.tournament_id", "b_tournament.id")
       .where({ "b_tournament.tournament_uuid": req.tournamentId, "b_participant.user_id": req.userId });
 
     if (existing_user.length) return { errors: ["User already register"] };
 
-    let data = await participant.knexObj()
+    const data = await participant.knexObj()
       .join("b_tournament", "b_participant.tournament_id", "b_tournament.id")
-      .where({ "b_tournament.tournament_uuid": req.tournamentId }).whereNull("b_participant.user_id")
-      .select("b_participant.id").first();
+      .where({ "b_tournament.tournament_uuid": req.tournamentId })
+.whereNull("b_participant.user_id")
+      .select("b_participant.id")
+.first();
     if (!data) return { errors: ["Tournament is full"] };
 
     await participant.update({
@@ -104,11 +106,12 @@ export const checkInTournament = async (
   }
   try {
     const participant = new CrudRepository<IBParticipants>(knexConnection, TABLE_NAMES.B_PARTICIPANT);
-    let existing_user = await participant.knexObj()
+    const existing_user = await participant.knexObj()
       .join("b_tournament", "b_participant.tournament_id", "b_tournament.id")
       .where({ "b_tournament.tournament_uuid": req.tournamentId, "b_participant.user_id": req.userId })
       .select("b_participant.id")
-      .select("b_participant.is_checked_in").first();
+      .select("b_participant.is_checked_in")
+.first();
 
     if (!existing_user) return { errors: ["User not register"] };
 
@@ -146,7 +149,7 @@ export const validateTournament = async (
   try {
     const repository = new TournamentsRepository(knexConnection);
     const data = await repository.getTournament(id);
-    return data ? true : false;
+    return Boolean(data);
   } catch (ex) {
     return false;
   }

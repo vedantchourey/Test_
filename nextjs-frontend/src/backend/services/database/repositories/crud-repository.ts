@@ -23,20 +23,24 @@ export class CrudRepository<T> extends BaseRepository<T> {
     }
 
     async findById(id: string, fields: string[] = ["*"]): Promise<any> {
-        const item = await this.entities().where("id", id).select(fields)
+        const item = await this.entities().where("id", id)
+.select(fields)
             .first();
         return item;
     }
 
     async find(query: any, fields: string[] = ["*"]): Promise<any> {
-        const items = await this.entities().where(query).select(fields)
+        const items = await this.entities().where(query)
+.select(fields)
         return items;
     }
     async findBy(key: string, value: string, fields: string[] = ["*"]): Promise<any> {
-        const items = await this.entities().where(key, value).select(fields)
+        const items = await this.entities().where(key, value)
+.select(fields)
         return items;
     }
     async delete(query: any): Promise<any> {
-        return await this.entities().delete().where(query)
+        return await this.entities().delete()
+.where(query)
     }
 }
