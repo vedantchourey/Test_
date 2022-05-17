@@ -231,6 +231,10 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
     req.templateCode = req.publishData?.templateCode || "";
     delete req.publishData;
     delete req.basic;
+    if(!requestData.settings) delete req.settings
+    if(!requestData.bracketsMetadata) delete req.bracketsMetadata
+    if(!requestData.streams) delete req.streams
+    if(!requestData.info) delete req.info
     return axios
       .post("/api/tournaments/create", req)
       .then((res: any) => {

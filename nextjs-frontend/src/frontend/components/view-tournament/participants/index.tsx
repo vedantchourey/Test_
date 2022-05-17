@@ -53,7 +53,7 @@ interface ParticipantsProps {
   data: TournamentData;
 }
 
-const Participants: React.FC<ParticipantsProps> = () => {
+const Participants:React.FC<ParticipantsProps> = () => {
   return (
     <React.Fragment>
       <ViewCard>

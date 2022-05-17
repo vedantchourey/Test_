@@ -10,6 +10,7 @@ import { PerRequestContext } from "../../../src/backend/utils/api-middle-ware/ap
 import { debitBalance } from "../../../src/backend/services/wallet-service/wallet-service";
 import { IWalletResponse } from "../../../src/backend/services/wallet-service/i-wallet-response";
 import { IWalletRequest } from "../../../src/backend/services/wallet-service/i-wallet-request";
+import { Knex } from "knex";
 
 export default createNextJsRouteHandler({
   post: {
@@ -18,7 +19,7 @@ export default createNextJsRouteHandler({
       res: NextApiResponse<ServiceResponse<IWalletRequest, IWalletResponse>>,
       context: PerRequestContext
     ) => {
-      const result: any = await debitBalance(req.body, context);
+      const result: any = await debitBalance(req.body, context.transaction as Knex.Transaction);
       res.status(200).json(result);
     },
     preHooks: [beginTransactionMiddleWare, authenticatedAdminUserMiddleware],

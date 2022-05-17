@@ -7,4 +7,5 @@ export interface ITransaction {
   invoice_no?: string;
   type?: string;
   created_at?: Date;
+  data?: any
 }

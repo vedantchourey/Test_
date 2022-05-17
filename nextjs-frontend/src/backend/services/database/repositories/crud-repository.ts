@@ -12,7 +12,7 @@ export class CrudRepository<T> extends BaseRepository<T> {
         return createdItems[0];
     }
 
-    get knexObj() {
+    get knexObj(): any {
         return this.entities
     }
     async update(data: any, query: any, fields: string[] = ["*"]): Promise<T> {
@@ -22,25 +22,25 @@ export class CrudRepository<T> extends BaseRepository<T> {
         return updatedItems[0];
     }
 
-    async findById(id: string, fields: string[] = ["*"]): Promise<any> {
+    async findById(id: string | number, fields: string[] = ["*"]): Promise<any> {
         const item = await this.entities().where("id", id)
-.select(fields)
+            .select(fields)
             .first();
         return item;
     }
 
     async find(query: any, fields: string[] = ["*"]): Promise<any> {
         const items = await this.entities().where(query)
-.select(fields)
+            .select(fields)
         return items;
     }
     async findBy(key: string, value: string, fields: string[] = ["*"]): Promise<any> {
         const items = await this.entities().where(key, value)
-.select(fields)
+            .select(fields)
         return items;
     }
     async delete(query: any): Promise<any> {
         return await this.entities().delete()
-.where(query)
+            .where(query)
     }
 }

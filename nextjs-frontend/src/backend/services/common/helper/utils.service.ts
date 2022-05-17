@@ -1,15 +1,32 @@
 import { Knex } from "knex";
-import { IProfile } from "../../database/models/i-profile";
-import { ProfilesRepository } from "../../database/repositories/profiles-repository";
+import { TABLE_NAMES } from "../../../../models/constants";
+import { IPrivateProfile } from "../../database/models/i-private-profile";
+import { ITournamentInvites } from "../../database/models/i-tournament-invites";
+import { ITournament } from "../../database/models/i-tournaments";
+import { CrudRepository } from "../../database/repositories/crud-repository";
 
 export const fetchUserById = async (
   id: string,
   connection: Knex | Knex.Transaction
-): Promise<IProfile | undefined> => {
-  let data: IProfile | undefined = undefined;
+): Promise<IPrivateProfile | undefined> => {
+  let data: IPrivateProfile | undefined = undefined;
   try {
-    const repository = new ProfilesRepository(connection);
-    data = await repository.getProfileById(id);
+    const repository = new CrudRepository<ITournamentInvites>(connection, TABLE_NAMES.PRIVATE_PROFILE)
+    data = await repository.findById(id);
+  } catch (ex) {
+    return undefined;
+  }
+  return data;
+};
+
+export const fetchTournamentById = async (
+  id: string,
+  connection: Knex | Knex.Transaction
+): Promise<ITournament | undefined> => {
+  let data: ITournament | undefined = undefined;
+  try {
+    const repository = new CrudRepository<ITournament>(connection, TABLE_NAMES.TOURNAMENTS)
+    data = await repository.findById(id);
   } catch (ex) {
     return undefined;
   }
@@ -24,3 +41,7 @@ export const randomString = (length: number): string => {
     result += chars[Math.floor(Math.random() * chars.length)];
   return result;
 };
+
+export function getErrorObject(msg = "Something went wrong"): { errors: string[] } {
+  return { errors: [msg] }
+}
