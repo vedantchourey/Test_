@@ -142,17 +142,19 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
             .where("status", "PENDING")
 
         if (pending_inivitation.length) return getErrorObject("Users have invitation pending");
+        let secret = randomString(15);
         const data = {
             team_id: team_info.id,
             user_id: player_data.id,
             type: "INVITE",
-            secret: randomString(15)
+            secret
         }
         const notification: INotifications = {
-            type: "TEAM INVITATION",
+            type: "TEAM_INVITATION",
             user_id: player_data.id,
             is_action_required: true,
             status: STATUS.PENDING,
+            data: { secret }
         }
         await Promise.all([
             team_invitation.create(data),
