@@ -1,5 +1,5 @@
 import { Knex } from "knex";
-import { TABLE_NAMES } from "../../../models/constants";
+import { STATUS, TABLE_NAMES } from "../../../models/constants";
 import { IError, ISuccess } from "../../utils/common/Interfaces";
 import { getErrorObject, randomString } from "../common/helper/utils.service";
 import { IGame } from "../database/models/i-game";
@@ -13,6 +13,8 @@ import { validateLeaveTeam, validateSendInvite, validateTeamCreation, validateTe
 import _ from "lodash";
 import { IUser } from "../database/models/i-user";
 import { ITournament } from "../database/models/i-tournaments";
+import { addNotifications } from "../notifications-service";
+import { INotifications } from "../database/models/i-notifications";
 const fields = ["id", "game_id", "name", "platform_id"]
 
 export const fetchTeams = async (connection: Knex.Transaction, user: any, query: any): Promise<ISuccess | IError> => {
@@ -146,7 +148,17 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
             type: "INVITE",
             secret: randomString(15)
         }
-        await team_invitation.create(data)
+        const notification: INotifications = {
+            type: "TEAM INVITATION",
+            user_id: player_data.id,
+            is_action_required: true,
+            status: STATUS.PENDING,
+        }
+        await Promise.all([
+            team_invitation.create(data),
+            addNotifications(notification, connection)
+        ])
+
         return { message: "Invite send successfully" } as any
 
     } catch (ex) {
