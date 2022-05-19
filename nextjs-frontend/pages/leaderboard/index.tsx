@@ -80,9 +80,8 @@ const Leaderboard = (): JSX.Element => {
       <Fragment>
         <Container maxWidth="xl">
           <Heading divider heading={"LEADERBOARD"} />
-          <Grid container>
 
-          <div>
+{/*          <div>
             <Slider {...settings}>
               <div>
                 <h3><img src="/images/game1.png"/></h3>
@@ -110,92 +109,59 @@ const Leaderboard = (): JSX.Element => {
               </div>
             </Slider>
           </div>
-
+*/}
           {isDesktop && 
-            <Grid item xs={12} lg={12} className={styles.containerDesktop}>
-              <Box className={styles.container}>
-                <img src="/icons/Male.png" className={styles.img1} />
-                <Box style={{ marginLeft: '45px' }}>
-                  <Box className={styles.box1}>
-                    <Typography className={styles.text1}>Leo Bergson</Typography>
-                    <Box className={styles.box2}>
-                      <Typography className={styles.text2}>ELO RATING</Typography>
-                      <Button variant="text" className={styles.button1}>56,267.000</Button>
-                    </Box>
-                    <Box className={styles.box3}>
-                      <Box className={styles.box4}>
-                        <img src="/icons/Brawl_Icon 1.png" className={styles.img2}/>
+          <Grid container spacing={{ lg: 2 }} columns={{ xs: 16, sm: 8, md: 12, lg: 12 }} className={styles.mainContainer}>
+            {Array.from(Array(3)).map((_, index) => (
+              <Grid item xs={12} lg={4} key={index} >
+                <Box className={styles.container}>
+                  <img src="/icons/Male.png" className={styles.img1} />
+                  <Box style={{ marginLeft: '45px' }}>
+                    <Box className={styles.box1}>
+                      <Typography className={styles.text1}>Leo Bergson</Typography>
+                      <Box className={styles.box2}>
+                        <Typography className={styles.text2}>ELO RATING</Typography>
+                        <Button variant="text" className={styles.button1}>56,267.000</Button>
                       </Box>
-                      <Typography className={styles.text3}>Legend Club</Typography>
+                      <Box className={styles.box3}>
+                        <Box className={styles.box4}>
+                          <img src="/icons/Brawl_Icon 1.png" className={styles.img2}/>
+                        </Box>
+                        <Typography className={styles.text3}>Legend Club</Typography>
+                      </Box>
                     </Box>
                   </Box>
                 </Box>
-              </Box>
-              <Box className={styles.container}>
-                <img src="/icons/Male.png" className={styles.img1} />
-                <Box style={{ marginLeft: '45px' }}>
-                  <Box className={styles.box1}>
-                    <Typography className={styles.text1}>Leo Bergson</Typography>
-                    <Box className={styles.box2}>
-                      <Typography className={styles.text2}>ELO RATING</Typography>
-                      <Button variant="text" className={styles.button1}>56,267.000</Button>
-                    </Box>
-                    <Box className={styles.box3}>
-                      <Box className={styles.box4}>
-                        <img src="/icons/Brawl_Icon 1.png" className={styles.img2}/>
-                      </Box>
-                      <Typography className={styles.text3}>Legend Club</Typography>
-                    </Box>
-                  </Box>
-                </Box>
-              </Box>
-              <Box className={styles.container}>
-                <img src="/icons/Male.png" className={styles.img1} />
-                <Box style={{ marginLeft: '45px' }}>
-                  <Box className={styles.box1}>
-                    <Typography className={styles.text1}>Leo Bergson</Typography>
-                    <Box className={styles.box2}>
-                      <Typography className={styles.text2}>ELO RATING</Typography>
-                      <Button variant="text" className={styles.button1}>56,267.000</Button>
-                    </Box>
-                    <Box className={styles.box3}>
-                      <Box className={styles.box4}>
-                        <img src="/icons/Brawl_Icon 1.png" className={styles.img2}/>
-                      </Box>
-                      <Typography className={styles.text3}>Legend Club</Typography>
-                    </Box>
-                  </Box>
-                </Box>
-              </Box>
-            </Grid> }
-            <TableContainer component={Paper} style={{ borderRadius: '0px', marginTop: '40px', marginBottom: '40px', height: '865px' }}>
-              <Table style={{ width: '100%' }} aria-label="simple table">
-                <TableHead>
-                  <TableRow 
-                  sx={{ '&:last-child td, &:last-child th': { border: 1, borderColor: 'rgba(255, 255, 255, 0.1)', color : '#6932F9' } }}>
-                    <TableCell style={{ width: '8%' }} align="center">Rank</TableCell>
-                    <TableCell style={{ width: '65%' }}>Username</TableCell>
-                    <TableCell style={{ width: '25%' }}>Elo Rating</TableCell>
+              </Grid>
+            ))}
+          </Grid>}
+          <div style={{ padding: '10px' }}>
+          <TableContainer component={Paper} className={styles.mainTable}>
+            <Table>
+              <TableHead>
+                <TableRow sx={{ 'th': { border: 1, borderColor: 'rgba(255, 255, 255, 0.1)', color : '#6932F9' } }}>
+                  <TableCell style={{ width: '8%' }} align="center">Rank</TableCell>
+                  <TableCell style={{ width: '65%' }}>Username</TableCell>
+                  <TableCell style={{ width: '25%' }}>Elo Rating</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody sx={{ '&:last-child td, &:last-child th': { border: 1, borderColor: 'rgba(255, 255, 255, 0.1)'} }}>
+                {rows.map((row) => (
+                  <TableRow key={row.name}>
+                    <TableCell align="center" component="th" scope="row">{row.rank}</TableCell>
+                    <TableCell>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <span>{row.img}</span>
+                        <span style={{ padding: '10px' }}>{row.name}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>{row.rating}</TableCell>
                   </TableRow>
-                </TableHead>
-                <TableBody
-                sx={{ '&:last-child td, &:last-child th': { border: 1, borderColor: 'rgba(255, 255, 255, 0.1)' } }}>
-                  {rows.map((row) => (
-                    <TableRow key={row.name}>
-                      <TableCell align="center" component="th" scope="row">{row.rank}</TableCell>
-                      <TableCell>
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                          <span>{row.img}</span>
-                          <span style={{ padding: '10px' }}>{row.name}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>{row.rating}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Grid>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          </div>
         </Container>
       </Fragment>
     </NoobPage>
