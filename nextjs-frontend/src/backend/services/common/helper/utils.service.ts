@@ -4,6 +4,7 @@ import { IPrivateProfile } from "../../database/models/i-private-profile";
 import { ITournamentInvites } from "../../database/models/i-tournament-invites";
 import { ITournament } from "../../database/models/i-tournaments";
 import { CrudRepository } from "../../database/repositories/crud-repository";
+import EloRank from 'elo-rank';
 
 export const fetchUserById = async (
   id: string,
@@ -44,4 +45,19 @@ export const randomString = (length: number): string => {
 
 export function getErrorObject(msg = "Something went wrong"): { errors: string[] } {
   return { errors: [msg] }
+}
+
+export function getEloRating(winnerRating: number, loserRating: number) {
+  let elo = new EloRank(32);
+  //Gets expected score for first parameter
+  let expectedScoreA = elo.getExpected(winnerRating, loserRating);
+  let expectedScoreB = elo.getExpected(loserRating, winnerRating);
+
+  //update score, 1 if won 0 if lost
+  winnerRating = elo.updateRating(expectedScoreA, 1, winnerRating);
+  loserRating = elo.updateRating(expectedScoreB, 0, loserRating);
+  return {
+    winnerRating,
+    loserRating
+  }
 }

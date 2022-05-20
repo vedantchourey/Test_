@@ -5,4 +5,5 @@ export interface ITeams {
   platform_id: string;
   game_id: string;
   is_active: boolean;
+  elo_rating:number;
 }
