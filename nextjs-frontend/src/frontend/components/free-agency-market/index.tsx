@@ -18,12 +18,12 @@ import {
   Grid
 } from "@mui/material";
 import FreeAgencyMarketCard from "../ui-components/free-agency-market";
-import Permissions from "./permissions";
+import Permissions from "./offerreceived";
 import styled from "@emotion/styled";
 import TeamMembers from "./members";
 import OfferTeamMembers from "./offersent";
 import WatchTeamMembers from "./watchlist";
-import OfferReceieve from "./permissions";
+import OfferReceieve from "./offerreceived";
 import MemberButton from "./members/member/index1";
 import { string } from "joi";
 
