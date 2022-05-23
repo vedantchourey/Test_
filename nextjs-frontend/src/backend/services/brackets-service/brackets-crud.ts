@@ -4,7 +4,7 @@ class BracketsCrud {
     this.knexConnection = knexConnection;
   }
   numberFields = ["id", "tournament_id", "number", "stage_id", "group_id", "round_id", "child_count", "parent_id",]
-  formatResult(data: any) {
+  formatResult(data: any): any {
     for (const key in data) {
       if (typeof data[key] === "object") {
         data[key] = this.formatResult(data[key])

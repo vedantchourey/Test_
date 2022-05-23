@@ -41,7 +41,7 @@ function mapToPrivateProfile(user: User, request: SignupRequest): IPrivateProfil
   };
 }
 
-function mapToWallet(user: User) {
+function mapToWallet(user: User): any {
   return {
     userId: user.id,
     balance: 0

@@ -1,5 +1,5 @@
 import { Knex } from "knex";
-import { TABLE_NAMES } from "../../../models/constants";
+import { STATUS, TABLE_NAMES } from "../../../models/constants";
 import { IError, ISuccess } from "../../utils/common/Interfaces";
 import { getErrorObject, randomString } from "../common/helper/utils.service";
 import { IGame } from "../database/models/i-game";
@@ -13,6 +13,8 @@ import { validateLeaveTeam, validateSendInvite, validateTeamCreation, validateTe
 import _ from "lodash";
 import { IUser } from "../database/models/i-user";
 import { ITournament } from "../database/models/i-tournaments";
+import { addNotifications } from "../notifications-service";
+import { INotifications } from "../database/models/i-notifications";
 const fields = ["id", "game_id", "name", "platform_id"]
 
 export const fetchTeams = async (connection: Knex.Transaction, user: any, query: any): Promise<ISuccess | IError> => {
@@ -140,13 +142,25 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
             .where("status", "PENDING")
 
         if (pending_inivitation.length) return getErrorObject("Users have invitation pending");
+        const secret = randomString(15);
         const data = {
             team_id: team_info.id,
             user_id: player_data.id,
             type: "INVITE",
-            secret: randomString(15)
+            secret
         }
-        await team_invitation.create(data)
+        const notification: INotifications = {
+            type: "TEAM_INVITATION",
+            user_id: player_data.id,
+            is_action_required: true,
+            status: STATUS.PENDING,
+            data: { secret }
+        }
+        await Promise.all([
+            team_invitation.create(data),
+            addNotifications(notification, connection)
+        ])
+
         return { message: "Invite send successfully" } as any
 
     } catch (ex) {
@@ -187,7 +201,7 @@ export const acceptInvite = async (secret: string, connection: Knex.Transaction)
     }
 
 }
-export const rejectInvite = async (secret: string, connection: Knex.Transaction, user: any): Promise<ISuccess | IError> => {
+export const rejectInvite = async (secret: string, connection: Knex.Transaction): Promise<ISuccess | IError> => {
     try {
         const team_invitation = new CrudRepository<ITeamInvitation>(connection, TABLE_NAMES.TEAM_INVITATION);
         const [invite] = await team_invitation.find({

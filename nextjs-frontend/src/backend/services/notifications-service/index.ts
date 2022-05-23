@@ -4,6 +4,7 @@ import { IError, ISuccess } from "../../utils/common/Interfaces";
 import { getErrorObject } from "../common/helper/utils.service";
 import { INotifications } from "../database/models/i-notifications";
 import { CrudRepository } from "../database/repositories/crud-repository";
+import { acceptInvite } from "../team-service";
 import { updateTournamentInvites } from "../tournament-service/tournament-service";
 import { INotificationRequest } from "./i-notification-request";
 import { validateNotificationResponse } from "./i-notification-validator";
@@ -47,10 +48,15 @@ export const submitNotifications = async (req: INotificationRequest, knexConnect
 }
 
 export const handleNotifiction = async (notification: INotifications, req: INotificationRequest, user: any, knexConnection: Knex): Promise<any> => {
-    const updated = await updateTournamentInvites({ status: req.response } as any, {
-        team_id: notification.data.team_id, tournament_id: notification.data.tournament_id, user_id: user.id,
-    }, knexConnection)
-
-    if (!updated) return getErrorObject("Tournament Invite not found")
-    return updated
+    if (notification.type === "TOURNAMENT_INVITE") {
+        const updated = await updateTournamentInvites({ status: req.response } as any, {
+            team_id: notification?.data?.team_id, tournament_id: notification?.data?.tournament_id, user_id: user.id,
+        }, knexConnection)
+        if (!updated) return getErrorObject("Tournament Invite not found")
+        return updated
+    }
+    if (notification.type === "TEAM_INVITATION") {
+        return await acceptInvite(notification?.data?.secret, knexConnection as Knex.Transaction)
+    }
+    return getErrorObject("Tournament Invite not found")
 }
