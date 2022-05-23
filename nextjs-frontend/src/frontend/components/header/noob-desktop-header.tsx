@@ -106,7 +106,7 @@ export default function NoobDesktopHeader(): JSX.Element {
             <Button variant="text" style={buttonStyle(['/leaderboards'])}>Leaderboards</Button>
             <Button variant="text" onClick={gotoAboutUsPage} style={buttonStyle(['/about-us'])}>About Us</Button>
             <Button variant="text" onClick={gotoSupportPage} style={buttonStyle(['/support'])}>Support</Button>
-            <Button variant="text" style={buttonStyle(['/faq'])}>FAQ</Button>
+            <Button variant="text" style={buttonStyle(['/faq'])} onClick={() : any => router.push("/match-hub")}>FAQ</Button>
           </div>
           <div className={styles.bottomMenuRightGroup}>
           </div>
