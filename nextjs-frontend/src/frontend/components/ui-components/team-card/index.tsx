@@ -5,7 +5,7 @@ import { ReactComponent as GameIcon } from "../../../../../public/icons/GameIcon
 import { ReactComponent as YouTubeIcon } from "../../../../../public/icons/YouTube_1.svg";
 import Image from "next/image";
 
-const CardDesktop: React.FC = () => {
+const CardDesktop: React.FC<TeamCardProp> = ({name ="-"}) => {
   return (
     <Grid container columnSpacing={2}>
       <Grid item md={3} lg={2}>
@@ -14,7 +14,7 @@ const CardDesktop: React.FC = () => {
       <Grid item md={6} lg={10} display={"flex"} flexDirection={"column"}>
         <Typography color={"white"} textAlign="left" component="h4">
           {" "}
-          Legend Club{" "}
+          {name}{" "}
         </Typography>
         <Box display={"flex"} marginTop="30px">
           <Box
@@ -43,7 +43,7 @@ const CardDesktop: React.FC = () => {
   );
 };
 
-const CardMobile: React.FC = () => {
+const CardMobile: React.FC<TeamCardProp> = ({name ="-"}) => {
   return (
     <Grid container>
       <Grid item xs={12} display={"flex"}>
@@ -53,7 +53,7 @@ const CardMobile: React.FC = () => {
         <Box marginLeft={2}>
           <Typography color={"white"} textAlign="left" component="h4">
             {" "}
-            Legend Club{" "}
+            {name}{" "}
           </Typography>
           <Box
             style={{
@@ -100,7 +100,11 @@ const CardMobile: React.FC = () => {
   );
 };
 
-const TeamCard: React.FC = ({ children }) => {
+interface TeamCardProp{
+  name?:string
+}
+
+const TeamCard: React.FC<TeamCardProp> = ({ children, name }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -115,7 +119,7 @@ const TeamCard: React.FC = ({ children }) => {
           backgroundSize: "cover",
         }}
       >
-        {!isMobile ? <CardDesktop /> : <CardMobile />}
+        {!isMobile ? <CardDesktop name={name} /> : <CardMobile name={name}/>}
       </Box>
 
       {children}

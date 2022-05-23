@@ -79,5 +79,6 @@ a:hover {
 @media screen and (min-width: 700px) {
   .slick-list {margin: 0 -5px!important;}
 .slick-slide>div {padding: 0 5px!important;}
+.slick-track{ margin-left: 0!important; }
 }
 

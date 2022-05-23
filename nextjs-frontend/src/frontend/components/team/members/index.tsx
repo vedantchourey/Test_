@@ -1,4 +1,12 @@
-import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormHelperText,
+  TextField,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import React from "react";
 import {
   Chart,
@@ -26,10 +34,12 @@ import { Line } from "react-chartjs-2";
 import moment from "moment";
 import Member, { MemberProp } from "./member";
 import Slider, { Settings } from "react-slick";
-
+import Modal from "@mui/material/Modal";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Image from "next/image";
+import axios from "axios";
+import { getAuthHeader } from "../../../utils/headers";
 
 export const options = {
   responsive: true,
@@ -93,39 +103,6 @@ export const data = {
   ],
 };
 
-const players: MemberProp[] = [
-  {
-    name: "Player",
-    image: "/images/teams/player.png",
-    type: "Bronze",
-    tags: ["Games", "Won", "Elo"],
-  },
-  {
-    name: "Player",
-    image: "/images/teams/player.png",
-    type: "Gold",
-    tags: ["Games", "Won", "Elo"],
-  },
-  {
-    name: "Player",
-    image: "/images/teams/player.png",
-    type: "Diamond",
-    tags: ["Games", "Won", "Elo"],
-  },
-  {
-    name: "Player",
-    image: "/images/teams/player.png",
-    type: "Ruby",
-    tags: ["Games", "Won", "Elo"],
-  },
-  {
-    name: "Player",
-    image: "/images/teams/player.png",
-    type: "Silver",
-    tags: ["Games", "Won", "Elo"],
-  },
-];
-
 const settings: Settings = {
   slidesToShow: 5,
   slidesToScroll: 1,
@@ -143,10 +120,70 @@ const settings: Settings = {
   ],
 };
 
-const TeamMembers: React.FC = () => {
+const style = {
+  position: "absolute" as const,
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+
+export interface Player{
+  balance:number;
+  firstName:string;
+  lastName:string;
+  user_id:string
+}
+
+interface TeamMembersProps {
+  teamId: string;
+  players:Player[]
+}
+
+const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [open, setOpen] = React.useState(false);
+  const [playerList, setPlayerList] = React.useState<MemberProp[]>([]);
+  const handleOpen = ():void => setOpen(true);
+  const handleClose = ():void => {
+    setOpen(false);
+    setEmail(undefined);
+    setError(undefined);
+  };
+  const [email, setEmail] = React.useState<string | undefined>(undefined);
+  const [error, setError] = React.useState<string | undefined>(undefined);
 
+  React.useEffect(()=>{
+    const newList = players.map((player)=>{
+      return {
+        image: "/images/teams/player.png",
+        type: "Silver",
+        tags: ["Games", "Won", "Elo"],
+        name: `${player.firstName} ${player.lastName}`
+      }
+    })
+    setPlayerList(newList);
+  },[players])
+  const invitePlayer = async ():Promise<void> => {
+    const payLoad = { email: email, team_id: teamId };
+    const headers = await getAuthHeader();
+    axios
+      .post("/api/teams/send-invite", payLoad, { headers: headers })
+      .then(() => {
+        handleClose();
+      })
+      .catch((err) => {
+        console.error(err);
+        if (err.response.status === 500 && err.response.data.errors) {
+          setError(err.response.data.errors[0]);
+        }
+      });
+  };
   return (
     <React.Fragment>
       <Box>
@@ -155,14 +192,19 @@ const TeamMembers: React.FC = () => {
         </Typography>
         <Box marginY={2}>
           <Slider {...settings}>
-            {players.map((player) => {
+            {playerList.map((player) => {
+              
               return <Member key={player.name} {...player} />;
             })}
             <Box>
               <Box
+                onClick={handleOpen}
                 border={"4px solid #6931F9"}
                 borderRadius={"10px"}
-                style={{ backgroundColor: "rgba(255, 255, 255, 0.09)" }}
+                style={{
+                  backgroundColor: "rgba(255, 255, 255, 0.09)",
+                  cursor: "pointer",
+                }}
                 minHeight={365}
                 display="flex"
                 alignContent={"center"}
@@ -198,6 +240,45 @@ const TeamMembers: React.FC = () => {
           <Line options={options} data={data} />
         </Box>
       ) : null}
+
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="h6"
+            color={"white"}
+            marginBottom={2}
+          >
+            Invite Player
+          </Typography>
+          <Box display="flex" justifyContent={"space-between"}>
+          <Box>
+          <TextField
+            variant="outlined"
+            placeholder="Enter Email"
+            value={email}
+            onChange={(e):void => {
+              setEmail(e.target.value);
+            }}
+            style={{ color: "white", marginTop: 2 }}
+          />
+          {error?<FormHelperText>{error}</FormHelperText>:null}
+          </Box>
+          <Box>
+          <Button style={{ marginLeft: "2px" }} onClick={invitePlayer}>
+            {" "}
+            Send{" "}
+          </Button>
+          </Box>
+          </Box>
+        </Box>
+      </Modal>
     </React.Fragment>
   );
 };

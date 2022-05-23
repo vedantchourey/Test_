@@ -19,7 +19,9 @@ import {
 import TeamCard from "../ui-components/team-card";
 import Permissions from "./permissions";
 import styled from "@emotion/styled";
-import TeamMembers from "./members";
+import TeamMembers, { Player } from "./members";
+import axios from "axios";
+import { getAuthHeader } from "../../utils/headers";
 
 export const NoobTab = styled(Tab)(() => ({
   textTransform: "capitalize",
@@ -41,12 +43,39 @@ const getActive = (url: string): number => {
   return tabs.findIndex((tab) => tab.url === url);
 };
 
+interface TeamType {
+  id: string;
+  name: string;
+  players: Player[];
+}
+
 const Team: React.FC = () => {
   const router = useRouter();
   const query: ParsedUrlQuery = router.query;
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [team, setTeam] = React.useState<TeamType | undefined>(undefined);
+
+  const fetchTeam = async (): Promise<void> => {
+    if (query.id) {
+      const headers = await getAuthHeader();
+      axios
+        .get("/api/teams", { params: { id: query.id }, headers: headers })
+        .then((res) => {
+          if (res.data.result && res.data.result.length > 0) {
+            setTeam(res.data.result[0]);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  };
+
+  React.useEffect(() => {
+    fetchTeam();
+  }, [query.id]);
 
   const renderComponent = (): JSX.Element => {
     let page;
@@ -63,7 +92,12 @@ const Team: React.FC = () => {
       case "permissions":
         return <Permissions />;
       case "members":
-        return <TeamMembers />;
+        return (
+          <TeamMembers
+            players={team?.players || []}
+            teamId={query.id as string}
+          />
+        );
 
       default:
         return <Noob404Page />;
@@ -90,12 +124,16 @@ const Team: React.FC = () => {
     if (!tab) {
       return;
     }
-    router.push("/team/view/[id]/[...slug]", `/team/view/${query.id}/${tab.url}`, { shallow: true });
+    router.push(
+      "/team/view/[id]/[...slug]",
+      `/team/view/${query.id}/${tab.url}`,
+      { shallow: true }
+    );
   };
 
-  const changeTabByValue = (tab:string):void=>{
+  const changeTabByValue = (tab: string): void => {
     router.push("/team/view/[...slug]", `/team/view/${tab}`, { shallow: true });
-  }
+  };
 
   const renderTabs = (): JSX.Element | JSX.Element[] => {
     if (isMobile) {
@@ -108,10 +146,18 @@ const Team: React.FC = () => {
         }
       }
       return (
-        <FormControl fullWidth >
-          <Select value={page} input={<OutlinedInput />} onChange={(e):void=>changeTabByValue(e.target.value)}>
+        <FormControl fullWidth>
+          <Select
+            value={page}
+            input={<OutlinedInput />}
+            onChange={(e): void => changeTabByValue(e.target.value)}
+          >
             {tabs.map((tab) => {
-              return <MenuItem key={tab.url} value={tab.url}>{tab.title}</MenuItem>;
+              return (
+                <MenuItem key={tab.url} value={tab.url}>
+                  {tab.title}
+                </MenuItem>
+              );
             })}
           </Select>
         </FormControl>
@@ -137,7 +183,7 @@ const Team: React.FC = () => {
         description: "Noob Storm team page",
       }}
     >
-      <TeamCard>
+      <TeamCard name={team?.name}>
         <Box display={"flex"} justifyContent="space-between">
           {renderTabs()}
           {!isMobile ? (
