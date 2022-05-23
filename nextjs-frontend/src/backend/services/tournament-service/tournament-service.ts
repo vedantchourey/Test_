@@ -141,12 +141,14 @@ export async function tournamentDetails(
         players = await part_repo.knexObj().
           join(TABLE_NAMES.PRIVATE_PROFILE, "private_profiles.id", "b_participant.user_id")
           .where({ tournament_id: bracketT.id, })
-          .select(["private_profiles.firstName", "private_profiles.lastName", "private_profiles.id"])
+          .select(["private_profiles.firstName", "private_profiles.lastName", "private_profiles.id", "private_profiles.elo_rating"])
           .whereNotNull("user_id");
         pricePool = Number(tournament?.bracketsMetadata?.playersLimit) * Number(tournament?.settings?.entryFeeAmount);
         currentPricePool = players.length ? players.length * Number(tournament?.settings?.entryFeeAmount) : 0;
       } else {
-        players = await part_repo.knexObj().select(["private_profiles.firstName", "private_profiles.lastName", "private_profiles.id", "teams.id as team_id", "teams.name as team_name"])
+        players = await part_repo.knexObj()
+          .select(["private_profiles.firstName", "private_profiles.lastName", "private_profiles.id", "private_profiles.elo_rating",
+            "teams.elo_rating as team_elo_rating", "teams.id as team_id", "teams.name as team_name"])
           .join(TABLE_NAMES.B_TOURNAMENT, "b_tournament.id", "b_participant.tournament_id")
           .join(TABLE_NAMES.TOURNAMENT_INIVTES, "tournament_invites.team_id", "b_participant.team_id")
           .join(TABLE_NAMES.TEAMS, "teams.id", "b_participant.team_id")
@@ -253,26 +255,26 @@ export const fetchMatchDetails = async (context: PerRequestContext): Promise<any
       opponent1: await opponent1,
       opponent2: await opponent2
     }
-  } 
-    opponent1
-      .join("b_tournament", "b_tournament.id", "b_participant.tournament_id")
-      .join("tournament_invites", "tournament_invites.tournament_id", "b_tournament.tournament_uuid")
-      .join("teams", "teams.id", "tournament_invites.team_id")
-      .join("private_profiles", "private_profiles.id", "tournament_invites.user_id")
-      .where({ "tournament_invites.is_checked_in": true })
-      .select(["teams.id as team_id", "teams.name as team_name", "teams.elo_rating as team_elo_rating"])
-    opponent2
-      .join("b_tournament", "b_tournament.id", "b_participant.tournament_id")
-      .join("tournament_invites", "tournament_invites.tournament_id", "b_tournament.tournament_uuid")
-      .join("teams", "teams.id", "tournament_invites.team_id")
-      .join("private_profiles", "private_profiles.id", "tournament_invites.user_id")
-      .where({ "tournament_invites.is_checked_in": true })
-      .select(["teams.id as team_id", "teams.name as team_name", "teams.elo_rating as team_elo_rating"])
-    return {
-      opponent1: { ...match?.opponent1, ...formatTeamsData(await opponent1)[0] },
-      opponent2: { ...match?.opponent2, ...formatTeamsData(await opponent2)[0] },
-    }
-  
+  }
+  opponent1
+    .join("b_tournament", "b_tournament.id", "b_participant.tournament_id")
+    .join("tournament_invites", "tournament_invites.tournament_id", "b_tournament.tournament_uuid")
+    .join("teams", "teams.id", "tournament_invites.team_id")
+    .join("private_profiles", "private_profiles.id", "tournament_invites.user_id")
+    .where({ "tournament_invites.is_checked_in": true })
+    .select(["teams.id as team_id", "teams.name as team_name", "teams.elo_rating as team_elo_rating"])
+  opponent2
+    .join("b_tournament", "b_tournament.id", "b_participant.tournament_id")
+    .join("tournament_invites", "tournament_invites.tournament_id", "b_tournament.tournament_uuid")
+    .join("teams", "teams.id", "tournament_invites.team_id")
+    .join("private_profiles", "private_profiles.id", "tournament_invites.user_id")
+    .where({ "tournament_invites.is_checked_in": true })
+    .select(["teams.id as team_id", "teams.name as team_name", "teams.elo_rating as team_elo_rating"])
+  return {
+    opponent1: { ...match?.opponent1, ...formatTeamsData(await opponent1)[0] },
+    opponent2: { ...match?.opponent2, ...formatTeamsData(await opponent2)[0] },
+  }
+
 }
 const formatTeamsData = (data: any): any => {
   const grouped = _.groupBy(data, "team_id") as any
