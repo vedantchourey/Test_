@@ -10,7 +10,7 @@ export const TABLE_NAMES = {
     TEAM_PLAYERS: "team_players",
     B_PARTICIPANT: "b_participant",
     B_TOURNAMENT: "b_tournament",
-    B_MATCH:"b_match",
+    B_MATCH: "b_match",
     USERS: "auth.users",
     WALLET: "wallet",
     NOTIFICATIONS: "notifications",
@@ -37,3 +37,6 @@ export const TOURNAMENT_TYPE_NUMBER: { [key: string]: number } = {
     "10v10": 10,
     "11v11": 10,
 }
+
+export const USER_FEILDS = ["private_profiles.id as user_id", "private_profiles.firstName", "private_profiles.lastName",
+    "private_profiles.elo_rating as player_elo_rating"]

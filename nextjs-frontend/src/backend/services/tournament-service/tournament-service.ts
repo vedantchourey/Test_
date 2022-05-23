@@ -21,7 +21,7 @@ import { ITournament } from "../database/models/i-tournaments";
 import BracketsCrud from "../brackets-service/brackets-crud";
 import { BTournament } from "../database/repositories/bracket-tournament";
 import { BracketsManager } from "brackets-manager";
-import { STATUS, TABLE_NAMES, TOURNAMENT_TYPE_NUMBER } from "../../../models/constants";
+import { STATUS, TABLE_NAMES, TOURNAMENT_TYPE_NUMBER, USER_FEILDS } from "../../../models/constants";
 import { CrudRepository } from "../database/repositories/crud-repository";
 import { IBParticipants } from "../database/models/i-b-participant";
 import { ITournamentInvites } from "../database/models/i-tournament-invites";
@@ -29,6 +29,10 @@ import _ from "lodash";
 import { getErrorObject } from "../common/helper/utils.service";
 import { debitBalance } from "../wallet-service/wallet-service";
 import { IError } from "../../utils/common/Interfaces";
+import { join } from "path/posix";
+import { IBMatch } from "../database/models/i-b-match";
+import { IPrivateProfile } from "../database/models/i-private-profile";
+import { ITeams } from "../database/models/i-teams";
 
 const getTournamentInviteObj = (knexConnection: Knex): CrudRepository<ITournamentInvites> => {
   return new CrudRepository<ITournamentInvites>(knexConnection, TABLE_NAMES.TOURNAMENT_INIVTES)
@@ -238,13 +242,9 @@ export const fetchMatchDetails = async (context: PerRequestContext): Promise<any
   const participantRepo = new CrudRepository<IBParticipants>(context.knexConnection as Knex, TABLE_NAMES.B_PARTICIPANT);
 
   const opponent1 = participantRepo.knexObj()
-    .select(["private_profiles.id as user_id", "private_profiles.firstName", "private_profiles.lastName",
-      "private_profiles.elo_rating as player_elo_rating"])
-    .where({ "b_participant.id": match?.opponent1.id })
+    .select(USER_FEILDS).where({ "b_participant.id": match?.opponent1.id })
   const opponent2 = participantRepo.knexObj()
-    .select(["private_profiles.id as user_id", "private_profiles.firstName", "private_profiles.lastName",
-      "private_profiles.elo_rating as player_elo_rating"])
-    .where({ "b_participant.id": match?.opponent2.id })
+    .select(USER_FEILDS).where({ "b_participant.id": match?.opponent2.id })
 
   if (tournament?.settings?.tournamentFormat === "1v1") {
     opponent1.join("private_profiles", "private_profiles.id", "b_participant.user_id")
@@ -275,6 +275,79 @@ export const fetchMatchDetails = async (context: PerRequestContext): Promise<any
     opponent2: { ...match?.opponent2, ...formatTeamsData(await opponent2)[0] },
   }
 
+}
+
+export const fetchUserMatchs = async (context: PerRequestContext): Promise<any | IError> => {
+  const { user } = context;
+
+  //fetching team tournaments entries
+  const inviteRepo = new CrudRepository<ITournamentInvites>(context.knexConnection as Knex, TABLE_NAMES.TOURNAMENT_INIVTES);
+  const team_tournaments = await inviteRepo.find({ user_id: user?.id, status: STATUS.ACCEPTED }, ["team_id"])
+  const team_ids = team_tournaments.map((x: any) => x.team_id)
+
+  //fetching all the participant id for single and team
+  const participantRepo = new CrudRepository<IBParticipants>(context.knexConnection as Knex, TABLE_NAMES.B_PARTICIPANT);
+  const tournaments = await participantRepo.knexObj().where("user_id", user?.id)
+    .orWhereIn("team_id", team_ids).select(["id", "tournament_id", "user_id", "team_id"])
+
+  //fetching matches
+  const matchRepo = new CrudRepository<IBMatch>(context.knexConnection as Knex, TABLE_NAMES.B_MATCH);
+  const matches = await matchRepo.knexObj()
+    .join("b_stage", "b_stage.id", "b_match.stage_id")
+    .join("b_tournament", "b_tournament.id", "b_stage.tournament_id")
+    .join(TABLE_NAMES.TOURNAMENTS, "tournamentsData.id", "b_tournament.tournament_uuid")
+    .whereRaw(`(opponent1->>'id') in (${tournaments.map((x: any) => `'${x.id}'`)}) 
+    or (opponent2->>'id') in (${tournaments.map((x: any) => `'${x.id}'`)}) `)
+    .select(["b_match.id as match_id", "tournamentsData.id as tournament_id",
+      "tournamentsData.name as tournament_name", "b_match.opponent1", "b_match.opponent2", "b_stage.type"])
+  const part_id: any[] = []
+  matches.forEach((x: any) => {
+    part_id.push(x.opponent1.id)
+    part_id.push(x.opponent2.id)
+  })
+  //fetch all participants of the match 
+  const part_list = await participantRepo.knexObj().whereIn("id", part_id).whereNotNull("user_id").orWhereNotNull("team_id")
+  const groupPartList = _.groupBy(part_list, "id")
+  const opponents: any[] = []
+  const opp_teams: any[] = []
+  part_list.forEach((part: any) => {
+    if (part.user_id) opponents.push(part.user_id);
+    if (part.team_id) opp_teams.push(part.team_id);
+  })
+  // fetching opponents details for single tournament
+  const userRepo = new CrudRepository<IPrivateProfile>(context.knexConnection as Knex, TABLE_NAMES.PRIVATE_PROFILE);
+  const opp_users = await userRepo.knexObj().whereIn("id", [...opponents, user?.id]).select(USER_FEILDS).select("id as user_id");
+
+  // fetching opponents details for teams tournament
+  const teamRepo = new CrudRepository<ITeams>(context.knexConnection as Knex, TABLE_NAMES.TEAMS);
+  const teams = await teamRepo.knexObj().whereIn("id", opp_teams).select(["id as team_id", "elo_rating", "name", "platform_id", "game_id"]);
+  const teams_grouped = _.groupBy(teams, 'team_id')
+  const opp_user_grouped = _.groupBy(opp_users, 'user_id');
+
+  // concatinating matchs and opponents/user details
+  const result = matches.map((match: any) => {
+    let { opponent1, opponent2 } = match;
+    if (opponent1.id && groupPartList[opponent1.id] && groupPartList[opponent1.id].length) {
+      const participant = groupPartList[opponent1.id][0];
+      if (participant.user_id)
+        opponent1 = { ...opponent1, ...opp_user_grouped[participant.user_id][0] };
+      if (participant.team_id)
+        opponent1 = { ...opponent1, ...teams_grouped[participant.team_id][0] };
+    }
+    if (opponent2.id && groupPartList[opponent2.id] && groupPartList[opponent2.id].length) {
+      const participant = groupPartList[opponent2.id][0];
+      if (participant.user_id)
+        opponent2 = { ...opponent2, ...opp_user_grouped[participant.user_id][0] };
+      if (participant.team_id)
+        opponent2 = { ...opponent2, ...teams_grouped[participant.team_id][0] };
+    }
+    return {
+      ...match,
+      opponent1,
+      opponent2,
+    }
+  })
+  return result
 }
 const formatTeamsData = (data: any): any => {
   const grouped = _.groupBy(data, "team_id") as any
