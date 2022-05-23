@@ -112,7 +112,7 @@ const FreeAgencyMarket: React.FC = (): JSX.Element => {
     router.push("/free-agency-market/view/[...slug]", `/free-agency-market/view/${tab}`, { shallow: true });
   }
 
-  const renderTabs = (): JSX.Element | JSX.Element[] => {
+  const renderTabs = (): JSX.Element => {
     
     let page;
     if (query.slug) {
