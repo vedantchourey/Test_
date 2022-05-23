@@ -5,17 +5,14 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
+  TableContainer, TableRow,
+  Typography
 } from "@mui/material";
-import { borderBottom } from "@mui/system";
 import React from "react";
 
 export const HeadCell = styled(TableCell)(() => ({
   borderTop: "1px solid #ffffff1a",
-  borderBottom:"none"
+  borderBottom: "none"
 }));
 
 export const NoobCell = styled(TableCell)(() => ({
@@ -31,7 +28,7 @@ const data: { rank: string; subtext: string; teams: string[]; nextfixture: strin
   {
     rank: "1",
     subtext: "th",
-    teams: ["/icons/Rectangle.svg", "Legend Club","/icons/Winner.svg"],
+    teams: ["/icons/Rectangle.svg", "Legend Club", "/icons/Winner.svg"],
     nextfixture: ["/icons/Rectangle.svg", "Legend Club"],
     points: "16",
     wins: "16",
@@ -145,7 +142,7 @@ const LeagueTableData: React.FC = () => {
                   <HeadCell>
                     <Typography align="left" color="#6932F9">Teams</Typography>
                   </HeadCell>
-                   <HeadCell> <Typography color="#6932F9">Next fixture</Typography>
+                  <HeadCell> <Typography color="#6932F9">Next fixture</Typography>
                   </HeadCell>
                   <HeadCell>
                     <Typography color="#6932F9">Points</Typography>
@@ -161,7 +158,7 @@ const LeagueTableData: React.FC = () => {
                     <NoobRow sx={{ display: { sm: "flex", xs: "flex", md: "table-row" }, flexDirection: { sm: "column", xs: "column" } }} key={item.rank}>
                       <NoobCell>
                         <Typography>{item.rank}<sup>{item.subtext}</sup></Typography>
-                        
+
                       </NoobCell>
                       <NoobCell>
                         <Box alignItems="center" display="center">

@@ -1,31 +1,27 @@
-import React from "react";
-import NoobPage from "../page/noob-page";
-import { useRouter } from "next/router";
-import { ParsedUrlQuery } from "querystring";
-import Noob404Page from "../../../../pages/404";
+import styled from "@emotion/styled";
 import {
-  Box,
-  FormControl,
+  Box, 
+  Button,
+  Grid, 
   MenuItem,
   OutlinedInput,
   Select,
   Tab,
-  Tabs,
-  Typography,
+  Tabs, 
   useMediaQuery,
-  useTheme,
-  Button,
-  Grid
+  useTheme
 } from "@mui/material";
+import { useRouter } from "next/router";
+import { ParsedUrlQuery } from "querystring";
+import React from "react";
+import Noob404Page from "../../../../pages/404";
+import NoobPage from "../page/noob-page";
 import FreeAgencyMarketCard from "../ui-components/free-agency-market";
-import Permissions from "./offerreceived";
-import styled from "@emotion/styled";
 import TeamMembers from "./members";
+import MemberButton from "./members/member/index1";
+import OfferReceieve from "./offerreceived";
 import OfferTeamMembers from "./offersent";
 import WatchTeamMembers from "./watchlist";
-import OfferReceieve from "./offerreceived";
-import MemberButton from "./members/member/index1";
-import { string } from "joi";
 
 export const NoobTab = styled(Tab)(() => ({
   textTransform: "capitalize",

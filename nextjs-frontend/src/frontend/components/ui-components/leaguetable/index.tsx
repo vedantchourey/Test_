@@ -1,5 +1,5 @@
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
-import { Box, Grid, Typography, useMediaQuery, useTheme, Button } from "@mui/material";
 
 
 const LeaderBoardCard: React.FC = ({ children }) => {

@@ -1,10 +1,7 @@
 import styled from "@emotion/styled";
 import {
-  Avatar,
   Box,
-  Button,
-  Divider,
-  Grid,
+  Button, Grid,
   Table,
   TableBody,
   TableCell,
@@ -12,12 +9,9 @@ import {
   TableRow,
   Typography,
   useMediaQuery,
-  useTheme,
+  useTheme
 } from "@mui/material";
 import React from "react";
-import CloseIcon from "@mui/icons-material/Close";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { ReactComponent as RectangleIcon } from "../../../../../public/icons/Rectangle.svg";
 
 
 export const NoobCell = styled(TableCell)(() => ({
@@ -43,7 +37,7 @@ export const NoobButton = styled(Button)(() => ({
   },
 }));
 
-const data: {username: string; teamname:string[]; date: string; }[] = [
+const data: { username: string; teamname: string[]; date: string; }[] = [
   {
     username: "Shaig Exp",
     teamname: ["/icons/Rectangle.svg", "Legend Club"],
@@ -76,68 +70,68 @@ const Permissions: React.FC = () => {
           <TableContainer>
             <Table>
               <TableBody>
-              {!isMobile ? (
-                <NoobRow>
-                  <NoobCell>
-                    <Box display="flex" alignItems={"center"}>
-                      <Typography marginRight={12}>Username</Typography>
-                      <Typography>Team Name</Typography>
-                    </Box>
-                  </NoobCell>
-                  <NoobCell>
-                  <Box display="flex" alignItems={"center"}>
-                    <Typography>Date</Typography>
-                  </Box>
-                  </NoobCell>
-                  <NoobCell>
-                    <Typography></Typography>
-                  </NoobCell>
-                </NoobRow>
-              ) : null}
+                {!isMobile ? (
+                  <NoobRow>
+                    <NoobCell>
+                      <Box display="flex" alignItems={"center"}>
+                        <Typography marginRight={12}>Username</Typography>
+                        <Typography>Team Name</Typography>
+                      </Box>
+                    </NoobCell>
+                    <NoobCell>
+                      <Box display="flex" alignItems={"center"}>
+                        <Typography>Date</Typography>
+                      </Box>
+                    </NoobCell>
+                    <NoobCell>
+                      <Typography></Typography>
+                    </NoobCell>
+                  </NoobRow>
+                ) : null}
                 {data.map((item) => {
                   return (
-                    <NoobRow sx={{display:{sm:"flex",xs:"flex",md:"table-row"},flexDirection:{sm:"column",xs:"column"}}} key={item.username}>
+                    <NoobRow sx={{ display: { sm: "flex", xs: "flex", md: "table-row" }, flexDirection: { sm: "column", xs: "column" } }} key={item.username}>
                       <NoobCell>
                         <Box display="flex" alignItems={"center"}>
                           <Typography marginRight={12}>{item.username}</Typography>
-                          <img src={item.teamname[0]} width={"65px"} height={"65px"}/>
+                          <img src={item.teamname[0]} width={"65px"} height={"65px"} />
                           <Typography marginLeft={2}>{item.teamname[1]}</Typography>
                         </Box>
                       </NoobCell>
                       <NoobCell>
-                      <Box display="flex" alignItems={"center"}>
-                        <Typography>{item.date}</Typography>
-                      </Box>
+                        <Box display="flex" alignItems={"center"}>
+                          <Typography>{item.date}</Typography>
+                        </Box>
                       </NoobCell>
-                      {isMobile ? ( 
-                          <>
-                            <NoobCell>
-                              <NoobButton
-                                style={{ backgroundColor: "#F09633" }}
-                                variant="contained" size={"small"} fullWidth={true}
-                              >
-                              Accept Offer
-                              </NoobButton>
-                            </NoobCell>
-                            <NoobCell>
-                              <NoobButton
-                                style={{ backgroundColor: "#6932F9" }}
-                                variant="contained" size={"small"} fullWidth={true}
-                              >
-                              Decline Offer
-                              </NoobButton>
-                            </NoobCell>
-                          </>
-                        ): 
-                        ( 
+                      {isMobile ? (
+                        <>
                           <NoobCell>
-                          <NoobButton
-                            style={{ backgroundColor: "#F09633" }}
-                            variant="contained" size={"small"}
-                          >
-                          View offer details
-                          </NoobButton>
-                        </NoobCell>
+                            <NoobButton
+                              style={{ backgroundColor: "#F09633" }}
+                              variant="contained" size={"small"} fullWidth={true}
+                            >
+                              Accept Offer
+                            </NoobButton>
+                          </NoobCell>
+                          <NoobCell>
+                            <NoobButton
+                              style={{ backgroundColor: "#6932F9" }}
+                              variant="contained" size={"small"} fullWidth={true}
+                            >
+                              Decline Offer
+                            </NoobButton>
+                          </NoobCell>
+                        </>
+                      ) :
+                        (
+                          <NoobCell>
+                            <NoobButton
+                              style={{ backgroundColor: "#F09633" }}
+                              variant="contained" size={"small"}
+                            >
+                              View offer details
+                            </NoobButton>
+                          </NoobCell>
                         )
                       }
                     </NoobRow>

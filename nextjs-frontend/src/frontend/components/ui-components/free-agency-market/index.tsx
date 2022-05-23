@@ -1,9 +1,8 @@
+import styled from "@emotion/styled";
+import { Box, Button, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
-import { Box, Grid, Typography, useMediaQuery, useTheme, Button } from "@mui/material";
 import { ReactComponent as UnplashIcon } from "../../../../../public/icons/Unplashicon.svg";
 import { ReactComponent as UnplashIconMobile } from "../../../../../public/icons/Unplashicon_mobile.svg";
-import Image from "next/image";
-import styled from "@emotion/styled";
 
 export const NoobButton = styled(Button)(() => ({
   color: "white",

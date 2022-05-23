@@ -1,16 +1,15 @@
-import React from "react";
-import NoobPage from "../page/noob-page";
-import { useRouter } from "next/router";
-import { ParsedUrlQuery } from "querystring";
 import {
   Box,
-  useTheme,
-  Typography,
+  useTheme
 } from "@mui/material";
-import LeaderBoardCard from "../ui-components/leaguetable";
-import LeagueTableData from "./league_table";
-import Heading from "../ui-components/typography/heading";
+import { useRouter } from "next/router";
+import { ParsedUrlQuery } from "querystring";
+import React from "react";
 import commonStyles from '../../styles/common.module.css';
+import NoobPage from "../page/noob-page";
+import LeaderBoardCard from "../ui-components/leaguetable";
+import Heading from "../ui-components/typography/heading";
+import LeagueTableData from "./league_table";
 
 
 const LeaderBoard: React.FC = () => {

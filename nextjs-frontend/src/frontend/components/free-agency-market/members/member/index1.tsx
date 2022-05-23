@@ -1,6 +1,5 @@
-import { Button, useTheme, useMediaQuery, Box, Select, MenuItem, } from "@mui/material";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import styled from "@emotion/styled";
+import { Box, Button, MenuItem, Select, useMediaQuery, useTheme } from "@mui/material";
 
 export const NoobButton = styled(Button)(() => ({
   color: "white",

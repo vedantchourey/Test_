@@ -1,16 +1,16 @@
-import { Box, Typography, useMediaQuery, useTheme, Button } from "@mui/material";
-import React from "react";
+import styled from "@emotion/styled";
+import { Box, Button, Typography, useMediaQuery, useTheme } from "@mui/material";
 import {
-  Chart,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  TimeScale,
+  CategoryScale, Chart, Legend, LinearScale, LineElement, PointElement, TimeScale, Title,
+  Tooltip
 } from "chart.js";
+import moment from "moment";
+import Image from "next/image";
+import React from "react";
+import Slider, { Settings } from "react-slick";
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
+import Member, { MemberProp } from "./member";
 Chart.register(
   CategoryScale,
   LinearScale,
@@ -22,15 +22,7 @@ Chart.register(
   TimeScale
 );
 
-import { Line } from "react-chartjs-2";
-import moment from "moment";
-import Member, { MemberProp } from "./member";
-import Slider, { Settings } from "react-slick";
 
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Image from "next/image";
-import styled from "@emotion/styled";
 
 export const NoobButton = styled(Button)(() => ({
   color: "white",

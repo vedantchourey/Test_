@@ -1,16 +1,16 @@
-import { Box, Typography, useMediaQuery, useTheme, Button } from "@mui/material";
-import React from "react";
+import styled from "@emotion/styled";
+import { Box, Button, Typography, useMediaQuery, useTheme } from "@mui/material";
 import {
-  Chart,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  TimeScale,
+  CategoryScale, Chart, Legend, LinearScale, LineElement, PointElement, TimeScale, Title,
+  Tooltip
 } from "chart.js";
+import moment from "moment";
+import Image from "next/image";
+import React from "react";
+import Slider, { Settings } from "react-slick";
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
+import Member, { MemberProp } from "./offersentmember";
 Chart.register(
   CategoryScale,
   LinearScale,
@@ -21,16 +21,6 @@ Chart.register(
   Legend,
   TimeScale
 );
-
-import { Line } from "react-chartjs-2";
-import moment from "moment";
-import Member, { MemberProp } from "./offersentmember";
-import Slider, { Settings } from "react-slick";
-
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Image from "next/image";
-import styled from "@emotion/styled";
 
 export const NoobButton = styled(Button)(() => ({
   color: "white",
@@ -202,16 +192,16 @@ const OfferTeamMembers: React.FC = () => {
           </Slider>
         </Box>
       </Box>
-      {isMobile ? ( 
-       <Box textAlign='center' mt={6} mb={12}>
-        <NoobButton variant="contained" style={{backgroundColor:'#6932F9'}} fullWidth={true}>Cancel Offer</NoobButton>
-      </Box>
+      {isMobile ? (
+        <Box textAlign='center' mt={6} mb={12}>
+          <NoobButton variant="contained" style={{ backgroundColor: '#6932F9' }} fullWidth={true}>Cancel Offer</NoobButton>
+        </Box>
       ) : (
-      <Box textAlign='center' mt={6} mb={12}>
-        <NoobButton variant="contained" style={{backgroundColor:'#6932F9',margin: "0px 10px"}}>Cancel Offer</NoobButton>
-      </Box>
+        <Box textAlign='center' mt={6} mb={12}>
+          <NoobButton variant="contained" style={{ backgroundColor: '#6932F9', margin: "0px 10px" }}>Cancel Offer</NoobButton>
+        </Box>
       )
-    }
+      }
     </React.Fragment>
   );
 };
