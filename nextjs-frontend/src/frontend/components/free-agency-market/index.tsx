@@ -113,47 +113,30 @@ const FreeAgencyMarket: React.FC = (): JSX.Element => {
   }
 
   const renderTabs = (): JSX.Element | JSX.Element[] => {
-    if (isMobile) {
-      let page;
-      if (query.slug) {
-        if (Array.isArray(query.slug)) {
-          page = (query.slug || []).join("/");
-        } else {
-          page = query.slug;
-        }
+    
+    let page;
+    if (query.slug) {
+      if (Array.isArray(query.slug)) {
+        page = (query.slug || []).join("/");
+      } else {
+        page = query.slug;
       }
+    }
+    
+    if (isMobile) {
       return (
-          <Select value={page} input={<OutlinedInput />} onChange={(e) => changeTabByValue(e.target.value)}
-          fullWidth  sx={{ m: 1 }}>
-            {tabs.map((tab) => {
-              return <MenuItem key={tab.url} value={tab.url}>{tab.title}</MenuItem>;
-            })}
-          </Select>
+        <Select value={page} input={<OutlinedInput />} onChange={(e) => changeTabByValue(e.target.value)}
+          fullWidth sx={{ m: 1 }}>
+          {tabs.map((tab) => {
+            return <MenuItem key={tab.url} value={tab.url}>{tab.title}</MenuItem>;
+          })}
+        </Select>
       );
     }
-
-    const return_controls = (): JSX.Element | JSX.Element[] => {
-      if (getActiveTab() === 0 || query.slug === "members") {
-        return (
-          <>
-            <Grid>
-              <Tabs
-                value={getActiveTab()}
-                onChange={(e, value): void => changeTab(value)}
-              >
-                {tabs.map(({ title }) => {
-                  return <NoobTab label={title} key={title} />;
-                })}
-              </Tabs>
-            </Grid>
-            <Grid><MemberButton /></Grid>
-          </>
-        )
-
-      }
-      else {
-        return (
-          <>
+    else if (getActiveTab() === 0 || query.slug === "members") {
+      return (
+        <>
+          <Grid>
             <Tabs
               value={getActiveTab()}
               onChange={(e, value): void => changeTab(value)}
@@ -162,12 +145,26 @@ const FreeAgencyMarket: React.FC = (): JSX.Element => {
                 return <NoobTab label={title} key={title} />;
               })}
             </Tabs>
-          </>
-        )
-      }
-    }
+          </Grid>
+          <Grid><MemberButton /></Grid>
+        </>
+      )
 
-    return return_controls()
+    }
+    else {
+      return (
+        <>
+          <Tabs
+            value={getActiveTab()}
+            onChange={(e, value): void => changeTab(value)}
+          >
+            {tabs.map(({ title }) => {
+              return <NoobTab label={title} key={title} />;
+            })}
+          </Tabs>
+        </>
+      )
+    }
   };
 
   return (

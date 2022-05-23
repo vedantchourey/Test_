@@ -1,18 +1,16 @@
 import {
   Box
 } from "@mui/material";
-import { useRouter } from "next/router";
 import React from "react";
 import commonStyles from '../../styles/common.module.css';
 import NoobPage from "../page/noob-page";
-import LeaderBoardCard from "../ui-components/leaguetable";
+import LeaderBoardCard from "../ui-components/leaderboard";
 import Heading from "../ui-components/typography/heading";
 import LeagueTableData from "./league_table";
 
 
 const LeaderBoard: React.FC = () => {
-  const router = useRouter();
-  
+
   return (
     <NoobPage
       title="League Table"
