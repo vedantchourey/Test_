@@ -34,7 +34,8 @@ export function validateMatchResult(body: any): any {
             score: Joi.number().required(),
             result: Joi.string().required()
 .valid("win", "lose"),
-        })
+        }),
+        screenshot: Joi.string()
     });
     const errors = model.validate(body, { abortEarly: false, allowUnknown: true, });
     if (errors) return errors.error?.details.map((x) => x.message);

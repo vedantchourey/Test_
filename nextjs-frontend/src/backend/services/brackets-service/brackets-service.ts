@@ -273,7 +273,10 @@ export const submitMatchResult = async (req: IMatchResultRequest, knexConnection
         result: req.opponent2.result as any
       }
     });
-    await updateELORating(match, req, knexConnection);
+    await Promise.all([
+      updateELORating(match, req, knexConnection),
+      repo.update({ screenshot: req.screenshot }, { id: Number(match.id) })
+    ])
     return match
   } catch (ex) {
     return getErrorObject("Something went wrong")
