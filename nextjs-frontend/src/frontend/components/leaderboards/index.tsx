@@ -1,9 +1,7 @@
 import {
-  Box,
-  useTheme
+  Box
 } from "@mui/material";
 import { useRouter } from "next/router";
-import { ParsedUrlQuery } from "querystring";
 import React from "react";
 import commonStyles from '../../styles/common.module.css';
 import NoobPage from "../page/noob-page";
@@ -14,10 +12,7 @@ import LeagueTableData from "./league_table";
 
 const LeaderBoard: React.FC = () => {
   const router = useRouter();
-  const query: ParsedUrlQuery = router.query;
-
-  const theme = useTheme();
-
+  
   return (
     <NoobPage
       title="League Table"

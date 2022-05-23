@@ -1,29 +1,23 @@
 import {
-    Alert,
+  Alert,
   Box,
   Button,
   FormControl,
   FormHelperText,
-  Grid,
-  Input,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Typography,
+  Grid, OutlinedInput,
+  Typography
 } from "@mui/material";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import FormLabel from "../../ui-components/formlabel";
-import * as yup from "yup";
-import { Formik, useFormik } from "formik";
-
-import React from "react";
-import GameDropDown from "../../drop-downs/game-drop-down";
-import NoobPage from "../../page/noob-page";
 import axios from "axios";
-import PlatformDropDown from "../../drop-downs/platform-drop-down";
-import { getAuthHeader } from "../../../utils/headers";
-import { authSession } from "../../../service-clients/auth-service-client";
+import { useFormik } from "formik";
 import { useRouter } from "next/router";
+import React from "react";
+import * as yup from "yup";
+import { getAuthHeader } from "../../../utils/headers";
+import GameDropDown from "../../drop-downs/game-drop-down";
+import PlatformDropDown from "../../drop-downs/platform-drop-down";
+import NoobPage from "../../page/noob-page";
+import FormLabel from "../../ui-components/formlabel";
+
 
 export interface GameData {
   game: string;
@@ -37,8 +31,8 @@ interface GameProps {
 }
 
 const CreateTeam: React.FC<GameProps> = () => {
-const router = useRouter();
-const [error,setError] = React.useState(undefined);
+  const router = useRouter();
+  const [error, setError] = React.useState(undefined);
 
   const validationSchema = yup.object({
     name: yup.string().required("Name is required"),
@@ -53,29 +47,31 @@ const [error,setError] = React.useState(undefined);
       platform: "",
     },
     validationSchema: validationSchema,
-    onSubmit: async(values) => {
-        console.log(values);
-        const data={
-            name: values.name,
-            game_id: values.game,
-            platform_id: values.platform
-        }
-        const headers = await getAuthHeader();
+    onSubmit: async (values) => {
+      console.log(values);
+      const data = {
+        name: values.name,
+        game_id: values.game,
+        platform_id: values.platform
+      }
+      const headers = await getAuthHeader();
 
-        axios.post("/api/teams/create",data,{headers:{
-            ...headers
-        }}).then((res)=>{
-            router.push("/team/view/[...slug]",`/team/view/${res.data.id}`,{shallow:true});
-            setError(undefined);
-        }).catch(err=>{
-            console.error(err);
-            if(err.response.data.errors && err.response.data.errors[0]){
-                setError(err.response.data.errors[0])
-            }else{
-                setError(undefined);
-            }
-            
-        })
+      axios.post("/api/teams/create", data, {
+        headers: {
+          ...headers
+        }
+      }).then((res) => {
+        router.push("/team/view/[...slug]", `/team/view/${res.data.id}`, { shallow: true });
+        setError(undefined);
+      }).catch(err => {
+        console.error(err);
+        if (err.response.data.errors && err.response.data.errors[0]) {
+          setError(err.response.data.errors[0])
+        } else {
+          setError(undefined);
+        }
+
+      })
     },
   });
   return (
@@ -110,15 +106,15 @@ const [error,setError] = React.useState(undefined);
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <Box sx={{ marginX: { xs: "10px", sm: "10px", md: "20%" }}} padding={3}>
-            {
-                error?(
-                    <Alert severity="error">{error}</Alert>
-                ):null
-            }
+            <Box sx={{ marginX: { xs: "10px", sm: "10px", md: "20%" } }} padding={3}>
+              {
+                error ? (
+                  <Alert severity="error">{error}</Alert>
+                ) : null
+              }
               <FormControl fullWidth variant="standard">
                 <FormLabel label="Team Name"></FormLabel>
-                <OutlinedInput id="name" name="name" onChange={formik.handleChange} error={formik.touched.name && Boolean(formik.errors.name)} value={formik.values.name}  />
+                <OutlinedInput id="name" name="name" onChange={formik.handleChange} error={formik.touched.name && Boolean(formik.errors.name)} value={formik.values.name} />
                 {formik.touched.name && Boolean(formik.errors.name) ? (
                   <FormHelperText> {formik.errors.name} </FormHelperText>
                 ) : null}
@@ -172,7 +168,7 @@ const [error,setError] = React.useState(undefined);
                 ) : null}
               </FormControl>
               <Box display={"flex"} justifyContent="center" width={"100%"}>
-    
+
                 <Button onClick={formik.submitForm}> Create Team</Button>
               </Box>
             </Box>

@@ -26,7 +26,7 @@ const CardDesktop: React.FC = () => {
         </Typography>
         <Typography mt={2} color={"white"} textAlign="left" variant="caption">
           <Box>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem</Box>
-          <Box> Ipsum has been the industry's standard dummy </Box>
+          <Box> Ipsum has been the industry&apos;s standard dummy </Box>
           <Box> text ever since the 1500s</Box>
         </Typography>
        
@@ -49,7 +49,7 @@ const CardMobile: React.FC = () => {
           </Typography><br/>
           <Typography color={"white"} textAlign="left" variant="caption">
           Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem<br/> 
-           Ipsum has been the industry's standard dummy <br/>
+           Ipsum has been the industry&apos;s standard dummy <br/>
            text ever since the 1500s
           </Typography>
         </Box>

@@ -1,9 +1,4 @@
-import React from "react";
-import NoobPage from "../page/noob-page";
-import { useRouter } from "next/router";
-import { ParsedUrlQuery } from "querystring";
-import Noob404Page from "../../../../pages/404";
-import MatchHistory from "./match-history";
+import styled from "@emotion/styled";
 import {
   Box,
   FormControl,
@@ -14,12 +9,17 @@ import {
   Tabs,
   Typography,
   useMediaQuery,
-  useTheme,
+  useTheme
 } from "@mui/material";
+import { useRouter } from "next/router";
+import { ParsedUrlQuery } from "querystring";
+import React from "react";
+import Noob404Page from "../../../../pages/404";
+import NoobPage from "../page/noob-page";
 import TeamCard from "../ui-components/team-card";
-import Permissions from "./permissions";
-import styled from "@emotion/styled";
+import MatchHistory from "./match-history";
 import TeamMembers from "./members";
+import Permissions from "./permissions";
 
 export const NoobTab = styled(Tab)(() => ({
   textTransform: "capitalize",
@@ -41,7 +41,7 @@ const getActive = (url: string): number => {
   return tabs.findIndex((tab) => tab.url === url);
 };
 
-const Team: React.FC = () => {
+const Team: React.FC = (): JSX.Element => {
   const router = useRouter();
   const query: ParsedUrlQuery = router.query;
 

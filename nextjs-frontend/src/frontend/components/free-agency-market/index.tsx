@@ -1,13 +1,13 @@
 import styled from "@emotion/styled";
 import {
-  Box, 
+  Box,
   Button,
-  Grid, 
+  Grid,
   MenuItem,
   OutlinedInput,
   Select,
   Tab,
-  Tabs, 
+  Tabs,
   useMediaQuery,
   useTheme
 } from "@mui/material";
@@ -52,7 +52,7 @@ const getActive = (url: string): number => {
   return tabs.findIndex((tab) => tab.url === url);
 };
 
-const FreeAgencyMarket: React.FC = () => {
+const FreeAgencyMarket: React.FC = (): JSX.Element => {
   const router = useRouter();
   const query: ParsedUrlQuery = router.query;
 
@@ -126,24 +126,14 @@ const FreeAgencyMarket: React.FC = () => {
           <Select value={page} input={<OutlinedInput />} onChange={(e) => changeTabByValue(e.target.value)}
           fullWidth  sx={{ m: 1 }}>
             {tabs.map((tab) => {
-              console.log(tab.url)
               return <MenuItem key={tab.url} value={tab.url}>{tab.title}</MenuItem>;
             })}
           </Select>
       );
     }
 
-    const is_view_all_tab = (): Boolean => {
-      if (getActiveTab() == 0 || query.slug == "members") {
-        return true;
-      }
-      else
-        return false;
-
-    }
-
     const return_controls = (): JSX.Element | JSX.Element[] => {
-      if (getActiveTab() == 0 || query.slug == "members") {
+      if (getActiveTab() === 0 || query.slug === "members") {
         return (
           <>
             <Grid>
@@ -191,7 +181,7 @@ const FreeAgencyMarket: React.FC = () => {
         <Box display={"flex"} justifyContent="space-between">
           {renderTabs()}
         </Box>
-        {isMobile && (getActiveTab() == 0 || query.slug == "members") ? (
+        {isMobile && (getActiveTab() === 0 || query.slug === "members") ? (
           <MemberButton />
         ) :
           null
