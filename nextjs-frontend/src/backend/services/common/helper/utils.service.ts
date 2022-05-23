@@ -47,11 +47,14 @@ export function getErrorObject(msg = "Something went wrong"): { errors: string[]
   return { errors: [msg] }
 }
 
-export function getEloRating(winnerRating: number, loserRating: number) {
-  let elo = new EloRank(32);
+export function getEloRating(winnerRating: number, loserRating: number): {
+  winnerRating: number,
+  loserRating: number,
+} {
+  const elo = new EloRank(32);
   //Gets expected score for first parameter
-  let expectedScoreA = elo.getExpected(winnerRating, loserRating);
-  let expectedScoreB = elo.getExpected(loserRating, winnerRating);
+  const expectedScoreA = elo.getExpected(winnerRating, loserRating);
+  const expectedScoreB = elo.getExpected(loserRating, winnerRating);
 
   //update score, 1 if won 0 if lost
   winnerRating = elo.updateRating(expectedScoreA, 1, winnerRating);

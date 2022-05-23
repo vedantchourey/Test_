@@ -6,17 +6,8 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import moment from "moment";
 import { walletDetaislSelector } from "../../../redux-store/wallet/wallet-selector";
 import { useAppSelector } from "../../../redux-store/redux-store";
-
-function createData(
-  action: string,
-  amount: string,
-  date: string
-): { action: string; amount: string; date: string } {
-  return { action, amount, date };
-}
 
 const Transactions = (): any => {
   const { transaction } = useAppSelector(walletDetaislSelector);

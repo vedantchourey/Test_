@@ -11,7 +11,6 @@ import Details from "./details";
 import Participants from "./participants";
 import Rules from "./rules";
 import Bracket from "./brackets";
-import { ReactComponent as RainbowIcon } from "../../../../public/icons/RainbowIcon.svg";
 import Prizes from "./prizes";
 import Image from "next/image";
 import ActionButton from "../ui-components/action-button";

@@ -27,11 +27,13 @@ export function validateMatchResult(body: any): any {
         match_id: Joi.number().required(),
         opponent1: Joi.object({
             score: Joi.number().required(),
-            result: Joi.string().required().valid("win", "lose"),
+            result: Joi.string().required()
+.valid("win", "lose"),
         }),
         opponent2: Joi.object({
             score: Joi.number().required(),
-            result: Joi.string().required().valid("win", "lose"),
+            result: Joi.string().required()
+.valid("win", "lose"),
         })
     });
     const errors = model.validate(body, { abortEarly: false, allowUnknown: true, });

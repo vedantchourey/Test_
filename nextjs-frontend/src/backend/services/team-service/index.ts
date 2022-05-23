@@ -142,7 +142,7 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
             .where("status", "PENDING")
 
         if (pending_inivitation.length) return getErrorObject("Users have invitation pending");
-        let secret = randomString(15);
+        const secret = randomString(15);
         const data = {
             team_id: team_info.id,
             user_id: player_data.id,
@@ -201,7 +201,7 @@ export const acceptInvite = async (secret: string, connection: Knex.Transaction)
     }
 
 }
-export const rejectInvite = async (secret: string, connection: Knex.Transaction, user: any): Promise<ISuccess | IError> => {
+export const rejectInvite = async (secret: string, connection: Knex.Transaction): Promise<ISuccess | IError> => {
     try {
         const team_invitation = new CrudRepository<ITeamInvitation>(connection, TABLE_NAMES.TEAM_INVITATION);
         const [invite] = await team_invitation.find({
