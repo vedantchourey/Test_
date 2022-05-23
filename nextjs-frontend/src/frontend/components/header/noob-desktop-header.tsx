@@ -52,7 +52,11 @@ export default function NoobDesktopHeader(): JSX.Element {
 
   async function gotoHomePage(): Promise<void> {
     await router.push('/')
-    }
+  }
+
+  async function gotoLeadboardsPage(): Promise<void> {
+    await router.push('/leaderboards')
+  }
 
   function onSuccessfulLogin(): void {
     setShowLoginModal(false);
@@ -107,7 +111,7 @@ export default function NoobDesktopHeader(): JSX.Element {
           <div className={styles.bottomMenuLeftGroup}>
             <Button variant="text" style={buttonStyle(['/'])} onClick={gotoHomePage}>Home</Button>
             <Button variant="text" style={buttonStyle(['/tournaments'])}>Tournaments</Button>
-            <Button variant="text" style={buttonStyle(['/leaderboards'])}>Leaderboards</Button>
+            <Button variant="text" style={buttonStyle(['/leaderboards'])} onClick={gotoLeadboardsPage}>Leaderboards</Button>
             <Button variant="text" onClick={gotoAboutUsPage} style={buttonStyle(['/about-us'])}>About Us</Button>
             <Button variant="text" onClick={gotoSupportPage} style={buttonStyle(['/support'])}>Support</Button>
             <Button variant="text" style={buttonStyle(['/faq'])}>FAQ</Button>
