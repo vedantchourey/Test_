@@ -28,6 +28,7 @@ import { ITournamentInvites } from "../database/models/i-tournament-invites";
 import _ from "lodash";
 import { getErrorObject } from "../common/helper/utils.service";
 import { debitBalance } from "../wallet-service/wallet-service";
+import { IError } from "../../utils/common/Interfaces";
 
 const getTournamentInviteObj = (knexConnection: Knex): CrudRepository<ITournamentInvites> => {
   return new CrudRepository<ITournamentInvites>(knexConnection, TABLE_NAMES.TOURNAMENT_INIVTES)
@@ -228,4 +229,65 @@ export const handleInviteSubmit = async (tournament_id: string, team_id: string,
       team_id,
     } as any, knexConnection)
   }
+}
+
+export const fetchMatchDetails = async (context: PerRequestContext): Promise<any | IError> => {
+  const { tournament, match } = context;
+  const participantRepo = new CrudRepository<IBParticipants>(context.knexConnection as Knex, TABLE_NAMES.B_PARTICIPANT);
+
+  const opponent1 = participantRepo.knexObj()
+    .select(["private_profiles.id as user_id", "private_profiles.firstName", "private_profiles.lastName",
+      "private_profiles.elo_rating as player_elo_rating"])
+    .where({ "b_participant.id": match?.opponent1.id })
+  const opponent2 = participantRepo.knexObj()
+    .select(["private_profiles.id as user_id", "private_profiles.firstName", "private_profiles.lastName",
+      "private_profiles.elo_rating as player_elo_rating"])
+    .where({ "b_participant.id": match?.opponent2.id })
+
+  if (tournament?.settings?.tournamentFormat === "1v1") {
+    opponent1.join("private_profiles", "private_profiles.id", "b_participant.user_id")
+      .where({ "b_participant.is_checked_in": true })
+    opponent2.join("private_profiles", "private_profiles.id", "b_participant.user_id")
+      .where({ "b_participant.is_checked_in": true })
+    return {
+      opponent1: await opponent1,
+      opponent2: await opponent2
+    }
+  } 
+    opponent1
+      .join("b_tournament", "b_tournament.id", "b_participant.tournament_id")
+      .join("tournament_invites", "tournament_invites.tournament_id", "b_tournament.tournament_uuid")
+      .join("teams", "teams.id", "tournament_invites.team_id")
+      .join("private_profiles", "private_profiles.id", "tournament_invites.user_id")
+      .where({ "tournament_invites.is_checked_in": true })
+      .select(["teams.id as team_id", "teams.name as team_name", "teams.elo_rating as team_elo_rating"])
+    opponent2
+      .join("b_tournament", "b_tournament.id", "b_participant.tournament_id")
+      .join("tournament_invites", "tournament_invites.tournament_id", "b_tournament.tournament_uuid")
+      .join("teams", "teams.id", "tournament_invites.team_id")
+      .join("private_profiles", "private_profiles.id", "tournament_invites.user_id")
+      .where({ "tournament_invites.is_checked_in": true })
+      .select(["teams.id as team_id", "teams.name as team_name", "teams.elo_rating as team_elo_rating"])
+    return {
+      opponent1: { ...match?.opponent1, ...formatTeamsData(await opponent1)[0] },
+      opponent2: { ...match?.opponent2, ...formatTeamsData(await opponent2)[0] },
+    }
+  
+}
+const formatTeamsData = (data: any): any => {
+  const grouped = _.groupBy(data, "team_id") as any
+  const result = Object.keys(grouped).map((key) => {
+    return {
+      team_id: key,
+      team_name: grouped[key][0].team_name,
+      elo_rating: grouped[key][0].team_elo_rating,
+      players: grouped[key].map((x: any) => ({
+        user_id: x.user_id,
+        firstName: x.firstName,
+        lastName: x.lastName,
+        elo_rating: x.player_elo_rating
+      }))
+    }
+  })
+  return result;
 }
