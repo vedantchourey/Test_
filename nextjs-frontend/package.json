@@ -30,6 +30,7 @@
     "chart.js": "^3.7.1",
     "chartjs-adapter-moment": "^1.0.0",
     "date-fns": "^2.28.0",
+    "elo-rank": "^1.0.4",
     "emotion": "^11.0.0",
     "formik": "^2.2.9",
     "joi": "^17.6.0",
