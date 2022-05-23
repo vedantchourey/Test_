@@ -319,13 +319,15 @@ export const fetchUserMatchs = async (context: PerRequestContext): Promise<any |
       if (part.user_id) opponents.push(part.user_id);
       if (part.team_id) opp_teams.push(part.team_id);
     })
-    // fetching opponents details for single tournament
     const userRepo = new CrudRepository<IPrivateProfile>(context.knexConnection as Knex, TABLE_NAMES.PRIVATE_PROFILE);
-    const opp_users = await userRepo.knexObj().whereIn("id", [...opponents, user?.id]).select(USER_FEILDS).select("id as user_id");
-
-    // fetching opponents details for teams tournament
     const teamRepo = new CrudRepository<ITeams>(context.knexConnection as Knex, TABLE_NAMES.TEAMS);
-    const teams = await teamRepo.knexObj().whereIn("id", opp_teams).select(["id as team_id", "elo_rating", "name", "platform_id", "game_id"]);
+
+    const [opp_users, teams] = await Promise.all([
+      // fetching opponents details for single tournament
+      await userRepo.knexObj().whereIn("id", [...opponents, user?.id]).select(USER_FEILDS).select("id as user_id"),
+      // fetching opponents details for teams tournament
+      await teamRepo.knexObj().whereIn("id", opp_teams).select(["id as team_id", "elo_rating", "name", "platform_id", "game_id"])
+    ])
     const teams_grouped = _.groupBy(teams, 'team_id')
     const opp_user_grouped = _.groupBy(opp_users, 'user_id');
 
