@@ -5,16 +5,17 @@ import { Button, Grid } from "@mui/material";
 
 // styles
 import styles from "./opponent-tile.module.css"
+import { Match } from "..";
 
 interface OpponentTileProps {
-    onMatchHub ?: (opponentData:any) => void;
-    opponentData?:any;
+    onMatchHub ?: (opponentData:Match) => void;
+    data:Match;
 }
 
-const OpponentTile: React.FC<OpponentTileProps> = ({onMatchHub,opponentData}) => {
+const OpponentTile: React.FC<OpponentTileProps> = ({onMatchHub,data}) => {
     const matchHubHandler = ():void =>{
         if(onMatchHub){
-            onMatchHub(opponentData);
+            onMatchHub(data);
         }
     }
     return (
@@ -23,12 +24,12 @@ const OpponentTile: React.FC<OpponentTileProps> = ({onMatchHub,opponentData}) =>
                 <p className={styles.opponentTileTitle}>Opponent:</p>
                 <div style={{display: "flex", alignItems: "center"}}>
                     <Image src="/images/legand-club.png" width={32} height={32} />
-                    <span style={{marginLeft: "8px"}} className={styles.opponentTileValue}>Legend Club</span>
+                    <span style={{marginLeft: "8px"}} className={styles.opponentTileValue}>{`${data.opponent1.firstName} ${data.opponent1.lastName}`}</span>
                 </div>
             </Grid>
             <Grid item xs={3}>
                 <p className={styles.opponentTileTitle}>Tournament name</p>
-                <p className={styles.opponentTileValue}>ENDPOINTGG VS CEX ESPORTS [2]</p>
+                <p className={styles.opponentTileValue}>{data.tournament_name}</p>
             </Grid>
             <Grid item xs={3} style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                 <p>

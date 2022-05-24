@@ -9,6 +9,7 @@ import {
   MenuItem,
   FormControlLabel,
   Checkbox,
+  FormHelperText,
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
@@ -20,7 +21,8 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import axios from "axios";
 import { getAuthHeader } from "../../../utils/headers";
-import CheckIcon from '@mui/icons-material/Check';
+import CheckIcon from "@mui/icons-material/Check";
+import { Match } from "..";
 
 const style = {
   position: "absolute" as const,
@@ -44,19 +46,34 @@ const dropZone = {
   flexDirection: "column",
 };
 
-const MatchHubTeams: React.FC = () => {
+interface Props {
+  match: Match;
+  onBack?:()=>void
+}
+
+const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
   const [uploadResults, setUploadResults] = React.useState(false);
-  const [resultStatus, setResultStatus] = React.useState(true);
+  const [resultStatus, setResultStatus] = React.useState(false);
+  const opponent1Name = match.opponent1.user_id
+    ? `${match.opponent1.firstName} ${match.opponent1.lastName}`
+    : match.opponent1.name;
+  const opponent2Name = match.opponent2.user_id
+    ? `${match.opponent2.firstName} ${match.opponent2.lastName}`
+    : match.opponent2.name;
 
   const validationSchema = yup.object({
     match_id: yup.string().required("Match id is required"),
     screenshot: yup.string().required("Screenshot is required"),
+    winner:yup.string().required("Winner is required"),
+    draw:yup.boolean()
   });
 
   const formik = useFormik({
     initialValues: {
-      match_id: "123",
+      match_id: match.match_id,
       screenshot: "",
+      winner:"",
+      draw:false
     },
     validationSchema: validationSchema,
     onSubmit: () => {
@@ -64,10 +81,39 @@ const MatchHubTeams: React.FC = () => {
     },
   });
 
-  const submitResult = async ():Promise<void> => {
+  const submitResult = async (): Promise<void> => {
     const headers = await getAuthHeader();
+    let op1Result, op2Result;
+    if(formik.values.draw){
+      op1Result = "draw";
+      op2Result = "draw"
+    }else{
+      if(formik.values.winner === match.opponent1.id){
+        op1Result = "win";
+        op2Result = "lose"
+      }else{
+        op1Result = "lose";
+        op2Result = "win"
+      }
+    }
+    
+    const request = {
+      ...formik.values,
+      opponent1:{
+        score:0,
+        result:op1Result
+      },
+      opponent2:{
+        score:0,
+        result:op2Result
+      }
+    }
+
+    delete (request as any).winner;
+    delete (request as any).draw;
+  
     axios
-      .post("/api/tournaments/match-result", formik.values, {
+      .post("/api/tournaments/match-result", request, {
         headers: headers,
       })
       .then(() => {
@@ -103,9 +149,13 @@ const MatchHubTeams: React.FC = () => {
           >
             <ResultTile
               isWon={true}
+              opponent1Name={opponent1Name}
+              opponent2Name={opponent2Name}
               child={
                 <Box color="white">
-                  <Typography>VS</Typography>
+                  <Typography variant="h3" component={"h1"}>
+                    VS
+                  </Typography>
                   <Typography>
                     Check start in:{" "}
                     <Typography component={"span"}>00.00.12</Typography>
@@ -115,17 +165,36 @@ const MatchHubTeams: React.FC = () => {
             />
           </Box>
         </Grid>
-        <Grid item xs={12}>
-          <Players />
-        </Grid>
+        {!match.opponent1.user_id ? (
+          <Grid item xs={12}>
+            <Players />
+          </Grid>
+        ) : null}
+
         <Grid item xs={12}>
           <Box display={"flex"} justifyContent={"center"} marginTop="60px">
+           <Button
+              style={{
+                color: "white",
+                padding: "12px 38px",
+                backgroundColor: "#08001C",
+                border: "1px solid #6932F9",
+              }}
+              onClick={():void=>{
+                if(onBack){
+                  onBack();
+                }
+              }}
+            >
+              Back
+            </Button>
             <Button
               style={{
                 color: "white",
                 padding: "12px 38px",
                 backgroundColor: "#08001C",
                 border: "1px solid #6932F9",
+                margin: "0px 0px 0px 16px",
               }}
             >
               Check In
@@ -167,11 +236,16 @@ const MatchHubTeams: React.FC = () => {
               <CloseIcon />
             </IconButton>
           </Box>
-          <Box marginY={2} display="flex" justifyContent={"flex-start"} alignItems="center">
-            <CheckIcon sx={{color:"white", marginRight:1}}/>
-              <Typography color="white" textAlign={"left"}>
-                Result successfully send to opponent.
-              </Typography>
+          <Box
+            marginY={2}
+            display="flex"
+            justifyContent={"flex-start"}
+            alignItems="center"
+          >
+            <CheckIcon sx={{ color: "white", marginRight: 1 }} />
+            <Typography color="white" textAlign={"left"}>
+              Result successfully send to opponent.
+            </Typography>
           </Box>
         </Box>
       </Modal>
@@ -191,19 +265,24 @@ const MatchHubTeams: React.FC = () => {
           </Box>
           <Grid container rowSpacing={2}>
             <Grid item xs={12} sm={4} md={4}>
-              <Select displayEmpty defaultValue={""}>
+              <Select displayEmpty id="winner" disabled={formik.values.draw} name="winner" onChange={formik.handleChange} defaultValue={""}>
                 <MenuItem value="">Select Winner</MenuItem>
+                <MenuItem value={match.opponent1.id}>{opponent1Name}</MenuItem>
+                <MenuItem value={match.opponent2.id}>{opponent2Name}</MenuItem>
               </Select>
+              {
+                formik.errors.winner?<FormHelperText sx={{color:"red"}}>Please select winner</FormHelperText>:null
+              }
             </Grid>
             <Grid item xs={12} sm={4} md={4}>
-              <Select displayEmpty defaultValue={""}>
+              <Select displayEmpty defaultValue={""} disabled={formik.values.draw}>
                 <MenuItem value="">Select Round</MenuItem>
               </Select>
             </Grid>
             <Grid item xs={12} sm={4} md={4}>
               <FormControlLabel
                 value="true"
-                control={<Checkbox />}
+                control={<Checkbox onChange={formik.handleChange} name="draw" id="draw"/>}
                 sx={{ color: "white" }}
                 label="Mark as a draw"
               />
@@ -230,13 +309,11 @@ const MatchHubTeams: React.FC = () => {
                 Once you have identified a winner, we will send a request to the
                 other user to accept it.
               </Typography>
-              {
-                formik.errors.screenshot && (
-                  <Typography color="white" variant="body2" marginTop={1}>
-                {formik.errors.screenshot}
-              </Typography>
-                )
-              }
+              {formik.errors.screenshot && (
+                <Typography color="white" variant="body2" marginTop={1}>
+                  {formik.errors.screenshot}
+                </Typography>
+              )}
             </Grid>
             <Grid item xs={12} display="flex" justifyContent={"center"}>
               <Button

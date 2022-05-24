@@ -10,10 +10,12 @@ import styles from "./result-tile.module.css";
 interface ResultTileProps {
   isWon?: boolean;
   child?: JSX.Element;
+  opponent1Name?:string;
+  opponent2Name?:string;
 }
 
 const ResultTile: React.FC<ResultTileProps> = (props) => {
-  const { isWon, child } = props;
+  const { isWon, child, opponent1Name="-", opponent2Name="-" } = props;
 
   return (
     <Grid container width={"100%"} className={styles.resultTileContainer}>
@@ -28,7 +30,7 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
             style={{ marginLeft: "16px" }}
             className={styles.resultTileValue}
           >
-            Legend Club
+            {opponent1Name}
           </span>
         </Button>
       </Grid>
@@ -66,7 +68,7 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
             style={{ marginRight: "16px" }}
             className={styles.resultTileValue}
           >
-            Legend Club
+            {opponent2Name}
           </span>
           <Image src="/images/legand-club.png" width={32} height={32} />
         </Button>
