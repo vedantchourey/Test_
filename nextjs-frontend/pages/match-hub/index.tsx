@@ -14,11 +14,12 @@ const MatchHubPage: NextPage = () => {
   const [match, setMatch] = React.useState<Match | undefined>();
   const [data, setData] = React.useState<Match[]>([]);
 
-  const fetchData = async () =>{
+  const fetchData = async ():Promise<void> =>{
     const headers = await getAuthHeader();
-    axios.get("/api/tournaments/user-matchs",{headers:headers}).then(res=>{
+    axios.get("/api/tournaments/user-matchs",{headers:headers}).then((res)=>{
       setData(res.data);
-    }).catch(err=>{
+    })
+.catch((err)=>{
       console.error(err);
     })
   }
@@ -34,7 +35,7 @@ const MatchHubPage: NextPage = () => {
       }}
     >
       <Box sx={{ margin: { xs: "0px", sm: "0px", md: "56px 70px 0px 70px" } }}>
-        {!match ? <MatchHub data={data} onMatchHub={setMatch} /> : <MatchHubTeams match={match} onBack={()=>setMatch(undefined)}/>}
+        {!match ? <MatchHub data={data} onMatchHub={setMatch} /> : <MatchHubTeams match={match} onBack={():void=>setMatch(undefined)}/>}
       </Box>
     </NoobPage>
   );

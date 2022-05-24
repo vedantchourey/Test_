@@ -42,8 +42,7 @@ const basicQueryParams = createQueryParamsMiddleWare({
             const tournament = await repository.getTournament(tournamentId as string);
             if (tournament == null)
                 return `Could not find tournament with tournamentId: ${tournamentId}`;
-            else
-                context.tournament = tournament
+            context.tournament = tournament
         }
     },
 });

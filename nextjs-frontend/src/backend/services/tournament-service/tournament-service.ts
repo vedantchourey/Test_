@@ -29,7 +29,6 @@ import _ from "lodash";
 import { getErrorObject } from "../common/helper/utils.service";
 import { debitBalance } from "../wallet-service/wallet-service";
 import { IError } from "../../utils/common/Interfaces";
-import { join } from "path/posix";
 import { IBMatch } from "../database/models/i-b-match";
 import { IPrivateProfile } from "../database/models/i-private-profile";
 import { ITeams } from "../database/models/i-teams";
@@ -243,9 +242,11 @@ export const fetchMatchDetails = async (context: PerRequestContext): Promise<any
     const participantRepo = new CrudRepository<IBParticipants>(context.knexConnection as Knex, TABLE_NAMES.B_PARTICIPANT);
 
     const opponent1 = participantRepo.knexObj()
-      .select(USER_FEILDS).where({ "b_participant.id": match?.opponent1.id })
+      .select(USER_FEILDS)
+.where({ "b_participant.id": match?.opponent1.id })
     const opponent2 = participantRepo.knexObj()
-      .select(USER_FEILDS).where({ "b_participant.id": match?.opponent2.id })
+      .select(USER_FEILDS)
+.where({ "b_participant.id": match?.opponent2.id })
 
     if (tournament?.settings?.tournamentFormat === "1v1") {
       opponent1.join("private_profiles", "private_profiles.id", "b_participant.user_id")
@@ -293,7 +294,8 @@ export const fetchUserMatchs = async (context: PerRequestContext): Promise<any |
     //fetching all the participant id for single and team
     const participantRepo = new CrudRepository<IBParticipants>(context.knexConnection as Knex, TABLE_NAMES.B_PARTICIPANT);
     const tournaments = await participantRepo.knexObj().where("user_id", user?.id)
-      .orWhereIn("team_id", team_ids).select(["id", "tournament_id", "user_id", "team_id"])
+      .orWhereIn("team_id", team_ids)
+.select(["id", "tournament_id", "user_id", "team_id"])
 
     //fetching matches
     const matchRepo = new CrudRepository<IBMatch>(context.knexConnection as Knex, TABLE_NAMES.B_MATCH);
@@ -311,7 +313,9 @@ export const fetchUserMatchs = async (context: PerRequestContext): Promise<any |
       part_id.push(x.opponent2.id)
     })
     //fetch all participants of the match 
-    const part_list = await participantRepo.knexObj().whereIn("id", part_id).whereNotNull("user_id").orWhereNotNull("team_id")
+    const part_list = await participantRepo.knexObj().whereIn("id", part_id)
+.whereNotNull("user_id")
+.orWhereNotNull("team_id")
     const groupPartList = _.groupBy(part_list, "id")
     const opponents: any[] = []
     const opp_teams: any[] = []
@@ -324,9 +328,12 @@ export const fetchUserMatchs = async (context: PerRequestContext): Promise<any |
 
     const [opp_users, teams] = await Promise.all([
       // fetching opponents details for single tournament
-      await userRepo.knexObj().whereIn("id", [...opponents, user?.id]).select(USER_FEILDS).select("id as user_id"),
+      await userRepo.knexObj().whereIn("id", [...opponents, user?.id])
+.select(USER_FEILDS)
+.select("id as user_id"),
       // fetching opponents details for teams tournament
-      await teamRepo.knexObj().whereIn("id", opp_teams).select(["id as team_id", "elo_rating", "name", "platform_id", "game_id"])
+      await teamRepo.knexObj().whereIn("id", opp_teams)
+.select(["id as team_id", "elo_rating", "name", "platform_id", "game_id"])
     ])
     const teams_grouped = _.groupBy(teams, 'team_id')
     const opp_user_grouped = _.groupBy(opp_users, 'user_id');

@@ -1,5 +1,3 @@
-import { NextPage } from "next";
-
 // Third party packages
 import { Card, CardContent, Container, Typography, Grid } from "@mui/material";
 
@@ -7,13 +5,15 @@ import { Card, CardContent, Container, Typography, Grid } from "@mui/material";
 import styles from "./match-hub.module.css";
 import OpponentTile from "./opponent-tile/opponent-tile";
 import ResultTile from "./opponent-tile/result-tile/result-tile";
+import { Player } from "./players";
+import React from "react";
 
 interface Props{
     data :Match[];
     onMatchHub?:(match:Match) => void;
 }
 
-interface Opponent{
+export interface Opponent{
     firstName:string;
     id:string;
     lastName:string;
@@ -27,6 +27,7 @@ interface Opponent{
     game_id?:string
     elo_rating?:string
     name?:string
+    players?: Player[]
 }
 
 export interface Match {
@@ -54,12 +55,15 @@ const MatchHub: React.FC<Props> = ({data, onMatchHub}) => {
                                     const opponent1Name = item.opponent1.user_id?`${item.opponent1.firstName} ${item.opponent1.lastName}`: item.opponent1.name
                                     const opponent2Name = item.opponent2.user_id?`${item.opponent2.firstName} ${item.opponent2.lastName}`: item.opponent2.name
                                     return (
-                                        <Grid item xs={12}>
+                                        <Grid key={item.opponent1.user_id} item xs={12}>
                                             {
                                                 !item.opponent1.result?(
                                                     <OpponentTile data={item} onMatchHub={onMatchHub}/>
                                                 ):(
+                                                    <React.Fragment>
+                                                        <OpponentTile data={item} onMatchHub={onMatchHub}/>
                                                     <ResultTile isWon={item.opponent1.result==="win"} opponent1Name={opponent1Name} opponent2Name={opponent2Name} />
+                                                    </React.Fragment>
                                                 )
                                             }
                                         </Grid>
