@@ -1,12 +1,22 @@
 import Image from "next/image";
-
+import React from 'react';
 // Third party packages
 import { Button, Grid } from "@mui/material";
 
 // styles
 import styles from "./opponent-tile.module.css"
 
-const OpponentTile: React.FC = () => {
+interface OpponentTileProps {
+    onMatchHub ?: (opponentData:any) => void;
+    opponentData?:any;
+}
+
+const OpponentTile: React.FC<OpponentTileProps> = ({onMatchHub,opponentData}) => {
+    const matchHubHandler = ():void =>{
+        if(onMatchHub){
+            onMatchHub(opponentData);
+        }
+    }
     return (
         <Grid container className={styles.opponentTileContainer}>
             <Grid item xs={2}>
@@ -30,9 +40,9 @@ const OpponentTile: React.FC = () => {
                     <span className={styles.opponentTileValue} style={{marginLeft: "24px"}}>00:18:45</span>
                 </p>
             </Grid>
-            <Grid item xs={4}  style={{display: "flex", justifyContent: "end"}}>
-                <Button variant="outlined" className={styles.opponentTileButton} style={{marginRight: "16px"}}>Match Hub</Button>
-                <Button variant="contained" className={styles.opponentTileButton}>View Tournament</Button>
+            <Grid item xs={4} style={{display: "flex", justifyContent: "end"}}>
+                <Button variant="outlined" className={styles.opponentTileButton} style={{marginRight: "16px"}} onClick={matchHubHandler}>Match Hub</Button>
+                <Button variant="contained" className={styles.opponentTileButton} >View Tournament</Button>
             </Grid>
         </Grid>
     );
