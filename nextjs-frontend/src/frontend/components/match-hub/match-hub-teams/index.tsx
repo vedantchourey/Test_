@@ -21,6 +21,7 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import axios from "axios";
 import { getAuthHeader } from "../../../utils/headers";
+import {ReactComponent as FlagIcon} from '../../../../../public/icons/flagIcon.svg';
 import CheckIcon from "@mui/icons-material/Check";
 import { Match } from "..";
 
@@ -243,6 +244,7 @@ op2Score=0;
               Report Score
             </Button>
             <Button
+            startIcon ={<FlagIcon />} 
               style={{
                 padding: "12px 38px",
                 background: "#830B0B",
