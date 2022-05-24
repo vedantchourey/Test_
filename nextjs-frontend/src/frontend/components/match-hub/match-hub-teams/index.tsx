@@ -64,7 +64,11 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
   const validationSchema = yup.object({
     match_id: yup.string().required("Match id is required"),
     screenshot: yup.string().required("Screenshot is required"),
-    winner:yup.string().required("Winner is required"),
+    winner:yup.string().when("draw",{
+      is:'true',
+      then:yup.string().required("Winner is required"),
+      otherwise:yup.string()
+    }),
     draw:yup.boolean()
   });
 
@@ -167,7 +171,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
         </Grid>
         {!match.opponent1.user_id ? (
           <Grid item xs={12}>
-            <Players />
+            <Players  />
           </Grid>
         ) : null}
 
