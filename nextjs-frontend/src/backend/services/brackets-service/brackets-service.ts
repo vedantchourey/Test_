@@ -249,6 +249,17 @@ export const checkInTournament = async (req: IRegisterTournament, knexConnection
     return { message: "Something went wrong" };
   }
 };
+export const submitMatchResultRequest = async (req: IMatchResultRequest, knexConnection: Knex): Promise<any> => {
+  try {
+    const errors = await validateMatchResult(req);
+    if (errors) return { errors };
+    const repo = new CrudRepository<IMatchResultRequest>(knexConnection, TABLE_NAMES.MATCH_RESULT_REQUEST);
+    const result = repo.create(req)
+    return result;
+  } catch (ex) {
+    return getErrorObject()
+  }
+}
 
 export const submitMatchResult = async (req: IMatchResultRequest, knexConnection: Knex): Promise<any> => {
   try {
