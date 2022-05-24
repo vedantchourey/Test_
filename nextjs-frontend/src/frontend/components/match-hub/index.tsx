@@ -60,10 +60,7 @@ const MatchHub: React.FC<Props> = ({data, onMatchHub}) => {
                                                 !item.opponent1.result?(
                                                     <OpponentTile data={item} onMatchHub={onMatchHub}/>
                                                 ):(
-                                                    <React.Fragment>
-                                                        <OpponentTile data={item} onMatchHub={onMatchHub}/>
                                                     <ResultTile isWon={item.opponent1.result==="win"} opponent1Name={opponent1Name} opponent2Name={opponent2Name} />
-                                                    </React.Fragment>
                                                 )
                                             }
                                         </Grid>
