@@ -13,14 +13,15 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Slider from "react-slick";
+import AliceCarousel from 'react-alice-carousel';
+import 'react-alice-carousel/lib/alice-carousel.css';
 
-function createData(
+const createData = (
   rank: HTMLParagraphElement,
   img: ImageData,
   name: string,
   rating: string,
-) {
+)  => {
   return { rank, img, name, rating};
 }
 
@@ -39,77 +40,40 @@ const rows = [
 
 const Leaderboard = (): JSX.Element => {
 
+  const responsive = {
+    0: { items: 2 },
+    568: { items: 3 },
+    1024: { items: 12 },
+  };
+
+  const items = [
+    <div className="item" key={1} data-value="1"><img src="/images/game1.png"/></div>,
+    <div className="item" key={2}data-value="2"><img src="/images/game2.png"/></div>,
+    <div className="item" key={3} data-value="3"><img src="/images/game3.png"/></div>,
+    <div className="item" key={4} data-value="4"><img src="/images/game4.png"/></div>,
+    <div className="item" key={5} data-value="5"><img src="/images/game5.png"/></div>,
+    <div className="item" key={6} data-value="6"><img src="/images/game6.png"/></div>,
+    <div className="item" key={7} data-value="7"><img src="/images/game7.png"/></div>,
+    <div className="item" key={8} data-value="8"><img src="/images/game8.png"/></div>,
+    <div className="item" key={9} data-value="9"><img src="/images/game9.png"/></div>,
+    <div className="item" key={10} data-value="10"><img src="/images/game10.png"/></div>,
+    <div className="item" key={11} data-value="11"><img src="/images/game11.png"/></div>,
+    <div className="item" key={12} data-value="12"><img src="/images/game12.png"/></div>,
+    <div className="item" key={13} data-value="13"><img src="/images/game1.png"/></div>,
+  ];
+
   const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
 
-  var settings = {
-    dots: true,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 4,
-    initialSlide: 0,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 5,
-          slidesToScroll: 5,
-          infinite: true,
-          dots: true
-        }
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 5,
-          slidesToScroll: 5,
-          initialSlide: 5
-        }
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1
-        }
-      }
-    ]
-  }
   return (
     <NoobPage title="Leaderboard" metaData={{ description: "Noob Storm Leaderboard page" }}>
       <Fragment>
         <Container maxWidth="xl">
           <Heading divider heading={"LEADERBOARD"} />
-
-{/*          <div>
-            <Slider {...settings}>
-              <div>
-                <h3><img src="/images/game1.png"/></h3>
-              </div>
-              <div>
-              <h3><img src="/images/game2.png"/></h3>
-              </div>
-              <div>
-              <h3><img src="/images/game3.png"/></h3>
-              </div>
-              <div>
-              <h3><img src="/images/game4.png"/></h3>
-              </div>
-              <div>
-              <h3><img src="/images/game5.png"/></h3>
-              </div>
-              <div>
-              <h3><img src="/images/game6.png"/></h3>
-              </div>
-              <div>
-              <h3><img src="/images/game7.png"/></h3>
-              </div>
-              <div>
-              <h3><img src="/images/game8.png"/></h3>
-              </div>
-            </Slider>
-          </div>
-*/}
+          <Typography className={styles.text}>Choose Game</Typography>
+          <AliceCarousel
+            items={items}
+            responsive={responsive}
+          />
           {isDesktop && 
           <Grid container spacing={{ lg: 2 }} columns={{ xs: 16, sm: 8, md: 12, lg: 12 }} className={styles.mainContainer}>
             {Array.from(Array(3)).map((_, index) => (
