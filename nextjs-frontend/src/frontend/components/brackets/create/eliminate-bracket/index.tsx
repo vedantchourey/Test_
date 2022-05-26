@@ -30,7 +30,7 @@ interface RoundData {
 }
 export interface EliminateBracketData {
   name: string;
-  startDate: string | null;
+  startDate: string | null | any;
   startTime: string | null;
   checkInType: string;
   checkInAmount: number;
