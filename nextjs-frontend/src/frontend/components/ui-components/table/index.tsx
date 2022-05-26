@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import CardLayout from "../card-layout";
+import Loader from "../loader";
 
 export interface NoobColumnConf<Type> {
   title: string;
@@ -30,6 +31,7 @@ export interface NoobTableProp<Type> {
   totalRecords?:number;
   paginate?: PageProps;
   title?:string;
+  loading?:boolean
 }
 
 const NoobTableCell = styled(TableCell)(() => ({
@@ -67,7 +69,8 @@ const NoobTable: <Type>(props:NoobTableProp<Type>)=>JSX.Element = ({
   data = [],
   paginate,
   title,
-  totalRecords = data.length
+  totalRecords = data.length,
+  loading=false
 }) => {
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -86,7 +89,10 @@ const NoobTable: <Type>(props:NoobTableProp<Type>)=>JSX.Element = ({
     return <NoobTableHead>{heads}</NoobTableHead>;
   };
 
-  const renderRow = (): JSX.Element[] => {
+  const renderRow = (): JSX.Element[] | JSX.Element => {
+    if(loading){
+      return <NoobTableRow><NoobTableCell colSpan={colConf.length} style={{textAlign:"center"}}>Loading..</NoobTableCell></NoobTableRow>;
+    }
     const rows = data.map((item, index) => {
       let rowIndex = index;
       if(paginate){
@@ -115,7 +121,7 @@ const NoobTable: <Type>(props:NoobTableProp<Type>)=>JSX.Element = ({
     <React.Fragment>
       {renderTitle()}
       <TableContainer>
-        <Table style={{ borderCollapse: "separate", borderSpacing: "0 1em" }}>
+        <Table  style={{ borderCollapse: "separate", borderSpacing: "0 1em" }}>
           {renderHeader()}
           {renderRow()}
         </Table>

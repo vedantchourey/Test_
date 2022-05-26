@@ -1,4 +1,12 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
@@ -23,9 +31,14 @@ import { getAuthHeader } from "../../utils/headers";
 import { useAppSelector } from "../../redux-store/redux-store";
 import { userProfileSelector } from "../../redux-store/authentication/authentication-selectors";
 import TeamSelection, { Team } from "./team-selection";
+import Loader from "../ui-components/loader";
 
-interface JoinTeamType{
-  tournamentId:string,userId:string,is_team_registration?:boolean,team_id?:string,user_list?:string[]
+interface JoinTeamType {
+  tournamentId: string;
+  userId: string;
+  is_team_registration?: boolean;
+  team_id?: string;
+  user_list?: string[];
 }
 
 interface HeadSubSectionProps {
@@ -81,11 +94,16 @@ const ViewTournament: React.FC = () => {
   const [selectedTeam, setSelectedTeam] = React.useState<Team | undefined>();
   const [isSuccessJoined, setSuccessJoined] = React.useState(false);
   const [openSuccessModal, setOpenSuccessModal] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
-  const fetchTeams = async ():Promise<void> => {
+  const fetchTeams = async (): Promise<void> => {
     const headers = await getAuthHeader();
+
     axios
-      .get("/api/teams", { headers: { ...headers }, params:{tournament_id:data.id} })
+      .get("/api/teams", {
+        headers: { ...headers },
+        params: { tournament_id: data.id },
+      })
       .then((res) => {
         setTeams(res.data.result);
       })
@@ -94,15 +112,14 @@ const ViewTournament: React.FC = () => {
       });
   };
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     setSelectedTeam(undefined);
-  },[openSuccessModal])
+  }, [openSuccessModal]);
 
   React.useEffect(() => {
-    if(data.id){
+    if (data.id) {
       fetchTeams();
     }
-    
   }, [data]);
 
   const getActionItems = (): ActionItem[][] => {
@@ -115,7 +132,7 @@ const ViewTournament: React.FC = () => {
     const create: ActionItem[] = [
       {
         title: "Create Team",
-        onClick: ():void => {
+        onClick: (): void => {
           router.push("/team/create", `/team/create`, { shallow: true });
         },
       },
@@ -124,7 +141,7 @@ const ViewTournament: React.FC = () => {
     const teamItems: ActionItem[] = teams.map((team) => {
       return {
         title: team.name,
-        onClick: ():void => {
+        onClick: (): void => {
           setSelectedTeam(team);
         },
       };
@@ -171,6 +188,8 @@ const ViewTournament: React.FC = () => {
 
   React.useEffect(() => {
     if (router.query.id && router.query.id) {
+      setLoading(true);
+
       axios
         .get(`/api/tournaments/${router.query.id}/details`)
         .then((res) => {
@@ -205,8 +224,10 @@ const ViewTournament: React.FC = () => {
               },
             } as TournamentData);
           }
+          setLoading(false);
         })
         .catch((err) => {
+          setLoading(false);
           console.error(err);
         });
     }
@@ -393,20 +414,20 @@ const ViewTournament: React.FC = () => {
     router.push(getUrl(), getAsURL(tab.toLowerCase()), { shallow: true });
   };
 
-  const onJoinTeam = async (payload:JoinTeamType): Promise<void> => {
+  const onJoinTeam = async (payload: JoinTeamType): Promise<void> => {
     if (!payload) {
       return;
     }
     const headers = await getAuthHeader();
     axios
-      .post("/api/tournaments/register", payload,{headers:{...headers}})
+      .post("/api/tournaments/register", payload, { headers: { ...headers } })
       .then(() => {
         setOpenSuccessModal(true);
         setSuccessJoined(true);
       })
       .catch((err) => {
         console.error(err);
-        if(err.response.status ===500){
+        if (err.response.status === 500) {
           setRegError(err.response.data.errors[0]);
         }
       });
@@ -416,24 +437,24 @@ const ViewTournament: React.FC = () => {
     if (!user || !data.id) {
       return;
     }
-    const payload:JoinTeamType = {
+    const payload: JoinTeamType = {
       tournamentId: data.id,
       userId: user.id,
-      is_team_registration:undefined
+      is_team_registration: undefined,
     };
     onJoinTeam(payload);
   };
 
-  const onTeamJoin = (teamId:string, players:string[]): void => {
+  const onTeamJoin = (teamId: string, players: string[]): void => {
     if (!user || !data.id) {
       return;
     }
-    const payload:JoinTeamType = {
+    const payload: JoinTeamType = {
       tournamentId: data.id,
       userId: user.id,
-      is_team_registration:true,
-      team_id:teamId,
-      user_list:players
+      is_team_registration: true,
+      team_id: teamId,
+      user_list: players,
     };
     onJoinTeam(payload);
   };
@@ -445,12 +466,15 @@ const ViewTournament: React.FC = () => {
           contentProps={{ sx: { padding: 0, paddingBottom: "0!important" } }}
         >
           <TeamSelection
-            onBack={():void => {setSelectedTeam(undefined);setRegError(undefined)}}
+            onBack={(): void => {
+              setSelectedTeam(undefined);
+              setRegError(undefined);
+            }}
             maxPlayer={playerLimit}
             team={selectedTeam}
             onJoin={onTeamJoin}
             error={regError}
-            entryFees={parseInt(data.settings?.entryFeeAmount || '0') || 0}
+            entryFees={parseInt(data.settings?.entryFeeAmount || "0") || 0}
           />
         </ViewCard>
       )
@@ -463,6 +487,8 @@ const ViewTournament: React.FC = () => {
     }
     return (
       <React.Fragment>
+        <Loader loading={loading} />
+
         <ViewCard>
           <Grid container>
             <Grid item md={6}>
@@ -499,15 +525,15 @@ const ViewTournament: React.FC = () => {
                 </Typography>
               </Box>
 
-              {!isSuccessJoined?(
+              {!isSuccessJoined ? (
                 <ActionButton
-                error={regError}
-                onClick={onSinglePlayerJoin}
-                buttonOnly={playerLimit === 1}
-                items={getActionItems()}
-                id={"action-item"}
-              />
-              ):null}
+                  error={regError}
+                  onClick={onSinglePlayerJoin}
+                  buttonOnly={playerLimit === 1}
+                  items={getActionItems()}
+                  id={"action-item"}
+                />
+              ) : null}
             </Grid>
           </Grid>
         </ViewCard>
@@ -542,20 +568,17 @@ const ViewTournament: React.FC = () => {
           />
         </Heading>
         {renderTournament()}
-        <Dialog open={openSuccessModal} onClose={():void=>setOpenSuccessModal(false)}>
-          <DialogTitle>
-            Success
-          </DialogTitle>
-          <DialogContent>
-            Team successfully joined.
-          </DialogContent>
+        <Dialog
+          open={openSuccessModal}
+          onClose={(): void => setOpenSuccessModal(false)}
+        >
+          <DialogTitle>Success</DialogTitle>
+          <DialogContent>Team successfully joined.</DialogContent>
           <DialogActions>
-          <Button onClick={():void=>setOpenSuccessModal(false)} autoFocus>
-            Ok
-          </Button>
-
+            <Button onClick={(): void => setOpenSuccessModal(false)} autoFocus>
+              Ok
+            </Button>
           </DialogActions>
-
         </Dialog>
       </React.Fragment>
     </NoobPage>

@@ -29,8 +29,6 @@ interface RoundData {
   startTime?: string;
 }
 export interface EliminateBracketData {
-  name: string;
-  startDate: string | null;
   startTime: string | null;
   checkInType: string;
   checkInAmount: number;
@@ -52,12 +50,6 @@ const EliminateBracket = React.forwardRef<
   EliminateBracketProps
 >(({ onSave, data }, ref) => {
   const validationSchema = yup.object({
-    name: yup.string().required("A name is required"),
-    startDate: yup
-      .date()
-      .required("Start date is required")
-      .nullable()
-      .transform((v) => (v instanceof Date && !isNaN(v.getTime()) ? v : null)),
     startTime: yup
       .date()
       .required("Start time is required")
@@ -71,8 +63,7 @@ const EliminateBracket = React.forwardRef<
       yup.object().shape({
         round: yup.string().required("Please select round"),
         description: yup.string().required("Please add description"),
-        map: yup.array().of(yup.string())
-.nullable(),
+        map: yup.array().of(yup.string()).nullable(),
         startTime: yup.date().when("round", (data) => {
           return data !== "1"
             ? yup.date().required("Start time is required")
@@ -84,8 +75,6 @@ const EliminateBracket = React.forwardRef<
 
   const formik = useFormik({
     initialValues: {
-      name: data?.name || "",
-      startDate: data?.startDate || null,
       startTime: data?.startTime || null,
       checkInType: data?.checkInType || "false",
       checkInAmount: data?.checkInAmount || 0,
@@ -164,71 +153,6 @@ const EliminateBracket = React.forwardRef<
     <React.Fragment>
       <CardLayout title="Eliminate Bracket">
         <Grid container rowSpacing={1} columnSpacing={5}>
-          <Grid item xs={6}>
-            <FormControl fullWidth variant="standard">
-              <OutlinedInput
-                id="name"
-                placeholder="Bracket Name"
-                onChange={formik.handleChange}
-                value={formik.values.name}
-                onBlur={formik.handleBlur}
-                error={formik.touched.name && Boolean(formik.errors.name)}
-              />
-              {formik.touched.name && Boolean(formik.errors.name) ? (
-                <FormHelperText> {formik.errors.name} </FormHelperText>
-              ) : null}
-            </FormControl>
-          </Grid>
-        </Grid>
-        <Grid container rowSpacing={1} columnSpacing={5}>
-          <Grid item xs={6}>
-            <FormControl fullWidth variant="standard">
-              <FormLabel label="Start Date(DD/MM/YYYY)"></FormLabel>
-              <DatePicker
-                onChange={(value): void => changeHandler("startDate", value)}
-                value={formik.values.startDate}
-                renderInput={(params): JSX.Element => (
-                  <TextField
-                    id="startDate"
-                    error={
-                      formik.touched.startDate &&
-                      Boolean(formik.errors.startDate)
-                    }
-                    onBlur={formik.handleBlur}
-                    {...params}
-                  />
-                )}
-              />
-              {formik.touched.startDate && Boolean(formik.errors.startDate) ? (
-                <FormHelperText> {formik.errors.startDate} </FormHelperText>
-              ) : null}
-            </FormControl>
-          </Grid>
-
-          <Grid item xs={6}>
-            <FormControl fullWidth variant="standard">
-              <FormLabel label="Start Time"></FormLabel>
-              <TimePicker
-                inputFormat="HH:mm a"
-                onChange={(value): void => changeHandler("startTime", value)}
-                value={formik.values.startTime}
-                renderInput={(params): JSX.Element => (
-                  <TextField
-                    id="startTime"
-                    error={
-                      formik.touched.startTime &&
-                      Boolean(formik.errors.startTime)
-                    }
-                    onBlur={formik.handleBlur}
-                    {...params}
-                  />
-                )}
-              />
-              {formik.touched.startTime && Boolean(formik.errors.startTime) ? (
-                <FormHelperText> {formik.errors.startTime} </FormHelperText>
-              ) : null}
-            </FormControl>
-          </Grid>
           <Grid item xs={6}>
             <FormControl fullWidth>
               <FormHelperText> Match Check in </FormHelperText>
@@ -480,8 +404,7 @@ const EliminateBracket = React.forwardRef<
                       </Grid>
                       <Grid item sm={12}>
                         {formik.values?.rounds[index]?.isMap &&
-                          new Array(5).fill(5)
-.map((x, i) => (
+                          new Array(5).fill(5).map((x, i) => (
                             <OutlinedInput
                               id="map"
                               key={x}

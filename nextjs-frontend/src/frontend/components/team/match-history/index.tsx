@@ -110,20 +110,7 @@ const MatchHistory:React.FC = () => {
           </Table>
         </TableContainer>
       </Grid>
-      <Grid item xs={12} sm={12} md={4}>
-        <Box
-          style={{ background: "#08001C", borderRadius: "10px" }}
-          flexDirection="column"
-          display={"flex"}
-          alignItems="center"
-        >
-          <Box width={"50%"} height={"100%"} marginBottom={2}>
-            <Doughnut data={chartData} options={chartOptions} />
-          </Box>
-          <Typography color={"white"}>Total Earning</Typography>
-          <Typography color={"white"}> $12,875 </Typography>
-        </Box>
-      </Grid>
+    
     </Grid>
   );
 };

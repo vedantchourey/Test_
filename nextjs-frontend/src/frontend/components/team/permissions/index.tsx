@@ -15,6 +15,7 @@ import {
 import React from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { Player } from "../members";
 
 export const NoobCell = styled(TableCell)(() => ({
   border: "0px",
@@ -39,30 +40,13 @@ export const NoobButton = styled(Button)(() => ({
   },
 }));
 
-const data: { image: string; name: string; roles: string[] }[] = [
-  {
-    image: "/icons/PersonIcon.svg",
-    name: "Ralph Edwards",
-    roles: ["Team Owner", "Team Captain", "Team Member"],
-  },
-  {
-    image: "/icons/PersonIcon.svg",
-    name: "Ralph Edwards",
-    roles: ["Team Owner", "Team Captain", "Team Member"],
-  },
-  {
-    image: "/icons/PersonIcon.svg",
-    name: "Ralph Edwards",
-    roles: ["Team Owner", "Team Captain", "Team Member"],
-  },
-  {
-    image: "/icons/PersonIcon.svg",
-    name: "Ralph Edwards",
-    roles: ["Team Owner", "Team Captain", "Team Member"],
-  },
-];
+const roles = ["Team Owner", "Team Captain", "Team Member"]
 
-const Permissions: React.FC = () => {
+interface PermissionProps{
+  players: Player[];
+}
+
+const Permissions: React.FC<PermissionProps> = ({players}) => {
   return (
     <React.Fragment>
       <Grid container rowSpacing={2}>
@@ -98,13 +82,13 @@ const Permissions: React.FC = () => {
           <TableContainer>
             <Table>
               <TableBody>
-                {data.map((item) => {
+                {players.map((player) => {
                   return (
-                    <NoobRow sx={{display:{sm:"flex",xs:"flex",md:"table-row"},flexDirection:{sm:"column",xs:"column"}}} key={item.name}>
+                    <NoobRow sx={{display:{sm:"flex",xs:"flex",md:"table-row"},flexDirection:{sm:"column",xs:"column"}}} key={player.user_id}>
                       <NoobCell>
                         <Box display="flex" alignItems={"center"}>
-                          <Avatar src={item.image}></Avatar>
-                          <Typography marginLeft={2}>{item.name}</Typography>
+                          <Avatar src={"/icons/PersonIcon.svg"}></Avatar>
+                          <Typography marginLeft={2}>{player.firstName} {player.lastName}</Typography>
                         </Box>
                       </NoobCell>
                       <NoobCell>
@@ -124,19 +108,12 @@ const Permissions: React.FC = () => {
                             color={"white"}
                             variant="body2"
                           >
-                            {item.roles.join(" ")}
+                            {roles.join(" ")}
                           </Typography>
                         </Box>
                       </NoobCell>
                       <NoobCell>
                         <Box display={"flex"} justifyContent="space-between" alignContent={"center"}>
-                        <Button
-                          style={{ backgroundColor: "#31274A" }}
-                          variant="contained"
-                          endIcon={<KeyboardArrowDownIcon />}
-                        >
-                          Add Assignment
-                        </Button>
                         <CloseIcon color="warning" />{" "}
                         </Box>
                       </NoobCell>
