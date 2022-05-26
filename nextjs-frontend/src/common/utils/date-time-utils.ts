@@ -63,7 +63,8 @@ export const getTimeAsLocal = (iso: string): TimePart | undefined => {
 
 export const toISOString = (datetime: DateTime | undefined | null): string | undefined => {
   if (datetime === null || datetime === undefined) return undefined;
-  return datetime.toUTC().toISO();
+  // return datetime.toUTC().toISO();
+  return new Date(datetime.toString()).toISOString()
 }
 
 export const nowAsISOString = (): string => {
