@@ -3,11 +3,9 @@ import React from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
-import Box from "@mui/material/Box";
 import moment from "moment";
 import { Chart, ArcElement } from "chart.js";
 Chart.register(ArcElement);
-import { Doughnut } from "react-chartjs-2";
 import {
   NoobTableCell,
   NoobTableHead,
@@ -22,44 +20,6 @@ function createData(
 ):any {
   return {team1, team2, date, status };
 }
-
-const chartOptions = {
-  legend: {
-    display: true,
-    position: "bottom",
-  },
-  elements: {
-    arc: {
-      borderWidth: 2,
-      // spacing:2,
-    },
-  },
-};
-
-const chartData = {
-  labels: ["Top Match", "Loose", "Win"],
-  datasets: [
-    {
-      data: [8, 4],
-      backgroundColor: ["rgba(227, 35, 255, 1)", "rgba(138, 255, 108, 1)"],
-      borderColor: ["rgba(227, 35, 255, 1)", "rgba(138, 255, 108, 1)"],
-      spacing: 2,
-      borderWidth: 1,
-      weight: 1,
-    },
-    {
-      data: [],
-      weight: 1,
-    },
-    {
-      data: [12],
-      backgroundColor: ["rgba(255, 212, 34, 1)"],
-      borderColor: ["rgba(255, 212, 34, 1)"],
-      borderWidth: 1,
-      weight: 1,
-    },
-  ],
-};
 
 const rows = [
   createData(
@@ -110,20 +70,7 @@ const MatchHistory:React.FC = () => {
           </Table>
         </TableContainer>
       </Grid>
-      <Grid item xs={12} sm={12} md={4}>
-        <Box
-          style={{ background: "#08001C", borderRadius: "10px" }}
-          flexDirection="column"
-          display={"flex"}
-          alignItems="center"
-        >
-          <Box width={"50%"} height={"100%"} marginBottom={2}>
-            <Doughnut data={chartData} options={chartOptions} />
-          </Box>
-          <Typography color={"white"}>Total Earning</Typography>
-          <Typography color={"white"}> $12,875 </Typography>
-        </Box>
-      </Grid>
+    
     </Grid>
   );
 };

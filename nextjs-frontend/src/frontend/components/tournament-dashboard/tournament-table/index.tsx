@@ -14,19 +14,23 @@ import { fetchAllGamesThunk } from "../../../redux-store/games/game-slice";
 const TournamentDashboardTable: React.FC = () => {
   const [data, setData] = React.useState<TournamentType[]>([]);
   const router = useRouter();
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
+    setLoading(true)
     axios
       .get("/api/tournaments/list")
       .then((res) => {
         if(res.data.data && res.data.data.tournaments){
           setData(res.data.data.tournaments);
         }
+        setLoading(false)
         
       })
       .catch((err) => {
         console.error(err);
         setData([]);
+        setLoading(false);
       });
   }, []);
 
@@ -138,6 +142,7 @@ const TournamentDashboardTable: React.FC = () => {
         title={"Tournament Master"}
         colConf={conf}
         data={data}
+        loading={loading}
       />
       <CardLayout styles={{ padding: 0, paddingBottom: "0!important" }}>
         <Box justifyContent={"center"} width="100%">

@@ -15,6 +15,7 @@ import { StreamData } from "./create/streams";
 import moment from "moment";
 import Share from "./share";
 import { InvitePlayerData } from "./share/invitePlayer";
+import Loader from '../ui-components/loader';
 
 export interface TournamentData {
   id?: string;
@@ -74,6 +75,8 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
   const router = useRouter();
   const query: ParsedUrlQuery = router.query;
 
+  const [loading, setLoading] = React.useState(false);
+
   let url = "/tournament/new/[...slug]";
   if (type === "update") {
     url = "/tournament/update/[id]/[...slug]";
@@ -81,6 +84,7 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
 
   React.useEffect(() => {
     if (router.query.id !== undefined) {
+      setLoading(true);
       axios
         .get(`/api/tournaments/${router.query.id}`)
         .then((res) => {
@@ -115,8 +119,10 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
               },
             } as TournamentData);
           }
+          setLoading(false);
         })
         .catch((err) => {
+          setLoading(false)
           console.error(err);
         });
     }
@@ -270,24 +276,27 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
         description: "Noob Storm tournament page",
       }}
     >
-      <Grid container spacing={1}>
-        <Grid item md={3}>
-          <SideBar key={"sidebar"} nav={sideBarNav} />
+      <React.Fragment>
+        <Loader loading={loading} />
+        <Grid container spacing={1}>
+          <Grid item md={3}>
+            <SideBar key={"sidebar"} nav={sideBarNav} />
+          </Grid>
+          <Grid item md={9}>
+            <TournamentContext.Provider
+              value={{
+                id: router.query.id ? router.query.id : "",
+                type,
+                data: data,
+                setData: updateData,
+                onSubmit: submitHandler,
+              }}
+            >
+              {renderSection()}
+            </TournamentContext.Provider>
+          </Grid>
         </Grid>
-        <Grid item md={9}>
-          <TournamentContext.Provider
-            value={{
-              id: router.query.id ? router.query.id : "",
-              type,
-              data: data,
-              setData: updateData,
-              onSubmit: submitHandler,
-            }}
-          >
-            {renderSection()}
-          </TournamentContext.Provider>
-        </Grid>
-      </Grid>
+      </React.Fragment>
     </NoobPage>
   );
 };
