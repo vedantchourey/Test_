@@ -20,7 +20,7 @@ export interface Player {
 
 const Players:React.FC<Props> = ({data}) => {
   const maxPlayers = (data.opponent1.players || []).length>(data.opponent2.players || []).length?(data.opponent1.players ||[]).length:(data.opponent2.players || []).length;
-  const renderPlayers = ():void =>{
+  const renderPlayers = ():JSX.Element[] =>{
     const items:JSX.Element[] = [];
     for(let i=0;i<maxPlayers;i++){
       const op1 = (data.opponent1.players || [])[i];
