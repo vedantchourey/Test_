@@ -22,6 +22,7 @@ import styled from "@emotion/styled";
 import TeamMembers, { Player } from "./members";
 import axios from "axios";
 import { getAuthHeader } from "../../utils/headers";
+import Loader from "../ui-components/loader";
 
 export const NoobTab = styled(Tab)(() => ({
   textTransform: "capitalize",
@@ -56,18 +57,24 @@ const Team: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [team, setTeam] = React.useState<TeamType | undefined>(undefined);
+  const [loading, setLoading] = React.useState(false);
 
   const fetchTeam = async (): Promise<void> => {
     if (query.id) {
       const headers = await getAuthHeader();
+      setLoading(true);
+
       axios
         .get("/api/teams", { params: { id: query.id }, headers: headers })
         .then((res) => {
           if (res.data.result && res.data.result.length > 0) {
             setTeam(res.data.result[0]);
           }
+          setLoading(false);
         })
         .catch((err) => {
+          setLoading(false);
+
           console.error(err);
         });
     }
@@ -90,7 +97,7 @@ const Team: React.FC = () => {
       case "match/history":
         return <MatchHistory />;
       case "permissions":
-        return <Permissions />;
+        return <Permissions players={team?.players || []} />;
       case "members":
         return (
           <TeamMembers
@@ -177,40 +184,44 @@ const Team: React.FC = () => {
   };
 
   return (
-    <NoobPage
-      title="Team"
-      metaData={{
-        description: "Noob Storm team page",
-      }}
-    >
-      <TeamCard name={team?.name}>
-        <Box display={"flex"} justifyContent="space-between">
-          {renderTabs()}
-          {!isMobile ? (
-            <Box
-              style={{
-                border: "1px solid rgba(255, 255, 255, 0.1)",
-                background: "#08001C",
-                display: "flex",
-                width: "270px",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Typography color={"white"}>
-                Team Elo Rating:
-                <span style={{ color: "#F09633", marginLeft: "30px" }}>
-                  {" "}
-                  356{" "}
-                </span>{" "}
-              </Typography>
-            </Box>
-          ) : null}
-        </Box>
+    <React.Fragment>
+      <Loader loading={loading} />
 
-        <Box marginY={2}>{renderComponent()}</Box>
-      </TeamCard>
-    </NoobPage>
+      <NoobPage
+        title="Team"
+        metaData={{
+          description: "Noob Storm team page",
+        }}
+      >
+        <TeamCard name={team?.name}>
+          <Box display={"flex"} justifyContent="space-between">
+            {renderTabs()}
+            {!isMobile ? (
+              <Box
+                style={{
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
+                  background: "#08001C",
+                  display: "flex",
+                  width: "270px",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography color={"white"}>
+                  Team Elo Rating:
+                  <span style={{ color: "#F09633", marginLeft: "30px" }}>
+                    {" "}
+                    356{" "}
+                  </span>{" "}
+                </Typography>
+              </Box>
+            ) : null}
+          </Box>
+
+          <Box marginY={2}>{renderComponent()}</Box>
+        </TeamCard>
+      </NoobPage>
+    </React.Fragment>
   );
 };
 
