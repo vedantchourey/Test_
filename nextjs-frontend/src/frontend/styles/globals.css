@@ -37,6 +37,8 @@ body {
   margin: 0;
   font-size: 16px;
   /* line-height:1.6; */
+
+  font-family: 'Chakra Petch';
 }
 
 *,
@@ -67,3 +69,18 @@ a:hover {
 .bracket .brackets-viewer {
   background-color: transparent;
 }
+
+/* .slick-slide {
+  margin: 0 27px!important;
+}
+
+.slick-list {
+  margin: 0 -27px!important;
+} */
+
+@media screen and (min-width: 700px) {
+  .slick-list {margin: 0 -5px!important;}
+.slick-slide>div {padding: 0 5px!important;}
+.slick-track{ margin-left: 0!important; }
+}
+

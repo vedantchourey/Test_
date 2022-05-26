@@ -22,4 +22,9 @@ export interface IBackendConfig {
     cmsApiEndpoint: string;
     appUrl: string;
   }
+  credit_config: {
+    credit_gst_percentage: number;
+    credit_service_percentage: number;
+    price_per_credit: number
+  }
 }

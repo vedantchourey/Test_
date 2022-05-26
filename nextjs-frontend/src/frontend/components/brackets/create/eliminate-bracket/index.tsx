@@ -158,7 +158,7 @@ const EliminateBracket = React.forwardRef<
             : new Date().toISOString(),
       };
     });
-  }, [formik.values.playersLimit]);
+  }, [formik.values.playersLimit, formik.values.type]);
 
   return (
     <React.Fragment>

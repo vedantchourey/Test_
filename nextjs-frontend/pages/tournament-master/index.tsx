@@ -12,7 +12,7 @@ const TournamentMasterPage: React.FC<void> = () => {
       redirectToOnFailure="/"
       renderOnCheckFailure={(): JSX.Element => <NotFound />}
     >
-      <TournamentMaster key={"tournament"}></TournamentMaster>
+    <TournamentMaster key={"tournament"}></TournamentMaster>
     </AuthGuard>
   );
 };

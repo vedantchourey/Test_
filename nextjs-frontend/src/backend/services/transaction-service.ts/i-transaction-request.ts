@@ -3,4 +3,5 @@ export interface ITransactionRequest {
   wallet_id: string;
   amount: number;
   type: string;
+  data?: any;
 }
