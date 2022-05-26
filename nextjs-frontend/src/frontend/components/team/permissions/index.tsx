@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import React from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { Player } from "../members";
 
 export const NoobCell = styled(TableCell)(() => ({

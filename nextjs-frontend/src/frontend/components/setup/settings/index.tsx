@@ -84,7 +84,7 @@ const Settings: React.FC<SettingProps> = ({
   React.useEffect(() => {
     if (data) {
       formik.setValues({
-        ...data      });
+        ...data });
     }
   }, [data]);
   

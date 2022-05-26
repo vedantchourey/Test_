@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import React from "react";
 import CardLayout from "../card-layout";
-import Loader from "../loader";
 
 export interface NoobColumnConf<Type> {
   title: string;
@@ -121,7 +120,7 @@ const NoobTable: <Type>(props:NoobTableProp<Type>)=>JSX.Element = ({
     <React.Fragment>
       {renderTitle()}
       <TableContainer>
-        <Table  style={{ borderCollapse: "separate", borderSpacing: "0 1em" }}>
+        <Table style={{ borderCollapse: "separate", borderSpacing: "0 1em" }}>
           {renderHeader()}
           {renderRow()}
         </Table>
