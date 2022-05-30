@@ -54,3 +54,24 @@
 	color: white;
 	border-radius: 0px;
 }
+.tab {
+	width: 180px;
+	margin-right: 20px;
+	height: 55px;
+	background: #0F0526;
+	border-radius: 5px;
+}
+.container {
+	display: flex;
+	align-items: flex-start;
+	margin: 80px 50px 50px 50px;
+}
+.sideBox {
+	width: 310px;
+	height: 468px;
+	background: rgba(215, 215, 215, 0.06);
+	border-radius: 5px;
+}
+.alice-carousel__prev-btn {
+	display: none !important;
+}
