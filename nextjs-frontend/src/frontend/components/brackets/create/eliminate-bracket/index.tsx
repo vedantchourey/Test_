@@ -29,6 +29,8 @@ interface RoundData {
   startTime?: string;
 }
 export interface EliminateBracketData {
+  name: string;
+  startDate: string | null;
   startTime: string | null;
   checkInType: string;
   checkInAmount: number;
