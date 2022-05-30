@@ -50,11 +50,6 @@ const EliminateBracket = React.forwardRef<
   EliminateBracketProps
 >(({ onSave, data }, ref) => {
   const validationSchema = yup.object({
-    startTime: yup
-      .date()
-      .required("Start time is required")
-      .nullable()
-      .transform((v) => (v instanceof Date && !isNaN(v.getTime()) ? v : null)),
     checkInType: yup.string().required(),
     type: yup.string().required("type is required"),
     playersLimit: yup.number(),
@@ -66,6 +61,7 @@ const EliminateBracket = React.forwardRef<
         map: yup.array().of(yup.string())
 .nullable(),
         startTime: yup.date().when("round", (data) => {
+        
           return data !== "1"
             ? yup.date().required("Start time is required")
             : yup.date();
@@ -76,7 +72,6 @@ const EliminateBracket = React.forwardRef<
 
   const formik = useFormik({
     initialValues: {
-      startTime: data?.startTime || null,
       checkInType: data?.checkInType || "false",
       checkInAmount: data?.checkInAmount || 0,
       type: data?.type || "",
