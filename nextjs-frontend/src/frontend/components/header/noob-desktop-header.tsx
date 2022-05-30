@@ -52,7 +52,11 @@ export default function NoobDesktopHeader(): JSX.Element {
 
   async function gotoHomePage(): Promise<void> {
     await router.push('/')
-    }
+  }
+
+  async function gotoLeadboardsPage(): Promise<void> {
+    await router.push('/leaderboards')
+  }
 
   function onSuccessfulLogin(): void {
     setShowLoginModal(false);
@@ -61,6 +65,10 @@ export default function NoobDesktopHeader(): JSX.Element {
   function onShowLoginModal(): void {
     setLoginButtonDimensions(createFromRef(loginButtonRef));
     setShowLoginModal(true);
+  }
+
+  async function gotoFreeAgencyMarketPage(): Promise<void> {
+    await router.push('/free-agency-market/view/members')
   }
 
   return (
@@ -77,7 +85,7 @@ export default function NoobDesktopHeader(): JSX.Element {
             <Button variant="text" startIcon={<ShoppingCartIcon />} style={{ textTransform: 'none' }}>
               Store
             </Button>
-            <Button variant="text" startIcon={<FlashOnIcon />} style={{ color: theme.palette.secondary.main, textTransform: 'none' }}>
+            <Button variant="text" startIcon={<FlashOnIcon />} style={{ color: theme.palette.secondary.main, textTransform: 'none' }} onClick={gotoFreeAgencyMarketPage}>
               Free Agency Market
             </Button>
           </div>
@@ -103,7 +111,7 @@ export default function NoobDesktopHeader(): JSX.Element {
           <div className={styles.bottomMenuLeftGroup}>
             <Button variant="text" style={buttonStyle(['/'])} onClick={gotoHomePage}>Home</Button>
             <Button variant="text" style={buttonStyle(['/tournaments'])}>Tournaments</Button>
-            <Button variant="text" style={buttonStyle(['/leaderboards'])}>Leaderboards</Button>
+            <Button variant="text" style={buttonStyle(['/leaderboards'])} onClick={gotoLeadboardsPage}>Leaderboards</Button>
             <Button variant="text" onClick={gotoAboutUsPage} style={buttonStyle(['/about-us'])}>About Us</Button>
             <Button variant="text" onClick={gotoSupportPage} style={buttonStyle(['/support'])}>Support</Button>
             <Button variant="text" style={buttonStyle(['/faq'])} onClick={() : any => router.push("/match-hub")}>FAQ</Button>
