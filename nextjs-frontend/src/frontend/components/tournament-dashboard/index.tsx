@@ -16,10 +16,10 @@ const TournamentDashboard: React.FC = () => {
       }}
     >
       <Grid container columnSpacing={2} rowSpacing={2}>
-        <Grid item md={3} lg={2}>
+        <Grid item md={3} lg={3}>
           <DashboardSideBar />
         </Grid>
-        <Grid item md={6} lg={8}>
+        <Grid item md={6} lg={9}>
           <Grid container columnSpacing={2} rowSpacing={2}>
             <Grid item md={8}>
               <DashboardCard
