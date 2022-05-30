@@ -1,7 +1,5 @@
 import { AppBar, Avatar, Icon, IconButton, Button, Box, Divider } from '@mui/material';
 import styles from './noob-mobile-header.module.css';
-import MenuIcon from '@mui/icons-material/Menu';
-import Image from 'next/image';
 import * as React from 'react';
 import { useState } from 'react';
 import NoobDrawer from '../drawer/noob-drawer';
@@ -18,6 +16,7 @@ import { signOut } from '../../service-clients/auth-service-client';
 import { setMobileHeaderHeight } from '../../redux-store/layout/layout-slice';
 import { mobileHeaderHeightSelector } from '../../redux-store/layout/layout-selectors';
 import { useRouter } from 'next/router';
+import style from './mobile-sidebar.module.css';
 
 export default function MobileDrawer(): JSX.Element {
   const [showMenu, setShowMenu] = useState(false);
@@ -61,60 +60,59 @@ export default function MobileDrawer(): JSX.Element {
   return (
     <>
       <AppBar position="fixed" className={styles.appBar} ref={updateMobileHeight}>
-
-      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '15px' }}>
+      <div className={style.container}>
         <Box>
           <IconButton onClick={toggleDrawer}>
             <img src="/icons/Vector-MenuIcon.png"/>
           </IconButton>
         </Box>
         <Box>
-          <img src="/icons/logo-white-1.png" style={{ marginLeft: '20px',marginBottom: '-8px' }} />
-          <span style={{ borderRight: '1px solid #6931F9',margin: '10px' }}></span>
-          <img src="/images/noobstorm-logo-small.png" style={{ marginBottom: '-13px', width: '120px', height: '33px' }}/>
+          <img src="/icons/logo-white-1.png" className={style.img1} />
+          <span className={style.border1}></span>
+          <img src="/images/noobstorm-logo-small.png" className={style.img2} />
         </Box>
         <Box>
-          <Button variant="text" style={{ color: 'white', backgroundColor: '#6931F9', borderRadius: '10px', marginLeft: '10px',fontSize: '12px', height: '30px', paddingLeft: '12px'}} startIcon={<img src="/icons/Vector-Wallet.png" />}>$240.00</Button>
-          </Box>
+          <Button variant="text" className={style.button1} startIcon={<img src="/icons/Vector-Wallet.png" />}>$240.00</Button>
+        </Box>
         <Box>
-          <img src="/icons/Vector-Bell.png" style={{ marginLeft: '10px', marginBottom: '-5px' }}/>
-          <img src="/icons/Vector-Ellipse.png" style={{ marginLeft: '-3px', marginBottom: '13px' }}/>
+          <img src="/icons/Vector-Bell.png" className={style.img3}/>
+          <img src="/icons/Vector-Ellipse.png" className={style.img4}/>
         </Box>
       </div>
-        <Divider/>
-        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '15px' }}>
-          <Box>
-            <img src="/icons/Vector-home2.png" style={{ height: '21px', width: '18px' }} />
-          </Box>
-          <Box>
-            <img src="/icons/Vector-Tournaments2.png" style={{ height: '21px', width: '18px' }}/>
-          </Box>
-          <Box>
-            <img src="/icons/Vector-Leaderboards.png" style={{ height: '21px', width: '18px' }}/>
-          </Box>
-          <Box style={{ width: '30px', height: '30px', backgroundColor: '#6931F9', alignItems: 'center', display: 'flex', justifyContent: 'center', borderRadius: '20px', marginTop: '-5px' }}>
-            <img src="/icons/Vector-Search.png" style={{ width: '16px' }}/>
-          </Box>
-        </div>
+      <Divider/>
+      <div className={style.container}>
+        <Box>
+          <img src="/icons/Vector-home2.png" className={style.img5}/>
+        </Box>
+        <Box>
+          <img src="/icons/Vector-Tournaments2.png" className={style.img5}/>
+        </Box>
+        <Box>
+          <img src="/icons/Vector-Leaderboards.png" className={style.img5}/>
+        </Box>
+        <Box className={style.box}>
+          <img src="/icons/Vector-Search.png" style={{ width: '16px' }}/>
+        </Box>
+      </div>
 
-        {isLoggedIn && <div className={styles.bottomHeader}>
-          <IconButton className={styles.bottomHeaderIcons} onClick={(): Promise<boolean> => router.push('/')}>
-            <Icon><HomeOutlinedIcon /></Icon>
-          </IconButton>
-          <IconButton className={styles.bottomHeaderIcons}>
-            <Icon><EqualizerOutlinedIcon /></Icon>
-          </IconButton>
-          <IconButton className={styles.bottomHeaderIcons}>
-            <Icon><MilitaryTechOutlinedIcon /></Icon>
-          </IconButton>
-          <IconButton className={styles.bottomHeaderIcons}>
-            <Icon><NotificationsOutlinedIcon /></Icon>
-          </IconButton>
-          <IconButton className={styles.bottomHeaderIcons}>
-            <Icon><ChatBubbleOutlineOutlinedIcon /></Icon>
-          </IconButton>
-        </div>
-        }
+      {isLoggedIn && <div className={styles.bottomHeader}>
+        <IconButton className={styles.bottomHeaderIcons} onClick={(): Promise<boolean> => router.push('/')}>
+          <Icon><HomeOutlinedIcon /></Icon>
+        </IconButton>
+        <IconButton className={styles.bottomHeaderIcons}>
+          <Icon><EqualizerOutlinedIcon /></Icon>
+        </IconButton>
+        <IconButton className={styles.bottomHeaderIcons}>
+          <Icon><MilitaryTechOutlinedIcon /></Icon>
+        </IconButton>
+        <IconButton className={styles.bottomHeaderIcons}>
+          <Icon><NotificationsOutlinedIcon /></Icon>
+        </IconButton>
+        <IconButton className={styles.bottomHeaderIcons}>
+          <Icon><ChatBubbleOutlineOutlinedIcon /></Icon>
+        </IconButton>
+      </div>
+      }
       </AppBar>
       <NoobDrawer show={showMenu}
         onClose={hideMenu}

@@ -3,8 +3,6 @@ import { useAppSelector } from "../../redux-store/redux-store";
 import { isDeviceTypeSelector } from "../../redux-store/layout/layout-selectors";
 import Head from "next/head";
 import NoobHeader from "../header/noob-header";
-import commonStyles from "../../styles/common.module.css";
-import styles from "./noob-page.module.css";
 import React from "react";
 import { deviceTypes } from "../../redux-store/layout/device-types";
 import NoobFooter from "../footer";
@@ -38,6 +36,7 @@ export default function NoobPage(props: Props): JSX.Element {
       <Box sx={{ display: 'flex' }}>
         <NoobHeader/>
           <Box
+            style={{ minHeight: '1005px' }}
             component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}>
             {children}
           </Box>
