@@ -126,6 +126,7 @@ const TeamMembers: React.FC = () => {
 
   const fetchUsers = async () =>{
     const headers = await getAuthHeader();
+    console.log('headers -> ', headers)
     axios.get("/api/free-agency-market/list",{headers:headers}).then((res)=>{
       const players: MemberProp[] = res.data.map((item: any) => ({
         name: `${item.firstName} ${item.lastName}`,
