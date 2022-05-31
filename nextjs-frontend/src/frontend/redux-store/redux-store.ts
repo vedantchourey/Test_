@@ -1,13 +1,14 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import layoutSliceReducer from './layout/layout-slice';
-import authenticationSliceReducer from './authentication/authentication-slice';
-import countrySliceReducer from './countries/country-slice';
-import screenAnimationsSliceReducer from './screen-animations/screen-animation-slice';
-import platformSliceReducer from './platforms/platform-slice';
-import gameSliceReducer from './games/game-slice';
-import matchBestOfSliceReducer from './match-best-of/match-best-of-slice';
-import matchFormatSliceReducer from './match-format/match-format-slice';
+import { configureStore } from "@reduxjs/toolkit";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import layoutSliceReducer from "./layout/layout-slice";
+import authenticationSliceReducer from "./authentication/authentication-slice";
+import countrySliceReducer from "./countries/country-slice";
+import screenAnimationsSliceReducer from "./screen-animations/screen-animation-slice";
+import platformSliceReducer from "./platforms/platform-slice";
+import { gameSliceReducer, formatSliceReducer } from "./games/game-slice";
+import matchBestOfSliceReducer from "./match-best-of/match-best-of-slice";
+import matchFormatSliceReducer from "./match-format/match-format-slice";
+import walletSliceReducer from "./wallet/wallet.-slice";
 
 const reduxStore = configureStore({
   reducer: {
@@ -17,9 +18,11 @@ const reduxStore = configureStore({
     countries: countrySliceReducer,
     platforms: platformSliceReducer,
     games: gameSliceReducer,
+    formats: formatSliceReducer,
     matchBestOfs: matchBestOfSliceReducer,
-    matchFormats: matchFormatSliceReducer
-  }
+    matchFormats: matchFormatSliceReducer,
+    wallet: walletSliceReducer,
+  },
 });
 
 export type RootState = ReturnType<typeof reduxStore.getState>;
@@ -30,4 +33,3 @@ export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export default reduxStore;
-

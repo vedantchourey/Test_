@@ -69,6 +69,7 @@ export interface ITournamentType {
   status: "DRAFT" | "PUBLISHED";
   joinStatus: "PRIVATE" | "PUBLIC";
   createTemplateCode: string;
+  templateCode?: string;
 }
 
 export interface IListTournamentResponse {

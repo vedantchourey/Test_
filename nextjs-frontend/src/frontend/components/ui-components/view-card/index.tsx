@@ -1,9 +1,10 @@
 import React from "react";
-import { Card, CardContent, CardHeader, Typography } from "@mui/material";
+import { Card, CardContent, CardContentProps, CardHeader, Typography } from "@mui/material";
 import styled from "@emotion/styled";
 
 interface CardProp {
   title?: string;
+  contentProps?:CardContentProps;
 }
 
 const NoobCardHeader = styled(CardHeader)(() => ({
@@ -13,21 +14,19 @@ const NoobCardHeader = styled(CardHeader)(() => ({
 const NoobCard = styled(Card)(() => ({
   height: "100%",
   borderRadius: "0px",
-  marginLeft: "70px",
-  marginRight: "70px",
   marginBottom: "15px",
 }));
 
-const ViewCard: React.FC<CardProp> = ({ title, children }) => {
+const ViewCard: React.FC<CardProp> = ({ title, children, contentProps }) => {
   return (
-    <NoobCard>
+    <NoobCard sx={{marginX:{xs:"10px",sm:"10px",md:"70px"}}}>
       {title ? (
         <NoobCardHeader
           title={<Typography textAlign={"left"} color={"rgba(105,50,249,1)"}>{title}</Typography>}
         />
       ) : null}
 
-      <CardContent>{children}</CardContent>
+      <CardContent {...contentProps}>{children}</CardContent>
     </NoobCard>
   );
 };

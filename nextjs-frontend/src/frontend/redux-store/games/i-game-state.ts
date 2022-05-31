@@ -5,4 +5,5 @@ export interface IGameState {
   games: IGameResponse[];
   fetchStatus: DataFetchStatus;
   error: unknown;
+  formats: any[]
 }

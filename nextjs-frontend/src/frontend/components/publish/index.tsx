@@ -10,15 +10,13 @@ const Publish: React.FC = (): JSX.Element => {
   const [isCreated, setCreated] = React.useState(false);
 
   const handleSave = (newData: PublishTournamentData): void => {
-    setData(
-      { ...data, publishData: newData },
-      undefined,
-      type === "new"
-    ).then((res)=>{
-      if(res){
-        setCreated(true);
+    setData({ ...data, publishData: newData }, undefined, type === "new").then(
+      (res) => {
+        if (res) {
+          setCreated(true);
+        }
       }
-    });
+    );
   };
 
   const goBack = (): void => {
@@ -37,7 +35,7 @@ const Publish: React.FC = (): JSX.Element => {
     }
   };
 
-  const handleClose = ():void =>{
+  const handleClose = (): void => {
     setCreated(false);
     if (type === "new") {
       router.push(
@@ -52,7 +50,7 @@ const Publish: React.FC = (): JSX.Element => {
         { shallow: true }
       );
     }
-  }
+  };
 
   return (
     <React.Fragment>

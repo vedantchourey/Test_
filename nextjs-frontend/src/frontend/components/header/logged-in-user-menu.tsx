@@ -20,6 +20,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { ISearchPeopleByUsernameResponse } from "../../service-clients/messages/i-search";
 import { searchPeopleByText } from "../../service-clients/search-service-client";
 import frontendConfig from '../../utils/config/front-end-config';
+import { walletDetaislSelector } from "../../redux-store/wallet/wallet-selector";
 
 const CustomMenu = styled(Menu)(() => {
   return ({
@@ -38,6 +39,7 @@ export default function LoggedInUserMenu(): JSX.Element {
   const avatarUrl = useAppSelector(avatarImageBlobUrlSelector);
   const [userList, setUserList] = useState<ISearchPeopleByUsernameResponse[]>([])
   const [isFetching, setIsFetching] = useState(false)
+  const wallet = useAppSelector(walletDetaislSelector);
 
   function handleClose(): void {
     setShowMenu(false);
@@ -57,6 +59,12 @@ export default function LoggedInUserMenu(): JSX.Element {
     handleClose();
     await router.push('/account')
   }
+
+  async function handleWallet(): Promise<void> {
+    handleClose();
+    await router.push('/wallet/info')
+  }
+
 
   async function handleDashboard(): Promise<void>{
     handleClose();
@@ -165,7 +173,7 @@ export default function LoggedInUserMenu(): JSX.Element {
         </div>
         <div className={styles.columnGroup}>
           <Typography className={styles.username}>{username}</Typography>
-          <Typography className={styles.balance}><Icon fontSize="inherit"><CurrencyRupeeIcon fontSize="inherit" /></Icon>600</Typography>
+          <Typography className={styles.balance}><Icon fontSize="inherit"><CurrencyRupeeIcon fontSize="inherit" /></Icon>{wallet?.balance}</Typography>
         </div>
         <div className={styles.menuGroup}>
           <IconButton aria-label="show user menu" onClick={onDownArrowClick}>
@@ -183,7 +191,7 @@ export default function LoggedInUserMenu(): JSX.Element {
           <MenuItem onClick={handleAccountItem}><ListItemIcon><PersonIcon fontSize="small" /></ListItemIcon><ListItemText>Account</ListItemText></MenuItem>
           <MenuItem onClick={handleDashboard}><ListItemIcon><DashboardIcon fontSize="small" /></ListItemIcon><ListItemText>Dashboard</ListItemText></MenuItem>
           <MenuItem onClick={handleClose}><ListItemIcon><ShoppingBagIcon fontSize="small" /></ListItemIcon><ListItemText>Orders</ListItemText></MenuItem>
-          <MenuItem onClick={handleClose}><ListItemIcon><AccountBalanceWalletIcon fontSize="small" /></ListItemIcon><ListItemText>Wallet</ListItemText></MenuItem>
+          <MenuItem onClick={handleWallet}><ListItemIcon><AccountBalanceWalletIcon fontSize="small" /></ListItemIcon><ListItemText>Wallet</ListItemText></MenuItem>
           <MenuItem onClick={handleSettings}><ListItemIcon><SettingsIcon fontSize="small" /></ListItemIcon><ListItemText>Profile Settings</ListItemText></MenuItem>
           <MenuItem onClick={handleClose}><ListItemIcon><WatchLaterIcon fontSize="small" /></ListItemIcon><ListItemText>Active Tournaments</ListItemText></MenuItem>
           <Divider />

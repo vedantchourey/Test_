@@ -4,12 +4,41 @@
   --swiper-theme-color: #6932f9 !important;
 }
 
+
+   
+.brackets-viewer {
+  /* Colors */
+  --primary-background: #101213;
+  --secondary-background: #1c2835;
+  --match-background: rgb(26, 16, 48);
+  --font-color: #d9d9d9;
+  --win-color: #50b649;
+  --loss-color: #e61a1a;
+  --label-color: grey;
+  --hint-color: #a7a7a7;
+  --connector-color: #404b57;
+  --border-color: var(--primary-background);
+  --border-hover-color: #b6b5b5;
+
+  /* Sizes */
+  --text-size: 16px;
+  --round-margin: 40px;
+  --match-width: 180px;
+  --match-horizontal-padding: 10px;
+  --match-vertical-padding: 15px;
+  --connector-border-width: 2px;
+  --match-border-width: 2px;
+  --match-border-radius: 0.5em;
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
   font-size: 16px;
   /* line-height:1.6; */
+
+  font-family: 'Chakra Petch';
 }
 
 *,
@@ -29,7 +58,7 @@ a:hover {
   font-family: "Inter", sans-serif !important;
 }
 
-.ql-container.ql-snow{
+.ql-container.ql-snow {
   border: 0px !important;
 }
 
@@ -37,126 +66,21 @@ a:hover {
   border: 0px !important;
   border-bottom: 1px solid #cccc !important;
 }
-
-.bracket {
-
-}
-.img{
-  padding-right: 18px;
-}
-.bracket .round {
-  display: inline-block;
-  vertical-align: middle;
-}
-.bracket .round .winners > div {
-  display: inline-block;
-  vertical-align: middle;
-}
-.bracket .round .winners > div.matchups .matchup:last-child {
-  margin-bottom: 0 !important;
-}
-.bracket .round .winners > div.matchups .matchup .participants {
-  border-radius: 0.25rem;
-  overflow: hidden;
-}
-.bracket .round .winners > div.matchups .matchup .participants .participant {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-  color: white;
-  /*border-left: 0.25rem solid #858585;*/
-  background: #19122C;
-  width: 300px;
-  height: 3rem;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
+.bracket .brackets-viewer {
+  background-color: transparent;
 }
 
-.bracket .round .winners > div.matchups .matchup .participants .participant span {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
+/* .slick-slide {
+  margin: 0 27px!important;
 }
-.spanclass{
-  padding: 14px;
-  padding-right: 20px;
-  padding-left: 20px;
-  background-color: #0F0526;
-  margin: 10px;
-  margin-left: 102px;
-  color: white;
-  font-size: 17px;
+
+.slick-list {
+  margin: 0 -27px!important;
+} */
+
+@media screen and (min-width: 700px) {
+  .slick-list {margin: 0 -5px!important;}
+.slick-slide>div {padding: 0 5px!important;}
+.slick-track{ margin-left: 0!important; }
 }
-.bracket .round .winners > div.matchups .matchup .participants .participant.winner {
-  color: #60c645;
-  border-color: #60c645;
-}
-.bracket .round .winners > div.matchups .matchup .participants .participant.loser {
-  color: #dc563f;
-  border-color: #dc563f;
-}
-.bracket .round .winners > div.matchups .matchup .participants .participant:not(:last-child) {
-  border-bottom: thin solid #f0f2f2;
-}
-.span {
-  line-height: 3;
-  font-size: 1rem;
-  font-family: "Roboto Slab";
-  margin: 15px;
-}
-.bracket .round .winners > div.connector.filled .line, .bracket .round .winners > div.connector.filled.bottom .merger:after, .bracket .round .winners > div.connector.filled.top .merger:before {
-  border-color: #60c645;
-}
-.bracket .round .winners > div.connector .line, .bracket .round .winners > div.connector .merger {
-  box-sizing: border-box;
-  width: 2rem;
-  display: inline-block;
-  vertical-align: top;
-}
-.bracket .round .winners > div.connector .line {
-  border-bottom: thin solid #c0c0c8;
-  height: 4rem;
-}
-.bracket .round .winners > div.connector .merger {
-  position: relative;
-  height: 8rem;
-}
-.bracket .round .winners > div.connector .merger:before, .bracket .round .winners > div.connector .merger:after {
-  content: "";
-  display: block;
-  box-sizing: border-box;
-  width: 100%;
-  height: 50%;
-  border: 0 solid;
-  border-color: #c0c0c8;
-}
-.bracket .round .winners > div.connector .merger:before {
-  border-right-width: thin;
-  border-top-width: thin;
-}
-.bracket .round .winners > div.connector .merger:after {
-  border-right-width: thin;
-  border-bottom-width: thin;
-}
-.bracket .round.quarterfinals .winners:not(:last-child) {
-  margin-bottom: 2rem;
-}
-.bracket .round.quarterfinals .winners .matchups .matchup:not(:last-child) {
-  margin-bottom: 2rem;
-}
-.bracket .round.semifinals .winners .matchups .matchup:not(:last-child) {
-  margin-bottom: 10rem;
-}
-.bracket .round.semifinals .winners .connector .merger {
-  height: 16rem;
-}
-.bracket .round.semifinals .winners .connector .line {
-  height: 8rem;
-}
-.bracket .round.finals .winners .connector .merger {
-  height: 3rem;
-}
-.bracket .round.finals .winners .connector .line {
-  height: 1.5rem;
-}
+
