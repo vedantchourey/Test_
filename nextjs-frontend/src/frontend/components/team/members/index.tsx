@@ -159,7 +159,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
   const [error, setError] = React.useState<string | undefined>(undefined);
 
   React.useEffect(()=>{
-    const newList = players.map((player)=>{
+    const newList:MemberProp[]  = players.map((player)=>{
       return {
         image: "/images/teams/player.png",
         type: "silver",
