@@ -3,7 +3,7 @@ export interface MemberProp {
   name: string;
   image: string;
   tags: string[];
-  type: string;
+  type: "silver" | "bronze" | "diamond" | "gold" | "ruby";
   elo?: string;
   won?: string;
   games?: string;

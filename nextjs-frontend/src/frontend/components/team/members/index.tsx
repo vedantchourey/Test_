@@ -162,12 +162,12 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
     const newList = players.map((player)=>{
       return {
         image: "/images/teams/player.png",
-        type: "Silver",
+        type: "silver",
         tags: ["Games", "Won", "Elo"],
         name: `${player.firstName} ${player.lastName}`,
-        games: 20,
-        won: 3,
-        elo: 1043,
+        games: "20",
+        won: "3",
+        elo: "1043",
       }
     })
     setPlayerList(newList);
