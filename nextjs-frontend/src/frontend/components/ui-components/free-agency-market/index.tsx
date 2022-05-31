@@ -2,7 +2,6 @@ import styled from "@emotion/styled";
 import { Box, Button, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
 import { ReactComponent as UnplashIcon } from "../../../../../public/icons/Unplashicon.svg";
-import { ReactComponent as UnplashIconMobile } from "../../../../../public/icons/Unplashicon_mobile.svg";
 
 export const NoobButton = styled(Button)(() => ({
   color: "white",
@@ -53,9 +52,6 @@ const CardMobile: React.FC = () => {
            text ever since the 1500s
           </Typography>
         </Box>
-      </Grid>
-      <Grid item xs={12} display={"flex"} mt={2}>
-          <UnplashIconMobile /> 
       </Grid>
     </Grid>
   );
