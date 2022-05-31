@@ -71,7 +71,6 @@ const FreeAgencyMarket: React.FC = (): JSX.Element => {
     switch (page) {
       case "members":
         return <><TeamMembers /></>;
-      // return <><MemberButton/><TeamMembers /></>;
       case "watchlist":
         return <WatchTeamMembers />;
       case "offer/sent":

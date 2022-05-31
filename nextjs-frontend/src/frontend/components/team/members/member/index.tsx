@@ -11,63 +11,63 @@ export interface MemberProp {
 
 const Member: React.FC<MemberProp> = ({ image, type, name, games, won, elo }) => {
   return (
-    <Box width={300} minHeight={409} position="relative">
+    <Box width={"100%"} position="relative">
       <div
         style={{
           position: "absolute",
           zIndex: 1000,
-          top: 252,
-          left: 80,
-          width: 134,
+          top: "61.5%",
+          left: "27%",
+          width: "45%",
           alignItems: "center",
         }}
       >
-        <Typography>{name}</Typography>
+        <Typography noWrap fontSize={"1.1 em"}>{name}</Typography>
       </div>
       <div
         style={{
           display: "flex",
           position: "absolute",
           zIndex: 1000,
-          top: 300,
-          left: 61,
-          width: 50,
-          height:47,
+          top: "74%",
+          left: "20%",
+          width: "17%",
+          height: "11%",
           alignItems: "center",
           justifyContent: "center",
         }}
       >
-        <Typography color={"#fff"}>{games}</Typography>
+        <Typography color={"#fff"} fontSize={"1.1 em"}>{games}</Typography>
       </div>
       <div
         style={{
           display: "flex",
           position: "absolute",
           zIndex: 1000,
-          top: 300,
-          left: 136,
-          width: 50,
-          height:47,
+          top: "74%",
+          left: "45%",
+          width: "17%",
+          height: "11%",
           alignItems: "center",
           justifyContent: "center",
         }}
       >
-        <Typography color={"#fff"}>{won}</Typography>
+        <Typography color={"#fff"} fontSize={"1.1 em"}>{won}</Typography>
       </div>
       <div
         style={{
           display: "flex",
           position: "absolute",
           zIndex: 1000,
-          top: 300,
-          left: 210,
-          width: 50,
-          height:47,
+          top: "74%",
+          left: "70%",
+          width: "17%",
+          height: "11%",
           alignItems: "center",
           justifyContent: "center",
         }}
       >
-        <Typography color={"#fff"}>{elo}</Typography>
+        <Typography color={"#fff"} fontSize={"1.1 em"}>{elo}</Typography>
       </div>
       <img
         src={image}

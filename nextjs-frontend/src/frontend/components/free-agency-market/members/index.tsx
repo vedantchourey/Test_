@@ -1,16 +1,19 @@
 import styled from "@emotion/styled";
 import { Box, Button, Typography, useMediaQuery, useTheme } from "@mui/material";
+import axios from "axios";
 import {
   CategoryScale, Chart, Legend, LinearScale, LineElement, PointElement, TimeScale, Title,
   Tooltip
 } from "chart.js";
 import moment from "moment";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Slider, { Settings } from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
-import Member, { MemberProp } from "./member";
+import { getAuthHeader } from "../../../utils/headers";
+import Member, { MemberProp } from "../../team/members/member";
+
 Chart.register(
   CategoryScale,
   LinearScale,
@@ -102,31 +105,31 @@ const players: MemberProp[] = [
   {
     name: "Player",
     image: "/images/teams/player.png",
-    type: "Bronze",
+    type: "bronze",
     tags: ["Games", "Won", "Elo"],
   },
   {
     name: "Player",
     image: "/images/teams/player.png",
-    type: "Gold",
+    type: "gold",
     tags: ["Games", "Won", "Elo"],
   },
   {
     name: "Player",
     image: "/images/teams/player.png",
-    type: "Diamond",
+    type: "diamond",
     tags: ["Games", "Won", "Elo"],
   },
   {
     name: "Player",
     image: "/images/teams/player.png",
-    type: "Ruby",
+    type: "ruby",
     tags: ["Games", "Won", "Elo"],
   },
   {
     name: "Player",
     image: "/images/teams/player.png",
-    type: "Silver",
+    type: "silver",
     tags: ["Games", "Won", "Elo"],
   },
 ];
@@ -151,6 +154,30 @@ const settings: Settings = {
 const TeamMembers: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [data, setData] = useState<MemberProp[] | []>([]);
+
+  const fetchUsers = async () =>{
+    const headers = await getAuthHeader();
+    axios.get("/api/free-agency-market/list",{headers:headers}).then((res)=>{
+      console.log('res.data -> ', res.data);
+      const players: MemberProp[] = res.data.map((item: any) => ({
+        name: `${item.firstName} ${item.lastName}`,
+        image: "/images/teams/player.png",
+        type: "bronze",
+        tags: ["Games", "Won", "Elo"],
+        elo: "10",
+        won: "6",
+        games: 12
+      }));
+      setData(players);
+    })
+  }
+
+  useEffect(() => {
+    fetchUsers();
+  }, [])
+
+  console.log('data -> ', data)
 
   return (
     <React.Fragment>
@@ -160,38 +187,9 @@ const TeamMembers: React.FC = () => {
         </Typography>
         <Box marginY={2}>
           <Slider {...settings}>
-            {players.map((player) => {
-              return <Member key={player.name} {...player} />;
+            {data.map((player: any) => {
+              return <Member key={player.firstName} {...player} />;
             })}
-            <Box>
-              <Box
-                border={"4px solid #6931F9"}
-                borderRadius={"10px"}
-                style={{ backgroundColor: "rgba(255, 255, 255, 0.09)" }}
-                minHeight={365}
-                display="flex"
-                alignContent={"center"}
-                flexDirection="column"
-                component={"div"}
-                justifyContent="center"
-              >
-                <Image
-                  src={"/icons/.svg"}
-                  height={"45px"}
-                  width={"45px"}
-                />
-                <Typography
-                  marginY={2}
-                  color="white"
-                  textTransform={"uppercase"}
-                  fontWeight="700"
-                  fontSize={"17px"}
-                  lineHeight={"18px"}
-                >
-                  Add Player
-                </Typography>
-              </Box>
-            </Box>
           </Slider>
         </Box>
       </Box>
