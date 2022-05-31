@@ -32,13 +32,13 @@ export function validatePersistTournament(body: any): any {
       limitType: Joi.string()
         .valid("LIMITED", "UNLIMITED").
         required(),
-      countryFlagOnBrackets: Joi.boolean().required(),
-      registrationRegion: Joi.string().required(),
+      countryFlagOnBrackets: Joi.boolean(),
+      registrationRegion: Joi.string()
     }).optional(),
     bracketsMetadata: Joi.object({
-      name: Joi.string().required(),
-      startDate: Joi.date().required(),
-      startTime: Joi.date().required(),
+      name: Joi.string(),
+      startDate: Joi.date(),
+      startTime: Joi.any(),
       checkInType: Joi.boolean().required(),
       checkInAmount: Joi.number().required(),
       type: Joi.string()

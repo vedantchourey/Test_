@@ -21,7 +21,7 @@
     "@mui/material": "^5.2.2",
     "@mui/styles": "^5.5.3",
     "@reduxjs/toolkit": "^1.6.2",
-    "@supabase/supabase-js": "^1.28.2",
+    "@supabase/supabase-js": "^1.35.3",
     "abort-controller": "^3.0.0",
     "axios": "^0.25.0",
     "brackets-json-db": "^1.0.1",
