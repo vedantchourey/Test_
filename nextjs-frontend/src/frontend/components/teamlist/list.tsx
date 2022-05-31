@@ -51,8 +51,8 @@ const TeamListData: React.FC = () => {
                       <NoobCell>
                         <Box alignItems="center" display="center">
                           <img src={item.image} width={"65px"} height={"65px"} />
-                          <Typography marginLeft={2} marginRight={2}>{item.teamname}</Typography>
-                          <Typography marginLeft={2} marginRight={2}>{item.gamename}</Typography>
+                         <Box><Typography marginLeft={2} marginRight={2}>{item.teamname}</Typography></Box>
+                         <Box><Typography marginLeft={2} marginRight={2}>{item.gamename}</Typography></Box>
                         </Box>
                       </NoobCell>
                     </NoobRow>
