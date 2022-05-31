@@ -21,6 +21,13 @@ import { DatePicker, TimePicker } from "@mui/lab";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import GameDropDown from "../../drop-downs/game-drop-down";
+import { frontendSupabase } from "../../../services/supabase-frontend-service";
+import { v4 } from "uuid";
+import { uploadImage } from "../../../service-clients/image-service-client";
+
+const blobToFile = (theBlob: Blob, fileName:string):File => {
+  return new File([theBlob], fileName, { lastModified: new Date().getTime(), type: theBlob.type })
+}
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -121,13 +128,14 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
     formik.setFieldValue(property, value, true);
   };
   const onDrop = useCallback((acceptedFiles: File[], field: string): void => {
-    acceptedFiles.forEach((file: Blob): void => {
-      const reader = new FileReader();
-      reader.onload = (): void => {
-        const binaryStr = reader.result;
-        formik.setFieldValue(field, binaryStr);
-      };
-      reader.readAsDataURL(file);
+    acceptedFiles.forEach(async (file: Blob): Promise<void> => {
+      const fileName = `${v4()}.png`;
+      const fileData = blobToFile(file, fileName)
+      const { data, error } = await uploadImage("public-files", fileName, fileData)
+      if(!error && data){
+        const fileUrl = frontendSupabase.storage.from("public-files").getPublicUrl(data.Key.split("/")[1])
+        formik.setFieldValue(field, fileUrl.data?.publicURL || "");
+      }
     });
   }, []);
 
@@ -187,6 +195,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
                 inputFormat="dd/MM/yyyy"
                 onChange={(value): void => changeHandler("startDate", value)}
                 value={formik.values.startDate}
+                minDate={new Date()}
                 renderInput={(params): JSX.Element => (
                   <TextField
                     size="medium"
