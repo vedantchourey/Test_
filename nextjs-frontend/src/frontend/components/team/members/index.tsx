@@ -164,7 +164,10 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
         image: "/images/teams/player.png",
         type: "Silver",
         tags: ["Games", "Won", "Elo"],
-        name: `${player.firstName} ${player.lastName}`
+        name: `${player.firstName} ${player.lastName}`,
+        games: 20,
+        won: 3,
+        elo: 1043,
       }
     })
     setPlayerList(newList);
@@ -193,8 +196,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
         <Box marginY={2}>
           <Slider {...settings}>
             {playerList.map((player) => {
-              
-              return <Member key={player.name} {...player} />;
+              return <Member key={player.name}  {...player} />;
             })}
             <Box>
               <Box
@@ -205,7 +207,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
                   backgroundColor: "rgba(255, 255, 255, 0.09)",
                   cursor: "pointer",
                 }}
-                minHeight={365}
+                height={409}
                 display="flex"
                 alignContent={"center"}
                 flexDirection="column"
