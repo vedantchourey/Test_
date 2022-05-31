@@ -30,9 +30,42 @@ const Home: NextPage = () => {
   };
 
   const items = [
-    <div className="item" data-value="1"><img src="/images/group.png"/></div>,
-    <div className="item" data-value="2"><img src="/images/group.png"/></div>,
-    <div className="item" data-value="3"><img src="/images/group.png"/></div>,
+    <div className="item" data-value="1">
+    	<Box className={styles.slider}>
+				<img src="/images/group.png"/>
+				<Typography className={styles.text3}>Always keep in touch with your friends and watch their activities, like and comment.</Typography>
+				<span className={styles.border} ></span>
+				<Box className={styles.sliderBox}>
+					<YoutubeIcon/>
+					<img src="/images/Discord.png" style={{ height: '19px' }} />
+					<TwitchIcon/>
+				</Box>
+			</Box>
+		</div>,
+		<div className="item" data-value="2">
+			<Box className={styles.slider}>
+				<img src="/images/group.png"/>
+				<Typography className={styles.text3}>Always keep in touch with your friends and watch their activities, like and comment.</Typography>
+				<span className={styles.border} ></span>
+				<Box className={styles.sliderBox}>
+					<YoutubeIcon/>
+					<img src="/images/Discord.png" style={{ height: '19px' }} />
+					<TwitchIcon/>
+				</Box>
+			</Box>
+		</div>,
+		<div className="item" data-value="3">
+			<Box className={styles.slider}>
+				<img src="/images/group.png"/>
+				<Typography className={styles.text3}>Always keep in touch with your friends and watch their activities, like and comment.</Typography>
+				<span className={styles.border} ></span>
+				<Box className={styles.sliderBox}>
+					<YoutubeIcon/>
+					<img src="/images/Discord.png" style={{ height: '19px' }} />
+					<TwitchIcon/>
+				</Box>
+			</Box>
+		</div>,
   ];
 
   return (
@@ -63,9 +96,53 @@ const Home: NextPage = () => {
 										<Tab value="2" className={styles.tab} icon={<StorageIcon />} iconPosition="start" label="NEW FEED" />
 										<Tab value="3" className={styles.tab} icon={<EmojiEventsIcon />} iconPosition="start" label="TOURNAMENTS" />
 									</TabList>
-									<TabPanel value="1">Item One</TabPanel>
-									<TabPanel value="2">Item Two</TabPanel>
-									<TabPanel value="3">Item Three</TabPanel>
+									<TabPanel value="1" className={styles.postContainer}>
+										<Grid container columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}>
+											{Array.from(Array(3)).map((_, index) => (
+												<Grid item xs={12} lg={4} key={index} className={styles.postGrid}>
+
+												</Grid>
+											))}
+										</Grid>
+									</TabPanel>
+									<TabPanel value="2" className={styles.newsFeedContainer}>
+										<Grid container columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}>											
+											<Grid item xs={12} lg={4}>
+												<img src="/images/newsfeed1.png" className={styles.newsFeedImg} />
+												<Typography className={styles.newsFeedText}>Overwatch january 28 update nerfs echo, tracer, and zenyatta</Typography>
+												<Button variant="text" className={styles.newsFeedButton}>SHOOTERS</Button>
+											</Grid>
+											<Grid item xs={12} lg={4}>
+												<img src="/images/newsfeed2.png" className={styles.newsFeedImg} />
+												<Typography className={styles.newsFeedText}>Zensports signs casino deal for colorado expansion</Typography>
+												<Button variant="text" className={styles.newsFeedButton}>SLIDER</Button>
+											</Grid>
+											<Grid item xs={12} lg={4}>
+												<img src="/images/newsfeed3.png" className={styles.newsFeedImg} />
+												<Typography className={styles.newsFeedText}>Evil geniuses enters valorant with mixed-gender team</Typography>
+												<Button variant="text" className={styles.newsFeedButton}>ADVENTURE</Button>
+											</Grid>
+										</Grid>
+									</TabPanel>
+									<TabPanel value="3" className={styles.tournamentContainer}>
+										<Grid container columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}>
+											<Grid item xs={12} lg={4}>
+												<img src="/images/tournament1.png" className={styles.newsFeedImg} />
+												<Typography className={styles.newsFeedText}>Overwatch january 28 update nerfs echo, tracer, and zenyatta</Typography>
+												<Button variant="text" className={styles.newsFeedButton}>SHOOTERS</Button>
+											</Grid>
+											<Grid item xs={12} lg={4}>
+												<img src="/images/tournament1.png" className={styles.newsFeedImg} />
+												<Typography className={styles.newsFeedText}>Overwatch january 28 update nerfs echo, tracer, and zenyatta</Typography>
+												<Button variant="text" className={styles.newsFeedButton}>SHOOTERS</Button>
+											</Grid>
+											<Grid item xs={12} lg={4}>
+												<img src="/images/tournament1.png" className={styles.newsFeedImg} />
+												<Typography className={styles.newsFeedText}>Overwatch january 28 update nerfs echo, tracer, and zenyatta</Typography>
+												<Button variant="text" className={styles.newsFeedButton}>SHOOTERS</Button>
+											</Grid>
+										</Grid>
+									</TabPanel>
 								</TabContext>
 						</Grid>
 						<Grid item xs={12} lg={3}>
@@ -74,10 +151,6 @@ const Home: NextPage = () => {
 									items={items}
 									responsive={responsive}
 								/>
-								<Typography>Always keep in touch with your friends and watch their activities, like and comment.</Typography>
-								<YoutubeIcon/>
-								<img src="/icons/Vector-DiscordIcon.png" style={{ height: '19px' }} />
-								<TwitchIcon/>
 							</Box>
 						</Grid>
 					</Container>
