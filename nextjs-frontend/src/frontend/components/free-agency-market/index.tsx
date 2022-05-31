@@ -125,10 +125,19 @@ const FreeAgencyMarket: React.FC = (): JSX.Element => {
     
     if (isMobile) {
       return (
-        <Select value={page} input={<OutlinedInput />} onChange={(e) => changeTabByValue(e.target.value)}
-          fullWidth sx={{ m: 1 }}>
+        <Select
+          value={page}
+          input={<OutlinedInput />}
+          onChange={(e: any):void => changeTabByValue(e.target.value)}
+          fullWidth
+          sx={{ m: 1 }}
+        >
           {tabs.map((tab) => {
-            return <MenuItem key={tab.url} value={tab.url}>{tab.title}</MenuItem>;
+            return (
+              <MenuItem key={tab.url} value={tab.url}>
+                {tab.title}
+              </MenuItem>
+            );
           })}
         </Select>
       );
@@ -151,7 +160,7 @@ const FreeAgencyMarket: React.FC = (): JSX.Element => {
       )
 
     }
-    else {
+    
       return (
         <>
           <Tabs
@@ -164,7 +173,7 @@ const FreeAgencyMarket: React.FC = (): JSX.Element => {
           </Tabs>
         </>
       )
-    }
+    
   };
 
   return (

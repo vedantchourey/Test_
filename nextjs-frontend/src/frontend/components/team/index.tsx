@@ -86,7 +86,6 @@ const Team: React.FC = () => {
   }, [query.id]);
 
   const renderComponent = (): JSX.Element => {
-    console.log('team -> ', team)
     let page;
     if (query.slug) {
       if (Array.isArray(query.slug)) {

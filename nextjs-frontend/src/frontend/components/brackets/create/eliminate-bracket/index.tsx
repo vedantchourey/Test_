@@ -147,8 +147,6 @@ const EliminateBracket = React.forwardRef<
     });
   }, [formik.values.playersLimit, formik.values.type]);
 
-  console.log('formik -> ', formik)
-
   return (
     <React.Fragment>
       <CardLayout title="Eliminate Bracket">
