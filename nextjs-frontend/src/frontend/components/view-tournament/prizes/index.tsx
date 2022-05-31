@@ -9,6 +9,9 @@ import ViewCard from "../../ui-components/view-card";
 import Image from "next/image";
 import { Box, Typography } from "@mui/material";
 import { TournamentData } from "../../tournament";
+import backendConfig from "../../../../backend/utils/config/backend-config";
+
+const { credit_config } = backendConfig
 
 const CreateData = (
   prizes: string,
@@ -26,9 +29,18 @@ interface PrizesProps {
 const Prizes: React.FC<PrizesProps> = ({ data }) => {
   const pricePool = data?.pricingDetails?.pricePool;
   const rows = [
-    CreateData("Place 1:", `${pricePool ? pricePool*0.60 : 0}`),
-    CreateData("Place 2:", `${pricePool ? pricePool*0.30 : 0}`),
-    CreateData("Place 3:", `${pricePool ? pricePool*0.10 : 0}`)
+    CreateData(
+      "Place 1:",
+      `${pricePool ? pricePool * 0.6 * credit_config.price_per_credit : 0}`
+    ),
+    CreateData(
+      "Place 2:",
+      `${pricePool ? pricePool * 0.3 * credit_config.price_per_credit : 0}`
+    ),
+    CreateData(
+      "Place 3:",
+      `${pricePool ? pricePool * 0.1 * credit_config.price_per_credit : 0}`
+    ),
   ];
   return (
     <ViewCard>
@@ -77,7 +89,7 @@ const Prizes: React.FC<PrizesProps> = ({ data }) => {
                       height={"30px"}
                     />
                     <Typography textTransform={"uppercase"} marginLeft={2}>
-                      {row.reward}
+                      {row.reward} ₹
                     </Typography>
                   </Box>
                 </TableCell>
