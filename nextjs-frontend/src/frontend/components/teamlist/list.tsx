@@ -1,12 +1,12 @@
 import styled from "@emotion/styled";
 import {
-    Box,
-    Grid,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer, TableRow,
-    Typography
+  Box,
+  Grid,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer, TableRow,
+  Typography
 } from "@mui/material";
 import React from "react";
 
@@ -51,8 +51,8 @@ const TeamListData: React.FC = () => {
                       <NoobCell>
                         <Box alignItems="center" display="center">
                           <img src={item.image} width={"65px"} height={"65px"} />
-                         <Box><Typography marginLeft={2} marginRight={2}>{item.teamname}</Typography></Box>
-                         <Box><Typography marginLeft={2} marginRight={2}>{item.gamename}</Typography></Box>
+                         <Box><Typography marginLeft={2} marginRight={2}>{item.teamname}</Typography>
+                         <Typography marginLeft={2} marginRight={2}>{item.gamename}</Typography></Box>
                         </Box>
                       </NoobCell>
                     </NoobRow>
