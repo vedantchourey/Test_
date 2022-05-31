@@ -10,6 +10,7 @@ import TwitchIcon from '../icons/twitch-icon';
 import YoutubeIcon from '../icons/youtube-icon';
 import { useRouter } from 'next/router';
 import { createStyles, makeStyles } from "@mui/styles";
+import style from './desktop-sidebar.module.css';
 
 const drawerWidth = 280;
 
@@ -66,15 +67,15 @@ async function gotoHomePage(): Promise<void> {
         classes={{ paper: classes.drawerPaper }}
       >
         <div>
-          <img src="/images/noobstorm-logo-small.png" alt="noob storm logo" style={{ width: '154px', height: '34px', marginTop: '15px' }} />
+          <img src="/images/noobstorm-logo-small.png" alt="noob storm logo" className={style.logo} />
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '20px' }}>
+        <div className={style.container1}>
             <Button variant="text" style={{ color: 'white' }}>Dashboard</Button>
-            <span style={{ borderRight: '1px solid white', opacity: '0.31',margin: '4px' }}></span>
-            <Button variant="text" style={{ color: 'white'}} endIcon={<img src="/icons/Downarrow.svg" style={{ color: 'white', height: '12px', width: '12px' }} />}>My Teams</Button>
+            <span className={style.border}></span>
+            <Button variant="text" style={{ color: 'white'}} endIcon={<img src="/icons/Downarrow.svg" className={style.img1} />}>My Teams</Button>
         </div>
 
-        <div style={{ padding: '20px', textAlign: 'left' }}>
+        <div className={style.container2}>
           <Box><Button variant="text" style={buttonStyle(['/'])} onClick={gotoHomePage} className={classes.buttonStyles}><img src="/icons/Vector-home.png" className={classes.imgStyle} />Home</Button></Box>
           <Box><Button variant="text" className={classes.buttonStyles}><img src="/icons/Vector-Tournaments.png" className={classes.imgStyle} />Tournaments</Button></Box>
           <Box><Button variant="text" className={classes.buttonStyles}><img src="/icons/Vector-Leaderboards.png" className={classes.imgStyle} />Leaderboards</Button></Box>
@@ -83,31 +84,27 @@ async function gotoHomePage(): Promise<void> {
           <Box><Button variant="text" className={classes.buttonStyles}><img src="/icons/Vector-Support.png" className={classes.imgStyle} />Support</Button></Box>
           <Box><Button variant="text" className={classes.buttonStyles}><img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />FAQ</Button></Box>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div className={style.container3}>
           <Box className={classes.boxStyle}>
-            <img src="/images/16276393842661.png" style={{ background: 'linear-gradient(180deg, rgba(10, 1, 30, 0) 0%, #0F0525 100%, #0C0322 100%)' }} />
-            <Typography color={"white"} style={{ marginTop: '20px', fontSize: '13px'}}>Always keep in touch with your friends and watch their activities, like and comment. </Typography>
-            <Box style={{ justifyContent: 'space-evenly', display: 'flex' }}>
-              <span style={{ borderTop: '1px solid white', padding: '10px', marginTop: '10px' }}></span>
+            <img src="/images/16276393842661.png" className={style.img2}/>
+            <Typography className={style.text1}>Always keep in touch with your friends and watch their activities, like and comment. </Typography>
+            <Box className={style.box1}>
+              <span className={style.border2}></span>
             </Box>
-            <Box style={{ justifyContent: 'space-evenly', display: 'flex' }}>
+            <Box className={style.box1}>
               <YoutubeIcon/>
               <img src="/icons/Vector-DiscordIcon.png" style={{ height: '19px' }} />
               <TwitchIcon/>
             </Box>
           </Box>
           <div className={styles.bottomMenuGroup}>
-            <Button variant="text" startIcon={<FlashOnIcon/>} style={{color: '#FD6262', fontSize: '17px', textTransform: 'none'}}>
-              Free Agency Market
-            </Button>
+            <Button variant="text" startIcon={<FlashOnIcon/>} className={style.button1}>Free Agency Market</Button>
           </div>
-          <Box style={{ justifyContent: 'space-evenly', display: 'flex' }}>
-              <span style={{ borderTop: '1px solid white', padding: '10px', marginTop: '10px', width: '140px' }}></span>
-            </Box>
-            <Typography color={"default"} variant="h3" style={{ fontSize: '13px' }}>
-            Copyright © 2021. All Rights Reserved By <Button variant="text" onClick={gotoHomePage}>
-              NOOBSTORM
-            </Button>
+          <Box className={style.box1}>
+            <span className={style.border3}></span>
+          </Box>
+          <Typography color={"default"} variant="h3" style={{ fontSize: '13px' }}>
+            Copyright © 2021. All Rights Reserved By <Button variant="text" onClick={gotoHomePage}> NOOBSTORM </Button>
           </Typography>
         </div>
       </Drawer>
