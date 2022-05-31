@@ -101,38 +101,6 @@ export const data = {
   ],
 };
 
-const players: MemberProp[] = [
-  {
-    name: "Player",
-    image: "/images/teams/player.png",
-    type: "bronze",
-    tags: ["Games", "Won", "Elo"],
-  },
-  {
-    name: "Player",
-    image: "/images/teams/player.png",
-    type: "gold",
-    tags: ["Games", "Won", "Elo"],
-  },
-  {
-    name: "Player",
-    image: "/images/teams/player.png",
-    type: "diamond",
-    tags: ["Games", "Won", "Elo"],
-  },
-  {
-    name: "Player",
-    image: "/images/teams/player.png",
-    type: "ruby",
-    tags: ["Games", "Won", "Elo"],
-  },
-  {
-    name: "Player",
-    image: "/images/teams/player.png",
-    type: "silver",
-    tags: ["Games", "Won", "Elo"],
-  },
-];
 
 const settings: Settings = {
   slidesToShow: 5,
@@ -159,7 +127,6 @@ const TeamMembers: React.FC = () => {
   const fetchUsers = async () =>{
     const headers = await getAuthHeader();
     axios.get("/api/free-agency-market/list",{headers:headers}).then((res)=>{
-      console.log('res.data -> ', res.data);
       const players: MemberProp[] = res.data.map((item: any) => ({
         name: `${item.firstName} ${item.lastName}`,
         image: "/images/teams/player.png",

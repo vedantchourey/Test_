@@ -8,6 +8,7 @@ import {
 } from "../../../src/backend/utils/api-middle-ware/transaction-middle-ware";
 import { listFreeAgencyMarket } from "../../../src/backend/services/FreeAgencyMarket/FreeAgencyMarket-Service";
 import { IFreeAgencyMarketResponse } from "../../../src/backend/services/FreeAgencyMarket/i-FreeAgencyMarket-response";
+import { authenticatedAdminUserMiddleware } from "../../../src/backend/utils/api-middle-ware/auth-middle-ware";
 
 export default createNextJsRouteHandler({
   get: {
@@ -19,7 +20,7 @@ export default createNextJsRouteHandler({
       const result = await listFreeAgencyMarket(context);
       res.status(result.errors ? 400 : 200).json(result);
     },
-    preHooks: [beginTransactionMiddleWare],
+    preHooks: [beginTransactionMiddleWare, authenticatedAdminUserMiddleware],
     postHooks: [commitOrRollBackTransactionMiddleWare],
   },
 });
