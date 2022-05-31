@@ -8,7 +8,6 @@ interface ParticipantsProps {
 }
 
 const Participants: React.FC<ParticipantsProps> = ({ data }) => {
-  console.log("{data.?.playerList} -> ", data?.playerList);
   return (
     <React.Fragment>
       <ViewCard>

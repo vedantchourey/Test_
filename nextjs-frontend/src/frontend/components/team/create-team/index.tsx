@@ -9,16 +9,18 @@ import {
   Typography,
 } from "@mui/material";
 import FormLabel from "../../ui-components/formlabel";
-import * as yup from "yup";
+
 import { useFormik } from "formik";
 
 import React from "react";
-import GameDropDown from "../../drop-downs/game-drop-down";
-import NoobPage from "../../page/noob-page";
-import axios from "axios";
-import PlatformDropDown from "../../drop-downs/platform-drop-down";
+import * as yup from "yup";
 import { getAuthHeader } from "../../../utils/headers";
+import GameDropDown from "../../drop-downs/game-drop-down";
+import PlatformDropDown from "../../drop-downs/platform-drop-down";
+
 import { useRouter } from "next/router";
+import axios from "axios";
+import NoobPage from "../../page/noob-page";
 
 export interface GameData {
   game: string;
