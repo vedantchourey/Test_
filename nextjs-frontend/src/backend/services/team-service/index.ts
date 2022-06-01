@@ -146,6 +146,7 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
         const team_invitation = new CrudRepository<ITeamInvitation>(connection, TABLE_NAMES.TEAM_INVITATION);
         const pending_inivitation = await team_invitation.knexObj().where("user_id", playerId || player_data?.id)
             .where("status", "PENDING")
+            .where("team_id", req.team_id)
 
         if (pending_inivitation.length) return getErrorObject("Users have invitation pending");
         const secret = randomString(15);

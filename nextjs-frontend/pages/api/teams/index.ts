@@ -9,7 +9,7 @@ import { PerRequestContext } from "../../../src/backend/utils/api-middle-ware/ap
 import { fetchTeams } from "../../../src/backend/services/team-service";
 import { Knex } from "knex";
 import { IError, ISuccess } from "../../../src/backend/utils/common/Interfaces";
-import { authenticatedAdminUserMiddleware } from "../../../src/backend/utils/api-middle-ware/auth-middle-ware";
+import { authenticatedUserMiddleware } from "../../../src/backend/utils/api-middle-ware/auth-middle-ware";
 
 export default createNextJsRouteHandler({
     get: {
@@ -21,7 +21,7 @@ export default createNextJsRouteHandler({
             const result: any = await fetchTeams(context.transaction as Knex.Transaction, context.user as any, req.query as any);
             res.status(result?.errors?.length ? 500 : 200).json(result)
         },
-        preHooks: [beginTransactionMiddleWare, authenticatedAdminUserMiddleware],
+        preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],
         postHooks: [commitOrRollBackTransactionMiddleWare],
     },
 });

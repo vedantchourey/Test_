@@ -6,10 +6,9 @@ import {
   beginTransactionMiddleWare,
   commitOrRollBackTransactionMiddleWare,
 } from "../../../src/backend/utils/api-middle-ware/transaction-middle-ware";
-import { IAddToWatchListRequest, listFreeAgencyMarket, addToWatchList } from "../../../src/backend/services/FreeAgencyMarket/FreeAgencyMarket-Service";
+import { addToWatchList } from "../../../src/backend/services/FreeAgencyMarket/FreeAgencyMarket-Service";
 import { IFreeAgencyMarketResponse } from "../../../src/backend/services/FreeAgencyMarket/i-FreeAgencyMarket-response";
-import { authenticatedAdminUserMiddleware } from "../../../src/backend/utils/api-middle-ware/auth-middle-ware";
-import { Nullable } from "brackets-manager/dist/types";
+import { authenticatedUserMiddleware } from "../../../src/backend/utils/api-middle-ware/auth-middle-ware";
 
 export default createNextJsRouteHandler({
   post: {
@@ -21,7 +20,7 @@ export default createNextJsRouteHandler({
       const result = await addToWatchList(req.body, context);
       res.status(result.errors ? 400 : 200).json(result);
     },
-    preHooks: [beginTransactionMiddleWare, authenticatedAdminUserMiddleware],
+    preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],
     postHooks: [commitOrRollBackTransactionMiddleWare],
   },
 });
