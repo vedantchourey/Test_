@@ -32,7 +32,7 @@
 }
 .text1 {
 	color: white;
-	margin-top: 20px;
+	margin-bottom: 10px;
 	font-size: 13px
 }
 .box1 {
@@ -55,16 +55,22 @@
 	margin-top: 10px;
 	width: 140px
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
+.container4 {
+	display: flex;
+	justify-content: space-between;
+	padding: 20px;
+	align-items: center;
+}
+.img3 {
+	height: 80px;
+	width: 80px;
+	border: 1px solid #220933;
+	border-radius: 80px;
+}
+.button4 {
+	color: white;
+	background-color: #6931F9;
+	border-radius: 10px;
+	font-size: 12px;
+	padding-left: 12px
+}
