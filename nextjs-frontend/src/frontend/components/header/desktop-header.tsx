@@ -50,10 +50,9 @@ const useRoundStatusStyles = makeStyles(() =>
       height: "16px",
       marginTop: "-5px",
     },
-  })
-);
+  }));
 
-export default function DrawerLeft() {
+export default function DrawerLeft(): JSX.Element {
   const classes = useRoundStatusStyles();
 
   const theme = useTheme();

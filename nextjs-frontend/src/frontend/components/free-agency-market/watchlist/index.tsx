@@ -3,11 +3,8 @@ import {
   Box,
   Button,
   Typography,
-  useMediaQuery,
-  useTheme,
 } from "@mui/material";
 import axios from "axios";
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import Slider, { Settings } from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
@@ -45,11 +42,10 @@ const settings: Settings = {
 };
 
 const WatchTeamMembers: React.FC<{teamId: string | string[] | undefined}> = ({teamId}) => {
-  const theme = useTheme();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<MemberProp[] | []>([]);
 
-  const fetchUsers = async () => {
+  const fetchUsers = async (): Promise<void> => {
     const headers = await getAuthHeader();
     setLoading(true);
     axios
@@ -70,7 +66,7 @@ const WatchTeamMembers: React.FC<{teamId: string | string[] | undefined}> = ({te
       .finally(() => setLoading(false));
   };
 
-  const removeToWatchList = async (id: string) => {
+  const removeToWatchList = async (id: string): Promise<void> => {
     setLoading(true);
     const data = {
       id,
@@ -80,16 +76,16 @@ const WatchTeamMembers: React.FC<{teamId: string | string[] | undefined}> = ({te
       .post("/api/free-agency-market/delete-watchlist", data, {
         headers: headers,
       })
-      .then((res) => {
+      .then(() => {
         fetchUsers();
       })
-      .catch((err) => {
+      .catch(() => {
         alert("Player already added in Watch list");
       })
       .finally(() => setLoading(false));
   };
 
-  const sendInvitation = async (playerId: string) => {
+  const sendInvitation = async (playerId: string): Promise<void> => {
     setLoading(true);
     const data = {
       player_id: playerId,
@@ -100,10 +96,10 @@ const WatchTeamMembers: React.FC<{teamId: string | string[] | undefined}> = ({te
       .post("/api/teams/send-invite", data, {
         headers: headers,
       })
-      .then((res) => {
+      .then(() => {
         // console.log('res -> ', res)
       })
-      .catch((err) => {
+      .catch(() => {
         alert("Player already invited or already in the team");
       })
       .finally(() => setLoading(false));
@@ -136,7 +132,7 @@ const WatchTeamMembers: React.FC<{teamId: string | string[] | undefined}> = ({te
                         disabled={loading}
                         style={{ backgroundColor: "#6932F9" }}
                         fullWidth={true}
-                        onClick={() => removeToWatchList(player.id || "")}
+                        onClick={(): void => {removeToWatchList(player.id || "")}}
                       >
                         - Remove
                       </NoobButton>
@@ -148,7 +144,7 @@ const WatchTeamMembers: React.FC<{teamId: string | string[] | undefined}> = ({te
                           disabled={loading}
                           style={{ backgroundColor: "#F09633" }}
                           fullWidth={true}
-                          onClick={() => sendInvitation(player.id || "")}
+                          onClick={(): void => {sendInvitation(player.id || "")}}
                         >
                           Send Offer to Recurit
                         </NoobButton>

@@ -1,12 +1,11 @@
-import { AppBar, Avatar, Icon, IconButton, Button, Box, Divider } from '@mui/material';
+import { AppBar, Icon, IconButton, Button, Box, Divider } from '@mui/material';
 import styles from './noob-mobile-header.module.css';
 import * as React from 'react';
 import { useState } from 'react';
 import NoobDrawer from '../drawer/noob-drawer';
 import LoginModal from '../auth/login-modal/login-modal';
 import { useAppDispatch, useAppSelector } from '../../redux-store/redux-store';
-import { avatarImageBlobUrlSelector, isLoggedInSelector } from '../../redux-store/authentication/authentication-selectors';
-import PersonIcon from '@mui/icons-material/Person';
+import { isLoggedInSelector } from '../../redux-store/authentication/authentication-selectors';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
 import MilitaryTechOutlinedIcon from '@mui/icons-material/MilitaryTechOutlined';
@@ -23,7 +22,6 @@ export default function MobileDrawer(): JSX.Element {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const toggleDrawer = (): void => setShowMenu(true);
   const hideMenu = (): void => setShowMenu(false);
-  const avatarUrl = useAppSelector(avatarImageBlobUrlSelector);
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const appDispatch = useAppDispatch();
   const currentHeight = useAppSelector(mobileHeaderHeightSelector);
@@ -36,14 +34,6 @@ export default function MobileDrawer(): JSX.Element {
   function onLoginClick(): void {
     setShowLoginModal(true)
     hideMenu();
-  }
-
-  function avatar(): JSX.Element {
-    if (avatarUrl == null) return (<Icon className={styles.userIcon}><PersonIcon className={styles.userIcon} /></Icon>);
-    return <Avatar alt="Remy Sharp"
-      sx={{ width: 40, height: 40 }}
-      className={styles.userProfilePic}
-      src={avatarUrl} />
   }
 
   async function onLogoutClick(): Promise<void> {

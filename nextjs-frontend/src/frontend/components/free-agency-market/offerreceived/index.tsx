@@ -54,13 +54,12 @@ const Permissions: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<IData[] | []>([]);
 
-  const fetchTeam = async () => {
+  const fetchTeam = async (): Promise<void> => {
     const headers = await getAuthHeader();
     setLoading(true);
     axios
       .get("/api/teams/list-invitations", { headers: headers })
       .then((res) => {
-        console.log('res.data -> ', res.data)
         const players: IData[] = res.data.result.map((item: any) => ({
           username: item.invite_by.username,
           teamname: ["/icons/Rectangle.svg", item.team.name],
@@ -73,17 +72,17 @@ const Permissions: React.FC = () => {
       .finally(() => setLoading(false));
   };
 
-  const acceptInvitaion = async (invite_key: string) => {
+  const acceptInvitaion = async (invite_key: string):Promise<void> => {
     setLoading(true);
     const headers = await getAuthHeader();
     axios
       .get(`/api/teams/accept-invite?invite_key=${invite_key}`, {
         headers: headers,
       })
-      .then((res) => {
+      .then(() => {
         fetchTeam()
       })
-      .catch((err) => {
+      .catch(() => {
         alert("Player already added in Watch list");
       })
       .finally(() => setLoading(false));
@@ -177,7 +176,7 @@ const Permissions: React.FC = () => {
                             variant="contained"
                             size={"small"}
                             disabled={loading}
-                            onClick={() => acceptInvitaion(item.invite_key)}
+                            onClick={(): void => {acceptInvitaion(item.invite_key)}}
                           >
                             Accpet
                           </NoobButton>

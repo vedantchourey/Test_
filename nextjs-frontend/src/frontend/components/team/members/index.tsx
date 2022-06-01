@@ -291,7 +291,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
             <Button
               style={{ marginLeft: "2px" }}
               color={"secondary"}
-              onClick={() => gotoFreeAgencyMarketPage()}
+              onClick={(): void => {gotoFreeAgencyMarketPage()}}
               variant={"outlined"}
             >
               Open Free Agency Market

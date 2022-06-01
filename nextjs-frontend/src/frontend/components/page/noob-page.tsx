@@ -1,10 +1,7 @@
-import { useTheme, Box } from "@mui/material";
-import { useAppSelector } from "../../redux-store/redux-store";
-import { isDeviceTypeSelector } from "../../redux-store/layout/layout-selectors";
+import { Box } from "@mui/material";
 import Head from "next/head";
 import NoobHeader from "../header/noob-header";
 import React from "react";
-import { deviceTypes } from "../../redux-store/layout/device-types";
 import NoobFooter from "../footer";
 
 interface Props {
@@ -17,12 +14,6 @@ interface Props {
 export default function NoobPage(props: Props): JSX.Element {
   const { metaData, favIcon = "/noob-fav.ico", title, children } = props;
   const metaKeys = Object.keys(metaData);
-
-  const theme = useTheme();
-  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
-  const backgroundColor = isDesktop
-    ? theme.palette.background.default
-    : theme.palette.background.paper;
 
   return (
     <div>

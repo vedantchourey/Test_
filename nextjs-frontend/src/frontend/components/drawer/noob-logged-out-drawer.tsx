@@ -4,7 +4,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import * as React from 'react';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
-import DiscordIcon from '../icons/discord-icon';
 import TwitchIcon from '../icons/twitch-icon';
 import YoutubeIcon from '../icons/youtube-icon';
 import { useRouter } from 'next/router';

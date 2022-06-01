@@ -338,7 +338,8 @@ export const getListOfInvitations = async (
     );
     const sent_invitations: any[] = await team_invitation
       .knexObj()
-      .where("user_id", user_id).where("status", STATUS.PENDING);
+      .where("user_id", user_id)
+.where("status", STATUS.PENDING);
       
     const batch = sent_invitations.map((item: any) =>
     findTemsWithInvitationDeatils(item.team_id, item, connection));

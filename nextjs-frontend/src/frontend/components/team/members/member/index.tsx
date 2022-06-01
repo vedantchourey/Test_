@@ -24,8 +24,12 @@ const Member: React.FC<MemberProp> = ({
   const [hover, setHover] = useState(false);
   return (
     <Box
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
+      onMouseEnter={(): void => {
+        setHover(true);
+      }}
+      onMouseLeave={(): void => {
+        setHover(false);
+      }}
     >
       <Box width={"100%"} position="relative">
         <div
