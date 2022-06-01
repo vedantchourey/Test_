@@ -315,8 +315,7 @@ const findTemsWithInvitationDeatils = async (
     connection: Knex.Transaction
   ) => {
     const teamRepo = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAMS);
-    const teamDetails = await teamRepo.findById("6738d3c7-4a7d-4801-bb04-d0cf65f9405e");
-    console.log('teamDetails -> ', teamDetails)
+    const teamDetails = await teamRepo.findById(teamId);
     return {
       team: { ...teamDetails },
       ...details,
