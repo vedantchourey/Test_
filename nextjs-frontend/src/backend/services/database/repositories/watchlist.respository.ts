@@ -17,4 +17,9 @@ export class watchlistRepository extends BaseRepository<IWatchList> {
       .select(...keys)
       .where(query);
   }
+  async delete(id: string): Promise<IWatchList[] | undefined> {
+    return this.entities()
+      .where({ id })
+      .delete();
+  }
 }
