@@ -32,6 +32,7 @@ interface IData {
   username: string;
   teamname: string[]; 
   date: string;
+  invite_key: string;
   teamId: string;
 }
 
@@ -53,7 +54,7 @@ const Permissions: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<IData[] | []>([]);
 
-  const fetchTeam = async () => {
+  const fetchTeam = async (): Promise<void> => {
     const headers = await getAuthHeader();
     setLoading(true);
     axios
@@ -64,8 +65,25 @@ const Permissions: React.FC = () => {
           teamname: ["/icons/Rectangle.svg", item.team.name],
           date: moment(item.created_at).format("DD/MM/YYYY HH:MM"),
           teamId: item.team.id,
+          invite_key: item.secret
         }));
         setData(players);
+      })
+      .finally(() => setLoading(false));
+  };
+
+  const acceptInvitaion = async (invite_key: string):Promise<void> => {
+    setLoading(true);
+    const headers = await getAuthHeader();
+    axios
+      .get(`/api/teams/accept-invite?invite_key=${invite_key}`, {
+        headers: headers,
+      })
+      .then(() => {
+        fetchTeam()
+      })
+      .catch(() => {
+        alert("Player already added in Watch list");
       })
       .finally(() => setLoading(false));
   };
@@ -157,8 +175,10 @@ const Permissions: React.FC = () => {
                             style={{ backgroundColor: "#F09633" }}
                             variant="contained"
                             size={"small"}
+                            disabled={loading}
+                            onClick={(): void => {acceptInvitaion(item.invite_key)}}
                           >
-                            View offer details
+                            Accpet
                           </NoobButton>
                         </NoobCell>
                       )}

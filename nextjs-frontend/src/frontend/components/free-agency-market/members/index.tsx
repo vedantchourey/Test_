@@ -76,7 +76,6 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
       .post("/api/free-agency-market/add-to-watchlist", data, {
         headers: headers,
       })
-      .then(() => {})
       .catch(() => {
         alert("Player already added in Watch list");
       })

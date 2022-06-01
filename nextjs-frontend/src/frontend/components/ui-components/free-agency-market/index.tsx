@@ -57,7 +57,7 @@ const CardDesktop: React.FC<any> = ({setOpen}) => {
       </Grid>
       <Grid item md={4} lg={2}>
         <Button
-          onClick={() => {
+          onClick={(): void => {
             setOpen(true);
           }}
         >
@@ -89,7 +89,7 @@ const CardMobile: React.FC<any> = ({setOpen}) => {
       </Grid>
       <Grid item md={4} lg={2}>
         <Button
-          onClick={() => {
+          onClick={(): void => {
             setOpen(true);
           }}
         >
@@ -109,7 +109,7 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
   const [platform, setPlatform] = useState("");
   const [loader, setLoader] = useState(false);
 
-  const onSubmit = async () =>{
+  const onSubmit = async (): Promise<void> =>{
     setLoader(true)
     const data = {
       game_id: selectGame,
@@ -136,10 +136,19 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
           backgroundSize: "cover",
         }}
       >
-        {!isMobile ? <CardDesktop setOpen={setOpen} /> : <CardMobile setOpen={setOpen} />}
+        {!isMobile ? (
+          <CardDesktop setOpen={setOpen} />
+        ) : (
+          <CardMobile setOpen={setOpen} />
+        )}
       </Box>
       {children}
-      <Modal open={open} onClose={() => setOpen(false)}>
+      <Modal
+        open={open}
+        onClose={(): void => {
+          setOpen(false);
+        }}
+      >
         <Grid
           container
           alignContent={"center"}
@@ -155,7 +164,11 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
                 justifyContent={"space-between"}
               >
                 <Typography>Test</Typography>
-                <Button onClick={() => setOpen(false)}>
+                <Button
+                  onClick={(): void => {
+                    setOpen(false);
+                  }}
+                >
                   <CloseIcon />
                 </Button>
               </Box>
@@ -173,7 +186,7 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
                       id="game"
                       name="game"
                       placeholder="Select Game"
-                      onChange={(id, selectedGame): void => {
+                      onChange={(id): void => {
                         setSelectGame(id || "");
                       }}
                       value={selectGame}
@@ -209,7 +222,7 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
                   <Grid sm={12} md={7} lg={7} p={2}>
                     <Typography textAlign="left">Game title</Typography>
                     <Typography textAlign="left" variant="caption">
-                      Lorem Ipsum has been the industry's standard dummy text
+                      Lorem Ipsum has been the industrys standard dummy text
                       ever since the 1500s, when an unknown printer took a
                       galley of type and scrambled it to make a type specimen
                       book.
@@ -217,7 +230,9 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
                     <Box mt={5}>
                       <Button
                         disabled={loader || !(selectGame && platform)}
-                        onClick={() => onSubmit()}
+                        onClick={(): void => {
+                          onSubmit();
+                        }}
                         variant="outlined"
                       >
                         Enter Free Agency Market

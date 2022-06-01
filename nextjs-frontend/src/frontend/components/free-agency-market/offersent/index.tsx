@@ -3,11 +3,8 @@ import {
   Box,
   Button,
   Typography,
-  useMediaQuery,
-  useTheme,
 } from "@mui/material";
 import axios from "axios";
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import Slider, { Settings } from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
@@ -48,7 +45,7 @@ const WatchTeamMembers: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<MemberProp[] | []>([]);
 
-  const fetchUsers = async () => {
+  const fetchUsers = async (): Promise<void> => {
     const headers = await getAuthHeader();
     setLoading(true);
     axios
@@ -69,17 +66,17 @@ const WatchTeamMembers: React.FC = () => {
       .finally(() => setLoading(false));
   };
 
-  const removeToWatchList = async (invite_key: string) => {
+  const removeToWatchList = async (invite_key: string): Promise<void> => {
     setLoading(true);
     const headers = await getAuthHeader();
     axios
       .get(`/api/teams/reject-invite?invite_key=${invite_key}`, {
         headers: headers,
       })
-      .then((res) => {
+      .then(() => {
         fetchUsers();
       })
-      .catch((err) => {
+      .catch(() => {
         alert("Player already added in Watch list");
       })
       .finally(() => setLoading(false));
@@ -112,7 +109,7 @@ const WatchTeamMembers: React.FC = () => {
                         disabled={loading}
                         style={{ backgroundColor: "#6932F9" }}
                         fullWidth={true}
-                        onClick={() => removeToWatchList(player.id || "")}
+                        onClick={(): void => {removeToWatchList(player.id || "")}}
                       >
                         Cancel
                       </NoobButton>

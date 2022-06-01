@@ -145,7 +145,7 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
         //validating if any pending invitation
         const team_invitation = new CrudRepository<ITeamInvitation>(connection, TABLE_NAMES.TEAM_INVITATION);
         const pending_inivitation = await team_invitation.knexObj().where("user_id", playerId || player_data?.id)
-            .where("status", "PENDING")
+            .where("status", STATUS.PENDING)
             .where("team_id", req.team_id)
 
         if (pending_inivitation.length) return getErrorObject("Users have invitation pending");
@@ -339,7 +339,8 @@ export const getListOfInvitations = async (
     const sent_invitations: any[] = await team_invitation
       .knexObj()
       .where("user_id", user_id)
-      .where("status", STATUS.PENDING);
+.where("status", STATUS.PENDING);
+      
     const batch = sent_invitations.map((item: any) =>
     findTemsWithInvitationDeatils(item.team_id, item, connection));
     const result = await Promise.all(batch);
