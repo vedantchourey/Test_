@@ -4,6 +4,7 @@ import { UsersRepository } from "../database/repositories/users-repository";
 import { watchlistRepository } from "../database/repositories/watchlist.respository";
 import { freeAgencyMarketRepository } from "../database/repositories/free-agency-market.respository";
 import { IFreeAgencyMarketResponse } from "./i-FreeAgencyMarket-response";
+import { getErrorObject } from "../common/helper/utils.service";
 
 const findUserWithFAM = async (
   userId: string,
@@ -30,7 +31,6 @@ export const listFreeAgencyMarket = async (
 };
 
 export interface IEnterFAMRequest {
-  user_id: string;
   game_id: string;
   platform_id: string;
 }
@@ -41,7 +41,7 @@ export const enterToFreeAgencyMarket = async (
 ): Promise<IFreeAgencyMarketResponse | undefined> => {
   const transaction = context.transaction as Knex.Transaction;
   const freeAgencyMarketRepo = new freeAgencyMarketRepository(transaction);
-  const result = await freeAgencyMarketRepo.create(req);
+  const result = await freeAgencyMarketRepo.create({...req, user_id: context.user?.id || ""});
   return result;
 };
 
@@ -55,6 +55,12 @@ export const addToWatchList = async (
 ): Promise<IFreeAgencyMarketResponse | undefined> => {
   const transaction = context.transaction as Knex.Transaction;
   const watchListRepo = new watchlistRepository(transaction);
+  const checkExisting = await watchListRepo.find({
+    playerId: req.playerId,
+    userId: context.user?.id || "",
+  });
+  if(checkExisting?.length)  return getErrorObject("Already added in watchlist");
+  
   const result = await watchListRepo.create({
     playerId: req.playerId,
     userId: context.user?.id || "",
@@ -67,11 +73,10 @@ export const getWatchList = async (
 ): Promise<IFreeAgencyMarketResponse | undefined> => {
   const transaction = context.transaction as Knex.Transaction;
   const watchListRepo = new watchlistRepository(transaction);
-  const userRepo = new UsersRepository(transaction);
   const watchlist = await watchListRepo.find({
     userId: context.user?.id || "",
   });
-  const resultBatch = watchlist?.map(item => userRepo.findById(item.playerId))
+  const resultBatch = watchlist?.map(item => findUserWithFAM(item.playerId, item,transaction))
   const result = await Promise.all(resultBatch || []);
   return result;
 };
