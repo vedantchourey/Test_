@@ -278,17 +278,13 @@ const findUserWithInvitationDeatils = async (
   userId: string,
   details: any,
   connection: Knex.Transaction
-) => {
-    try{
-        const userRepo = new UsersRepository(connection);
-        const userDetails = await userRepo.findById(userId);
-        return {
-          player: { ...userDetails.raw_user_meta_data, id: userDetails.id },
-          ...details,
-        };
-    } catch(err){
-    }
-  
+): Promise<any> => {
+  const userRepo = new UsersRepository(connection);
+  const userDetails = await userRepo.findById(userId);
+  return {
+    player: { ...userDetails.raw_user_meta_data, id: userDetails.id },
+    ...details,
+  };
 };
 
 export const getListOfSendInvitations = async (
@@ -303,10 +299,10 @@ export const getListOfSendInvitations = async (
     );
     const sent_invitations: any[] = await team_invitation
       .knexObj()
-      .where("invite_by", user_id).where("status", "PENDING");
+      .where("invite_by", user_id)
+.where("status", "PENDING");
     const batch = sent_invitations.map((item: any) =>
-      findUserWithInvitationDeatils(item.user_id, item, connection)
-    );
+      findUserWithInvitationDeatils(item.user_id, item, connection));
     const result = await Promise.all(batch);
     return { result };
   } catch (ex) {
@@ -318,7 +314,7 @@ const findTemsWithInvitationDeatils = async (
     teamId: string,
     details: any,
     connection: Knex.Transaction
-  ) => {
+  ): Promise<any> => {
     const teamRepo = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAMS);
     const teamDetails = await teamRepo.findById(teamId);
     const userRepo = new UsersRepository(connection);
@@ -345,8 +341,7 @@ export const getListOfInvitations = async (
       .where("user_id", user_id).where("status", STATUS.PENDING);
       
     const batch = sent_invitations.map((item: any) =>
-    findTemsWithInvitationDeatils(item.team_id, item, connection)
-    );
+    findTemsWithInvitationDeatils(item.team_id, item, connection));
     const result = await Promise.all(batch);
     return { result };
   } catch (ex) {

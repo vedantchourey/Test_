@@ -10,7 +10,7 @@ const findUserWithFAM = async (
   userId: string,
   details: any,
   connection: Knex.Transaction
-) => {
+): Promise<any> => {
   const userRepo = new UsersRepository(connection);
   const userDetails = await userRepo.findById(userId);
   return {
@@ -25,7 +25,7 @@ export const listFreeAgencyMarket = async (
   const transaction = context.transaction as Knex.Transaction;
   const freeAgencyMarketRepo = new freeAgencyMarketRepository(transaction);
   const userList = await freeAgencyMarketRepo.fetch();
-  const batch = userList.map(item => findUserWithFAM(item.user_id, item, transaction))
+  const batch = userList.map((item) => findUserWithFAM(item.user_id, item, transaction))
   const result = await Promise.all(batch)
   return result;
 };
@@ -59,7 +59,7 @@ export const addToWatchList = async (
     playerId: req.playerId,
     userId: context.user?.id || "",
   });
-  if(checkExisting?.length)  return getErrorObject("Already added in watchlist");
+  if(checkExisting?.length) return getErrorObject("Already added in watchlist");
   
   const result = await watchListRepo.create({
     playerId: req.playerId,
@@ -76,7 +76,7 @@ export const getWatchList = async (
   const watchlist = await watchListRepo.find({
     userId: context.user?.id || "",
   });
-  const resultBatch = watchlist?.map(item => findUserWithFAM(item.playerId, item,transaction))
+  const resultBatch = watchlist?.map((item) => findUserWithFAM(item.playerId, item,transaction))
   const result = await Promise.all(resultBatch || []);
   return result;
 };
