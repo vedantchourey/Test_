@@ -67,7 +67,7 @@ const TeamMembers: React.FC = () => {
     axios
       .post("/api/free-agency-market/add-to-watchlist", data, { headers: headers })
       .then((res) => {
-        console.log('res -> ', res)
+        
       })
       .catch((err) => {
         alert("Player already added in Watch list")

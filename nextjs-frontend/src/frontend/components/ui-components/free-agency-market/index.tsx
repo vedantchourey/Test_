@@ -175,7 +175,6 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
                       placeholder="Select Game"
                       onChange={(id, selectedGame): void => {
                         setSelectGame(id || "");
-                        console.log("id, selectedGame -> ", id, selectedGame);
                       }}
                       value={selectGame}
                     />

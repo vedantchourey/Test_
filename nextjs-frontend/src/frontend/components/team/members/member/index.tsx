@@ -22,7 +22,6 @@ const Member: React.FC<MemberProp> = ({
   children,
 }) => {
   const [hover, setHover] = useState(false);
-  console.log("hover -> ", hover);
   return (
     <Box
       onMouseEnter={() => setHover(true)}

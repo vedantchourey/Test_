@@ -68,7 +68,6 @@ export default function NoobDesktopHeader(): JSX.Element {
   }
 
   async function gotoFreeAgencyMarketPage(): Promise<void> {
-    console.log('here -> ')
     await router.push('/free-agency-market/view/members')
   }
 

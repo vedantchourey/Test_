@@ -51,7 +51,6 @@ const WatchTeamMembers: React.FC = () => {
   const fetchUsers = async () => {
     const headers = await getAuthHeader();
     setLoading(true);
-    console.log("headers -> ", headers);
     axios
       .get("/api/teams/list-sent-invitations", { headers: headers })
       .then((res) => {
