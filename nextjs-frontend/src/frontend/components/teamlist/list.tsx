@@ -27,19 +27,6 @@ export const NoobRow = styled(TableRow)(() => ({
   align: "center"
 }));
 
-// const static_data: { teamname: string; gamename: string; image: string; }[] = [
-//   {
-//     teamname: "Legend Club",
-//     gamename: "Game",
-//     image: "/icons/Rectangle.svg",
-//   },
-//   {
-//     teamname: "Legend Club",
-//     gamename: "Game",
-//     image: "/icons/Rectangle.svg",
-//   },
-// ];
-
 export interface Player {
   balance: number;
   firstName: string;
@@ -64,10 +51,8 @@ const TeamListData: React.FC = () => {
       const headers = await getAuthHeader();
       axios.get(endpoint, { headers: headers }).then((res) => {
         setData(res.data.result);
-        console.log(res.data.result);
       });
     } catch (err) {
-      console.error(err);
     }
   };
 
