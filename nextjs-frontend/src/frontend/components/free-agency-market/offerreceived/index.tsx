@@ -1,7 +1,8 @@
 import styled from "@emotion/styled";
 import {
   Box,
-  Button, Grid,
+  Button,
+  Grid,
   Table,
   TableBody,
   TableCell,
@@ -9,10 +10,12 @@ import {
   TableRow,
   Typography,
   useMediaQuery,
-  useTheme
+  useTheme,
 } from "@mui/material";
-import React from "react";
-
+import axios from "axios";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { getAuthHeader } from "../../../utils/headers";
 
 export const NoobCell = styled(TableCell)(() => ({
   border: "0px",
@@ -24,6 +27,13 @@ export const NoobRow = styled(TableRow)(() => ({
   //     borderRight:"1px solid #6932F9"
   // }
 }));
+
+interface IData {
+  username: string;
+  teamname: string[]; 
+  date: string;
+  teamId: string;
+}
 
 export const NoobButton = styled(Button)(() => ({
   color: "white",
@@ -37,32 +47,33 @@ export const NoobButton = styled(Button)(() => ({
   },
 }));
 
-const data: { username: string; teamname: string[]; date: string; }[] = [
-  {
-    username: "Shaig Exp",
-    teamname: ["/icons/Rectangle.svg", "Legend Club"],
-    date: "12.09.2021 21:56",
-  },
-  {
-    username: "Shaig Exp",
-    teamname: ["/icons/Rectangle.svg", "Legend Club"],
-    date: "12.09.2021 21:56",
-  },
-  {
-    username: "Shaig Exp",
-    teamname: ["/icons/Rectangle.svg", "Legend Club"],
-    date: "12.09.2021 21:56",
-  },
-  {
-    username: "Shaig Exp",
-    teamname: ["/icons/Rectangle.svg", "Legend Club"],
-    date: "12.09.2021 21:56",
-  },
-];
-
 const Permissions: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<IData[] | []>([]);
+
+  const fetchTeam = async () => {
+    const headers = await getAuthHeader();
+    setLoading(true);
+    axios
+      .get("/api/teams/list-invitations", { headers: headers })
+      .then((res) => {
+        const players: IData[] = res.data.result.map((item: any) => ({
+          username: item.invite_by.username,
+          teamname: ["/icons/Rectangle.svg", item.team.name],
+          date: moment(item.created_at).format("DD/MM/YYYY HH:MM"),
+          teamId: item.team.id,
+        }));
+        setData(players);
+      })
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchTeam();
+  }, []);
+
   return (
     <React.Fragment>
       <Grid container rowSpacing={2}>
@@ -90,12 +101,26 @@ const Permissions: React.FC = () => {
                 ) : null}
                 {data.map((item) => {
                   return (
-                    <NoobRow sx={{ display: { sm: "flex", xs: "flex", md: "table-row" }, flexDirection: { sm: "column", xs: "column" } }} key={item.username}>
+                    <NoobRow
+                      sx={{
+                        display: { sm: "flex", xs: "flex", md: "table-row" },
+                        flexDirection: { sm: "column", xs: "column" },
+                      }}
+                      key={item.username}
+                    >
                       <NoobCell>
                         <Box display="flex" alignItems={"center"}>
-                          <Typography marginRight={12}>{item.username}</Typography>
-                          <img src={item.teamname[0]} width={"65px"} height={"65px"} />
-                          <Typography marginLeft={2}>{item.teamname[1]}</Typography>
+                          <Typography marginRight={12}>
+                            {item.username}
+                          </Typography>
+                          <img
+                            src={item.teamname[0]}
+                            width={"65px"}
+                            height={"65px"}
+                          />
+                          <Typography marginLeft={2}>
+                            {item.teamname[1]}
+                          </Typography>
                         </Box>
                       </NoobCell>
                       <NoobCell>
@@ -108,7 +133,9 @@ const Permissions: React.FC = () => {
                           <NoobCell>
                             <NoobButton
                               style={{ backgroundColor: "#F09633" }}
-                              variant="contained" size={"small"} fullWidth={true}
+                              variant="contained"
+                              size={"small"}
+                              fullWidth={true}
                             >
                               Accept Offer
                             </NoobButton>
@@ -116,24 +143,25 @@ const Permissions: React.FC = () => {
                           <NoobCell>
                             <NoobButton
                               style={{ backgroundColor: "#6932F9" }}
-                              variant="contained" size={"small"} fullWidth={true}
+                              variant="contained"
+                              size={"small"}
+                              fullWidth={true}
                             >
                               Decline Offer
                             </NoobButton>
                           </NoobCell>
                         </>
-                      ) :
-                        (
-                          <NoobCell>
-                            <NoobButton
-                              style={{ backgroundColor: "#F09633" }}
-                              variant="contained" size={"small"}
-                            >
-                              View offer details
-                            </NoobButton>
-                          </NoobCell>
-                        )
-                      }
+                      ) : (
+                        <NoobCell>
+                          <NoobButton
+                            style={{ backgroundColor: "#F09633" }}
+                            variant="contained"
+                            size={"small"}
+                          >
+                            View offer details
+                          </NoobButton>
+                        </NoobCell>
+                      )}
                     </NoobRow>
                   );
                 })}

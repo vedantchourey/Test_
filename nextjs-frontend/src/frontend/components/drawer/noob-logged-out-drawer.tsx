@@ -60,7 +60,7 @@ export default function NoobLoggedOutDrawer(props: Props): JSX.Element {
           <Button variant="text" startIcon={<ShoppingCartIcon/>} style={{textTransform: 'none'}}>
             Store
           </Button>
-          <Button variant="text" startIcon={<FlashOnIcon/>} style={{color: theme.palette.secondary.main, textTransform: 'none'}}>
+          <Button variant="text" startIcon={<FlashOnIcon/>} onClick={(): Promise<void> => gotoPage('/free-agency-market/view/members')} style={{color: theme.palette.secondary.main, textTransform: 'none'}}>
             Free Agency Market
           </Button>
         </div>

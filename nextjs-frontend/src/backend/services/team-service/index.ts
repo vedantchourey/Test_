@@ -316,9 +316,12 @@ const findTemsWithInvitationDeatils = async (
   ) => {
     const teamRepo = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAMS);
     const teamDetails = await teamRepo.findById(teamId);
+    const userRepo = new UsersRepository(connection);
+    const invite_by = await userRepo.findById(details.invite_by);
     return {
-      team: { ...teamDetails },
       ...details,
+      team: { ...teamDetails },
+      invite_by: {...invite_by.raw_user_meta_data, id: invite_by.id}
     };
   };
 
