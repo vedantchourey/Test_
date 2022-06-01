@@ -87,7 +87,10 @@ export default function NoobLoggedOutDrawer(props: Props): JSX.Element {
           <Box><Button variant="text" className={classes.buttonStyles}><img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />FAQ</Button></Box>
         </div>
         <div className={styles.bottomMenuGroup}>
-          <Button variant="text" startIcon={<FlashOnIcon/>} style={{color: '#FD6262', fontSize: '17px', textTransform: 'none'}}>
+          <Button variant="text" startIcon={<ShoppingCartIcon/>} style={{textTransform: 'none'}}>
+            Store
+          </Button>
+          <Button variant="text" startIcon={<FlashOnIcon/>} onClick={(): Promise<void> => gotoPage('/free-agency-market/view/members')} style={{color: theme.palette.secondary.main, textTransform: 'none'}}>
             Free Agency Market
           </Button>
         </div>

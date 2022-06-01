@@ -1,9 +1,3 @@
-import React from "react";
-import NoobPage from "../page/noob-page";
-import { useRouter } from "next/router";
-import { ParsedUrlQuery } from "querystring";
-import Noob404Page from "../../../../pages/404";
-import MatchHistory from "./match-history";
 import {
   Box,
   FormControl,
@@ -16,6 +10,11 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { useRouter } from "next/router";
+import { ParsedUrlQuery } from "querystring";
+import React from "react";
+import Noob404Page from "../../../../pages/404";
+import NoobPage from "../page/noob-page";
 import TeamCard from "../ui-components/team-card";
 import Permissions from "./permissions";
 import styled from "@emotion/styled";
@@ -23,6 +22,7 @@ import TeamMembers, { Player } from "./members";
 import axios from "axios";
 import { getAuthHeader } from "../../utils/headers";
 import Loader from "../ui-components/loader";
+import MatchHistory from "./match-history";
 
 export const NoobTab = styled(Tab)(() => ({
   textTransform: "capitalize",
@@ -74,7 +74,6 @@ const Team: React.FC = () => {
         })
         .catch((err) => {
           setLoading(false);
-
           console.error(err);
         });
     }

@@ -15,6 +15,7 @@ import { IUser } from "../database/models/i-user";
 import { ITournament } from "../database/models/i-tournaments";
 import { addNotifications } from "../notifications-service";
 import { INotifications } from "../database/models/i-notifications";
+import { UsersRepository } from "../database/repositories/users-repository";
 const fields = ["id", "game_id", "name", "platform_id"]
 
 export const fetchTeams = async (connection: Knex.Transaction, user: any, query: any): Promise<ISuccess | IError> => {
@@ -119,9 +120,14 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
         const errors = await validateSendInvite(req);
         if (errors) return { errors };
 
+        const playerId = req.player_id;
+        let player_data: IUser | undefined;
+
         // validating all the users
-        const player_data: IUser = await fetchUserDetails(req.email, connection)
-        if (!player_data) return getErrorObject("Invalid email address.")
+        if(req?.email){
+            player_data = await fetchUserDetails(req?.email, connection)
+            if (!player_data) return getErrorObject("Invalid email address.")
+        }
 
         const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
         const team_info = await teams.findById(req.team_id);
@@ -132,26 +138,28 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
 
         // checking if users already in the team 
         const team_players = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
-        const existing_players = await team_players.knexObj().where("user_id", player_data.id)
+        const existing_players = await team_players.knexObj().where("user_id", playerId || player_data?.id)
             .where("team_id", req.team_id);
         if (existing_players.length) return getErrorObject("Players already exists in the team.");
 
         //validating if any pending invitation
         const team_invitation = new CrudRepository<ITeamInvitation>(connection, TABLE_NAMES.TEAM_INVITATION);
-        const pending_inivitation = await team_invitation.knexObj().where("user_id", player_data.id)
+        const pending_inivitation = await team_invitation.knexObj().where("user_id", playerId || player_data?.id)
             .where("status", "PENDING")
+            .where("team_id", req.team_id)
 
         if (pending_inivitation.length) return getErrorObject("Users have invitation pending");
         const secret = randomString(15);
         const data = {
             team_id: team_info.id,
-            user_id: player_data.id,
+            invite_by: user.id,
+            user_id: playerId || player_data?.id,
             type: "INVITE",
             secret
         }
         const notification: INotifications = {
             type: "TEAM_INVITATION",
-            user_id: player_data.id,
+            user_id: playerId || player_data?.id || "",
             is_action_required: true,
             status: STATUS.PENDING,
             data: { secret }
@@ -166,8 +174,8 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
     } catch (ex) {
         return getErrorObject("Something went wrong")
     }
-
 }
+
 export const acceptInvite = async (secret: string, connection: Knex.Transaction): Promise<ISuccess | IError> => {
     try {
         const team_invitation = new CrudRepository<ITeamInvitation>(connection, TABLE_NAMES.TEAM_INVITATION);
@@ -265,6 +273,85 @@ export const validateCreationData = async (req: ITeamCreateRequest, connection: 
     }
 
 }
+
+const findUserWithInvitationDeatils = async (
+  userId: string,
+  details: any,
+  connection: Knex.Transaction
+) => {
+    try{
+        const userRepo = new UsersRepository(connection);
+        const userDetails = await userRepo.findById(userId);
+        return {
+          player: { ...userDetails.raw_user_meta_data, id: userDetails.id },
+          ...details,
+        };
+    } catch(err){
+    }
+  
+};
+
+export const getListOfSendInvitations = async (
+  connection: Knex.Transaction,
+  user: any
+): Promise<ISuccess | IError> => {
+  try {
+    const user_id = user.id;
+    const team_invitation = new CrudRepository<ITeamInvitation>(
+      connection,
+      TABLE_NAMES.TEAM_INVITATION
+    );
+    const sent_invitations: any[] = await team_invitation
+      .knexObj()
+      .where("invite_by", user_id).where("status", "PENDING");
+    const batch = sent_invitations.map((item: any) =>
+      findUserWithInvitationDeatils(item.user_id, item, connection)
+    );
+    const result = await Promise.all(batch);
+    return { result };
+  } catch (ex) {
+    return getErrorObject("Something went wrong");
+  }
+};
+
+const findTemsWithInvitationDeatils = async (
+    teamId: string,
+    details: any,
+    connection: Knex.Transaction
+  ) => {
+    const teamRepo = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAMS);
+    const teamDetails = await teamRepo.findById(teamId);
+    const userRepo = new UsersRepository(connection);
+    const invite_by = await userRepo.findById(details.invite_by);
+    return {
+      ...details,
+      team: { ...teamDetails },
+      invite_by: {...invite_by.raw_user_meta_data, id: invite_by.id}
+    };
+  };
+
+export const getListOfInvitations = async (
+  connection: Knex.Transaction,
+  user: any
+): Promise<ISuccess | IError> => {
+  try {
+    const user_id = user.id;
+    const team_invitation = new CrudRepository<ITeamInvitation>(
+      connection,
+      TABLE_NAMES.TEAM_INVITATION
+    );
+    const sent_invitations: any[] = await team_invitation
+      .knexObj()
+      .where("user_id", user_id);
+    const batch = sent_invitations.map((item: any) =>
+    findTemsWithInvitationDeatils(item.team_id, item, connection)
+    );
+    const result = await Promise.all(batch);
+    return { result };
+  } catch (ex) {
+    return getErrorObject("Something went wrong");
+  }
+};
 
 export const fetchUserDetails = async (email: string, connection: Knex.Transaction): Promise<IUser> => {
     const user_list = new CrudRepository<IUser>(connection, TABLE_NAMES.USERS);

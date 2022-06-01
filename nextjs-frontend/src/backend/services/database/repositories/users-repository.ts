@@ -24,6 +24,10 @@ export class UsersRepository extends BaseRepository<IUser> {
     const items = await this.entities().where("id", user_id);
     return items[0];
   }
+  async list(): Promise<any> {
+    const items = await this.entities();
+    return items;
+  }
 }
 
 export const createUsersRepository = (

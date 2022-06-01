@@ -25,6 +25,7 @@ async function isUserAuthorized(user: User, allowedRoles: NoobUserRole[], contex
 
 const authMiddleWare = (opts: Opts): NoobApiRouteHandler => {
   const {allowAnonymous, allowedRoles} = opts;
+  console.log('allowedRoles -> ', allowedRoles)
   return async (req: NextApiRequest, res: NextApiResponse, context: PerRequestContext): Promise<unknown> => {
     const {authorization} = req.headers;
     if (allowAnonymous) return;

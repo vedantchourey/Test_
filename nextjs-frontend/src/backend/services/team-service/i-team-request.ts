@@ -9,8 +9,9 @@ export interface ITeamDiscardRequest {
 }
 
 export interface ITeamInviteRequest {
+    player_id?: string;
     team_id: string;
-    email: string;
+    email?: string;
 }
 
 export interface ITeamLeaveRequest{

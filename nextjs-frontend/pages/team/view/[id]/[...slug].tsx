@@ -4,7 +4,6 @@ import Team from "../../../../src/frontend/components/team";
 const TeamPage: React.FC<void> = () => {
   return (
     <Team key={"team"}></Team>
-    
   );
 };
 

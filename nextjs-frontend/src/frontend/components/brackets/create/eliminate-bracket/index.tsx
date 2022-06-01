@@ -63,6 +63,7 @@ const EliminateBracket = React.forwardRef<
         map: yup.array().of(yup.string())
 .nullable(),
         startTime: yup.date().when("round", (data) => {
+        
           return data !== "1"
             ? yup.date().required("Start time is required")
             : yup.date();
@@ -145,8 +146,6 @@ const EliminateBracket = React.forwardRef<
       };
     });
   }, [formik.values.playersLimit, formik.values.type]);
-
-  console.log('formik -> ', formik)
 
   return (
     <React.Fragment>
