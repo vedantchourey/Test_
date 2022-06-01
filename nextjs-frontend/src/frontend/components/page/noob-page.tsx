@@ -27,7 +27,7 @@ export default function NoobPage(props: Props): JSX.Element {
       <Box sx={{ display: 'flex' }}>
         <NoobHeader/>
           <Box
-            style={{ minHeight: '1005px' }}
+            style={{ minHeight: '1240px' }}
             component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}>
             {children}
           </Box>
