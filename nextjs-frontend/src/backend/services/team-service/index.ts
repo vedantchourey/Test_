@@ -278,12 +278,16 @@ const findUserWithInvitationDeatils = async (
   details: any,
   connection: Knex.Transaction
 ) => {
-  const userRepo = new UsersRepository(connection);
-  const userDetails = await userRepo.findById(userId);
-  return {
-    player: { ...userDetails.raw_user_meta_data, id: userDetails.id },
-    ...details,
-  };
+    try{
+        const userRepo = new UsersRepository(connection);
+        const userDetails = await userRepo.findById(userId);
+        return {
+          player: { ...userDetails.raw_user_meta_data, id: userDetails.id },
+          ...details,
+        };
+    } catch(err){
+    }
+  
 };
 
 export const getListOfSendInvitations = async (
@@ -298,7 +302,7 @@ export const getListOfSendInvitations = async (
     );
     const sent_invitations: any[] = await team_invitation
       .knexObj()
-      .where("invite_by", user_id);
+      .where("invite_by", user_id).where("status", "PENDING");
     const batch = sent_invitations.map((item: any) =>
       findUserWithInvitationDeatils(item.user_id, item, connection)
     );

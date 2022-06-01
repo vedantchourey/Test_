@@ -44,7 +44,7 @@ const settings: Settings = {
   ],
 };
 
-const WatchTeamMembers: React.FC = () => {
+const WatchTeamMembers: React.FC<{teamId: string | string[] | undefined}> = ({teamId}) => {
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<MemberProp[] | []>([]);
@@ -89,6 +89,26 @@ const WatchTeamMembers: React.FC = () => {
       .finally(() => setLoading(false));
   };
 
+  const sendInvitation = async (playerId: string) => {
+    setLoading(true);
+    const data = {
+      player_id: playerId,
+      team_id: teamId,
+    };
+    const headers = await getAuthHeader();
+    axios
+      .post("/api/teams/send-invite", data, {
+        headers: headers,
+      })
+      .then((res) => {
+        // console.log('res -> ', res)
+      })
+      .catch((err) => {
+        alert("Player already invited or already in the team");
+      })
+      .finally(() => setLoading(false));
+  };
+
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -121,16 +141,19 @@ const WatchTeamMembers: React.FC = () => {
                         - Remove
                       </NoobButton>
                     </Box>
-                    <Box textAlign="center" mt={2} mb={12}>
-                      <NoobButton
-                        variant="contained"
-                        disabled={loading}
-                        style={{ backgroundColor: "#F09633" }}
-                        fullWidth={true}
-                      >
-                        Send Offer to Recurit
-                      </NoobButton>
-                    </Box>
+                    {teamId && (
+                      <Box textAlign="center" mt={2} mb={12}>
+                        <NoobButton
+                          variant="contained"
+                          disabled={loading}
+                          style={{ backgroundColor: "#F09633" }}
+                          fullWidth={true}
+                          onClick={() => sendInvitation(player.id || "")}
+                        >
+                          Send Offer to Recurit
+                        </NoobButton>
+                      </Box>
+                    )}
                   </>
                 </Member>
               );

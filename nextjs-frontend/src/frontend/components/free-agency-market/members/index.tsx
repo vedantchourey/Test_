@@ -1,5 +1,11 @@
 import styled from "@emotion/styled";
-import { Box, Button, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Box,
+  Button,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Slider, { Settings } from "react-slick";
@@ -37,47 +43,71 @@ const settings: Settings = {
   ],
 };
 
-const TeamMembers: React.FC = () => {
+const TeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
+  teamId,
+}) => {
   const [data, setData] = useState<MemberProp[] | []>([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchUsers = async () =>{
+  const fetchUsers = async () => {
     const headers = await getAuthHeader();
-    axios.get("/api/free-agency-market/list",{headers:headers}).then((res)=>{
-      const players: MemberProp[] = res.data.map((item: any) => ({
-        name: `${item.firstName} ${item.lastName}`,
-        id: item.user_id,
-        image: "/images/teams/player.png",
-        type: "bronze",
-        tags: ["Games", "Won", "Elo"],
-        elo: "10",
-        won: "6",
-        games: 12,
-      }));
-      setData(players);
-    })
-  }
+    axios
+      .get("/api/free-agency-market/list", { headers: headers })
+      .then((res) => {
+        const players: MemberProp[] = res.data.map((item: any) => ({
+          name: `${item.firstName} ${item.lastName}`,
+          id: item.user_id,
+          image: "/images/teams/player.png",
+          type: "bronze",
+          tags: ["Games", "Won", "Elo"],
+          elo: "10",
+          won: "6",
+          games: 12,
+        }));
+        setData(players);
+      });
+  };
 
   const addToWatchList = async (playerId: string) => {
     setLoading(true);
     const data = {
-      playerId
-    }
+      playerId,
+    };
     const headers = await getAuthHeader();
     axios
-      .post("/api/free-agency-market/add-to-watchlist", data, { headers: headers })
-      .then((res) => {
-        
+      .post("/api/free-agency-market/add-to-watchlist", data, {
+        headers: headers,
       })
+      .then((res) => {})
       .catch((err) => {
-        alert("Player already added in Watch list")
+        alert("Player already added in Watch list");
       })
       .finally(() => setLoading(false));
-  }
+  };
+
+  const sendInvitation = async (playerId: string) => {
+    setLoading(true);
+    const data = {
+      player_id: playerId,
+      team_id: teamId,
+    };
+    const headers = await getAuthHeader();
+    axios
+      .post("/api/teams/send-invite", data, {
+        headers: headers,
+      })
+      .then((res) => {
+        // console.log('res -> ', res)
+      })
+      .catch((err) => {
+        alert("Player already invited or already in the team");
+      })
+      .finally(() => setLoading(false));
+  };
 
   useEffect(() => {
     fetchUsers();
-  }, [])
+  }, []);
 
   return (
     <React.Fragment>
@@ -90,23 +120,32 @@ const TeamMembers: React.FC = () => {
             {data.map((player: any) => {
               return (
                 <Member key={player.firstName} {...player}>
-                  <Box textAlign="center" mt={2}>
-                    <NoobButton
-                      variant="contained"
-                      style={{ backgroundColor: "#6932F9", margin: 5 }}
-                      disabled={loading}
-                      onClick={() => addToWatchList(player.id)}
-                    >
-                      + Add to Watch List
-                    </NoobButton>
-                    <NoobButton
-                      variant="contained"
-                      disabled={loading}
-                      style={{ backgroundColor: "#F09633", margin: 5 }}
-                    >
-                      Send Offer to Recurit
-                    </NoobButton>
-                  </Box>
+                  <>
+                    <Box textAlign="center" mt={6}>
+                      <NoobButton
+                        variant="contained"
+                        disabled={loading}
+                        style={{ backgroundColor: "#6932F9" }}
+                        fullWidth={true}
+                        onClick={() => addToWatchList(player.id)}
+                      >
+                        + Add to Watch List
+                      </NoobButton>
+                    </Box>
+                    {teamId && (
+                      <Box textAlign="center" mt={2} mb={12}>
+                        <NoobButton
+                          variant="contained"
+                          disabled={loading}
+                          style={{ backgroundColor: "#F09633" }}
+                          fullWidth={true}
+                          onClick={() => sendInvitation(player.id || "")}
+                        >
+                          Send Offer to Recurit
+                        </NoobButton>
+                      </Box>
+                    )}
+                  </>
                 </Member>
               );
             })}

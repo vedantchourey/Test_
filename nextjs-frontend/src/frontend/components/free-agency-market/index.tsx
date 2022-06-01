@@ -9,11 +9,11 @@ import {
   Tab,
   Tabs,
   useMediaQuery,
-  useTheme
+  useTheme,
 } from "@mui/material";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
-import React from "react";
+import React, { useState } from "react";
 import Noob404Page from "../../../../pages/404";
 import NoobPage from "../page/noob-page";
 import FreeAgencyMarketCard from "../ui-components/free-agency-market";
@@ -46,8 +46,6 @@ const tabs: { title: string; url: string }[] = [
   { title: "Offer Received", url: "offer/received" },
 ];
 
-
-
 const getActive = (url: string): number => {
   return tabs.findIndex((tab) => tab.url === url);
 };
@@ -58,6 +56,7 @@ const FreeAgencyMarket: React.FC = (): JSX.Element => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [teamId] = useState(query.teamId)
 
   const renderComponent = (): JSX.Element => {
     let page;
@@ -70,9 +69,13 @@ const FreeAgencyMarket: React.FC = (): JSX.Element => {
     }
     switch (page) {
       case "members":
-        return <><TeamMembers /></>;
+        return (
+          <>
+            <TeamMembers teamId={teamId} />
+          </>
+        );
       case "watchlist":
-        return <WatchTeamMembers />;
+        return <WatchTeamMembers teamId={teamId} />;
       case "offer/sent":
         return <OfferTeamMembers />;
       case "offer/received":
@@ -103,16 +106,22 @@ const FreeAgencyMarket: React.FC = (): JSX.Element => {
     if (!tab) {
       return;
     }
-    router.push("/free-agency-market/view/[...slug]", `/free-agency-market/view/${tab.url}`, { shallow: true });
+    router.push(
+      `/free-agency-market/view/[...slug]`,
+      `/free-agency-market/view/${tab.url}${teamId ? `?teamId=${teamId}` : ""}`,
+      {shallow: true}
+    );
   };
 
-
   const changeTabByValue = (tab: string): void => {
-    router.push("/free-agency-market/view/[...slug]", `/free-agency-market/view/${tab}`, { shallow: true });
-  }
+    router.push(
+      `/free-agency-market/view/[...slug]`,
+      `/free-agency-market/view/${tab}${teamId ? `?teamId=${teamId}` : ""}`,
+      { shallow: true }
+    );
+  };
 
   const renderTabs = (): JSX.Element => {
-    
     let page;
     if (query.slug) {
       if (Array.isArray(query.slug)) {
@@ -121,13 +130,13 @@ const FreeAgencyMarket: React.FC = (): JSX.Element => {
         page = query.slug;
       }
     }
-    
+
     if (isMobile) {
       return (
         <Select
           value={page}
           input={<OutlinedInput />}
-          onChange={(e: any):void => changeTabByValue(e.target.value)}
+          onChange={(e: any): void => changeTabByValue(e.target.value)}
           fullWidth
           sx={{ m: 1 }}
         >
@@ -140,8 +149,7 @@ const FreeAgencyMarket: React.FC = (): JSX.Element => {
           })}
         </Select>
       );
-    }
-    else if (getActiveTab() === 0 || query.slug === "members") {
+    } else if (getActiveTab() === 0 || query.slug === "members") {
       return (
         <>
           <Grid>
@@ -154,25 +162,25 @@ const FreeAgencyMarket: React.FC = (): JSX.Element => {
               })}
             </Tabs>
           </Grid>
-          <Grid><MemberButton /></Grid>
+          <Grid>
+            <MemberButton />
+          </Grid>
         </>
-      )
-
+      );
     }
-    
-      return (
-        <>
-          <Tabs
-            value={getActiveTab()}
-            onChange={(e, value): void => changeTab(value)}
-          >
-            {tabs.map(({ title }) => {
-              return <NoobTab label={title} key={title} />;
-            })}
-          </Tabs>
-        </>
-      )
-    
+
+    return (
+      <>
+        <Tabs
+          value={getActiveTab()}
+          onChange={(e, value): void => changeTab(value)}
+        >
+          {tabs.map(({ title }) => {
+            return <NoobTab label={title} key={title} />;
+          })}
+        </Tabs>
+      </>
+    );
   };
 
   return (
@@ -188,9 +196,7 @@ const FreeAgencyMarket: React.FC = (): JSX.Element => {
         </Box>
         {isMobile && (getActiveTab() === 0 || query.slug === "members") ? (
           <MemberButton />
-        ) :
-          null
-        }
+        ) : null}
         <Box marginY={2}>{renderComponent()}</Box>
       </FreeAgencyMarketCard>
     </NoobPage>

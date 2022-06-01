@@ -40,6 +40,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Image from "next/image";
 import axios from "axios";
 import { getAuthHeader } from "../../../utils/headers";
+import { useRouter } from 'next/router';
 
 export const options = {
   responsive: true,
@@ -132,25 +133,26 @@ const style = {
   p: 4,
 };
 
-export interface Player{
-  balance:number;
-  firstName:string;
-  lastName:string;
-  user_id:string
+export interface Player {
+  balance: number;
+  firstName: string;
+  lastName: string;
+  user_id: string;
 }
 
 interface TeamMembersProps {
   teamId: string;
-  players:Player[]
+  players: Player[];
 }
 
 const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
   const theme = useTheme();
+  const router = useRouter();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [open, setOpen] = React.useState(false);
   const [playerList, setPlayerList] = React.useState<MemberProp[]>([]);
-  const handleOpen = ():void => setOpen(true);
-  const handleClose = ():void => {
+  const handleOpen = (): void => setOpen(true);
+  const handleClose = (): void => {
     setOpen(false);
     setEmail(undefined);
     setError(undefined);
@@ -158,8 +160,15 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
   const [email, setEmail] = React.useState<string | undefined>(undefined);
   const [error, setError] = React.useState<string | undefined>(undefined);
 
-  React.useEffect(()=>{
-    const newList:MemberProp[]  = players.map((player)=>{
+  async function gotoFreeAgencyMarketPage(): Promise<void> {
+    await router.push({
+      pathname: "/free-agency-market/view/members",
+      query: { teamId },
+    });
+  }
+
+  React.useEffect(() => {
+    const newList: MemberProp[] = players.map((player) => {
       return {
         image: "/images/teams/player.png",
         type: "silver",
@@ -168,11 +177,11 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
         games: "20",
         won: "3",
         elo: "1043",
-      }
-    })
+      };
+    });
     setPlayerList(newList);
-  },[players])
-  const invitePlayer = async ():Promise<void> => {
+  }, [players]);
+  const invitePlayer = async (): Promise<void> => {
     const payLoad = { email: email, team_id: teamId };
     const headers = await getAuthHeader();
     axios
@@ -260,24 +269,33 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
             Invite Player
           </Typography>
           <Box display="flex" justifyContent={"space-between"}>
-          <Box>
-          <TextField
-            variant="outlined"
-            placeholder="Enter Email"
-            value={email}
-            onChange={(e):void => {
-              setEmail(e.target.value);
-            }}
-            style={{ color: "white", marginTop: 2 }}
-          />
-          {error?<FormHelperText>{error}</FormHelperText>:null}
+            <Box>
+              <TextField
+                variant="outlined"
+                placeholder="Enter Email"
+                value={email}
+                onChange={(e): void => {
+                  setEmail(e.target.value);
+                }}
+                style={{ color: "white", marginTop: 2 }}
+              />
+              {error ? <FormHelperText>{error}</FormHelperText> : null}
+            </Box>
+            <Box>
+              <Button style={{ marginLeft: "2px" }} onClick={invitePlayer}>
+                Send
+              </Button>
+            </Box>
           </Box>
           <Box>
-          <Button style={{ marginLeft: "2px" }} onClick={invitePlayer}>
-            {" "}
-            Send{" "}
-          </Button>
-          </Box>
+            <Button
+              style={{ marginLeft: "2px" }}
+              color={"secondary"}
+              onClick={() => gotoFreeAgencyMarketPage()}
+              variant={"outlined"}
+            >
+              Open Free Agency Market
+            </Button>
           </Box>
         </Box>
       </Modal>

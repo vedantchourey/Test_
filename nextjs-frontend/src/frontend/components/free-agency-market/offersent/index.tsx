@@ -56,7 +56,7 @@ const WatchTeamMembers: React.FC = () => {
       .then((res) => {
         const players: MemberProp[] = res.data.result.map((item: any) => ({
           name: `${item.player.firstName} ${item.player.lastName}`,
-          id: item.id,
+          id: item.secret,
           image: "/images/teams/player.png",
           type: "bronze",
           tags: ["Games", "Won", "Elo"],
@@ -69,14 +69,11 @@ const WatchTeamMembers: React.FC = () => {
       .finally(() => setLoading(false));
   };
 
-  const removeToWatchList = async (id: string) => {
+  const removeToWatchList = async (invite_key: string) => {
     setLoading(true);
-    const data = {
-      id,
-    };
     const headers = await getAuthHeader();
     axios
-      .post("/api/free-agency-market/delete-watchlist", data, {
+      .get(`/api/teams/reject-invite?invite_key=${invite_key}`, {
         headers: headers,
       })
       .then((res) => {

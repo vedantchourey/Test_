@@ -1,4 +1,3 @@
-
 import {
   Box,
   FormControl,
@@ -9,7 +8,7 @@ import {
   Tabs,
   Typography,
   useMediaQuery,
-  useTheme
+  useTheme,
 } from "@mui/material";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
@@ -75,7 +74,6 @@ const Team: React.FC = () => {
         })
         .catch((err) => {
           setLoading(false);
-
           console.error(err);
         });
     }
