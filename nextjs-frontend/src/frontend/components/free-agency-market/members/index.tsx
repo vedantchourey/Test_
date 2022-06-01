@@ -145,8 +145,6 @@ const TeamMembers: React.FC = () => {
     fetchUsers();
   }, [])
 
-  console.log('data -> ', data)
-
   return (
     <React.Fragment>
       <Box>
