@@ -136,7 +136,7 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
           backgroundSize: "cover",
         }}
       >
-        {!isMobile ? <CardDesktop setOpen={setOpen} /> : <CardMobile  setOpen={setOpen} />}
+        {!isMobile ? <CardDesktop setOpen={setOpen} /> : <CardMobile setOpen={setOpen} />}
       </Box>
       {children}
       <Modal open={open} onClose={() => setOpen(false)}>

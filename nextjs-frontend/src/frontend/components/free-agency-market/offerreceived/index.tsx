@@ -32,6 +32,7 @@ interface IData {
   username: string;
   teamname: string[]; 
   date: string;
+  invite_key: string;
   teamId: string;
 }
 
@@ -59,13 +60,31 @@ const Permissions: React.FC = () => {
     axios
       .get("/api/teams/list-invitations", { headers: headers })
       .then((res) => {
+        console.log('res.data -> ', res.data)
         const players: IData[] = res.data.result.map((item: any) => ({
           username: item.invite_by.username,
           teamname: ["/icons/Rectangle.svg", item.team.name],
           date: moment(item.created_at).format("DD/MM/YYYY HH:MM"),
           teamId: item.team.id,
+          invite_key: item.secret
         }));
         setData(players);
+      })
+      .finally(() => setLoading(false));
+  };
+
+  const acceptInvitaion = async (invite_key: string) => {
+    setLoading(true);
+    const headers = await getAuthHeader();
+    axios
+      .get(`/api/teams/accept-invite?invite_key=${invite_key}`, {
+        headers: headers,
+      })
+      .then((res) => {
+        fetchTeam()
+      })
+      .catch((err) => {
+        alert("Player already added in Watch list");
       })
       .finally(() => setLoading(false));
   };
@@ -157,8 +176,10 @@ const Permissions: React.FC = () => {
                             style={{ backgroundColor: "#F09633" }}
                             variant="contained"
                             size={"small"}
+                            disabled={loading}
+                            onClick={() => acceptInvitaion(item.invite_key)}
                           >
-                            View offer details
+                            Accpet
                           </NoobButton>
                         </NoobCell>
                       )}

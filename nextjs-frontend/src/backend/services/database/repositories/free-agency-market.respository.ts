@@ -24,7 +24,8 @@ export class freeAgencyMarketRepository extends BaseRepository<IFreeAgencyMarket
   }
 
   async findById(id: any): Promise<IFreeAgencyMarket | undefined> {
-    const fetchItem: IFreeAgencyMarket[] = await this.entities().select(...keys).where({ id });
+    const fetchItem: IFreeAgencyMarket[] = await this.entities().select(...keys)
+.where({ id });
     return fetchItem[0]
   }
 

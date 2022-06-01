@@ -24,26 +24,41 @@ const drawerWidth = 280;
 const useRoundStatusStyles = makeStyles(() =>
   createStyles({
     drawer: {
-      width: drawerWidth
+      width: drawerWidth,
     },
     drawerPaper: {
-      width: drawerWidth
+      width: drawerWidth,
     },
     root: {
-      display: 'flex'
+      display: "flex",
     },
-    buttonStyles : { margin: '10px',marginLeft: '30px', color: '#ffffff', opacity: '0.31',justifyContent: 'flex-start', width:'180px',' & .hover': {background: 'linear-gradient(90deg, rgba(105, 49, 249, 0.12) 9.34%, rgba(105, 49, 249, 0) 100%)',},
+    buttonStyles: {
+      margin: "10px",
+      marginLeft: "30px",
+      color: "#ffffff",
+      opacity: "0.31",
+      justifyContent: "flex-start",
+      width: "180px",
+      " & .hover": {
+        background:
+          "linear-gradient(90deg, rgba(105, 49, 249, 0.12) 9.34%, rgba(105, 49, 249, 0) 100%)",
+      },
     },
-    boxStyle : {
-      width: '209px',
-      height: '304px',
-      background: 'linear-gradient(196.04deg, #08001C -37.47%, rgba(15, 5, 38, 0) 89.41%)',
-      borderRadius: '5px',
+    boxStyle: {
+      width: "209px",
+      height: "304px",
+      background:
+        "linear-gradient(196.04deg, #08001C -37.47%, rgba(15, 5, 38, 0) 89.41%)",
+      borderRadius: "5px",
     },
-    imgStyle : {
-      marginRight: '20px', width: '15px', height: '16px', marginTop: '-5px'
-    }
-  }));
+    imgStyle: {
+      marginRight: "20px",
+      width: "15px",
+      height: "16px",
+      marginTop: "-5px",
+    },
+  })
+);
 
 export default function DrawerLeft() {
 
@@ -59,8 +74,6 @@ export default function DrawerLeft() {
   const router = useRouter()
   const { pathname } = router;
 
-  
-
   function buttonStyle(expectedPaths: string[]): React.CSSProperties {
     if (expectedPaths.indexOf(pathname) === -1) return { color: 'white', fontWeight: 700 };
     return { color: theme.palette.primary.main, fontWeight: 700, textDecoration: 'blink', width: '180px', borderRadius: '8px', backgroundColor: 'rgb(249 50 50)', background: 'linear-gradient(90deg, rgba(105, 49, 249, 0.12) 9.34%, rgba(105, 49, 249, 0) 100%)'};
@@ -73,6 +86,9 @@ export default function DrawerLeft() {
   }
   async function gotoTeamListPage(): Promise<void> {
     await router.push('/teamlist')
+  }
+  async function gotoFreeAgencyMarketPage(): Promise<void> {
+    await router.push("/free-agency-market/view/members");
   }
   function onSuccessfulLogin(): void {
     setShowLoginModal(false);
@@ -145,23 +161,95 @@ export default function DrawerLeft() {
             <Box className={style.box1}>
               <span className={style.border2}></span>
             </Box>
-            <Box className={style.box1}>
-              <YoutubeIcon/>
-              <img src="/icons/Vector-DiscordIcon.png" style={{ height: '19px' }} />
-              <TwitchIcon/>
+            <Box>
+              <Button variant="text" className={classes.buttonStyles}>
+                <img
+                  src="/icons/Vector-Leaderboards.png"
+                  className={classes.imgStyle}
+                />
+                Leaderboards
+              </Button>
             </Box>
-          </Box>
-          <div className={styles.bottomMenuGroup}>
-            <Button variant="text" startIcon={<FlashOnIcon/>} className={style.button1}>Free Agency Market</Button>
+            <Box>
+              <Button variant="text" className={classes.buttonStyles}>
+                <img
+                  src="/icons/Vector-Message.png"
+                  className={classes.imgStyle}
+                />
+                Message
+              </Button>
+            </Box>
+            <Box>
+              <Button variant="text" className={classes.buttonStyles}>
+                <img
+                  src="/icons/Vector-Aboutus.png"
+                  className={classes.imgStyle}
+                />
+                About Us
+              </Button>
+            </Box>
+            <Box>
+              <Button variant="text" className={classes.buttonStyles}>
+                <img
+                  src="/icons/Vector-Support.png"
+                  className={classes.imgStyle}
+                />
+                Support
+              </Button>
+            </Box>
+            <Box>
+              <Button variant="text" className={classes.buttonStyles}>
+                <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
+                FAQ
+              </Button>
+            </Box>
+            </Box>
           </div>
-          <Box className={style.box1}>
-            <span className={style.border3}></span>
-          </Box>
-          <Typography color={"default"} variant="h3" style={{ fontSize: '13px' }}>
-            Copyright © 2021. All Rights Reserved By <Button variant="text" onClick={gotoHomePage}> NOOBSTORM </Button>
-          </Typography>
-        </div>
-      </Drawer>
+          <div className={style.container3}>
+            <Box className={classes.boxStyle}>
+              <img src="/images/16276393842661.png" className={style.img2} />
+              <Typography className={style.text1}>
+                Always keep in touch with your friends and watch their
+                activities, like and comment.{" "}
+              </Typography>
+              <Box className={style.box1}>
+                <span className={style.border2}></span>
+              </Box>
+              <Box className={style.box1}>
+                <YoutubeIcon />
+                <img
+                  src="/icons/Vector-DiscordIcon.png"
+                  style={{ height: "19px" }}
+                />
+                <TwitchIcon />
+              </Box>
+            </Box>
+            <div className={styles.bottomMenuGroup}>
+              <Button
+                variant="text"
+                startIcon={<FlashOnIcon />}
+                className={style.button1}
+                onClick={gotoFreeAgencyMarketPage}
+              >
+                Free Agency Market
+              </Button>
+            </div>
+            <Box className={style.box1}>
+              <span className={style.border3}></span>
+            </Box>
+            <Typography
+              color={"default"}
+              variant="h3"
+              style={{ fontSize: "13px" }}
+            >
+              Copyright © 2021. All Rights Reserved By{" "}
+              <Button variant="text" onClick={gotoHomePage}>
+                {" "}
+                NOOBSTORM{" "}
+              </Button>
+            </Typography>
+          </div>
+        </Drawer>
       </div>
     </Box>
     <LoginModal show={showLoginModal}
