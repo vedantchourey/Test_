@@ -1,21 +1,22 @@
 import { Grid } from "@mui/material";
+import axios from "axios";
+import moment from "moment";
+import { useRouter } from "next/router";
+import { ParsedUrlQuery } from "querystring";
 import React from "react";
+import { EliminateBracketData } from "../brackets/create/eliminate-bracket";
+import NoobPage from "../page/noob-page";
+import { PublishTournamentData } from "../publish/publish-tournament";
 import { BasicData } from "../setup/basic";
 import { InfoData } from "../setup/info";
-import SideBar from "../ui-components/sidebar";
-import axios from "axios";
-import { EliminateBracketData } from "../brackets/create/eliminate-bracket";
 import { SettingData } from "../setup/settings";
-import { useRouter } from "next/router";
-import NoobPage from "../page/noob-page";
+import Loader from '../ui-components/loader';
+import SideBar from "../ui-components/sidebar";
 import Create from "./create";
-import { ParsedUrlQuery } from "querystring";
-import { PublishTournamentData } from "../publish/publish-tournament";
 import { StreamData } from "./create/streams";
-import moment from "moment";
+import Manage from "./manage";
 import Share from "./share";
 import { InvitePlayerData } from "./share/invitePlayer";
-import Loader from '../ui-components/loader';
 
 export interface TournamentData {
   id?: string;
@@ -196,6 +197,23 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
         },
       ],
     },
+    {
+      icon: <img src="/icons/manage-alt.svg" alt="icon" />,
+      title: "Manage",
+      isActive: (url: string): boolean => {
+        return url.indexOf("/manage") > -1;
+      },
+      items: [
+        {
+          title: "Match Dashboard",
+          url: url,
+          as: getAS("/manage/matchDashboard"),
+          isActive: (url: string): boolean => {
+            return url.indexOf("/matchDashboard") > -1;
+          },
+        },
+      ],
+    },
   ];
 
   const updateData = (
@@ -264,6 +282,8 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
         return <Create />;
       case "share":
         return <Share />;
+      case "manage":
+        return <Manage />;
       default:
         return null;
     }
