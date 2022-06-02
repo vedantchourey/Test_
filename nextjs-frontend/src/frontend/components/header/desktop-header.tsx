@@ -138,6 +138,7 @@ export default function DrawerLeft(): JSX.Element {
           <Button variant="text" className={classes.buttonStyles}><img src="/icons/Vector-Aboutus.png" className={classes.imgStyle} />About Us</Button>
           <Button variant="text" className={classes.buttonStyles}><img src="/icons/Vector-Support.png" className={classes.imgStyle} />Support</Button>
           <Button variant="text" className={classes.buttonStyles}><img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />FAQ</Button>
+          <Button variant="text" className={classes.buttonStyles} onClick={() : any => router.push("/match-hub")}><img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />Match Hub</Button>
 
           {
             !isLoggedIn && <Box>
