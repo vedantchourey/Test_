@@ -1,5 +1,14 @@
 import { Box, Typography } from "@mui/material";
 import { useState } from "react";
+import bronze from './images/bronze_Card.png';
+import diamond from './images/diamond_Card.png';
+import gold from './images/gold_Card.png';
+import ruby from './images/ruby_Card.png';
+import silver from './images/silver_Card.png';
+import Player from './images/Player.png';
+
+const images = {bronze, diamond, gold, ruby, silver, Player}
+
 export interface MemberProp {
   name: string;
   image: string;
@@ -13,7 +22,6 @@ export interface MemberProp {
 }
 
 const Member: React.FC<MemberProp> = ({
-  image,
   type,
   name,
   games,
@@ -98,7 +106,7 @@ const Member: React.FC<MemberProp> = ({
           </Typography>
         </div>
         <img
-          src={image}
+          src={images["Player"].src}
           style={{
             position: "absolute",
             width: "100%",
@@ -107,7 +115,7 @@ const Member: React.FC<MemberProp> = ({
           }}
         />
         <img
-          src={`/images/teams/${type}_Card.png`}
+          src={images[type].src}
           style={{ zIndex: 1, width: "100%" }}
         />
       </Box>

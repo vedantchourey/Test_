@@ -490,7 +490,7 @@ const ViewTournament: React.FC = () => {
         <Loader loading={loading} />
 
         <ViewCard>
-          <Grid container>
+          <Grid>
             <Grid item md={6}>
               {data.basic?.sponsor && (
                 <img
