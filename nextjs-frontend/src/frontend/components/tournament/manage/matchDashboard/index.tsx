@@ -4,7 +4,7 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
-import { DateTime } from "luxon";
+import moment from "moment";
 import React from "react";
 import { ReactComponent as CircleCloseIcon } from "../../../../../../public/icons/close.svg";
 import { getAuthHeader } from "../../../../utils/headers";
@@ -43,7 +43,7 @@ export interface Tournament {
     matchId: number;
     status: string;
     reportedBy: TournamentReporter,
-    createdAt: DateTime
+    createdAt: Date
 }
 
 export interface TournamentReporter {
@@ -53,8 +53,14 @@ export interface TournamentReporter {
     countryId: string,
     firstName: string,
     agreeToTnc: boolean,
-    dateOfBirth: DateTime
+    dateOfBirth: Date
 }
+
+export const calculateDiff = (createdAt: Date): string => {
+    let today_date = new Date()
+    let days = moment(today_date).diff(moment(createdAt), "days")
+    return String(days)
+};
 
 const MatchDashboard: React.FC = (): JSX.Element => {
 
@@ -65,7 +71,6 @@ const MatchDashboard: React.FC = (): JSX.Element => {
             const headers = await getAuthHeader();
             axios.get(endpoint, { params: { tournamentId: 1 }, headers: headers }).then((res) => {
                 setData(res.data);
-                console.log("resp: " +res.data);
             });
         } catch (err) {
             alert(err);
@@ -129,8 +134,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                                                         <Typography>co-admin</Typography>
                                                     </NoobCell>
                                                     <NoobCell>
-                                                       {/*<Typography>{item.createdAt.diffNow("days")}</Typography>*/}
-                                                        {/* <Typography>{DateTime.fromISO(item.createdAt).diffNow("days")}</Typography> */}
+                                                        <Typography>{calculateDiff(item.createdAt)}</Typography>
                                                     </NoobCell>
                                                 </NoobRow>
                                             );
