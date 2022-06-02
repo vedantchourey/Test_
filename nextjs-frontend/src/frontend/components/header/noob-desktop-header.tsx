@@ -1,18 +1,18 @@
-import styles from './noob-desktop-header.module.css';
-import Image from 'next/image';
-import { AppBar, Button, Typography, useTheme } from '@mui/material';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { AppBar, Button, Typography, useTheme } from '@mui/material';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
 import * as React from 'react';
 import { useRef, useState } from 'react';
-import { useRouter } from 'next/router';
+import { isLoggedInSelector } from '../../redux-store/authentication/authentication-selectors';
+import { desktopHeaderHeightSelector, screenWidthSelector } from '../../redux-store/layout/layout-selectors';
+import { setDesktopHeaderHeight } from '../../redux-store/layout/layout-slice';
+import { useAppDispatch, useAppSelector } from '../../redux-store/redux-store';
 import LoginModal from '../auth/login-modal/login-modal';
 import { ComponentDimensions, createFromRef } from '../utils/component-dimensions';
-import { useAppDispatch, useAppSelector } from '../../redux-store/redux-store';
-import { desktopHeaderHeightSelector, screenWidthSelector } from '../../redux-store/layout/layout-selectors';
-import { isLoggedInSelector } from '../../redux-store/authentication/authentication-selectors';
 import LoggedInUserMenu from './logged-in-user-menu';
-import { setDesktopHeaderHeight } from '../../redux-store/layout/layout-slice';
+import styles from './noob-desktop-header.module.css';
 
 export default function NoobDesktopHeader(): JSX.Element {
   const theme = useTheme();
@@ -56,6 +56,10 @@ export default function NoobDesktopHeader(): JSX.Element {
 
   async function gotoLeadboardsPage(): Promise<void> {
     await router.push('/leaderboards')
+  }
+
+  async function gotoTeamListPage(): Promise<void> {
+    await router.push('/teamlist')
   }
 
   function onSuccessfulLogin(): void {
@@ -115,6 +119,7 @@ export default function NoobDesktopHeader(): JSX.Element {
             <Button variant="text" onClick={gotoAboutUsPage} style={buttonStyle(['/about-us'])}>About Us</Button>
             <Button variant="text" onClick={gotoSupportPage} style={buttonStyle(['/support'])}>Support</Button>
             <Button variant="text" style={buttonStyle(['/faq'])} onClick={() : any => router.push("/match-hub")}>FAQ</Button>
+            <Button variant="text" style={buttonStyle(['/teamlist'])} onClick={gotoTeamListPage}>Teams</Button>
           </div>
           <div className={styles.bottomMenuRightGroup}>
           </div>
