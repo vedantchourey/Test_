@@ -485,13 +485,14 @@ const ViewTournament: React.FC = () => {
     if (selectedTeam) {
       return renderTeamSelection();
     }
+    console.log('data.basic -> ', data.basic)
     return (
       <React.Fragment>
         <Loader loading={loading} />
 
         <ViewCard>
-          <Grid>
-            <Grid item md={6}>
+          <Grid container>
+            <Grid item xs={6}>
               {data.basic?.sponsor && (
                 <img
                   src={data.basic?.sponsor}
@@ -501,7 +502,7 @@ const ViewTournament: React.FC = () => {
             </Grid>
             <Grid
               item
-              md={6}
+              xs={6}
               display="flex"
               alignItems="center"
               justifyContent={"flex-end"}

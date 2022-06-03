@@ -102,6 +102,7 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
                 name: tournamentData.name,
                 about: tournamentData.about,
                 game: tournamentData.game,
+                sponsor: tournamentData.sponsor,
                 startDate: tournamentData.startDate,
                 startTime: moment(
                   tournamentData.startTime,
