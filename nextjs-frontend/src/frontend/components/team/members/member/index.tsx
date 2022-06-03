@@ -1,13 +1,13 @@
 import { Box, Typography } from "@mui/material";
 import { useState } from "react";
-import bronze from './images/bronze_Card.png';
-import diamond from './images/diamond_Card.png';
-import gold from './images/gold_Card.png';
-import ruby from './images/ruby_Card.png';
-import silver from './images/silver_Card.png';
-import Player from './images/Player.png';
+import bronze from "./images/bronze_Card.png";
+import diamond from "./images/diamond_Card.png";
+import gold from "./images/gold_Card.png";
+import ruby from "./images/ruby_Card.png";
+import silver from "./images/silver_Card.png";
+import Player from "./images/Player.png";
 
-const images = {bronze, diamond, gold, ruby, silver, Player}
+const images = { bronze, diamond, gold, ruby, silver, Player };
 
 export interface MemberProp {
   name: string;
@@ -20,6 +20,18 @@ export interface MemberProp {
   id?: string;
   children?: JSX.Element;
 }
+
+const findCardType = (
+  elo: string
+): "silver" | "bronze" | "diamond" | "gold" | "ruby" => {
+  const eloNum = parseInt(elo);
+  if (eloNum >= 0 && eloNum < 15) return "silver";
+  if (eloNum >= 15 && eloNum < 30) return "bronze";
+  if (eloNum >= 30 && eloNum < 45) return "gold";
+  if (eloNum >= 45 && eloNum < 60) return "diamond";
+  if (eloNum >= 60 && eloNum < 75) return "ruby";
+  return "silver";
+};
 
 const Member: React.FC<MemberProp> = ({
   type,
@@ -114,10 +126,7 @@ const Member: React.FC<MemberProp> = ({
             cursor: "pointer",
           }}
         />
-        <img
-          src={images[type].src}
-          style={{ zIndex: 1, width: "100%" }}
-        />
+        <img src={images[findCardType(elo || "0")].src} style={{ zIndex: 1, width: "100%" }} />
       </Box>
       {children && hover && <Box>{children}</Box>}
     </Box>
