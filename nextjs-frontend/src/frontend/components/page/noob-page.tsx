@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import Head from "next/head";
 import NoobHeader from "../header/noob-header";
 import React from "react";
@@ -16,7 +16,7 @@ export default function NoobPage(props: Props): JSX.Element {
   const metaKeys = Object.keys(metaData);
 
   return (
-    <div>
+    <div style={{marginTop: 100}}>
       <Head>
         <title>{title}</title>
         {metaKeys.map((key, index) => (

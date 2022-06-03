@@ -112,7 +112,7 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
         <Typography color={"white"} variant={"h5"} mt={8}>
           Team Members
         </Typography>
-        <Box marginY={2}>
+        <Box marginY={2} width={"70vw"}>
           <Slider {...settings}>
             {data.map((player: any) => {
               return (

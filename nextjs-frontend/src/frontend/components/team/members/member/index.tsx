@@ -44,13 +44,13 @@ const Member: React.FC<MemberProp> = ({
           style={{
             position: "absolute",
             zIndex: 1000,
-            top: "61.5%",
+            top: "60.8%",
             left: "27%",
             width: "45%",
             alignItems: "center",
           }}
         >
-          <Typography noWrap fontSize={"1.1 em"}>
+          <Typography noWrap fontSize={"0.9 em"}>
             {name}
           </Typography>
         </div>
@@ -67,7 +67,7 @@ const Member: React.FC<MemberProp> = ({
             justifyContent: "center",
           }}
         >
-          <Typography color={"#fff"} fontSize={"1.1 em"}>
+          <Typography color={"#fff"} fontSize={"0.9 em"}>
             {games}
           </Typography>
         </div>
@@ -84,7 +84,7 @@ const Member: React.FC<MemberProp> = ({
             justifyContent: "center",
           }}
         >
-          <Typography color={"#fff"} fontSize={"1.1 em"}>
+          <Typography color={"#fff"} fontSize={"0.9 em"}>
             {won}
           </Typography>
         </div>
@@ -101,7 +101,7 @@ const Member: React.FC<MemberProp> = ({
             justifyContent: "center",
           }}
         >
-          <Typography color={"#fff"} fontSize={"1.1 em"}>
+          <Typography color={"#fff"} fontSize={"0.9 em"}>
             {elo}
           </Typography>
         </div>
