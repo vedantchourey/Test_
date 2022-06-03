@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import Head from "next/head";
 import NoobHeader from "../header/noob-header";
 import React from "react";

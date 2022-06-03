@@ -121,40 +121,42 @@ const WatchTeamMembers: React.FC<{teamId: string | string[] | undefined}> = ({te
               <Typography color={"white"}>No player added in watchlist</Typography>
             </Box>
           )}
-          <Slider {...settings}>
-            {data.map((player) => {
-              return (
-                <Member key={player.name} {...player}>
-                  <>
-                    <Box textAlign="center" mt={6}>
-                      <NoobButton
-                        variant="contained"
-                        disabled={loading}
-                        style={{ backgroundColor: "#6932F9" }}
-                        fullWidth={true}
-                        onClick={(): void => {removeToWatchList(player.id || "")}}
-                      >
-                        - Remove
-                      </NoobButton>
-                    </Box>
-                    {teamId && (
-                      <Box textAlign="center" mt={2} mb={12}>
+          <Box marginY={2} width={"70vw"}>
+            <Slider {...settings}>
+              {data.map((player) => {
+                return (
+                  <Member key={player.name} {...player}>
+                    <>
+                      <Box textAlign="center" mt={6}>
                         <NoobButton
                           variant="contained"
                           disabled={loading}
-                          style={{ backgroundColor: "#F09633" }}
+                          style={{ backgroundColor: "#6932F9" }}
                           fullWidth={true}
-                          onClick={(): void => {sendInvitation(player.id || "")}}
+                          onClick={(): void => {removeToWatchList(player.id || "")}}
                         >
-                          Send Offer to Recurit
+                          - Remove
                         </NoobButton>
                       </Box>
-                    )}
-                  </>
-                </Member>
-              );
-            })}
-          </Slider>
+                      {teamId && (
+                        <Box textAlign="center" mt={2} mb={12}>
+                          <NoobButton
+                            variant="contained"
+                            disabled={loading}
+                            style={{ backgroundColor: "#F09633" }}
+                            fullWidth={true}
+                            onClick={(): void => {sendInvitation(player.id || "")}}
+                          >
+                            Send Offer to Recurit
+                          </NoobButton>
+                        </Box>
+                      )}
+                    </>
+                  </Member>
+                );
+              })}
+            </Slider>
+          </Box>
         </Box>
       </Box>
     </React.Fragment>

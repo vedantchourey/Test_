@@ -202,7 +202,8 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
         <Typography color={"white"} variant={"h5"}>
           Team Members
         </Typography>
-        <Box marginY={2}>
+        
+        <Box marginY={2} width={"70vw"}>
           <Slider {...settings}>
             {playerList.map((player) => {
               return <Member key={player.name} {...player} />;

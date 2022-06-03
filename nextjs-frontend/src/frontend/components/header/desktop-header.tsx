@@ -17,7 +17,6 @@ import { screenWidthSelector } from '../../redux-store/layout/layout-selectors';
 import LoginModal from '../auth/login-modal/login-modal';
 import { ComponentDimensions, createFromRef } from '../utils/component-dimensions';
 import { isLoggedInSelector, userNameSelector } from '../../redux-store/authentication/authentication-selectors';
-import LoggedInUserMenu from './logged-in-user-menu';
 import { walletDetaislSelector } from '../../redux-store/wallet/wallet-selector';
 import { signOut } from '../../service-clients/auth-service-client';
 
