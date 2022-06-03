@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import router from "next/router";
 import { useEffect } from "react";
 import NoobPage from "../src/frontend/components/page/noob-page";
-import Heading from "../src/frontend/components/ui-components/typography/heading";
+import NewHome from "../pages/home/index";
 import { isLoggedInSelector } from "../src/frontend/redux-store/authentication/authentication-selectors";
 import { useAppSelector } from "../src/frontend/redux-store/redux-store";
 
@@ -20,7 +20,7 @@ const Home: NextPage = () => {
       }}
     >
       <>
-        <Heading heading="Homepage" />
+        <NewHome />
       </>
     </NoobPage>
   );
