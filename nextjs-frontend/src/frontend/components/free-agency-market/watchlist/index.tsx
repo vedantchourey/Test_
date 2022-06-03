@@ -57,9 +57,9 @@ const WatchTeamMembers: React.FC<{teamId: string | string[] | undefined}> = ({te
           image: "/images/teams/player.png",
           type: "bronze",
           tags: ["Games", "Won", "Elo"],
-          elo: "10",
-          won: "6",
-          games: 12,
+          elo: item?.elo_rating,
+          won: item?.won,
+          games: Number(item?.won)+Number(item?.lost),
         }));
         setData(players);
       })
