@@ -17,7 +17,7 @@ export default createNextJsRouteHandler({
       res: NextApiResponse<ServiceResponse<null, IFreeAgencyMarketResponse>>,
       context: PerRequestContext
     ) => {
-      const result = await listFreeAgencyMarket(context);
+      const result = await listFreeAgencyMarket(context,req.query);
       res.status(result.errors ? 400 : 200).json(result);
     },
     preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],

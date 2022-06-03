@@ -57,6 +57,10 @@ const FreeAgencyMarket: React.FC = (): JSX.Element => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [teamId] = useState(query.teamId)
+  const [param,setParam] = useState({
+    platformId:"",
+    gameId:""
+  })
 
   const renderComponent = (): JSX.Element => {
     let page;
@@ -71,7 +75,7 @@ const FreeAgencyMarket: React.FC = (): JSX.Element => {
       case "members":
         return (
           <>
-            <TeamMembers teamId={teamId} />
+            <TeamMembers teamId={teamId} params={param} />
           </>
         );
       case "watchlist":
@@ -163,7 +167,7 @@ const FreeAgencyMarket: React.FC = (): JSX.Element => {
             </Tabs>
           </Grid>
           <Grid>
-            <MemberButton />
+            <MemberButton setParam={setParam}/>
           </Grid>
         </>
       );
