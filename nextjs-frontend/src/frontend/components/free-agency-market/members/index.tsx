@@ -25,7 +25,7 @@ export const NoobButton = styled(Button)(() => ({
 }));
 
 const settings: Settings = {
-  slidesToShow: 5,
+  slidesToShow: 4,
   slidesToScroll: 1,
   infinite: false,
   responsive: [

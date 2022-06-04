@@ -297,6 +297,9 @@ export const fetchUserMatchs = async (context: PerRequestContext): Promise<any |
       .orWhereIn("team_id", team_ids)
 .select(["id", "tournament_id", "user_id", "team_id"])
 
+    if(!tournaments?.length){
+      return []
+    }
     //fetching matches
     const matchRepo = new CrudRepository<IBMatch>(context.knexConnection as Knex, TABLE_NAMES.B_MATCH);
     const matches = await matchRepo.knexObj()
@@ -363,7 +366,7 @@ export const fetchUserMatchs = async (context: PerRequestContext): Promise<any |
     })
     return result
   } catch (ex: any) {
-    return getErrorObject()
+    return getErrorObject(ex)
   }
 }
 const formatTeamsData = (data: any): any => {
