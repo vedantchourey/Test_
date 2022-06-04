@@ -3,7 +3,6 @@ import { PerRequestContext } from "../../utils/api-middle-ware/api-middleware-ty
 import { UsersRepository } from "../database/repositories/users-repository";
 import { matchDisputeRepository } from "../database/repositories/match-dispute-repository";
 import { IMatchDisputeResponse } from "./i-matchDispute-response";
-import { getErrorObject } from "../common/helper/utils.service";
 
 export interface IAddToMatchDisputeRequest {
     tournamentId: string;
