@@ -12,14 +12,13 @@ const NoobCardHeader = styled(CardHeader)(() => ({
 }));
 
 const NoobCard = styled(Card)(() => ({
-  height: "100%",
   borderRadius: "0px",
   marginBottom: "15px",
 }));
 
 const ViewCard: React.FC<CardProp> = ({ title, children, contentProps }) => {
   return (
-    <NoobCard sx={{marginX:{xs:"10px",sm:"10px",md:"70px"}}}>
+    <NoobCard sx={{marginX:{xs:"10px",sm:"10px",md:"70px"}}} style={{textAlign: "left"}}>
       {title ? (
         <NoobCardHeader
           title={<Typography textAlign={"left"} color={"rgba(105,50,249,1)"}>{title}</Typography>}

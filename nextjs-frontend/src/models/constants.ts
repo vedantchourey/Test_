@@ -16,7 +16,9 @@ export const TABLE_NAMES = {
     NOTIFICATIONS: "notifications",
     TOURNAMENT_INIVTES: "tournament_invites",
     TOURNAMENTS: "tournamentsData",
-    MATCH_RESULT_REQUEST: "match_result_request"
+    MATCH_RESULT_REQUEST: "match_result_request",
+    FREE_AGENCY_MARKET: "free_agency_market",
+    WATCHLIST: "watchlist"
 }
 
 export const STATUS = {

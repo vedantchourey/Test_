@@ -491,7 +491,7 @@ const ViewTournament: React.FC = () => {
 
         <ViewCard>
           <Grid container>
-            <Grid item md={6}>
+            <Grid item xs={6}>
               {data.basic?.sponsor && (
                 <img
                   src={data.basic?.sponsor}
@@ -501,7 +501,7 @@ const ViewTournament: React.FC = () => {
             </Grid>
             <Grid
               item
-              md={6}
+              xs={6}
               display="flex"
               alignItems="center"
               justifyContent={"flex-end"}

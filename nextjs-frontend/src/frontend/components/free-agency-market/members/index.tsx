@@ -1,9 +1,5 @@
 import styled from "@emotion/styled";
-import {
-  Box,
-  Button,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Slider, { Settings } from "react-slick";
@@ -25,7 +21,7 @@ export const NoobButton = styled(Button)(() => ({
 }));
 
 const settings: Settings = {
-  slidesToShow: 5,
+  slidesToShow: 4,
   slidesToScroll: 1,
   infinite: false,
   responsive: [
@@ -41,29 +37,25 @@ const settings: Settings = {
   ],
 };
 
-const TeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
-  teamId,
-}) => {
+const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any }> = ({ teamId, params }) => {
   const [data, setData] = useState<MemberProp[] | []>([]);
   const [loading, setLoading] = useState(false);
 
   const fetchUsers = async (): Promise<void> => {
     const headers = await getAuthHeader();
-    axios
-      .get("/api/free-agency-market/list", { headers: headers })
-      .then((res) => {
-        const players: MemberProp[] = res.data.map((item: any) => ({
-          name: `${item.firstName} ${item.lastName}`,
-          id: item.user_id,
-          image: "/images/teams/player.png",
-          type: "bronze",
-          tags: ["Games", "Won", "Elo"],
-          elo: "10",
-          won: "6",
-          games: 12,
-        }));
-        setData(players);
-      });
+    axios.get("/api/free-agency-market/list", { headers: headers, params }).then((res) => {
+      const players: MemberProp[] = res.data.map((item: any) => ({
+        name: `${item.firstName} ${item.lastName}`,
+        id: item.user_id,
+        image: "/images/teams/player.png",
+        type: "bronze",
+        tags: ["Games", "Won", "Elo"],
+        elo: item?.elo_rating,
+        won: item?.won,
+        games: Number(item?.won) + Number(item?.lost),
+      }));
+      setData(players);
+    });
   };
 
   const addToWatchList = async (playerId: string): Promise<void> => {
@@ -104,7 +96,7 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [params]);
 
   return (
     <React.Fragment>
@@ -112,7 +104,7 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
         <Typography color={"white"} variant={"h5"} mt={8}>
           Team Members
         </Typography>
-        <Box marginY={2}>
+        <Box marginY={2} width={"70vw"}>
           <Slider {...settings}>
             {data.map((player: any) => {
               return (
@@ -124,7 +116,9 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
                         disabled={loading}
                         style={{ backgroundColor: "#6932F9" }}
                         fullWidth={true}
-                        onClick={():void => {addToWatchList(player.id)}}
+                        onClick={(): void => {
+                          addToWatchList(player.id);
+                        }}
                       >
                         + Add to Watch List
                       </NoobButton>
@@ -136,7 +130,9 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
                           disabled={loading}
                           style={{ backgroundColor: "#F09633" }}
                           fullWidth={true}
-                          onClick={():void => {sendInvitation(player.id || "")}}
+                          onClick={(): void => {
+                            sendInvitation(player.id || "");
+                          }}
                         >
                           Send Offer to Recurit
                         </NoobButton>

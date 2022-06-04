@@ -82,6 +82,7 @@ const TeamListData: React.FC = () => {
                       onClick={(): void => {
                         handleNavigation(item.id);
                       }}
+                      style={{cursor: "pointer"}}
                     >
                       <NoobCell>
                         <Box alignItems="center" display="center">

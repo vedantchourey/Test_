@@ -16,7 +16,7 @@ export default function NoobPage(props: Props): JSX.Element {
   const metaKeys = Object.keys(metaData);
 
   return (
-    <div>
+    <div style={{marginTop: 100}}>
       <Head>
         <title>{title}</title>
         {metaKeys.map((key, index) => (
