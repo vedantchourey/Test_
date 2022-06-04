@@ -11,11 +11,16 @@ import { IWatchList } from "../database/models/i-watchlist";
 
 
 export const listFreeAgencyMarket = async (
-  context: PerRequestContext
+  context: PerRequestContext,
+  param: any
 ): Promise<IFreeAgencyMarketResponse | undefined> => {
   const famRepo = new CrudRepository<IFreeAgencyMarket>(context.knexConnection as Knex, TABLE_NAMES.FREE_AGENCY_MARKET);
-  const users = await famRepo.knexObj()
+  const query = famRepo.knexObj()
     .join("private_profiles", "free_agency_market.user_id", "private_profiles.id")
+  if(param.gameId) query.where("game_id",param.gameId)
+  if(param.platformId) query.where("platform_id",param.platformId)
+  
+  const users = await query;
   return users;
 };
 
