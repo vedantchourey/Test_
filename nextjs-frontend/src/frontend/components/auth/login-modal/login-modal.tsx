@@ -1,17 +1,17 @@
-import { Button, Dialog, FormHelperText, IconButton, Link, styled, TextField, Typography } from '@mui/material';
-import styles from './login-modal.module.css';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { useState } from 'react';
-import { getErrorForProp, isThereAnyError, propsHasError, ValidationResult } from '../../../../common/utils/validation/validator';
-import { useAppDispatch, useAppSelector } from '../../../redux-store/redux-store';
-import { isDeviceTypeSelector } from '../../../redux-store/layout/layout-selectors';
-import { deviceTypes } from '../../../redux-store/layout/device-types';
-import validator from 'validator';
-import { SignInRequest } from '../../../service-clients/messages/sign-in-request';
-import { signIn } from '../../../service-clients/auth-service-client';
+import { Button, Dialog, FormHelperText, IconButton, Link, styled, TextField, Typography } from '@mui/material';
 import { ApiError } from '@supabase/gotrue-js';
-import { setIsLoading } from '../../../redux-store/screen-animations/screen-animation-slice';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
+import validator from 'validator';
+import { getErrorForProp, isThereAnyError, propsHasError, ValidationResult } from '../../../../common/utils/validation/validator';
+import { deviceTypes } from '../../../redux-store/layout/device-types';
+import { isDeviceTypeSelector } from '../../../redux-store/layout/layout-selectors';
+import { useAppDispatch, useAppSelector } from '../../../redux-store/redux-store';
+import { setIsLoading } from '../../../redux-store/screen-animations/screen-animation-slice';
+import { signIn } from '../../../service-clients/auth-service-client';
+import { SignInRequest } from '../../../service-clients/messages/sign-in-request';
+import styles from './login-modal.module.css';
 
 interface Props {
   show: boolean;
@@ -99,9 +99,16 @@ export default function LoginModal(props: Props): JSX.Element {
   const onClickLostPassword = async (): Promise<void> => {
     await router.push('/reset-password')
   };
+  const handleKeypress = (e: { keyCode: number; }) => {
+      //it triggers by pressing the enter key
+    if (e.keyCode === 0) {
+      onClickLogin();
+    }
+  };
 
   return (
-    <CustomLoginDialog open={show} onClose={onClose} top={top} right={right} color="#08001C">
+    <CustomLoginDialog open={show} onClose={onClose} top={top} right={right} color="#08001C" 
+    onKeyPress ={handleKeypress}>
       <div className={styles.content}>
         <div className={styles.header}>
           <div className={styles.headerTitle}>
@@ -145,7 +152,7 @@ export default function LoginModal(props: Props): JSX.Element {
           <Typography><Link onClick={onClickLostPassword}>Lost your password</Link></Typography>
         </div>
         <div className={styles.row}>
-          <Button className={styles.actionButton}
+          <Button type={'button'} className={styles.actionButton}
             onClick={onClickLogin}
             disabled={isBusy}>
             <Typography>Log In</Typography>
