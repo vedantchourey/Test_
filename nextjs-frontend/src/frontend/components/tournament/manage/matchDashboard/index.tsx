@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Button, Chip, Grid, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
+import { Button, Chip, Dialog, Grid, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
 import moment from "moment";
@@ -55,6 +55,9 @@ const MatchDashboard: React.FC = (): JSX.Element => {
   const { id } = router.query;
 
   const [tournamentdata, setData] = React.useState<Tournament[]>([]);
+  const [resultReq, setResultReq] = React.useState<any[]>([]);
+  const [popVisible, setPopupVisible] = React.useState<boolean>(false);
+  const [image, setImage] = React.useState<string>("");
   const tournamentList = async (): Promise<void> => {
     try {
       const endpoint = "/api/match-dispute/list";
@@ -66,9 +69,20 @@ const MatchDashboard: React.FC = (): JSX.Element => {
       alert(err);
     }
   };
-
+  const fetchMatchResultReq = async (): Promise<void> => {
+    try {
+      const endpoint = "/api/tournaments/match-result";
+      const headers = await getAuthHeader();
+      axios.get(endpoint, { params: { tournament_id: id }, headers: headers }).then((res) => {
+        setResultReq(res.data);
+      });
+    } catch (err) {
+      alert(err);
+    }
+  };
   React.useEffect(() => {
     tournamentList();
+    fetchMatchResultReq();
   }, []);
   const resolveDispute = async (id: any): Promise<void> => {
     const endpoint = "/api/match-dispute/update";
@@ -76,6 +90,19 @@ const MatchDashboard: React.FC = (): JSX.Element => {
     axios.patch(endpoint, { id, status: "RESOLVED" }, { headers: headers }).then(() => {
       tournamentList();
     });
+  };
+
+  const acceptResult = async (id: any): Promise<void> => {
+    const endpoint = "/api/tournaments/match-result";
+    const headers = await getAuthHeader();
+    axios.patch(endpoint, { id, status: "RESOLVED" }, { headers: headers }).then(() => {
+      fetchMatchResultReq();
+    });
+  };
+
+  const toggle = (data: string):void => {
+    setImage(data);
+    setPopupVisible(!popVisible);
   };
   return (
     <React.Fragment>
@@ -113,14 +140,14 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                       return (
                         <NoobRow key={item.id}>
                           <NoobCell>
-                            <Typography>{item.matchId}</Typography>
+                            <Typography>{item?.matchId}</Typography>
                           </NoobCell>
                           <NoobCell>
                             <Typography>Incorrect score</Typography>
                           </NoobCell>
                           <NoobCell>
                             <Typography>
-                              {item.reportedBy.firstName} {item.reportedBy.lastName}
+                              {item?.reportedBy?.firstName} {item?.reportedBy?.lastName}
                             </Typography>
                           </NoobCell>
                           <NoobCell>
@@ -134,7 +161,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                           {item.status === "PENDING" ? (
                             <NoobCell>
                               <Typography>
-                                <Button onClick={():void => resolveDispute(item.id)}>Resolve</Button>
+                                <Button onClick={(): any => resolveDispute(item.id)}>Resolve</Button>
                               </Typography>
                             </NoobCell>
                           ) : (
@@ -155,6 +182,77 @@ const MatchDashboard: React.FC = (): JSX.Element => {
           </Grid>
         </CardLayout>
       </AccordionAlt>
+      <AccordionAlt title="MATCH RESULT REQUEST" icon={{ expanded: <CircleCloseIcon /> }}>
+        <CardLayout title="Match Result Request">
+          <Grid container rowSpacing={1} columnSpacing={5}>
+            <Grid item xs={12}>
+              <TableContainer>
+                <Table>
+                  <TableBody>
+                    <NoobRow>
+                      <HeadCell>
+                        <Typography align="left">Match</Typography>
+                      </HeadCell>
+                      <HeadCell>
+                        <Typography>Opponent 1 Score</Typography>
+                      </HeadCell>
+                      <HeadCell>
+                        <Typography>Opponent 2 Score</Typography>
+                      </HeadCell>
+                      <HeadCell>
+                        <Typography>Status</Typography>
+                      </HeadCell>
+                      <HeadCell>
+                        <Typography>Action</Typography>
+                      </HeadCell>
+                      <HeadCell>
+                        <Typography>View Image</Typography>
+                      </HeadCell>
+                    </NoobRow>
+                    {resultReq.map((item) => {
+                      return (
+                        <NoobRow key={item.id}>
+                          <NoobCell>
+                            <Typography>{item.match_id}</Typography>
+                          </NoobCell>
+                          <NoobCell>
+                            <Typography>{item?.opponent1?.score}</Typography>
+                          </NoobCell>
+                          <NoobCell>
+                            <Typography>{item?.opponent2?.score}</Typography>
+                          </NoobCell>
+                          <NoobCell>
+                            <Typography>
+                              <Chip label={item.status} color="success" />
+                            </Typography>
+                          </NoobCell>
+                          {item.status === "PENDING" ? (
+                            <NoobCell>
+                              <Typography>
+                                <Button onClick={(): any => acceptResult(item.id)}>Resolve</Button>
+                              </Typography>
+                            </NoobCell>
+                          ) : (
+                            <>
+                              <Typography></Typography>
+                            </>
+                          )}
+                          <NoobCell>
+                            <Button onClick={(): any => toggle(item.screenshot)}>View</Button>
+                          </NoobCell>
+                        </NoobRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
+          </Grid>
+        </CardLayout>
+      </AccordionAlt>
+      <Dialog open={popVisible} onClose={():void => toggle("")} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+        <img height={"70%"} src={image} />
+      </Dialog>
       <Box display="flex" justifyContent={"flex-end"}>
         <Button variant="contained"> Send </Button>
       </Box>

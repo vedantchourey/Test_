@@ -226,9 +226,21 @@ export const registerTeamTournament = async (req: IRegisterTournament, knexConne
   }
 }
 export const checkInTournament = async (req: IRegisterTournament, knexConnection: Knex, user: any): Promise<any> => {
-  const tournamet = await validateTournament(req.tournamentId, knexConnection);
-  if (!tournamet) return { errors: ["Invalid Tournament id"] };
+  try {
+    const tournamet: ITournament | null = await validateTournament(req.tournamentId, knexConnection);
+    if (!tournamet) return { errors: ["Invalid Tournament id"] };
 
+    if (tournamet?.settings?.tournamentFormat === "1v1") {
+      return await checkInIndividualTournament(req, knexConnection, user)
+    } 
+      return await checkInTeamTournament(req, knexConnection, user)
+    
+  } catch (ex: any) {
+    return getErrorObject(ex.message)
+  }
+
+};
+export const checkInIndividualTournament = async (req: IRegisterTournament, knexConnection: Knex, user: any): Promise<any> => {
   try {
     const participant = new CrudRepository<IBParticipants>(knexConnection, TABLE_NAMES.B_PARTICIPANT);
     const existing_user = await participant.knexObj()
@@ -249,6 +261,35 @@ export const checkInTournament = async (req: IRegisterTournament, knexConnection
     return { message: "Something went wrong" };
   }
 };
+
+export const checkInTeamTournament = async (req: IRegisterTournament, knexConnection: Knex, user: any): Promise<any> => {
+  try {
+    const repo = new CrudRepository<IBParticipants>(knexConnection, TABLE_NAMES.TOURNAMENT_INIVTES);
+    const [invite] = await repo.find({
+      tournament_id: req.tournamentId,
+      user_id: user.id,
+    })
+    if (!invite) return getErrorObject("User not part of the tournament team");
+
+    const participant = new CrudRepository<IBParticipants>(knexConnection, TABLE_NAMES.B_PARTICIPANT);
+    const existing_user = await participant.knexObj()
+      .join("b_tournament", "b_participant.tournament_id", "b_tournament.id")
+      .where({ "b_tournament.tournament_uuid": req.tournamentId, "b_participant.team_id": invite.team_id })
+      .select("b_participant.id")
+      .select("b_participant.is_checked_in")
+      .first();
+
+    if (!existing_user) return { errors: ["Team not register"] };
+
+    if (existing_user.is_checked_in) return { errors: ["Team already checked in"] };
+
+    await participant.update({ is_checked_in: true }, { id: existing_user.id })
+
+    return { message: "Team check in successfull" };
+  } catch (ex) {
+    return { message: "Something went wrong" };
+  }
+};
 export const submitMatchResultRequest = async (req: IMatchResultRequest, knexConnection: Knex): Promise<any> => {
   try {
     const errors = await validateMatchResult(req);
@@ -261,13 +302,24 @@ export const submitMatchResultRequest = async (req: IMatchResultRequest, knexCon
   }
 }
 
-export const submitMatchResult = async (req: IMatchResultRequest, knexConnection: Knex): Promise<any> => {
+export const fetchMatchResultsReq = async (req: any, knexConnection: Knex): Promise<any> => {
   try {
-    const errors = await validateMatchResult(req);
-    if (errors) return { errors };
+    if (!req.tournament_id) return getErrorObject("Please provide tournament Id");
+    const repo = new CrudRepository<IMatchResultRequest>(knexConnection, TABLE_NAMES.MATCH_RESULT_REQUEST);
+    const result = repo.findBy("tournament_id", req.tournament_id)
+    return result;
+  } catch (ex) {
+    return getErrorObject()
+  }
+}
 
+export const submitMatchResult = async (req: any, knexConnection: Knex): Promise<any> => {
+  try {
+    const repos = new CrudRepository<IMatchResultRequest>(knexConnection, TABLE_NAMES.MATCH_RESULT_REQUEST);
+    const data: any = await repos.findById(req.id)
+    if (!data) return getErrorObject("Invalid match Id")
     const repo = new CrudRepository<IBMatch>(knexConnection, TABLE_NAMES.B_MATCH);
-    const match: IBMatch = await repo.findById(req.match_id);
+    const match: IBMatch = await repo.findById(data?.match_id);
     const manager = new BracketsManager(
       new BracketsCrud(knexConnection as any) as any
     );
@@ -275,18 +327,19 @@ export const submitMatchResult = async (req: IMatchResultRequest, knexConnection
       id: Number(match.id),
       opponent1: {
         id: Number(match.opponent1.id),
-        score: req.opponent1.score,
-        result: req.opponent1.result as any
+        score: data.opponent1.score,
+        result: data.opponent1.result as any
       },
       opponent2: {
         id: Number(match.opponent2.id),
-        score: req.opponent2.score,
-        result: req.opponent2.result as any
+        score: data.opponent2.score,
+        result: data.opponent2.result as any
       }
     });
     await Promise.all([
-      updateELORating(match, req, knexConnection),
-      repo.update({ screenshot: req.screenshot }, { id: Number(match.id) })
+      updateELORating(match, data, knexConnection),
+      repo.update({ screenshot: data.screenshot }, { id: Number(match.id) }),
+      closeMatchResultRequest(data, knexConnection)
     ])
     return match
   } catch (ex) {
@@ -294,7 +347,19 @@ export const submitMatchResult = async (req: IMatchResultRequest, knexConnection
   }
 }
 
-export const updateELORating = async (match: IBMatch, req: IMatchResultRequest, knexConnection: Knex): Promise<any> => {
+export const closeMatchResultRequest = (data: any, knexConnection: Knex): Promise<any> => {
+  const repos = new CrudRepository<IMatchResultRequest>(knexConnection, TABLE_NAMES.MATCH_RESULT_REQUEST);
+  return Promise.all([
+    repos.update({ status: STATUS.ACCEPTED }, { id: data.id }),
+    repos.knexObj().update({ status: STATUS.REJECTED })
+.whereNot({ id: data.id })
+.where({
+      tournament_id: data.tournament_id
+    })
+  ])
+}
+
+export const updateELORating = async (match: IBMatch, req: IMatchResultRequest, knexConnection: Knex): Promise<any> => {  
   const partRepo = new CrudRepository<IBParticipants>(knexConnection, TABLE_NAMES.B_PARTICIPANT);
   const players: IBParticipants[] = await partRepo.knexObj().whereIn("id", [match.opponent1.id, match.opponent2.id]);
   const player1: IBParticipants = players.find((x) => x.id === match.opponent1.id) || players[0];

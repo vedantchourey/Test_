@@ -34,7 +34,6 @@ const findCardType = (
 };
 
 const Member: React.FC<MemberProp> = ({
-  type,
   name,
   games,
   won,

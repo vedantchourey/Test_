@@ -107,6 +107,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
         score: op2Score,
         result: op2Result,
       },
+      tournament_id: match.tournament_id,
     };
 
     delete (request as any).winner;
@@ -154,6 +155,21 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
         headers: headers,
       }
     );
+  };
+
+  const checkInTournament = async (): Promise<void> => {
+    const headers = await getAuthHeader();
+    axios
+      .post(
+        `/api/tournaments/checkIn`,
+        {
+          tournamentId: match.tournament_id,
+        },
+        {
+          headers: headers,
+        }
+      )
+      .catch();
   };
 
   React.useEffect(() => {
@@ -232,6 +248,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                 border: "1px solid #6932F9",
                 margin: "0px 0px 0px 16px",
               }}
+              onClick={(): any => checkInTournament()}
             >
               Check In
             </Button>
@@ -242,6 +259,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                 color: "white",
                 margin: "0px 16px 0px 16px",
               }}
+              disabled={!opponent1Name || !opponent2Name}
               onClick={(): void => setUploadResults(true)}
             >
               Report Score
