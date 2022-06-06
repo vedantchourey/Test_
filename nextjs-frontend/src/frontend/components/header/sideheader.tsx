@@ -14,24 +14,23 @@ export default function SideHeader(): JSX.Element {
     return (
         <>
             {isLoggedIn && (
-                <Grid container spacing={2}>
-                    <Grid item md={7}></Grid>
-                    <Grid item md={3}>
-                        <Box style={{ border: "1px solid #6931F9", marginTop: 42 }} sx={{borderRadius: '16px'}}>
-                            <InputBase  placeholder="Search anything..." inputProps={{ 'aria-label': 'search google maps' }} />
-                            <IconButton aria-label="search">
-                                <img src="/icons/search-icon.png" />
-                            </IconButton>
-                        </Box>
-                    </Grid>
-                    <Grid item md={2}>
+                <Grid container spacing={1}>
+                    <Grid item md={8}></Grid>
+                    <Grid item md={4} >
                         <div className={style.container4}>
-                            <img src="/icons/notification-icon.svg" />
-                            <img src="/images/16276393842661.png" className={style.img3} alt="logo" />
-                            <Box>
+                            <Box style={{ border: "1px solid #6931F9" }} sx={{ borderRadius: '16px' }}>
+                                <InputBase size="small" placeholder="Search anything..." sx={{ p: 1 }}/>
+                                <IconButton aria-label="search">
+                                    <img src="/icons/search-icon.png" />
+                                </IconButton>
+                            </Box>
+                            <img src="/icons/notification-icon.svg" style={{ marginLeft: 10 }}/>
+                            <img src="/images/16276393842661.png" className={style.img3} alt="logo" style={{ height: "50px", width: "50px", marginLeft: 10 }} />
+                            <Box >
                                 <Typography className={style.text1}>{username}</Typography>
                                 <Button
                                     variant="text"
+                                    size="small"
                                     className={style.button4}
                                     onClick={(): any => router.push("/wallet/info")}
                                     startIcon={<img src="/icons/Vector-Wallet.png" />}
