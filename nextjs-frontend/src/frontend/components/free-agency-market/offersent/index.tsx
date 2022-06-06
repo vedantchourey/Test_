@@ -89,9 +89,6 @@ const WatchTeamMembers: React.FC = () => {
   return (
     <React.Fragment>
       <Box>
-        <Typography color={"white"} variant={"h5"} mt={8}>
-          Team Members
-        </Typography>
         <Box marginY={2}>
           {!data.length && !loading && (
             <Box mt={5} mb={5}>
