@@ -25,7 +25,11 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
             .join(TABLE_NAMES.TEAM_PLAYERS, "team_players.team_id", "teams.id")
             .join(TABLE_NAMES.PRIVATE_PROFILE, "private_profiles.id", "team_players.user_id")
             .join(TABLE_NAMES.WALLET, "wallet.userId", "private_profiles.id")
-            .select(["teams.name", "teams.id", "private_profiles.firstName", "private_profiles.lastName", "private_profiles.id as user_id", "wallet.balance"])
+            .leftJoin(TABLE_NAMES.ELO_RATING, {
+                "elo_ratings.user_id": "private_profiles.id",
+                "elo_ratings.game_id": "teams.game_id"
+            })
+            .select(["teams.name", "teams.id", "private_profiles.firstName", "private_profiles.lastName", "private_profiles.id as user_id", "wallet.balance", "elo_ratings.elo_rating"])
             .where("created_by", user.id)
 
         if (query.id) {
@@ -39,7 +43,7 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
                 teamQuery.where("teams.platform_id", settings.platform)
             }
         }
-        const data = await teamQuery;
+        const data = await teamQuery
         if (!data.length) return getErrorObject("No Teams found")
 
         return {
@@ -53,7 +57,8 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
                                 user_id: data.user_id,
                                 lastName: data.lastName,
                                 firstName: data.firstName,
-                                balance: data.balance
+                                balance: data.balance,
+                                elo_rating:data.elo_rating,
                             }
                         })
                     };
@@ -124,7 +129,7 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
         let player_data: IUser | undefined;
 
         // validating all the users
-        if(req?.email){
+        if (req?.email) {
             player_data = await fetchUserDetails(req?.email, connection)
             if (!player_data) return getErrorObject("Invalid email address.")
         }
@@ -275,79 +280,79 @@ export const validateCreationData = async (req: ITeamCreateRequest, connection: 
 }
 
 const findUserWithInvitationDeatils = async (
-  userId: string,
-  details: any,
-  connection: Knex.Transaction
+    userId: string,
+    details: any,
+    connection: Knex.Transaction
 ): Promise<any> => {
-  const userRepo = new UsersRepository(connection);
-  const userDetails = await userRepo.findById(userId);
-  return {
-    player: { ...userDetails.raw_user_meta_data, id: userDetails.id },
-    ...details,
-  };
+    const userRepo = new UsersRepository(connection);
+    const userDetails = await userRepo.findById(userId);
+    return {
+        player: { ...userDetails.raw_user_meta_data, id: userDetails.id },
+        ...details,
+    };
 };
 
 export const getListOfSendInvitations = async (
-  connection: Knex.Transaction,
-  user: any
+    connection: Knex.Transaction,
+    user: any
 ): Promise<ISuccess | IError> => {
-  try {
-    const user_id = user.id;
-    const team_invitation = new CrudRepository<ITeamInvitation>(
-      connection,
-      TABLE_NAMES.TEAM_INVITATION
-    );
-    const sent_invitations: any[] = await team_invitation
-      .knexObj()
-      .where("invite_by", user_id)
-.where("status", "PENDING");
-    const batch = sent_invitations.map((item: any) =>
-      findUserWithInvitationDeatils(item.user_id, item, connection));
-    const result = await Promise.all(batch);
-    return { result };
-  } catch (ex) {
-    return getErrorObject("Something went wrong");
-  }
+    try {
+        const user_id = user.id;
+        const team_invitation = new CrudRepository<ITeamInvitation>(
+            connection,
+            TABLE_NAMES.TEAM_INVITATION
+        );
+        const sent_invitations: any[] = await team_invitation
+            .knexObj()
+            .where("invite_by", user_id)
+            .where("status", "PENDING");
+        const batch = sent_invitations.map((item: any) =>
+            findUserWithInvitationDeatils(item.user_id, item, connection));
+        const result = await Promise.all(batch);
+        return { result };
+    } catch (ex) {
+        return getErrorObject("Something went wrong");
+    }
 };
 
 const findTemsWithInvitationDeatils = async (
     teamId: string,
     details: any,
     connection: Knex.Transaction
-  ): Promise<any> => {
+): Promise<any> => {
     const teamRepo = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAMS);
     const teamDetails = await teamRepo.findById(teamId);
     const userRepo = new UsersRepository(connection);
     const invite_by = await userRepo.findById(details.invite_by);
     return {
-      ...details,
-      team: { ...teamDetails },
-      invite_by: {...invite_by.raw_user_meta_data, id: invite_by.id}
+        ...details,
+        team: { ...teamDetails },
+        invite_by: { ...invite_by.raw_user_meta_data, id: invite_by.id }
     };
-  };
+};
 
 export const getListOfInvitations = async (
-  connection: Knex.Transaction,
-  user: any
+    connection: Knex.Transaction,
+    user: any
 ): Promise<ISuccess | IError> => {
-  try {
-    const user_id = user.id;
-    const team_invitation = new CrudRepository<ITeamInvitation>(
-      connection,
-      TABLE_NAMES.TEAM_INVITATION
-    );
-    const sent_invitations: any[] = await team_invitation
-      .knexObj()
-      .where("user_id", user_id)
-.where("status", STATUS.PENDING);
-      
-    const batch = sent_invitations.map((item: any) =>
-    findTemsWithInvitationDeatils(item.team_id, item, connection));
-    const result = await Promise.all(batch);
-    return { result };
-  } catch (ex) {
-    return getErrorObject("Something went wrong");
-  }
+    try {
+        const user_id = user.id;
+        const team_invitation = new CrudRepository<ITeamInvitation>(
+            connection,
+            TABLE_NAMES.TEAM_INVITATION
+        );
+        const sent_invitations: any[] = await team_invitation
+            .knexObj()
+            .where("user_id", user_id)
+            .where("status", STATUS.PENDING);
+
+        const batch = sent_invitations.map((item: any) =>
+            findTemsWithInvitationDeatils(item.team_id, item, connection));
+        const result = await Promise.all(batch);
+        return { result };
+    } catch (ex) {
+        return getErrorObject("Something went wrong");
+    }
 };
 
 export const fetchUserDetails = async (email: string, connection: Knex.Transaction): Promise<IUser> => {

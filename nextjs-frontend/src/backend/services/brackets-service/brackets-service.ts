@@ -1,4 +1,4 @@
-import { Knex } from "knex";
+import knex, { Knex } from "knex";
 import { IRegisterTournament } from "../database/models/i-register-tournament";
 import { ITournament } from "../database/models/i-tournaments";
 import { TournamentsRepository } from "../database/repositories/tournaments-repository";
@@ -20,6 +20,8 @@ import { IError, ISuccess } from "../../utils/common/Interfaces";
 import { IMatchResultRequest } from "./i-brackets-request";
 import { IBMatch } from "../database/models/i-b-match";
 import { ITeams } from "../database/models/i-teams";
+import { IEloRatingHistory } from "../database/models/i-elo-rating-history";
+import { IEloRating } from "../database/models/i-elo-rating";
 
 export const persistBrackets = async (req: ITournament): Promise<any> => {
   const connection = createKnexConnection();
@@ -232,9 +234,9 @@ export const checkInTournament = async (req: IRegisterTournament, knexConnection
 
     if (tournamet?.settings?.tournamentFormat === "1v1") {
       return await checkInIndividualTournament(req, knexConnection, user)
-    } 
-      return await checkInTeamTournament(req, knexConnection, user)
-    
+    }
+    return await checkInTeamTournament(req, knexConnection, user)
+
   } catch (ex: any) {
     return getErrorObject(ex.message)
   }
@@ -352,36 +354,53 @@ export const closeMatchResultRequest = (data: any, knexConnection: Knex): Promis
   return Promise.all([
     repos.update({ status: STATUS.ACCEPTED }, { id: data.id }),
     repos.knexObj().update({ status: STATUS.REJECTED })
-.whereNot({ id: data.id })
-.where({
-      tournament_id: data.tournament_id
-    })
+      .whereNot({ id: data.id })
+      .where({
+        tournament_id: data.tournament_id
+      })
   ])
 }
 
-export const updateELORating = async (match: IBMatch, req: IMatchResultRequest, knexConnection: Knex): Promise<any> => {  
+export const updateELORating = async (match: IBMatch, req: IMatchResultRequest, knexConnection: Knex): Promise<any> => {
   const partRepo = new CrudRepository<IBParticipants>(knexConnection, TABLE_NAMES.B_PARTICIPANT);
   const players: IBParticipants[] = await partRepo.knexObj().whereIn("id", [match.opponent1.id, match.opponent2.id]);
   const player1: IBParticipants = players.find((x) => x.id === match.opponent1.id) || players[0];
   const player2: IBParticipants = players.find((x) => x.id === match.opponent2.id) || players[1];
+  const game_id = await getGameId(req, knexConnection);
+  const eloHistoryRepo = new CrudRepository<IEloRatingHistory>(knexConnection, TABLE_NAMES.ELO_RATING_HISTORY);
   if (players[0].user_id) {
-    const userRepo = new CrudRepository<IPrivateProfile>(knexConnection, TABLE_NAMES.PRIVATE_PROFILE);
-    const users: IPrivateProfile[] = await userRepo.knexObj().whereIn("id", [player1.user_id, player2.user_id])
-    const user1: IPrivateProfile = users.find((x) => x.id === player1.user_id) || users[0]
-    const user2: IPrivateProfile = users.find((x) => x.id === player2.user_id) || users[1]
+    const eloRepo = new CrudRepository<IEloRating>(knexConnection, TABLE_NAMES.ELO_RATING);
+    const users: IEloRating[] = await eloRepo.knexObj().whereIn("user_id", [player1.user_id, player2.user_id]).where("game_id", game_id)
+    let user1: IEloRating = users.find((x) => x.id === player1.user_id) || users[0]
+    let user2: IEloRating = users.find((x) => x.id === player2.user_id) || users[1]
+    if (!user1) {
+      user1 = await eloRepo.create({
+        user_id: player1.user_id,
+        game_id
+      })
+    }
+    if (!user2) {
+      user2 = await eloRepo.create({
+        user_id: player2.user_id,
+        game_id
+      })
+    }
     let elo_rating = { winnerRating: 0, loserRating: 0 };
+    let ratings = { user1: 0, user2: 0 }
     if (req.opponent1.result === "win") {
       elo_rating = getEloRating(Number(user1?.elo_rating), Number(user2?.elo_rating))
-      user1.elo_rating = elo_rating.winnerRating;
-      user2.elo_rating = elo_rating.loserRating;
+      ratings.user1 = elo_rating.winnerRating;
+      ratings.user2 = elo_rating.loserRating;
     } else {
       elo_rating = getEloRating(Number(user2?.elo_rating), Number(user1?.elo_rating))
-      user1.elo_rating = elo_rating.loserRating;
-      user2.elo_rating = elo_rating.winnerRating;
+      ratings.user1 = elo_rating.loserRating;
+      ratings.user2 = elo_rating.winnerRating;
     }
     return await Promise.all([
-      userRepo.update({ elo_rating: user1.elo_rating }, { id: user1.id }),
-      userRepo.update({ elo_rating: user2.elo_rating }, { id: user2.id })
+      eloRepo.update({ elo_rating: ratings.user1 }, { id: user1.id, game_id }),
+      eloHistoryRepo.create({ user_id: user1.user_id, tournament_id: req.tournament_id, match_id: req.match_id, game_id, elo_rating: user1.elo_rating }),
+      eloRepo.update({ elo_rating: ratings.user2 }, { id: user2.id, game_id }),
+      eloHistoryRepo.create({ user_id: user2.user_id, tournament_id: req.tournament_id, match_id: req.match_id, game_id, elo_rating: user2.elo_rating })
     ])
   }
   const teamRepo = new CrudRepository<ITeams>(knexConnection, TABLE_NAMES.TEAMS);
@@ -389,21 +408,31 @@ export const updateELORating = async (match: IBMatch, req: IMatchResultRequest, 
   const team1: ITeams = teams.find((x) => x.id === player1.team_id) || teams[0];
   const team2: ITeams = teams.find((x) => x.id === player2.team_id) || teams[1];
   let elo_rating = { winnerRating: 0, loserRating: 0 };
+  let ratings = { team1: 0, team2: 0 }
   if (req.opponent1.result === "win") {
     elo_rating = getEloRating(Number(team1?.elo_rating), Number(team2?.elo_rating))
-    team1.elo_rating = elo_rating.winnerRating;
-    team2.elo_rating = elo_rating.loserRating;
+    ratings.team1 = elo_rating.winnerRating;
+    ratings.team2 = elo_rating.loserRating;
   } else {
     elo_rating = getEloRating(Number(team2?.elo_rating), Number(team1?.elo_rating))
-    team1.elo_rating = elo_rating.loserRating;
-    team2.elo_rating = elo_rating.winnerRating;
+    ratings.team1 = elo_rating.loserRating;
+    ratings.team2 = elo_rating.winnerRating;
   }
   return await Promise.all([
-    teamRepo.update({ elo_rating: team1.elo_rating }, { id: team1.id }),
-    teamRepo.update({ elo_rating: team2.elo_rating }, { id: team2.id })
+    teamRepo.update({ elo_rating: ratings.team1 }, { id: team1.id }),
+    eloHistoryRepo.create({ team_id: team1.id, tournament_id: req.tournament_id, match_id: req.match_id, game_id, elo_rating: team1.elo_rating }),
+    teamRepo.update({ elo_rating: ratings.team2 }, { id: team2.id }),
+    eloHistoryRepo.create({ team_id: team2.id, tournament_id: req.tournament_id, match_id: req.match_id, game_id, elo_rating: team2.elo_rating }),
   ])
+}
 
-
+export const createEloHistory = async (data: any, knexConnection: Knex): Promise<any> => {
+  const repo = new CrudRepository<IEloRatingHistory>(knexConnection, TABLE_NAMES.ELO_RATING_HISTORY);
+}
+export const getGameId = async (req: IMatchResultRequest, knexConnection: Knex): Promise<any> => {
+  const repo = new CrudRepository<ITournament>(knexConnection, TABLE_NAMES.TOURNAMENTS);
+  const [tournament]: ITournament[] = await repo.findBy('id', req?.tournament_id);
+  return tournament.game
 }
 
 export const validateUser = async (

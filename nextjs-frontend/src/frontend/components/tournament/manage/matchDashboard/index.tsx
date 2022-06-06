@@ -92,15 +92,15 @@ const MatchDashboard: React.FC = (): JSX.Element => {
     });
   };
 
-  const acceptResult = async (id: any): Promise<void> => {
+  const acceptResult = async ({ id, tournament_id }: any): Promise<void> => {
     const endpoint = "/api/tournaments/match-result";
     const headers = await getAuthHeader();
-    axios.patch(endpoint, { id, status: "RESOLVED" }, { headers: headers }).then(() => {
+    axios.patch(endpoint, { id, status: "RESOLVED", tournament_id }, { headers: headers }).then(() => {
       fetchMatchResultReq();
     });
   };
 
-  const toggle = (data: string):void => {
+  const toggle = (data: string): void => {
     setImage(data);
     setPopupVisible(!popVisible);
   };
@@ -229,7 +229,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                           {item.status === "PENDING" ? (
                             <NoobCell>
                               <Typography>
-                                <Button onClick={(): any => acceptResult(item.id)}>Resolve</Button>
+                                <Button onClick={(): any => acceptResult(item)}>Resolve</Button>
                               </Typography>
                             </NoobCell>
                           ) : (
@@ -250,7 +250,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
           </Grid>
         </CardLayout>
       </AccordionAlt>
-      <Dialog open={popVisible} onClose={():void => toggle("")} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+      <Dialog open={popVisible} onClose={(): void => toggle("")} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <img height={"70%"} src={image} />
       </Dialog>
       <Box display="flex" justifyContent={"flex-end"}>
