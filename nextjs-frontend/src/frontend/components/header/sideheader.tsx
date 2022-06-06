@@ -17,11 +17,11 @@ export default function SideHeader(): JSX.Element {
                 <Grid container spacing={2}>
                     <Grid item md={7}></Grid>
                     <Grid item md={3}>
-                    <Box style={{ border: "1px soloid #6931F9" }}>  <Box style={{ marginTop: 42 }}>
-                           <InputBase placeholder="Search anything..." inputProps={{ 'aria-label': 'search google maps' }}/>
+                        <Box style={{ border: "1px solid #6931F9", marginTop: 42 }} sx={{borderRadius: '16px'}}>
+                            <InputBase  placeholder="Search anything..." inputProps={{ 'aria-label': 'search google maps' }} />
                             <IconButton aria-label="search">
-                                <img src="/icons/search-icon.png"/>
-                            </IconButton></Box>
+                                <img src="/icons/search-icon.png" />
+                            </IconButton>
                         </Box>
                     </Grid>
                     <Grid item md={2}>
