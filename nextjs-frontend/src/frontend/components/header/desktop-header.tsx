@@ -1,24 +1,23 @@
+import FlashOnIcon from '@mui/icons-material/FlashOn';
+import { Button, IconButton, Typography, useTheme } from '@mui/material';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import Drawer from '@mui/material/Drawer';
+import { createStyles, makeStyles } from "@mui/styles";
+import { useRouter } from 'next/router';
 import * as React from 'react';
 import { useRef, useState } from 'react';
-import styles from './noob-desktop-header.module.css';
-import { Typography, Button, useTheme } from '@mui/material';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import CssBaseline from '@mui/material/CssBaseline';
-import AppBar from '@mui/material/AppBar';
-import FlashOnIcon from '@mui/icons-material/FlashOn';
-import TwitchIcon from '../icons/twitch-icon';
-import YoutubeIcon from '../icons/youtube-icon';
-import { useRouter } from 'next/router';
-import { createStyles, makeStyles } from "@mui/styles";
-import style from './desktop-sidebar.module.css';
-import { useAppSelector } from '../../redux-store/redux-store';
-import { screenWidthSelector } from '../../redux-store/layout/layout-selectors';
-import LoginModal from '../auth/login-modal/login-modal';
-import { ComponentDimensions, createFromRef } from '../utils/component-dimensions';
 import { isLoggedInSelector, userNameSelector } from '../../redux-store/authentication/authentication-selectors';
+import { screenWidthSelector } from '../../redux-store/layout/layout-selectors';
+import { useAppSelector } from '../../redux-store/redux-store';
 import { walletDetaislSelector } from '../../redux-store/wallet/wallet-selector';
 import { signOut } from '../../service-clients/auth-service-client';
+import LoginModal from '../auth/login-modal/login-modal';
+import TwitchIcon from '../icons/twitch-icon';
+import YoutubeIcon from '../icons/youtube-icon';
+import { ComponentDimensions, createFromRef } from '../utils/component-dimensions';
+import style from './desktop-sidebar.module.css';
 
 const drawerWidth = 280;
 
@@ -138,11 +137,13 @@ export default function DrawerLeft(): JSX.Element {
             classes={{ paper: classes.drawerPaper }}
           >
             <div>
+              <Button style={{ backgroundColor: 'transparent' }} onClick={gotoHomePage}>
               <img
                 src="/images/noobstorm-logo-small.png"
                 alt="noob storm logo"
                 className={style.logo}
               />
+              </Button>
             </div>
             <div className={style.container1}>
               <Button
@@ -158,10 +159,10 @@ export default function DrawerLeft(): JSX.Element {
                 style={{ color: "white" }}
                 onClick={gotoTeamListPage}
               >
-                My Teams
+                Account
               </Button>
             </div>
-            {isLoggedIn && (
+            {/*{isLoggedIn && (
               <div className={style.container4}>
                 <img src="/images/16276393842661.png" className={style.img3} />
                 <Box>
@@ -176,7 +177,7 @@ export default function DrawerLeft(): JSX.Element {
                   </Button>
                 </Box>
               </div>
-            )}
+            )}*/}
 
             <div className={style.container2}>
               <Button
@@ -198,6 +199,33 @@ export default function DrawerLeft(): JSX.Element {
                 />
                 Tournaments
               </Button>
+              <Button sx={{display:"flex"}} variant="text" startIcon={<FlashOnIcon />} className={classes.buttonStyles} onClick={gotoFreeAgencyMarketPage}>
+                  Free Agency Market
+              </Button>
+              <Button variant="text" className={classes.buttonStyles}>
+                <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
+                Social
+              </Button>
+              <Button variant="text" className={classes.buttonStyles}>
+                <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
+                News
+              </Button>
+              <Button variant="text" className={classes.buttonStyles}>
+                <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
+                Chat
+              </Button>
+              <Button
+                variant="text"
+                className={classes.buttonStyles}
+                onClick={(): any => router.push("/match-hub")}
+              >
+                <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
+                Match Hub
+              </Button>
+              <Button variant="text" className={classes.buttonStyles} onClick={gotoTeamListPage}>
+              <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
+                My Teams
+              </Button>
               <Button variant="text" className={classes.buttonStyles}>
                 <img
                   src="/icons/Vector-Leaderboards.png"
@@ -206,6 +234,13 @@ export default function DrawerLeft(): JSX.Element {
                 Leaderboards
               </Button>
               <Button variant="text" className={classes.buttonStyles}>
+                <img
+                  src="/icons/Vector-Support.png"
+                  className={classes.imgStyle}
+                />
+                Support
+              </Button>
+              {/*<Button variant="text" className={classes.buttonStyles}>
                 <img
                   src="/icons/Vector-Message.png"
                   className={classes.imgStyle}
@@ -220,24 +255,9 @@ export default function DrawerLeft(): JSX.Element {
                 About Us
               </Button>
               <Button variant="text" className={classes.buttonStyles}>
-                <img
-                  src="/icons/Vector-Support.png"
-                  className={classes.imgStyle}
-                />
-                Support
-              </Button>
-              <Button variant="text" className={classes.buttonStyles}>
                 <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
                 FAQ
-              </Button>
-              <Button
-                variant="text"
-                className={classes.buttonStyles}
-                onClick={(): any => router.push("/match-hub")}
-              >
-                <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
-                Match Hub
-              </Button>
+            </Button>*/}
               {isLoggedIn && (
                 <Button
                   variant="text"
@@ -297,24 +317,20 @@ export default function DrawerLeft(): JSX.Element {
                   <span className={style.border2}></span>
                 </Box>
                 <Box className={style.box1}>
+                <IconButton color="default" aria-label="Youtube" component="span">
                   <YoutubeIcon />
+                </IconButton>
+                <IconButton color="default" aria-label="Youtube" component="span">
                   <img
                     src="/icons/Vector-DiscordIcon.png"
                     style={{ height: "19px" }}
                   />
+                </IconButton>
+                <IconButton color="default" aria-label="Youtube" component="span">
                   <TwitchIcon />
+                </IconButton>
                 </Box>
               </Box>
-              <div className={styles.bottomMenuGroup}>
-                <Button
-                  variant="text"
-                  startIcon={<FlashOnIcon />}
-                  className={style.button1}
-                  onClick={gotoFreeAgencyMarketPage}
-                >
-                  Free Agency Market
-                </Button>
-              </div>
               <Box className={style.box1}>
                 <span className={style.border3}></span>
               </Box>
