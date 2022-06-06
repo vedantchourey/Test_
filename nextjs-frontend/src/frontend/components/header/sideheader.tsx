@@ -1,4 +1,4 @@
-import { Box, Button, Grid, InputBase, Popover, Typography } from "@mui/material";
+import { Box, Button, Grid, IconButton, InputBase, Popover, Typography } from "@mui/material";
 import { useRouter } from 'next/router';
 import * as React from 'react';
 import { isLoggedInSelector, userNameSelector } from '../../redux-store/authentication/authentication-selectors';
@@ -43,13 +43,13 @@ export default function SideHeader(): JSX.Element {
                         <div className={style.container4} style={{ justifyContent: 'flex-end' }}>
                             <Box style={{ border: "1px solid #6931F9" }} sx={{ borderRadius: '16px' }}>
                                 <InputBase size="small" placeholder="Search anything..." sx={{ p: 1 }} />
-                                <Button>
+                                <IconButton sx={{ mr: 1}}>
                                     <img src="/icons/search-icon.png" />
-                                </Button>
+                                </IconButton>
                             </Box>
-                            <Button onClick={handleClick}>
+                            <IconButton onClick={handleClick} sx={{ mr: 1, ml: 1}}>
                                 <img src="/icons/notification-icon.svg" />
-                            </Button>
+                            </IconButton>
                             <img src="/images/16276393842661.png" className={style.img3} alt="logo" style={{ height: "50px", width: "50px", }} />
                             <Box >
                                 <Typography className={style.text1}>{username}</Typography>
