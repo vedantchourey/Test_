@@ -485,7 +485,6 @@ const ViewTournament: React.FC = () => {
     if (selectedTeam) {
       return renderTeamSelection();
     }
-    console.log('data.basic -> ', data.basic)
     return (
       <React.Fragment>
         <Loader loading={loading} />
