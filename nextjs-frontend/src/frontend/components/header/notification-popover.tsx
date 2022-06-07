@@ -1,4 +1,4 @@
-import { Avatar, Button, Divider, List, ListItem, ListItemAvatar, ListItemText, ListSubheader, Typography } from '@mui/material';
+import { Button, Divider, List, ListItem, ListItemAvatar, ListItemText, ListSubheader, Typography } from '@mui/material';
 import * as React from 'react';
 
 interface Message {
@@ -26,7 +26,7 @@ export default function BasicPopover(props: Props) {
       <Divider variant="middle" component="li" />
       < ListItem alignItems="flex-start" >
         <ListItemAvatar>
-          <Avatar alt="Travis Howard" src={message[0].image} />
+          <img alt="Travis Howard" src={message[0].image} />
         </ListItemAvatar>
         <ListItemText
           secondary={
