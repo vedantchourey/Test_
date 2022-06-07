@@ -4,7 +4,7 @@ import { IPrivateProfile } from '../models/i-private-profile';
 
 export class PrivateProfilesRepository extends BaseRepository<IPrivateProfile> {
 
-  constructor(transaction: Knex.Transaction) {
+  constructor(transaction: Knex.Transaction | Knex) {
     super(transaction, 'private_profiles');
   }
 

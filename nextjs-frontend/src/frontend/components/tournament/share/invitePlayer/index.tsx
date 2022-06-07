@@ -23,7 +23,7 @@ import { useRouter } from "next/router";
 import { TournamentContext } from "../..";
 import CardLayout from "../../../ui-components/card-layout";
 import FormLabel from "../../../ui-components/formlabel";
-
+import FrontendConfig from '../../../../utils/config/front-end-config'
 
 export interface InvitePlayerData {
   url: string;
@@ -39,7 +39,7 @@ const InvitePlayer: React.FC = (): JSX.Element => {
 
   const formik = useFormik({
     initialValues: {
-      url: data?.invitePlayer?.url || "",
+      url: `${FrontendConfig.baseAppUrl}/view-tournament/${data.id}/details` || "",
     },
     validationSchema: validationSchema,
 
@@ -65,8 +65,7 @@ const InvitePlayer: React.FC = (): JSX.Element => {
   const [copySuccess, setCopySuccess] = useState("");
 
   const copyToClipboard = (): void => {
-    navigator.clipboard.writeText(formik.values.url);
-
+    navigator.clipboard.writeText(`${FrontendConfig.baseAppUrl}/view-tournament/${data.id}/details`);
     setCopySuccess("Copied!");
   };
 
@@ -93,11 +92,8 @@ const InvitePlayer: React.FC = (): JSX.Element => {
                       </InputAdornment>
                     }
                     id="url"
-                    placeholder="http://battelfy.com/demo/section"
-                    onChange={formik.handleChange}
-                    value={formik.values.url}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.url && Boolean(formik.errors.url)}
+                    value={`${FrontendConfig.baseAppUrl}/view-tournament/${data.id}/details`}
+                    disabled
                   />
                   {formik.touched.url && Boolean(formik.errors.url) ? (
                     <FormHelperText> {formik.errors.url} </FormHelperText>

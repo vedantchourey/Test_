@@ -3,9 +3,20 @@ class BracketsCrud {
   constructor(knexConnection: any) {
     this.knexConnection = knexConnection;
   }
+  numberFields = ["id", "tournament_id", "number", "stage_id", "group_id", "round_id", "child_count", "parent_id",]
+  formatResult(data: any): any {
+    for (const key in data) {
+      if (typeof data[key] === "object") {
+        data[key] = this.formatResult(data[key])
+      } else
+        if (this.numberFields.includes(key)) {
+          data[key] = Number(data[key])
+        }
+    }
+    return data;
+  }
   async select(table: string, filter: number | any): Promise<any> {
     // console.log("select", table, filter);
-
     let data: any;
     try {
       if (typeof filter === "number" || !isNaN(filter)) {
@@ -13,14 +24,12 @@ class BracketsCrud {
           .select("*")
           .where({ id: filter });
 
-        return table === "stage"
-          ? { ...data[0], tournament_id: Number(data[0].tournament_id) }
-          : data[0];
+        return this.formatResult(data[0]);
       } else if (typeof filter === "object") {
         data = await this.knexConnection("b_" + table)
           .select("*")
           .where({ ...filter });
-        return data;
+        return this.formatResult(data);
       }
     } catch (ex: any) {
       console.error("select error", ex.message);

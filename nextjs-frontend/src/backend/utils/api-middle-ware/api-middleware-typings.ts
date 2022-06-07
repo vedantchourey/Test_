@@ -2,6 +2,8 @@ import { User } from '@supabase/gotrue-js';
 import { Knex } from 'knex';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ServiceResponse } from '../../services/common/contracts/service-response';
+import { IBMatch } from '../../services/database/models/i-b-match';
+import { ITournament } from '../../services/database/models/i-tournaments';
 import { ParamConfig } from './query-param-middle-ware/param-config';
 
 type MiddlewareResponse = { status: number, data: { message: string } };
@@ -26,6 +28,8 @@ export class PerRequestContext {
 
   user?: User;
   jwt?: string;
+  tournament?: ITournament;
+  match?: IBMatch;
   private _transaction?: Knex.Transaction;
   private _knexConnection?: Knex;
   error: unknown;

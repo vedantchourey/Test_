@@ -1,16 +1,16 @@
 import * as React from 'react';
-import NoobDesktopHeader from './noob-desktop-header';
+import DrawerLeft from '../header/desktop-header';
+import MobileDrawer from '../header/mobile-header';
 import { useAppSelector } from '../../redux-store/redux-store';
 import { isDeviceTypeSelector } from '../../redux-store/layout/layout-selectors';
 import { deviceTypes } from '../../redux-store/layout/device-types';
-import NoobMobileHeader from './noob-mobile-header';
 
 export default function NoobHeader(): JSX.Element {
   const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
   return (
     <nav>
-      {isDesktop && <NoobDesktopHeader />}
-      {!isDesktop && <NoobMobileHeader />}
+      {isDesktop && <DrawerLeft />}
+      {!isDesktop && <MobileDrawer />}
     </nav>
   );
 }

@@ -18,6 +18,7 @@ const keys = [
   "status",
   "joinStatus",
   "createTemplateCode",
+  "sponsor"
 ];
 export class TournamentsRepository extends BaseRepository<ITournament> {
   constructor(transaction: Knex.Transaction | Knex) {

@@ -1,0 +1,25 @@
+.opponentTileContainer {
+    background-color: #08001C;
+    padding: 24px;
+}
+
+.opponentTileTitle {
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 24px;
+    color: #B5B5B5;
+    margin-bottom: 4px;
+}
+
+.opponentTileValue {
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.opponentTileButton {
+    padding: 8px; 
+    border-radius: 0; 
+    min-width: 160px;
+    min-height: 48px;
+
+}

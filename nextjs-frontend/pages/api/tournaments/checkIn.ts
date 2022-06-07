@@ -8,6 +8,7 @@ import { ServiceResponse } from "../../../src/backend/services/common/contracts/
 import { PerRequestContext } from "../../../src/backend/utils/api-middle-ware/api-middleware-typings";
 import { checkInTournament } from "../../../src/backend/services/brackets-service/brackets-service";
 import { Knex } from "knex";
+import { authenticatedUserMiddleware } from "../../../src/backend/utils/api-middle-ware/auth-middle-ware";
 
 export default createNextJsRouteHandler({
   post: {
@@ -16,10 +17,10 @@ export default createNextJsRouteHandler({
       res: NextApiResponse<ServiceResponse<any, any>>,
       context: PerRequestContext
     ) => {
-      const result = await checkInTournament(req.body, context.knexConnection as Knex);
-      res.status(200).json({ data: result });
+      const result = await checkInTournament(req.body, context.knexConnection as Knex, context.user);
+      res.status(result?.errors?.length ? 500 : 200).json(result)
     },
-    preHooks: [beginTransactionMiddleWare],
+    preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],
     postHooks: [commitOrRollBackTransactionMiddleWare],
   },
 });
