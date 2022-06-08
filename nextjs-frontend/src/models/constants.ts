@@ -18,7 +18,9 @@ export const TABLE_NAMES = {
     TOURNAMENTS: "tournamentsData",
     MATCH_RESULT_REQUEST: "match_result_request",
     FREE_AGENCY_MARKET: "free_agency_market",
-    WATCHLIST: "watchlist"
+    WATCHLIST: "watchlist",
+    ELO_RATING: "elo_ratings",
+    ELO_RATING_HISTORY: "elo_ratings_history"
 }
 
 export const STATUS = {
@@ -42,4 +44,4 @@ export const TOURNAMENT_TYPE_NUMBER: { [key: string]: number } = {
 }
 
 export const USER_FEILDS = ["private_profiles.id as user_id", "private_profiles.firstName", "private_profiles.lastName",
-    "private_profiles.elo_rating as player_elo_rating"]
+    "elo_ratings.elo_rating as player_elo_rating"]

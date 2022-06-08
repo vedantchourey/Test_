@@ -3,6 +3,7 @@ export interface IMatchResultRequest {
     opponent1: IResult
     opponent2: IResult
     screenshot: string;
+    tournament_id: string;
 }
 export interface IResult {
     score: number;

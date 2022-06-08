@@ -7,7 +7,7 @@ import {
   TableCell,
   TableContainer,
   TableRow,
-  Typography,
+  Typography
 } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/router";
