@@ -28,14 +28,15 @@ export function validateMatchResult(body: any): any {
         opponent1: Joi.object({
             score: Joi.number().required(),
             result: Joi.string().required()
-.valid("win", "lose"),
+                .valid("win", "lose"),
         }),
         opponent2: Joi.object({
             score: Joi.number().required(),
             result: Joi.string().required()
-.valid("win", "lose"),
+                .valid("win", "lose"),
         }),
-        screenshot: Joi.string()
+        screenshot: Joi.string(),
+        tournament_id: Joi.string().required()
     });
     const errors = model.validate(body, { abortEarly: false, allowUnknown: true, });
     if (errors) return errors.error?.details.map((x) => x.message);

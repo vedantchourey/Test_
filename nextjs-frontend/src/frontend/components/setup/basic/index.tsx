@@ -24,10 +24,9 @@ import GameDropDown from "../../drop-downs/game-drop-down";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import { v4 } from "uuid";
 import { uploadImage } from "../../../service-clients/image-service-client";
+import { blobToFile } from "../../../../common/utils/utils";
 
-const blobToFile = (theBlob: Blob, fileName:string):File => {
-  return new File([theBlob], fileName, { lastModified: new Date().getTime(), type: theBlob.type })
-}
+
 
 const useStyles = makeStyles(() =>
   createStyles({
