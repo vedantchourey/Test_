@@ -16,9 +16,7 @@ import {
 } from "../../redux-store/authentication/authentication-selectors";
 import { useAppSelector } from "../../redux-store/redux-store";
 import { walletDetaislSelector } from "../../redux-store/wallet/wallet-selector";
-import { frontendSupabase } from "../../services/supabase-frontend-service";
 import { getAuthHeader } from "../../utils/headers";
-import { data } from "../team/members";
 import style from "./desktop-sidebar.module.css";
 import BasicPopover from "./notification-popover";
 
@@ -39,7 +37,6 @@ export default function SideHeader(): JSX.Element {
         headers: { ...headers },
       })
       .then((res) => {
-          console.log('res?.data?.data -> ', res?.data?.data)
         const notificatiosData = (res?.data?.data || [])?.map((i: any) => ({
           id: i.id,
           message:
@@ -53,7 +50,7 @@ export default function SideHeader(): JSX.Element {
                   text: "New notifications",
                 },
           data: i,
-          isActionRequired: i.is_action_required
+          isActionRequired: i.is_action_required,
         }));
         setNotifications(notificatiosData);
       })
@@ -62,7 +59,10 @@ export default function SideHeader(): JSX.Element {
       });
   };
 
-  const submitNotification = async (id: string ,response: string): Promise<void> => {
+  const submitNotification = async (
+    id: string,
+    response: string
+  ): Promise<void> => {
     const headers = await getAuthHeader();
     axios
       .post(
@@ -85,17 +85,14 @@ export default function SideHeader(): JSX.Element {
     if (isLoggedIn) {
       fetchNotifications();
     } else {
+      setNotifications([]);
     }
   }, [isLoggedIn]);
 
-  console.log("notifications -> ", notifications);
-
-  
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+  const handleClose = (): void => {
     setAnchorEl(null);
   };
 
@@ -167,11 +164,11 @@ export default function SideHeader(): JSX.Element {
         {notifications.map((i: any, idx: number) => (
           <BasicPopover
             message={i.message}
-            onAccept={() => {
-                submitNotification(i.id, "ACCEPTED");
+            onAccept={(): void => {
+              submitNotification(i.id, "ACCEPTED");
             }}
-            onDecline={() => {
-                submitNotification(i.id, "REJECT");
+            onDecline={(): void => {
+              submitNotification(i.id, "REJECT");
             }}
             isActionRequired={i.isActionRequired}
             key={idx}

@@ -1,4 +1,4 @@
-import knex, { Knex } from "knex";
+import { Knex } from "knex";
 import { IRegisterTournament } from "../database/models/i-register-tournament";
 import { ITournament } from "../database/models/i-tournaments";
 import { TournamentsRepository } from "../database/repositories/tournaments-repository";
@@ -370,7 +370,8 @@ export const updateELORating = async (match: IBMatch, req: IMatchResultRequest, 
   const eloHistoryRepo = new CrudRepository<IEloRatingHistory>(knexConnection, TABLE_NAMES.ELO_RATING_HISTORY);
   if (players[0].user_id) {
     const eloRepo = new CrudRepository<IEloRating>(knexConnection, TABLE_NAMES.ELO_RATING);
-    const users: IEloRating[] = await eloRepo.knexObj().whereIn("user_id", [player1.user_id, player2.user_id]).where("game_id", game_id)
+    const users: IEloRating[] = await eloRepo.knexObj().whereIn("user_id", [player1.user_id, player2.user_id])
+.where("game_id", game_id)
     let user1: IEloRating = users.find((x) => x.id === player1.user_id) || users[0]
     let user2: IEloRating = users.find((x) => x.id === player2.user_id) || users[1]
     if (!user1) {
@@ -386,7 +387,7 @@ export const updateELORating = async (match: IBMatch, req: IMatchResultRequest, 
       })
     }
     let elo_rating = { winnerRating: 0, loserRating: 0 };
-    let ratings = { user1: 0, user2: 0 }
+    const ratings = { user1: 0, user2: 0 }
     if (req.opponent1.result === "win") {
       elo_rating = getEloRating(Number(user1?.elo_rating), Number(user2?.elo_rating))
       ratings.user1 = elo_rating.winnerRating;
@@ -408,7 +409,7 @@ export const updateELORating = async (match: IBMatch, req: IMatchResultRequest, 
   const team1: ITeams = teams.find((x) => x.id === player1.team_id) || teams[0];
   const team2: ITeams = teams.find((x) => x.id === player2.team_id) || teams[1];
   let elo_rating = { winnerRating: 0, loserRating: 0 };
-  let ratings = { team1: 0, team2: 0 }
+  const ratings = { team1: 0, team2: 0 }
   if (req.opponent1.result === "win") {
     elo_rating = getEloRating(Number(team1?.elo_rating), Number(team2?.elo_rating))
     ratings.team1 = elo_rating.winnerRating;
@@ -428,6 +429,7 @@ export const updateELORating = async (match: IBMatch, req: IMatchResultRequest, 
 
 export const createEloHistory = async (data: any, knexConnection: Knex): Promise<any> => {
   const repo = new CrudRepository<IEloRatingHistory>(knexConnection, TABLE_NAMES.ELO_RATING_HISTORY);
+  return repo;
 }
 export const getGameId = async (req: IMatchResultRequest, knexConnection: Knex): Promise<any> => {
   const repo = new CrudRepository<ITournament>(knexConnection, TABLE_NAMES.TOURNAMENTS);

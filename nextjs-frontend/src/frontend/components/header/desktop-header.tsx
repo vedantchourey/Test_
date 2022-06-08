@@ -8,10 +8,9 @@ import { createStyles, makeStyles } from "@mui/styles";
 import { useRouter } from 'next/router';
 import * as React from 'react';
 import { useRef, useState } from 'react';
-import { isLoggedInSelector, userNameSelector } from '../../redux-store/authentication/authentication-selectors';
+import { isLoggedInSelector } from '../../redux-store/authentication/authentication-selectors';
 import { screenWidthSelector } from '../../redux-store/layout/layout-selectors';
 import { useAppSelector } from '../../redux-store/redux-store';
-import { walletDetaislSelector } from '../../redux-store/wallet/wallet-selector';
 import { signOut } from '../../service-clients/auth-service-client';
 import LoginModal from '../auth/login-modal/login-modal';
 import TwitchIcon from '../icons/twitch-icon';
@@ -66,8 +65,8 @@ export default function DrawerLeft(): JSX.Element {
   const screenWidth = useAppSelector(screenWidthSelector);
   const isLoggedIn = useAppSelector(isLoggedInSelector);
 
-  const username = useAppSelector(userNameSelector);
-  const wallet = useAppSelector(walletDetaislSelector);
+  // const username = useAppSelector(userNameSelector);
+  // const wallet = useAppSelector(walletDetaislSelector);
 
   const classes = useRoundStatusStyles();
 

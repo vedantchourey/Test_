@@ -22,7 +22,7 @@ interface Props {
   isActionRequired: boolean;
 }
 
-export default function BasicPopover(props: Props) {
+export default function BasicPopover(props: Props): JSX.Element {
   const { message, onAccept, onDecline } = props;
   return (
     <List

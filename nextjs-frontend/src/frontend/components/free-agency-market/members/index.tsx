@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Slider, { Settings } from "react-slick";

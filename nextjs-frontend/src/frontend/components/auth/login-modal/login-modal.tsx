@@ -99,7 +99,7 @@ export default function LoginModal(props: Props): JSX.Element {
   const onClickLostPassword = async (): Promise<void> => {
     await router.push('/reset-password')
   };
-  const handleKeypress = (e: { keyCode: number; }) => {
+  const handleKeypress = (e: { keyCode: number; }): void => {
       //it triggers by pressing the enter key
     if (e.keyCode === 0) {
       onClickLogin();
