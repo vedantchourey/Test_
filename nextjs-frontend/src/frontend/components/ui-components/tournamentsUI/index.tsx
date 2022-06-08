@@ -1,10 +1,11 @@
 import {
-    Box, Grid, Typography
+    Box, Grid, Typography, useMediaQuery, useTheme
 } from "@mui/material";
 import React from "react";
 
 const TournamentsCard: React.FC = ({ children }) => {
-
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     return (
         <Box sx={{ marginX: { md: "70px", sm: "10px", xs: "10px" } }}>
             <Box
@@ -27,8 +28,16 @@ const TournamentsCard: React.FC = ({ children }) => {
                         <Typography color={"white"} textAlign="center" variant="h1">
                             Tournaments
                         </Typography>
-
                     </Grid>
+                    {isMobile ?(
+                         <>
+                         
+                       </>
+
+                    ):(
+                        <></>
+
+                    )}
                 </Grid>
             </Box>
             {children}
