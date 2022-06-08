@@ -1,8 +1,9 @@
 import { Box } from "@mui/material";
 import Head from "next/head";
-import NoobHeader from "../header/noob-header";
 import React from "react";
 import NoobFooter from "../footer";
+import NoobHeader from "../header/noob-header";
+import SideHeader from "../header/sideheader";
 
 interface Props {
   title: string;
@@ -16,23 +17,26 @@ export default function NoobPage(props: Props): JSX.Element {
   const metaKeys = Object.keys(metaData);
 
   return (
-    <div style={{marginTop: 100}}>
-      <Head>
-        <title>{title}</title>
-        {metaKeys.map((key, index) => (
-          <meta key={index} name={key} content={metaData[key]} />
-        ))}
-        <link rel="icon" href={favIcon} />
-      </Head>
-      <Box sx={{ display: 'flex' }}>
-        <NoobHeader/>
-          <Box
-            style={{ minHeight: '1240px' }}
-            component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}>
-            {children}
-          </Box>
-      </Box>
-      <NoobFooter/>
-    </div>
+    <>
+    <SideHeader/>
+      <div style={{marginTop: 50}}>
+        <Head>
+          <title>{title}</title>
+          {metaKeys.map((key, index) => (
+            <meta key={index} name={key} content={metaData[key]} />
+          ))}
+          <link rel="icon" href={favIcon} />
+        </Head>
+        <Box sx={{ display: 'flex' }}>
+          <NoobHeader/>
+            <Box
+              style={{ minHeight: '1240px' }}
+              component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}>
+              {children}
+            </Box>
+        </Box>
+        <NoobFooter/>
+      </div>
+    </>
   );
 }
