@@ -102,7 +102,7 @@ export default function LoginModal(props: Props): JSX.Element {
   const handleKeypress = (e: { keyCode: number; }): void => {
       //it triggers by pressing the enter key
     if (e.keyCode === 0) {
-      onClickLogin();
+      // onClickLogin();
     }
   };
 
