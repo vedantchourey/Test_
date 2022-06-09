@@ -218,7 +218,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
                   backgroundColor: "rgba(255, 255, 255, 0.09)",
                   cursor: "pointer",
                 }}
-                height={409}
+                height={"18.5vw"}
                 display="flex"
                 alignContent={"center"}
                 flexDirection="column"

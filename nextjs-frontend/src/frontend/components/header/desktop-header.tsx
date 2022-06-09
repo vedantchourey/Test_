@@ -1,4 +1,3 @@
-import FlashOnIcon from '@mui/icons-material/FlashOn';
 import { Button, IconButton, Typography, useTheme } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';

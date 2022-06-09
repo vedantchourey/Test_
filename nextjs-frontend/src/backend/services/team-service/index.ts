@@ -256,7 +256,10 @@ export const leaveTeam = async (req: ITeamLeaveRequest,
         // validating team id and if the leaving user is owner.
         if (!existing_player) return getErrorObject("You are not part of the team.");
         if (existing_player.is_owner) {
-            let new_owner = await teams_player.knexObj().whereNot({ user_id: user.id }).where({ "team_id": req.team_id }).orderBy("created_at").first();
+            const new_owner = await teams_player.knexObj().whereNot({ user_id: user.id })
+.where({ "team_id": req.team_id })
+.orderBy("created_at")
+.first();
             await teams_player.update({ is_owner: true }, { "team_id": req.team_id, user_id: new_owner.user_id })
         }
 

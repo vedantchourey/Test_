@@ -47,6 +47,7 @@ const getActive = (url: string): number => {
 interface TeamType {
   id: string;
   name: string;
+  created_by: string;
   players: Player[];
 }
 
@@ -96,7 +97,7 @@ const Team: React.FC = () => {
       case "match/history":
         return <MatchHistory />;
       case "permissions":
-        return <Permissions players={team?.players || []} />;
+        return <Permissions team={team} players={team?.players || []} />;
       case "members":
         return (
           <TeamMembers
