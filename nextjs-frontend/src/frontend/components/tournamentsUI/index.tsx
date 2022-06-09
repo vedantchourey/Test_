@@ -1,6 +1,7 @@
 import React from "react";
 import NoobPage from "../page/noob-page";
 import CardComp from "../tournamentsUI/card";
+import SliderComp from "../tournamentsUI/sliderimage";
 import TournamentsCard from "../ui-components/tournamentsUI";
 
 const Tournaments: React.FC = (): JSX.Element => {
@@ -14,6 +15,7 @@ const Tournaments: React.FC = (): JSX.Element => {
     >
       <TournamentsCard>
         <CardComp />
+        <SliderComp/>
       </TournamentsCard>
     </NoobPage>
   );
