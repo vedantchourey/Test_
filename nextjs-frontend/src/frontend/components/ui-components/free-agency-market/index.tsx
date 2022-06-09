@@ -31,7 +31,7 @@ export const NoobButton = styled(Button)(() => ({
   },
 }));
 
-const CardDesktop: React.FC<any> = ({setOpen}) => {
+const CardDesktop: React.FC<any> = ({ setOpen }) => {
   return (
     <Grid container columnSpacing={2}>
       <Grid
@@ -55,20 +55,37 @@ const CardDesktop: React.FC<any> = ({setOpen}) => {
           <Box> text ever since the 1500s</Box>
         </Typography>
       </Grid>
-      <Grid item md={4} lg={2}>
+      <Grid
+        item
+        md={4}
+        lg={2}
+        alignContent={"center"}
+        display={"flex"}
+        flexDirection={"column"}
+        justifyContent={"center"}
+        alignItems={"center"}
+      >
+        <UnplashIcon width={230} />
         <Button
+          style={{
+            background: "linear-gradient(180deg, #EF507E 0%, #F09633 100%)",
+            color: "white",
+            padding: "10px 10px",
+            marginTop: 20,
+            width: "230px",
+          }}
           onClick={(): void => {
             setOpen(true);
           }}
         >
-          <UnplashIcon />
+          Enter Free Agency
         </Button>
       </Grid>
     </Grid>
   );
 };
 
-const CardMobile: React.FC<any> = ({setOpen}) => {
+const CardMobile: React.FC<any> = ({ setOpen }) => {
   return (
     <Grid container>
       <Grid item xs={12} display={"flex"}>
@@ -87,13 +104,30 @@ const CardMobile: React.FC<any> = ({setOpen}) => {
           </Typography>
         </Box>
       </Grid>
-      <Grid item md={4} lg={2}>
+      <Grid
+        item
+        md={4}
+        lg={2}
+        alignContent={"center"}
+        display={"flex"}
+        flexDirection={"column"}
+        justifyContent={"center"}
+        alignItems={"center"}
+      >
+        <UnplashIcon width={230} />
         <Button
+          style={{
+            background: "linear-gradient(180deg, #EF507E 0%, #F09633 100%)",
+            color: "white",
+            padding: "10px 10px",
+            marginTop: 20,
+            width: "230px",
+          }}
           onClick={(): void => {
             setOpen(true);
           }}
         >
-          <UnplashIcon />
+          Enter Free Agency
         </Button>
       </Grid>
     </Grid>
@@ -109,12 +143,12 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
   const [platform, setPlatform] = useState("");
   const [loader, setLoader] = useState(false);
 
-  const onSubmit = async (): Promise<void> =>{
-    setLoader(true)
+  const onSubmit = async (): Promise<void> => {
+    setLoader(true);
     const data = {
       game_id: selectGame,
-      platform_id: platform
-    }
+      platform_id: platform,
+    };
     const headers = await getAuthHeader();
     axios
       .post("/api/free-agency-market", data, { headers: headers })
@@ -123,7 +157,7 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
       })
       .catch((err) => alert(err))
       .finally(() => setLoader(false));
-  }
+  };
 
   return (
     <Box sx={{ marginX: { md: "70px", sm: "10px", xs: "10px" } }}>
