@@ -29,7 +29,7 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
                 "elo_ratings.user_id": "private_profiles.id",
                 "elo_ratings.game_id": "teams.game_id"
             })
-            .select(["teams.name", "teams.id", "private_profiles.firstName", "private_profiles.lastName", "private_profiles.id as user_id", "wallet.balance", "elo_ratings.elo_rating"])
+            .select(["teams.name", "teams.id", "teams.created_by", "private_profiles.firstName", "private_profiles.lastName", "private_profiles.id as user_id", "wallet.balance", "elo_ratings.elo_rating"])
             .where("created_by", user.id)
 
         if (query.id) {
@@ -45,12 +45,12 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
         }
         const data = await teamQuery
         if (!data.length) return getErrorObject("No Teams found")
-
         return {
             result: _(data).groupBy("name")
                 .map(function (items, name) {
                     return {
                         id: items[0].id,
+                        created_by: items[0].created_by,
                         name,
                         players: _.map(items, (data) => {
                             return {

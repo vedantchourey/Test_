@@ -198,8 +198,12 @@ export default function DrawerLeft(): JSX.Element {
                 />
                 Tournaments
               </Button>
-              <Button sx={{display:"flex"}} variant="text" startIcon={<FlashOnIcon />} className={classes.buttonStyles} onClick={gotoFreeAgencyMarketPage}>
-                  Free Agency Market
+              <Button variant="text" className={classes.buttonStyles} onClick={gotoFreeAgencyMarketPage}>
+                <img
+                  src="/icons/Vector-Tournaments.png"
+                  className={classes.imgStyle}
+                />
+                Free Agency
               </Button>
               <Button variant="text" className={classes.buttonStyles}>
                 <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
