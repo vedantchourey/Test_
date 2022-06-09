@@ -23,6 +23,8 @@
     "@reduxjs/toolkit": "^1.6.2",
     "@supabase/supabase-js": "^1.35.3",
     "abort-controller": "^3.0.0",
+    "ajv": "^8.11.0",
+    "api": "^4.5.1",
     "axios": "^0.25.0",
     "brackets-json-db": "^1.0.1",
     "brackets-manager": "^1.4.4",
