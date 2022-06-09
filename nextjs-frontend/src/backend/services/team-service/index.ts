@@ -101,8 +101,8 @@ export const createTeams = async (req: ITeamCreateRequest,
         return data
 
     } catch (ex: any) {
-        if (ex?.code === 23505) return getErrorObject("Team with same name already exists")
-        return getErrorObject("Something went wrong")
+        if (ex?.code === '23505') return getErrorObject("Team with same name already exists")
+        return getErrorObject("Something went wrong"+ex)
     }
 }
 
