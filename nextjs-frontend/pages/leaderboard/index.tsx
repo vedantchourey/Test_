@@ -187,7 +187,6 @@ const Leaderboard = (): JSX.Element => {
 
   const isDesktop = useAppSelector((x) =>
     isDeviceTypeSelector(x, deviceTypes.desktop));
-
   return (
     <NoobPage
       title="Leaderboard"

@@ -87,6 +87,9 @@ export default function DrawerLeft(): JSX.Element {
   async function gotoTeamListPage(): Promise<void> {
     await router.push('/teamlist')
   }
+  async function gotoLeaderboardsPage(): Promise<void> {
+    await router.push('/leaderboard')
+  }
   async function gotoFreeAgencyMarketPage(): Promise<void> {
     await router.push("/free-agency-market/view/members");
   }
@@ -225,7 +228,7 @@ export default function DrawerLeft(): JSX.Element {
               <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
                 My Teams
               </Button>
-              <Button variant="text" className={classes.buttonStyles}>
+              <Button variant="text" className={classes.buttonStyles} onClick={gotoLeaderboardsPage}>
                 <img
                   src="/icons/Vector-Leaderboards.png"
                   className={classes.imgStyle}
