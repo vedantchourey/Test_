@@ -1,5 +1,5 @@
 import { createNextJsRouteHandler } from "../../../src/backend/utils/api-middle-ware/api-handler-factory";
-import { authenticatedAdminUserMiddleware } from "../../../src/backend/utils/api-middle-ware/auth-middle-ware";
+import { authenticatedUserMiddleware } from "../../../src/backend/utils/api-middle-ware/auth-middle-ware";
 import {
   beginTransactionMiddleWare,
   commitOrRollBackTransactionMiddleWare,
@@ -35,7 +35,7 @@ export default createNextJsRouteHandler({
         res.status(500);
       }
     },
-    preHooks: [beginTransactionMiddleWare, authenticatedAdminUserMiddleware],
+    preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],
     postHooks: [commitOrRollBackTransactionMiddleWare],
   },
 });

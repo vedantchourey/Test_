@@ -1,18 +1,18 @@
-import styles from './registration-form.module.css';
-import { Button, Checkbox, FormControl, FormControlLabel, FormHelperText, TextField, Typography } from '@mui/material';
 import { DesktopDatePicker } from '@mui/lab';
-import { ChangeEvent, useState } from 'react';
+import { Button, Checkbox, FormControl, FormControlLabel, FormHelperText, TextField, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
-import Link from 'next/link'
-import commonStyles from '../../../styles/common.module.css';
-import { parseDateTime, toISOString } from '../../../../common/utils/date-time-utils';
-import StateDropDown from '../../drop-downs/state-drop-down';
-import { validateSignUp } from './validator';
-import { getErrorForProp, isThereAnyError, propsHasError, ValidationResult } from '../../../../common/utils/validation/validator';
+import Link from 'next/link';
+import { ChangeEvent, useState } from 'react';
 import { SignupRequest } from '../../../../backend/services/auth-service/signup/signup-contracts';
-import { signUp } from '../../../service-clients/auth-service-client';
+import { parseDateTime, toISOString } from '../../../../common/utils/date-time-utils';
+import { getErrorForProp, isThereAnyError, propsHasError, ValidationResult } from '../../../../common/utils/validation/validator';
 import { useAppDispatch } from '../../../redux-store/redux-store';
 import { setIsLoading } from '../../../redux-store/screen-animations/screen-animation-slice';
+import { signUp } from '../../../service-clients/auth-service-client';
+import commonStyles from '../../../styles/common.module.css';
+import StateDropDown from '../../drop-downs/state-drop-down';
+import styles from './registration-form.module.css';
+import { validateSignUp } from './validator';
 
 interface Props {
   onSignUpSuccess: (userId: string | undefined) => void;
@@ -67,11 +67,12 @@ export default function RegistrationForm(props: Props): JSX.Element {
           id="username"
           label="Username"
           variant="filled"
+          autoComplete='email'
           className={styles.inputRowItem}
           value={request.username}
           error={propsHasError(errors, 'username')}
           helperText={getErrorForProp(errors, 'username')}
-          onChange={(event): void => setRequest({ ...request, username: event.target.value })}
+          onChange={(event): void => setRequest({ ...request, username: event.target.value.trim() })}
         />
       </div>
       <div className={styles.inputRow}>
@@ -82,7 +83,7 @@ export default function RegistrationForm(props: Props): JSX.Element {
           value={request.email}
           error={propsHasError(errors, 'email')}
           helperText={getErrorForProp(errors, 'email')}
-          onChange={(event): void => setRequest({ ...request, email: event.target.value })}
+          onChange={(event): void => setRequest({ ...request, email: event.target.value.trim() })}
         />
         <TextField id="mobile"
           label="Mobile"
@@ -91,7 +92,7 @@ export default function RegistrationForm(props: Props): JSX.Element {
           value={request.phone}
           error={propsHasError(errors, 'phone')}
           helperText={getErrorForProp(errors, 'phone')}
-          onChange={(event): void => setRequest({ ...request, phone: event.target.value })}
+          onChange={(event): void => setRequest({ ...request, phone: event.target.value.trim() })}
         />
       </div>
       <div className={styles.inputRow}>
@@ -102,7 +103,7 @@ export default function RegistrationForm(props: Props): JSX.Element {
           value={request.firstName}
           error={propsHasError(errors, 'firstName')}
           helperText={getErrorForProp(errors, 'firstName')}
-          onChange={(event): void => setRequest({ ...request, firstName: event.target.value })}
+          onChange={(event): void => setRequest({ ...request, firstName: event.target.value.trim() })}
         />
         <TextField id="lastName"
           label="Last Name"
@@ -111,7 +112,7 @@ export default function RegistrationForm(props: Props): JSX.Element {
           value={request.lastName}
           error={propsHasError(errors, 'lastName')}
           helperText={getErrorForProp(errors, 'lastName')}
-          onChange={(event): void => setRequest({ ...request, lastName: event.target.value })}
+          onChange={(event): void => setRequest({ ...request, lastName: event.target.value.trim() })}
         />
       </div>
       <div className={styles.inputRow}>
@@ -138,7 +139,7 @@ export default function RegistrationForm(props: Props): JSX.Element {
           value={request.password}
           error={propsHasError(errors, 'password')}
           helperText={getErrorForProp(errors, 'password')}
-          onChange={(event): void => setRequest({ ...request, password: event.target.value })}
+          onChange={(event): void => setRequest({ ...request, password: event.target.value.trim() })}
         />
       </div>
       <div className={styles.inputRow}>

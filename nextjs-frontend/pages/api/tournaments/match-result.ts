@@ -8,7 +8,7 @@ import { ServiceResponse } from "../../../src/backend/services/common/contracts/
 import { PerRequestContext } from "../../../src/backend/utils/api-middle-ware/api-middleware-typings";
 import { fetchMatchResultsReq, submitMatchResult, submitMatchResultRequest } from "../../../src/backend/services/brackets-service/brackets-service";
 import { Knex } from "knex";
-import { authenticatedAdminUserMiddleware, authenticatedUserMiddleware } from "../../../src/backend/utils/api-middle-ware/auth-middle-ware";
+import { authenticatedUserMiddleware } from "../../../src/backend/utils/api-middle-ware/auth-middle-ware";
 
 export default createNextJsRouteHandler({
   post: {
@@ -32,7 +32,7 @@ export default createNextJsRouteHandler({
       const result = await fetchMatchResultsReq(req.query, context.knexConnection as Knex);
       res.status(result?.errors?.length ? 500 : 200).json(result)
     },
-    preHooks: [beginTransactionMiddleWare, authenticatedAdminUserMiddleware],
+    preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],
     postHooks: [commitOrRollBackTransactionMiddleWare],
   },
   patch: {
@@ -44,7 +44,7 @@ export default createNextJsRouteHandler({
       const result = await submitMatchResult(req.body, context.knexConnection as Knex);
       res.status(result?.errors?.length ? 500 : 200).json(result)
     },
-    preHooks: [beginTransactionMiddleWare, authenticatedAdminUserMiddleware],
+    preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],
     postHooks: [commitOrRollBackTransactionMiddleWare],
   },
 });

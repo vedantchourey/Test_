@@ -1,5 +1,5 @@
 import { createNextJsRouteHandler } from "../../../src/backend/utils/api-middle-ware/api-handler-factory";
-import { authenticatedAdminUserMiddleware } from "../../../src/backend/utils/api-middle-ware/auth-middle-ware";
+import { authenticatedUserMiddleware } from "../../../src/backend/utils/api-middle-ware/auth-middle-ware";
 import {
     beginTransactionMiddleWare,
     commitOrRollBackTransactionMiddleWare,
@@ -21,7 +21,7 @@ export default createNextJsRouteHandler({
             const result: any = await createRazorPayOrder(req.body, context.knexConnection as Knex)
             res.status(200).json(result as any);
         },
-        preHooks: [beginTransactionMiddleWare, authenticatedAdminUserMiddleware],
+        preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],
         postHooks: [commitOrRollBackTransactionMiddleWare],
     },
 });
