@@ -42,10 +42,6 @@ export default function NoobDesktopHeader(): JSX.Element {
     await router.push('/about-us')
   }
 
-  async function gotoLeaderboardPage(): Promise<void> {
-    await router.push('/leaderboard')
-  }
-
   async function gotoRegisterPage(): Promise<void> {
     await router.push('/register')
   }
