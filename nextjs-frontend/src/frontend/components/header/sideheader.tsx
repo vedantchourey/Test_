@@ -14,8 +14,9 @@ import {
   isLoggedInSelector,
   userNameSelector,
 } from "../../redux-store/authentication/authentication-selectors";
-import { useAppSelector } from "../../redux-store/redux-store";
+import { useAppDispatch, useAppSelector } from "../../redux-store/redux-store";
 import { walletDetaislSelector } from "../../redux-store/wallet/wallet-selector";
+import { setWalletDetails } from "../../redux-store/wallet/wallet.-slice";
 import { getAuthHeader } from "../../utils/headers";
 import style from "./desktop-sidebar.module.css";
 import BasicPopover from "./notification-popover";
@@ -59,6 +60,15 @@ export default function SideHeader(): JSX.Element {
       });
   };
 
+  const appDispatch = useAppDispatch();
+  const fetchWalletDetails = async (): Promise<void> => {
+    const headers = await getAuthHeader();
+    const { data } = await axios.get(`/api/wallet/details`, {
+      headers,
+    });
+    if (data) appDispatch(setWalletDetails(data));
+  };
+
   const submitNotification = async (
     id: string,
     response: string
@@ -88,6 +98,10 @@ export default function SideHeader(): JSX.Element {
       setNotifications([]);
     }
   }, [isLoggedIn]);
+
+  React.useEffect(() => {
+    fetchWalletDetails();
+  }, []);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(event.currentTarget);
