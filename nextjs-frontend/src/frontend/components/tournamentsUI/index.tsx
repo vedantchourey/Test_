@@ -14,8 +14,8 @@ const Tournaments: React.FC = (): JSX.Element => {
       }}
     >
       <TournamentsCard>
-        <CardComp />
         <SliderComp/>
+        <CardComp />
       </TournamentsCard>
     </NoobPage>
   );
