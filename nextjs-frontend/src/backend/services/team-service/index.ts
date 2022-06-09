@@ -16,11 +16,14 @@ import { ITournament } from "../database/models/i-tournaments";
 import { addNotifications } from "../notifications-service";
 import { INotifications } from "../database/models/i-notifications";
 import { UsersRepository } from "../database/repositories/users-repository";
+import { IEloRatingHistory } from "../database/models/i-elo-rating-history";
 const fields = ["id", "game_id", "name", "platform_id"]
 
 export const fetchTeams = async (connection: Knex.Transaction, user: any, query: any): Promise<ISuccess | IError> => {
     try {
         const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
+        const eloRatingHistory = new CrudRepository<IEloRatingHistory>(connection, TABLE_NAMES.ELO_RATING_HISTORY);
+        let eloHistory: any = null;
         const teamQuery = teams.knexObj()
             .join(TABLE_NAMES.TEAM_PLAYERS, "team_players.team_id", "teams.id")
             .join(TABLE_NAMES.PRIVATE_PROFILE, "private_profiles.id", "team_players.user_id")
@@ -34,6 +37,7 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
 
         if (query.id) {
             teamQuery.where("teams.id", query.id)
+            eloHistory = await eloRatingHistory.knexObj().select("*").where("user_id", user.id)
         }
         if (query.tournament_id) {
             const tour_repo = new CrudRepository<ITournament>(connection, TABLE_NAMES.TOURNAMENTS);
@@ -52,6 +56,7 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
                         id: items[0].id,
                         created_by: items[0].created_by,
                         name,
+                        eloHistory,
                         players: _.map(items, (data) => {
                             return {
                                 user_id: data.user_id,

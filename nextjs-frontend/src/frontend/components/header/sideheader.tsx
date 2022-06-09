@@ -4,6 +4,7 @@ import {
   Grid,
   IconButton,
   InputBase,
+  ListSubheader,
   Popover,
   Typography,
 } from "@mui/material";
@@ -175,6 +176,17 @@ export default function SideHeader(): JSX.Element {
           horizontal: "center",
         }}
       >
+        <ListSubheader
+           sx={{
+             fontStyle: "norma",
+             fontSize: "20px",
+             fontWeight: 700,
+             fontFamily: "Inter",
+             color: "#FFFFFF",
+           }}
+         >
+           Notifications
+         </ListSubheader>
         {notifications.map((i: any, idx: number) => (
           <BasicPopover
             message={i.message}
@@ -188,6 +200,9 @@ export default function SideHeader(): JSX.Element {
             key={idx}
           />
         ))}
+        <Button variant="text">
+          View All
+        </Button>
       </Popover>
     </>
   );
