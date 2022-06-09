@@ -25,12 +25,12 @@ const findCardType = (
   elo: string
 ): "silver" | "bronze" | "diamond" | "gold" | "ruby" => {
   const eloNum = parseInt(elo);
-  if (eloNum >= 0 && eloNum < 15) return "silver";
-  if (eloNum >= 15 && eloNum < 30) return "bronze";
-  if (eloNum >= 30 && eloNum < 45) return "gold";
-  if (eloNum >= 45 && eloNum < 60) return "diamond";
-  if (eloNum >= 60 && eloNum < 75) return "ruby";
-  return "silver";
+  if (eloNum >= 0 && eloNum < 1000) return "bronze";
+  if (eloNum >= 1000 && eloNum < 1250) return "silver";
+  if (eloNum >= 1250 && eloNum < 1500) return "gold";
+  if (eloNum >= 1500 && eloNum < 2000) return "diamond";
+  if (eloNum >= 2000 && eloNum < 1000000000) return "ruby";
+  return "bronze";
 };
 
 const Member: React.FC<MemberProp> = ({
