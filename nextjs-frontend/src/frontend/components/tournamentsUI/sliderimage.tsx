@@ -38,7 +38,7 @@ const SliderComp: React.FC = (): JSX.Element => {
   }, []);
 
   const choose_game_items = [
-    <Button className="item" key={1} data-value="1"><img src="/images/game1.png" onClick={() => getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257")} /></Button>,
+    <Button className="item" key={1} data-value="1"><img src="" onClick={() => getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257")} /></Button>,
     <Button className="item" key={2} data-value="2"><img src="/images/game2.png" onClick={() => getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257-1")} /></Button>,
     <Button className="item" key={3} data-value="3"><img src="/images/game3.png" onClick={() => getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257-1")} /></Button>,
     <Button className="item" key={4} data-value="4"><img src="/images/game4.png" onClick={() => getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257-1")} /></Button>,
