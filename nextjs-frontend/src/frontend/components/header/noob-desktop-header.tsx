@@ -115,10 +115,10 @@ export default function NoobDesktopHeader(): JSX.Element {
           <div className={styles.bottomMenuLeftGroup}>
             <Button variant="text" style={buttonStyle(['/'])} onClick={gotoHomePage}>Home</Button>
             <Button variant="text" style={buttonStyle(['/tournaments'])}>Tournaments</Button>
-            <Button variant="text" style={buttonStyle(['/leaderboards'])} onClick={gotoLeadboardsPage}>Leaderboards</Button>
+            <Button variant="text" onClick={gotoLeadboardsPage} style={buttonStyle(['/leaderboards'])} >Leaderboards</Button>
             <Button variant="text" onClick={gotoAboutUsPage} style={buttonStyle(['/about-us'])}>About Us</Button>
             <Button variant="text" onClick={gotoSupportPage} style={buttonStyle(['/support'])}>Support</Button>
-            <Button variant="text" style={buttonStyle(['/faq'])} onClick={() : any => router.push("/match-hub")}>FAQ</Button>
+            <Button variant="text" style={buttonStyle(['/faq'])} onClick={(): any => router.push("/match-hub")}>FAQ</Button>
             <Button variant="text" style={buttonStyle(['/teamlist'])} onClick={gotoTeamListPage}>Teams</Button>
           </div>
           <div className={styles.bottomMenuRightGroup}>

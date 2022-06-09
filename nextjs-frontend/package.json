@@ -45,6 +45,7 @@
     "quill": "^1.3.7",
     "razorpay": "^2.8.1",
     "react": "17.0.2",
+    "react-alice-carousel": "^2.6.1",
     "react-brackets": "^0.4.6",
     "react-brackets-table": "^1.0.1",
     "react-chartjs-2": "^4.1.0",
