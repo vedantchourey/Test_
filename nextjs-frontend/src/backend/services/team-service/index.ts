@@ -58,7 +58,7 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
                                 lastName: data.lastName,
                                 firstName: data.firstName,
                                 balance: data.balance,
-                                elo_rating:data.elo_rating,
+                                elo_rating: data.elo_rating,
                             }
                         })
                     };
@@ -84,6 +84,9 @@ export const createTeams = async (req: ITeamCreateRequest,
         if (data_errors) return { errors: data_errors }
         const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
 
+        const existing_team = await teams.find({ game_id: req.game_id, platform_id: req.platform_id, })
+        if (existing_team?.length) return getErrorObject("Team with same Game and Platform exists")
+
         const data = await teams.create({
             created_by: user.id,
             ...req
@@ -98,8 +101,8 @@ export const createTeams = async (req: ITeamCreateRequest,
         return data
 
     } catch (ex: any) {
-        if (ex?.code === 23505) return getErrorObject("Team with same name already exists")
-        return getErrorObject("Something went wrong")
+        if (ex?.code === '23505') return getErrorObject("Team with same name already exists")
+        return getErrorObject("Something went wrong"+ex)
     }
 }
 
@@ -252,7 +255,10 @@ export const leaveTeam = async (req: ITeamLeaveRequest,
 
         // validating team id and if the leaving user is owner.
         if (!existing_player) return getErrorObject("You are not part of the team.");
-        if (existing_player.is_owner) return getErrorObject("You are the owner of the team so cannot leave it");
+        if (existing_player.is_owner) {
+            let new_owner = await teams_player.knexObj().whereNot({ user_id: user.id }).where({ "team_id": req.team_id }).orderBy("created_at").first();
+            await teams_player.update({ is_owner: true }, { "team_id": req.team_id, user_id: new_owner.user_id })
+        }
 
         await teams_player.delete({
             "team_id": req.team_id, user_id: user.id

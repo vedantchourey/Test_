@@ -17,9 +17,11 @@ export const listFreeAgencyMarket = async (
   const famRepo = new CrudRepository<IFreeAgencyMarket>(context.knexConnection as Knex, TABLE_NAMES.FREE_AGENCY_MARKET);
   const query = famRepo.knexObj()
     .join("private_profiles", "free_agency_market.user_id", "private_profiles.id")
-  if(param.gameId) query.where("game_id",param.gameId)
-  if(param.platformId) query.where("platform_id",param.platformId)
-  
+    .join("profiles","profiles.id","private_profiles.id")
+    .whereNot({ "free_agency_market.user_id": context.user?.id })
+  if (param.gameId) query.where("game_id", param.gameId)
+  if (param.platformId) query.where("platform_id", param.platformId)
+
   const users = await query;
   return users;
 };
@@ -68,7 +70,7 @@ export const getWatchList = async (
   const watchListRepo = new CrudRepository<IWatchList>(context.knexConnection as Knex, TABLE_NAMES.WATCHLIST);
   const users = await watchListRepo.knexObj()
     .join("private_profiles", "watchlist.playerId", "private_profiles.id")
-  return users  
+  return users
 };
 
 export interface IDeleteWatchListRequest {

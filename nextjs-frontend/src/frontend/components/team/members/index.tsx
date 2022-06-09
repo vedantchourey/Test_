@@ -138,6 +138,7 @@ export interface Player {
   firstName: string;
   lastName: string;
   user_id: string;
+  elo_rating: string;
 }
 
 interface TeamMembersProps {
@@ -176,7 +177,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
         name: `${player.firstName} ${player.lastName}`,
         games: "20",
         won: "3",
-        elo: "1043",
+        elo: player.elo_rating,
       };
     });
     setPlayerList(newList);
