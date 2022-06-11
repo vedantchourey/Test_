@@ -1,0 +1,9 @@
+.MuiSlider-thumb:is(:hover, .Mui-active) {
+    display: none;
+  }
+.css-4swtag-MuiSlider-root {
+    padding: 0px;
+}
+.heading_font_color{
+  color: #B5B5B5;
+}

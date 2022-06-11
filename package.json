@@ -1,5 +1,11 @@
 {
   "dependencies": {
-    "react-alice-carousel": "^2.6.1"
+    "@trendyol-js/react-carousel": "^3.0.0",
+    "better-react-carousel": "^1.1.1",
+    "react": "^18.1.0",
+    "react-alice-carousel": "^2.6.1",
+    "react-dom": "^18.1.0",
+    "react-icons": "^4.4.0",
+    "slick-carousel": "^1.8.1"
   }
 }

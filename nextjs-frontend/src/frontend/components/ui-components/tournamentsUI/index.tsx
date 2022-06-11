@@ -1,34 +1,10 @@
 import {
-    Box, Grid, MenuItem, Select, Typography, useMediaQuery, useTheme
+    Box, Grid, Typography
 } from "@mui/material";
 import React from "react";
 
-const CardDesktop: React.FC = () => {
-    return (
-        <>
-            <Grid item xs={6} lg={2} md={2}>
-                <Select value={"teamsize"} fullWidth={true}>
-                    <MenuItem value="teamsize">Team Size</MenuItem>
-                </Select>
-            </Grid>
-            <Grid item xs={6} lg={2} md={2}>
-                <Select value={"status"} fullWidth={true}>
-                    <MenuItem value="status">Status</MenuItem>
-                </Select>
-            </Grid>
-            <Grid item xs={12} lg={2} md={2}>
-                <Select value={"entryfee"} fullWidth={true}>
-                    <MenuItem value="entryfee">Entry Fee</MenuItem>
-                </Select>
-            </Grid>
-        </>
-    );
-};
-
 const TournamentsCard: React.FC = ({ children }) => {
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-    return (
+    return (<>
         <Box sx={{ marginX: { md: "70px", sm: "10px", xs: "10px" } }}>
             <Box
                 marginBottom={2}
@@ -47,19 +23,11 @@ const TournamentsCard: React.FC = ({ children }) => {
                     </Grid>
                 </Grid>
             </Box>
-
-            <Grid container columnSpacing={2}>
-                {isMobile ? (
-                    <CardDesktop />
-                ) : (
-                    <>
-                        <Grid item xs={6}></Grid>
-                        <CardDesktop />
-                    </>
-                )}
-            </Grid>
+        </Box>
+        <Box>
             {children}
         </Box>
+    </>
     );
 };
 

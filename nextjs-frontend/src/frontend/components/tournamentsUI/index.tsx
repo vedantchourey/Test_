@@ -1,8 +1,8 @@
-import React from "react";
+import { Container } from "@mui/material";
+import React, { Fragment } from "react";
 import NoobPage from "../page/noob-page";
-import CardComp from "../tournamentsUI/card";
-import SliderComp from "../tournamentsUI/sliderimage";
 import TournamentsCard from "../ui-components/tournamentsUI";
+import SliderComp from "./sliderimage";
 
 const Tournaments: React.FC = (): JSX.Element => {
 
@@ -13,11 +13,14 @@ const Tournaments: React.FC = (): JSX.Element => {
         description: "Noob Storm Tournaments page",
       }}
     >
-      <TournamentsCard>
-        <SliderComp/>
-        <CardComp />
-      </TournamentsCard>
-    </NoobPage>
+      <Fragment>
+        <Container maxWidth="xl">
+          <TournamentsCard>
+            <SliderComp />
+          </TournamentsCard>
+        </Container>
+      </Fragment>
+    </NoobPage >
   );
 };
 
