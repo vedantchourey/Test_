@@ -5,8 +5,8 @@ import { getErrorObject, randomString } from "../common/helper/utils.service";
 import { IGame } from "../database/models/i-game";
 import { IPlatform } from "../database/models/i-platform";
 import { ITeams } from "../database/models/i-teams";
-import { ITeamInvitation } from "../database/models/i-teams-invitation";
 import { ITeamPlayers } from "../database/models/i-teams-players";
+import { ITeamInvitation } from "../database/models/i-teams-invitation";
 import { CrudRepository } from "../database/repositories/crud-repository";
 import { ITeamCreateRequest, ITeamDiscardRequest, ITeamInviteRequest, ITeamLeaveRequest } from "./i-team-request";
 import { validateLeaveTeam, validateSendInvite, validateTeamCreation, validateTeamDiscard } from "./i-team-validator";
@@ -23,6 +23,13 @@ const fields = ["id", "game_id", "name", "platform_id"]
 export const fetchTeams = async (connection: Knex.Transaction, user: any, query: any): Promise<ISuccess | IError> => {
     try {
         const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
+        const teamsPlayers = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
+        const teamPlayersQuery = teamsPlayers.knexObj().select("team_id")
+            .where({ user_id: user.id });
+
+        const dataa = await teamPlayersQuery;
+        const array = dataa.map((item: any) => { return item.team_id });
+
         const eloRatingHistory = new CrudRepository<IEloRatingHistory>(connection, TABLE_NAMES.ELO_RATING_HISTORY);
         let eloHistory: any = null;
         const teamQuery = teams.knexObj()
@@ -34,7 +41,7 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
                 "elo_ratings.game_id": "teams.game_id"
             })
             .select(["teams.name", "teams.id", "teams.created_by", "private_profiles.firstName", "private_profiles.lastName", "private_profiles.id as user_id", "wallet.balance", "elo_ratings.elo_rating", "private_profiles.won", "private_profiles.lost"])
-            .where("created_by", user.id)
+            .whereIn("teams.id", array)
 
         if (query.id) {
             teamQuery.where("teams.id", query.id)
@@ -263,7 +270,9 @@ export const leaveTeam = async (req: ITeamLeaveRequest,
         if (!existing_player) return getErrorObject("You are not part of the team.");
         if (existing_player.is_owner) {
             const new_owner = await teams_player.knexObj().whereNot({ user_id: user.id })
-                .where({ "team_id": req.team_id }).orderBy("created_at").first();
+                .where({ "team_id": req.team_id })
+                .orderBy("created_at")
+                .first();
             await teams_player.update({ is_owner: true }, { "team_id": req.team_id, user_id: new_owner.user_id })
         }
 
