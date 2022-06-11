@@ -20,7 +20,8 @@ export const TABLE_NAMES = {
     FREE_AGENCY_MARKET: "free_agency_market",
     WATCHLIST: "watchlist",
     ELO_RATING: "elo_ratings",
-    ELO_RATING_HISTORY: "elo_ratings_history"
+    ELO_RATING_HISTORY: "elo_ratings_history",
+    PRODUCTS: "products"
 }
 
 export const STATUS = {
