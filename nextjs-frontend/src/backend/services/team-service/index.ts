@@ -222,14 +222,11 @@ export const acceptInvite = async (secret: string, connection: Knex.Transaction)
                 deleteFAMEntry({ user_id: invite.user_id, game_id: teams.game_id, platform_id: teams.platform_id }, connection),
                 team_players.create({ team_id: invite.team_id, user_id: invite.user_id })
             ]).catch(() =>
-                team_invitation.update({ status: "PENDING" }, { secret })
-            )
+                team_invitation.update({ status: "PENDING" }, { secret }))
         }
         return { message: "Invitation accepted" } as any
 
     } catch (ex) {
-        console.log(ex);
-
         return getErrorObject("Something went wrong")
     }
 
@@ -319,7 +316,8 @@ export const getListOfSendInvitations = async (
         const team_invitation = new CrudRepository<ITeamInvitation>(connection, TABLE_NAMES.TEAM_INVITATION);
 
         const sent_invitations: any[] = await team_invitation.knexObj()
-            .where("invite_by", user_id).where("status", "PENDING");
+            .where("invite_by", user_id)
+.where("status", "PENDING");
 
         const batch = sent_invitations.map((item: any) => findUserWithInvitationDeatils(item.user_id, item, connection));
 
@@ -357,7 +355,8 @@ export const getListOfInvitations = async (
             TABLE_NAMES.TEAM_INVITATION
         );
         const sent_invitations: any[] = await team_invitation.knexObj()
-            .where("user_id", user_id).where("status", STATUS.PENDING);
+            .where("user_id", user_id)
+.where("status", STATUS.PENDING);
 
         const batch = sent_invitations.map((item: any) => findTemsWithInvitationDeatils(item.team_id, item, connection));
         const result = await Promise.all(batch);
@@ -369,7 +368,8 @@ export const getListOfInvitations = async (
 
 export const fetchUserDetails = async (email: string, connection: Knex.Transaction): Promise<IUser> => {
     const user_list = new CrudRepository<IUser>(connection, TABLE_NAMES.USERS);
-    const data = await user_list.knexObj().where("email", email).first()
+    const data = await user_list.knexObj().where("email", email)
+.first()
     return data
 }
 
