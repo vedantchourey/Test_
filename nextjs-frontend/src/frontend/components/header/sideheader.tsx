@@ -101,7 +101,9 @@ export default function SideHeader(): JSX.Element {
   }, [isLoggedIn]);
 
   React.useEffect(() => {
-    fetchWalletDetails();
+    if (isLoggedIn) {
+      fetchWalletDetails();
+    }
   }, []);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {

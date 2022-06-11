@@ -61,6 +61,8 @@ const Permissions: React.FC<PermissionProps> = ({ players, team }) => {
   const user = useAppSelector(userProfileSelector);
   const teamOwner = user?.id === team?.created_by;
 
+  console.log('user -> ', user)
+
   const deleteTeam = async (): Promise<void> => {
     setLoading(true);
     const data = {
