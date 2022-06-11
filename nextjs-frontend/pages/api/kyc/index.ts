@@ -21,6 +21,7 @@ export default createNextJsRouteHandler({
         ) => {
             // const result = await aadharVarification("882441951970")
             const result = await bankAccountVarification({mobile: "9825866927", accNo: "77770101466296", ifsc: "FDRL0007777", name: "Patel Neel"})
+            // if KYC is verified then add entry in KYC table with aadhar and back data
             res
               .status(result.error ? 500 : 200)
               .json({ data: { errors: result.error, result: [result], message: "" } });
