@@ -37,7 +37,8 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
 
         if (query.id) {
             teamQuery.where("teams.id", query.id)
-            eloHistory = await eloRatingHistory.knexObj().select("*").where("user_id", user.id)
+            eloHistory = await eloRatingHistory.knexObj().select("*")
+.where("user_id", user.id)
         }
         if (query.tournament_id) {
             const tour_repo = new CrudRepository<ITournament>(connection, TABLE_NAMES.TOURNAMENTS);
