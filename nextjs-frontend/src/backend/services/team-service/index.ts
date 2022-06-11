@@ -33,13 +33,13 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
                 "elo_ratings.user_id": "private_profiles.id",
                 "elo_ratings.game_id": "teams.game_id"
             })
-            .select(["teams.name", "teams.id", "teams.created_by", "private_profiles.firstName", "private_profiles.lastName", "private_profiles.id as user_id", "wallet.balance", "elo_ratings.elo_rating"])
+            .select(["teams.name", "teams.id", "teams.created_by", "private_profiles.firstName", "private_profiles.lastName", "private_profiles.id as user_id", "wallet.balance", "elo_ratings.elo_rating", "private_profiles.won", "private_profiles.lost"])
             .where("created_by", user.id)
 
         if (query.id) {
             teamQuery.where("teams.id", query.id)
             eloHistory = await eloRatingHistory.knexObj().select("*")
-                .where("user_id", user.id)
+                .where("team_id", query.id)
         }
         if (query.tournament_id) {
             const tour_repo = new CrudRepository<ITournament>(connection, TABLE_NAMES.TOURNAMENTS);
@@ -61,11 +61,7 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
                         eloHistory,
                         players: _.map(items, (data) => {
                             return {
-                                user_id: data.user_id,
-                                lastName: data.lastName,
-                                firstName: data.firstName,
-                                balance: data.balance,
-                                elo_rating: data.elo_rating,
+                                ...data
                             }
                         })
                     };
