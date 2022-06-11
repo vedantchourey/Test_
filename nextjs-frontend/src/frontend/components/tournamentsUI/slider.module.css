@@ -1,9 +1,21 @@
-.MuiSlider-thumb:is(:hover, .Mui-active) {
-    display: none;
+.Slider {
+    display: none !important;
   }
 .css-4swtag-MuiSlider-root {
     padding: 0px;
 }
 .heading_font_color{
   color: #B5B5B5;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 18px;
+  letter-spacing: -0.011em;
+}
+
+.credit_font{
+  background: -webkit-linear-gradient(#EF507E, #F09633);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

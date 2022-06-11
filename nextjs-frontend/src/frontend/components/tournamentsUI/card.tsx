@@ -1,17 +1,6 @@
 import { Box, Button, Grid, Slider, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
 import styles from "./slider.module.css";
-
-//interface Tournament {
-//   tournament_type: string;
-//   tournament_name: string;
-//    platform: string;
-//    totalslot: string;
-//    leftslot: string;
-//    gamename: string;
-//    date: Date;
-//    credits: string;
-//}
     
 const CardDesktop: React.FC = ({ tournament_name, tournament_type, platform, total_slots, left_slots, start_date, credits }) => {
     return (
@@ -23,7 +12,6 @@ const CardDesktop: React.FC = ({ tournament_name, tournament_type, platform, tot
                             backgroundImage: "url('/icons/card-tournament-desktop.svg')",
                             backgroundRepeat: "no-repeat",
                             backgroundSize: "cover",
-                            fontSize: "15px",
                             paddingBottom: "0px"
                         }}
                     >
@@ -31,7 +19,7 @@ const CardDesktop: React.FC = ({ tournament_name, tournament_type, platform, tot
                             <Grid item md={4} lg={4} className={styles.heading_font_color}>
                                 TOURNAMENT TYPE
                             </Grid>
-                            <Grid item md={2} lg={2} color="#B5B5B5">
+                            <Grid item md={2} lg={2} className={styles.heading_font_color}>
                                 PLATFORM
                             </Grid>
                             <Grid item md={6} lg={6}>
@@ -65,10 +53,10 @@ const CardDesktop: React.FC = ({ tournament_name, tournament_type, platform, tot
                             </Grid>
                         </Grid>
                         <Grid container columnSpacing={2}>
-                            <Grid item md={6} lg={6} color="#B5B5B5">
+                            <Grid item md={6} lg={6} className={styles.heading_font_color}>
                                 {start_date}
                             </Grid>
-                            <Grid item md={4} lg={4} textAlign={"right"} color="##EF507E">
+                            <Grid item md={4} lg={4} className={styles.credit_font} textAlign={"right"}>
                                 {credits} Credits
                             </Grid>
                             <Grid item md={2} lg={2} textAlign={"right"}>
@@ -93,7 +81,6 @@ const CardMobile: React.FC = ({ tournament_name, tournament_type, platform, star
                             backgroundRepeat: "no-repeat",
                             backgroundSize: "cover",
                             color: "#FFFFFF",
-                            fontSize: "15px",
                             paddingBottom: "0px"
                         }}
                     >
@@ -102,13 +89,13 @@ const CardMobile: React.FC = ({ tournament_name, tournament_type, platform, star
                             <Grid item xs={9}>
                                 {tournament_name}
                             </Grid>
-                            <Grid item xs={9}>
+                            <Grid item xs={9} className={styles.heading_font_color}>
                                {start_date}
                             </Grid>
                             <Grid item xs={9} mt={1}>
                                 <img src="/icons/mobilegameicon.svg" />
                             </Grid>
-                            <Grid item xs={10} mt={5}>
+                            <Grid item xs={10} mt={5} className={styles.heading_font_color}>
                                 Participants
                             </Grid>
                             <Grid item xs={12}>
@@ -116,7 +103,7 @@ const CardMobile: React.FC = ({ tournament_name, tournament_type, platform, star
                             </Grid>
                             <Grid item xs={2}>
                             </Grid>
-                            <Grid item xs={9} mt={1}>
+                            <Grid item xs={9} mt={1} className={styles.heading_font_color}>
                                 TOURNAMENT TYPE
                             </Grid>
                             <Grid item xs={2}>
@@ -124,7 +111,7 @@ const CardMobile: React.FC = ({ tournament_name, tournament_type, platform, star
                             <Grid item xs={9}>
                                 {tournament_type}
                             </Grid>
-                            <Grid item xs={12} mt={1}>
+                            <Grid item xs={12} mt={1} className={styles.heading_font_color}>
                                 Platform
                             </Grid>
                             <Grid item xs={6}>

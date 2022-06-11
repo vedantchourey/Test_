@@ -1,5 +1,6 @@
 import { Button, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
 import axios from "axios";
+import moment from "moment-timezone";
 import React from "react";
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
@@ -14,16 +15,6 @@ import { getAuthHeader } from "../../utils/headers";
 import { TournamentData } from "../tournament";
 import ButtonComp from './buttons';
 import CardComp from './card';
-
-
-const createData = (
-  rank: HTMLParagraphElement,
-  img: ImageData,
-  name: string,
-  rating: string,
-) => {
-  return { rank, img, name, rating };
-}
 
 const imagedata = {
   FIFA_22: "/images/game1.svg",
@@ -42,26 +33,13 @@ const imagedata = {
   corp: "/images/game2.svg",
 };
 
+const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+  "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
+];
+
 const SliderComp: React.FC = (): JSX.Element => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
-
-  // const settings: Settings = {
-  //   dots: true,
-  //   slidesToShow: 1,
-  //   responsive: [
-  //     {
-  //       breakpoint: 768,
-  //       settings: {
-  //         centerMode: false,
-  //         slidesToShow: 1,
-  //         slidesToScroll: 1,
-  //         arrows: true,
-  //       },
-  //     },
-  //   ],
-  // };
 
   const [tournamentsData, setData] = React.useState<TournamentData[]>([]);
   const setTournamentsData = async (game_id: string): Promise<void> => {
@@ -118,7 +96,7 @@ const SliderComp: React.FC = (): JSX.Element => {
             <AliceCarousel items={items} autoWidth disableDotsControls mouseTracking responsive={responsive} />
           </Grid>
         ) : (
-          <Grid mt={5} sx={{ width: 1, maxWidth: 'lg'}}>
+          <Grid mt={5} sx={{ width: 1, maxWidth: 'lg' }}>
             <AliceCarousel items={items} autoWidth disableDotsControls mouseTracking responsive={responsive} />
           </Grid>
         )
@@ -126,9 +104,9 @@ const SliderComp: React.FC = (): JSX.Element => {
       <ButtonComp />
       <Grid container columnSpacing={2} mt={5}>
         {tournamentsData.map((data) => {
-          console.log(data)
+          const startDateTime = moment.tz(data.startDate, "GMT").format("D MMM YYYY hh:mm A")
           return (
-            <CardComp tournament_name={data.name} tournament_type={data.name} platform={data.name} total_slots={50} left_slots={12} start_date={data.name} credits={data.name} participants={data.name} />
+            <CardComp tournament_name={data.name} tournament_type={data.settings?.tournamentFormat} platform={"PC"} total_slots={50} left_slots={12} start_date={startDateTime} credits="256" participants="6 out of 6" />
           )
         })}
       </Grid>
