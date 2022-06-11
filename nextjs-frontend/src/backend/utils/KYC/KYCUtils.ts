@@ -1,6 +1,6 @@
 import backendConfig from "../config/backend-config";
 
-const getAccessToken = async () => {
+const getAccessToken = async (): Promise<any> => {
   const options = {
     method: "POST",
     headers: {
@@ -56,17 +56,16 @@ export const aadharVarification = async (
   if (aadharResponse.err) return { error: aadharResponse.err };
   if (aadharResponse.code === 200)
     return {
-      isVarified: true,
+      isVerified: true,
       ...aadharResponse
     };
-  else
-    return {
-      isVarified: false,
+  return {
+      isVerified: false,
       ...aadharResponse
     };
 };
 
-interface IBankAccountVarification {
+export interface IBankAccountVarification {
   mobile: string;
   name: string;
   accNo: string;
@@ -100,17 +99,14 @@ export const bankAccountVarification = async ({
     .then((response) => response)
     .catch((err) => ({ err }));
 
-    console.log('bankResponse -> ', bankResponse)
-
   if (bankResponse.err) return { error: bankResponse.err };
   if (bankResponse.code === 200)
     return {
-      isVarified: true,
+      isVerified: true,
       ...bankResponse
     };
-  else
-    return {
-      isVarified: false,
+  return {
+      isVerified: false,
       ...bankResponse
     };
 };
