@@ -21,7 +21,8 @@ export const TABLE_NAMES = {
     WATCHLIST: "watchlist",
     ELO_RATING: "elo_ratings",
     ELO_RATING_HISTORY: "elo_ratings_history",
-    KYC_DETAILS: "kyc_details"
+    KYC_DETAILS: "kyc_details",
+    PRODUCTS: "products"
 }
 
 export const STATUS = {

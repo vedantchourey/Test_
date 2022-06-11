@@ -142,12 +142,15 @@ export default function SideHeader(): JSX.Element {
               <IconButton onClick={handleClick} sx={{ mr: 1, ml: 1 }}>
                 <img src="/icons/notification-icon.svg" />
               </IconButton>
-              <img
-                src="/images/16276393842661.png"
-                className={style.img3}
-                alt="logo"
-                style={{ height: "50px", width: "50px" }}
-              />
+              <Button variant="text" onClick={(): any => router.push("/account")}>
+                <img
+                  src="/images/16276393842661.png"
+                  className={style.img3}
+                  alt="logo"
+                  style={{ height: "50px", width: "50px" }}
+                />
+              </Button>
+              
               <Box>
                 <Typography className={style.text1}>{username}</Typography>
                 <Button
