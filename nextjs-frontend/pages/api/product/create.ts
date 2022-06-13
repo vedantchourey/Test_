@@ -6,18 +6,18 @@ import {
   beginTransactionMiddleWare,
   commitOrRollBackTransactionMiddleWare,
 } from "../../../src/backend/utils/api-middle-ware/transaction-middle-ware";
-import { enterToFreeAgencyMarket } from "../../../src/backend/services/FreeAgencyMarket/FreeAgencyMarket-Service";
-import { IFreeAgencyMarketResponse } from "../../../src/backend/services/FreeAgencyMarket/i-FreeAgencyMarket-response";
+import { createProduct } from "../../../src/backend/services/product-service/Product-Service";
+import { IProductResponse } from "../../../src/backend/services/product-service/i-Product-response";
 import { authenticatedUserMiddleware } from "../../../src/backend/utils/api-middle-ware/auth-middle-ware";
 
 export default createNextJsRouteHandler({
   post: {
     handler: async (
       req: NextApiRequest,
-      res: NextApiResponse<ServiceResponse<null, IFreeAgencyMarketResponse>>,
+      res: NextApiResponse<ServiceResponse<null, IProductResponse>>,
       context: PerRequestContext
     ) => {
-      const result = await enterToFreeAgencyMarket(req.body, context);
+      const result = await createProduct(req.body, context);
       res.status(result.errors ? 400 : 200).json(result);
     },
     preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],
