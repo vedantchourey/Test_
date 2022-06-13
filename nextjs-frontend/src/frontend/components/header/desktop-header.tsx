@@ -215,7 +215,7 @@ export default function DrawerLeft(): JSX.Element {
                 <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
                 News
               </Button>
-              <Button variant="text" className={classes.buttonStyles}>
+              <Button variant="text" className={classes.buttonStyles} onClick={(): any => router.push("/chat")}>
                 <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
                 Chat
               </Button>

@@ -102,7 +102,9 @@ export const getChannel = async (
   connection: Knex.Transaction
 ): Promise<any | IError> => {
   const channel = new CrudRepository<IChannel>(connection, 'channel');
-  const data = await channel.knexObj().join("channel", "channel.owner", "private_profiles.id");
+  const data = await channel
+    .knexObj()
+    .join("channel", "channel.owner", "private_profiles.id")
   return data;
 };
 

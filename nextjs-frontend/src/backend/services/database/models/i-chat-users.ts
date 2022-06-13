@@ -4,4 +4,6 @@ export interface IChatUsers {
   created_at: string;
   usre_id: string;
   channel_name: string;
+  updated_at: string;
+  last_message: string;
 }
