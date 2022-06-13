@@ -48,35 +48,6 @@ export const options = {
   },
 };
 
-const getRandomArbitrary = (min: number, max: number): number => {
-  return Math.random() * (max - min) + min;
-};
-
-const getData = (): { x: string; y: number }[] => {
-  let date = moment().subtract(10, "days");
-  const data = [];
-  data.push({ x: date.format("DD/MM/YYYY"), y: getRandomArbitrary(200, 700) });
-  for (let i = 1; i <= 10; i++) {
-    date = date.add(1, "day");
-    data.push({
-      x: date.format("DD/MM/YYYY"),
-      y: getRandomArbitrary(200, 700),
-    });
-  }
-  return data;
-};
-
-export const data = {
-  datasets: [
-    {
-      label: "Dataset 1",
-      data: getData(),
-      borderColor: "rgb(105, 49, 249)",
-      backgroundColor: "rgb(105, 49, 249)",
-    },
-  ],
-};
-
 const settings: Settings = {
   slidesToShow: 5,
   slidesToScroll: 1,
@@ -119,9 +90,10 @@ export interface Player {
 interface TeamMembersProps {
   teamId: string;
   players: Player[];
+  team: any;
 }
 
-const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
+const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team }) => {
   const theme = useTheme();
   const router = useRouter();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -143,8 +115,22 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
     });
   }
 
+  const data = {
+    datasets: [
+      {
+        label: "Dataset 1",
+        data: team?.eloHistory.map((i: any) => ({
+          x: moment(i.created_at).format("DD/MM/YYYY"),
+          y: parseInt(i.elo_rating),
+        })),
+        borderColor: "rgb(105, 49, 249)",
+        backgroundColor: "rgb(105, 49, 249)",
+      },
+    ],
+  };
+
   React.useEffect(() => {
-    const newList: MemberProp[] = players.map((player) => {
+    const newList: any[] = players.map((player) => {
       return {
         image: "/images/teams/player.png",
         type: "silver",

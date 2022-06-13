@@ -4,6 +4,6 @@ export interface IError {
 
 export interface ISuccess {
     message?: string
-    result?: any[]
+    result?: any[] | any
 }
 

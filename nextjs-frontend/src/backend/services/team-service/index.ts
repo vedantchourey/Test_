@@ -18,7 +18,10 @@ import { INotifications } from "../database/models/i-notifications";
 import { UsersRepository } from "../database/repositories/users-repository";
 import { IEloRatingHistory } from "../database/models/i-elo-rating-history";
 import { deleteFAMEntry } from "../FreeAgencyMarket/FreeAgencyMarket-Service";
+import { createChannel } from "../chat-service";
 const fields = ["id", "game_id", "name", "platform_id"]
+import { IChannel } from "../database/models/i-channel";
+
 
 export const fetchTeams = async (connection: Knex.Transaction, user: any, query: any): Promise<ISuccess | IError> => {
     try {
@@ -103,6 +106,12 @@ export const createTeams = async (req: ITeamCreateRequest,
             ...req
         }, fields)
 
+        await createChannel(connection, user, {
+            channel_id: data.id,
+            type: "team",
+            users: [user.id],
+        });
+
         const team_players = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
         await deleteFAMEntry({
             user_id: user.id,
@@ -131,6 +140,10 @@ export const discardTeams = async (req: ITeamDiscardRequest,
         const existing_team = await teams.findById(req.id)
         if (existing_team) {
             await teams.delete({ id: req.id, created_by: user.id })
+
+            const channelRepo = new CrudRepository<IChannel>(connection, "channel");
+            await channelRepo.delete({ "channel_id": req.id, "user_id": user.id });
+
             return { message: "Teams discard successfull" }
         } return getErrorObject("Team for platform and game combination already exists")
     } catch (ex) {
@@ -275,6 +288,9 @@ export const leaveTeam = async (req: ITeamLeaveRequest,
 
         await teams_player.delete({ "team_id": req.team_id, user_id: user.id })
 
+        const channelRepo = new CrudRepository<IChannel>(connection, "channel");
+        await channelRepo.delete({ "channel_id": req.team_id, "user_id": user.id });
+
         return { message: "Team left" } as any
     } catch (ex) {
         return getErrorObject("Something went wrong")
@@ -317,7 +333,7 @@ export const getListOfSendInvitations = async (
 
         const sent_invitations: any[] = await team_invitation.knexObj()
             .where("invite_by", user_id)
-.where("status", "PENDING");
+            .where("status", "PENDING");
 
         const batch = sent_invitations.map((item: any) => findUserWithInvitationDeatils(item.user_id, item, connection));
 
@@ -356,7 +372,7 @@ export const getListOfInvitations = async (
         );
         const sent_invitations: any[] = await team_invitation.knexObj()
             .where("user_id", user_id)
-.where("status", STATUS.PENDING);
+            .where("status", STATUS.PENDING);
 
         const batch = sent_invitations.map((item: any) => findTemsWithInvitationDeatils(item.team_id, item, connection));
         const result = await Promise.all(batch);
@@ -369,7 +385,7 @@ export const getListOfInvitations = async (
 export const fetchUserDetails = async (email: string, connection: Knex.Transaction): Promise<IUser> => {
     const user_list = new CrudRepository<IUser>(connection, TABLE_NAMES.USERS);
     const data = await user_list.knexObj().where("email", email)
-.first()
+        .first()
     return data
 }
 
