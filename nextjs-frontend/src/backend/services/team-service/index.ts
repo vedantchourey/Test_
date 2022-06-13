@@ -18,6 +18,7 @@ import { INotifications } from "../database/models/i-notifications";
 import { UsersRepository } from "../database/repositories/users-repository";
 import { IEloRatingHistory } from "../database/models/i-elo-rating-history";
 import { deleteFAMEntry } from "../FreeAgencyMarket/FreeAgencyMarket-Service";
+import { createChannel } from "../chat-service";
 const fields = ["id", "game_id", "name", "platform_id"]
 
 export const fetchTeams = async (connection: Knex.Transaction, user: any, query: any): Promise<ISuccess | IError> => {
@@ -102,6 +103,12 @@ export const createTeams = async (req: ITeamCreateRequest,
             created_by: user.id,
             ...req
         }, fields)
+
+        await createChannel(connection, user, {
+          channel_id: data.id,
+          type: "team",
+          users: [user.id],
+        });
 
         const team_players = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
         await deleteFAMEntry({
