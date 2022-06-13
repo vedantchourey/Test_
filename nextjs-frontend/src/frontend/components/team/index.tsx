@@ -103,6 +103,7 @@ const Team: React.FC = () => {
           <TeamMembers
             players={team?.players || []}
             teamId={query.id as string}
+            team={team}
           />
         );
 
