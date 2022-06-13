@@ -10,7 +10,13 @@ import { ITeams } from "../database/models/i-teams";
 import { IUser } from "../database/models/i-user";
 
 const messageTableFields = ["id", "owner", "type"];
-const chatUserTableFields = ["id", "channel_id", "user_id", "channel_name", "other_user"];
+const chatUserTableFields = [
+  "id",
+  "channel_id",
+  "user_id",
+  "channel_name",
+  "other_user",
+];
 
 interface ICreateChannel {
   channel_id: string | null;
@@ -91,6 +97,12 @@ export const createChannel = async (
     return getErrorObject("Something went wrong" + ex.message);
   }
 };
+
+export const getChannel = async (
+  connection: Knex.Transaction,
+  user: any,
+  channel_id: string
+) => {};
 
 const fetchUserDetails = async (
   id: string,
