@@ -11,16 +11,16 @@ interface IChatBox {
 
 export default function ChatBox(props: IChatBox): JSX.Element {
   const [messages, _setMessages] = useState<IMessages[]>([]);
-  const [text, setText] = useState("");
+  const [text, setText] = useState<string>("");
 
-  const messageRef = useRef(messages);
+  const messageRef = useRef<IMessages[]>(messages);
 
-  const setMessages = (data: any) => {
+  const setMessages = (data: any): void => {
     _setMessages(data);
     messageRef.current = data;
   };
 
-  const sendMessage = async () => {
+  const sendMessage = async (): Promise<void> => {
     if(text.length){
       await frontendSupabase.from("messages").insert({
         channel_id: props.channelId,
@@ -28,16 +28,15 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         message: text.trim(),
         metadata: null,
       });
-      const data = await frontendSupabase
+      await frontendSupabase
         .from("chat_users")
         .update({ last_message: text, updatedAt: new Date().toISOString })
         .eq("channel_id", props.channelId);
-      console.log("data -> ", data);
       setText("");
     }
   };
 
-  const fetchMessages = async () => {
+  const fetchMessages = async (): Promise<void> => {
     const messages = await frontendSupabase
       .from("messages")
       .select("*")
@@ -88,6 +87,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
                 i.send_by === props.userId ? "flex-end" : "flex-start"
               }
               p={1}
+              key={i.id}
             >
               <Box
                 bgcolor={
@@ -113,12 +113,12 @@ export default function ChatBox(props: IChatBox): JSX.Element {
           style={{ marginBottom: 0 }}
           fullWidth={true}
           value={text}
-          onKeyPress={(e) => {
+          onKeyPress={(e): void => {
             if (e.key === "Enter") {
               sendMessage();
             }
           }}
-          onChange={(e) => {
+          onChange={(e): void => {
             setText(e.target.value);
           }}
         />

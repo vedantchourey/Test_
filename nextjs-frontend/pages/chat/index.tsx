@@ -9,26 +9,26 @@ import { frontendSupabase } from "../../src/frontend/services/supabase-frontend-
 import ChatBox from "./ChatBox";
 import ChatCard from "./ChatCard";
 
-export default function Chat() {
+export default function Chat(): JSX.Element {
   const user = useAppSelector(userProfileSelector);
-  const [chats, _setChats] = useState<Object>({});
+  const [chats, _setChats] = useState<object>({});
   const [currentChat, setCurrentChat] = useState<string | null>();
   const [currentChatName, setCurrentChatName] = useState("");
 
   const chatRef = useRef(chats);
   const userRef = useRef(user);
 
-  const setChats = (data: any) => {
+  const setChats = (data: any): void => {
     _setChats(data);
     chatRef.current = data;
   };
 
-  const fetchChannels = async () => {
+  const fetchChannels = async (): Promise<void> => {
     const res = await frontendSupabase
       .from("chat_users")
       .select()
       .eq("user_id", user?.id);
-    let data: any = {};
+    const data: any = {};
 
     if (!res.error) {
       res.data.map((i: IChatUsers) => {
@@ -39,8 +39,7 @@ export default function Chat() {
   };
 
   const updateChat = (id: string, data: IChatUsers): void => {
-    console.log("data update -> ", data);
-    let updateChatList: any = { ...chatRef.current };
+    const updateChatList: any = { ...chatRef.current };
     updateChatList[id] = data;
     _setChats(updateChatList);
   };
@@ -59,7 +58,7 @@ export default function Chat() {
         }
       })
       .subscribe();
-    return () => {
+    return (): any => {
       chatListener.unsubscribe();
     };
   }, []);
@@ -90,11 +89,12 @@ export default function Chat() {
           >
             {chatsList.map((i) => (
               <ChatCard
+                key={i.id}
                 name={i.channel_name}
                 message={i.last_message}
-                onClick={() => {
+                onClick={(): void => {
                   setCurrentChat(null);
-                  setTimeout(() => {
+                  setTimeout((): void => {
                     setCurrentChatName(i.channel_name);
                     setCurrentChat(i.channel_id);
                   }, 500);
@@ -103,7 +103,11 @@ export default function Chat() {
             ))}
           </Box>
           {currentChat && (
-            <ChatBox channelName={currentChatName} channelId={currentChat} userId={user?.id || ""} />
+            <ChatBox
+              channelName={currentChatName}
+              channelId={currentChat}
+              userId={user?.id || ""}
+            />
           )}
         </Box>
       </>
