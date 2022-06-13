@@ -68,47 +68,48 @@ export const createChannel = async (
       );
       usersData.push(userObj);
       return { result: [{ channel: data, users: usersData }] };
-    } else {
-      const ownerUser = await fetchUserDetails(users[0], connection);
-      const secondUser = await fetchUserDetails(users[1], connection);
-      const ownerUserObj = await chatUserRepo.create(
-        {
-          channel_id: obj_id,
-          user_id: users[0],
-          other_user: users[1],
-          channel_name: secondUser.raw_user_meta_data.username,
-        },
-        chatUserTableFields
-      );
-      usersData.push(ownerUserObj);
-      const secondUserObj = await chatUserRepo.create(
-        {
-          channel_id: obj_id,
-          user_id: users[1],
-          other_user: users[0],
-          channel_name: ownerUser.raw_user_meta_data.username,
-        },
-        chatUserTableFields
-      );
-      usersData.push(secondUserObj);
-      return { result: { channel: data, users: usersData } };
     }
+    const ownerUser = await fetchUserDetails(users[0], connection);
+    const secondUser = await fetchUserDetails(users[1], connection);
+    const ownerUserObj = await chatUserRepo.create(
+      {
+        channel_id: obj_id,
+        user_id: users[0],
+        other_user: users[1],
+        channel_name: secondUser.raw_user_meta_data.username,
+      },
+      chatUserTableFields
+    );
+    usersData.push(ownerUserObj);
+    const secondUserObj = await chatUserRepo.create(
+      {
+        channel_id: obj_id,
+        user_id: users[1],
+        other_user: users[0],
+        channel_name: ownerUser.raw_user_meta_data.username,
+      },
+      chatUserTableFields
+    );
+    usersData.push(secondUserObj);
+    return { result: { channel: data, users: usersData } };
+
   } catch (ex: any) {
     return getErrorObject("Something went wrong" + ex.message);
   }
 };
 
 export const getChannel = async (
-  connection: Knex.Transaction,
-  user: any,
-  channel_id: string
-) => {};
-
-const fetchUserDetails = async (
-  id: string,
   connection: Knex.Transaction
-): Promise<any> => {
-  const user_list = new CrudRepository<IUser>(connection, TABLE_NAMES.USERS);
-  const data = await user_list.knexObj().where("id", id).first();
+): Promise<any | IError> => {
+  const channel = new CrudRepository<IChannel>(connection, 'channel');
+  const data = await channel.knexObj().join("channel", "channel.owner", "private_profiles.id");
   return data;
 };
+
+async function fetchUserDetails(id: string,
+  connection: Knex.Transaction): Promise<any> {
+  const user_list = new CrudRepository<IUser>(connection, TABLE_NAMES.USERS);
+  const data = await user_list.knexObj().where("id", id)
+    .first();
+  return data;
+}

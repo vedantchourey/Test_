@@ -8,7 +8,7 @@ import { ServiceResponse } from "../../../src/backend/services/common/contracts/
 import { PerRequestContext } from "../../../src/backend/utils/api-middle-ware/api-middleware-typings";
 import { Knex } from "knex";
 import { IError, ISuccess } from "../../../src/backend/utils/common/Interfaces";
-import { createMessagesReport } from "../../../src/backend/services/message-report";
+import { getMessagesReport } from "../../../src/backend/services/message-report";
 
 export default createNextJsRouteHandler({
     post: {
@@ -17,7 +17,7 @@ export default createNextJsRouteHandler({
             res: NextApiResponse<ServiceResponse<any, ISuccess | IError>>,
             context: PerRequestContext
         ) => {
-            const result: any = await createMessagesReport(context.transaction as Knex.Transaction, context.user as any, req.body as any);
+            const result: any = await getMessagesReport(context.transaction as Knex.Transaction);
             res.status(result?.errors?.length ? 500 : 200).json(result)
         },
         preHooks: [beginTransactionMiddleWare],
