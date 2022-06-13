@@ -17,7 +17,7 @@ export default createNextJsRouteHandler({
       res: NextApiResponse<ServiceResponse<null, IProductResponse>>,
       context: PerRequestContext
     ) => {
-      const result = await getAllProducts(context, req.query);
+      const result = await getAllProducts(context);
       res.status(result.errors ? 400 : 200).json(result);
     },
     preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],
