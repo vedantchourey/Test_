@@ -1,0 +1,30 @@
+.mainContainer {
+	padding: 30px;
+	justify-content: center;
+}
+.container {
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.img1 {
+	width: 200px;
+	height: 200px;
+}
+.text1 {
+	font-weight: 700;
+	font-size: 24px;
+	line-height: 31px;
+	text-align: center;
+	letter-spacing: -0.011em;
+	color: #FFFFFF;
+}
+.text2 {
+	font-weight: 500;
+	font-size: 16px;
+	line-height: 24px;
+	text-align: center;
+	letter-spacing: -0.011em;
+	color: #FFFFFF;
+}

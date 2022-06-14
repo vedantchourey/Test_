@@ -1,5 +1,5 @@
 import { createNextJsRouteHandler } from "../../../src/backend/utils/api-middle-ware/api-handler-factory";
-import { authenticatedAdminUserMiddleware } from "../../../src/backend/utils/api-middle-ware/auth-middle-ware";
+import { authenticatedUserMiddleware } from "../../../src/backend/utils/api-middle-ware/auth-middle-ware";
 import {
   beginTransactionMiddleWare,
   commitOrRollBackTransactionMiddleWare,
@@ -10,6 +10,7 @@ import { PerRequestContext } from "../../../src/backend/utils/api-middle-ware/ap
 import { creditBalance } from "../../../src/backend/services/wallet-service/wallet-service";
 import { IWalletResponse } from "../../../src/backend/services/wallet-service/i-wallet-response";
 import { IWalletRequest } from "../../../src/backend/services/wallet-service/i-wallet-request";
+import { Knex } from "knex";
 
 export default createNextJsRouteHandler({
   post: {
@@ -18,10 +19,10 @@ export default createNextJsRouteHandler({
       res: NextApiResponse<ServiceResponse<IWalletResponse, IWalletRequest>>,
       context: PerRequestContext
     ) => {
-      const result: any = await creditBalance(req.body, context);
+      const result: any = await creditBalance(req.body, context.transaction as Knex.Transaction);
       res.status(200).json(result);
     },
-    preHooks: [beginTransactionMiddleWare, authenticatedAdminUserMiddleware],
+    preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],
     postHooks: [commitOrRollBackTransactionMiddleWare],
   },
 });

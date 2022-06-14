@@ -8,4 +8,5 @@ export interface IPrivateProfile {
   agreeToTnc: boolean;
   createdAt: string;
   updatedAt: string;
+  elo_rating?:number;
 }

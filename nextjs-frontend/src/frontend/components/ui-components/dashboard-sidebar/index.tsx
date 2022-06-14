@@ -39,8 +39,7 @@ const useStyles = makeStyles(() =>
       justifyContent: "flex-start",
       padding: 20,
     },
-  })
-);
+  }));
 
 const DashboardSideBar: React.FC = () => {
   const classes = useStyles();

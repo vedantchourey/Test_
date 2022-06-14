@@ -1,6 +1,6 @@
 import { createNextJsRouteHandler } from '../../../src/backend/utils/api-middle-ware/api-handler-factory';
 import { createTournament } from '../../../src/backend/services/tournament-service/tournament-service';
-import { authenticatedAdminUserMiddleware } from '../../../src/backend/utils/api-middle-ware/auth-middle-ware';
+import { authenticatedUserMiddleware } from '../../../src/backend/utils/api-middle-ware/auth-middle-ware';
 import { beginTransactionMiddleWare, commitOrRollBackTransactionMiddleWare } from '../../../src/backend/utils/api-middle-ware/transaction-middle-ware';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ServiceResponse } from '../../../src/backend/services/common/contracts/service-response';
@@ -14,7 +14,7 @@ export default createNextJsRouteHandler({
       const result = await createTournament(req.body, context);
       res.status(result.errors ? 400 : 200).json(result);
     },
-    preHooks: [beginTransactionMiddleWare, authenticatedAdminUserMiddleware],
+    preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],
     postHooks: [commitOrRollBackTransactionMiddleWare]
   }
 });

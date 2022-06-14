@@ -20,7 +20,6 @@ import { useFormik } from "formik";
 import AccordionAlt from "../../ui-components/accordion";
 import { ReactComponent as CircleCloseIcon } from "../../../../../public/icons/close.svg";
 import { useRouter } from "next/router";
-import { TournamentContext } from "../../tournament";
 
 const randomString = (length: number): string => {
   const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -37,8 +36,7 @@ const useStyles = makeStyles(() =>
       border: "1px solid rgba(255, 255, 255, 0.3)",
       width: "50%",
     },
-  })
-);
+  }));
 
 export interface PublishTournamentData {
   registration: string;
@@ -48,12 +46,14 @@ export interface PublishTournamentData {
 }
 
 interface PublishTournamentProps {
+  tournamentId?: string;
   onBack?: () => void;
   data?: PublishTournamentData;
   onSave?: (data: PublishTournamentData) => void;
 }
 
 const PublishPage: React.FC<PublishTournamentProps> = ({
+  tournamentId,
   onBack,
   onSave,
   data,
@@ -62,10 +62,11 @@ const PublishPage: React.FC<PublishTournamentProps> = ({
   const validationSchema = yup.object({
     registration: yup.string().required("Registration field required"),
     society: yup.string().required("society field required"),
-    joinCode: yup.string().notRequired().nullable(),
+    joinCode: yup.string().notRequired()
+.nullable(),
   });
+  
   const router = useRouter();
-  const { id } = React.useContext(TournamentContext);
   const [isCopied, setCopied] = React.useState(false);
 
   const formik = useFormik({
@@ -124,7 +125,7 @@ const PublishPage: React.FC<PublishTournamentProps> = ({
         <Button
           variant="contained"
           onClick={(): void => {
-            router.push(`/view-tournament/${id}/details`);
+            router.push(`/view-tournament/${tournamentId}/details`);
           }}
         >
           Preview
