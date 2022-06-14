@@ -20,7 +20,6 @@ import { useFormik } from "formik";
 import AccordionAlt from "../../ui-components/accordion";
 import { ReactComponent as CircleCloseIcon } from "../../../../../public/icons/close.svg";
 import { useRouter } from "next/router";
-import { TournamentContext } from "../../tournament";
 
 const randomString = (length: number): string => {
   const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -66,8 +65,8 @@ const PublishPage: React.FC<PublishTournamentProps> = ({
     joinCode: yup.string().notRequired()
 .nullable(),
   });
+  
   const router = useRouter();
-  const { id } = React.useContext(TournamentContext);
   const [isCopied, setCopied] = React.useState(false);
 
   const formik = useFormik({
