@@ -23,14 +23,11 @@ const CardDesktop: React.FC<any> = ({
   credits,
   banner,
 }: any) => {
-    const router = useRouter();
+  const router = useRouter();
   return (
     <Grid item lg={6} md={6} mb={2}>
       <Box>
         <Box
-          sx={{
-            padding: { sm: "8px", xs: "8px", md: "8px", textAlign: "left" },
-          }}
           style={{
             backgroundImage: `url(${banner})`,
             backgroundRepeat: "no-repeat",
@@ -38,75 +35,84 @@ const CardDesktop: React.FC<any> = ({
             paddingBottom: "0px",
           }}
         >
-          <Grid container columnSpacing={2}>
-            <Grid item md={4} lg={4} className={styles.heading_font_color}>
-              TOURNAMENT TYPE
+          <Box
+            sx={{
+              padding: { sm: "8px", xs: "8px", md: "8px", textAlign: "left" },
+            }}
+            bgcolor={"rgba(105, 50, 249, 0.1)"}
+          >
+            <Grid container columnSpacing={2}>
+              <Grid item md={4} lg={4} className={styles.heading_font_color}>
+                TOURNAMENT TYPE
+              </Grid>
+              <Grid item md={2} lg={2} className={styles.heading_font_color}>
+                PLATFORM
+              </Grid>
+              <Grid item md={6} lg={6}>
+                <LinearProgress
+                  variant="determinate"
+                  color={"secondary"}
+                  value={(left_slots * 100) / parseInt(total_slots.toString())}
+                />
+              </Grid>
             </Grid>
-            <Grid item md={2} lg={2} className={styles.heading_font_color}>
-              PLATFORM
+            <Grid container columnSpacing={2}>
+              <Grid item md={4} lg={4}>
+                {tournament_type}
+              </Grid>
+              <Grid item md={2} lg={2}>
+                {platform}
+              </Grid>
+              <Grid item md={3} lg={3} textAlign={"left"}>
+                {total_slots} TOTAL SLOTS
+              </Grid>
+              <Grid item md={3} lg={3} textAlign={"right"}>
+                {left_slots} LEFT SLOTS
+              </Grid>
             </Grid>
-            <Grid item md={6} lg={6}>
-              <LinearProgress
-                variant="determinate"
-                color={"secondary"}
-                value={(left_slots * 100) / parseInt(total_slots.toString())}
-              />
+            <Grid container columnSpacing={2} mt={1}>
+              <Grid item md={4} lg={4}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  sx={{ color: "#FFFFFF" }}
+                >
+                  Completed
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid container columnSpacing={2}>
-            <Grid item md={4} lg={4}>
-              {tournament_type}
+            <Grid container columnSpacing={2} mt={15}>
+              <Grid item md={8} lg={8}>
+                {tournament_name}
+              </Grid>
+              <Grid item md={4} lg={4}></Grid>
             </Grid>
-            <Grid item md={2} lg={2}>
-              {platform}
-            </Grid>
-            <Grid item md={3} lg={3} textAlign={"left"}>
-              {total_slots} TOTAL SLOTS
-            </Grid>
-            <Grid item md={3} lg={3} textAlign={"right"}>
-              {left_slots} LEFT SLOTS
-            </Grid>
-          </Grid>
-          <Grid container columnSpacing={2} mt={1}>
-            <Grid item md={4} lg={4}>
-              <Button
-                variant="contained"
-                color="secondary"
-                sx={{ color: "#FFFFFF" }}
+            <Grid container columnSpacing={2}>
+              <Grid item md={6} lg={6} className={styles.heading_font_color}>
+                {start_date}
+              </Grid>
+              <Grid
+                item
+                md={4}
+                lg={4}
+                className={styles.credit_font}
+                textAlign={"right"}
               >
-                Completed
-              </Button>
+                {credits} Credits
+              </Grid>
+              <Grid item md={2} mb={1} lg={2} textAlign={"right"}>
+                <Button
+                  variant="contained"
+                  onClick={(): any =>
+                    router.push(`/view-tournament/${id}/details`)
+                  }
+                >
+                  {" "}
+                  -{">"}
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid container columnSpacing={2} mt={15}>
-            <Grid item md={8} lg={8}>
-              {tournament_name}
-            </Grid>
-            <Grid item md={4} lg={4}></Grid>
-          </Grid>
-          <Grid container columnSpacing={2}>
-            <Grid item md={6} lg={6} className={styles.heading_font_color}>
-              {start_date}
-            </Grid>
-            <Grid
-              item
-              md={4}
-              lg={4}
-              className={styles.credit_font}
-              textAlign={"right"}
-            >
-              {credits} Credits
-            </Grid>
-            <Grid item md={2} mb={1} lg={2} textAlign={"right"}>
-              <Button
-                variant="contained"
-                onClick={(): any => router.push(`/view-tournament/${id}/details`)}
-              >
-                {" "}
-                -{">"}
-              </Button>
-            </Grid>
-          </Grid>
+          </Box>
         </Box>
       </Box>
     </Grid>
@@ -192,12 +198,10 @@ const CardComp = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const platforms = useAppSelector(getAllPlatformsSelector);
-  const [selectedPlatform, setSelectedPlatform] = useState<any>(null)
+  const [selectedPlatform, setSelectedPlatform] = useState<any>(null);
 
   React.useEffect(() => {
-    const matchingPlatform = platforms.filter(
-      (x) => x.id === platform
-    )[0];
+    const matchingPlatform = platforms.filter((x) => x.id === platform)[0];
     setSelectedPlatform(matchingPlatform || null);
   }, [platforms]);
 
