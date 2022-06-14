@@ -1,22 +1,27 @@
-import { Button, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Button,
+  Grid,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import axios from "axios";
-import moment from "moment-timezone";
+import moment from "moment";
 import React from "react";
-import AliceCarousel from 'react-alice-carousel';
-import 'react-alice-carousel/lib/alice-carousel.css';
+import AliceCarousel from "react-alice-carousel";
+import "react-alice-carousel/lib/alice-carousel.css";
 import {
-  allGamesSelector, gamesFetchStatusSelector
+  allGamesSelector,
+  gamesFetchStatusSelector,
 } from "../../redux-store/games/game-selectors";
-import {
-  fetchAllGamesThunk
-} from "../../redux-store/games/game-slice";
+import { fetchAllGamesThunk } from "../../redux-store/games/game-slice";
 import { useAppDispatch, useAppSelector } from "../../redux-store/redux-store";
 import { getAuthHeader } from "../../utils/headers";
 import { TournamentData } from "../tournament";
-import ButtonComp from './buttons';
-import CardComp from './card';
+import ButtonComp from "./buttons";
+import CardComp from "./card";
 
-const imagedata = {
+const imagedata: any = {
   FIFA_22: "/images/game1.svg",
   CSG_O2: "/images/game2.svg",
   CALL_OF_DUTY: "/images/game3.svg",
@@ -33,8 +38,19 @@ const imagedata = {
   corp: "/images/game2.svg",
 };
 
-const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
-  "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
+const monthNames = [
+  "JAN",
+  "FEB",
+  "MAR",
+  "APR",
+  "MAY",
+  "JUN",
+  "JUL",
+  "AUG",
+  "SEP",
+  "OCT",
+  "NOV",
+  "DEC",
 ];
 
 const SliderComp: React.FC = (): JSX.Element => {
@@ -46,17 +62,21 @@ const SliderComp: React.FC = (): JSX.Element => {
     try {
       const endpoint = "/api/tournaments/list";
       const headers = await getAuthHeader();
-      axios.get(endpoint, {
-        params: {
-          game: game_id
-        }, headers: headers
-      }).then((res) => {
-        setData(res.data.data.tournaments);
-        // console.log(res.data.data.tournaments);
-      }).catch(function (error) {
-        setData([]);
-        alert(error);
-      });
+      axios
+        .get(endpoint, {
+          params: {
+            game: game_id,
+          },
+          headers: headers,
+        })
+        .then((res) => {
+          setData(res.data.data.tournaments);
+          // console.log(res.data.data.tournaments);
+        })
+        .catch(function (error) {
+          setData([]);
+          alert(error);
+        });
     } catch (err) {
       alert(err);
     }
@@ -80,38 +100,72 @@ const SliderComp: React.FC = (): JSX.Element => {
   let items: JSX.Element[] = [];
   {
     games.map((data) => {
-      return (
-        items.push(
-          <Button key={1} data-value="1"><img src={imagedata[data.code]} onClick={() => setTournamentsData(data.id)} role="presentation" /></Button>
-        )
-      )
-    })
+      return items.push(
+        <Button key={1} data-value="1">
+          <img
+            src={imagedata[data.code]}
+            onClick={() => setTournamentsData(data.id)}
+            role="presentation"
+          />
+        </Button>
+      );
+    });
   }
+  console.log("data -> ", tournamentsData);
   return (
     <>
       <Typography textAlign={"left"}>Choose Game</Typography>
-      {isMobile ?
-        (
-          <Grid mt={5} sx={{ width: 1, maxWidth: 'sm' }}>
-            <AliceCarousel items={items} autoWidth disableDotsControls mouseTracking responsive={responsive} />
-          </Grid>
-        ) : (
-          <Grid mt={5} sx={{ width: 1, maxWidth: 'lg' }}>
-            <AliceCarousel items={items} autoWidth disableDotsControls mouseTracking responsive={responsive} />
-          </Grid>
-        )
-      }
+      {isMobile ? (
+        <Grid mt={5} sx={{ width: 1, maxWidth: "sm" }}>
+          <AliceCarousel
+            items={items}
+            autoWidth
+            disableDotsControls
+            mouseTracking
+            responsive={responsive}
+          />
+        </Grid>
+      ) : (
+        <Grid mt={5} sx={{ width: 1, maxWidth: "lg" }}>
+          <AliceCarousel
+            items={items}
+            autoWidth
+            disableDotsControls
+            mouseTracking
+            responsive={responsive}
+          />
+        </Grid>
+      )}
       <ButtonComp />
       <Grid container columnSpacing={2} mt={5}>
-        {tournamentsData.map((data) => {
-          const startDateTime = moment.tz(data.startDate, "GMT").format("D MMM YYYY hh:mm A")
+        {tournamentsData.map((data: any) => {
+          const startDateTime = moment(data.startDate).format(
+            "D MMM YYYY hh:mm A"
+          );
+          const totalSlots = data?.bracketsMetadata?.playersLimit || 0;
+          const currentSlot = (data?.playerList || []).length;
+          
           return (
-            <CardComp tournament_name={data.name} tournament_type={data.settings?.tournamentFormat} platform={"PC"} total_slots={50} left_slots={12} start_date={startDateTime} credits="256" participants="6 out of 6" />
-          )
+            <>
+              {console.log("data -> ", data)}
+              <CardComp
+                id={data.id}
+                tournament_name={data.name}
+                banner={data.banner}
+                tournament_type={data.settings?.tournamentFormat}
+                platform={data.settings?.platform}
+                total_slots={totalSlots}
+                left_slots={currentSlot}
+                start_date={startDateTime}
+                credits={data.settings?.entryFeeAmount || 0}
+                participants={`${currentSlot} out of ${totalSlots}`}
+              />
+            </>
+          );
         })}
       </Grid>
     </>
-  )
-}
+  );
+};
 
 export default SliderComp;
