@@ -47,12 +47,14 @@ export interface PublishTournamentData {
 }
 
 interface PublishTournamentProps {
+  tournamentId?: string;
   onBack?: () => void;
   data?: PublishTournamentData;
   onSave?: (data: PublishTournamentData) => void;
 }
 
 const PublishPage: React.FC<PublishTournamentProps> = ({
+  tournamentId,
   onBack,
   onSave,
   data,
@@ -124,7 +126,7 @@ const PublishPage: React.FC<PublishTournamentProps> = ({
         <Button
           variant="contained"
           onClick={(): void => {
-            router.push(`/view-tournament/${id}/details`);
+            router.push(`/view-tournament/${tournamentId}/details`);
           }}
         >
           Preview

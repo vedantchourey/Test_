@@ -55,6 +55,7 @@ const Publish: React.FC = (): JSX.Element => {
   return (
     <React.Fragment>
       <PublishTournament
+        tournamentId={data.id}
         data={data.publishData}
         onSave={handleSave}
         onBack={goBack}
