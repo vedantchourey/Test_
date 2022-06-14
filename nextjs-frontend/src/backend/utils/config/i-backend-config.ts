@@ -26,5 +26,9 @@ export interface IBackendConfig {
     credit_gst_percentage: number;
     credit_service_percentage: number;
     price_per_credit: number
+  },
+  sandbox: {
+    api_key: string,
+    secret: string
   }
 }

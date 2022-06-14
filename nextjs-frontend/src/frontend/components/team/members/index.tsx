@@ -1,34 +1,7 @@
-import {
-  Box,
-  Button,
-  FormHelperText,
-  TextField,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { Box, Button, FormHelperText, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
-import {
-  Chart,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  TimeScale,
-} from "chart.js";
-Chart.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  TimeScale
-);
+import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale } from "chart.js";
+Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale);
 
 import { Line } from "react-chartjs-2";
 import moment from "moment";
@@ -40,7 +13,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Image from "next/image";
 import axios from "axios";
 import { getAuthHeader } from "../../../utils/headers";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 
 export const options = {
   responsive: true,
@@ -73,35 +46,6 @@ export const options = {
       },
     },
   },
-};
-
-const getRandomArbitrary = (min: number, max: number): number => {
-  return Math.random() * (max - min) + min;
-};
-
-const getData = (): { x: string; y: number }[] => {
-  let date = moment().subtract(10, "days");
-  const data = [];
-  data.push({ x: date.format("DD/MM/YYYY"), y: getRandomArbitrary(200, 700) });
-  for (let i = 1; i <= 10; i++) {
-    date = date.add(1, "day");
-    data.push({
-      x: date.format("DD/MM/YYYY"),
-      y: getRandomArbitrary(200, 700),
-    });
-  }
-  return data;
-};
-
-export const data = {
-  datasets: [
-    {
-      label: "Dataset 1",
-      data: getData(),
-      borderColor: "rgb(105, 49, 249)",
-      backgroundColor: "rgb(105, 49, 249)",
-    },
-  ],
 };
 
 const settings: Settings = {
@@ -138,14 +82,18 @@ export interface Player {
   firstName: string;
   lastName: string;
   user_id: string;
+  elo_rating: string;
+  won?: string;
+  lost?: string;
 }
 
 interface TeamMembersProps {
   teamId: string;
   players: Player[];
+  team: any;
 }
 
-const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
+const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team }) => {
   const theme = useTheme();
   const router = useRouter();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -167,16 +115,30 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
     });
   }
 
+  const data = {
+    datasets: [
+      {
+        label: "Dataset 1",
+        data: team?.eloHistory.map((i: any) => ({
+          x: moment(i.created_at).format("DD/MM/YYYY"),
+          y: parseInt(i.elo_rating),
+        })),
+        borderColor: "rgb(105, 49, 249)",
+        backgroundColor: "rgb(105, 49, 249)",
+      },
+    ],
+  };
+
   React.useEffect(() => {
-    const newList: MemberProp[] = players.map((player) => {
+    const newList: any[] = players.map((player) => {
       return {
         image: "/images/teams/player.png",
         type: "silver",
         tags: ["Games", "Won", "Elo"],
         name: `${player.firstName} ${player.lastName}`,
-        games: "20",
-        won: "3",
-        elo: "1043",
+        games: Number(player.won) + Number(player.lost),
+        won: player.won,
+        elo: player.elo_rating,
       };
     });
     setPlayerList(newList);
@@ -202,7 +164,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
         <Typography color={"white"} variant={"h5"}>
           Team Members
         </Typography>
-        
+
         <Box marginY={2} width={"70vw"}>
           <Slider {...settings}>
             {playerList.map((player) => {
@@ -217,26 +179,15 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
                   backgroundColor: "rgba(255, 255, 255, 0.09)",
                   cursor: "pointer",
                 }}
-                height={409}
+                height={"18.5vw"}
                 display="flex"
                 alignContent={"center"}
                 flexDirection="column"
                 component={"div"}
                 justifyContent="center"
               >
-                <Image
-                  src={"/icons/PlayerAdd.svg"}
-                  height={"45px"}
-                  width={"45px"}
-                />
-                <Typography
-                  marginY={2}
-                  color="white"
-                  textTransform={"uppercase"}
-                  fontWeight="700"
-                  fontSize={"17px"}
-                  lineHeight={"18px"}
-                >
+                <Image src={"/icons/PlayerAdd.svg"} height={"45px"} width={"45px"} />
+                <Typography marginY={2} color="white" textTransform={"uppercase"} fontWeight="700" fontSize={"17px"} lineHeight={"18px"}>
                   Add Player
                 </Typography>
               </Box>
@@ -253,20 +204,9 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
         </Box>
       ) : null}
 
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+      <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style}>
-          <Typography
-            id="modal-modal-title"
-            variant="h6"
-            component="h6"
-            color={"white"}
-            marginBottom={2}
-          >
+          <Typography id="modal-modal-title" variant="h6" component="h6" color={"white"} marginBottom={2}>
             Invite Player
           </Typography>
           <Box display="flex" justifyContent={"space-between"}>
@@ -292,7 +232,9 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
             <Button
               style={{ marginLeft: "2px" }}
               color={"secondary"}
-              onClick={(): void => {gotoFreeAgencyMarketPage()}}
+              onClick={(): void => {
+                gotoFreeAgencyMarketPage();
+              }}
               variant={"outlined"}
             >
               Open Free Agency Market

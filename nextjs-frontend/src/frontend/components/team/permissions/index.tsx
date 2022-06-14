@@ -12,9 +12,13 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import React from "react";
-import CloseIcon from "@mui/icons-material/Close";
+import React, { useState } from "react";
+// import CloseIcon from "@mui/icons-material/Close";
 import { Player } from "../members";
+import { useAppSelector } from "../../../redux-store/redux-store";
+import { userProfileSelector } from "../../../redux-store/authentication/authentication-selectors";
+import { getAuthHeader } from "../../../utils/headers";
+import axios from "axios";
 
 export const NoobCell = styled(TableCell)(() => ({
   border: "0px",
@@ -39,13 +43,56 @@ export const NoobButton = styled(Button)(() => ({
   },
 }));
 
-const roles = ["Team Owner", "Team Captain", "Team Member"]
-
-interface PermissionProps{
+interface TeamType {
+  id: string;
+  name: string;
+  created_by: string;
   players: Player[];
 }
 
-const Permissions: React.FC<PermissionProps> = ({players}) => {
+interface PermissionProps {
+  players: Player[];
+  team?: TeamType;
+}
+
+const Permissions: React.FC<PermissionProps> = ({ players, team }) => {
+  const [loading, setLoading] = useState(false);
+
+  const user = useAppSelector(userProfileSelector);
+  const teamOwner = user?.id === team?.created_by;
+
+  const deleteTeam = async (): Promise<void> => {
+    setLoading(true);
+    const data = {
+      id: team?.id || "",
+    };
+    const headers = await getAuthHeader();
+    axios
+      .post("/api/teams/discard", data, {
+        headers: headers,
+      })
+      .catch(() => {
+        alert("Player already added in Watch list");
+      })
+      .finally(() => setLoading(false));
+  };
+
+  const leaveTeam = async (): Promise<void> => {
+    setLoading(true);
+    const data = {
+      team_id: team?.id || "",
+    };
+    const headers = await getAuthHeader();
+    axios
+      .post("/api/teams/leave-team", data, {
+        headers: headers,
+      })
+      .catch(() => {
+        alert("Player already added in Watch list");
+      })
+      .finally(() => setLoading(false));
+  };
+
   return (
     <React.Fragment>
       <Grid container rowSpacing={2}>
@@ -60,22 +107,40 @@ const Permissions: React.FC<PermissionProps> = ({players}) => {
           sm={6}
           md={6}
           display={"flex"}
-          sx={{justifyContent:{sm:"flex-end",xs:"space-between",md:"flex-end"}}}
+          sx={{
+            justifyContent: {
+              sm: "flex-end",
+              xs: "space-between",
+              md: "flex-end",
+            },
+          }}
         >
-          <NoobButton size="small" className="leave" variant="contained">
-            Leave Team
-          </NoobButton>
+          {teamOwner && (
+            <NoobButton
+              size="small"
+              className="delete"
+              variant="contained"
+              style={{ margin: "0px 10px" }}
+              disabled={loading}
+              onClick={(): any => deleteTeam()}
+            >
+              Delete Team
+            </NoobButton>
+          )}
+
           <NoobButton
             size="small"
-            className="delete"
+            className="leave"
             variant="contained"
-            style={{ margin: "0px 10px" }}
+            disabled={loading}
+            onClick={(): any => leaveTeam()}
           >
-            Delete Team
+            Leave Team
           </NoobButton>
-          <NoobButton size="small" variant="contained">
+
+          {/* <NoobButton size="small" variant="contained">
             Add Member
-          </NoobButton>
+          </NoobButton> */}
         </Grid>
         <Grid item xs={12} sm={12} md={12}>
           <TableContainer>
@@ -83,11 +148,19 @@ const Permissions: React.FC<PermissionProps> = ({players}) => {
               <TableBody>
                 {players.map((player) => {
                   return (
-                    <NoobRow sx={{display:{sm:"flex",xs:"flex",md:"table-row"},flexDirection:{sm:"column",xs:"column"}}} key={player.user_id}>
+                    <NoobRow
+                      sx={{
+                        display: { sm: "flex", xs: "flex", md: "table-row" },
+                        flexDirection: { sm: "column", xs: "column" },
+                      }}
+                      key={player.user_id}
+                    >
                       <NoobCell>
                         <Box display="flex" alignItems={"center"}>
                           <Avatar src={"/icons/PersonIcon.svg"}></Avatar>
-                          <Typography marginLeft={2}>{player.firstName} {player.lastName}</Typography>
+                          <Typography marginLeft={2}>
+                            {player.firstName} {player.lastName}
+                          </Typography>
                         </Box>
                       </NoobCell>
                       <NoobCell>
@@ -107,15 +180,21 @@ const Permissions: React.FC<PermissionProps> = ({players}) => {
                             color={"white"}
                             variant="body2"
                           >
-                            {roles.join(" ")}
+                            {player.user_id === user?.id
+                              ? "Team Owner"
+                              : "Team Member"}
                           </Typography>
                         </Box>
                       </NoobCell>
-                      <NoobCell>
-                        <Box display={"flex"} justifyContent="space-between" alignContent={"center"}>
-                        <CloseIcon color="warning" />{" "}
+                      {/* <NoobCell>
+                        <Box
+                          display={"flex"}
+                          justifyContent="space-between"
+                          alignContent={"center"}
+                        >
+                          <CloseIcon color="warning" />{" "}
                         </Box>
-                      </NoobCell>
+                      </NoobCell> */}
                     </NoobRow>
                   );
                 })}

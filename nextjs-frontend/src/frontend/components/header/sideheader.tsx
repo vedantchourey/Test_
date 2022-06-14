@@ -4,6 +4,7 @@ import {
   Grid,
   IconButton,
   InputBase,
+  ListSubheader,
   Popover,
   Typography,
 } from "@mui/material";
@@ -14,8 +15,9 @@ import {
   isLoggedInSelector,
   userNameSelector,
 } from "../../redux-store/authentication/authentication-selectors";
-import { useAppSelector } from "../../redux-store/redux-store";
+import { useAppDispatch, useAppSelector } from "../../redux-store/redux-store";
 import { walletDetaislSelector } from "../../redux-store/wallet/wallet-selector";
+import { setWalletDetails } from "../../redux-store/wallet/wallet.-slice";
 import { getAuthHeader } from "../../utils/headers";
 import style from "./desktop-sidebar.module.css";
 import BasicPopover from "./notification-popover";
@@ -59,6 +61,15 @@ export default function SideHeader(): JSX.Element {
       });
   };
 
+  const appDispatch = useAppDispatch();
+  const fetchWalletDetails = async (): Promise<void> => {
+    const headers = await getAuthHeader();
+    const { data } = await axios.get(`/api/wallet/details`, {
+      headers,
+    });
+    if (data) appDispatch(setWalletDetails(data));
+  };
+
   const submitNotification = async (
     id: string,
     response: string
@@ -88,6 +99,12 @@ export default function SideHeader(): JSX.Element {
       setNotifications([]);
     }
   }, [isLoggedIn]);
+
+  React.useEffect(() => {
+    if (isLoggedIn) {
+      fetchWalletDetails();
+    }
+  }, []);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(event.currentTarget);
@@ -125,12 +142,15 @@ export default function SideHeader(): JSX.Element {
               <IconButton onClick={handleClick} sx={{ mr: 1, ml: 1 }}>
                 <img src="/icons/notification-icon.svg" />
               </IconButton>
-              <img
-                src="/images/16276393842661.png"
-                className={style.img3}
-                alt="logo"
-                style={{ height: "50px", width: "50px" }}
-              />
+              <Button variant="text" onClick={(): any => router.push("/account")}>
+                <img
+                  src="/images/16276393842661.png"
+                  className={style.img3}
+                  alt="logo"
+                  style={{ height: "50px", width: "50px" }}
+                />
+              </Button>
+              
               <Box>
                 <Typography className={style.text1}>{username}</Typography>
                 <Button
@@ -161,6 +181,17 @@ export default function SideHeader(): JSX.Element {
           horizontal: "center",
         }}
       >
+        <ListSubheader
+           sx={{
+             fontStyle: "norma",
+             fontSize: "20px",
+             fontWeight: 700,
+             fontFamily: "Inter",
+             color: "#FFFFFF",
+           }}
+         >
+           Notifications
+         </ListSubheader>
         {notifications.map((i: any, idx: number) => (
           <BasicPopover
             message={i.message}
@@ -174,6 +205,9 @@ export default function SideHeader(): JSX.Element {
             key={idx}
           />
         ))}
+        <Button variant="text">
+          View All
+        </Button>
       </Popover>
     </>
   );

@@ -1,11 +1,11 @@
 import {
+  Box,
   Button,
   Divider,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
-  ListSubheader,
   Typography,
 } from "@mui/material";
 import * as React from "react";
@@ -27,28 +27,15 @@ export default function BasicPopover(props: Props): JSX.Element {
   return (
     <List
       sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
-      subheader={
-        <ListSubheader
-          sx={{
-            fontStyle: "norma",
-            fontSize: "20px",
-            fontWeight: 700,
-            fontFamily: "Inter",
-            color: "#FFFFFF",
-          }}
-        >
-          Notifications
-        </ListSubheader>
-      }
     >
-      <Divider variant="middle" component="li" />
+      {/* <Divider variant="middle" component="li" /> */}
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
           <img alt="Travis Howard" src={message.image} />
         </ListItemAvatar>
         <ListItemText
           secondary={
-            <React.Fragment>
+            <Box ml={1} display={"flex"} flexDirection={"column"}>
               <Typography
                 sx={{ display: "inline" }}
                 component="span"
@@ -57,22 +44,19 @@ export default function BasicPopover(props: Props): JSX.Element {
               >
                 {message.text}
               </Typography>
-            </React.Fragment>
-          }
-        />
-      </ListItem>
-      <ListItem sx={{ justifyContent: "left" }}>
-        <ListItemAvatar />
-        {props.isActionRequired && (
-          <>
+              {props.isActionRequired && (
+          <Box display={"flex"} flexDirection={"row"} mt={2}>
             <Button variant="contained" onClick={onAccept} sx={{ mr: 1 }}>
               Accept
             </Button>
             <Button variant="outlined" onClick={onDecline} sx={{ mr: 1 }}>
               Decline
             </Button>
-          </>
+          </Box>
         )}
+            </Box>
+          }
+        />
       </ListItem>
       <Divider variant="middle" component="li" />
     </List>

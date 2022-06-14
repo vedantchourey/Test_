@@ -77,7 +77,6 @@ const MemberButton = ({ setParam }: any): JSX.Element => {
           </Box>
         </>
       )}
-      ;
     </>
   );
 };

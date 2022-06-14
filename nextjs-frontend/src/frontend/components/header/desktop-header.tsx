@@ -1,4 +1,3 @@
-import FlashOnIcon from '@mui/icons-material/FlashOn';
 import { Button, IconButton, Typography, useTheme } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -86,6 +85,9 @@ export default function DrawerLeft(): JSX.Element {
   }
   async function gotoTeamListPage(): Promise<void> {
     await router.push('/teamlist')
+  }
+  async function gotoLeaderboardsPage(): Promise<void> {
+    await router.push('/leaderboard')
   }
   async function gotoFreeAgencyMarketPage(): Promise<void> {
     await router.push("/free-agency-market/view/members");
@@ -198,8 +200,12 @@ export default function DrawerLeft(): JSX.Element {
                 />
                 Tournaments
               </Button>
-              <Button sx={{display:"flex"}} variant="text" startIcon={<FlashOnIcon />} className={classes.buttonStyles} onClick={gotoFreeAgencyMarketPage}>
-                  Free Agency Market
+              <Button variant="text" className={classes.buttonStyles} onClick={gotoFreeAgencyMarketPage}>
+                <img
+                  src="/icons/Vector-Tournaments.png"
+                  className={classes.imgStyle}
+                />
+                Free Agency
               </Button>
               <Button variant="text" className={classes.buttonStyles}>
                 <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
@@ -209,7 +215,7 @@ export default function DrawerLeft(): JSX.Element {
                 <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
                 News
               </Button>
-              <Button variant="text" className={classes.buttonStyles}>
+              <Button variant="text" className={classes.buttonStyles} onClick={(): any => router.push("/chat")}>
                 <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
                 Chat
               </Button>
@@ -225,7 +231,7 @@ export default function DrawerLeft(): JSX.Element {
               <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
                 My Teams
               </Button>
-              <Button variant="text" className={classes.buttonStyles}>
+              <Button variant="text" className={classes.buttonStyles} onClick={gotoLeaderboardsPage}>
                 <img
                   src="/icons/Vector-Leaderboards.png"
                   className={classes.imgStyle}
