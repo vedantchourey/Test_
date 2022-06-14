@@ -7,14 +7,16 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
-import React from "react";
+import React, { useState } from "react";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import {
+  allFormatsSelector,
   allGamesSelector,
+  formatsFetchStatusSelector,
   gamesFetchStatusSelector,
 } from "../../redux-store/games/game-selectors";
-import { fetchAllGamesThunk } from "../../redux-store/games/game-slice";
+import { fetchAllFormats, fetchAllGamesThunk } from "../../redux-store/games/game-slice";
 import { useAppDispatch, useAppSelector } from "../../redux-store/redux-store";
 import { getAuthHeader } from "../../utils/headers";
 import { TournamentData } from "../tournament";
@@ -41,8 +43,12 @@ const imagedata: any = {
 const SliderComp: React.FC = (): JSX.Element => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const formats = useAppSelector(allFormatsSelector);
+  const formatsFetchStatus = useAppSelector(formatsFetchStatusSelector);
+  const [format, setFormat] = useState("")
 
   const [tournamentsData, setData] = React.useState<TournamentData[]>([]);
+  
   const setTournamentsData = async (game_id: string): Promise<void> => {
     try {
       const endpoint = "/api/tournaments/list";
@@ -51,6 +57,7 @@ const SliderComp: React.FC = (): JSX.Element => {
         .get(endpoint, {
           params: {
             game: game_id,
+            format
           },
           headers: headers,
         })
@@ -73,8 +80,18 @@ const SliderComp: React.FC = (): JSX.Element => {
   React.useEffect(() => {
     if (gamesFetchStatus !== "idle") return;
     appDispatch(fetchAllGamesThunk());
-    // setTournamentsData(games[0].id)
   }, [appDispatch, gamesFetchStatus]);
+
+  React.useEffect(() => {
+    if (formatsFetchStatus !== "idle") return;
+    appDispatch(fetchAllFormats());
+  }, [appDispatch, formatsFetchStatus]);
+
+  React.useEffect(() => {
+    if(games?.[0]?.id){
+      setTournamentsData(games[0].id)
+    }
+  }, [games, format])
 
   const responsive = {
     0: { items: 5 },
@@ -100,7 +117,7 @@ const SliderComp: React.FC = (): JSX.Element => {
     <>
       <Typography textAlign={"left"}>Choose Game</Typography>
       {isMobile ? (
-        <Grid mt={5} sx={{ width: 1, maxWidth: "sm" }}>
+        <Grid mt={5} sx={{ maxWidth: "sm" }}>
           <AliceCarousel
             items={items}
             autoWidth
@@ -110,7 +127,7 @@ const SliderComp: React.FC = (): JSX.Element => {
           />
         </Grid>
       ) : (
-        <Grid mt={5} sx={{ width: 1, maxWidth: "lg" }}>
+        <Grid mt={5} sx={{ maxWidth: "lg" }}>
           <AliceCarousel
             items={items}
             autoWidth
@@ -120,7 +137,7 @@ const SliderComp: React.FC = (): JSX.Element => {
           />
         </Grid>
       )}
-      <ButtonComp />
+      <ButtonComp formats={formats} setFormat={setFormat} format={format} />
       <Grid container columnSpacing={2} mt={5}>
         {tournamentsData.map((data: any) => {
           const startDateTime = moment(data.startDate).format(
@@ -128,7 +145,7 @@ const SliderComp: React.FC = (): JSX.Element => {
           );
           const totalSlots = data?.bracketsMetadata?.playersLimit || 0;
           const currentSlot = (data?.playerList || []).length;
-          
+
           return (
             <>
               <CardComp
