@@ -4,7 +4,7 @@ import React from "react";
 const ButtonComp: React.FC<any> = ({ formats = [], setFormat, format }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  
+
   return (
     <Grid container columnSpacing={2} mt={5}>
       {isMobile ? (
@@ -41,12 +41,12 @@ const ButtonComp: React.FC<any> = ({ formats = [], setFormat, format }) => {
         </>
       ) : (
         <>
-          <Grid item xs={6}></Grid>
-          <Grid item xs={6} lg={2} md={2}>
+          <Grid item xs={12} textAlign={"right"}>
             <Select
               value={format || "Team Size"}
-              fullWidth={true}
-              onChange={(e): any => setFormat(e.target.value === "Team Size" ? "" : e.target.value)}
+              onChange={(e): any =>
+                setFormat(e.target.value === "Team Size" ? "" : e.target.value)
+              }
               placeholder={"Select Team size"}
             >
               <MenuItem value="Team Size">Team Size</MenuItem>
@@ -59,6 +59,7 @@ const ButtonComp: React.FC<any> = ({ formats = [], setFormat, format }) => {
               })}
             </Select>
           </Grid>
+          <Grid item xs={6} lg={2} md={2} justifyContent={"flex-end"}></Grid>
           {/* <Grid item xs={6} lg={2} md={2}>
               <Select value={"status"} fullWidth={true}>
                 <MenuItem value="status">Status</MenuItem>
