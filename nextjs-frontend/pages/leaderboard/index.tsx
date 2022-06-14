@@ -46,6 +46,7 @@ export interface Gameinfo {
   game_id: string;
   user_id: string;
   created_at: string;
+  userDetails: any;
 }
 
 const Leaderboard = (): JSX.Element => {
@@ -211,7 +212,7 @@ const Leaderboard = (): JSX.Element => {
                     <Box style={{ marginLeft: "45px" }}>
                       <Box className={styles.box1}>
                         <Typography className={styles.text1}>
-                          {item.user_id}
+                          {item.userDetails.username}
                         </Typography>
                         <Box className={styles.box2}>
                           <Typography className={styles.text2}>
@@ -279,7 +280,7 @@ const Leaderboard = (): JSX.Element => {
                             <img src="/icons/Ellipse 4.png" />
                           </span>
                           <span style={{ padding: "10px" }}>
-                            {item.user_id}
+                            {item.userDetails.username}
                           </span>
                         </div>
                       </TableCell>
