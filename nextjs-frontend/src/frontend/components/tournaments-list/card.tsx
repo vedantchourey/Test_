@@ -100,7 +100,7 @@ const CardDesktop: React.FC<any> = ({
             <Grid item md={2} mb={1} lg={2} textAlign={"right"}>
               <Button
                 variant="contained"
-                onClick={() => router.push(`/view-tournament/${id}/details`)}
+                onClick={(): any => router.push(`/view-tournament/${id}/details`)}
               >
                 {" "}
                 -{">"}
@@ -119,7 +119,7 @@ const CardMobile: React.FC<any> = ({
   platform,
   start_date,
   participants,
-}: any) => {
+}: any): JSX.Element => {
   return (
     <Grid container columnSpacing={2} mt={5}>
       <Grid item xs={12}>
@@ -188,7 +188,7 @@ const CardComp = ({
   credits,
   participants,
   banner,
-}: any) => {
+}: any): JSX.Element => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const platforms = useAppSelector(getAllPlatformsSelector);

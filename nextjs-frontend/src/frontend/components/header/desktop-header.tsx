@@ -58,8 +58,7 @@ const useRoundStatusStyles = makeStyles(() =>
       height: "16px",
       marginTop: "-5px",
     },
-  })
-);
+  }));
 
 export default function DrawerLeft(): JSX.Element {
   const [showLoginModal, setShowLoginModal] = useState(false);

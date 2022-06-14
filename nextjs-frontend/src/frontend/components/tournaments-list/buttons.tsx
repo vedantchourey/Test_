@@ -1,29 +1,7 @@
 import { Grid, MenuItem, Select, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
 
-const CardDesktop: React.FC = () => {
-    return (
-        <>
-            <Grid item xs={6} lg={2} md={2}>
-                <Select value={"teamsize"} fullWidth={true}>
-                    <MenuItem value="teamsize">Team Size</MenuItem>
-                </Select>
-            </Grid>
-            <Grid item xs={6} lg={2} md={2}>
-                <Select value={"status"} fullWidth={true}>
-                    <MenuItem value="status">Status</MenuItem>
-                </Select>
-            </Grid>
-            <Grid item xs={12} lg={2} md={2} sx={{ marginTop: { sm: "8px", xs: "8px" } }}>
-                <Select value={"entryfee"} fullWidth={true}>
-                    <MenuItem value="entryfee">Entry Fee</MenuItem>
-                </Select>
-            </Grid>
-        </>
-    );
-};
-
-const ButtonComp: React.FC = ({ children }) => {
+const ButtonComp: React.FC = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     return (

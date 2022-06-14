@@ -38,21 +38,6 @@ const imagedata: any = {
   corp: "/images/game2.svg",
 };
 
-const monthNames = [
-  "JAN",
-  "FEB",
-  "MAR",
-  "APR",
-  "MAY",
-  "JUN",
-  "JUL",
-  "AUG",
-  "SEP",
-  "OCT",
-  "NOV",
-  "DEC",
-];
-
 const SliderComp: React.FC = (): JSX.Element => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -97,21 +82,20 @@ const SliderComp: React.FC = (): JSX.Element => {
     1366: { items: 10 },
   };
 
-  let items: JSX.Element[] = [];
+  const items: JSX.Element[] = [];
   {
     games.map((data) => {
       return items.push(
         <Button key={1} data-value="1">
           <img
             src={imagedata[data.code]}
-            onClick={() => setTournamentsData(data.id)}
+            onClick={(): any => setTournamentsData(data.id)}
             role="presentation"
           />
         </Button>
       );
     });
   }
-  console.log("data -> ", tournamentsData);
   return (
     <>
       <Typography textAlign={"left"}>Choose Game</Typography>
@@ -147,7 +131,6 @@ const SliderComp: React.FC = (): JSX.Element => {
           
           return (
             <>
-              {console.log("data -> ", data)}
               <CardComp
                 id={data.id}
                 tournament_name={data.name}
