@@ -70,6 +70,10 @@ a:hover {
   background-color: transparent;
 }
 
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* .slick-slide {
   margin: 0 27px!important;
 }

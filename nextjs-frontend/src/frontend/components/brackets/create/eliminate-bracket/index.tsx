@@ -225,11 +225,12 @@ const EliminateBracket = React.forwardRef<
                     control={
                       <Checkbox
                         checked={formik.values.thirdPlace}
-                        onChange={(event): void =>
+                        onChange={(event): void =>{
                           changeHandler(
                             "thirdPlace",
-                            event.target.value === "on"
+                            !formik.values.thirdPlace
                           )
+                        }
                         }
                       />
                     }

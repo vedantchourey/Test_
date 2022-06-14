@@ -63,7 +63,21 @@ const Publish: React.FC = (): JSX.Element => {
       <Dialog open={isCreated} onClose={handleClose}>
         <DialogTitle>Successfully saved!</DialogTitle>
         <DialogActions>
-          <Button onClick={handleClose}>Ok</Button>
+          <Button
+            onClick={(): void => {
+              handleClose()
+            }}
+          >
+            Close
+          </Button>
+          <Button
+            onClick={(): void => {
+              handleClose()
+              router.push(`/view-tournament/${data.id}/details`);
+            }}
+          >
+            View
+          </Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>
