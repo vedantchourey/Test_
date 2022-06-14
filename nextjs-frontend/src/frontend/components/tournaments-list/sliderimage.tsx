@@ -49,14 +49,14 @@ const SliderComp: React.FC = (): JSX.Element => {
 
   const [tournamentsData, setData] = React.useState<TournamentData[]>([]);
   
-  const setTournamentsData = async (game_id: string): Promise<void> => {
+  const setTournamentsData = async (game_id: string, first = false): Promise<void> => {
     try {
       const endpoint = "/api/tournaments/list";
       const headers = await getAuthHeader();
       axios
         .get(endpoint, {
           params: {
-            game: game_id,
+            game: first ? "" : game_id,
             format
           },
           headers: headers,
@@ -89,7 +89,7 @@ const SliderComp: React.FC = (): JSX.Element => {
 
   React.useEffect(() => {
     if(games?.[0]?.id){
-      setTournamentsData(games[0].id)
+      setTournamentsData(games[0].id, true)
     }
   }, [games, format])
 
