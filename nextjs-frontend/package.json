@@ -41,6 +41,7 @@
     "luxon": "^2.1.1",
     "material-ui-editor": "^1.0.6",
     "moment": "^2.29.3",
+    "moment-timezone": "^0.5.34",
     "mui-rte": "^2.0.1",
     "next": "12.0.4",
     "pg": "^8.7.1",

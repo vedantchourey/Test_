@@ -6,31 +6,27 @@ import {
   Grid,
   MenuItem,
   Select,
-  Typography,
+  Typography
 } from "@mui/material";
-import React from "react";
-import NoobPage from "../page/noob-page";
-import DashboardSideBar from "../ui-components/dashboard-sidebar";
-import { ReactComponent as GameIcon } from "../../../../public/icons/GameIcon.svg";
-import CardLayout from "../ui-components/card-layout";
-import NoobTable, { NoobColumnConf } from "../ui-components/table";
-import moment from "moment";
-import { TournamentData } from "../tournament";
-import { BasicData } from "../setup/basic";
 import axios from "axios";
+import moment from "moment";
 import { useRouter } from "next/router";
-import { useAppDispatch, useAppSelector } from "../../redux-store/redux-store";
+import React from "react";
+import { ReactComponent as GameIcon } from "../../../../public/icons/GameIcon.svg";
 import {
-  allGamesSelector,
-  gamesFetchStatusSelector,
-  allFormatsSelector,
-  formatsFetchStatusSelector,
+  allFormatsSelector, allGamesSelector, formatsFetchStatusSelector, gamesFetchStatusSelector
 } from "../../redux-store/games/game-selectors";
 import {
-  fetchAllGamesThunk,
-  fetchAllFormats,
+  fetchAllFormats, fetchAllGamesThunk
 } from "../../redux-store/games/game-slice";
+import { useAppDispatch, useAppSelector } from "../../redux-store/redux-store";
 import { IGameResponse } from "../../service-clients/messages/i-game-response";
+import NoobPage from "../page/noob-page";
+import { BasicData } from "../setup/basic";
+import { TournamentData } from "../tournament";
+import CardLayout from "../ui-components/card-layout";
+import DashboardSideBar from "../ui-components/dashboard-sidebar";
+import NoobTable, { NoobColumnConf } from "../ui-components/table";
 
 export interface TournamentType
   extends Omit<TournamentData, "basic">,
