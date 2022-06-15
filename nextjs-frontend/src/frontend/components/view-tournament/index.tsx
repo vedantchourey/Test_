@@ -348,17 +348,18 @@ const ViewTournament: React.FC = () => {
   
 
   const getBracketProps = (): RoundStatusData[] => {
-    // if (
-    //   !data.bracketsMetadata ||
-    //   data.bracketsMetadata === null ||
-    //   data.bracketsMetadata.startDate === null ||
-    //   !data.bracketsMetadata.startDate ||
-    //   !data.bracketsMetadata.startTime ||
-    //   data.bracketsMetadata.startTime === null
-    // ) {
-    //   // return [];
-    // }
-    const startDate = data?.bracketsMetadata?.startDate || new Date().toISOString();
+    if (
+      !data.bracketsMetadata ||
+      data.bracketsMetadata === null ||
+      data?.basic?.startDate === null ||
+      !data?.basic?.startDate ||
+      !data.bracketsMetadata.startTime ||
+      data.bracketsMetadata.startTime === null
+    ) {
+      // return [];
+    }
+    
+    const startDate =  data?.basic?.startDate || new Date().toISOString();
     const startTime = data?.bracketsMetadata?.startTime || new Date().toISOString();
     const now = moment();
     return (data.bracketsMetadata?.rounds || []).map((round, index) => {

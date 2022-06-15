@@ -1,5 +1,10 @@
 import { useEffect } from "react";
+import '../../../ui-components/typography/heading.module.css'
+
 const Component = ({ brackets }: { brackets: any }): any => {
+
+  console.log('brackets -> ', brackets)
+  
   useEffect(() => {
     if (!brackets) return;
 
@@ -15,8 +20,9 @@ const Component = ({ brackets }: { brackets: any }): any => {
       // This is optional. You must do it before render().
       window.bracketsViewer.setParticipantImages(
         // @ts-expect-error: ignore
-        data.participant.map((participant) => ({
+        data?.participant?.map((participant) => ({
           participantId: participant.id,
+          imageUrl: "/images/teams/Player.png"
         }))
       );
       // @ts-expect-error: ignore
