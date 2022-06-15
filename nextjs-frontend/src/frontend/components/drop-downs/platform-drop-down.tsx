@@ -83,7 +83,7 @@ export default function PlatformDropDown(props: Props): JSX.Element {
           {...params}
           label={label}
           variant="outlined"
-          size="medium"
+          size="small"
           className={inputClassName}
           error={error}
           placeholder={placeholder}

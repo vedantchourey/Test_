@@ -1,18 +1,20 @@
-import { Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
+import axios from "axios";
+import moment from "moment";
+import { useRouter } from "next/router";
+import { ParsedUrlQuery } from "querystring";
 import React from "react";
+import { EliminateBracketData } from "../brackets/create/eliminate-bracket";
+import NoobPage from "../page/noob-page";
+import { PublishTournamentData } from "../publish/publish-tournament";
 import { BasicData } from "../setup/basic";
 import { InfoData } from "../setup/info";
-import SideBar from "../ui-components/sidebar";
-import axios from "axios";
-import { EliminateBracketData } from "../brackets/create/eliminate-bracket";
 import { SettingData } from "../setup/settings";
-import { useRouter } from "next/router";
-import NoobPage from "../page/noob-page";
+import Loader from "../ui-components/loader";
+import SideBar from "../ui-components/sidebar";
 import Create from "./create";
-import { ParsedUrlQuery } from "querystring";
-import { PublishTournamentData } from "../publish/publish-tournament";
 import { StreamData } from "./create/streams";
-import moment from "moment";
+import Manage from "./manage";
 import Share from "./share";
 import { InvitePlayerData } from "./share/invitePlayer";
 
@@ -74,6 +76,8 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
   const router = useRouter();
   const query: ParsedUrlQuery = router.query;
 
+  const [loading, setLoading] = React.useState(false);
+
   let url = "/tournament/new/[...slug]";
   if (type === "update") {
     url = "/tournament/update/[id]/[...slug]";
@@ -81,6 +85,7 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
 
   React.useEffect(() => {
     if (router.query.id !== undefined) {
+      setLoading(true);
       axios
         .get(`/api/tournaments/${router.query.id}`)
         .then((res) => {
@@ -98,6 +103,7 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
                 name: tournamentData.name,
                 about: tournamentData.about,
                 game: tournamentData.game,
+                sponsor: tournamentData.sponsor,
                 startDate: tournamentData.startDate,
                 startTime: moment(
                   tournamentData.startTime,
@@ -115,8 +121,10 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
               },
             } as TournamentData);
           }
+          setLoading(false);
         })
         .catch((err) => {
+          setLoading(false);
           console.error(err);
         });
     }
@@ -190,6 +198,23 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
         },
       ],
     },
+    {
+      icon: <img src="/icons/manage-alt.svg" alt="icon" />,
+      title: "Manage",
+      isActive: (url: string): boolean => {
+        return url.indexOf("/manage") > -1;
+      },
+      items: [
+        {
+          title: "Match Dashboard",
+          url: url,
+          as: getAS("/manage/matchDashboard"),
+          isActive: (url: string): boolean => {
+            return url.indexOf("/matchDashboard") > -1;
+          },
+        },
+      ],
+    },
   ];
 
   const updateData = (
@@ -213,6 +238,7 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
   };
 
   const submitHandler = (submitData: TournamentData): Promise<boolean> => {
+    setLoading(true);
     const requestData = Object.assign({}, submitData);
     const req = {
       ...requestData,
@@ -231,10 +257,10 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
     req.templateCode = req.publishData?.templateCode || "";
     delete req.publishData;
     delete req.basic;
-    if(!requestData.settings) delete req.settings
-    if(!requestData.bracketsMetadata) delete req.bracketsMetadata
-    if(!requestData.streams) delete req.streams
-    if(!requestData.info) delete req.info
+    if (!requestData.settings) delete req.settings;
+    if (!requestData.bracketsMetadata) delete req.bracketsMetadata;
+    if (!requestData.streams) delete req.streams;
+    if (!requestData.info) delete req.info;
     return axios
       .post("/api/tournaments/create", req)
       .then((res: any) => {
@@ -247,6 +273,9 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
       .catch((err) => {
         console.error(err);
         return false;
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -258,6 +287,8 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
         return <Create />;
       case "share":
         return <Share />;
+      case "manage":
+        return <Manage />;
       default:
         return null;
     }
@@ -270,24 +301,29 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
         description: "Noob Storm tournament page",
       }}
     >
-      <Grid container spacing={1}>
-        <Grid item md={3}>
-          <SideBar key={"sidebar"} nav={sideBarNav} />
-        </Grid>
-        <Grid item md={9}>
-          <TournamentContext.Provider
-            value={{
-              id: router.query.id ? router.query.id : "",
-              type,
-              data: data,
-              setData: updateData,
-              onSubmit: submitHandler,
-            }}
-          >
-            {renderSection()}
-          </TournamentContext.Provider>
-        </Grid>
-      </Grid>
+      <React.Fragment>
+        <Loader loading={loading} />
+        <Box width={"80vw"}>
+          <Grid container spacing={1}>
+            <Grid item md={3}>
+              <SideBar key={"sidebar"} nav={sideBarNav} />
+            </Grid>
+            <Grid item md={9}>
+              <TournamentContext.Provider
+                value={{
+                  id: router.query.id ? router.query.id : "",
+                  type,
+                  data: data,
+                  setData: updateData,
+                  onSubmit: submitHandler,
+                }}
+              >
+                {renderSection()}
+              </TournamentContext.Provider>
+            </Grid>
+          </Grid>
+        </Box>
+      </React.Fragment>
     </NoobPage>
   );
 };

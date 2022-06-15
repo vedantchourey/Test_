@@ -68,6 +68,7 @@ const Bracket: React.FC<BracketProps> = ({ rounds = [], brackets }) => {
           rowSpacing={1}
           overflow={"scroll"}
           flexWrap={"nowrap"}
+          className={"hide-scrollbar"}
         >
           {renderStatus()}
         </Grid>
@@ -78,6 +79,7 @@ const Bracket: React.FC<BracketProps> = ({ rounds = [], brackets }) => {
           style={{ overflow: "scroll" }}
           columnSpacing={2}
           rowSpacing={1}
+          className={"hide-scrollbar"}
         >
           <div className="bracket">
             {/* {type === "SINGLE" ? (

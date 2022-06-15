@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TournamentContext } from "../tournament";
 import PublishTournament, { PublishTournamentData } from "./publish-tournament";
 import { Dialog, DialogTitle, DialogActions, Button } from "@mui/material";
@@ -8,6 +8,7 @@ const Publish: React.FC = (): JSX.Element => {
   const router = useRouter();
   const { data, setData, id, type } = React.useContext(TournamentContext);
   const [isCreated, setCreated] = React.useState(false);
+  const [tid, settId] = useState("");
 
   const handleSave = (newData: PublishTournamentData): void => {
     setData({ ...data, publishData: newData }, undefined, type === "new").then(
@@ -18,6 +19,12 @@ const Publish: React.FC = (): JSX.Element => {
       }
     );
   };
+
+  useEffect(() => {
+    if (data.id) {
+      settId(data.id);
+    }
+  }, [data]);
 
   const goBack = (): void => {
     if (type === "new") {
@@ -51,10 +58,11 @@ const Publish: React.FC = (): JSX.Element => {
       );
     }
   };
-
+  
   return (
     <React.Fragment>
       <PublishTournament
+        tournamentId={data.id}
         data={data.publishData}
         onSave={handleSave}
         onBack={goBack}
@@ -62,7 +70,21 @@ const Publish: React.FC = (): JSX.Element => {
       <Dialog open={isCreated} onClose={handleClose}>
         <DialogTitle>Successfully saved!</DialogTitle>
         <DialogActions>
-          <Button onClick={handleClose}>Ok</Button>
+          <Button
+            onClick={(): void => {
+              handleClose()
+            }}
+          >
+            Close
+          </Button>
+          <Button
+            onClick={(): void => {
+              handleClose()
+              router.push(`/view-tournament/${tid}/details`);
+            }}
+          >
+            View
+          </Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>

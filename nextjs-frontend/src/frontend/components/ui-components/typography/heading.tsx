@@ -40,8 +40,11 @@ export default function Heading({
         className={styles.heroContainer}
         style={{ background: `url(${backgroundImageUrl})` }}
       >
-        {heading && <div className={styles.heading}>{simpleHeading()}</div>}
-        {children && <Box className={styles.childContainer}>{children}</Box>}
+        <div style={{background: "rgba(0,0,0,0.5)", padding: 70, flex: 1, height: "100%"}}>
+          {heading && <div className={styles.heading}>{simpleHeading()}</div>}
+          {children && <Box className={styles.childContainer}>{children}</Box>}  
+        </div>
+        
       </div>
     );
   }

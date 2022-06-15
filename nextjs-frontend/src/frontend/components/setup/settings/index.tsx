@@ -40,8 +40,7 @@ export interface SettingData {
   screenShots: string;
   limitType: string;
   limit: number;
-  countryFlagOnBrackets: boolean;
-  registrationRegion: string;
+  
 }
 
 const Settings: React.FC<SettingProps> = ({
@@ -57,11 +56,7 @@ const Settings: React.FC<SettingProps> = ({
     checkInType: yup.string().required("check In type is required"),
     ScoreReporting: yup.string().required("Score reporting is required"),
     screenShots: yup.string().required("screenShots are required"),
-    limitType: yup.string().required("limit type is required"),
-    countryFlagOnBrackets: yup.boolean().required("country flag is required"),
-    registrationRegion: yup
-      .string()
-      .required("Registration Region is required"),
+    limitType: yup.string().required("limit type is required")
   });
 
   const formik = useFormik({
@@ -76,9 +71,7 @@ const Settings: React.FC<SettingProps> = ({
       ScoreReporting: data?.ScoreReporting || "ADMIN_PLAYER",
       screenShots: data?.screenShots || "NOT_REQUIRED",
       limitType: data?.limitType || "UNLIMITED",
-      limit: data?.limit || -1,
-      countryFlagOnBrackets: (data?.countryFlagOnBrackets || true) === true,
-      registrationRegion: data?.registrationRegion || "ALL",
+      limit: data?.limit || -1
     },
     validationSchema: validationSchema,
     onSubmit: (values: SettingData) => {
@@ -91,9 +84,7 @@ const Settings: React.FC<SettingProps> = ({
   React.useEffect(() => {
     if (data) {
       formik.setValues({
-        ...data,
-        countryFlagOnBrackets:data.countryFlagOnBrackets
-      });
+        ...data });
     }
   }, [data]);
   
@@ -205,7 +196,7 @@ const Settings: React.FC<SettingProps> = ({
             alignItems="center"
           >
             {formik.values.entryType === "credit" ? (
-              <React.Fragment>
+              <Box pt={3}>
                 <OutlinedInput
                   fullWidth
                   id="entryFeeAmount"
@@ -220,7 +211,7 @@ const Settings: React.FC<SettingProps> = ({
                     Boolean(formik.errors.entryFeeAmount)
                   }
                 />
-              </React.Fragment>
+              </Box>
             ) : null}
           </Grid>
           <Grid item xs={6}>
@@ -345,45 +336,9 @@ const Settings: React.FC<SettingProps> = ({
             ) : null}
           </Grid>
 
-          <Grid item xs={6}>
-            <FormControl fullWidth>
-              <FormLabel label="Country Flags on Brackets"></FormLabel>
-              <NoobToggleButtonGroup
-                exclusive
-                value={formik.values.countryFlagOnBrackets ? "on" : "off"}
-                onChange={(
-                  e: React.MouseEvent<Element, MouseEvent>,
-                  val: string
-                ): void => changeHandler("countryFlagOnBrackets", val === "on")}
-                fullWidth
-              >
-                <NoobToggleButton value="off">Off</NoobToggleButton>
-                <NoobToggleButton value="on">On</NoobToggleButton>
-              </NoobToggleButtonGroup>
-            </FormControl>
-          </Grid>
+          
         </Grid>
-        <Grid container rowSpacing={1} columnSpacing={5}>
-          <Grid item xs={6}>
-            <FormControl fullWidth>
-              <FormLabel label="Registration Region"></FormLabel>
-              <NoobToggleButtonGroup
-                exclusive
-                value={formik.values.registrationRegion}
-                onChange={(
-                  e: React.MouseEvent<Element, MouseEvent>,
-                  val: string
-                ): void => changeHandler("registrationRegion", val)}
-                fullWidth
-              >
-                <NoobToggleButton value="ALL">All</NoobToggleButton>
-                <NoobToggleButton value="SPECIFIC-REGION">
-                  Specific Region
-                </NoobToggleButton>
-              </NoobToggleButtonGroup>
-            </FormControl>
-          </Grid>
-        </Grid>
+        
       </CardLayout>
       <Box display="flex" justifyContent={"space-between"}>
         <Button

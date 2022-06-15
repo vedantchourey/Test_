@@ -1,16 +1,9 @@
-import { useTheme } from "@mui/material";
-import { useAppSelector } from "../../redux-store/redux-store";
-import {
-  
-  isDeviceTypeSelector,
-} from "../../redux-store/layout/layout-selectors";
+import { Box } from "@mui/material";
 import Head from "next/head";
-import NoobHeader from "../header/noob-header";
-import commonStyles from "../../styles/common.module.css";
-import styles from "./noob-page.module.css";
 import React from "react";
-import { deviceTypes } from "../../redux-store/layout/device-types";
 import NoobFooter from "../footer";
+import NoobHeader from "../header/noob-header";
+import SideHeader from "../header/sideheader";
 
 interface Props {
   title: string;
@@ -23,29 +16,27 @@ export default function NoobPage(props: Props): JSX.Element {
   const { metaData, favIcon = "/noob-fav.ico", title, children } = props;
   const metaKeys = Object.keys(metaData);
 
-  const theme = useTheme();
-  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
-  const backgroundColor = isDesktop
-    ? theme.palette.background.default
-    : theme.palette.background.paper;
-
   return (
-    <div style={{ backgroundColor }}>
-      <Head>
-        <title>{title}</title>
-        {metaKeys.map((key, index) => (
-          <meta key={index} name={key} content={metaData[key]} />
-        ))}
-        <link rel="icon" href={favIcon} />
-      </Head>
-      <NoobHeader />
-      <main className={commonStyles.main}>
-      {/*  */}
-        <div className={styles.container} style={{ marginTop: "155px" }}>
-          {children}
-        </div>
-      </main>
-      <NoobFooter />
-    </div>
+    <>
+      <SideHeader/>
+      <div style={{marginTop: 50}}>
+        <Head>
+          <title>{title}</title>
+          {metaKeys.map((key, index) => (
+            <meta key={index} name={key} content={metaData[key]} />
+          ))}
+          <link rel="icon" href={favIcon} />
+        </Head>  
+        <Box sx={{ display: 'flex' }} maxWidth={"100vw"}>
+          <NoobHeader/>
+            <Box
+              style={{ minHeight: '1040px' }}
+              component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}>
+              {children}
+            </Box>
+        </Box>
+        <NoobFooter/>
+      </div>
+    </>
   );
 }

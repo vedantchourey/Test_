@@ -54,6 +54,8 @@
   column-gap: 20px;
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  margin-bottom: 60px;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+  margin-top: -19px;
+  margin-left: 10px;
 }
