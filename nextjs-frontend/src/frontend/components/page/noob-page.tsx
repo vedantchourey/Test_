@@ -18,7 +18,7 @@ export default function NoobPage(props: Props): JSX.Element {
 
   return (
     <>
-    <SideHeader/>
+    
       <div style={{marginTop: 50}}>
         <Head>
           <title>{title}</title>
@@ -27,10 +27,11 @@ export default function NoobPage(props: Props): JSX.Element {
           ))}
           <link rel="icon" href={favIcon} />
         </Head>
+        <SideHeader/>
         <Box sx={{ display: 'flex' }} maxWidth={"100vw"}>
           <NoobHeader/>
             <Box
-              style={{ minHeight: '1240px' }}
+              style={{ minHeight: '1040px' }}
               component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}>
               {children}
             </Box>
