@@ -53,25 +53,29 @@ const Bracket: React.FC<BracketProps> = ({ rounds = [], brackets }) => {
   const renderStatus = (): JSX.Element[] => {
     return rounds.map((round) => {
       return (
-        <Grid key={round.round} item md={3}>
+        <Grid key={round.round} item md={3} mr={2}>
           <RoundStatus {...round} />
         </Grid>
       );
     });
   };
+  
   return (
     <>
       <Box marginX={"70px"} marginY={2}>
-        <Grid
+        {/* <Grid
           container
           columnSpacing={2}
           rowSpacing={1}
           overflow={"scroll"}
           flexWrap={"nowrap"}
-          className={"hide-scrollbar"}
-        >
+          // className={"hide-scrollbar"}
+        > */}
+        <Box display={"flex"} flexWrap={"nowrap"} maxWidth={"70vw"} overflow={"scroll"} className="hide-scrollbar">
           {renderStatus()}
-        </Grid>
+        </Box>
+          
+        {/* </Grid> */}
       </Box>
       <Box marginX={"70px"} marginY={2}>
         <Grid

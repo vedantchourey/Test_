@@ -48,8 +48,8 @@ const Component = ({ brackets }: { brackets: any }): any => {
   }, [brackets]);
   return (
     <>
-      <div className="bracket" style={{ maxHeight: 600, overflow: "scroll" }}>
-        <div id="example" className="brackets-viewer"></div>
+      <div className="bracket hide-scrollbar" style={{ maxHeight: 600, overflow: "scroll", maxWidth: "80vw" }}>
+        <div id="example" className="brackets-viewer hide-scrollbar" style={{ maxHeight: 600, overflow: "scroll", maxWidth: "80vw" }}></div>
       </div>
     </>
   );

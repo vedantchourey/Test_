@@ -345,21 +345,23 @@ const ViewTournament: React.FC = () => {
     };
   };
 
+  
+
   const getBracketProps = (): RoundStatusData[] => {
-    if (
-      !data.bracketsMetadata ||
-      data.bracketsMetadata === null ||
-      data.bracketsMetadata.startDate === null ||
-      !data.bracketsMetadata.startDate ||
-      !data.bracketsMetadata.startTime ||
-      data.bracketsMetadata.startTime === null
-    ) {
-      return [];
-    }
-    const startDate = data.bracketsMetadata.startDate;
-    const startTime = data.bracketsMetadata.startTime;
+    // if (
+    //   !data.bracketsMetadata ||
+    //   data.bracketsMetadata === null ||
+    //   data.bracketsMetadata.startDate === null ||
+    //   !data.bracketsMetadata.startDate ||
+    //   !data.bracketsMetadata.startTime ||
+    //   data.bracketsMetadata.startTime === null
+    // ) {
+    //   // return [];
+    // }
+    const startDate = data?.bracketsMetadata?.startDate || new Date().toISOString();
+    const startTime = data?.bracketsMetadata?.startTime || new Date().toISOString();
     const now = moment();
-    return (data.bracketsMetadata.rounds || []).map((round, index) => {
+    return (data.bracketsMetadata?.rounds || []).map((round, index) => {
       let timing;
       if (parseInt(round.round) === 1) {
         timing = getMomentDate(startDate, startTime);
