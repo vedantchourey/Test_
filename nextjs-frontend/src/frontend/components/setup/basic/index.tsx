@@ -25,7 +25,6 @@ import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import { v4 } from "uuid";
 import { uploadImage } from "../../../service-clients/image-service-client";
 import { blobToFile } from "../../../../common/utils/utils";
-import { number } from "joi";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -42,8 +41,7 @@ const useStyles = makeStyles(() =>
       alignItems: "center",
       flexDirection: "column",
     },
-  })
-);
+  }));
 
 export interface BasicData {
   name: string;
@@ -83,7 +81,8 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
     cloneTournament: yup.boolean(),
     createTemplateCode: yup.string(),
     banner: yup.string().nullable(),
-    sponsor: yup.string().nullable().notRequired(),
+    sponsor: yup.string().nullable()
+.notRequired(),
   });
 
   const formik = useFormik({
@@ -234,7 +233,6 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
                 inputFormat="HH:mm a"
                 onChange={(value): void => {
                   changeHandler("startTime", value);
-                  console.log("value -> ", value);
                 }}
                 value={formik.values.startTime}
                 renderInput={(params): JSX.Element => (

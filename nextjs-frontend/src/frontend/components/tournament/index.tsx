@@ -3,7 +3,7 @@ import axios from "axios";
 import moment from "moment";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
-import React, { useState } from "react";
+import React from "react";
 import { EliminateBracketData } from "../brackets/create/eliminate-bracket";
 import NoobPage from "../page/noob-page";
 import { PublishTournamentData } from "../publish/publish-tournament";
