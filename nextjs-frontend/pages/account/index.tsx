@@ -105,7 +105,6 @@ function Account(): JSX.Element {
                     }}
                   >
                     <Tab label="Posts" value="posts" sx={tabStyles} />
-                    <Tab label="About" value="about" sx={tabStyles} />
                     <Tab label="Match activity" value="activity" sx={tabStyles} />
                   </TabList>
                 </Box>
@@ -118,7 +117,6 @@ function Account(): JSX.Element {
                   <CreatePostInput setPosts={setPosts} />
                   {_renderPosts()}
                 </TabPanel>
-                <TabPanel sx={{ p: 0 }} value="about"></TabPanel>
                 <TabPanel sx={{ p: 0 }} value="activity"></TabPanel>
               </TabContext>
             </Box>

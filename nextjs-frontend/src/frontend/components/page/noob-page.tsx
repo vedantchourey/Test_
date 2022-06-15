@@ -18,7 +18,7 @@ export default function NoobPage(props: Props): JSX.Element {
 
   return (
     <>
-    
+      <SideHeader/>
       <div style={{marginTop: 50}}>
         <Head>
           <title>{title}</title>
@@ -26,8 +26,7 @@ export default function NoobPage(props: Props): JSX.Element {
             <meta key={index} name={key} content={metaData[key]} />
           ))}
           <link rel="icon" href={favIcon} />
-        </Head>
-        <SideHeader/>
+        </Head>  
         <Box sx={{ display: 'flex' }} maxWidth={"100vw"}>
           <NoobHeader/>
             <Box
