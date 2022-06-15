@@ -2,6 +2,7 @@ import {
     Button, Grid, OutlinedInput, Typography
 } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
 import { createStyles, makeStyles } from "@mui/styles";
 import { Box } from "@mui/system";
 import { useFormik } from "formik";
@@ -130,6 +131,9 @@ const NewsPage: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
                                                 onBlur={formik.handleBlur}
                                                 error={formik.touched.title && Boolean(formik.errors.title)}
                                             />
+                                            {formik.touched.title && Boolean(formik.errors.title) ? (
+                                                <FormHelperText> {formik.errors.title} </FormHelperText>
+                                            ) : null}
                                         </FormControl>
                                     </Grid>
                                     <Grid item xs={6}>
@@ -146,6 +150,9 @@ const NewsPage: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
                                                 onBlur={formik.handleBlur}
                                                 error={formik.touched.subtitle && Boolean(formik.errors.subtitle)}
                                             />
+                                            {formik.touched.subtitle && Boolean(formik.errors.subtitle) ? (
+                                                <FormHelperText> {formik.errors.subtitle} </FormHelperText>
+                                            ) : null}
                                         </FormControl>
                                     </Grid>
 
@@ -162,6 +169,9 @@ const NewsPage: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
                                                 onBlur={formik.handleBlur}
                                                 error={formik.touched.authorname && Boolean(formik.errors.authorname)}
                                             />
+                                            {formik.touched.authorname && Boolean(formik.errors.authorname) ? (
+                                                <FormHelperText> {formik.errors.authorname} </FormHelperText>
+                                            ) : null}
                                         </FormControl>
                                     </Grid>
                                 </Grid>
