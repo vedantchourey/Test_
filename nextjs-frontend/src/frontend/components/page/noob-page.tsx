@@ -27,7 +27,7 @@ export default function NoobPage(props: Props): JSX.Element {
           ))}
           <link rel="icon" href={favIcon} />
         </Head>
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex' }} maxWidth={"100vw"}>
           <NoobHeader/>
             <Box
               style={{ minHeight: '1240px' }}

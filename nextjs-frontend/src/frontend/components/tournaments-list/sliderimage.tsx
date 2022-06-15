@@ -57,6 +57,7 @@ const SliderComp: React.FC = (): JSX.Element => {
         .get(endpoint, {
           params: {
             game: first ? "" : game_id,
+            limit: 20,
             format
           },
           headers: headers,

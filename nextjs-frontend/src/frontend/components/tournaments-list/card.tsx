@@ -39,7 +39,7 @@ const CardDesktop: React.FC<any> = ({
             sx={{
               padding: { sm: "8px", xs: "8px", md: "8px", textAlign: "left" },
             }}
-            bgcolor={"rgba(105, 50, 249, 0.1)"}
+            bgcolor={"rgba(0,0,0,0.4)"}
           >
             <Grid container columnSpacing={2}>
               <Grid item md={4} lg={4} className={styles.heading_font_color}>
