@@ -10,7 +10,7 @@ import { PublishTournamentData } from "../publish/publish-tournament";
 import { BasicData } from "../setup/basic";
 import { InfoData } from "../setup/info";
 import { SettingData } from "../setup/settings";
-import Loader from '../ui-components/loader';
+import Loader from "../ui-components/loader";
 import SideBar from "../ui-components/sidebar";
 import Create from "./create";
 import { StreamData } from "./create/streams";
@@ -124,7 +124,7 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
           setLoading(false);
         })
         .catch((err) => {
-          setLoading(false)
+          setLoading(false);
           console.error(err);
         });
     }
@@ -256,10 +256,10 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
     req.templateCode = req.publishData?.templateCode || "";
     delete req.publishData;
     delete req.basic;
-    if(!requestData.settings) delete req.settings
-    if(!requestData.bracketsMetadata) delete req.bracketsMetadata
-    if(!requestData.streams) delete req.streams
-    if(!requestData.info) delete req.info
+    if (!requestData.settings) delete req.settings;
+    if (!requestData.bracketsMetadata) delete req.bracketsMetadata;
+    if (!requestData.streams) delete req.streams;
+    if (!requestData.info) delete req.info;
     return axios
       .post("/api/tournaments/create", req)
       .then((res: any) => {

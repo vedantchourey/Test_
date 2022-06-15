@@ -9,6 +9,7 @@ import { gameSliceReducer, formatSliceReducer } from "./games/game-slice";
 import matchBestOfSliceReducer from "./match-best-of/match-best-of-slice";
 import matchFormatSliceReducer from "./match-format/match-format-slice";
 import walletSliceReducer from "./wallet/wallet.-slice";
+import cartSliceReducer from "./cart/cart-slice";
 
 const reduxStore = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ const reduxStore = configureStore({
     matchBestOfs: matchBestOfSliceReducer,
     matchFormats: matchFormatSliceReducer,
     wallet: walletSliceReducer,
+    cart: cartSliceReducer,
   },
 });
 

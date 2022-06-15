@@ -18,7 +18,10 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useAppSelector } from "../../src/frontend/redux-store/redux-store";
+import {
+  useAppSelector,
+  useAppDispatch,
+} from "../../src/frontend/redux-store/redux-store";
 import { isDeviceTypeSelector } from "../../src/frontend/redux-store/layout/layout-selectors";
 import { deviceTypes } from "../../src/frontend/redux-store/layout/device-types";
 import { getAuthHeader } from "../../src/frontend/utils/headers";
@@ -264,6 +267,7 @@ const StoreIndex = (): JSX.Element => {
                       description={product.description}
                       price={product.amount}
                       key={i}
+                      id={product.id}
                     />
                   );
                 })}
