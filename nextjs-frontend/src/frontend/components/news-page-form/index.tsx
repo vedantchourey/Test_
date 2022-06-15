@@ -48,9 +48,8 @@ export interface BasicData {
 interface BasicPorps {
     data?: BasicData;
     onSave?: (data: BasicData) => void;
-    setPlatformIds?: any;
 }
-const NewsPage: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
+const NewsPage: React.FC<BasicPorps> = ({ onSave, data }) => {
     const style = useStyles();
     const validationSchema = yup.object({
         title: yup.string().required("Title is required"),
