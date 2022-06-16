@@ -76,10 +76,10 @@ const Bracket: React.FC<BracketProps> = ({
               ...i,
               name: findPlayer?.firstName + " " + findPlayer?.lastName,
             };
-          else return { ...i, name: "NA" };
-        } else {
           return { ...i, name: "NA" };
-        }
+        } 
+          return { ...i, name: "NA" };
+        
       }),
     };
     setBData(null);

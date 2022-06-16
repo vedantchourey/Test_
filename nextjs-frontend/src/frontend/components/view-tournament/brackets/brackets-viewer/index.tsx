@@ -1,10 +1,7 @@
 import { useEffect } from "react";
 import '../../../ui-components/typography/heading.module.css'
 
-const Component = ({ brackets }: { brackets: any }): any => {
-
-  console.log('brackets -> ', brackets)
-  
+const Component = ({ brackets }: { brackets: any }): any => {  
   useEffect(() => {
     if (!brackets) return;
 

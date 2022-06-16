@@ -13,15 +13,26 @@ import { isThereAnyError } from "../../../common/utils/validation/validator";
 import { TournamentRepository } from "../database/repositories/tournament-repository";
 import { TournamentsRepository } from "../database/repositories/tournaments-repository";
 import { Knex } from "knex";
-import { fetchInivtesValidator, validatePersistTournament } from "./persist-tournament-validator";
-import { persistBrackets, registerTeamTournament } from "../brackets-service/brackets-service";
+import {
+  fetchInivtesValidator,
+  validatePersistTournament,
+} from "./persist-tournament-validator";
+import {
+  persistBrackets,
+  registerTeamTournament,
+} from "../brackets-service/brackets-service";
 import { ServiceResponse } from "../common/contracts/service-response";
 import { ListTournamentType } from "./list-tournaments-request";
 import { ITournament } from "../database/models/i-tournaments";
 import BracketsCrud from "../brackets-service/brackets-crud";
 import { BTournament } from "../database/repositories/bracket-tournament";
 import { BracketsManager } from "brackets-manager";
-import { STATUS, TABLE_NAMES, TOURNAMENT_TYPE_NUMBER, USER_FEILDS } from "../../../models/constants";
+import {
+  STATUS,
+  TABLE_NAMES,
+  TOURNAMENT_TYPE_NUMBER,
+  USER_FEILDS,
+} from "../../../models/constants";
 import { CrudRepository } from "../database/repositories/crud-repository";
 import { IBParticipants } from "../database/models/i-b-participant";
 import { ITournamentInvites } from "../database/models/i-tournament-invites";
@@ -32,14 +43,25 @@ import { IError } from "../../utils/common/Interfaces";
 import { IBMatch } from "../database/models/i-b-match";
 import { IPrivateProfile } from "../database/models/i-private-profile";
 import { ITeams } from "../database/models/i-teams";
+import { IEloRating } from "../database/models/i-elo-rating";
 
-const getTournamentInviteObj = (knexConnection: Knex): CrudRepository<ITournamentInvites> => {
-  return new CrudRepository<ITournamentInvites>(knexConnection, TABLE_NAMES.TOURNAMENT_INIVTES)
-}
+const getTournamentInviteObj = (
+  knexConnection: Knex
+): CrudRepository<ITournamentInvites> => {
+  return new CrudRepository<ITournamentInvites>(
+    knexConnection,
+    TABLE_NAMES.TOURNAMENT_INIVTES
+  );
+};
 
-const getTournamentObj = (knexConnection: Knex): CrudRepository<ITournament> => {
-  return new CrudRepository<ITournament>(knexConnection, TABLE_NAMES.TOURNAMENTS)
-}
+const getTournamentObj = (
+  knexConnection: Knex
+): CrudRepository<ITournament> => {
+  return new CrudRepository<ITournament>(
+    knexConnection,
+    TABLE_NAMES.TOURNAMENTS
+  );
+};
 
 export const createTournament: NoobApiService<
   CreateOrEditTournamentRequest,
@@ -124,9 +146,7 @@ export async function tournamentDetails(
       context.transaction as Knex.Transaction
     );
 
-    let tournament = await repository.getTournament(
-      tournamentId as string
-    );
+    let tournament = await repository.getTournament(tournamentId as string);
 
     const bracketTournamentRepo = new BTournament(
       context.transaction as Knex.Transaction
@@ -136,47 +156,96 @@ export async function tournamentDetails(
     });
 
     let players: any = [];
-    let pricePool = 0
-    let currentPricePool = 0
+    let pricePool = 0;
+    let currentPricePool = 0;
     if (bracketT) {
-      const part_repo = new CrudRepository<IBParticipants>(context.knexConnection as any, TABLE_NAMES.B_PARTICIPANT);
+      const part_repo = new CrudRepository<IBParticipants>(
+        context.knexConnection as any,
+        TABLE_NAMES.B_PARTICIPANT
+      );
       if (tournament?.settings?.tournamentFormat === "1v1") {
-        players = await part_repo.knexObj().
-          join(TABLE_NAMES.PRIVATE_PROFILE, "private_profiles.id", "b_participant.user_id")
+        players = await part_repo
+          .knexObj()
+          .join(
+            TABLE_NAMES.PRIVATE_PROFILE,
+            "private_profiles.id",
+            "b_participant.user_id"
+          )
           .leftJoin(TABLE_NAMES.ELO_RATING, {
             "elo_ratings.user_id": "private_profiles.id",
           })
-          .where({ tournament_id: bracketT.id, })
+          .where({ tournament_id: bracketT.id })
           .where({
-            "elo_ratings.game_id": tournament.game
+            "elo_ratings.game_id": tournament.game,
           })
-          .select(["private_profiles.firstName", "private_profiles.lastName", "private_profiles.id", "elo_ratings.elo_rating"])
+          .select([
+            "private_profiles.firstName",
+            "private_profiles.lastName",
+            "private_profiles.id",
+            "elo_ratings.elo_rating",
+          ])
           .whereNotNull("b_participant.user_id");
 
-        pricePool = Number(tournament?.bracketsMetadata?.playersLimit) * Number(tournament?.settings?.entryFeeAmount);
-        currentPricePool = players.length ? players.length * Number(tournament?.settings?.entryFeeAmount) : 0;
+        pricePool =
+          Number(tournament?.bracketsMetadata?.playersLimit) *
+          Number(tournament?.settings?.entryFeeAmount);
+        currentPricePool = players.length
+          ? players.length * Number(tournament?.settings?.entryFeeAmount)
+          : 0;
       } else {
-        players = await part_repo.knexObj()
-          .select(["private_profiles.firstName", "private_profiles.lastName", "private_profiles.id", "elo_ratings.elo_rating",
-            "teams.elo_rating as team_elo_rating", "teams.id as team_id", "teams.name as team_name"])
-          .join(TABLE_NAMES.B_TOURNAMENT, "b_tournament.id", "b_participant.tournament_id")
-          .join(TABLE_NAMES.TOURNAMENT_INIVTES, "tournament_invites.team_id", "b_participant.team_id")
+        players = await part_repo
+          .knexObj()
+          .select([
+            "private_profiles.firstName",
+            "private_profiles.lastName",
+            "private_profiles.id",
+            "elo_ratings.elo_rating",
+            "teams.elo_rating as team_elo_rating",
+            "teams.id as team_id",
+            "teams.name as team_name",
+          ])
+          .join(
+            TABLE_NAMES.B_TOURNAMENT,
+            "b_tournament.id",
+            "b_participant.tournament_id"
+          )
+          .join(
+            TABLE_NAMES.TOURNAMENT_INIVTES,
+            "tournament_invites.team_id",
+            "b_participant.team_id"
+          )
           .join(TABLE_NAMES.TEAMS, "teams.id", "b_participant.team_id")
-          .where({ "b_participant.tournament_id": bracketT.id, })
-          .join(TABLE_NAMES.PRIVATE_PROFILE, "private_profiles.id", "tournament_invites.user_id")
+          .where({ "b_participant.tournament_id": bracketT.id })
+          .join(
+            TABLE_NAMES.PRIVATE_PROFILE,
+            "private_profiles.id",
+            "tournament_invites.user_id"
+          )
           .leftJoin(TABLE_NAMES.ELO_RATING, {
             "elo_ratings.user_id": "private_profiles.id",
-            "elo_ratings.game_id": "teams.game_id"
+            "elo_ratings.game_id": "teams.game_id",
           })
           .where("tournament_invites.tournament_id", tournamentId as string)
-          .whereNotNull("b_participant.team_id")
-        const grp_team = _.groupBy(players, "team_name")
-        currentPricePool = players.length ? players.length * Number(tournament?.settings?.entryFeeAmount) : 0;
+          .whereNotNull("b_participant.team_id");
+        const grp_team = _.groupBy(players, "team_name");
+        currentPricePool = players.length
+          ? players.length * Number(tournament?.settings?.entryFeeAmount)
+          : 0;
         players = _.keys(grp_team).map((k) => {
-          return { team_name: k, team_id: grp_team[k][0].team_id, ...grp_team[k] }
-        })
-        const playerCount = TOURNAMENT_TYPE_NUMBER[tournament?.settings?.tournamentFormat || "1v1"]
-        pricePool = Number(tournament?.bracketsMetadata?.playersLimit) * playerCount * Number(tournament?.settings?.entryFeeAmount);
+          return {
+            team_name: k,
+            team_id: grp_team[k][0].team_id,
+            ...grp_team[k],
+          };
+        });
+        const playerCount =
+          TOURNAMENT_TYPE_NUMBER[
+            tournament?.settings?.tournamentFormat || "1v1"
+          ];
+        pricePool =
+          Number(tournament?.bracketsMetadata?.playersLimit) *
+          playerCount *
+          Number(tournament?.settings?.entryFeeAmount);
       }
 
       const connect = context.knexConnection;
@@ -194,215 +263,406 @@ export async function tournamentDetails(
       },
     } as any;
   } catch (ex) {
-    return getErrorObject("Something went wrong" + ex) as any
+    return getErrorObject("Something went wrong" + ex) as any;
   }
 }
 
-export const addTournamentInvites = async (data: ITournamentInvites | ITournamentInvites[], knexConnection: Knex): Promise<any> => {
+export const addTournamentInvites = async (
+  data: ITournamentInvites | ITournamentInvites[],
+  knexConnection: Knex
+): Promise<any> => {
   const invites = getTournamentInviteObj(knexConnection);
-  return await invites.create(data)
-}
+  return await invites.create(data);
+};
 
-export const updateTournamentInvites = async (data: ITournamentInvites, query: any, knexConnection: Knex): Promise<any> => {
+export const updateTournamentInvites = async (
+  data: ITournamentInvites,
+  query: any,
+  knexConnection: Knex
+): Promise<any> => {
   const invites = getTournamentInviteObj(knexConnection);
   const tournamtObj = getTournamentObj(knexConnection);
-  const tournament: ITournament = await tournamtObj.findById(query.tournament_id);
+  const tournament: ITournament = await tournamtObj.findById(
+    query.tournament_id
+  );
 
-  if (data.status === STATUS.ACCEPTED && tournament?.settings?.entryType === "credit") {
-    const wallet_result = await debitBalance({
-      userId: query.user_id,
-      amount: Number(tournament.settings?.entryFeeAmount),
-      type: "TOURNAMENT_REGISTRATION",
-    }, knexConnection as Knex.Transaction, {
-      tournament_id: tournament.id
-    })
+  if (
+    data.status === STATUS.ACCEPTED &&
+    tournament?.settings?.entryType === "credit"
+  ) {
+    const wallet_result = await debitBalance(
+      {
+        userId: query.user_id,
+        amount: Number(tournament.settings?.entryFeeAmount),
+        type: "TOURNAMENT_REGISTRATION",
+      },
+      knexConnection as Knex.Transaction,
+      {
+        tournament_id: tournament.id,
+      }
+    );
     if (wallet_result?.errors) {
-      return wallet_result
+      return wallet_result;
     }
   }
-  const result = await invites.update(data, query)
-  await handleInviteSubmit(query.tournament_id, query.team_id, knexConnection)
-  return result
-}
+  const result = await invites.update(data, query);
+  await handleInviteSubmit(query.tournament_id, query.team_id, knexConnection);
+  return result;
+};
 
-export const fetchTournamentInvites = async (req: any, knexConnection: Knex): Promise<any> => {
+export const fetchTournamentInvites = async (
+  req: any,
+  knexConnection: Knex
+): Promise<any> => {
   const errors = await fetchInivtesValidator(req);
   if (errors) return { errors };
 
   const invites = getTournamentInviteObj(knexConnection);
-  const data = await invites.find({ tournament_id: req.tournament_id, team_id: req.team_id })
-  return { data }
-}
+  const data = await invites.find({
+    tournament_id: req.tournament_id,
+    team_id: req.team_id,
+  });
+  return { data };
+};
 
-export const handleInviteSubmit = async (tournament_id: string, team_id: string, knexConnection: Knex): Promise<any> => {
+export const handleInviteSubmit = async (
+  tournament_id: string,
+  team_id: string,
+  knexConnection: Knex
+): Promise<any> => {
   const inviteObj = getTournamentInviteObj(knexConnection);
   const tournameObj = getTournamentObj(knexConnection);
   const tournament: ITournament = await tournameObj.findById(tournament_id);
-  const acceptedInvites = await inviteObj.find({ team_id, tournament_id, status: STATUS.ACCEPTED })
-  const numberOfPlayer: string = tournament?.settings?.tournamentFormat || "1v1";
+  const acceptedInvites = await inviteObj.find({
+    team_id,
+    tournament_id,
+    status: STATUS.ACCEPTED,
+  });
+  const numberOfPlayer: string =
+    tournament?.settings?.tournamentFormat || "1v1";
   if (TOURNAMENT_TYPE_NUMBER[numberOfPlayer] === acceptedInvites.length) {
-    return await registerTeamTournament({
-      tournamentId: tournament_id,
-      team_id,
-    } as any, knexConnection)
+    return await registerTeamTournament(
+      {
+        tournamentId: tournament_id,
+        team_id,
+      } as any,
+      knexConnection
+    );
   }
-}
+};
 
-export const fetchMatchDetails = async (context: PerRequestContext): Promise<any | IError> => {
+export const fetchMatchDetails = async (
+  context: PerRequestContext
+): Promise<any | IError> => {
   try {
     const { tournament, match } = context;
-    const participantRepo = new CrudRepository<IBParticipants>(context.knexConnection as Knex, TABLE_NAMES.B_PARTICIPANT);
+    const participantRepo = new CrudRepository<IBParticipants>(
+      context.knexConnection as Knex,
+      TABLE_NAMES.B_PARTICIPANT
+    );
 
-    const opponent1 = participantRepo.knexObj()
+    const opponent1 = participantRepo
+      .knexObj()
       .select(USER_FEILDS)
-      .where({ "b_participant.id": match?.opponent1.id })
-    const opponent2 = participantRepo.knexObj()
+      .where({ "b_participant.id": match?.opponent1.id });
+    const opponent2 = participantRepo
+      .knexObj()
       .select(USER_FEILDS)
-      .where({ "b_participant.id": match?.opponent2.id })
+      .where({ "b_participant.id": match?.opponent2.id });
 
     if (tournament?.settings?.tournamentFormat === "1v1") {
-      opponent1.join("private_profiles", "private_profiles.id", "b_participant.user_id")
+      opponent1
+        .join(
+          "private_profiles",
+          "private_profiles.id",
+          "b_participant.user_id"
+        )
         .leftJoin(TABLE_NAMES.ELO_RATING, {
           "elo_ratings.user_id": "private_profiles.id",
         })
         .where({
-          "elo_ratings.game_id": tournament.game
+          "elo_ratings.game_id": tournament.game,
         })
-        .where({ "b_participant.is_checked_in": true })
-      opponent2.join("private_profiles", "private_profiles.id", "b_participant.user_id")
+        .where({ "b_participant.is_checked_in": true });
+      opponent2
+        .join(
+          "private_profiles",
+          "private_profiles.id",
+          "b_participant.user_id"
+        )
         .leftJoin(TABLE_NAMES.ELO_RATING, {
           "elo_ratings.user_id": "private_profiles.id",
         })
         .where({
-          "elo_ratings.game_id": tournament.game
+          "elo_ratings.game_id": tournament.game,
         })
-        .where({ "b_participant.is_checked_in": true })
+        .where({ "b_participant.is_checked_in": true });
       return {
         opponent1: await opponent1,
-        opponent2: await opponent2
-      }
+        opponent2: await opponent2,
+      };
     }
     opponent1
       .join("b_tournament", "b_tournament.id", "b_participant.tournament_id")
-      .join("tournament_invites", "tournament_invites.tournament_id", "b_tournament.tournament_uuid")
+      .join(
+        "tournament_invites",
+        "tournament_invites.tournament_id",
+        "b_tournament.tournament_uuid"
+      )
       .join("teams", "teams.id", "tournament_invites.team_id")
-      .join("private_profiles", "private_profiles.id", "tournament_invites.user_id")
+      .join(
+        "private_profiles",
+        "private_profiles.id",
+        "tournament_invites.user_id"
+      )
       .leftJoin(TABLE_NAMES.ELO_RATING, {
         "elo_ratings.user_id": "private_profiles.id",
-        "elo_ratings.game_id": "teams.game_id"
+        "elo_ratings.game_id": "teams.game_id",
       })
       .where({ "tournament_invites.is_checked_in": true })
-      .select(["teams.id as team_id", "teams.name as team_name", "teams.elo_rating as team_elo_rating"])
+      .select([
+        "teams.id as team_id",
+        "teams.name as team_name",
+        "teams.elo_rating as team_elo_rating",
+      ]);
     opponent2
       .join("b_tournament", "b_tournament.id", "b_participant.tournament_id")
-      .join("tournament_invites", "tournament_invites.tournament_id", "b_tournament.tournament_uuid")
+      .join(
+        "tournament_invites",
+        "tournament_invites.tournament_id",
+        "b_tournament.tournament_uuid"
+      )
       .join("teams", "teams.id", "tournament_invites.team_id")
       .leftJoin(TABLE_NAMES.ELO_RATING, {
         "elo_ratings.user_id": "private_profiles.id",
-        "elo_ratings.game_id": "teams.game_id"
+        "elo_ratings.game_id": "teams.game_id",
       })
-      .join("private_profiles", "private_profiles.id", "tournament_invites.user_id")
+      .join(
+        "private_profiles",
+        "private_profiles.id",
+        "tournament_invites.user_id"
+      )
       .where({ "tournament_invites.is_checked_in": true })
-      .select(["teams.id as team_id", "teams.name as team_name", "teams.elo_rating as team_elo_rating"])
+      .select([
+        "teams.id as team_id",
+        "teams.name as team_name",
+        "teams.elo_rating as team_elo_rating",
+      ]);
     return {
-      opponent1: { ...match?.opponent1, ...formatTeamsData(await opponent1)[0] },
-      opponent2: { ...match?.opponent2, ...formatTeamsData(await opponent2)[0] },
-    }
+      opponent1: {
+        ...match?.opponent1,
+        ...formatTeamsData(await opponent1)[0],
+      },
+      opponent2: {
+        ...match?.opponent2,
+        ...formatTeamsData(await opponent2)[0],
+      },
+    };
   } catch (e: any) {
-    return getErrorObject()
+    return getErrorObject();
   }
+};
 
-}
+const getUserWithElo = async (
+  userId: string,
+  details: any,
+  context: PerRequestContext
+): Promise<any> => {
+  const eloRepo = new CrudRepository<IEloRating>(
+    context.knexConnection as Knex,
+    TABLE_NAMES.ELO_RATING
+  );
+  const player_elo_rating = (await eloRepo.findBy("user_id", userId))[0]?.elo_rating || 0;
+  return {
+      ...details,
+      player_elo_rating
+  };
+};
 
-export const fetchUserMatchs = async (context: PerRequestContext): Promise<any | IError> => {
+export const fetchUserMatchs = async (
+  context: PerRequestContext
+): Promise<any | IError> => {
   try {
     const { user } = context;
 
     //fetching team tournaments entries
-    const inviteRepo = new CrudRepository<ITournamentInvites>(context.knexConnection as Knex, TABLE_NAMES.TOURNAMENT_INIVTES);
-    const team_tournaments = await inviteRepo.find({ user_id: user?.id, status: STATUS.ACCEPTED }, ["team_id"])
-    const team_ids = team_tournaments.map((x: any) => x.team_id)
+    const inviteRepo = new CrudRepository<ITournamentInvites>(
+      context.knexConnection as Knex,
+      TABLE_NAMES.TOURNAMENT_INIVTES
+    );
+    
+    const team_tournaments = await inviteRepo.find(
+      { user_id: user?.id, status: STATUS.ACCEPTED },
+      ["team_id"]
+    );
+    const team_ids = team_tournaments.map((x: any) => x.team_id);
+    
 
     //fetching all the participant id for single and team
-    const participantRepo = new CrudRepository<IBParticipants>(context.knexConnection as Knex, TABLE_NAMES.B_PARTICIPANT);
-    const tournaments = await participantRepo.knexObj().where("user_id", user?.id)
+    const participantRepo = new CrudRepository<IBParticipants>(
+      context.knexConnection as Knex,
+      TABLE_NAMES.B_PARTICIPANT
+    );
+    
+    const tournaments = await participantRepo
+      .knexObj()
+      .where("user_id", user?.id)
       .orWhereIn("team_id", team_ids)
-      .select(["id", "tournament_id", "user_id", "team_id"])
-
+      .select(["id", "tournament_id", "user_id", "team_id"]);
+      
     if (!tournaments?.length) {
-      return []
+      return [];
     }
+
+    
     //fetching matches
-    const matchRepo = new CrudRepository<IBMatch>(context.knexConnection as Knex, TABLE_NAMES.B_MATCH);
-    const matches = await matchRepo.knexObj()
+    const matchRepo = new CrudRepository<IBMatch>(
+      context.knexConnection as Knex,
+      TABLE_NAMES.B_MATCH
+    );
+    
+    const matches = await matchRepo
+      .knexObj()
       .join("b_stage", "b_stage.id", "b_match.stage_id")
       .join("b_tournament", "b_tournament.id", "b_stage.tournament_id")
-      .join(TABLE_NAMES.TOURNAMENTS, "tournamentsData.id", "b_tournament.tournament_uuid")
-      .whereRaw(`(opponent1->>'id') in (${tournaments.map((x: any) => `'${x.id}'`)}) 
-    or (opponent2->>'id') in (${tournaments.map((x: any) => `'${x.id}'`)}) `)
-      .select(["b_match.id as match_id", "tournamentsData.id as tournament_id",
-        "tournamentsData.name as tournament_name", "b_match.opponent1", "b_match.opponent2", "b_stage.type"])
-    const part_id: any[] = []
+      .join(
+        TABLE_NAMES.TOURNAMENTS,
+        "tournamentsData.id",
+        "b_tournament.tournament_uuid"
+      )
+      .whereRaw(
+        `(opponent1->>'id') in (${tournaments.map((x: any) => `'${x.id}'`)}) 
+    or (opponent2->>'id') in (${tournaments.map((x: any) => `'${x.id}'`)}) `
+      )
+      .select([
+        "b_match.id as match_id",
+        "tournamentsData.id as tournament_id",
+        "tournamentsData.name as tournament_name",
+        "b_match.opponent1",
+        "b_match.opponent2",
+        "b_stage.type",
+      ]);
+      
+    const part_id: any[] = [];
     matches.forEach((x: any) => {
-      part_id.push(x.opponent1.id)
-      part_id.push(x.opponent2.id)
-    })
-    //fetch all participants of the match 
-    const part_list = await participantRepo.knexObj().whereIn("id", part_id)
+      part_id.push(x.opponent1.id);
+      part_id.push(x.opponent2.id);
+    });
+    
+    //fetch all participants of the match
+    const part_list = await participantRepo
+      .knexObj()
+      .whereIn("id", part_id)
       .whereNotNull("user_id")
-      .orWhereNotNull("team_id")
-    const groupPartList = _.groupBy(part_list, "id")
-    const opponents: any[] = []
-    const opp_teams: any[] = []
+      .orWhereNotNull("team_id");
+    
+    const groupPartList = _.groupBy(part_list, "id");
+    const opponents: any[] = [];
+    const opp_teams: any[] = [];
+    
     part_list.forEach((part: any) => {
       if (part.user_id) opponents.push(part.user_id);
       if (part.team_id) opp_teams.push(part.team_id);
-    })
-    const userRepo = new CrudRepository<IPrivateProfile>(context.knexConnection as Knex, TABLE_NAMES.PRIVATE_PROFILE);
-    const teamRepo = new CrudRepository<ITeams>(context.knexConnection as Knex, TABLE_NAMES.TEAMS);
+    });
+    
+    const userRepo = new CrudRepository<IPrivateProfile>(
+      context.knexConnection as Knex,
+      TABLE_NAMES.PRIVATE_PROFILE
+    );
+    
+    const teamRepo = new CrudRepository<ITeams>(
+      context.knexConnection as Knex,
+      TABLE_NAMES.TEAMS
+    );
+    
+    
 
-    const [opp_users, teams] = await Promise.all([
+    const [opp_users_list] = await Promise.all([
       // fetching opponents details for single tournament
-      await userRepo.knexObj().whereIn("id", [...opponents, user?.id])
+      await userRepo
+        .knexObj()
+        .whereIn("id", [...opponents, user?.id])
         .select(USER_FEILDS)
         .select("id as user_id"),
-      // fetching opponents details for teams tournament
-      await teamRepo.knexObj().whereIn("id", opp_teams)
-        .select(["id as team_id", "elo_rating", "name", "platform_id", "game_id"])
-    ])
-    const teams_grouped = _.groupBy(teams, 'team_id')
-    const opp_user_grouped = _.groupBy(opp_users, 'user_id');
+    ]);
+
+    const opp_users = await Promise.all(opp_users_list.map((i: any) => getUserWithElo(i.user_id, i, context)))
+
+    
+
+    const [teams] = await Promise.all([
+      await teamRepo
+        .knexObj()
+        .whereIn("id", opp_teams)
+        .select([
+          "id as team_id",
+          "name",
+          "platform_id",
+          "game_id",
+        ]),
+    ]);
+    
+    const teams_grouped = _.groupBy(teams, "team_id");
+    const opp_user_grouped = _.groupBy(opp_users, "user_id");
+
+    
 
     // concatinating matchs and opponents/user details
+    
     const result = matches.map((match: any) => {
       let { opponent1, opponent2 } = match;
-      if (opponent1.id && groupPartList[opponent1.id] && groupPartList[opponent1.id].length) {
-        const participant = groupPartList[opponent1.id][0];
+      if (
+        opponent1.id &&
+        groupPartList[opponent1.id] &&
+        groupPartList[opponent1.id].length
+      ) {
+        const participant = groupPartList?.[opponent1.id]?.[0];
         if (participant.user_id)
-          opponent1 = { ...opponent1, ...opp_user_grouped[participant.user_id][0] };
+          opponent1 = {
+            ...opponent1,
+            ...opp_user_grouped[participant.user_id][0],
+          };
         if (participant.team_id)
-          opponent1 = { ...opponent1, ...teams_grouped[participant.team_id][0] };
+          opponent1 = {
+            ...opponent1,
+            ...teams_grouped?.[participant.team_id]?.[0],
+          };
       }
-      if (opponent2.id && groupPartList[opponent2.id] && groupPartList[opponent2.id].length) {
+      if (
+        opponent2.id &&
+        groupPartList[opponent2.id] &&
+        groupPartList[opponent2.id].length
+      ) {
         const participant = groupPartList[opponent2.id][0];
         if (participant.user_id)
-          opponent2 = { ...opponent2, ...opp_user_grouped[participant.user_id][0] };
+          opponent2 = {
+            ...opponent2,
+            ...opp_user_grouped[participant.user_id][0],
+          };
         if (participant.team_id)
-          opponent2 = { ...opponent2, ...teams_grouped[participant.team_id][0] };
+          opponent2 = {
+            ...opponent2,
+            ...teams_grouped?.[participant.team_id]?.[0],
+          };
       }
+      
+      
+      
       return {
         ...match,
         opponent1,
         opponent2,
-      }
-    })
-    return result
+      };
+    });
+    
+    return result;
   } catch (ex: any) {
-    return getErrorObject(ex)
+    
+    return getErrorObject(ex);
   }
-}
+};
 const formatTeamsData = (data: any): any => {
-  const grouped = _.groupBy(data, "team_id") as any
+  const grouped = _.groupBy(data, "team_id") as any;
   const result = Object.keys(grouped).map((key) => {
     return {
       team_id: key,
@@ -412,9 +672,9 @@ const formatTeamsData = (data: any): any => {
         user_id: x.user_id,
         firstName: x.firstName,
         lastName: x.lastName,
-        elo_rating: x.player_elo_rating
-      }))
-    }
-  })
+        elo_rating: x.player_elo_rating,
+      })),
+    };
+  });
   return result;
-}
+};

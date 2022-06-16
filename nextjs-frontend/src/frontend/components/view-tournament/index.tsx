@@ -359,7 +359,7 @@ const ViewTournament: React.FC = () => {
       // return [];
     }
     
-    const startDate =  data?.basic?.startDate || new Date().toISOString();
+    const startDate = data?.basic?.startDate || new Date().toISOString();
     const startTime = data?.bracketsMetadata?.startTime || new Date().toISOString();
     const now = moment();
     return (data.bracketsMetadata?.rounds || []).map((round, index) => {
