@@ -36,8 +36,10 @@ export const createOrder = async (
   const orderRepo = new orderRepository(transaction);
   const result = await orderRepo.create(req);
   if (result) {
-    const reqBody = { amount: result.total_amount };
-    return await createRazorPayOrder(reqBody, context.knexConnection as Knex);
+
+    return await createRazorPayOrder({
+      amount: req.amount,
+    }, context.knexConnection as Knex);
   }
   return result;
 };

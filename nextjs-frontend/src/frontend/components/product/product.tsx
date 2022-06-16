@@ -23,6 +23,8 @@ export default function Product(props: any): JSX.Element {
       const item = cart.products[i];
       const q = item.quantity;
       setQty(q);
+    } else {
+      setQty(0);
     }
   }, [cart]);
 
@@ -74,7 +76,16 @@ export default function Product(props: any): JSX.Element {
         ${props.price}
       </Typography>
       <Box className={styles.box}>
-        <Button variant="text" className={styles.button1}>
+        <Button
+          variant="text"
+          className={styles.button1}
+          onClick={() => {
+            if (qty <= 0) {
+              addToCart();
+            }
+            router.push("/checkout");
+          }}
+        >
           Buy Now
         </Button>
         {qty > 0 ? (
@@ -85,7 +96,6 @@ export default function Product(props: any): JSX.Element {
             value={qty}
             onChange={(event): void => {
               updateQty(event.target.value);
-              // setQty(Number(event.target.value));
             }}
             placeholder="qty"
             style={{ width: 75, marginLeft: "10px", marginTop: "20px" }}

@@ -5,7 +5,7 @@ import { IOrder } from "../models/i-order";
 const keys = ["id", "created_at",
     "order_id",
     "products",
-    "total_amount",
+    "amount",
     "payment_status",
     "status",
     "paymentInfo"

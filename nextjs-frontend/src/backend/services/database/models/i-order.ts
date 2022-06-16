@@ -12,6 +12,6 @@ export interface IOrder {
     status: string;
     products: IOrderProduct[];
     createdAt?: Date;
-    total_amount: number;
+    amount: number;
     paymentInfo: GenericObject;
 }
