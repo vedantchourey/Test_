@@ -138,7 +138,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team }) => {
         name: `${player.firstName} ${player.lastName}`,
         games: Number(player.won) + Number(player.lost),
         won: player.won,
-        elo: player.elo_rating,
+        elo: player.elo_rating || "0",
       };
     });
     setPlayerList(newList);
