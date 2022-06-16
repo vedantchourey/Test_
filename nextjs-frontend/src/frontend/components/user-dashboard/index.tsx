@@ -2,18 +2,19 @@ import { Box, Typography, Grid, Divider, Button } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
+import { IMatchHubData } from "../../../../pages/match-hub";
 import { userProfileSelector } from "../../redux-store/authentication/authentication-selectors";
 import { useAppSelector } from "../../redux-store/redux-store";
 import { IPostsResponse } from "../../service-clients/messages/i-posts-response";
 import { getPostsByUserId } from "../../service-clients/post-service-client";
 import { getAuthHeader } from "../../utils/headers";
 import PostCard from "../account/posts/post-card";
-import MatchHub, { Match } from "../match-hub";
+import MatchHub from "../match-hub";
 
 export default function index(): JSX.Element {
   const user = useAppSelector(userProfileSelector);
   const [data, setData] = useState<any>([]);
-  const [matchData, setMatchData] = useState<Match[]>([])
+  const [matchData, setMatchData] = useState<IMatchHubData[]>([])
   const [isFetchingPosts, setIsFetchingPosts] = useState<boolean>(true);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
 

@@ -7,10 +7,11 @@ import OpponentTile from "./opponent-tile/opponent-tile";
 import ResultTile from "./opponent-tile/result-tile/result-tile";
 import { Player } from "./players";
 import React from "react";
+import { IMatchHubData } from "../../../../pages/match-hub";
 
 interface Props {
-  data: Match[];
-  onMatchHub?: (match: Match) => void;
+  data: IMatchHubData[];
+  onMatchHub?: (match: IMatchHubData) => void;
   userDashboard?: boolean;
 }
 

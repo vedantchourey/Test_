@@ -138,10 +138,11 @@ export async function listTournament(
 }
 
 export async function tournamentDetails(
-  context: PerRequestContext
+  context: PerRequestContext,
+  _tournamentId?: string
 ): Promise<ServiceResponse<null, ITournament>> {
   try {
-    const tournamentId = context.getParamValue("tournamentId");
+    const tournamentId = _tournamentId || context.getParamValue("tournamentId");
     const repository = new TournamentsRepository(
       context.transaction as Knex.Transaction
     );
@@ -609,51 +610,53 @@ export const fetchUserMatchs = async (
 
     // concatinating matchs and opponents/user details
     
-    const result = matches.map((match: any) => {
-      let { opponent1, opponent2 } = match;
-      if (
-        opponent1.id &&
-        groupPartList[opponent1.id] &&
-        groupPartList[opponent1.id].length
-      ) {
-        const participant = groupPartList?.[opponent1.id]?.[0];
-        if (participant.user_id)
-          opponent1 = {
-            ...opponent1,
-            ...opp_user_grouped[participant.user_id][0],
-          };
-        if (participant.team_id)
-          opponent1 = {
-            ...opponent1,
-            ...teams_grouped?.[participant.team_id]?.[0],
-          };
-      }
-      if (
-        opponent2.id &&
-        groupPartList[opponent2.id] &&
-        groupPartList[opponent2.id].length
-      ) {
-        const participant = groupPartList[opponent2.id][0];
-        if (participant.user_id)
-          opponent2 = {
-            ...opponent2,
-            ...opp_user_grouped[participant.user_id][0],
-          };
-        if (participant.team_id)
-          opponent2 = {
-            ...opponent2,
-            ...teams_grouped?.[participant.team_id]?.[0],
-          };
-      }
-      
-      
-      
-      return {
-        ...match,
-        opponent1,
-        opponent2,
-      };
-    });
+    const result = Promise.all(
+      matches.map(async (match: any) => {
+        let { opponent1, opponent2 } = match;
+        if (
+          opponent1.id &&
+          groupPartList[opponent1.id] &&
+          groupPartList[opponent1.id].length
+        ) {
+          const participant = groupPartList?.[opponent1.id]?.[0];
+          if (participant.user_id)
+            opponent1 = {
+              ...opponent1,
+              ...opp_user_grouped[participant.user_id][0],
+            };
+          if (participant.team_id)
+            opponent1 = {
+              ...opponent1,
+              ...teams_grouped?.[participant.team_id]?.[0],
+            };
+        }
+        if (
+          opponent2.id &&
+          groupPartList[opponent2.id] &&
+          groupPartList[opponent2.id].length
+        ) {
+          const participant = groupPartList[opponent2.id][0];
+          if (participant.user_id)
+            opponent2 = {
+              ...opponent2,
+              ...opp_user_grouped[participant.user_id][0],
+            };
+          if (participant.team_id)
+            opponent2 = {
+              ...opponent2,
+              ...teams_grouped?.[participant.team_id]?.[0],
+            };
+        }
+
+        const tournament = await tournamentDetails(context, match.tournament_id);
+        return {
+          ...match,
+          tournament: tournament.data,
+          opponent1,
+          opponent2,
+        };
+      })
+    );
     
     return result;
   } catch (ex: any) {
