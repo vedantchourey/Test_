@@ -30,7 +30,7 @@ const Home: NextPage = () => {
       }}
     >
       <>
-        <NewHome />
+        
         <Heading heading="Homepage" />
         {/* {isLoggedIn && <UserDashboard />} */}
         {isLoggedIn && <NewHome />}

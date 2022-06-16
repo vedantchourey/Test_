@@ -1,6 +1,4 @@
 .backgroundImg {
-	margin-top: -40px;
-	width: 1345px;
 	height: 468px;
 	background: radial-gradient(50% 50% at 50% 50%, rgba(8, 0, 29, 0.7) 0%, rgba(8, 0, 29, 0.8) 46.24%, rgba(8, 0, 29, 0.9) 100%), url('/images/home.png');
 }
@@ -14,10 +12,7 @@
 .bgImgContainer {
 	display: flex;
 	flex-direction: column;
-	position: absolute;
 	justify-content: space-around;
-	left: 70px;
-	top: 300px;
 	width: 860px;
 	height: 222px;
 }

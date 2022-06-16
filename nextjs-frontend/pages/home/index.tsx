@@ -73,7 +73,7 @@ const Home = (): JSX.Element => {
   ];
 
   return (
-		<NoobPage title='Home' metaData={{ description: "Noob Storm home page" }}>
+		
 			<Fragment>
 				<Grid container>
           {isDesktop && <>
@@ -288,7 +288,7 @@ const Home = (): JSX.Element => {
 					</Container>
 				</Grid>
 			</Fragment>
-    </NoobPage>
+    
   )
 }
 
