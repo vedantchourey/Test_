@@ -11,12 +11,17 @@ import { Match } from "..";
 interface OpponentTileProps {
   onMatchHub?: (opponentData: Match) => void;
   data: Match;
+  userDashboard?: boolean;
 }
 
-const OpponentTile: React.FC<OpponentTileProps> = ({ onMatchHub, data }) => {
+const OpponentTile: React.FC<OpponentTileProps> = ({ onMatchHub, data, userDashboard }) => {
   const router = useRouter();
 
   const matchHubHandler = (): void => {
+    if (userDashboard) {
+      router.push(`/match-hub`);
+      return
+    }
     if (onMatchHub) {
       onMatchHub(data);
     }
@@ -56,7 +61,7 @@ const OpponentTile: React.FC<OpponentTileProps> = ({ onMatchHub, data }) => {
           </span>
         </p>
         <p>
-          <span className={styles.opponentTileTitle}>Chech starts in::</span>
+          <span className={styles.opponentTileTitle}>Chech starts in:</span>
           <span
             className={styles.opponentTileValue}
             style={{ marginLeft: "24px" }}
@@ -72,13 +77,13 @@ const OpponentTile: React.FC<OpponentTileProps> = ({ onMatchHub, data }) => {
           style={{ marginRight: "16px" }}
           onClick={matchHubHandler}
         >
-          Match Hub
+          {userDashboard ? "Open Match Hub" : "Match Hub"}
         </Button>
         <Button
           variant="contained"
           className={styles.opponentTileButton}
           onClick={(): void => {
-            router.push(`/view-tournament/${data.tournament_id}/details`,);
+            router.push(`/view-tournament/${data.tournament_id}/details`);
           }}
         >
           View Tournament

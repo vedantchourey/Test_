@@ -4,13 +4,19 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { userProfileSelector } from "../../redux-store/authentication/authentication-selectors";
 import { useAppSelector } from "../../redux-store/redux-store";
+import { IPostsResponse } from "../../service-clients/messages/i-posts-response";
+import { getPostsByUserId } from "../../service-clients/post-service-client";
 import { getAuthHeader } from "../../utils/headers";
+import PostCard from "../account/posts/post-card";
 import MatchHub, { Match } from "../match-hub";
 
 export default function index(): JSX.Element {
   const user = useAppSelector(userProfileSelector);
   const [data, setData] = useState<any>([]);
   const [matchData, setMatchData] = useState<Match[]>([])
+  const [isFetchingPosts, setIsFetchingPosts] = useState<boolean>(true);
+  const [posts, setPosts] = useState<IPostsResponse[]>([]);
+
   const teamList = async (): Promise<void> => {
     try {
       const endpoint = "api/teams";
@@ -21,6 +27,28 @@ export default function index(): JSX.Element {
     } catch (err) {
       alert(err);
     }
+  };
+
+  useEffect(() => {
+    try {
+      (async (): Promise<void> => {
+        const posts = await getPostsByUserId(user?.id || '');
+        setPosts(posts);
+      })();
+    } finally {
+      setIsFetchingPosts(false);
+    }
+  }, []);
+
+  const _renderPosts = (): JSX.Element | React.ReactNode => {
+    if (isFetchingPosts) {
+      return new Array(5).fill("")
+        .map((data, i) => <h1 key={i}>Skeleton</h1>);
+    }
+    const jsx = posts.map((postData) => {
+      return <PostCard key={postData.id} data={postData} row={true} />;
+    });
+    return jsx;
   };
 
   const fetchData = async (): Promise<void> => {
@@ -45,7 +73,7 @@ export default function index(): JSX.Element {
   return (
     <Box textAlign={"left"}>
       <Grid container>
-        <Grid xs={8}>
+        <Grid xs={10}>
           <Grid mb={2} container>
             <Grid xs={6}>
               <Box display={"flex"}>
@@ -76,19 +104,33 @@ export default function index(): JSX.Element {
             </Grid>
           </Grid>
           <Divider />
+          <Typography textAlign={"left"} mt={2} mb={2}>My Posts</Typography>
+          <Box display={"flex"} overflow={"scroll"}>
+            {_renderPosts()}
+          </Box>
+
           <Box mt={3}>
             <Box display={"flex"} justifyContent={"space-between"}>
               <Typography textAlign={"left"}>Match Activity</Typography>
               <Button>View All</Button>
             </Box>
-            <MatchHub data={matchData} onMatchHub={(data): any => console.warn('data -> ', data)} />
+            <MatchHub
+              data={matchData}
+              onMatchHub={(data): any => console.warn("data -> ", data)}
+              userDashboard={true}
+            />
           </Box>
         </Grid>
-        <Grid xs={4}>
+        <Grid xs={2}>
           <Box p={2} bgcolor={"rgba(255, 255, 255, 0.06)"}>
             <Typography textAlign={"left"}>My Team</Typography>
             {data.map((i: any) => (
-              <Box display={"flex"} alignItems={"center"} mt={1} key={`${i.id}`}>
+              <Box
+                display={"flex"}
+                alignItems={"center"}
+                mt={1}
+                key={`${i.id}`}
+              >
                 <img
                   src="/icons/Rectangle.svg"
                   width={"30px"}

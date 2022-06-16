@@ -6,6 +6,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import moment from "moment";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { getAllPlatformsSelector } from "../../redux-store/platforms/platform-selectors";
@@ -77,7 +78,7 @@ const CardDesktop: React.FC<any> = ({
                   color="secondary"
                   sx={{ color: "#FFFFFF" }}
                 >
-                  Completed
+                  {moment(start_date).isBefore(moment()) ? "Completed" : "On Going"}
                 </Button>
               </Grid>
             </Grid>

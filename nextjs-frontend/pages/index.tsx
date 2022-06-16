@@ -8,7 +8,6 @@ import {
   userProfileSelector,
 } from "../src/frontend/redux-store/authentication/authentication-selectors";
 import { useAppSelector } from "../src/frontend/redux-store/redux-store";
-import UserDashboard from '../src/frontend/components/user-dashboard'
 
 const Home: NextPage = () => {
   const isLoggedIn = useAppSelector(isLoggedInSelector);
@@ -30,7 +29,6 @@ const Home: NextPage = () => {
     >
       <>
         <Heading heading="Homepage" />
-        {isLoggedIn && <UserDashboard />}
       </>
     </NoobPage>
   );
