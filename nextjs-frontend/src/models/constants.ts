@@ -45,5 +45,4 @@ export const TOURNAMENT_TYPE_NUMBER: { [key: string]: number } = {
     "11v11": 10,
 }
 
-export const USER_FEILDS = ["private_profiles.id as user_id", "private_profiles.firstName", "private_profiles.lastName",
-    "elo_ratings.elo_rating as player_elo_rating"]
+export const USER_FEILDS = ["private_profiles.id as user_id", "private_profiles.firstName", "private_profiles.lastName"]

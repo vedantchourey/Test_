@@ -6,10 +6,12 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 // styles
 import styles from "./result-tile.module.css";
+import { IMatchHubData } from "../../../../../../pages/match-hub";
 
 interface ResultTileProps {
   isWon?: boolean;
   child?: JSX.Element;
+  data: IMatchHubData;
   opponent1Name?:string;
   opponent2Name?:string;
 }
@@ -39,7 +41,7 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
       {!child ? (
         <Grid item xs={6}>
           <p className={styles.resultTileValue}>
-            ENDPOINTGG VS CEX ESPORTS [2]
+            {props.data.tournament_name}
           </p>
           <p
             className={styles.resultTileStatus}

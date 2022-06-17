@@ -8,11 +8,15 @@ import React from "react";
 import { Box } from "@mui/material";
 import axios from "axios";
 import { getAuthHeader } from "../../src/frontend/utils/headers";
+import { TournamentData } from "../../src/frontend/components/tournament";
 
+export interface IMatchHubData extends Match {
+  tournament: TournamentData | any
+}
 
 const MatchHubPage: NextPage = () => {
-  const [match, setMatch] = React.useState<Match | undefined>();
-  const [data, setData] = React.useState<Match[]>([]);
+  const [match, setMatch] = React.useState<IMatchHubData | undefined>();
+  const [data, setData] = React.useState<IMatchHubData[]>([]);
 
   const fetchData = async ():Promise<void> =>{
     const headers = await getAuthHeader();

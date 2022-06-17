@@ -31,7 +31,7 @@ export interface RoundStatusData {
 
 export interface BracketProps {
   rounds?: RoundStatusData[];
-  brackets: IBrackets;
+  brackets: IBrackets | any;
   type: string;
   players: IPlayers[]
 }

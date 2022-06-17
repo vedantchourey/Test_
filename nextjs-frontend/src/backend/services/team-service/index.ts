@@ -21,6 +21,7 @@ import { deleteFAMEntry } from "../FreeAgencyMarket/FreeAgencyMarket-Service";
 import { createChannel } from "../chat-service";
 const fields = ["id", "game_id", "name", "platform_id"]
 import { IChannel } from "../database/models/i-channel";
+import { IChatUsers } from "../database/models/i-chat-users";
 
 
 export const fetchTeams = async (connection: Knex.Transaction, user: any, query: any): Promise<ISuccess | IError> => {
@@ -230,6 +231,15 @@ export const acceptInvite = async (secret: string, connection: Knex.Transaction)
             const [teams]: ITeams[] = await teamQuery.find({ id: invite.team_id });
 
             const team_players = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
+
+            const chatUserRepo = new CrudRepository<IChatUsers>(connection, "chat_users");
+            await chatUserRepo.create({
+              channel_id: invite.team_id,
+              user_id: invite.user_id,
+              other_user: invite.team_id,
+              channel_name: teams.name,
+            });
+
             await Promise.all([
                 team_invitation.update({ status: "ACCEPTED" }, { secret }),
                 deleteFAMEntry({ user_id: invite.user_id, game_id: teams.game_id, platform_id: teams.platform_id }, connection),
@@ -288,8 +298,8 @@ export const leaveTeam = async (req: ITeamLeaveRequest,
 
         await teams_player.delete({ "team_id": req.team_id, user_id: user.id })
 
-        const channelRepo = new CrudRepository<IChannel>(connection, "channel");
-        await channelRepo.delete({ "channel_id": req.team_id, "user_id": user.id });
+        const chatUserRepo = new CrudRepository<IChatUsers>(connection, "chat_users");
+        await chatUserRepo.delete({ "channel_id": req.team_id, "user_id": user.id });
 
         return { message: "Team left" } as any
     } catch (ex) {

@@ -168,7 +168,7 @@ export default function DrawerLeft(): JSX.Element {
               <Button
                 variant="text"
                 style={{ color: "white" }}
-                onClick={gotoHomePage}
+                onClick={(): any => router.push("/user-dashboard")}
               >
                 Dashboard
               </Button>

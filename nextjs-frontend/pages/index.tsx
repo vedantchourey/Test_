@@ -9,7 +9,6 @@ import {
   userProfileSelector,
 } from "../src/frontend/redux-store/authentication/authentication-selectors";
 import { useAppSelector } from "../src/frontend/redux-store/redux-store";
-import UserDashboard from '../src/frontend/components/user-dashboard'
 
 const Home: NextPage = () => {
   const isLoggedIn = useAppSelector(isLoggedInSelector);
@@ -18,7 +17,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (isLoggedIn) {
       if (user?.userRoles[0] === "noob-admin") {
-        router.push("tournament-dashboard");
+        // router.push("tournament-dashboard");
       }
     }
   }, [isLoggedIn, user]);
