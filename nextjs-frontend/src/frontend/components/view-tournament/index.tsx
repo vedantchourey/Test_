@@ -151,9 +151,9 @@ const ViewTournament: React.FC = () => {
     items.push(select);
     if (teamItems.length > 0) {
       items.push(teamItems);
+    } else {
+      items.push(create);
     }
-
-    items.push(create);
 
     return items;
   };
