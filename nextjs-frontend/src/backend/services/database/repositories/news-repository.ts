@@ -34,4 +34,11 @@ export class NewsRepository extends BaseRepository<INews> {
                .select(...keys);
   }
 
+  async update(news: INews): Promise<INews> {
+    const updatedItems = await this.entities()
+        .where("id", news.id)
+        .update(news, keys);
+    return updatedItems[0];
+}
+
 }
