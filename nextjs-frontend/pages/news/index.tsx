@@ -7,7 +7,7 @@ import ReactHtmlParser from "react-html-parser";
 import { getAuthHeader } from "../../src/frontend/utils/headers";
 import axios from "axios";
 
-export default function News() {
+export default function News(): JSX.Element {
   const data = {
     id: "1",
     title: "thus is from pratik",
@@ -44,8 +44,6 @@ export default function News() {
     getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257");
   }, []);
 
-  console.log('newsData -> ', newsData)
-
   return (
     <NoobPage
       title="Home"
@@ -61,7 +59,7 @@ export default function News() {
               <Card
                 sx={{ maxWidth: 345, m: 2 }}
                 key={key}
-                onClick={() => setCurrentNews(i)}
+                onClick={(): any => setCurrentNews(i)}
               >
                 <CardMedia
                   component="img"
