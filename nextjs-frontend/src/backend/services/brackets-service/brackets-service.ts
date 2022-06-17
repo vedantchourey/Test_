@@ -65,7 +65,8 @@ export const persistBrackets = async (req: ITournament): Promise<any> => {
         req?.bracketsMetadata?.type === "SINGLE"
           ? "single_elimination"
           : "double_elimination",
-      seeding: new Array(playerCount).fill(0).map((x, i) => `${i}`),
+      seeding: new Array(playerCount).fill(0)
+.map((x, i) => `${i}`),
       settings: { seedOrdering: ["natural"] },
     };
     if (
@@ -269,7 +270,7 @@ export const registerIndividualTournament = async (
       }
     }
 
-    const updateP = await participant.update(
+    await participant.update(
       { user_id: user.id },
       { id: data.id }
     );
@@ -698,11 +699,16 @@ const deleteBracket = (
   stage_id: any
 ): Promise<any> => {
   const all = [
-    connection("b_stage").delete().where({ tournament_id }),
-    connection("b_participant").delete().where({ tournament_id }),
-    connection("b_round").delete().where({ stage_id }),
-    connection("b_match").delete().where({ stage_id }),
-    connection("b_group").delete().where({ stage_id }),
+    connection("b_stage").delete()
+.where({ tournament_id }),
+    connection("b_participant").delete()
+.where({ tournament_id }),
+    connection("b_round").delete()
+.where({ stage_id }),
+    connection("b_match").delete()
+.where({ stage_id }),
+    connection("b_group").delete()
+.where({ stage_id }),
   ];
   return Promise.all(all);
 };

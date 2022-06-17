@@ -24,7 +24,7 @@ const OpponentTile: React.FC = () => {
       <Grid item xs={3}>
         <p className={styles.opponentTileTitle}>Tournament name</p>
         <p className={styles.opponentTileValue}>
-          ENDPOINTGG VS CEX ESPORTS [2]
+          {/* ENDPOINTGG VS CEX ESPORTS [2] */}
         </p>
       </Grid>
       <Grid item xs={3}>
