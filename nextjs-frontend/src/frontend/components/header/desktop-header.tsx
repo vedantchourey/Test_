@@ -7,7 +7,7 @@ import { createStyles, makeStyles } from "@mui/styles";
 import { useRouter } from "next/router";
 import * as React from "react";
 import { useRef, useState } from "react";
-import { isLoggedInSelector } from "../../redux-store/authentication/authentication-selectors";
+import { isLoggedInSelector, userProfileSelector } from "../../redux-store/authentication/authentication-selectors";
 import { screenWidthSelector } from "../../redux-store/layout/layout-selectors";
 import { useAppSelector } from "../../redux-store/redux-store";
 import { signOut } from "../../service-clients/auth-service-client";
@@ -68,6 +68,7 @@ export default function DrawerLeft(): JSX.Element {
   );
   const screenWidth = useAppSelector(screenWidthSelector);
   const isLoggedIn = useAppSelector(isLoggedInSelector);
+  const user = useAppSelector(userProfileSelector);
 
   // const username = useAppSelector(userNameSelector);
   // const wallet = useAppSelector(walletDetaislSelector);
@@ -168,7 +169,13 @@ export default function DrawerLeft(): JSX.Element {
               <Button
                 variant="text"
                 style={{ color: "white" }}
-                onClick={(): any => router.push("/user-dashboard")}
+                onClick={(): any => {
+                  if (user?.userRoles[0] === "noob-admin") {
+                    router.push("tournament-dashboard");
+                  } else{
+                    router.push("/user-dashboard")
+                  }
+                }}
               >
                 Dashboard
               </Button>

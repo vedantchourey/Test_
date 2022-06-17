@@ -19,32 +19,29 @@ import router from "next/router";
 import { userProfileSelector } from "../../src/frontend/redux-store/authentication/authentication-selectors";
 import { fetchUserFollowingList } from "../../src/frontend/service-clients/profile-service-client";
 import { getPostsByUserId } from "../../src/frontend/service-clients/post-service-client";
-import { IPost } from "../../src/backend/services/database/models/i-post";
 import { IPostsResponse } from "../../src/frontend/service-clients/messages/i-posts-response";
 import PostCard from "../../src/frontend/components/account/posts/post-card";
 
 const Home = (): JSX.Element => {
   const isDesktop = useAppSelector((x) =>
-    isDeviceTypeSelector(x, deviceTypes.desktop)
-  );
+    isDeviceTypeSelector(x, deviceTypes.desktop));
   const user = useAppSelector(userProfileSelector);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
   const [isFetchingPosts, setIsFetchingPosts] = useState<boolean>(true);
 
   const [value, setValue] = useState("1");
 
-  const handleChange = (event: SyntheticEvent, newValue: string) => {
+  const handleChange = (event: SyntheticEvent, newValue: string): void => {
     if (newValue === "3") router.push("tournaments-list");
     setValue(newValue);
   };
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (): Promise<void> => {
     try {
       setIsFetchingPosts(true);
       const followers = await fetchUserFollowingList(user?.id || "");
       const fetchPostsBatch = followers.map((i) =>
-        getPostsByUserId(i.follower.id)
-      );
+        getPostsByUserId(i.follower.id));
       const posts: IPostsResponse[] = [];
       const followerPosts = await Promise.all(fetchPostsBatch);
       followerPosts.map((p: any) => {
@@ -58,8 +55,6 @@ const Home = (): JSX.Element => {
 
   useEffect(() => {
     if (user?.id) fetchPosts();
-
-    return () => {};
   }, [user]);
 
   const responsive = {
@@ -70,7 +65,8 @@ const Home = (): JSX.Element => {
 
   const _renderPosts = (): JSX.Element | React.ReactNode => {
     if (isFetchingPosts) {
-      return new Array(5).fill("").map((data, i) => <h1 key={i}>Skeleton</h1>);
+      return new Array(5).fill("")
+.map((data, i) => <h1 key={i}>Skeleton</h1>);
     }
     const jsx = posts.map((postData) => {
       return <PostCard key={postData.id} data={postData} row={true} />;
@@ -79,7 +75,7 @@ const Home = (): JSX.Element => {
   };
 
   const items = [
-    <div className="item" data-value="1">
+    <div className="item" data-value="1" key={"1"}>
       <Box className={styles.slider}>
         <img src="/images/group.png" />
         <Typography className={styles.text3}>
@@ -94,7 +90,7 @@ const Home = (): JSX.Element => {
         </Box>
       </Box>
     </div>,
-    <div className="item" data-value="2">
+    <div className="item" data-value="2" key={"2"}>
       <Box className={styles.slider}>
         <img src="/images/group.png" />
         <Typography className={styles.text3}>
@@ -109,7 +105,7 @@ const Home = (): JSX.Element => {
         </Box>
       </Box>
     </div>,
-    <div className="item" data-value="3">
+    <div className="item" data-value="3" key={"3"}>
       <Box className={styles.slider}>
         <img src="/images/group.png" />
         <Typography className={styles.text3}>
