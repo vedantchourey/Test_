@@ -41,8 +41,7 @@ const useStyles = makeStyles(() =>
       alignItems: "center",
       flexDirection: "column",
     },
-  })
-);
+  }));
 
 export interface BasicData {
   name: string;
@@ -82,7 +81,8 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
     cloneTournament: yup.boolean(),
     createTemplateCode: yup.string(),
     banner: yup.string().nullable(),
-    sponsor: yup.string().nullable().notRequired(),
+    sponsor: yup.string().nullable()
+.notRequired(),
   });
 
   const formik = useFormik({

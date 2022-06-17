@@ -45,7 +45,7 @@ export const createChannel = async (
     const data = await channelRepo.create(
       {
         id: obj_id,
-        owner: user?.id || "5afe6eee-04bf-4faa-b63d-8f6a4374d6e1",
+        owner: user?.id,
         type,
       },
       messageTableFields
@@ -57,10 +57,12 @@ export const createChannel = async (
       const teamObj = await teams.knexObj().where("id", channel_id);
 
       const channel_name = teamObj[0].name;
+      const userData = await fetchUserDetails(user?.id, connection);
       const userObj = await chatUserRepo.create(
         {
           channel_id: obj_id,
-          user_id: user?.id || "5afe6eee-04bf-4faa-b63d-8f6a4374d6e1",
+          user_id: user?.id,
+          user_name: userData.raw_user_meta_data.username,
           other_user: channel_id,
           channel_name,
         },
@@ -75,6 +77,7 @@ export const createChannel = async (
       {
         channel_id: obj_id,
         user_id: users[0],
+        user_name: ownerUser.raw_user_meta_data.username,
         other_user: users[1],
         channel_name: secondUser.raw_user_meta_data.username,
       },
@@ -85,6 +88,7 @@ export const createChannel = async (
       {
         channel_id: obj_id,
         user_id: users[1],
+        user_name: secondUser.raw_user_meta_data.username,
         other_user: users[0],
         channel_name: ownerUser.raw_user_meta_data.username,
       },

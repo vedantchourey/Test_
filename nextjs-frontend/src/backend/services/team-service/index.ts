@@ -150,7 +150,6 @@ export const discardTeams = async (req: ITeamDiscardRequest,
             return { message: "Teams discard successfull" }
         } return getErrorObject("Team for platform and game combination already exists")
     } catch (ex) {
-        console.log('ex -> ', ex)
         return getErrorObject("Something went wrong")
     }
 }

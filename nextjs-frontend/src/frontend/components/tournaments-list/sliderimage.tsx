@@ -3,13 +3,10 @@ import {
   Button,
   Grid,
   Typography,
-  useMediaQuery,
-  useTheme,
 } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
 import React, { useState } from "react";
-import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import {
   allFormatsSelector,
@@ -46,8 +43,6 @@ const imagedata: any = {
 };
 
 const SliderComp: React.FC = (): JSX.Element => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const formats = useAppSelector(allFormatsSelector);
   const formatsFetchStatus = useAppSelector(formatsFetchStatusSelector);
   const [format, setFormat] = useState("");
@@ -107,11 +102,6 @@ const SliderComp: React.FC = (): JSX.Element => {
     }
   }, [games, format]);
 
-  const responsive = {
-    0: { items: 5 },
-    1024: { items: 3 },
-    1366: { items: 10 },
-  };
 
   return (
     <>

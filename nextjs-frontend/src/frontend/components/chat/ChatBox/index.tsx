@@ -3,7 +3,7 @@ import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
 import { IMessages } from "../../../../backend/services/database/models/i-messages";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 interface IChatBox {
   channelId: string;
@@ -15,6 +15,7 @@ interface IChatBox {
 
 export default function ChatBox(props: IChatBox): JSX.Element {
   const [messages, _setMessages] = useState<IMessages[]>([]);
+  const [chatUsers, setchatUsers] = useState<any[]>([]);
   const [text, setText] = useState<string>("");
 
   const messageRef = useRef<IMessages[]>(messages);
@@ -25,7 +26,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
   };
 
   const sendMessage = async (): Promise<void> => {
-    if(text.length){
+    if (text.length) {
       await frontendSupabase.from("messages").insert({
         channel_id: props.channelId,
         send_by: props.userId,
@@ -41,6 +42,11 @@ export default function ChatBox(props: IChatBox): JSX.Element {
   };
 
   const fetchMessages = async (): Promise<void> => {
+    const chatUsersRes = await frontendSupabase
+      .from("chat_users")
+      .select("*")
+      .eq("channel_id", props.channelId);
+    setchatUsers(chatUsersRes.data || []);
     const messages = await frontendSupabase
       .from("messages")
       .select("*")
@@ -110,31 +116,48 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         overflow="scroll"
       >
         <Box display={"flex"} flexDirection={"column"}>
-          {messages.map((i) => (
-            <Box
-              display={"flex"}
-              justifyContent={
-                i.send_by === props.userId ? "flex-end" : "flex-start"
-              }
-              p={1}
-              key={i.id}
-            >
+          {messages.map((i) => {
+            const user = chatUsers.find((j) => j.user_id === i.send_by);
+            return (
               <Box
-                bgcolor={
-                  i.send_by === props.userId
-                    ? "rgb(105, 49, 249)"
-                    : "rgba(255,255,255,0.05)"
+                display={"flex"}
+                justifyContent={
+                  i.send_by === props.userId ? "flex-end" : "flex-start"
                 }
-                pl={2}
-                pr={2}
-                pt={1}
-                pb={1}
-                borderRadius={2}
+                p={1}
+                key={i.id}
               >
-                <Typography fontSize={14}>{i.message}</Typography>
+                <Box
+                  bgcolor={
+                    i.send_by === props.userId
+                      ? "rgb(105, 49, 249)"
+                      : "rgba(255,255,255,0.05)"
+                  }
+                  pl={2}
+                  pr={2}
+                  pt={1}
+                  pb={1}
+                  borderRadius={2}
+                  minWidth={100}
+                >
+                  <Typography
+                    fontSize={9}
+                    textAlign={i.send_by === props.userId ? "right" : "left"}
+                    lineHeight={"5px"}
+                    style={{ color: "rgba(255,255,255,0.5)" }}
+                  >
+                    {user.user_name}
+                  </Typography>
+                  <Typography
+                    fontSize={14}
+                    textAlign={i.send_by === props.userId ? "right" : "left"}
+                  >
+                    {i.message}
+                  </Typography>
+                </Box>
               </Box>
-            </Box>
-          ))}
+            );
+          })}
         </Box>
       </Box>
       <Box display={"flex"} justifyContent="center" m={1}>
