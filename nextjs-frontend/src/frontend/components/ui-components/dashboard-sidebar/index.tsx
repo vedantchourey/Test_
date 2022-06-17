@@ -1,11 +1,11 @@
-import React from "react";
-import { ReactComponent as DashHomeIcon } from "../../../../../public/icons/DashHomeIcon.svg";
-import { ReactComponent as GameIcon } from "../../../../../public/icons/GameIcon.svg";
-import { ReactComponent as PersonIcon } from "../../../../../public/icons/PersonIcon.svg";
-import { ReactComponent as LogIcon } from "../../../../../public/icons/LogIcon.svg";
 import { Button, Card, CardContent, Grid } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
 import { useRouter } from "next/router";
+import React from "react";
+import { ReactComponent as DashHomeIcon } from "../../../../../public/icons/DashHomeIcon.svg";
+import { ReactComponent as GameIcon } from "../../../../../public/icons/GameIcon.svg";
+import { ReactComponent as LogIcon } from "../../../../../public/icons/LogIcon.svg";
+import { ReactComponent as PersonIcon } from "../../../../../public/icons/PersonIcon.svg";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -73,6 +73,20 @@ const DashboardSideBar: React.FC = () => {
             startIcon={<GameIcon />}
           >
             Tournaments
+          </Button>
+        </Grid>
+        <Grid item marginX={2}>
+          <Button
+            variant="contained"
+            component={"a"}
+            fullWidth
+            onClick={(): Promise<boolean> =>
+              router.push("/news-page", undefined, { shallow: true })
+            }
+            classes={{ root: classes.button }}
+            startIcon={<DashHomeIcon />}
+          >
+            News
           </Button>
         </Grid>
         <Grid item marginX={2}>
