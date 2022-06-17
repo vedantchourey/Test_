@@ -55,7 +55,7 @@ export default function News(): JSX.Element {
         <Typography variant="h1">News</Typography>
         {!currentNews && (
           <Box display={"flex"} flexWrap={"wrap"}>
-            {[...newsData, ...newsData, ...newsData].map((i: any, key) => (
+            {newsData.map((i: any, key) => (
               <Card
                 sx={{ maxWidth: 345, m: 2 }}
                 key={key}
