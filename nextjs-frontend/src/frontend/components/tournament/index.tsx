@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
 import { useRouter } from "next/router";
@@ -10,7 +10,7 @@ import { PublishTournamentData } from "../publish/publish-tournament";
 import { BasicData } from "../setup/basic";
 import { InfoData } from "../setup/info";
 import { SettingData } from "../setup/settings";
-import Loader from '../ui-components/loader';
+import Loader from "../ui-components/loader";
 import SideBar from "../ui-components/sidebar";
 import Create from "./create";
 import { StreamData } from "./create/streams";
@@ -124,7 +124,7 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
           setLoading(false);
         })
         .catch((err) => {
-          setLoading(false)
+          setLoading(false);
           console.error(err);
         });
     }
@@ -238,6 +238,7 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
   };
 
   const submitHandler = (submitData: TournamentData): Promise<boolean> => {
+    setLoading(true);
     const requestData = Object.assign({}, submitData);
     const req = {
       ...requestData,
@@ -256,10 +257,10 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
     req.templateCode = req.publishData?.templateCode || "";
     delete req.publishData;
     delete req.basic;
-    if(!requestData.settings) delete req.settings
-    if(!requestData.bracketsMetadata) delete req.bracketsMetadata
-    if(!requestData.streams) delete req.streams
-    if(!requestData.info) delete req.info
+    if (!requestData.settings) delete req.settings;
+    if (!requestData.bracketsMetadata) delete req.bracketsMetadata;
+    if (!requestData.streams) delete req.streams;
+    if (!requestData.info) delete req.info;
     return axios
       .post("/api/tournaments/create", req)
       .then((res: any) => {
@@ -272,6 +273,9 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
       .catch((err) => {
         console.error(err);
         return false;
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -299,24 +303,26 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
     >
       <React.Fragment>
         <Loader loading={loading} />
-        <Grid container spacing={1}>
-          <Grid item md={3}>
-            <SideBar key={"sidebar"} nav={sideBarNav} />
+        <Box width={"80vw"}>
+          <Grid container spacing={1}>
+            <Grid item md={3}>
+              <SideBar key={"sidebar"} nav={sideBarNav} />
+            </Grid>
+            <Grid item md={9}>
+              <TournamentContext.Provider
+                value={{
+                  id: router.query.id ? router.query.id : "",
+                  type,
+                  data: data,
+                  setData: updateData,
+                  onSubmit: submitHandler,
+                }}
+              >
+                {renderSection()}
+              </TournamentContext.Provider>
+            </Grid>
           </Grid>
-          <Grid item md={9}>
-            <TournamentContext.Provider
-              value={{
-                id: router.query.id ? router.query.id : "",
-                type,
-                data: data,
-                setData: updateData,
-                onSubmit: submitHandler,
-              }}
-            >
-              {renderSection()}
-            </TournamentContext.Provider>
-          </Grid>
-        </Grid>
+        </Box>
       </React.Fragment>
     </NoobPage>
   );

@@ -1,5 +1,7 @@
 import { useEffect } from "react";
-const Component = ({ brackets }: { brackets: any }): any => {
+import '../../../ui-components/typography/heading.module.css'
+
+const Component = ({ brackets }: { brackets: any }): any => {  
   useEffect(() => {
     if (!brackets) return;
 
@@ -15,8 +17,9 @@ const Component = ({ brackets }: { brackets: any }): any => {
       // This is optional. You must do it before render().
       window.bracketsViewer.setParticipantImages(
         // @ts-expect-error: ignore
-        data.participant.map((participant) => ({
+        data?.participant?.map((participant) => ({
           participantId: participant.id,
+          imageUrl: "/images/teams/Player.png"
         }))
       );
       // @ts-expect-error: ignore
@@ -48,8 +51,8 @@ const Component = ({ brackets }: { brackets: any }): any => {
   }, [brackets]);
   return (
     <>
-      <div className="bracket" style={{ maxHeight: 600, overflow: "scroll" }}>
-        <div id="example" className="brackets-viewer"></div>
+      <div className="bracket hide-scrollbar" style={{ maxHeight: 600, overflow: "scroll", maxWidth: "80vw" }}>
+        <div id="example" className="brackets-viewer hide-scrollbar" style={{ maxHeight: 600, overflow: "scroll", maxWidth: "80vw" }}></div>
       </div>
     </>
   );

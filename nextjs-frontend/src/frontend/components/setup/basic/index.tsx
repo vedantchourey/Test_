@@ -26,8 +26,6 @@ import { v4 } from "uuid";
 import { uploadImage } from "../../../service-clients/image-service-client";
 import { blobToFile } from "../../../../common/utils/utils";
 
-
-
 const useStyles = makeStyles(() =>
   createStyles({
     inputBox: {
@@ -49,7 +47,7 @@ export interface BasicData {
   name: string;
   game: string;
   startDate: string | null;
-  startTime: string | null;
+  startTime: any;
   about: string;
   cloneTournament: boolean;
   createTemplateCode?: string;
@@ -92,7 +90,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
       game: data?.game || "",
       name: data?.name || "",
       startDate: data?.startDate || null,
-      startTime: data?.startTime || null,
+      startTime: data?.startTime || new Date(),
       about: data?.about || "",
       createTemplateCode: data?.createTemplateCode || "",
       cloneTournament: data?.cloneTournament || false,
@@ -129,10 +127,16 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
   const onDrop = useCallback((acceptedFiles: File[], field: string): void => {
     acceptedFiles.forEach(async (file: Blob): Promise<void> => {
       const fileName = `${v4()}.png`;
-      const fileData = blobToFile(file, fileName)
-      const { data, error } = await uploadImage("public-files", fileName, fileData)
-      if(!error && data){
-        const fileUrl = frontendSupabase.storage.from("public-files").getPublicUrl(data.Key.split("/")[1])
+      const fileData = blobToFile(file, fileName);
+      const { data, error } = await uploadImage(
+        "public-files",
+        fileName,
+        fileData
+      );
+      if (!error && data) {
+        const fileUrl = frontendSupabase.storage
+          .from("public-files")
+          .getPublicUrl(data.Key.split("/")[1]);
         formik.setFieldValue(field, fileUrl.data?.publicURL || "");
       }
     });
@@ -188,7 +192,13 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
           </Grid>
 
           <Grid item xs={6}>
-            <FormControl fullWidth variant="standard">
+            <FormControl
+              fullWidth
+              variant="standard"
+              error={
+                formik.touched.startDate && Boolean(formik.errors.startDate)
+              }
+            >
               <FormLabel label="Start Date(DD/MM/YYYY)"></FormLabel>
               <DatePicker
                 inputFormat="dd/MM/yyyy"
@@ -199,10 +209,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
                   <TextField
                     size="medium"
                     id="startDate"
-                    error={
-                      formik.touched.startDate &&
-                      Boolean(formik.errors.startDate)
-                    }
+                    disabled
                     onBlur={formik.handleBlur}
                     {...params}
                   />
@@ -214,19 +221,24 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
             </FormControl>
           </Grid>
           <Grid item xs={6}>
-            <FormControl fullWidth variant="standard">
+            <FormControl
+              fullWidth
+              variant="standard"
+              error={
+                formik.touched.startTime && Boolean(formik.errors.startTime)
+              }
+            >
               <FormLabel label="Start Time"></FormLabel>
               <TimePicker
                 inputFormat="HH:mm a"
-                onChange={(value): void => changeHandler("startTime", value)}
+                onChange={(value): void => {
+                  changeHandler("startTime", value);
+                }}
                 value={formik.values.startTime}
                 renderInput={(params): JSX.Element => (
                   <TextField
                     id="startTime"
-                    error={
-                      formik.touched.startTime &&
-                      Boolean(formik.errors.startTime)
-                    }
+                    size="medium"
                     onBlur={formik.handleBlur}
                     {...params}
                   />
@@ -239,61 +251,7 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
             </FormControl>
           </Grid>
         </Grid>
-      </CardLayout>
-
-      <CardLayout title="Optional Fields">
-        <Grid container rowSpacing={1} columnSpacing={5}>
-          <Grid item xs={6}>
-            <FormControl variant="standard">
-              <FormLabel label="Select A Tournament To Clone From"></FormLabel>
-              <Box>
-                <Checkbox
-                  id="cloneTournament"
-                  name="cloneTournament"
-                  onChange={formik.handleChange}
-                  checked={formik.values.cloneTournament}
-                />
-              </Box>
-            </FormControl>
-          </Grid>
-          <Grid item xs={6}>
-            {formik.values.cloneTournament ? (
-              <FormControl fullWidth variant="standard">
-                <FormLabel label={""}></FormLabel>
-                <OutlinedInput
-                  id="createTemplateCode"
-                  name="createTemplateCode"
-                  placeholder="Template code"
-                  onChange={formik.handleChange}
-                  value={formik.values.createTemplateCode}
-                  onBlur={formik.handleBlur}
-                  error={
-                    formik.touched.createTemplateCode &&
-                    Boolean(formik.errors.createTemplateCode)
-                  }
-                />
-                {formik.touched.createTemplateCode &&
-                Boolean(formik.errors.createTemplateCode) ? (
-                  <FormHelperText>
-                    {" "}
-                    {formik.errors.createTemplateCode}{" "}
-                  </FormHelperText>
-                ) : null}
-              </FormControl>
-            ) : null}
-          </Grid>
-          <Grid item xs={12}>
-            <AccordionAlt title="About">
-              <NoobReachTextEditor
-                value={formik.values.about}
-                onChange={(value: any): void => {
-                  changeHandler("about", value);
-                }}
-              />
-            </AccordionAlt>
-          </Grid>
-
-          <Grid item xs={12}>
+        <Grid item xs={12}>
             <FormControl fullWidth variant="standard">
               <FormLabel label="Header Banner"></FormLabel>
               <Dropzone onDrop={(files): void => onDrop(files, "banner")}>
@@ -314,6 +272,12 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
                   </Box>
                 )}
               </Dropzone>
+              {formik.touched.createTemplateCode &&
+                Boolean(formik.errors.banner) ? (
+                  <FormHelperText error>
+                    {formik.errors.banner}
+                  </FormHelperText>
+                ) : null}
               <Box display="flex" flexDirection={"column"}>
                 {formik?.values?.banner !== "" && (
                   <>
@@ -350,6 +314,12 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
                   </Box>
                 )}
               </Dropzone>
+              {formik.touched.sponsor &&
+                Boolean(formik.errors.sponsor) ? (
+                  <FormHelperText error>
+                    {formik.errors.sponsor}
+                  </FormHelperText>
+                ) : null}
               <Box display="flex" flexDirection={"column"}>
                 {formik?.values?.sponsor !== "" && (
                   <>
@@ -364,6 +334,64 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
               </Box>
             </FormControl>
           </Grid>
+      </CardLayout>
+
+      <CardLayout title="Optional Fields">
+        <Grid container rowSpacing={1} columnSpacing={5}>
+          <Grid item xs={6} textAlign={"left"}>
+            <FormControl variant="standard">
+              <Box display={"flex"} alignItems={"center"} textAlign={"left"}>
+                <Checkbox
+                  id="cloneTournament"
+                  name="cloneTournament"
+                  onChange={formik.handleChange}
+                  checked={formik.values.cloneTournament}
+                />
+                <Box marginTop={"2px"}>
+                  <FormLabel label="Select A Tournament To Clone From"></FormLabel>
+                </Box>
+                
+              </Box>
+            </FormControl>
+          </Grid>
+          <Grid item xs={6}>
+            {formik.values.cloneTournament ? (
+              <FormControl fullWidth variant="standard">
+                <OutlinedInput
+                  id="createTemplateCode"
+                  name="createTemplateCode"
+                  placeholder="Template code"
+                  margin="none"
+                  onChange={formik.handleChange}
+                  value={formik.values.createTemplateCode}
+                  onBlur={formik.handleBlur}
+                  error={
+                    formik.touched.createTemplateCode &&
+                    Boolean(formik.errors.createTemplateCode)
+                  }
+                />
+                {formik.touched.createTemplateCode &&
+                Boolean(formik.errors.createTemplateCode) ? (
+                  <FormHelperText>
+                    {" "}
+                    {formik.errors.createTemplateCode}{" "}
+                  </FormHelperText>
+                ) : null}
+              </FormControl>
+            ) : null}
+          </Grid>
+          <Grid item xs={12}>
+            <AccordionAlt title="About">
+              <NoobReachTextEditor
+                value={formik.values.about}
+                onChange={(value: any): void => {
+                  changeHandler("about", value);
+                }}
+              />
+            </AccordionAlt>
+          </Grid>
+
+          
         </Grid>
       </CardLayout>
       <Box display="flex" justifyContent={"flex-end"}>

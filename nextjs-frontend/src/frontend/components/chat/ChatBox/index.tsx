@@ -1,8 +1,8 @@
 import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
 import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
-import { IMessages } from "../../../src/backend/services/database/models/i-messages";
-import { frontendSupabase } from "../../../src/frontend/services/supabase-frontend-service";
+import { IMessages } from "../../../../backend/services/database/models/i-messages";
+import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 interface IChatBox {

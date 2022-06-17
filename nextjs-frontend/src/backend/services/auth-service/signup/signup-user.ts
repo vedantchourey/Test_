@@ -14,6 +14,8 @@ import { IPrivateProfile } from '../../database/models/i-private-profile';
 import { CrudRepository } from '../../database/repositories/crud-repository';
 import { IWallet } from '../../database/models/i-wallet';
 import { TABLE_NAMES } from '../../../../models/constants';
+import { IGame } from '../../database/models/i-game';
+import { IEloRating } from '../../database/models/i-elo-rating';
 
 function mapToProfile(user: User, request: SignupRequest): IProfile {
   const nowAsString = nowAsISOString();
@@ -74,18 +76,34 @@ function mapRequiredParams(request: SignupRequest): { metaData: Metadata; signup
 }
 
 export default async function signupUser(request: SignupRequest, context: PerRequestContext): Promise<ServiceResponse<SignupRequest, SignupResponse>> {
+  const transaction = context.transaction as Knex.Transaction;
+  const gameRepo = new CrudRepository<IGame>(transaction, TABLE_NAMES.GAMES);
+  const eloRatingRepo = new CrudRepository<IEloRating>(transaction, TABLE_NAMES.ELO_RATING);
+  const listOfGame: IGame[] = await gameRepo.knexObj().select("*");
+
+  
   const errors = await validateSignUp(request, context);
   if (isThereAnyError(errors)) return { errors: errors };
 
   const { signupParams, metaData } = mapRequiredParams(request);
   const result = await backendSupabase.auth.signUp({ ...signupParams }, metaData);
   if (result.error) return { errors: { apiError: result.error } };
-
-  const transaction = context.transaction as Knex.Transaction;
   const profilesRepository = createProfileRepository(transaction);
   const privateProfilesRepository = new PrivateProfilesRepository(transaction);
   const user = result.user as User;
   const walletRepo = new CrudRepository<IWallet>(transaction, TABLE_NAMES.WALLET);
+  const eloRatingMap = listOfGame.map(async (i) => {
+    const find = await eloRatingRepo.find({user_id: user.id, game_id: i.id})
+    if(find.length){
+      return null
+    }
+    return eloRatingRepo.create({
+      user_id: user.id,
+      game_id: i.id
+    })
+  })
+
+  await Promise.all(eloRatingMap);
   await Promise.all([
     profilesRepository.createProfile(mapToProfile(user, request)),
     privateProfilesRepository.createProfile(mapToPrivateProfile(user, request)),

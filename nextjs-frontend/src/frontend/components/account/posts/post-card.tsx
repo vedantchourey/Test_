@@ -22,6 +22,7 @@ import config from '../../../utils/config/front-end-config';
 
 interface IProps {
   data: IPostsResponse;
+  row?: boolean
 }
 
 // eslint-disable-next-line no-useless-escape
@@ -115,33 +116,54 @@ const PostCard = (props: IProps): JSX.Element => {
   if (isDeleted) return <></>;
 
   return (
-    <Grid item md={12}>
-      <Card className={styles.postCard} sx={{ mb: 3 }} elevation={0}>
-        <Box sx={{
-          width: "100%",
-          display: 'inline-flex',
-          justifyContent: "space-between",
-
-        }}>
-          <Box sx={{ display: 'flex' }}>
-            <Image bucket={config.storage.publicBucket} filePath={avatarUrl || ''} isPublicBucket={true} width={50} height={50} className={styles.postAvatar} />
-            <Box sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'baseline',
-              paddingLeft: "10px"
-            }}>
-              <Typography variant={'h3'} fontSize={15} fontWeight={400}>
+    <Grid
+      item
+      md={12}
+      // minHeight={props.row ? 450 : undefined}
+      minWidth={400}
+      mr={props.row ? 2 : 0}
+    >
+      <Card
+        className={styles.postCard}
+        sx={{ mb: 3 }}
+        style={{ height: props.row ? "100%" : "auto" }}
+        elevation={0}
+      >
+        <Box
+          sx={{
+            width: "100%",
+            display: "inline-flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box sx={{ display: "flex" }}>
+            <Image
+              bucket={config.storage.publicBucket}
+              filePath={avatarUrl || ""}
+              isPublicBucket={true}
+              width={50}
+              height={50}
+              className={styles.postAvatar}
+            />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "baseline",
+                paddingLeft: "10px",
+              }}
+            >
+              <Typography variant={"h3"} fontSize={15} fontWeight={400}>
                 {values.postOwner.username}
               </Typography>
-              <Typography variant="subtitle2" color='#575265'>
+              <Typography variant="subtitle2" color="#575265">
                 {new Date(values.createdAt).toDateString()}
               </Typography>
             </Box>
           </Box>
 
           <div>
-            <IconButton sx={{ padding: '10px' }} onClick={handleToggleMenu} >
+            <IconButton sx={{ padding: "10px" }} onClick={handleToggleMenu}>
               <MoreHorizIcon />
             </IconButton>
             {showMenu && (
@@ -150,9 +172,13 @@ const PostCard = (props: IProps): JSX.Element => {
                   <Button
                     fullWidth
                     className={styles.postCardOptionsBtn}
-                    sx={{ color: 'red', borderTopLeftRadius: '5px !important', borderTopRightRadius: '5px !important' }}
+                    sx={{
+                      color: "red",
+                      borderTopLeftRadius: "5px !important",
+                      borderTopRightRadius: "5px !important",
+                    }}
                   >
-                    <img src='/icons/error.svg' alt='icon' />
+                    <img src="/icons/error.svg" alt="icon" />
                     Report Post
                   </Button>
                 </ListItem>
@@ -160,32 +186,34 @@ const PostCard = (props: IProps): JSX.Element => {
                   <Button
                     fullWidth
                     className={styles.postCardOptionsBtn}
-                    sx={{ color: 'red', borderRadius: '0px' }}
+                    sx={{ color: "red", borderRadius: "0px" }}
                   >
-                    <img src='/icons/copy.svg' alt='icon' />
+                    <img src="/icons/copy.svg" alt="icon" />
                     Copy Link
                   </Button>
                 </ListItem>
-                {
-                  values.postOwner.id === user?.id && (
-                    <ListItem disablePadding>
-                      <Button
-                        fullWidth
-                        onClick={deletePost}
-                        className={styles.postCardOptionsBtn}
-                        sx={{ color: 'black' }}
-                      >
-                        Delete Post
-                      </Button>
-                    </ListItem>
-                  )
-                }
+                {values.postOwner.id === user?.id && (
+                  <ListItem disablePadding>
+                    <Button
+                      fullWidth
+                      onClick={deletePost}
+                      className={styles.postCardOptionsBtn}
+                      sx={{ color: "black" }}
+                    >
+                      Delete Post
+                    </Button>
+                  </ListItem>
+                )}
                 <ListItem disablePadding>
                   <Button
                     fullWidth
                     onClick={handleCloseMenu}
                     className={styles.postCardOptionsBtn}
-                    sx={{ color: 'black', borderBottomLeftRadius: '5px !important', borderBottomRightRadius: '5px !important' }}
+                    sx={{
+                      color: "black",
+                      borderBottomLeftRadius: "5px !important",
+                      borderBottomRightRadius: "5px !important",
+                    }}
                   >
                     Cancel
                   </Button>
@@ -193,51 +221,68 @@ const PostCard = (props: IProps): JSX.Element => {
               </List>
             )}
           </div>
-
         </Box>
-        <Typography sx={{ marginBottom: !values.postImgUrl ? 10 : 0 }} my={2} align='left' fontSize={14} fontWeight={300} paragraph>
-          {
-            values.postContent.split(" ").map((part) => URL_REGEX.test(part) ? <a href={part} target="_blank" rel="noreferrer">{part} </a> : part + " ")
-          }
+        <Typography
+          sx={{ marginBottom: !values.postImgUrl ? 10 : 0 }}
+          my={2}
+          align="left"
+          fontSize={14}
+          fontWeight={300}
+          paragraph
+        >
+          {values.postContent.split(" ").map((part) =>
+            URL_REGEX.test(part) ? (
+              <a href={part} target="_blank" rel="noreferrer">
+                {part}{" "}
+              </a>
+            ) : (
+              part + " "
+            ))}
         </Typography>
 
-        <Box sx={{ position: 'relative' }}>
+        <Box sx={{ position: "relative" }}>
           {imgUrl && (
             <>
               {/* Action Button Blur Container */}
-              {
-                values.postType === 'url' ? (
-                  <div style={{ overflow: 'hidden' }}>
-                    <a href={values.postUrl} target="_blank" rel="noreferrer">
-                      <img
-                        className={styles.postImg}
-                        src={values.postImgUrl}
-                        style={{ width: '100%', height: 300, objectFit: 'cover' }}
-                        key={values.id}
-                      />
-                      <div style={{ position: 'absolute', width: '100%', background: 'rgba(0,0,0,0.4)', bottom: 80, padding: '10px 0' }}>
-                        {values.urlPostTitle && (
-                          <Typography style={{ color: 'white' }}>
-                            {values.urlPostTitle}
-                          </Typography>
-                        )}
-                      </div>
-                    </a>
-                  </div>
-                ) : (
-                  <Image
-                    className={styles.postImg}
-                    bucket={config.storage.publicBucket}
-                    filePath={imgUrl || ''}
-                    isPublicBucket={true}
-                    height={600}
-                    width={1400}
-                    layout="responsive"
-                    objectFit="contain"
-                    key={values.id}
-                  />
-                )
-              }
+              {values.postType === "url" ? (
+                <div style={{ overflow: "hidden" }}>
+                  <a href={values.postUrl} target="_blank" rel="noreferrer">
+                    <img
+                      className={styles.postImg}
+                      src={values.postImgUrl}
+                      style={{ width: "100%", height: 300, objectFit: "cover" }}
+                      key={values.id}
+                    />
+                    <div
+                      style={{
+                        position: "absolute",
+                        width: "100%",
+                        background: "rgba(0,0,0,0.4)",
+                        bottom: 80,
+                        padding: "10px 0",
+                      }}
+                    >
+                      {values.urlPostTitle && (
+                        <Typography style={{ color: "white" }}>
+                          {values.urlPostTitle}
+                        </Typography>
+                      )}
+                    </div>
+                  </a>
+                </div>
+              ) : (
+                <Image
+                  className={styles.postImg}
+                  bucket={config.storage.publicBucket}
+                  filePath={imgUrl || ""}
+                  isPublicBucket={true}
+                  height={600}
+                  width={1400}
+                  layout="responsive"
+                  objectFit="contain"
+                  key={values.id}
+                />
+              )}
 
               {/*  <CardMedia
                 component="img"
@@ -249,39 +294,44 @@ const PostCard = (props: IProps): JSX.Element => {
             </>
           )}
 
-          {
-            !isFetchingMeta && (
-              <Box className={styles.actionButtons}>
-                <Box className={styles.blurContainer}>
-                  <Box sx={{
-                    display: 'flex',
-                    alignItems: 'center'
-                  }}>
-                    <Box>
-                      <IconButton
-                        onClick={toggleLike}
-                        className={styles.postBtn}
-                        sx={{ padding: '12px' }}
-                      >
-                        <img src={values.isLiked ? '/icons/heart-filled.svg' : '/icons/heart.svg'} alt='icon' key={values.totalLikes} />
-                      </IconButton>
-                      <Typography>
-                        {values?.totalLikes || 0}
-                      </Typography>
-                    </Box>
-                    <Box mx={1}>
-                      <IconButton
-                        className={styles.postBtn}
-                        onClick={handleOpenComments}
-                        sx={{ padding: '15px' }}
-                      >
-                        <img src='/icons/message.svg' alt='icon' />
-                      </IconButton>
-                      <Typography>
-                        {values.totalComments || 0}
-                      </Typography>
-                    </Box>
-                    {/*  <Box>
+          {!isFetchingMeta && (
+            <Box className={styles.actionButtons}>
+              <Box className={styles.blurContainer}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <Box>
+                    <IconButton
+                      onClick={toggleLike}
+                      className={styles.postBtn}
+                      sx={{ padding: "12px" }}
+                    >
+                      <img
+                        src={
+                          values.isLiked
+                            ? "/icons/heart-filled.svg"
+                            : "/icons/heart.svg"
+                        }
+                        alt="icon"
+                        key={values.totalLikes}
+                      />
+                    </IconButton>
+                    <Typography>{values?.totalLikes || 0}</Typography>
+                  </Box>
+                  <Box mx={1}>
+                    <IconButton
+                      className={styles.postBtn}
+                      onClick={handleOpenComments}
+                      sx={{ padding: "15px" }}
+                    >
+                      <img src="/icons/message.svg" alt="icon" />
+                    </IconButton>
+                    <Typography>{values.totalComments || 0}</Typography>
+                  </Box>
+                  {/*  <Box>
                       <IconButton
                         className={styles.postBtn}
                       >
@@ -289,19 +339,21 @@ const PostCard = (props: IProps): JSX.Element => {
                       </IconButton>
                       5
                     </Box> */}
-                  </Box>
                 </Box>
               </Box>
-            )
-          }
+            </Box>
+          )}
           {/* <Box mt={5} sx={{ textAlign: 'center' }}>
             <img width={85} src='/images/noobstorm-logo-small.png' />
           </Box> */}
         </Box>
       </Card>
-      <CommentsModal isModalOpen={openCommentsModal} handleClose={handleCloseComments} postId={values.id} />
-
-    </Grid >
+      <CommentsModal
+        isModalOpen={openCommentsModal}
+        handleClose={handleCloseComments}
+        postId={values.id}
+      />
+    </Grid>
   );
 };
 

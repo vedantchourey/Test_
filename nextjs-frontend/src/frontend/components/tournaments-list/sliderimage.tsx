@@ -20,6 +20,7 @@ import { fetchAllFormats, fetchAllGamesThunk } from "../../redux-store/games/gam
 import { useAppDispatch, useAppSelector } from "../../redux-store/redux-store";
 import { getAuthHeader } from "../../utils/headers";
 import { TournamentData } from "../tournament";
+import Loader from '../ui-components/loader';
 import ButtonComp from "./buttons";
 import CardComp from "./card";
 
@@ -45,19 +46,22 @@ const SliderComp: React.FC = (): JSX.Element => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const formats = useAppSelector(allFormatsSelector);
   const formatsFetchStatus = useAppSelector(formatsFetchStatusSelector);
-  const [format, setFormat] = useState("")
+  const [format, setFormat] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [tournamentsData, setData] = React.useState<TournamentData[]>([]);
   
   const setTournamentsData = async (game_id: string, first = false): Promise<void> => {
     try {
+      setLoading(true);
       const endpoint = "/api/tournaments/list";
       const headers = await getAuthHeader();
       axios
         .get(endpoint, {
           params: {
             game: first ? "" : game_id,
-            format
+            limit: 50,
+            format,
           },
           headers: headers,
         })
@@ -68,6 +72,9 @@ const SliderComp: React.FC = (): JSX.Element => {
         .catch(function (error) {
           setData([]);
           alert(error);
+        })
+        .finally((): void => {
+          setLoading(false);
         });
     } catch (err) {
       alert(err);
@@ -115,6 +122,7 @@ const SliderComp: React.FC = (): JSX.Element => {
   }
   return (
     <>
+    <Loader loading={loading} />
       <Typography textAlign={"left"}>Choose Game</Typography>
       {isMobile ? (
         <Grid mt={5} sx={{ maxWidth: "sm" }}>

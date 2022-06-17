@@ -1,6 +1,6 @@
 import { Box, Grid, Typography } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DoubleElimination from "./brackets-viewer";
 import { BracketProps, RoundStatusData } from "./BracketsInterface";
 import style from "./style";
@@ -49,29 +49,65 @@ const RoundStatus: React.FC<RoundStatusData> = ({
   );
 };
 
-const Bracket: React.FC<BracketProps> = ({ rounds = [], brackets }) => {
+const Bracket: React.FC<BracketProps> = ({
+  rounds = [],
+  brackets,
+  players,
+}) => {
+  const [bData, setBData] = useState<any>(null);
   const renderStatus = (): JSX.Element[] => {
     return rounds.map((round) => {
       return (
-        <Grid key={round.round} item md={3}>
+        <Grid key={round.round} item md={3} mr={2}>
           <RoundStatus {...round} />
         </Grid>
       );
     });
   };
+
+  useEffect(() => {
+    const data = {
+      ...brackets,
+      participant: brackets?.participant?.map((i: any) => {
+        if (i.user_id) {
+          const findPlayer: any = players.find((p) => p.id === i.user_id);
+          if (findPlayer)
+            return {
+              ...i,
+              name: findPlayer?.firstName + " " + findPlayer?.lastName,
+            };
+          return { ...i, name: "NA" };
+        } 
+          return { ...i, name: "NA" };
+        
+      }),
+    };
+    setBData(null);
+    setTimeout(() => setBData(data), 500);
+  }, [brackets]);
+
   return (
     <>
       <Box marginX={"70px"} marginY={2}>
-        <Grid
+        {/* <Grid
           container
           columnSpacing={2}
           rowSpacing={1}
           overflow={"scroll"}
           flexWrap={"nowrap"}
-          className={"hide-scrollbar"}
+          // className={"hide-scrollbar"}
+        > */}
+        <Box
+          display={"flex"}
+          flexWrap={"nowrap"}
+          maxWidth={"70vw"}
+          overflow={"scroll"}
+          className="hide-scrollbar"
         >
           {renderStatus()}
-        </Grid>
+        </Box>
+
+        {/* </Grid> */}
       </Box>
       <Box marginX={"70px"} marginY={2}>
         <Grid
@@ -82,11 +118,8 @@ const Bracket: React.FC<BracketProps> = ({ rounds = [], brackets }) => {
           className={"hide-scrollbar"}
         >
           <div className="bracket">
-            {/* {type === "SINGLE" ? (
-              <SingleElimination brackets={brackets} players={players as any} />
-            ) : ( */}
-            <DoubleElimination brackets={brackets} />
-            {/* )} */}
+            
+            {bData && <DoubleElimination brackets={bData} />}
           </div>
         </Grid>
       </Box>

@@ -196,7 +196,7 @@ const Settings: React.FC<SettingProps> = ({
             alignItems="center"
           >
             {formik.values.entryType === "credit" ? (
-              <React.Fragment>
+              <Box pt={3}>
                 <OutlinedInput
                   fullWidth
                   id="entryFeeAmount"
@@ -211,7 +211,7 @@ const Settings: React.FC<SettingProps> = ({
                     Boolean(formik.errors.entryFeeAmount)
                   }
                 />
-              </React.Fragment>
+              </Box>
             ) : null}
           </Grid>
           <Grid item xs={6}>

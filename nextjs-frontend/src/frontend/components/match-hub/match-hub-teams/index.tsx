@@ -13,11 +13,12 @@ import axios from "axios";
 import { getAuthHeader } from "../../../utils/headers";
 import { ReactComponent as FlagIcon } from "../../../../../public/icons/flagIcon.svg";
 import CheckIcon from "@mui/icons-material/Check";
-import { Match } from "..";
 import { blobToFile } from "../../../../common/utils/utils";
 import { uploadImage } from "../../../service-clients/image-service-client";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import { v4 } from "uuid";
+import moment from "moment";
+import { IMatchHubData } from "../../../../../pages/match-hub";
 
 const style = {
   position: "absolute" as const,
@@ -42,9 +43,14 @@ const dropZone = {
 };
 
 interface Props {
-  match: Match;
+  match: IMatchHubData;
   onBack?: () => void;
 }
+
+const calculateDuration = (
+  eventTime: moment.Moment,
+  now: moment.Moment = moment()
+): moment.Duration => moment.duration(eventTime.diff(now), "milliseconds");
 
 const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
   const [uploadResults, setUploadResults] = React.useState(false);
@@ -169,8 +175,49 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
           headers: headers,
         }
       )
-      .catch();
+      .catch((err: any) => {
+        console.error(err);
+        alert("User already checked in")
+      });
   };
+
+  React.useEffect(() => {
+    const timerRef = window.setInterval(timerCallback, 1000);
+
+    return () => {
+      clearInterval(timerRef);
+    };
+  }, [data]);
+
+  const [countDown, setCountDown] = React.useState("00:00:00");
+
+  const timerCallback = React.useCallback(() => {
+    if (match?.tournament) {
+      const mDate = moment(match.tournament.startDate);
+      const mTime = moment(match.tournament.startTime, "hh:mm:SS");
+      mDate.set({
+        hours: mTime.get("hours"),
+        minutes: mTime.get("minutes"),
+        seconds: mTime.get("seconds"),
+      });
+      const now = moment();
+      let diff = mDate.diff(now);
+      if (diff <= 0) {
+        setCountDown("00:00:00");
+      } else {
+        diff = mDate.diff(now, "hours");
+        if (diff > 24) {
+          diff = mDate.diff(now, "days");
+          setCountDown(`${diff} days`);
+        } else {
+          const timer = calculateDuration(mDate, now);
+          setCountDown(
+            `${timer.hours()}:${timer.minutes()}:${timer.seconds()}`
+          );
+        }
+      }
+    }
+  }, [data]);
 
   React.useEffect(() => {
     if (!match.opponent1.user_id) {
@@ -201,6 +248,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
             }}
           >
             <ResultTile
+              data={match}
               isWon={true}
               opponent1Name={opponent1Name}
               opponent2Name={opponent2Name}
@@ -210,7 +258,8 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                     VS
                   </Typography>
                   <Typography>
-                    Check start in: <Typography component={"span"}>00.00.12</Typography>
+                    Check start in:{" "}
+                    <Typography component={"span"}>{countDown}</Typography>
                   </Typography>
                 </Box>
               }
@@ -255,7 +304,10 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
             <Button
               style={{
                 padding: "12px",
-                background: "#6932F9",
+                background:
+                  !opponent1Name || !opponent2Name
+                    ? "rgba(255,255,255,0.2)"
+                    : "#6932F9",
                 color: "white",
                 margin: "0px 16px 0px 16px",
               }}
@@ -282,7 +334,11 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       </Grid>
       <Modal open={resultStatus} onClose={(): void => setResultStatus(false)}>
         <Box sx={style}>
-          <Box display="flex" justifyContent={"space-between"} alignItems={"center"}>
+          <Box
+            display="flex"
+            justifyContent={"space-between"}
+            alignItems={"center"}
+          >
             <Typography variant="body1" color="white">
               Upload Result
             </Typography>
@@ -290,7 +346,12 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
               <CloseIcon />
             </IconButton>
           </Box>
-          <Box marginY={2} display="flex" justifyContent={"flex-start"} alignItems="center">
+          <Box
+            marginY={2}
+            display="flex"
+            justifyContent={"flex-start"}
+            alignItems="center"
+          >
             <CheckIcon sx={{ color: "white", marginRight: 1 }} />
             <Typography color="white" textAlign={"left"}>
               Result successfully send to opponent.
@@ -300,7 +361,11 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       </Modal>
       <Modal open={uploadResults} onClose={(): void => setUploadResults(false)}>
         <Box sx={style}>
-          <Box display="flex" justifyContent={"space-between"} alignItems={"center"}>
+          <Box
+            display="flex"
+            justifyContent={"space-between"}
+            alignItems={"center"}
+          >
             <Typography variant="body1" color="white">
               Upload Result
             </Typography>
@@ -310,20 +375,46 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
           </Box>
           <Grid container rowSpacing={2}>
             <Grid item xs={12} sm={4} md={4}>
-              <Select displayEmpty id="winner" disabled={formik.values.draw} name="winner" onChange={formik.handleChange} defaultValue={""}>
+              <Select
+                displayEmpty
+                id="winner"
+                disabled={formik.values.draw}
+                name="winner"
+                onChange={formik.handleChange}
+                defaultValue={""}
+              >
                 <MenuItem value="">Select Winner</MenuItem>
                 <MenuItem value={match.opponent1.id}>{opponent1Name}</MenuItem>
                 <MenuItem value={match.opponent2.id}>{opponent2Name}</MenuItem>
               </Select>
-              {formik.errors.winner ? <FormHelperText sx={{ color: "red" }}>Please select winner</FormHelperText> : null}
+              {formik.errors.winner ? (
+                <FormHelperText sx={{ color: "red" }}>
+                  Please select winner
+                </FormHelperText>
+              ) : null}
             </Grid>
             <Grid item xs={12} sm={4} md={4}>
-              <Select displayEmpty defaultValue={""} disabled={formik.values.draw}>
+              <Select
+                displayEmpty
+                defaultValue={""}
+                disabled={formik.values.draw}
+              >
                 <MenuItem value="">Select Round</MenuItem>
               </Select>
             </Grid>
             <Grid item xs={12} sm={4} md={4}>
-              <FormControlLabel value="true" control={<Checkbox onChange={formik.handleChange} name="draw" id="draw" />} sx={{ color: "white" }} label="Mark as a draw" />
+              <FormControlLabel
+                value="true"
+                control={
+                  <Checkbox
+                    onChange={formik.handleChange}
+                    name="draw"
+                    id="draw"
+                  />
+                }
+                sx={{ color: "white" }}
+                label="Mark as a draw"
+              />
             </Grid>
             <Grid item xs={12}>
               <Dropzone onDrop={onDrop}>
@@ -331,14 +422,21 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                   <Box sx={dropZone} component={"div"} {...getRootProps()}>
                     <input {...getInputProps()} />
                     <img src="/icons/folder.svg" alt="upload" />
-                    <Typography textAlign={"center"} marginTop={2} variant="subtitle2" sx={{ color: "#6932F9" }}>
-                      <Typography component={"span"}>Select </Typography> or Drag and Drop your files <br /> here
+                    <Typography
+                      textAlign={"center"}
+                      marginTop={2}
+                      variant="subtitle2"
+                      sx={{ color: "#6932F9" }}
+                    >
+                      <Typography component={"span"}>Select </Typography> or
+                      Drag and Drop your files <br /> here
                     </Typography>
                   </Box>
                 )}
               </Dropzone>
               <Typography color="white" variant="body2" marginTop={1}>
-                Once you have identified a winner, we will send a request to the other user to accept it.
+                Once you have identified a winner, we will send a request to the
+                other user to accept it.
               </Typography>
               {formik.errors.screenshot && (
                 <Typography color="white" variant="body2" marginTop={1}>
@@ -349,7 +447,8 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
             <Grid item xs={12} display="flex" justifyContent={"center"}>
               <Button
                 sx={{
-                  background: "linear-gradient(180deg, #EF507E 0%, #F09633 100%)",
+                  background:
+                    "linear-gradient(180deg, #EF507E 0%, #F09633 100%)",
                   borderRadius: 0,
                 }}
                 size="large"
