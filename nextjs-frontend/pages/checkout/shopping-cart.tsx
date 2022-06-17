@@ -31,6 +31,19 @@ export default function ProductDetail(props: any): JSX.Element {
   const router = useRouter();
   const appDispatch = useAppDispatch();
 
+  const [razorPay, setRazorPay] = React.useState(false);
+  useEffect((): void => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = (): void => {
+      setRazorPay(true);
+    };
+    script.onerror = (): void => {
+      setRazorPay(false);
+    };
+    document.body.appendChild(script);
+  }, []);
+
   function updateQty(id, quantity): void {
     appDispatch(
       updateQuantity({
@@ -60,9 +73,9 @@ export default function ProductDetail(props: any): JSX.Element {
           // eslint-disable-next-line newline-per-chained-call
           order_id: Math.random().toString(36).substring(2, 7),
           products: cart.products,
-          amount: cart.total,
+          amount: getTotalAmount(),
           payment_status: "pending",
-          status: "started",
+          status: "Incomplete",
           paymentInfo: {},
         },
         {
@@ -71,6 +84,23 @@ export default function ProductDetail(props: any): JSX.Element {
       )
       .then((res) => {
         setProduct(res.data);
+        const options = {
+          ...res.data.createRazorPayOrder,
+          name: "Learning To Code Online",
+          description: "Test Order Transaction",
+          handler: async function (response: any): Promise<void> {
+            axios.post(
+              `/api/order/update-order-payment-status`,
+              { ...response, id: res.data.id },
+              { headers }
+            );
+            appDispatch(clearCart({}));
+            router.push("/wallet/success");
+          },
+        };
+        // @ts-expect-error: ignore
+        const paymentObject = new window.Razorpay(options);
+        paymentObject.open();
       })
       .catch((err) => {
         console.error(err);
@@ -157,7 +187,7 @@ export default function ProductDetail(props: any): JSX.Element {
               variant="text"
               className={styles.button3}
               onClick={() => {
-                appDispatch(clearCart());
+                appDispatch(clearCart({}));
               }}
             >
               Clear shopping cart
