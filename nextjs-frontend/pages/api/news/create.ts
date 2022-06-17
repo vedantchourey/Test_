@@ -11,7 +11,7 @@ export default createNextJsRouteHandler({
       const result = await createNews(req.body, context);
       res.status(result.errors ? 400 : 200).send(result)
     },
-    preHooks: [beginTransactionMiddleWare],
+    preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],
     postHooks: [commitOrRollBackTransactionMiddleWare]
   }
 });

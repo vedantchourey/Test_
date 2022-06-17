@@ -19,6 +19,7 @@ import { useAppSelector } from "../../../redux-store/redux-store";
 import { userProfileSelector } from "../../../redux-store/authentication/authentication-selectors";
 import { getAuthHeader } from "../../../utils/headers";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 export const NoobCell = styled(TableCell)(() => ({
   border: "0px",
@@ -57,6 +58,7 @@ interface PermissionProps {
 
 const Permissions: React.FC<PermissionProps> = ({ players, team }) => {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const user = useAppSelector(userProfileSelector);
   const teamOwner = user?.id === team?.created_by;
@@ -70,6 +72,8 @@ const Permissions: React.FC<PermissionProps> = ({ players, team }) => {
     axios
       .post("/api/teams/discard", data, {
         headers: headers,
+      }).then(() => {
+        router.push("/teamlist");
       })
       .catch(() => {
         alert("Player already added in Watch list");
@@ -86,6 +90,8 @@ const Permissions: React.FC<PermissionProps> = ({ players, team }) => {
     axios
       .post("/api/teams/leave-team", data, {
         headers: headers,
+      }).then(() => {
+          router.push("/teamlist")
       })
       .catch(() => {
         alert("Player already added in Watch list");

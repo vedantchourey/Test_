@@ -11,7 +11,7 @@ export default createNextJsRouteHandler({
       const result = await newsList(context);
       res.status(200).send(result)
     },
-    preHooks: [beginTransactionMiddleWare],
+    preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],
     postHooks: [commitOrRollBackTransactionMiddleWare]
   }
 });

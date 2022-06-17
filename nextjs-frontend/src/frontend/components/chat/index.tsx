@@ -66,9 +66,12 @@ export default function Chat(props: {smallChat: boolean}): JSX.Element {
   }, []);
 
   const chatsList: IChatUsers[] = Object.values(chats).sort(
-    (a: IChatUsers, b: IChatUsers) =>
-      parseInt(moment(b.updated_at).format("X")) -
-      parseInt(moment(a.updated_at).format("X"))
+    (a: IChatUsers, b: IChatUsers) => {
+      return (
+        parseInt(moment(a.updated_at).format("X")) -
+        parseInt(moment(b.updated_at).format("X"))
+      );
+    }
   );
 
   const renderChatList = (): JSX.Element => {

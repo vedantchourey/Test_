@@ -252,87 +252,88 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-            <FormControl fullWidth variant="standard">
-              <FormLabel label="Header Banner"></FormLabel>
-              <Dropzone onDrop={(files): void => onDrop(files, "banner")}>
-                {({ getRootProps, getInputProps }): JSX.Element => (
-                  <Box
-                    className={style.dropZone}
-                    component={"div"}
-                    {...getRootProps()}
-                  >
-                    <input {...getInputProps()} />
-                    <img src="/icons/Upload.svg" alt="upload" />
-                    <Typography marginTop={2} variant="subtitle2">
-                      1029px - 600px
-                    </Typography>
-                    <Typography variant="subtitle2">
-                      Click or drag and drop
-                    </Typography>
-                  </Box>
-                )}
-              </Dropzone>
-              {formik.touched.createTemplateCode &&
-                Boolean(formik.errors.banner) ? (
-                  <FormHelperText error>
-                    {formik.errors.banner}
-                  </FormHelperText>
-                ) : null}
-              <Box display="flex" flexDirection={"column"}>
-                {formik?.values?.banner !== "" && (
-                  <>
-                    <Typography
-                      style={{ textAlign: "left", margin: "10px 0px" }}
-                    >
-                      Preview
-                    </Typography>
-                    <img src={formik.values.banner} width="30%" />
-                  </>
-                )}
-              </Box>
-            </FormControl>
-          </Grid>
+          <FormControl fullWidth variant="standard">
+            <FormLabel label="Header Banner"></FormLabel>
+            <Dropzone onDrop={(files): void => onDrop(files, "banner")}>
+              {({ getRootProps, getInputProps }): JSX.Element => (
+                <Box
+                  className={style.dropZone}
+                  component={"div"}
+                  {...getRootProps()}
+                >
+                  <input {...getInputProps()} />
+                  <img src="/icons/Upload.svg" alt="upload" />
+                  <Typography marginTop={2} variant="subtitle2">
+                    1029px - 600px
+                  </Typography>
+                  <Typography variant="subtitle2">
+                    Click or drag and drop
+                  </Typography>
+                </Box>
+              )}
+            </Dropzone>
+            {formik.touched.createTemplateCode &&
+            Boolean(formik.errors.banner) ? (
+              <FormHelperText error>{formik.errors.banner}</FormHelperText>
+            ) : null}
+            <Box display="flex" flexDirection={"column"}>
+              {formik?.values?.banner !== "" && (
+                <>
+                  <Typography style={{ textAlign: "left", margin: "10px 0px" }}>
+                    Preview
+                  </Typography>
+                  <img src={formik.values.banner} width="30%" />
+                </>
+              )}
+            </Box>
+          </FormControl>
+        </Grid>
 
-          <Grid item xs={12}>
-            <FormControl fullWidth variant="standard">
-              <FormLabel label="Sponsor Logo"></FormLabel>
-              <Dropzone onDrop={(files): void => onDrop(files, "sponsor")}>
-                {({ getRootProps, getInputProps }): JSX.Element => (
-                  <Box
-                    className={style.dropZone}
-                    component={"div"}
-                    {...getRootProps()}
-                  >
-                    <input {...getInputProps()} />
-                    <img src="/icons/Upload.svg" alt="upload" />
-                    <Typography marginTop={2} variant="subtitle2">
-                      1029px - 600px
-                    </Typography>
-                    <Typography variant="subtitle2">
-                      Click or drag and drop
-                    </Typography>
-                  </Box>
-                )}
-              </Dropzone>
-              {formik.touched.sponsor &&
-                Boolean(formik.errors.sponsor) ? (
-                  <FormHelperText error>
-                    {formik.errors.sponsor}
-                  </FormHelperText>
-                ) : null}
-              <Box display="flex" flexDirection={"column"}>
-                {formik?.values?.sponsor !== "" && (
-                  <>
-                    <Typography
-                      style={{ textAlign: "left", margin: "10px 0px" }}
-                    >
-                      Preview
-                    </Typography>
-                    <img src={formik.values.sponsor} width="30%" />
-                  </>
-                )}
-              </Box>
-            </FormControl>
+        <Grid item xs={12}>
+          <FormControl fullWidth variant="standard">
+            <FormLabel label="Sponsor Logo"></FormLabel>
+            <Dropzone onDrop={(files): void => onDrop(files, "sponsor")}>
+              {({ getRootProps, getInputProps }): JSX.Element => (
+                <Box
+                  className={style.dropZone}
+                  component={"div"}
+                  {...getRootProps()}
+                >
+                  <input {...getInputProps()} />
+                  <img src="/icons/Upload.svg" alt="upload" />
+                  <Typography marginTop={2} variant="subtitle2">
+                    1029px - 600px
+                  </Typography>
+                  <Typography variant="subtitle2">
+                    Click or drag and drop
+                  </Typography>
+                </Box>
+              )}
+            </Dropzone>
+            {formik.touched.sponsor && Boolean(formik.errors.sponsor) ? (
+              <FormHelperText error>{formik.errors.sponsor}</FormHelperText>
+            ) : null}
+            <Box display="flex" flexDirection={"column"}>
+              {formik?.values?.sponsor !== "" && (
+                <>
+                  <Typography style={{ textAlign: "left", margin: "10px 0px" }}>
+                    Preview
+                  </Typography>
+                  <img src={formik.values.sponsor} width="30%" />
+                </>
+              )}
+            </Box>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12}>
+            <AccordionAlt title="About">
+              <NoobReachTextEditor
+                value={formik.values.about}
+                onChange={(value: any): void => {
+                  changeHandler("about", value);
+                }}
+              />
+            </AccordionAlt>
           </Grid>
       </CardLayout>
 
@@ -350,7 +351,6 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
                 <Box marginTop={"2px"}>
                   <FormLabel label="Select A Tournament To Clone From"></FormLabel>
                 </Box>
-                
               </Box>
             </FormControl>
           </Grid>
@@ -380,18 +380,6 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
               </FormControl>
             ) : null}
           </Grid>
-          <Grid item xs={12}>
-            <AccordionAlt title="About">
-              <NoobReachTextEditor
-                value={formik.values.about}
-                onChange={(value: any): void => {
-                  changeHandler("about", value);
-                }}
-              />
-            </AccordionAlt>
-          </Grid>
-
-          
         </Grid>
       </CardLayout>
       <Box display="flex" justifyContent={"flex-end"}>

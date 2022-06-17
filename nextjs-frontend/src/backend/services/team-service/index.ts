@@ -143,7 +143,9 @@ export const discardTeams = async (req: ITeamDiscardRequest,
             await teams.delete({ id: req.id, created_by: user.id })
 
             const channelRepo = new CrudRepository<IChannel>(connection, "channel");
-            await channelRepo.delete({ "channel_id": req.id, "user_id": user.id });
+            await channelRepo.delete({ "id": req.id });
+            const chatUserRepo = new CrudRepository<IChatUsers>(connection, "chat_users");
+            await chatUserRepo.delete({ "channel_id": req.id });
 
             return { message: "Teams discard successfull" }
         } return getErrorObject("Team for platform and game combination already exists")
