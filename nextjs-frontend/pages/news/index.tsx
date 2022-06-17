@@ -97,7 +97,7 @@ export default function News(): JSX.Element {
           <Box textAlign={"left"}>
             <Button onClick={(): any => setCurrentNews(null)}>Back</Button>
             <Typography textAlign={"left"} variant="h5">
-              {data.title}
+              {currentNews.title}
             </Typography>
             <Typography
               textAlign={"left"}
@@ -105,7 +105,7 @@ export default function News(): JSX.Element {
               fontSize={12}
               color={"rgba(255,255,255,0.7)"}
             >
-              {data.subtitle}
+              {currentNews.subtitle}
             </Typography>
             <Typography
               textAlign={"left"}
@@ -114,16 +114,16 @@ export default function News(): JSX.Element {
               mt={1}
               color={"#6931F9"}
             >
-              Author: {data.author} / Publishing Date:{" "}
-              {moment(data.created_at).format("DD MMM YYYY")}
+              Author: {currentNews.author} / Publishing Date:{" "}
+              {moment(currentNews.created_at).format("DD MMM YYYY")}
             </Typography>
             <Box mt={4} textAlign={"center"}>
-              <img src={data.image} style={{ width: "60vh" }} />
+              <img src={currentNews.image} style={{ width: "60vh" }} />
             </Box>
             <div
               style={{ fontFamily: "Inter", textAlign: "left", marginTop: 40 }}
             >
-              {ReactHtmlParser(data.description)}
+              {ReactHtmlParser(currentNews.description)}
             </div>
           </Box>
         )}
