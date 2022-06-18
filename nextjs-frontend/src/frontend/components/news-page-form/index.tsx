@@ -1,6 +1,4 @@
-import {
-    Button, Grid, OutlinedInput, Typography
-} from "@mui/material";
+import { Button, Grid, OutlinedInput, Typography } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import { createStyles, makeStyles } from "@mui/styles";
@@ -21,223 +19,242 @@ import FormLabel from "../ui-components/formlabel";
 import NoobReachTextEditor from "../ui-components/rte";
 
 const useStyles = makeStyles(() =>
-    createStyles({
-        inputBox: {
-            borderRadius: "10px",
-            marginBottom: "20px",
-        },
-        dropZone: {
-            border: "1px solid rgba(255, 255, 255, 0.3)",
-            borderRadius: "10px",
-            height: "178px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
-        },
-    }));
+  createStyles({
+    inputBox: {
+      borderRadius: "10px",
+      marginBottom: "20px",
+    },
+    dropZone: {
+      border: "1px solid rgba(255, 255, 255, 0.3)",
+      borderRadius: "10px",
+      height: "178px",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      flexDirection: "column",
+    },
+  }));
 
 export interface BasicData {
-    title: string;
-    subtitle: string;
-    authorname: string;
-    description: string;
-    banner?: string;
+  title: string;
+  subtitle: string;
+  authorname: string;
+  description: string;
+  banner: string;
 }
 
 interface BasicPorps {
-    data?: BasicData;
-    onSave?: (data: BasicData) => void;
+  data?: BasicData;
+  onSave?: (data: BasicData) => void;
 }
 const NewsPage: React.FC<BasicPorps> = ({ onSave, data }) => {
-    const style = useStyles();
-    const validationSchema = yup.object({
-        title: yup.string().required("Title is required"),
-        subtitle: yup.string().required("Subtitle is required"),
-        authorname: yup.string().required("Author Name is required"),
-        description: yup.string(),
-        banner: yup.string().nullable(),
+  const style = useStyles();
+  const validationSchema = yup.object({
+    title: yup.string().required("Title is required"),
+    subtitle: yup.string().required("Subtitle is required"),
+    authorname: yup.string().required("Author Name is required"),
+    description: yup.string(),
+    banner: yup.string().nullable(),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      title: data?.title || "",
+      subtitle: data?.subtitle || "",
+      authorname: data?.authorname || "",
+      description: data?.description || "",
+      banner: data?.banner || "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      if (onSave) {
+        onSave(values);
+      }
+    },
+  });
+
+  React.useEffect(() => {
+    if (data) {
+      formik.setValues({
+        ...data,
+        banner: data?.banner ? data?.banner : "",
+      });
+    }
+  }, [data]);
+
+  const changeHandler = (
+    property: string,
+    value: string | boolean | Date | null
+  ): void => {
+    formik.setFieldValue(property, value, true);
+  };
+  const onDrop = useCallback((acceptedFiles: File[], field: string): void => {
+    acceptedFiles.forEach(async (file: Blob): Promise<void> => {
+      const fileName = `${v4()}.png`;
+      const fileData = blobToFile(file, fileName);
+      const { data, error } = await uploadImage(
+        "public-files",
+        fileName,
+        fileData
+      );
+      if (!error && data) {
+        const fileUrl = frontendSupabase.storage
+          .from("public-files")
+          .getPublicUrl(data.Key.split("/")[1]);
+        formik.setFieldValue(field, fileUrl.data?.publicURL || "");
+      }
     });
+  }, []);
+  return (
+    <NoobPage
+      title={"News Page"}
+      metaData={{
+        description: "Noob Storm home page",
+      }}
+    >
+      <Grid container columnSpacing={2} rowSpacing={2}>
+        <Grid item md={3} lg={2}>
+          <DashboardSideBar />
+        </Grid>
+        <Grid item md={9} lg={10} paddingRight={2}>
+          <Grid container columnSpacing={2}>
+            <Grid item md={12}>
+              <CardLayout title="Required Fields">
+                <Grid container rowSpacing={1} columnSpacing={5}>
+                  <Grid item xs={6}>
+                    <FormControl fullWidth variant="standard">
+                      <FormLabel label="Title"></FormLabel>
+                      <OutlinedInput
+                        id="title"
+                        name="title"
+                        placeholder="Title"
+                        onChange={formik.handleChange}
+                        value={formik.values.title}
+                        className={style.inputBox}
+                        onBlur={formik.handleBlur}
+                        error={
+                          formik.touched.title && Boolean(formik.errors.title)
+                        }
+                      />
+                      {formik.touched.title && Boolean(formik.errors.title) ? (
+                        <FormHelperText> {formik.errors.title} </FormHelperText>
+                      ) : null}
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={6}>
+                    {" "}
+                    <FormControl fullWidth variant="standard">
+                      <FormLabel label="SubTitle"></FormLabel>
+                      <OutlinedInput
+                        id="subtitle"
+                        name="subtitle"
+                        placeholder="SubTitle"
+                        onChange={formik.handleChange}
+                        value={formik.values.subtitle}
+                        className={style.inputBox}
+                        onBlur={formik.handleBlur}
+                        error={
+                          formik.touched.subtitle &&
+                          Boolean(formik.errors.subtitle)
+                        }
+                      />
+                      {formik.touched.subtitle &&
+                      Boolean(formik.errors.subtitle) ? (
+                        <FormHelperText>
+                          {" "}
+                          {formik.errors.subtitle}{" "}
+                        </FormHelperText>
+                      ) : null}
+                    </FormControl>
+                  </Grid>
 
-    const formik = useFormik({
-        initialValues: {
-            title: data?.title || "",
-            subtitle: data?.subtitle || "",
-            authorname: data?.authorname || "",
-            description: data?.description || "",
-            banner: data?.banner || "",
-        },
-        validationSchema: validationSchema,
-        onSubmit: (values) => {
-            if (onSave) {
-                onSave(values);
-            }
-        },
-    });
-
-    React.useEffect(() => {
-        if (data) {
-            formik.setValues({
-                ...data,
-                banner: data?.banner ? data?.banner : "",
-            });
-        }
-    }, [data]);
-
-    const changeHandler = (
-        property: string,
-        value: string | boolean | Date | null
-    ): void => {
-        formik.setFieldValue(property, value, true);
-    };
-    const onDrop = useCallback((acceptedFiles: File[], field: string): void => {
-        acceptedFiles.forEach(async (file: Blob): Promise<void> => {
-            const fileName = `${v4()}.png`;
-            const fileData = blobToFile(file, fileName)
-            const { data, error } = await uploadImage("public-files", fileName, fileData)
-            if (!error && data) {
-                const fileUrl = frontendSupabase.storage.from("public-files").getPublicUrl(data.Key.split("/")[1])
-                formik.setFieldValue(field, fileUrl.data?.publicURL || "");
-            }
-        });
-    }, []);
-    return (
-        <NoobPage
-            title={"News Page"}
-            metaData={{
-                description: "Noob Storm home page",
-            }}
-        >
-            <Grid container columnSpacing={2} rowSpacing={2}>
-                <Grid item md={3} lg={2}>
-                    <DashboardSideBar />
+                  <Grid item xs={6}>
+                    <FormControl fullWidth variant="standard">
+                      <FormLabel label="Author Name"></FormLabel>
+                      <OutlinedInput
+                        id="authorname"
+                        name="authorname"
+                        placeholder="Author Name"
+                        onChange={formik.handleChange}
+                        value={formik.values.authorname}
+                        className={style.inputBox}
+                        onBlur={formik.handleBlur}
+                        error={
+                          formik.touched.authorname &&
+                          Boolean(formik.errors.authorname)
+                        }
+                      />
+                      {formik.touched.authorname &&
+                      Boolean(formik.errors.authorname) ? (
+                        <FormHelperText>
+                          {" "}
+                          {formik.errors.authorname}{" "}
+                        </FormHelperText>
+                      ) : null}
+                    </FormControl>
+                  </Grid>
                 </Grid>
-                <Grid item md={9} lg={10} paddingRight={2}>
-                    <Grid container columnSpacing={2}>
-                        <Grid item md={12}>
-                            <CardLayout title="Required Fields">
-                                <Grid container rowSpacing={1} columnSpacing={5}>
-                                    <Grid item xs={6}>
-                                        <FormControl fullWidth variant="standard">
-                                            <FormLabel label="Title"></FormLabel>
-                                            <OutlinedInput
-                                                id="title"
-                                                name="title"
-                                                placeholder="Title"
-                                                onChange={formik.handleChange}
-                                                value={formik.values.title}
-                                                className={style.inputBox}
-                                                onBlur={formik.handleBlur}
-                                                error={formik.touched.title && Boolean(formik.errors.title)}
-                                            />
-                                            {formik.touched.title && Boolean(formik.errors.title) ? (
-                                                <FormHelperText> {formik.errors.title} </FormHelperText>
-                                            ) : null}
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        {" "}
-                                        <FormControl fullWidth variant="standard">
-                                            <FormLabel label="SubTitle"></FormLabel>
-                                            <OutlinedInput
-                                                id="subtitle"
-                                                name="subtitle"
-                                                placeholder="SubTitle"
-                                                onChange={formik.handleChange}
-                                                value={formik.values.subtitle}
-                                                className={style.inputBox}
-                                                onBlur={formik.handleBlur}
-                                                error={formik.touched.subtitle && Boolean(formik.errors.subtitle)}
-                                            />
-                                            {formik.touched.subtitle && Boolean(formik.errors.subtitle) ? (
-                                                <FormHelperText> {formik.errors.subtitle} </FormHelperText>
-                                            ) : null}
-                                        </FormControl>
-                                    </Grid>
+              </CardLayout>
 
-                                    <Grid item xs={6}>
-                                        <FormControl fullWidth variant="standard">
-                                            <FormLabel label="Author Name"></FormLabel>
-                                            <OutlinedInput
-                                                id="authorname"
-                                                name="authorname"
-                                                placeholder="Author Name"
-                                                onChange={formik.handleChange}
-                                                value={formik.values.authorname}
-                                                className={style.inputBox}
-                                                onBlur={formik.handleBlur}
-                                                error={formik.touched.authorname && Boolean(formik.errors.authorname)}
-                                            />
-                                            {formik.touched.authorname && Boolean(formik.errors.authorname) ? (
-                                                <FormHelperText> {formik.errors.authorname} </FormHelperText>
-                                            ) : null}
-                                        </FormControl>
-                                    </Grid>
-                                </Grid>
-                            </CardLayout>
-
-                            <CardLayout title="Optional Fields">
-                                <Grid container rowSpacing={1} columnSpacing={5}>
-                                    <Grid item xs={12}>
-                                        <AccordionAlt title="Discription">
-                                            <NoobReachTextEditor
-                                                value={formik.values.description}
-                                                onChange={(value: any): void => {
-                                                    changeHandler("description", value);
-                                                }}
-                                            />
-                                        </AccordionAlt>
-                                    </Grid>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <FormControl fullWidth variant="standard">
-                                        <FormLabel label="Image"></FormLabel>
-                                        <Dropzone onDrop={(files): void => onDrop(files, "banner")}>
-                                            {({ getRootProps, getInputProps }): JSX.Element => (
-                                                <Box
-                                                    className={style.dropZone}
-                                                    component={"div"}
-                                                    {...getRootProps()}
-                                                >
-                                                    <input {...getInputProps()} />
-                                                    <img src="/icons/Upload.svg" alt="upload" />
-                                                    <Typography marginTop={2} variant="subtitle2">
-                                                        1029px - 600px
-                                                    </Typography>
-                                                    <Typography variant="subtitle2">
-                                                        Click or drag and drop
-                                                    </Typography>
-                                                </Box>
-                                            )}
-                                        </Dropzone>
-                                        <Box display="flex" flexDirection={"column"}>
-                                            {formik?.values?.banner !== "" && (
-                                                <>
-                                                    <Typography
-                                                        style={{ textAlign: "left", margin: "10px 0px" }}
-                                                    >
-                                                        Preview
-                                                    </Typography>
-                                                    <img src={formik.values.banner} width="30%" />
-                                                </>
-                                            )}
-                                        </Box>
-                                    </FormControl>
-                                </Grid>
-                            </CardLayout>
-                            <Box display="flex" justifyContent={"flex-end"}>
-                                <Button
-                                    variant="contained"
-                                    onClick={formik.submitForm}
-                                >
-                                    Save
-                                </Button>
-                            </Box>
-                        </Grid>
-                    </Grid>
+              <CardLayout title="Optional Fields">
+                <Grid container rowSpacing={1} columnSpacing={5}>
+                  <Grid item xs={12}>
+                    <AccordionAlt title="Discription">
+                      <NoobReachTextEditor
+                        value={formik.values.description}
+                        onChange={(value: any): void => {
+                          changeHandler("description", value);
+                        }}
+                      />
+                    </AccordionAlt>
+                  </Grid>
                 </Grid>
+                <Grid item xs={12}>
+                  <FormControl fullWidth variant="standard">
+                    <FormLabel label="Image"></FormLabel>
+                    <Dropzone onDrop={(files): void => onDrop(files, "banner")}>
+                      {({ getRootProps, getInputProps }): JSX.Element => (
+                        <Box
+                          className={style.dropZone}
+                          component={"div"}
+                          {...getRootProps()}
+                        >
+                          <input {...getInputProps()} />
+                          <img src="/icons/Upload.svg" alt="upload" />
+                          <Typography marginTop={2} variant="subtitle2">
+                            1029px - 600px
+                          </Typography>
+                          <Typography variant="subtitle2">
+                            Click or drag and drop
+                          </Typography>
+                        </Box>
+                      )}
+                    </Dropzone>
+                    <Box display="flex" flexDirection={"column"}>
+                      {formik?.values?.banner !== "" && (
+                        <>
+                          <Typography
+                            style={{ textAlign: "left", margin: "10px 0px" }}
+                          >
+                            Preview
+                          </Typography>
+                          <img src={formik.values.banner} width="30%" />
+                        </>
+                      )}
+                    </Box>
+                  </FormControl>
+                </Grid>
+              </CardLayout>
+              <Box display="flex" justifyContent={"flex-end"}>
+                <Button variant="contained" onClick={formik.submitForm}>
+                  Save
+                </Button>
+              </Box>
             </Grid>
-        </NoobPage>
-    );
+          </Grid>
+        </Grid>
+      </Grid>
+    </NoobPage>
+  );
 };
 export default NewsPage;

@@ -8,16 +8,6 @@ import { getAuthHeader } from "../../src/frontend/utils/headers";
 import axios from "axios";
 
 export default function News(): JSX.Element {
-  const data = {
-    id: "1",
-    title: "thus is from pratik",
-    subtitle: "hello subtitle",
-    author: "pratyk",
-    image:
-      "https://images.unsplash.com/photo-1516832970803-325be7a92aa5?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=93d7ac9abad6167aecb49ebd67fd5b6d&auto=format&fit=crop&w=751&q=80",
-    description: "cxc czxcx cxzcx",
-    created_at: "2022-06-16T17:49:31.642Z",
-  };
 
   const [newsData, setData] = useState<any[]>([]);
   const [currentNews, setCurrentNews] = useState<any>(null)

@@ -3,6 +3,7 @@ import { PerRequestContext } from "../../utils/api-middle-ware/api-middleware-ty
 import { productsRepository } from "../database/repositories/products-repository";
 import { IProductResponse } from "./i-Product-response";
 import { IProduct } from "../database/models/i-product";
+import { IProductRequest } from "./i-Product-request";
 
 export const getAllProducts = async (
   context: PerRequestContext,
@@ -12,6 +13,17 @@ export const getAllProducts = async (
   const result = await productsRepo.fetch();
   return result;
 };
+
+export const getProductById = async (
+  context: PerRequestContext,
+  req: IProductRequest,
+): Promise<IProductResponse | undefined> => {
+  const transaction = context.transaction as Knex.Transaction;
+  const productsRepo = new productsRepository(transaction);
+  const result = await productsRepo.findById(req.id);
+  return result;
+};
+
 
 export const createProduct = async (
   req: IProduct,
