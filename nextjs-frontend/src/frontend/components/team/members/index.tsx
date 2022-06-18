@@ -1,7 +1,34 @@
-import { Box, Button, FormHelperText, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormHelperText,
+  TextField,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import React from "react";
-import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale } from "chart.js";
-Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale);
+import {
+  Chart,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  TimeScale,
+} from "chart.js";
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  TimeScale
+);
 
 import { Line } from "react-chartjs-2";
 import moment from "moment";
@@ -119,7 +146,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team }) => {
     datasets: [
       {
         label: "Dataset 1",
-        data: team?.eloHistory.map((i: any) => ({
+        data: team?.eloHistory?.map((i: any) => ({
           x: moment(i.created_at).format("DD/MM/YYYY"),
           y: parseInt(i.elo_rating),
         })),
@@ -186,8 +213,19 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team }) => {
                 component={"div"}
                 justifyContent="center"
               >
-                <Image src={"/icons/PlayerAdd.svg"} height={"45px"} width={"45px"} />
-                <Typography marginY={2} color="white" textTransform={"uppercase"} fontWeight="700" fontSize={"17px"} lineHeight={"18px"}>
+                <Image
+                  src={"/icons/PlayerAdd.svg"}
+                  height={"45px"}
+                  width={"45px"}
+                />
+                <Typography
+                  marginY={2}
+                  color="white"
+                  textTransform={"uppercase"}
+                  fontWeight="700"
+                  fontSize={"17px"}
+                  lineHeight={"18px"}
+                >
                   Add Player
                 </Typography>
               </Box>
@@ -204,9 +242,20 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team }) => {
         </Box>
       ) : null}
 
-      <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h6" color={"white"} marginBottom={2}>
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="h6"
+            color={"white"}
+            marginBottom={2}
+          >
             Invite Player
           </Typography>
           <Box display="flex" justifyContent={"space-between"}>

@@ -16,7 +16,6 @@ import { ITournament } from "../database/models/i-tournaments";
 import { addNotifications } from "../notifications-service";
 import { INotifications } from "../database/models/i-notifications";
 import { UsersRepository } from "../database/repositories/users-repository";
-import { IEloRatingHistory } from "../database/models/i-elo-rating-history";
 import { deleteFAMEntry } from "../FreeAgencyMarket/FreeAgencyMarket-Service";
 import { createChannel } from "../chat-service";
 const fields = ["id", "game_id", "name", "platform_id"]
@@ -27,30 +26,20 @@ import { IChatUsers } from "../database/models/i-chat-users";
 export const fetchTeams = async (connection: Knex.Transaction, user: any, query: any): Promise<ISuccess | IError> => {
     try {
         const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
-        const teamsPlayers = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
-        const teamPlayersQuery = teamsPlayers.knexObj().select("team_id")
-            .where({ user_id: user.id });
+        const team_players = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
+        // Finding all teams ids for the user
+        const team_players_query = team_players.find({ user_id: user.id }, ["team_id"]);
 
-        const dataa = await teamPlayersQuery;
-        const array = dataa.map((item: any) => { return item.team_id });
-
-        const eloRatingHistory = new CrudRepository<IEloRatingHistory>(connection, TABLE_NAMES.ELO_RATING_HISTORY);
-        let eloHistory: any = null;
         const teamQuery = teams.knexObj()
             .join(TABLE_NAMES.TEAM_PLAYERS, "team_players.team_id", "teams.id")
             .join(TABLE_NAMES.PRIVATE_PROFILE, "private_profiles.id", "team_players.user_id")
             .join(TABLE_NAMES.WALLET, "wallet.userId", "private_profiles.id")
-            .leftJoin(TABLE_NAMES.ELO_RATING, {
-                "elo_ratings.user_id": "private_profiles.id",
-                "elo_ratings.game_id": "teams.game_id"
-            })
-            .select(["teams.name", "teams.id", "teams.created_by", "private_profiles.firstName", "private_profiles.lastName", "private_profiles.id as user_id", "wallet.balance", "elo_ratings.elo_rating", "private_profiles.won", "private_profiles.lost"])
-            .whereIn("teams.id", array)
+            .select(["teams.name", "teams.id", "private_profiles.firstName", "private_profiles.lastName", "private_profiles.id as user_id", "wallet.balance"])
+            // checking if the team id is included in users teams id array
+            .whereIn('teams.id', team_players_query)
 
         if (query.id) {
             teamQuery.where("teams.id", query.id)
-            eloHistory = await eloRatingHistory.knexObj().select("*")
-                .where("team_id", query.id)
         }
         if (query.tournament_id) {
             const tour_repo = new CrudRepository<ITournament>(connection, TABLE_NAMES.TOURNAMENTS);
@@ -60,19 +49,21 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
                 teamQuery.where("teams.platform_id", settings.platform)
             }
         }
-        const data = await teamQuery
+        const data = await teamQuery;
         if (!data.length) return getErrorObject("No Teams found")
+
         return {
             result: _(data).groupBy("name")
                 .map(function (items, name) {
                     return {
                         id: items[0].id,
-                        created_by: items[0].created_by,
                         name,
-                        eloHistory,
                         players: _.map(items, (data) => {
                             return {
-                                ...data
+                                user_id: data.user_id,
+                                lastName: data.lastName,
+                                firstName: data.firstName,
+                                balance: data.balance
                             }
                         })
                     };
@@ -236,10 +227,10 @@ export const acceptInvite = async (secret: string, connection: Knex.Transaction)
 
             const chatUserRepo = new CrudRepository<IChatUsers>(connection, "chat_users");
             await chatUserRepo.create({
-              channel_id: invite.team_id,
-              user_id: invite.user_id,
-              other_user: invite.team_id,
-              channel_name: teams.name,
+                channel_id: invite.team_id,
+                user_id: invite.user_id,
+                other_user: invite.team_id,
+                channel_name: teams.name,
             });
 
             await Promise.all([
