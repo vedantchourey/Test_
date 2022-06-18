@@ -40,7 +40,7 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
             .join(TABLE_NAMES.PRIVATE_PROFILE, "private_profiles.id", "team_players.user_id")
             .join(TABLE_NAMES.WALLET, "wallet.userId", "private_profiles.id")
             .select(["teams.name", "teams.id", "private_profiles.firstName", "private_profiles.lastName", "private_profiles.id as user_id", "wallet.balance"])
-            .whereIn('teams.id', teamIds.map((item): any => item.team_id));
+            .whereIn('teams.id', teamIds.map((item: any): any => item.team_id));
 
         if (query.id) {
             teamQuery.where("teams.id", query.id)
