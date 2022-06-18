@@ -87,7 +87,7 @@ export default function ProductDetail(): JSX.Element {
               { ...response, id: res.data.id },
               { headers }
             );
-            appDispatch(clearCart({}));
+            appDispatch(clearCart());
             router.push("/wallet/success");
           },
         };
@@ -179,7 +179,7 @@ export default function ProductDetail(): JSX.Element {
               variant="text"
               className={styles.button3}
               onClick={(): any => {
-                appDispatch(clearCart({}));
+                appDispatch(clearCart());
               }}
             >
               Clear shopping cart
