@@ -16,6 +16,7 @@ import { ITournament } from "../database/models/i-tournaments";
 import { addNotifications } from "../notifications-service";
 import { INotifications } from "../database/models/i-notifications";
 import { UsersRepository } from "../database/repositories/users-repository";
+import { IEloRatingHistory } from "../database/models/i-elo-rating-history";
 import { deleteFAMEntry } from "../FreeAgencyMarket/FreeAgencyMarket-Service";
 import { createChannel } from "../chat-service";
 const fields = ["id", "game_id", "name", "platform_id"]
@@ -27,16 +28,19 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
     try {
         const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
         const team_players = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
-        // Finding all teams ids for the user
-        const team_players_query = team_players.find({ user_id: user.id }, ["team_id"]);
+
+        const teamPlayersQuery = team_players.find({
+            user_id: user.id
+        }, ["team_id"]);
+
+        const teamIds = await teamPlayersQuery;
 
         const teamQuery = teams.knexObj()
             .join(TABLE_NAMES.TEAM_PLAYERS, "team_players.team_id", "teams.id")
             .join(TABLE_NAMES.PRIVATE_PROFILE, "private_profiles.id", "team_players.user_id")
             .join(TABLE_NAMES.WALLET, "wallet.userId", "private_profiles.id")
             .select(["teams.name", "teams.id", "private_profiles.firstName", "private_profiles.lastName", "private_profiles.id as user_id", "wallet.balance"])
-            // checking if the team id is included in users teams id array
-            .whereIn('teams.id', team_players_query)
+            .whereIn('teams.id', teamIds.map((item): any => item.team_id));
 
         if (query.id) {
             teamQuery.where("teams.id", query.id)
