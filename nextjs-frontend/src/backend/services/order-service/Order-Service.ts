@@ -36,8 +36,15 @@ export const createOrder = async (
   const orderRepo = new orderRepository(transaction);
   const result = await orderRepo.create(req);
   if (result) {
-    const reqBody = { amount: result.total_amount };
-    return await createRazorPayOrder(reqBody, context.knexConnection as Knex);
+
+    const res = await createRazorPayOrder({
+      amount: req.amount,
+    }, context.knexConnection as Knex);
+
+    return {
+      id: result.id,
+      createRazorPayOrder: res,
+    }
   }
   return result;
 };
@@ -52,15 +59,22 @@ export const updateOrderPaymentStatus = async (req: IOrderRequest, context: PerR
     key_secret: secret.value,
   });
   const payment_response: any = await razorpay.payments.fetch(req.razorpay_payment_id);
-  if (payment_response?.captured && req.order) {
+  if (payment_response?.captured && req.id) {
     const transaction = context.transaction as Knex.Transaction;
     const orderRepo = new orderRepository(transaction);
-    const result = await orderRepo.update({
-      ...req.order,
-      payment_status: 'completed',
-      paymentInfo: payment_response,
-    });
-    return result;
+    const orderObj = await orderRepo.findById(req.id);
+    if (orderObj !== undefined) {
+      const result = await orderRepo.update({
+        id: orderObj.id,
+        order_id: orderObj.order_id,
+        products: orderObj.products,
+        amount: orderObj.amount,
+        payment_status: 'submitted',
+        paymentInfo: payment_response,
+        status: 'incomplete',
+      });
+      return result;
+    }
   }
   return payment_response
 }

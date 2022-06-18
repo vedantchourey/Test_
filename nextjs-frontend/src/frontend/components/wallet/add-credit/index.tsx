@@ -18,9 +18,9 @@ import { useAppDispatch } from "../../../redux-store/redux-store";
 import { setCartDetails } from "../../../redux-store/wallet/wallet.-slice";
 const AddCredit: React.FC = () => {
   const [amount, setAmount] = useState("0.00");
-  const [razorPay, setRazorPay] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const appDispatch = useAppDispatch();
+  const [razorPay, setRazorPay] = useState(false);
   useEffect((): void => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -50,6 +50,7 @@ const AddCredit: React.FC = () => {
         }
       )
       .then(({ data }): void => {
+        console.warn(data);
         appDispatch(setCartDetails(data));
         const options = {
           ...data,
