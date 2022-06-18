@@ -46,14 +46,14 @@ const cartSlice = createSlice({
             // state.products.push(action.payload);
             // state.quantity += 1;
             const newId = action.payload.id
-            const index = state.products.findIndex(item => item.id == newId);
+            const index = state.products.findIndex((item: any) => item.id === newId);
             const amount = state.products[index].amount;
             const oldQty = state.products[index].quantity;
             const newQty = action.payload.quantity;
             state.total += ((newQty - oldQty) * amount);
             state.products[index].quantity = newQty;
 
-            if (newQty == 0) {
+            if (newQty === 0) {
                 state.quantity -= 1;
                 state.products.splice(index, 1);
             }
@@ -73,7 +73,7 @@ const cartSlice = createSlice({
         },
         removeProduct: (state, action) => {
             const id = action.payload.id
-            const index = state.products.findIndex(item => item.id == id);
+            const index = state.products.findIndex((item: any) => item.id === id);
             state.total -= state.products[index].amount * state.products[index].quantity;
             state.quantity -= 1;
 
@@ -92,7 +92,7 @@ const cartSlice = createSlice({
                 );
             }
         },
-        clearCart: (state, action) => {
+        clearCart: (state) => {
             state.products = []
             state.quantity = 0
             state.total = 0

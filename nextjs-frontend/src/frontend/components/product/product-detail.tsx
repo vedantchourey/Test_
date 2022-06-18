@@ -13,7 +13,7 @@ export default function ProductDetail(props: any): JSX.Element {
   const appDispatch = useAppDispatch();
 
   useEffect(() => {
-    const i = cart.products.findIndex((x) => x.id == props.id);
+    const i = cart.products.findIndex((x: any) => x.id === props.id);
     if (i !== -1) {
       const item = cart.products[i];
       const q = item.quantity;
@@ -75,7 +75,7 @@ export default function ProductDetail(props: any): JSX.Element {
             <Button
               variant="text"
               className={styles.button1}
-              onClick={() => {
+              onClick={(): any => {
                 if (qty <= 0) {
                   addToCart();
                 }

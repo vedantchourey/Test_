@@ -33,8 +33,7 @@ const useStyles = makeStyles(() =>
       alignItems: "center",
       flexDirection: "column",
     },
-  })
-);
+  }));
 
 export interface BasicData {
   title: string;

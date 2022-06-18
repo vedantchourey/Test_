@@ -20,7 +20,6 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   useAppSelector,
-  useAppDispatch,
 } from "../../src/frontend/redux-store/redux-store";
 import { isDeviceTypeSelector } from "../../src/frontend/redux-store/layout/layout-selectors";
 import { deviceTypes } from "../../src/frontend/redux-store/layout/device-types";
@@ -53,8 +52,7 @@ const StoreIndex = (): JSX.Element => {
   }, []);
 
   const isDesktop = useAppSelector((x) =>
-    isDeviceTypeSelector(x, deviceTypes.desktop)
-  );
+    isDeviceTypeSelector(x, deviceTypes.desktop));
 
   return (
     <NoobPage title="Store" metaData={{ description: "Noob Storm Store page" }}>

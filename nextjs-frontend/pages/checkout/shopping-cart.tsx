@@ -24,27 +24,22 @@ const { credit_config } = backendConfig;
 import axios from "axios";
 import { getAuthHeader } from "../../src/frontend/utils/headers";
 
-export default function ProductDetail(props: any): JSX.Element {
+export default function ProductDetail(): JSX.Element {
   const cart = useAppSelector(cartSelector);
-  const [loading, setLoading] = React.useState(false);
-  const [product, setProduct] = React.useState({});
   const router = useRouter();
   const appDispatch = useAppDispatch();
 
-  const [razorPay, setRazorPay] = React.useState(false);
   useEffect((): void => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
-    script.onload = (): void => {
-      setRazorPay(true);
-    };
-    script.onerror = (): void => {
-      setRazorPay(false);
-    };
+    // script.onload = (): void => {
+    // };
+    // script.onerror = (): void => {
+    // };
     document.body.appendChild(script);
   }, []);
 
-  function updateQty(id, quantity): void {
+  function updateQty(id: any, quantity: any): void {
     appDispatch(
       updateQuantity({
         id: id,
@@ -53,7 +48,7 @@ export default function ProductDetail(props: any): JSX.Element {
     );
   }
 
-  function getTotalAmount() {
+  function getTotalAmount(): any {
     return (
       cart.total +
       (credit_config.credit_gst_percentage / 100) * cart.total +
@@ -63,7 +58,6 @@ export default function ProductDetail(props: any): JSX.Element {
   }
 
   const insertData = async (): Promise<void> => {
-    setLoading(true);
 
     const headers = await getAuthHeader();
     axios
@@ -83,7 +77,6 @@ export default function ProductDetail(props: any): JSX.Element {
         }
       )
       .then((res) => {
-        setProduct(res.data);
         const options = {
           ...res.data.createRazorPayOrder,
           name: "Learning To Code Online",
@@ -105,7 +98,6 @@ export default function ProductDetail(props: any): JSX.Element {
       .catch((err) => {
         console.error(err);
       })
-      .finally(() => setLoading(false));
   };
 
   return (
@@ -177,7 +169,7 @@ export default function ProductDetail(props: any): JSX.Element {
             <Button
               variant="text"
               className={styles.button4}
-              onClick={() => {
+              onClick={(): any => {
                 router.push("/store");
               }}
             >
@@ -186,7 +178,7 @@ export default function ProductDetail(props: any): JSX.Element {
             <Button
               variant="text"
               className={styles.button3}
-              onClick={() => {
+              onClick={(): any => {
                 appDispatch(clearCart({}));
               }}
             >

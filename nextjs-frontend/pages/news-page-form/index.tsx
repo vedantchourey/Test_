@@ -10,7 +10,7 @@ const requiredRoles: NoobUserRole[] = [];
 
 const NewsPageFormCard: React.FC<void> = () => {
   const router = useRouter();
-  const handleSubmit = async (data) => {
+  const handleSubmit = async (data: any): Promise<any> => {
     const headers = await getAuthHeader();
 
     axios
