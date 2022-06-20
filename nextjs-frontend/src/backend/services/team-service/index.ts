@@ -16,7 +16,6 @@ import { ITournament } from "../database/models/i-tournaments";
 import { addNotifications } from "../notifications-service";
 import { INotifications } from "../database/models/i-notifications";
 import { UsersRepository } from "../database/repositories/users-repository";
-import { IEloRatingHistory } from "../database/models/i-elo-rating-history";
 import { deleteFAMEntry } from "../FreeAgencyMarket/FreeAgencyMarket-Service";
 import { createChannel } from "../chat-service";
 const fields = ["id", "game_id", "name", "platform_id"]
