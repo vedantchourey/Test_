@@ -229,11 +229,13 @@ export const acceptInvite = async (secret: string, connection: Knex.Transaction)
             const team_players = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
 
             const chatUserRepo = new CrudRepository<IChatUsers>(connection, "chat_users");
+            const userData: any = await fetchUserDetailsById(invite.user_id, connection);
             await chatUserRepo.create({
                 channel_id: invite.team_id,
                 user_id: invite.user_id,
                 other_user: invite.team_id,
                 channel_name: teams.name,
+                user_name: userData.raw_user_meta_data.username, 
             });
 
             await Promise.all([
@@ -387,6 +389,14 @@ export const getListOfInvitations = async (
         return getErrorObject("Something went wrong");
     }
 };
+
+async function fetchUserDetailsById(id: string,
+    connection: Knex.Transaction): Promise<any> {
+    const user_list = new CrudRepository<IUser>(connection, TABLE_NAMES.USERS);
+    const data = await user_list.knexObj().where("id", id)
+      .first();
+    return data;
+  }
 
 export const fetchUserDetails = async (email: string, connection: Knex.Transaction): Promise<IUser> => {
     const user_list = new CrudRepository<IUser>(connection, TABLE_NAMES.USERS);
