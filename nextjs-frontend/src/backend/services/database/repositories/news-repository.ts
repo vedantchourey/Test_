@@ -39,6 +39,12 @@ export class NewsRepository extends BaseRepository<INews> {
         .where("id", news.id)
         .update(news, keys);
     return updatedItems[0];
-}
+  }
+
+  async delete(id: string): Promise<INews | undefined> {
+    return this.entities()
+        .where({ id })
+        .delete();
+  }
 
 }

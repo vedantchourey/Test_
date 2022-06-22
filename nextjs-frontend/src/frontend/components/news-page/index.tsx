@@ -1,4 +1,5 @@
 import { Button, Grid, Typography } from "@mui/material";
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { useRouter } from "next/router";
 import React from "react";
 import NoobPage from "../page/noob-page";
@@ -10,21 +11,42 @@ import { getAuthHeader } from "../../utils/headers";
 const NewsPage: React.FC = () => {
   const [data, setData] = React.useState([]);
 
-  React.useEffect(() => {
-    const fetchData = async (): Promise<void> => {
-      const headers = await getAuthHeader();
-      axios
-        .get("/api/news/newslist", { headers: headers })
-        .then((res) => {
-          setData(res.data);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    };
+  const fetchData = async (): Promise<void> => {
+    const headers = await getAuthHeader();
+    axios
+      .get("/api/news/newslist", { headers: headers })
+      .then((res) => {
+        setData(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
+  React.useEffect(() => {
     fetchData();
   }, []);
+
+const deletnews = async (newsId: string): Promise<void> => {
+  try {
+    const endpoint = "/api/news/deleteNews";
+    const headers = await getAuthHeader();
+    axios
+      .get(endpoint, {
+        params: { newsId: newsId },
+        headers: headers,
+      })
+      .then((res) => {
+        if(res.status === 200){
+          fetchData();
+        }
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+  } catch (err) {}
+};
+
   const router = useRouter();
   const conf: NoobColumnConf<any>[] = [
     {
@@ -54,6 +76,13 @@ const NewsPage: React.FC = () => {
         return row.created_at;
       },
       width: "10%",
+    },
+    {
+      title: "Action",
+      renderCell: (row): any => {
+        return <DeleteOutlinedIcon  onClick={() => deletnews(row.id)}/>;
+      },
+      width: "5%",
     },
   ];
 
