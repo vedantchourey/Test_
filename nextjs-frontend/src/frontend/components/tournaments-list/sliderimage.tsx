@@ -1,14 +1,12 @@
 import {
+  Box,
   Button,
   Grid,
   Typography,
-  useMediaQuery,
-  useTheme,
 } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
 import React, { useState } from "react";
-import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import {
   allFormatsSelector,
@@ -16,11 +14,14 @@ import {
   formatsFetchStatusSelector,
   gamesFetchStatusSelector,
 } from "../../redux-store/games/game-selectors";
-import { fetchAllFormats, fetchAllGamesThunk } from "../../redux-store/games/game-slice";
+import {
+  fetchAllFormats,
+  fetchAllGamesThunk,
+} from "../../redux-store/games/game-slice";
 import { useAppDispatch, useAppSelector } from "../../redux-store/redux-store";
 import { getAuthHeader } from "../../utils/headers";
 import { TournamentData } from "../tournament";
-import Loader from '../ui-components/loader';
+import Loader from "../ui-components/loader";
 import ButtonComp from "./buttons";
 import CardComp from "./card";
 
@@ -42,16 +43,17 @@ const imagedata: any = {
 };
 
 const SliderComp: React.FC = (): JSX.Element => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const formats = useAppSelector(allFormatsSelector);
   const formatsFetchStatus = useAppSelector(formatsFetchStatusSelector);
   const [format, setFormat] = useState("");
   const [loading, setLoading] = useState(false);
 
   const [tournamentsData, setData] = React.useState<TournamentData[]>([]);
-  
-  const setTournamentsData = async (game_id: string, first = false): Promise<void> => {
+
+  const setTournamentsData = async (
+    game_id: string,
+    first = false
+  ): Promise<void> => {
     try {
       setLoading(true);
       const endpoint = "/api/tournaments/list";
@@ -95,36 +97,17 @@ const SliderComp: React.FC = (): JSX.Element => {
   }, [appDispatch, formatsFetchStatus]);
 
   React.useEffect(() => {
-    if(games?.[0]?.id){
-      setTournamentsData(games[0].id, true)
+    if (games?.[0]?.id) {
+      setTournamentsData(games[0].id, true);
     }
-  }, [games, format])
+  }, [games, format]);
 
-  const responsive = {
-    0: { items: 5 },
-    1024: { items: 3 },
-    1366: { items: 10 },
-  };
 
-  const items: JSX.Element[] = [];
-  {
-    games.map((data) => {
-      return items.push(
-        <Button key={1} data-value="1">
-          <img
-            src={imagedata[data.code]}
-            onClick={(): any => setTournamentsData(data.id)}
-            role="presentation"
-          />
-        </Button>
-      );
-    });
-  }
   return (
     <>
-    <Loader loading={loading} />
+      <Loader loading={loading} />
       <Typography textAlign={"left"}>Choose Game</Typography>
-      {isMobile ? (
+      {/* {isMobile ? (
         <Grid mt={5} sx={{ maxWidth: "sm" }}>
           <AliceCarousel
             items={items}
@@ -144,7 +127,26 @@ const SliderComp: React.FC = (): JSX.Element => {
             responsive={responsive}
           />
         </Grid>
-      )}
+      )} */}
+      <Box
+        mt={5}
+        sx={{ maxWidth: "lg" }}
+        display={"flex"}
+        flexWrap={"nowrap"}
+        overflow={"scroll"}
+        className="hide-scrollbar"
+      >
+        {games.map((data) => (
+          <Button key={1} data-value="1">
+            <img
+              src={imagedata[data.code]}
+              onClick={(): any => setTournamentsData(data.id)}
+              role="presentation"
+            />
+          </Button>
+        ))}
+      </Box>
+
       <ButtonComp formats={formats} setFormat={setFormat} format={format} />
       <Grid container columnSpacing={2} mt={5}>
         {tournamentsData.map((data: any) => {

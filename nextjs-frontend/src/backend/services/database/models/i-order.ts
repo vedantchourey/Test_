@@ -6,12 +6,12 @@ export interface IOrderProduct extends IProduct {
 type GenericObject = { [key: string]: any };
 
 export interface IOrder {
-    id?: string;
+    id: string;
     order_id: string;
     payment_status: string;
     status: string;
     products: IOrderProduct[];
     createdAt?: Date;
-    total_amount: number;
+    amount: number;
     paymentInfo: GenericObject;
 }

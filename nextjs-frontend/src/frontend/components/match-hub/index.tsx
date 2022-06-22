@@ -74,6 +74,7 @@ const MatchHub: React.FC<Props> = ({ data, onMatchHub, userDashboard }) => {
                     <OpponentTile data={item} onMatchHub={onMatchHub} userDashboard={userDashboard} />
                   ) : (
                     <ResultTile
+                      data={item}
                       isWon={item.opponent1.result === "win"}
                       opponent1Name={opponent1Name}
                       opponent2Name={opponent2Name}

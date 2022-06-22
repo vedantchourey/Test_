@@ -248,6 +248,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
             }}
           >
             <ResultTile
+              data={match}
               isWon={true}
               opponent1Name={opponent1Name}
               opponent2Name={opponent2Name}

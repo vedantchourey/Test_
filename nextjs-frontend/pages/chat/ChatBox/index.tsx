@@ -1,12 +1,16 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
+import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
 import { IMessages } from "../../../src/backend/services/database/models/i-messages";
 import { frontendSupabase } from "../../../src/frontend/services/supabase-frontend-service";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 interface IChatBox {
   channelId: string;
   channelName: string;
   userId: string;
+  smallChat: boolean;
+  onBack: () => void;
 }
 
 export default function ChatBox(props: IChatBox): JSX.Element {
@@ -62,15 +66,41 @@ export default function ChatBox(props: IChatBox): JSX.Element {
 
   return (
     <Box
-      flex={0.6}
+      flex={props.smallChat ? 1 : 0.75}
       display={"flex"}
       flexDirection={"column"}
       justifyContent={"flex-end"}
-      pl={1}
-      pr={1}
+      // pl={1}
+      // pr={1}
     >
-      <Box p={1} bgcolor={"rgb(125, 69, 255)"}>
-        <Typography>{props.channelName}</Typography>
+      <Box
+        p={2}
+        style={{
+          borderBottomColor: "rgba(255,255,255,0.1)",
+          borderBottomWidth: 1,
+          borderBottomStyle: "solid",
+        }}
+        display="flex"
+        justifyContent={"space-between"}
+        alignItems={"center"}
+      >
+        <Box display={"flex"}>
+          <IconButton aria-label="back" size="small" onClick={props.onBack}>
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography textAlign={"left"} ml={1} lineHeight={"35px"}>
+            {props.channelName}
+          </Typography>
+        </Box>
+
+        <Typography
+          textAlign={"left"}
+          variant="caption"
+          color={"rgba(255,255,255,0.5)"}
+        >
+          {moment().format("dddd, MMMM DD YYYY")}
+        </Typography>
+        {/* <Typography textAlign={"left"}> </Typography> */}
       </Box>
       <Box
         p={1}
@@ -107,7 +137,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
           ))}
         </Box>
       </Box>
-      <Box display={"flex"} justifyContent="center" mt={1} mb={1}>
+      <Box display={"flex"} justifyContent="center" m={1}>
         <TextField
           margin="none"
           style={{ marginBottom: 0 }}

@@ -151,9 +151,9 @@ const ViewTournament: React.FC = () => {
     items.push(select);
     if (teamItems.length > 0) {
       items.push(teamItems);
+    } else {
+      items.push(create);
     }
-
-    items.push(create);
 
     return items;
   };
@@ -345,8 +345,6 @@ const ViewTournament: React.FC = () => {
     };
   };
 
-  
-
   const getBracketProps = (): RoundStatusData[] => {
     if (
       !data.bracketsMetadata ||
@@ -358,9 +356,10 @@ const ViewTournament: React.FC = () => {
     ) {
       // return [];
     }
-    
+
     const startDate = data?.basic?.startDate || new Date().toISOString();
-    const startTime = data?.bracketsMetadata?.startTime || new Date().toISOString();
+    const startTime =
+      data?.bracketsMetadata?.startTime || new Date().toISOString();
     const now = moment();
     return (data.bracketsMetadata?.rounds || []).map((round, index) => {
       let timing;
@@ -576,7 +575,7 @@ const ViewTournament: React.FC = () => {
           onClose={(): void => setOpenSuccessModal(false)}
         >
           <DialogTitle>Success</DialogTitle>
-          <DialogContent>Team successfully joined.</DialogContent>
+          <DialogContent>tournament successfully joined.</DialogContent>
           <DialogActions>
             <Button onClick={(): void => setOpenSuccessModal(false)} autoFocus>
               Ok

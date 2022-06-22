@@ -27,14 +27,14 @@ const Balance = (): any => {
     aadhar_no: yup.string().required("aadhar is required"),
   });
 
-  const getKycDetails = async ():Promise<void> => {
+  const getKycDetails = async (): Promise<void> => {
     const headers = await getAuthHeader();
     axios
       .get(`/api/kyc`, {
         headers: headers,
       })
       .then((res) => {
-        if(res.data.length){
+        if (res.data.length) {
           const kycData: any = res.data[0];
           formik.setValues({
             mobile: kycData.mobile,
@@ -43,28 +43,28 @@ const Balance = (): any => {
             ifsc: kycData.ifsc,
             name: kycData.name,
           });
-          setIsVerified(true)
+          setIsVerified(true);
         }
       })
       .catch((err) => {
-        console.error(err)
-      })
+        console.error(err);
+      });
   };
 
-  const submmitKycDetails = async (data: any):Promise<void> => {
+  const submmitKycDetails = async (data: any): Promise<void> => {
     const headers = await getAuthHeader();
     await axios
-      .post(`/api/kyc`, data ,{
+      .post(`/api/kyc`, data, {
         headers: headers,
       })
       .then((res) => {
-        if(res.status){
-          setIsVerified(true)
+        if (res.status) {
+          setIsVerified(true);
         }
       })
       .catch((err) => {
-        console.error(err)
-      })
+        console.error(err);
+      });
   };
 
   const formik = useFormik({
@@ -76,7 +76,7 @@ const Balance = (): any => {
       aadhar_no: "",
     },
     validationSchema: validationSchema,
-    onSubmit: async (data, {setSubmitting}) => {
+    onSubmit: async (data, { setSubmitting }) => {
       setSubmitting(true);
       await submmitKycDetails(data);
       setSubmitting(false);
@@ -84,8 +84,8 @@ const Balance = (): any => {
   });
 
   useEffect(() => {
-    getKycDetails()
-  }, [])
+    getKycDetails();
+  }, []);
 
   return (
     <React.Fragment>
@@ -93,8 +93,7 @@ const Balance = (): any => {
         <Grid container padding={2} columnSpacing={1} rowSpacing={1}>
           <Grid item xs={12} sm={12} md={6}>
             <Typography variant="h6" marginBottom={"16px"} marginTop={2}>
-              {" "}
-              Your Balance{" "}
+              Your Balance
             </Typography>
             <Typography textAlign={"start"}>
               Lorem ipsum dolor sit amet consectetur, adipisicing elit.
@@ -135,8 +134,108 @@ const Balance = (): any => {
                 marginBottom: "30px",
               }}
             />
+          </Grid>
+          <Grid item xs={12} md={6} display={"flex"}></Grid>
+          <Grid item xs={12} md={6} display={"flex"}>
+            <Button
+              fullWidth
+              style={{
+                height: 56,
+                backgroundColor: "#6932F9",
+                color: "#ffffff",
+              }}
+              onClick={(): void => {
+                Router.push("credit/add");
+              }}
+            >
+              Add Credits
+            </Button>
+          </Grid>
+        </Grid>
+      </Card>
+
+      <Card sx={{ mt: 2 }}>
+        <Grid container padding={2} columnSpacing={1} rowSpacing={1}>
+          <Grid item xs={12} sm={12} md={6}>
+            <Typography variant="h6" marginBottom={"16px"} marginTop={2}>
+              Available for Withdraw
+            </Typography>
+            <Typography textAlign={"start"}>
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+              Corrupti, inventore.
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={12} md={6}>
+            <Box
+              display="flex"
+              marginTop={2}
+              style={{
+                background: "#08001C",
+                border: "1px solid rgba(255, 255, 255, 0.1)",
+              }}
+              height={76}
+              width={"100%"}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
+              <Typography
+                color={"#F09633"}
+                variant={"h6"}
+                display="flex"
+                justifyContent={"center"}
+                alignItems={"center"}
+              >
+                {wallet?.balance} INR.
+              </Typography>
+            </Box>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Divider
+              variant="fullWidth"
+              style={{
+                borderColor: "rgba(255, 255, 255, 0.1)",
+                marginTop: "30px",
+                marginBottom: "30px",
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} md={6} display={"flex"}></Grid>
+          <Grid item xs={12} md={6} display={"flex"}>
+            <Button
+              fullWidth
+              disabled={!isVerified}
+              style={{
+                height: 56,
+                color: "#ffffff",
+                backgroundColor: isVerified
+                  ? "#F09633"
+                  : "rgba(255,255,255,0.2)",
+              }}
+            >
+              Withdraw
+            </Button>
+          </Grid>
+        </Grid>
+      </Card>
+
+      <Card sx={{ mt: 2 }}>
+        <Grid container padding={2} columnSpacing={1} rowSpacing={1}>
+          <Grid item xs={12}>
+            <Typography variant="h6" marginBottom={"16px"} marginTop={2}>
+              KYC Details
+            </Typography>
+            <Divider
+              variant="fullWidth"
+              style={{
+                borderColor: "rgba(255, 255, 255, 0.1)",
+                marginTop: "30px",
+                marginBottom: "30px",
+              }}
+            />
+          </Grid>
+          <Grid item xs={12}>
             <Box mt={3}>
-              <Typography textAlign={"start"}>KYC Details</Typography>
               <Grid container spacing={1} marginTop={3}>
                 <Grid item xs={6}>
                   <TextField
@@ -152,9 +251,9 @@ const Balance = (): any => {
                     helperText={
                       formik.touched.aadhar_no && formik.errors.aadhar_no
                     }
-                    error={
-                      Boolean(formik.touched.aadhar_no && formik.errors.aadhar_no)
-                    }
+                    error={Boolean(
+                      formik.touched.aadhar_no && formik.errors.aadhar_no
+                    )}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -169,9 +268,7 @@ const Balance = (): any => {
                     onBlur={formik.handleBlur}
                     value={formik.values.name}
                     helperText={formik.touched.name && formik.errors.name}
-                    error={
-                      Boolean(formik.touched.name && formik.errors.name)
-                    }
+                    error={Boolean(formik.touched.name && formik.errors.name)}
                   />
                 </Grid>
                 <Grid item xs={4}>
@@ -186,9 +283,7 @@ const Balance = (): any => {
                     onBlur={formik.handleBlur}
                     value={formik.values.accNo}
                     helperText={formik.touched.accNo && formik.errors.accNo}
-                    error={
-                      Boolean(formik.touched.accNo && formik.errors.accNo)
-                    }
+                    error={Boolean(formik.touched.accNo && formik.errors.accNo)}
                   />
                 </Grid>
                 <Grid item xs={4}>
@@ -203,9 +298,7 @@ const Balance = (): any => {
                     onBlur={formik.handleBlur}
                     value={formik.values.ifsc}
                     helperText={formik.touched.ifsc && formik.errors.ifsc}
-                    error={
-                      Boolean(formik.touched.ifsc && formik.errors.ifsc)
-                    }
+                    error={Boolean(formik.touched.ifsc && formik.errors.ifsc)}
                   />
                 </Grid>
                 <Grid item xs={4}>
@@ -220,57 +313,24 @@ const Balance = (): any => {
                     onBlur={formik.handleBlur}
                     value={formik.values.mobile}
                     helperText={formik.touched.mobile && formik.errors.mobile}
-                    error={
-                      Boolean(formik.touched.mobile && formik.errors.mobile)
-                    }
+                    error={Boolean(
+                      formik.touched.mobile && formik.errors.mobile
+                    )}
                   />
                 </Grid>
               </Grid>
               {!isVerified && (
                 <Box display={"flex"} justifyContent={"flex-end"}>
-                  <Button variant="contained" disabled={formik.isSubmitting} onClick={formik.submitForm}>Submit</Button>
+                  <Button
+                    variant="contained"
+                    disabled={formik.isSubmitting}
+                    onClick={formik.submitForm}
+                  >
+                    Submit
+                  </Button>
                 </Box>
               )}
             </Box>
-          </Grid>
-
-          <Grid item xs={12}>
-            <Divider
-              variant="fullWidth"
-              style={{
-                borderColor: "rgba(255, 255, 255, 0.1)",
-                marginTop: "30px",
-                marginBottom: "30px",
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} md={6} display={"flex"}>
-            <Button
-              fullWidth
-              disabled={!isVerified}
-              style={{
-                height: 56,
-                color: "#ffffff",
-                backgroundColor: isVerified ? "#F09633" : "rgba(255,255,255,0.2)",
-              }}
-            >
-              Withdraw
-            </Button>
-          </Grid>
-          <Grid item xs={12} md={6} display={"flex"}>
-            <Button
-              fullWidth
-              style={{
-                height: 56,
-                backgroundColor: "#6932F9",
-                color: "#ffffff",
-              }}
-              onClick={(): void => {
-                Router.push("credit/add");
-              }}
-            >
-              Add Credits
-            </Button>
           </Grid>
         </Grid>
       </Card>

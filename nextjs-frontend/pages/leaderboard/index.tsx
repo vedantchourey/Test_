@@ -8,13 +8,14 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import axios from "axios";
 import React, { Fragment } from "react";
-import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import NoobPage from "../../src/frontend/components/page/noob-page";
 import Heading from "../../src/frontend/components/ui-components/typography/heading";
+import { allGamesSelector, gamesFetchStatusSelector } from "../../src/frontend/redux-store/games/game-selectors";
+import { fetchAllGamesThunk } from "../../src/frontend/redux-store/games/game-slice";
 import { deviceTypes } from "../../src/frontend/redux-store/layout/device-types";
 import { isDeviceTypeSelector } from "../../src/frontend/redux-store/layout/layout-selectors";
-import { useAppSelector } from "../../src/frontend/redux-store/redux-store";
+import { useAppDispatch, useAppSelector } from "../../src/frontend/redux-store/redux-store";
 import { getAuthHeader } from "../../src/frontend/utils/headers";
 import styles from "./leaderboard.module.css";
 
@@ -49,12 +50,24 @@ export interface Gameinfo {
   userDetails: any;
 }
 
+const imagedata: any = {
+  FIFA_22: "/images/game1.svg",
+  CSG_O2: "/images/game2.svg",
+  CALL_OF_DUTY: "/images/game3.svg",
+  PUBG: "/images/game4.svg",
+  F1_2021: "/images/game5.svg",
+  VALORANT: "/images/game6.svg",
+  OVERWATCH: "/images/game7.svg",
+  DOTA_2: "/images/game8.svg",
+  MORTAL_KOMBAT_X: "/images/game9.svg",
+  FORTNITE: "/images/game10.svg",
+  APEX_LEGENDS: "/images/game11.svg",
+  ROCKET_LEAGUE: "/images/game12.svg",
+  lolp: "/images/game1.svg",
+  corp: "/images/game2.svg",
+};
+
 const Leaderboard = (): JSX.Element => {
-  const responsive = {
-    0: { items: 2 },
-    568: { items: 3 },
-    1024: { items: 12 },
-  };
 
   const [leaderboardgamedata, setData] = React.useState<Gameinfo[]>([]);
   const getleaderboardgamedata = async (gameId: string): Promise<void> => {
@@ -75,116 +88,20 @@ const Leaderboard = (): JSX.Element => {
     }
   };
 
-  React.useEffect(() => {
-    getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257");
-  }, []);
+  const appDispatch = useAppDispatch();
+  const games = useAppSelector(allGamesSelector);
+  const gamesFetchStatus = useAppSelector(gamesFetchStatusSelector);
 
-  const choose_game_items = [
-    <Button className="item" key={1} data-value="1">
-      <img
-        src="/images/game1.png"
-        onClick={(): any =>
-          getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257")
-        }
-      />
-    </Button>,
-    <Button className="item" key={2} data-value="2">
-      <img
-        src="/images/game2.png"
-        onClick={(): any =>
-          getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257-1")
-        }
-      />
-    </Button>,
-    <Button className="item" key={3} data-value="3">
-      <img
-        src="/images/game3.png"
-        onClick={(): any =>
-          getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257-1")
-        }
-      />
-    </Button>,
-    <Button className="item" key={4} data-value="4">
-      <img
-        src="/images/game4.png"
-        onClick={(): any =>
-          getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257-1")
-        }
-      />
-    </Button>,
-    <Button className="item" key={5} data-value="5">
-      <img
-        src="/images/game5.png"
-        onClick={(): any =>
-          getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257-1")
-        }
-      />
-    </Button>,
-    <Button className="item" key={6} data-value="6">
-      <img
-        src="/images/game6.png"
-        onClick={(): any =>
-          getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257-1")
-        }
-      />
-    </Button>,
-    <Button className="item" key={7} data-value="7">
-      <img
-        src="/images/game7.png"
-        onClick={(): any =>
-          getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257-1")
-        }
-      />
-    </Button>,
-    <Button className="item" key={8} data-value="8">
-      <img
-        src="/images/game8.png"
-        onClick={(): any =>
-          getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257-1")
-        }
-      />
-    </Button>,
-    <Button className="item" key={9} data-value="9">
-      <img
-        src="/images/game9.png"
-        onClick={(): any =>
-          getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257-1")
-        }
-      />
-    </Button>,
-    <Button className="item" key={10} data-value="10">
-      <img
-        src="/images/game10.png"
-        onClick={(): any =>
-          getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257-1")
-        }
-      />
-    </Button>,
-    <Button className="item" key={11} data-value="11">
-      <img
-        src="/images/game11.png"
-        onClick={(): any =>
-          getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257-1")
-        }
-      />
-    </Button>,
-    <Button className="item" key={12} data-value="12">
-      <img
-        src="/images/game12.png"
-        onClick={(): any =>
-          getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257-1")
-        }
-      />
-    </Button>,
-    <Button className="item" key={13} data-value="13">
-      <img
-        src="/images/game1.png"
-        onClick={(): any =>
-          getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257-1")
-        }
-      />
-    </Button>,
-  ];
+  React.useEffect(() => {
+    if(games.length){
+      getleaderboardgamedata(games[0].id);
+    }
+  }, [games]);
+
+  React.useEffect(() => {
+    if (gamesFetchStatus !== "idle") return;
+    appDispatch(fetchAllGamesThunk());
+  }, [appDispatch, gamesFetchStatus]);
 
   const isDesktop = useAppSelector((x) =>
     isDeviceTypeSelector(x, deviceTypes.desktop));
@@ -197,7 +114,24 @@ const Leaderboard = (): JSX.Element => {
         <Container maxWidth="xl">
           <Heading divider heading={"LEADERBOARD"} />
           <Typography className={styles.text}>Choose Game</Typography>
-          <AliceCarousel items={choose_game_items} responsive={responsive} />
+          <Box
+            mt={5}
+            sx={{ maxWidth: "lg" }}
+            display={"flex"}
+            flexWrap={"nowrap"}
+            overflow={"scroll"}
+            className="hide-scrollbar"
+          >
+            {games.map((data) => (
+              <Button key={1} data-value="1">
+                <img
+                  src={imagedata[data.code]}
+                  onClick={(): any => getleaderboardgamedata(data.id)}
+                  role="presentation"
+                />
+              </Button>
+            ))}
+          </Box>
           {isDesktop && (
             <Grid
               container
@@ -205,7 +139,7 @@ const Leaderboard = (): JSX.Element => {
               columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}
               className={styles.mainContainer}
             >
-              {leaderboardgamedata.slice(0, 2).map((item) => (
+              {leaderboardgamedata.slice(0, 3).map((item) => (
                 <Grid item xs={12} lg={4} key={item.id}>
                   <Box className={styles.container}>
                     <img src="/icons/Male.png" className={styles.img1} />

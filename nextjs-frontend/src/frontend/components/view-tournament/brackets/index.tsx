@@ -68,6 +68,7 @@ const Bracket: React.FC<BracketProps> = ({
   useEffect(() => {
     const data = {
       ...brackets,
+      match: brackets?.match?.sort((a: any, b: any) => a.id - b.id),
       participant: brackets?.participant?.map((i: any) => {
         if (i.user_id) {
           const findPlayer: any = players.find((p) => p.id === i.user_id);
@@ -77,9 +78,8 @@ const Bracket: React.FC<BracketProps> = ({
               name: findPlayer?.firstName + " " + findPlayer?.lastName,
             };
           return { ...i, name: "NA" };
-        } 
-          return { ...i, name: "NA" };
-        
+        }
+        return { ...i, name: "NA" };
       }),
     };
     setBData(null);
