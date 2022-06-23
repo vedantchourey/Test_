@@ -4,6 +4,7 @@ export interface IMatchDispute {
     matchId: string;
     status: string;
     reportedBy: string;
+    reason?: string;
     createdAt?: Date,
     updatedAt?: Date
 }

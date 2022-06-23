@@ -1,8 +1,21 @@
 import React from "react";
 // Third party packages
-import { Grid, Box, Typography, IconButton, Select, MenuItem, FormControlLabel, Checkbox, FormHelperText } from "@mui/material";
+import {
+  Grid,
+  Box,
+  Typography,
+  IconButton,
+  Select,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  FormControlLabel,
+  Checkbox,
+  FormHelperText,
+} from "@mui/material";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
+import { SelectChangeEvent } from "@mui/material/Select";
 import ResultTile from "../opponent-tile/result-tile/result-tile";
 import Players, { PlayerData } from "../players";
 import CloseIcon from "@mui/icons-material/Close";
@@ -57,8 +70,12 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
   const [resultStatus, setResultStatus] = React.useState(false);
   const [data, setData] = React.useState<PlayerData | undefined>();
 
-  const opponent1Name = match.opponent1.user_id ? `${match.opponent1.firstName} ${match.opponent1.lastName}` : match.opponent1.name;
-  const opponent2Name = match.opponent2.user_id ? `${match.opponent2.firstName} ${match.opponent2.lastName}` : match.opponent2.name;
+  const opponent1Name = match.opponent1.user_id
+    ? `${match.opponent1.firstName} ${match.opponent1.lastName}`
+    : match.opponent1.name;
+  const opponent2Name = match.opponent2.user_id
+    ? `${match.opponent2.firstName} ${match.opponent2.lastName}`
+    : match.opponent2.name;
 
   const validationSchema = yup.object({
     match_id: yup.string().required("Match id is required"),
@@ -148,7 +165,14 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       });
   };
 
-  const reportDispute = async (): Promise<void> => {
+  const [reportIssue, setReportIssue] = React.useState("");
+
+  const handleChangeissue = (event: SelectChangeEvent) => {
+    setReportIssue(event.target.value);
+    reportDispute(event.target.value);
+  };
+
+  const reportDispute = async (resons: string): Promise<void> => {
     const headers = await getAuthHeader();
     axios.post(
       `/api/match-dispute/add`,
@@ -156,6 +180,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
         tournamentId: match.tournament_id,
         matchId: match.match_id,
         status: "PENDING",
+        reason: resons
       },
       {
         headers: headers,
@@ -177,7 +202,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       )
       .catch((err: any) => {
         console.error(err);
-        alert("User already checked in")
+        alert("User already checked in");
       });
   };
 
@@ -229,9 +254,15 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
     acceptedFiles.forEach(async (file: Blob): Promise<void> => {
       const fileName = `${v4()}.png`;
       const fileData = blobToFile(file, fileName);
-      const { data, error } = await uploadImage("public-files", fileName, fileData);
+      const { data, error } = await uploadImage(
+        "public-files",
+        fileName,
+        fileData
+      );
       if (!error && data) {
-        const fileUrl = frontendSupabase.storage.from("public-files").getPublicUrl(data.Key.split("/")[1]);
+        const fileUrl = frontendSupabase.storage
+          .from("public-files")
+          .getPublicUrl(data.Key.split("/")[1]);
         formik.setFieldValue("screenshot", fileUrl.data?.publicURL || "");
       }
     });
@@ -316,7 +347,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
             >
               Report Score
             </Button>
-            <Button
+            {/* <Button
               startIcon={<FlagIcon />}
               style={{
                 padding: "12px 38px",
@@ -328,7 +359,33 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
               }}
             >
               Report Match Issue
-            </Button>
+            </Button> */}
+            <FormControl sx={{ m: 0, minWidth: 200, }}>
+              <InputLabel id="demo-simple-select-autowidth-label">
+              Report Match Issue
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-autowidth-label"
+                id="demo-simple-select-autowidth"
+                value={reportIssue}
+                onChange={handleChangeissue}
+                autoWidth
+                label="Report Match Issue"
+                style={{
+                  padding: "8px 38px",
+                  background: "#830B0B",
+                  color: "white",
+                }}
+              >
+                <MenuItem value="The score in incorrect.">The score in incorrect.</MenuItem>
+                <MenuItem value='My opponent cheated.'>My opponent cheated.</MenuItem>
+                <MenuItem value="Problem setting up the match">Problem setting up the match</MenuItem>
+                <MenuItem value="Ineligible roster">Ineligible roster</MenuItem>
+                <MenuItem value="Harassment">Harassment</MenuItem>
+                <MenuItem value="A player disconnected.">A player disconnected.</MenuItem>
+                <MenuItem value="Technical issue with Noobstorm">Technical issue with Noobstorm</MenuItem>
+              </Select>
+            </FormControl>
           </Box>
         </Grid>
       </Grid>

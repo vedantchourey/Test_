@@ -9,6 +9,7 @@ export interface IAddToMatchDisputeRequest {
     matchId: string;
     status: string;
     reportedBy: string;
+    reason: string;
 }
 
 export const addToMatchDisputeList = async (
@@ -23,6 +24,7 @@ export const addToMatchDisputeList = async (
         matchId: req.matchId,
         status: req.status,
         reportedBy: context.user?.id || "",
+        reason: req.reason
     });
     return result;
 };
