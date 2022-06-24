@@ -34,7 +34,7 @@ export default function NoobPage(props: Props): JSX.Element {
   return (
     <>
       <SideHeader />
-      <div style={{ marginTop: 50 }}>
+      <div>
         <Head>
           <title>{title}</title>
           {metaKeys.map((key, index) => (
