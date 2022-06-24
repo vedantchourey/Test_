@@ -47,6 +47,8 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
           .join(TABLE_NAMES.WALLET, "wallet.userId", "private_profiles.id")
           .select([
             "teams.name",
+            "teams.teamLogo",
+            "teams.teamCover",
             "teams.id",
             "private_profiles.firstName",
             "private_profiles.lastName",
@@ -79,6 +81,8 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
                     return {
                         id: items[0].id,
                         name,
+                        teamLogo: items[0].teamLogo,
+                        teamCover: items[0].teamCover,
                         players: _.map(items, (data) => {
                             return {
                                 user_id: data.user_id,
