@@ -21,6 +21,7 @@ import { createChannel } from "../chat-service";
 const fields = ["id", "game_id", "name", "platform_id"]
 import { IChannel } from "../database/models/i-channel";
 import { IChatUsers } from "../database/models/i-chat-users";
+import { IEmailTeamInvitation } from "../database/models/i-email-team-invitation";
 
 
 export const fetchTeams = async (connection: Knex.Transaction, user: any, query: any): Promise<ISuccess | IError> => {
@@ -153,17 +154,43 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
         const errors = await validateSendInvite(req);
         if (errors) return { errors };
 
+        const secret = randomString(15);
+
         const playerId = req.player_id;
         let player_data: IUser | undefined;
 
-        // validating all the users
-        if (req?.email) {
-            player_data = await fetchUserDetails(req?.email, connection)
-            if (!player_data) return getErrorObject("Invalid email address.")
-        }
-
         const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
         const team_info = await teams.findById(req.team_id);
+
+        // validating all the users
+        if (req?.email) {
+          const emailTeamInvitationRepo =
+            new CrudRepository<IEmailTeamInvitation>(
+              connection,
+              TABLE_NAMES.EMAIL_TEAM_INVITATION
+            );
+          player_data = await fetchUserDetails(req?.email, connection);
+
+          // send email to user
+
+          if (!player_data) {
+            const data = {
+              team_id: team_info.id,
+              invite_by: user.id,
+              email_id: req?.email,
+              secret,
+            };
+            const result = await emailTeamInvitationRepo.create(data, [
+              "team_id",
+              "invite_by",
+              "email_id",
+              "type",
+              "secret",
+            ]);
+
+            return { message: "Invite send successfully", result } as any;
+          }
+        }
 
         // validation team id and whether the requested user is the owner of the team
         if (!team_info) return getErrorObject("Team id does not exisits");
@@ -182,7 +209,6 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
             .where("team_id", req.team_id)
 
         if (pending_inivitation.length) return getErrorObject("Users have invitation pending");
-        const secret = randomString(15);
         const data = {
             team_id: team_info.id,
             invite_by: user.id,
