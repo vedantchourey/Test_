@@ -11,8 +11,7 @@ export async function likeNews(req: ILikeNews, context: PerRequestContext): Prom
     if (isThereAnyError(errors)) return {errors: errors}
     const repository = new NewsLikesRepository(context.transaction as Knex.Transaction);
 
-    const _res = await repository.createLike({newsId: req.newsId, likedBy: context.user?.id})
-    console.log(_res);
+    await repository.createLike({newsId: req.newsId, likedBy: context.user?.id})
     
     return {
         data: { message: "news liked" }

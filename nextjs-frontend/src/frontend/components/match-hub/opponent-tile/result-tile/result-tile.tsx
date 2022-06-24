@@ -1,8 +1,7 @@
 import Image from "next/image";
 
 // Third party packages
-import { Button, Grid, Container } from "@mui/material";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { Button, Grid } from "@mui/material";
 
 // styles
 import styles from "./result-tile.module.css";
@@ -49,12 +48,12 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
           >
             {isWon ? "WON" : "LOST"}
           </p>
-          <Container style={{ display: "flex", justifyContent: "center" }}>
+          {/* <Container style={{ display: "flex", justifyContent: "center" }}>
             <Button className={styles.resultTileButton}>
               View Result
               <ArrowForwardIcon />
             </Button>
-          </Container>
+          </Container> */}
         </Grid>
       ) : (
         <Grid item xs={6}>{child}</Grid>

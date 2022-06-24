@@ -24,7 +24,6 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import axios from "axios";
 import { getAuthHeader } from "../../../utils/headers";
-import { ReactComponent as FlagIcon } from "../../../../../public/icons/flagIcon.svg";
 import CheckIcon from "@mui/icons-material/Check";
 import { blobToFile } from "../../../../common/utils/utils";
 import { uploadImage } from "../../../service-clients/image-service-client";
@@ -69,6 +68,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
   const [uploadResults, setUploadResults] = React.useState(false);
   const [resultStatus, setResultStatus] = React.useState(false);
   const [data, setData] = React.useState<PlayerData | undefined>();
+  const [matchReportSubmited, setMatchReportSubmited] = React.useState(false)
 
   const opponent1Name = match.opponent1.user_id
     ? `${match.opponent1.firstName} ${match.opponent1.lastName}`
@@ -167,7 +167,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
 
   const [reportIssue, setReportIssue] = React.useState("");
 
-  const handleChangeissue = (event: SelectChangeEvent) => {
+  const handleChangeissue = (event: SelectChangeEvent): any => {
     setReportIssue(event.target.value);
     reportDispute(event.target.value);
   };
@@ -185,7 +185,9 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       {
         headers: headers,
       }
-    );
+    ).then(() => {
+      setMatchReportSubmited(true)
+    });
   };
 
   const checkInTournament = async (): Promise<void> => {
@@ -304,7 +306,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
         ) : null}
 
         <Grid item xs={12}>
-          <Box display={"flex"} justifyContent={"center"} marginTop="60px">
+          <Box display={"flex"} justifyContent={"center"} marginTop="60px" alignItems={"center"}>
             <Button
               style={{
                 color: "white",
@@ -360,32 +362,48 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
             >
               Report Match Issue
             </Button> */}
-            <FormControl sx={{ m: 0, minWidth: 200, }}>
-              <InputLabel id="demo-simple-select-autowidth-label">
-              Report Match Issue
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-autowidth-label"
-                id="demo-simple-select-autowidth"
-                value={reportIssue}
-                onChange={handleChangeissue}
-                autoWidth
-                label="Report Match Issue"
-                style={{
-                  padding: "8px 38px",
-                  background: "#830B0B",
-                  color: "white",
-                }}
-              >
-                <MenuItem value="The score in incorrect.">The score in incorrect.</MenuItem>
-                <MenuItem value='My opponent cheated.'>My opponent cheated.</MenuItem>
-                <MenuItem value="Problem setting up the match">Problem setting up the match</MenuItem>
-                <MenuItem value="Ineligible roster">Ineligible roster</MenuItem>
-                <MenuItem value="Harassment">Harassment</MenuItem>
-                <MenuItem value="A player disconnected.">A player disconnected.</MenuItem>
-                <MenuItem value="Technical issue with Noobstorm">Technical issue with Noobstorm</MenuItem>
-              </Select>
-            </FormControl>
+            {matchReportSubmited ? (
+              "Match issue reported"
+            ) : (
+              <FormControl sx={{ m: 0, minWidth: 200 }}>
+                <InputLabel id="demo-simple-select-autowidth-label">
+                  Report Match Issue
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-autowidth-label"
+                  id="demo-simple-select-autowidth"
+                  value={reportIssue}
+                  onChange={handleChangeissue}
+                  autoWidth
+                  label="Report Match Issue"
+                  style={{
+                    padding: "8px 38px",
+                    background: "#830B0B",
+                    color: "white",
+                  }}
+                >
+                  <MenuItem value="The score in incorrect.">
+                    The score in incorrect.
+                  </MenuItem>
+                  <MenuItem value="My opponent cheated.">
+                    My opponent cheated.
+                  </MenuItem>
+                  <MenuItem value="Problem setting up the match">
+                    Problem setting up the match
+                  </MenuItem>
+                  <MenuItem value="Ineligible roster">
+                    Ineligible roster
+                  </MenuItem>
+                  <MenuItem value="Harassment">Harassment</MenuItem>
+                  <MenuItem value="A player disconnected.">
+                    A player disconnected.
+                  </MenuItem>
+                  <MenuItem value="Technical issue with Noobstorm">
+                    Technical issue with Noobstorm
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            )}
           </Box>
         </Grid>
       </Grid>

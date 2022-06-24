@@ -3,7 +3,6 @@ import { createNextJsRouteHandler } from '../../../src/backend/utils/api-middle-
 import { PerRequestContext } from '../../../src/backend/utils/api-middle-ware/api-middleware-typings';
 import { editNews } from '../../../src/backend/services/news-services';
 import { beginTransactionMiddleWare, commitOrRollBackTransactionMiddleWare } from '../../../src/backend/utils/api-middle-ware/transaction-middle-ware';
-import { authenticatedUserMiddleware } from '../../../src/backend/utils/api-middle-ware/auth-middle-ware';
 
 export default createNextJsRouteHandler({
   post: {
