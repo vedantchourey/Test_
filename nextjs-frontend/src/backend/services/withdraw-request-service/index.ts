@@ -9,20 +9,19 @@ import { IWithdrawRequest } from "../database/models/i-withdraw-request";
 export const fetchWithdrawRequest = async (connection: Knex.Transaction): Promise<ISuccess | IError> => {
     try {
         const withdrawRequest = new CrudRepository<IWithdrawRequest>(connection, TABLE_NAMES.WITHDRAWREQUEST);
-        const result = withdrawRequest
+        const result = await withdrawRequest
           .knexObj()
           .join(
             TABLE_NAMES.PRIVATE_PROFILE,
-            "private_profiles.id",
-            "withdraw_eequest.user_id"
+            "withdraw_request.userId",
+            "private_profiles.id"
           )
-          .join(
-            TABLE_NAMES.KYC_DETAILS,
-            "kyc_details.id",
-            "withdraw_eequest.user_id"
-          )
-          .where("status", STATUS.PENDING)
-          .select("*");
+          .select("withdraw_request.id")
+          .select("withdraw_request.status")
+          .select("private_profiles.id as user_id")
+          .select("private_profiles.withdrawAmount")
+          .select("private_profiles.firstName")
+          .select("private_profiles.lastName");
         return { result };
     } catch (ex: any) {
         return getErrorObject("Something went wrong" + ex.message)

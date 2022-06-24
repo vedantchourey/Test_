@@ -41,7 +41,7 @@ const Balance = (): any => {
           headers: headers,
         }
       )
-      .then((res) => {
+      .then(() => {
         alert("Your withdraw reuqst is submitted");
       })
       .catch((err) => {

@@ -6,7 +6,6 @@ import {
 import { NextApiRequest, NextApiResponse } from "next";
 import { ServiceResponse } from "../../../src/backend/services/common/contracts/service-response";
 import { PerRequestContext } from "../../../src/backend/utils/api-middle-ware/api-middleware-typings";
-import { fetchMatchResultsReq, submitMatchResult, submitMatchResultRequest } from "../../../src/backend/services/brackets-service/brackets-service";
 import { Knex } from "knex";
 import { authenticatedUserMiddleware } from "../../../src/backend/utils/api-middle-ware/auth-middle-ware";
 import { addWithdrawRequest, fetchWithdrawRequest, resolveWithdrawRequest } from "../../../src/backend/services/withdraw-request-service";
