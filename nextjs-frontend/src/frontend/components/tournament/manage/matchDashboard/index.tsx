@@ -147,10 +147,12 @@ const MatchDashboard: React.FC = (): JSX.Element => {
           tournament_id,
           forceUpdate: true,
           opponent1: {
+            user_id: matchData?.opponent1?.[0]?.user_id,
             score: op1Score,
             result: op1Result,
           },
           opponent2: {
+            user_id: matchData?.opponent1?.[0]?.user_id,
             score: op2Score,
             result: op2Result,
           },

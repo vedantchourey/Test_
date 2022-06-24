@@ -171,7 +171,7 @@ export default function DrawerLeft(): JSX.Element {
                 style={{ color: "white" }}
                 onClick={(): any => {
                   if (user?.userRoles[0] === "noob-admin") {
-                    router.push("tournament-dashboard");
+                    router.push("/tournament-dashboard");
                   } else{
                     router.push("/user-dashboard")
                   }
