@@ -93,7 +93,7 @@ export default async function signupUser(request: SignupRequest, context: PerReq
   const user = result.user as User;
   const walletRepo = new CrudRepository<IWallet>(transaction, TABLE_NAMES.WALLET);
   const eloRatingMap = listOfGame.map(async (i) => {
-    const find = await eloRatingRepo.find({user_id: user.id, game_id: i.id})
+    const find = await eloRatingRepo.find({user_id: user.id, game_id: i.id, elo_rating: 750})
     if(find.length){
       return null
     }
