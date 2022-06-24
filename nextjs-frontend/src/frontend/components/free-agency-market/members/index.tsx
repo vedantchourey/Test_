@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import Slider, { Settings } from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
+import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import { getAuthHeader } from "../../../utils/headers";
 import Member, { MemberProp } from "../../team/members/member";
 
@@ -53,6 +54,11 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
         elo: item?.elo_rating,
         won: item?.won,
         games: Number(item?.won) + Number(item?.lost),
+        profileImage: item.avatarUrl
+          ? frontendSupabase.storage
+              .from("public-files")
+              .getPublicUrl(item.avatarUrl).publicURL
+          : undefined,
       }));
       setData(players);
     });

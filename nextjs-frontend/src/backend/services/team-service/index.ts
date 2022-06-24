@@ -384,6 +384,7 @@ export const getListOfSendInvitations = async (
         const team_invitation = new CrudRepository<ITeamInvitation>(connection, TABLE_NAMES.TEAM_INVITATION);
 
         const sent_invitations: any[] = await team_invitation.knexObj()
+            .join("profiles", "profiles.id", "teams_invitation.user_id")
             .where("invite_by", user_id)
             .where("status", "PENDING");
 
