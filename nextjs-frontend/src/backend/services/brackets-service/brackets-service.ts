@@ -49,6 +49,9 @@ export const persistBrackets = async (req: ITournament): Promise<any> => {
     );
     let playerCount = Number(req?.bracketsMetadata?.playersLimit);
     playerCount = nextPowerOf2(playerCount);
+
+    const grandFinal = req?.bracketsMetadata?.type !== "SINGLE" ? {grandFinal: "double"} : {};
+
     if (tournament && tournament.length) {
       await deleteBracket(connection, tournament[0].id, tournament[0].stage_id);
     } else {
@@ -67,7 +70,7 @@ export const persistBrackets = async (req: ITournament): Promise<any> => {
           : "double_elimination",
       seeding: new Array(playerCount).fill(0)
 .map((x, i) => `${i}`),
-      settings: { seedOrdering: ["natural"] },
+      settings: { seedOrdering: ["natural"], ...grandFinal },
     };
     if (
       req?.bracketsMetadata?.type === "SINGLE" &&

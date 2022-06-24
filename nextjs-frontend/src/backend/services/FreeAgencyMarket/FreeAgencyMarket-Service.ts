@@ -81,6 +81,7 @@ export const getWatchList = async (
   const watchListRepo = new CrudRepository<IWatchList>(context.knexConnection as Knex, TABLE_NAMES.WATCHLIST);
   const users = await watchListRepo.knexObj()
     .join("private_profiles", "watchlist.playerId", "private_profiles.id")
+    .join("profiles", "profiles.id", "watchlist.playerId")
   return users
 };
 

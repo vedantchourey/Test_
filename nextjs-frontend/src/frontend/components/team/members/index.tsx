@@ -41,6 +41,7 @@ import Image from "next/image";
 import axios from "axios";
 import { getAuthHeader } from "../../../utils/headers";
 import { useRouter } from "next/router";
+import { frontendSupabase } from "../../../services/supabase-frontend-service";
 
 export const options = {
   responsive: true,
@@ -112,6 +113,7 @@ export interface Player {
   elo_rating: string;
   won?: string;
   lost?: string;
+  avatarUrl?: string;
 }
 
 interface TeamMembersProps {
@@ -166,6 +168,11 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team }) => {
         games: Number(player.won) + Number(player.lost),
         won: player.won,
         elo: player.elo_rating || "0",
+        profileImage: player.avatarUrl
+          ? frontendSupabase.storage
+              .from("public-files")
+              .getPublicUrl(player.avatarUrl).publicURL
+          : undefined,
       };
     });
     setPlayerList(newList);

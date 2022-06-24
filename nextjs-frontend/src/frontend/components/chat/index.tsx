@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
 import { IChatUsers } from "../../../backend/services/database/models/i-chat-users";
@@ -9,13 +9,13 @@ import ChatBox from "./ChatBox";
 import ChatCard from "./ChatCard";
 import ChatIcon from "@mui/icons-material/Chat";
 
-
-
-export default function Chat(props: {smallChat: boolean}): JSX.Element {
+export default function Chat(props: { smallChat: boolean }): JSX.Element {
   const user = useAppSelector(userProfileSelector);
   const [chats, _setChats] = useState<object>({});
   const [currentChat, setCurrentChat] = useState<string | null>();
   const [currentChatName, setCurrentChatName] = useState("");
+  const [supportChatChannel, setSupportChatChannel] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
 
   const chatRef = useRef(chats);
   const userRef = useRef(user);
@@ -25,11 +25,20 @@ export default function Chat(props: {smallChat: boolean}): JSX.Element {
     chatRef.current = data;
   };
 
+  const fetchSupportChannel = async (): Promise<any> => {
+    const res = await frontendSupabase
+      .from("chat_users")
+      .select()
+      .eq("user_id", user?.id)
+      .eq("other_user", "support");
+    if (res.data?.length) setSupportChatChannel(true);
+  };
+
   const fetchChannels = async (): Promise<void> => {
     const res = await frontendSupabase
       .from("chat_users")
       .select()
-      .eq("user_id", user?.id);
+      .eq("user_id", user?.userRoles[0] === "noob-admin" ? "support" : user?.id);
     const data: any = {};
 
     if (!res.error) {
@@ -47,6 +56,7 @@ export default function Chat(props: {smallChat: boolean}): JSX.Element {
   };
 
   useEffect(() => {
+    fetchSupportChannel();
     fetchChannels();
     userRef.current = user;
   }, [user]);
@@ -68,11 +78,45 @@ export default function Chat(props: {smallChat: boolean}): JSX.Element {
   const chatsList: IChatUsers[] = Object.values(chats).sort(
     (a: IChatUsers, b: IChatUsers) => {
       return (
-        parseInt(moment(a.updated_at).format("X")) -
-        parseInt(moment(b.updated_at).format("X"))
+        parseInt(moment(b.updated_at).format("X")) -
+        parseInt(moment(a.updated_at).format("X"))
       );
     }
   );
+
+  const createSupportChat = async (): Promise<any> => {
+    setLoading(true)
+    await frontendSupabase.from("chat_users").insert({
+      channel_id: `${user?.id}_support`,
+      user_id: user?.id || "",
+      other_user: "support",
+      channel_name: "support",
+      user_name: user?.username,
+    });
+    await frontendSupabase.from("chat_users").insert({
+      channel_id: `${user?.id}_support`,
+      user_id: "support",
+      other_user: user?.id || "",
+      channel_name: user?.username,
+      user_name: "support",
+    });
+    await frontendSupabase.from("messages").insert({
+      channel_id: `${user?.id}_support`,
+      send_by: user?.id,
+      message: "Hey, I need Help!",
+      metadata: null,
+    });
+    await frontendSupabase
+      .from("chat_users")
+      .update({
+        last_message: "Hey, I need Help!",
+        updatedAt: new Date().toISOString,
+      })
+      .eq("channel_id", `${user?.id}_support`);
+    fetchSupportChannel();
+    fetchChannels();
+    setLoading(false);
+  };
 
   const renderChatList = (): JSX.Element => {
     return (
@@ -125,10 +169,19 @@ export default function Chat(props: {smallChat: boolean}): JSX.Element {
             borderRightStyle: "solid",
             borderRightColor: "rgba(255,255,255,0.1)",
             borderRightWidth: 1,
+            overflow: "scroll",
           }}
         >
+          {!supportChatChannel && user?.userRoles[0] !== "noob-admin" ? (
+            <Box mt={2}>
+              <Button disabled={loading} onClick={(): any => createSupportChat()}>
+                Create Support Chat
+              </Button>
+            </Box>
+          ) : null}
           <Typography variant="h5" m={1} textAlign="left">
-            Friends
+          {user?.userRoles[0] === "noob-admin" ? "Support request" : "Friends"}
+            
           </Typography>
           {renderChatList()}
         </Box>
@@ -140,6 +193,7 @@ export default function Chat(props: {smallChat: boolean}): JSX.Element {
           channelId={currentChat}
           userId={user?.id || ""}
           onBack={(): any => setCurrentChat(undefined)}
+          user={user}
           smallChat={props.smallChat}
         />
       ) : (
@@ -149,7 +203,7 @@ export default function Chat(props: {smallChat: boolean}): JSX.Element {
             flex={0.75}
             alignItems={"center"}
             justifyContent={"center"}
-            height={'100%'}
+            height={"100%"}
           >
             <ChatIcon
               style={{ fontSize: 180, color: "rgba(255, 255, 255, 0.1)" }}

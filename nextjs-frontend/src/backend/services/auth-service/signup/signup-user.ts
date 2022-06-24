@@ -16,6 +16,8 @@ import { IWallet } from '../../database/models/i-wallet';
 import { TABLE_NAMES } from '../../../../models/constants';
 import { IGame } from '../../database/models/i-game';
 import { IEloRating } from '../../database/models/i-elo-rating';
+import { IEmailTeamInvitation } from '../../database/models/i-email-team-invitation';
+import { sendInvites } from '../../team-service';
 
 function mapToProfile(user: User, request: SignupRequest): IProfile {
   const nowAsString = nowAsISOString();
@@ -92,8 +94,10 @@ export default async function signupUser(request: SignupRequest, context: PerReq
   const privateProfilesRepository = new PrivateProfilesRepository(transaction);
   const user = result.user as User;
   const walletRepo = new CrudRepository<IWallet>(transaction, TABLE_NAMES.WALLET);
+
+  // // add default ELO for all games
   const eloRatingMap = listOfGame.map(async (i) => {
-    const find = await eloRatingRepo.find({user_id: user.id, game_id: i.id})
+    const find = await eloRatingRepo.find({user_id: user.id, game_id: i.id, elo_rating: 750})
     if(find.length){
       return null
     }
@@ -103,12 +107,31 @@ export default async function signupUser(request: SignupRequest, context: PerReq
     })
   })
 
+  // check for email invitation
+  const emailTeamInvitationRepo = new CrudRepository<IEmailTeamInvitation>(
+    transaction,
+    TABLE_NAMES.EMAIL_TEAM_INVITATION
+  );
+  const listOfInvitations: IEmailTeamInvitation[] =
+    await emailTeamInvitationRepo.findBy("email_id", request.email);
+
+  const sendInvitesBatch = listOfInvitations.map((i) =>
+    sendInvites(
+      { team_id: i.team_id, email: i.email_id, player_id: undefined },
+      transaction,
+      { id: i.invite_by }
+    ));
+
+  const sendInvitesResult = Promise.all(sendInvitesBatch);
+
+  console.warn("listOfInvitations -> ", sendInvitesResult);
+
   await Promise.all(eloRatingMap);
   await Promise.all([
     profilesRepository.createProfile(mapToProfile(user, request)),
     privateProfilesRepository.createProfile(mapToPrivateProfile(user, request)),
     walletRepo.create(mapToWallet(user))
   ])
-  return { data: { userId: result.user?.id } };
+  return { data: { userId: result.user?.id} };
 }
 

@@ -21,6 +21,7 @@ import { createChannel } from "../chat-service";
 const fields = ["id", "game_id", "name", "platform_id"]
 import { IChannel } from "../database/models/i-channel";
 import { IChatUsers } from "../database/models/i-chat-users";
+import { IEmailTeamInvitation } from "../database/models/i-email-team-invitation";
 
 
 export const fetchTeams = async (connection: Knex.Transaction, user: any, query: any): Promise<ISuccess | IError> => {
@@ -34,12 +35,31 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
 
         const teamIds = await teamPlayersQuery;
 
-        const teamQuery = teams.knexObj()
-            .join(TABLE_NAMES.TEAM_PLAYERS, "team_players.team_id", "teams.id")
-            .join(TABLE_NAMES.PRIVATE_PROFILE, "private_profiles.id", "team_players.user_id")
-            .join(TABLE_NAMES.WALLET, "wallet.userId", "private_profiles.id")
-            .select(["teams.name", "teams.id", "private_profiles.firstName", "private_profiles.lastName", "private_profiles.id as user_id", "wallet.balance"])
-            .whereIn('teams.id', teamIds.map((item: any): any => item.team_id));
+        const teamQuery = teams
+          .knexObj()
+          .join(TABLE_NAMES.TEAM_PLAYERS, "team_players.team_id", "teams.id")
+          .join(
+            TABLE_NAMES.PRIVATE_PROFILE,
+            "private_profiles.id",
+            "team_players.user_id"
+          )
+          .join("profiles", "profiles.id", "team_players.user_id")
+          .join(TABLE_NAMES.WALLET, "wallet.userId", "private_profiles.id")
+          .select([
+            "teams.name",
+            "teams.teamLogo",
+            "teams.teamCover",
+            "teams.id",
+            "private_profiles.firstName",
+            "private_profiles.lastName",
+            "private_profiles.id as user_id",
+            "wallet.balance",
+            "profiles.avatarUrl",
+          ])
+          .whereIn(
+            "teams.id",
+            teamIds.map((item: any): any => item.team_id)
+          );
 
         if (query.id) {
             teamQuery.where("teams.id", query.id)
@@ -61,11 +81,14 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
                     return {
                         id: items[0].id,
                         name,
+                        teamLogo: items[0].teamLogo,
+                        teamCover: items[0].teamCover,
                         players: _.map(items, (data) => {
                             return {
                                 user_id: data.user_id,
                                 lastName: data.lastName,
                                 firstName: data.firstName,
+                                avatarUrl: data.avatarUrl,
                                 balance: data.balance
                             }
                         })
@@ -153,17 +176,43 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
         const errors = await validateSendInvite(req);
         if (errors) return { errors };
 
+        const secret = randomString(15);
+
         const playerId = req.player_id;
         let player_data: IUser | undefined;
 
-        // validating all the users
-        if (req?.email) {
-            player_data = await fetchUserDetails(req?.email, connection)
-            if (!player_data) return getErrorObject("Invalid email address.")
-        }
-
         const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
         const team_info = await teams.findById(req.team_id);
+
+        // validating all the users
+        if (req?.email) {
+          const emailTeamInvitationRepo =
+            new CrudRepository<IEmailTeamInvitation>(
+              connection,
+              TABLE_NAMES.EMAIL_TEAM_INVITATION
+            );
+          player_data = await fetchUserDetails(req?.email, connection);
+
+          // send email to user
+
+          if (!player_data) {
+            const data = {
+              team_id: team_info.id,
+              invite_by: user.id,
+              email_id: req?.email,
+              secret,
+            };
+            const result = await emailTeamInvitationRepo.create(data, [
+              "team_id",
+              "invite_by",
+              "email_id",
+              "type",
+              "secret",
+            ]);
+
+            return { message: "Invite send successfully", result } as any;
+          }
+        }
 
         // validation team id and whether the requested user is the owner of the team
         if (!team_info) return getErrorObject("Team id does not exisits");
@@ -182,7 +231,6 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
             .where("team_id", req.team_id)
 
         if (pending_inivitation.length) return getErrorObject("Users have invitation pending");
-        const secret = randomString(15);
         const data = {
             team_id: team_info.id,
             invite_by: user.id,
@@ -340,6 +388,7 @@ export const getListOfSendInvitations = async (
         const team_invitation = new CrudRepository<ITeamInvitation>(connection, TABLE_NAMES.TEAM_INVITATION);
 
         const sent_invitations: any[] = await team_invitation.knexObj()
+            .join("profiles", "profiles.id", "teams_invitation.user_id")
             .where("invite_by", user_id)
             .where("status", "PENDING");
 
