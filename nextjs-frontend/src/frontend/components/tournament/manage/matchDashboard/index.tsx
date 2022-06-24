@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Button, Chip, Dialog, Grid, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
+import { Button, Chip, Dialog, FormControl, Grid, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
 import moment from "moment";
@@ -30,6 +30,7 @@ export interface Tournament {
   tournamentId: number;
   matchId: number;
   status: string;
+  reason: string;
   reportedBy: TournamentReporter;
   createdAt: Date;
 }
@@ -57,7 +58,11 @@ const MatchDashboard: React.FC = (): JSX.Element => {
   const [tournamentdata, setData] = React.useState<Tournament[]>([]);
   const [resultReq, setResultReq] = React.useState<any[]>([]);
   const [popVisible, setPopupVisible] = React.useState<boolean>(false);
+  const [matchData, setMatchData] = React.useState<any>(undefined);
+  const [matchIssueModal, setMatchIssueModal] = React.useState<any>(null)
   const [image, setImage] = React.useState<string>("");
+  const [winnerId, setWinnerId] = React.useState<any>(null)
+
   const tournamentList = async (): Promise<void> => {
     try {
       const endpoint = "/api/match-dispute/list";
@@ -84,12 +89,87 @@ const MatchDashboard: React.FC = (): JSX.Element => {
     tournamentList();
     fetchMatchResultReq();
   }, []);
+
   const resolveDispute = async (id: any): Promise<void> => {
     const endpoint = "/api/match-dispute/update";
     const headers = await getAuthHeader();
     axios.patch(endpoint, { id, status: "RESOLVED" }, { headers: headers }).then(() => {
       tournamentList();
     });
+  };
+
+  const fetchMatch = async (item: any): Promise<void> => {
+    try {
+      const endpoint = `/api/tournaments/${item.tournamentId}/${item.matchId}`;
+      const headers = await getAuthHeader();
+      axios.get(endpoint, { params: { tournament_id: id }, headers: headers }).then((res) => {
+        setMatchData(res.data);
+        setMatchIssueModal(item);
+        // setResultReq(res.data);
+      });
+    } catch (err) {
+      alert(err);
+    }
+  };
+  React.useEffect(() => {
+    tournamentList();
+    fetchMatchResultReq();
+  }, []);
+  
+
+  const updateResult = async ({ id, tournament_id, draw, opponent1_id, winnerId }: any): Promise<void> => {
+    let op1Result,
+      op2Result,
+      op1Score = 0,
+      op2Score = 0;
+    if (draw) {
+      op1Result = "draw";
+      op2Result = "draw";
+    } else if (winnerId === opponent1_id) {
+      op1Result = "win";
+      op2Result = "lose";
+      op1Score = 1;
+    } else {
+      op1Result = "lose";
+      op2Result = "win";
+      op2Score = 1;
+    }
+    
+    const endpoint = "/api/tournaments/match-result";
+    const headers = await getAuthHeader();
+    axios
+      .patch(
+        endpoint,
+        {
+          id,
+          match_id: id,
+          status: "RESOLVED",
+          tournament_id,
+          forceUpdate: true,
+          opponent1: {
+            score: op1Score,
+            result: op1Result,
+          },
+          opponent2: {
+            score: op2Score,
+            result: op2Result,
+          },
+        },
+        { headers: headers }
+      )
+      .then(() => {
+        fetchMatchResultReq();
+        resolveDispute(matchIssueModal.id);
+        tournamentList();
+        fetchMatchResultReq();
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        setMatchIssueModal(null);
+        setMatchData(null);
+      });
   };
 
   const acceptResult = async ({ id, tournament_id }: any): Promise<void> => {
@@ -106,7 +186,10 @@ const MatchDashboard: React.FC = (): JSX.Element => {
   };
   return (
     <React.Fragment>
-      <AccordionAlt title="MATCH DISTIPUTES" icon={{ expanded: <CircleCloseIcon /> }}>
+      <AccordionAlt
+        title="MATCH DISTIPUTES"
+        icon={{ expanded: <CircleCloseIcon /> }}
+      >
         <CardLayout title="Match Distiputes">
           <Grid container rowSpacing={1} columnSpacing={5}>
             <Grid item xs={12}>
@@ -143,11 +226,12 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                             <Typography>{item?.matchId}</Typography>
                           </NoobCell>
                           <NoobCell>
-                            <Typography>Incorrect score</Typography>
+                            <Typography>{item?.reason}</Typography>
                           </NoobCell>
                           <NoobCell>
                             <Typography>
-                              {item?.reportedBy?.firstName} {item?.reportedBy?.lastName}
+                              {item?.reportedBy?.firstName}{" "}
+                              {item?.reportedBy?.lastName}
                             </Typography>
                           </NoobCell>
                           <NoobCell>
@@ -161,7 +245,9 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                           {item.status === "PENDING" ? (
                             <NoobCell>
                               <Typography>
-                                <Button onClick={(): any => resolveDispute(item.id)}>Resolve</Button>
+                                <Button onClick={(): any => fetchMatch(item)}>
+                                  Resolve
+                                </Button>
                               </Typography>
                             </NoobCell>
                           ) : (
@@ -170,7 +256,9 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                             </>
                           )}
                           <NoobCell>
-                            <Typography>{calculateDiff(item.createdAt)}</Typography>
+                            <Typography>
+                              {moment(item.createdAt).fromNow()}
+                            </Typography>
                           </NoobCell>
                         </NoobRow>
                       );
@@ -182,7 +270,10 @@ const MatchDashboard: React.FC = (): JSX.Element => {
           </Grid>
         </CardLayout>
       </AccordionAlt>
-      <AccordionAlt title="MATCH RESULT REQUEST" icon={{ expanded: <CircleCloseIcon /> }}>
+      <AccordionAlt
+        title="MATCH RESULT REQUEST"
+        icon={{ expanded: <CircleCloseIcon /> }}
+      >
         <CardLayout title="Match Result Request">
           <Grid container rowSpacing={1} columnSpacing={5}>
             <Grid item xs={12}>
@@ -226,10 +317,13 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                               <Chip label={item.status} color="success" />
                             </Typography>
                           </NoobCell>
+
                           {item.status === "PENDING" ? (
                             <NoobCell>
                               <Typography>
-                                <Button onClick={(): any => acceptResult(item)}>Resolve</Button>
+                                <Button onClick={(): any => acceptResult(item)}>
+                                  Resolve
+                                </Button>
                               </Typography>
                             </NoobCell>
                           ) : (
@@ -238,7 +332,11 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                             </>
                           )}
                           <NoobCell>
-                            <Button onClick={(): any => toggle(item.screenshot)}>View</Button>
+                            <Button
+                              onClick={(): any => toggle(item.screenshot)}
+                            >
+                              View
+                            </Button>
                           </NoobCell>
                         </NoobRow>
                       );
@@ -250,7 +348,61 @@ const MatchDashboard: React.FC = (): JSX.Element => {
           </Grid>
         </CardLayout>
       </AccordionAlt>
-      <Dialog open={popVisible} onClose={(): void => toggle("")} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+      <Dialog open={Boolean(matchIssueModal)}>
+        <Box minWidth={500} p={2}>
+          <Box>
+            <Box>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">
+                  Select Winner
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={winnerId}
+                  label="Select Winner"
+                  onChange={(e): any => setWinnerId(e.target.value)}
+                >
+                  <MenuItem value={matchData?.opponent1?.[0]?.user_id}>
+                    {matchData?.opponent1?.[0]
+                      ? matchData?.opponent1?.[0]?.firstName +
+                        " " +
+                        matchData?.opponent1?.[0]?.lastName
+                      : "NA"}
+                  </MenuItem>
+                  <MenuItem value={matchData?.opponent2?.[0]?.user_id}>
+                    {matchData?.opponent2?.[0]
+                      ? matchData?.opponent2?.[0]?.firstName +
+                        " " +
+                        matchData?.opponent2?.[0]?.lastName
+                      : "NA"}
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+            <Button onClick={(): any => setMatchIssueModal(null)}>Close</Button>
+            <Button
+              onClick={(): any =>
+                updateResult({
+                  id: matchIssueModal.matchId,
+                  tournament_id: matchIssueModal.tournamentId,
+                  draw: false,
+                  opponent1_id: matchData?.opponent1?.[0]?.id,
+                  winnerId: "",
+                })
+              }
+            >
+              Submit
+            </Button>
+          </Box>
+        </Box>
+      </Dialog>
+      <Dialog
+        open={popVisible}
+        onClose={(): void => toggle("")}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
         <img height={"70%"} src={image} />
       </Dialog>
       <Box display="flex" justifyContent={"flex-end"}>

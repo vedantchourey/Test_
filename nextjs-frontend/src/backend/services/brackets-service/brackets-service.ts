@@ -416,6 +416,7 @@ export const checkInTeamTournament = async (
     return { message: "Something went wrong" };
   }
 };
+
 export const submitMatchResultRequest = async (
   req: IMatchResultRequest,
   knexConnection: Knex
@@ -434,6 +435,61 @@ export const submitMatchResultRequest = async (
   }
 };
 
+export const submitMatchResult = async (
+  req: any,
+  knexConnection: Knex
+): Promise<any> => {
+  try {
+    const repos = new CrudRepository<IMatchResultRequest>(
+      knexConnection,
+      TABLE_NAMES.MATCH_RESULT_REQUEST
+    );
+
+    let data: any
+    if (!req.forceUpdate) {
+      data = await repos.findById(req.id);
+      if (!data) return getErrorObject("Invalid match Id");
+    } else{
+      data= {
+        match_id: req.id,
+        opponent1: req.opponent1,
+        opponent2: req.opponent2,
+        screenshot: "",
+        tournament_id: req.tournament_id,
+      }
+    }
+    const repo = new CrudRepository<IBMatch>(
+      knexConnection,
+      TABLE_NAMES.B_MATCH
+    );
+
+    const match: IBMatch = await repo.findById(data?.match_id);
+    const manager = new BracketsManager(
+      new BracketsCrud(knexConnection as any) as any
+    );
+
+    await manager.update.match({
+      id: Number(match.id),
+      opponent1: {
+        id: Number(match.opponent1.id),
+        score: data.opponent1.score, result: data.opponent1.result as any
+      },
+      opponent2: {
+        id: Number(match.opponent2.id),
+        score: data.opponent2.score, result: data.opponent2.result as any
+      },
+    });
+    await Promise.all([
+      updateELORating(match, data, knexConnection),
+      repo.update({ screenshot: data.screenshot }, { id: Number(match.id) }),
+      !req.forceUpdate ? closeMatchResultRequest(data, knexConnection) : {},
+    ]);
+    return match;
+  } catch (ex) {
+    return getErrorObject("Something went wrong");
+  }
+};
+
 export const fetchMatchResultsReq = async (
   req: any,
   knexConnection: Knex
@@ -449,49 +505,6 @@ export const fetchMatchResultsReq = async (
     return result;
   } catch (ex) {
     return getErrorObject();
-  }
-};
-
-export const submitMatchResult = async (
-  req: any,
-  knexConnection: Knex
-): Promise<any> => {
-  try {
-    const repos = new CrudRepository<IMatchResultRequest>(
-      knexConnection,
-      TABLE_NAMES.MATCH_RESULT_REQUEST
-    );
-    const data: any = await repos.findById(req.id);
-    if (!data) return getErrorObject("Invalid match Id");
-    const repo = new CrudRepository<IBMatch>(
-      knexConnection,
-      TABLE_NAMES.B_MATCH
-    );
-    const match: IBMatch = await repo.findById(data?.match_id);
-    const manager = new BracketsManager(
-      new BracketsCrud(knexConnection as any) as any
-    );
-    await manager.update.match({
-      id: Number(match.id),
-      opponent1: {
-        id: Number(match.opponent1.id),
-        score: data.opponent1.score,
-        result: data.opponent1.result as any,
-      },
-      opponent2: {
-        id: Number(match.opponent2.id),
-        score: data.opponent2.score,
-        result: data.opponent2.result as any,
-      },
-    });
-    await Promise.all([
-      updateELORating(match, data, knexConnection),
-      repo.update({ screenshot: data.screenshot }, { id: Number(match.id) }),
-      closeMatchResultRequest(data, knexConnection),
-    ]);
-    return match;
-  } catch (ex) {
-    return getErrorObject("Something went wrong");
   }
 };
 
