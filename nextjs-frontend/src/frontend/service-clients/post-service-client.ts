@@ -7,6 +7,7 @@ import { getAuthHeader } from "../utils/headers";
 import { frontendSupabase } from "../services/supabase-frontend-service";
 import { ICreateCommentRequest } from "../../backend/services/posts-services/create-comment/i-create-comment";
 import { sendFiles } from './fetch-api-wrapper';
+import _ from "lodash";
 
 export const getPostsByUserId = async (userid: string): Promise<IPostsResponse[]> => {
   const result = await frontendSupabase.from("posts").select(`
@@ -24,6 +25,36 @@ export const getPostsByUserId = async (userid: string): Promise<IPostsResponse[]
     .match({ postedBy: userid });
   if (result.error) throw result.error;
   return result.data as IPostsResponse[];
+};
+
+const getPostById =async (postId:string): Promise<IPostsResponse> => {
+  const result = await frontendSupabase.from("posts").select(`
+        id,
+        postContent,
+        postImgUrl,
+        postOwner : profiles!fk_posts_profiles_id(id, username, avatarUrl),
+        postType,
+        createdAt,
+        updatedAt,
+        postUrl,
+        urlPostTitle
+  `)
+.match({ id: postId });
+  if (result.error) throw result.error;
+  return result.data[0] as IPostsResponse;
+}
+
+export const getTopPosts = async (): Promise<IPostsResponse[]> => {
+  const res = await frontendSupabase.from('post_likes').select("*");
+  const postsLikeList = _.groupBy(res.body, "postId");
+  const listOfPost = Object.values(postsLikeList)
+  const listOfTopPost = listOfPost
+    .sort((a, b) => b.length - a.length)
+    .slice(0, 5)
+    .map((i) => i[0].postId);
+  const postBatch = listOfTopPost.map((postId: string) => getPostById(postId));
+  const result = await Promise.all(postBatch);
+  return result;
 };
 
 export const createPost = async (
