@@ -294,6 +294,11 @@ export async function tournamentDetails(
             "private_profiles.id",
             "b_participant.user_id"
           )
+          .join(
+            "profiles",
+            "profiles.id",
+            "b_participant.user_id"
+          )
           .leftJoin(TABLE_NAMES.ELO_RATING, {
             "elo_ratings.user_id": "private_profiles.id",
           })
@@ -305,6 +310,7 @@ export async function tournamentDetails(
             "private_profiles.firstName",
             "private_profiles.lastName",
             "private_profiles.id",
+            "profiles.avatarUrl",
             "elo_ratings.elo_rating",
           ])
           .whereNotNull("b_participant.user_id");

@@ -38,7 +38,7 @@ export default function Chat(props: { smallChat: boolean }): JSX.Element {
     const res = await frontendSupabase
       .from("chat_users")
       .select()
-      .eq("user_id", user?.id);
+      .eq("user_id", user?.userRoles[0] === "noob-admin" ? "support" : user?.id);
     const data: any = {};
 
     if (!res.error) {
@@ -172,7 +172,7 @@ export default function Chat(props: { smallChat: boolean }): JSX.Element {
             overflow: "scroll",
           }}
         >
-          {!supportChatChannel ? (
+          {!supportChatChannel && user?.userRoles[0] !== "noob-admin" ? (
             <Box mt={2}>
               <Button disabled={loading} onClick={(): any => createSupportChat()}>
                 Create Support Chat
@@ -180,7 +180,8 @@ export default function Chat(props: { smallChat: boolean }): JSX.Element {
             </Box>
           ) : null}
           <Typography variant="h5" m={1} textAlign="left">
-            Friends
+          {user?.userRoles[0] === "noob-admin" ? "Support request" : "Friends"}
+            
           </Typography>
           {renderChatList()}
         </Box>

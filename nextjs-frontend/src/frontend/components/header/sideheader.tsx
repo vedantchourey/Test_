@@ -12,6 +12,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import * as React from "react";
 import {
+  avatarImageBlobUrlSelector,
   isLoggedInSelector,
   userNameSelector,
 } from "../../redux-store/authentication/authentication-selectors";
@@ -31,6 +32,7 @@ export default function SideHeader(): JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
+  const avatarImageBlobUrl = useAppSelector(avatarImageBlobUrlSelector);
 
   const fetchNotifications = async (): Promise<void> => {
     const headers = await getAuthHeader();
@@ -144,7 +146,7 @@ export default function SideHeader(): JSX.Element {
               </IconButton>
               <Button variant="text" onClick={(): any => router.push("/account")}>
                 <img
-                  src="/images/16276393842661.png"
+                  src={avatarImageBlobUrl || "/images/16276393842661.png"}
                   className={style.img3}
                   alt="logo"
                   style={{ height: "50px", width: "50px" }}
