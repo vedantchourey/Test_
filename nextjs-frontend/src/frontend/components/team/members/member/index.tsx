@@ -14,6 +14,7 @@ export interface MemberProp {
   image: string;
   tags: string[];
   type: "silver" | "bronze" | "diamond" | "gold" | "ruby";
+  profileImage?: string;
   elo?: string;
   won?: string;
   games?: string;
@@ -39,6 +40,7 @@ const Member: React.FC<MemberProp> = ({
   won,
   elo,
   children,
+  profileImage
 }) => {
   const [hover, setHover] = useState(false);
   return (
@@ -117,7 +119,7 @@ const Member: React.FC<MemberProp> = ({
           </Typography>
         </div>
         <img
-          src={images["Player"].src}
+          src={profileImage || Player.src}
           style={{
             position: "absolute",
             width: "100%",
@@ -125,7 +127,10 @@ const Member: React.FC<MemberProp> = ({
             cursor: "pointer",
           }}
         />
-        <img src={images[findCardType(elo || "0")].src} style={{ zIndex: 1, width: "100%" }} />
+        <img
+          src={images[findCardType(elo || "0")].src}
+          style={{ zIndex: 1, width: "100%" }}
+        />
       </Box>
       {children && hover && <Box>{children}</Box>}
     </Box>
