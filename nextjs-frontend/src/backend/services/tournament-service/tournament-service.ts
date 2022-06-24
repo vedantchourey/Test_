@@ -112,6 +112,122 @@ export const persistTournament: NoobApiService<
   return { id: id as string, ...others };
 };
 
+const tournamentsWithPlayers = async (context: PerRequestContext, tournamentId: string, tournament: ITournament): Promise<any> => {
+  const bracketTournamentRepo = new BTournament(
+    context.transaction as Knex.Transaction
+  );
+  const bracketT = await bracketTournamentRepo.select({
+    tournament_uuid: tournamentId,
+  });
+
+  let players: any = [];
+  let pricePool = 0;
+  let currentPricePool = 0;
+  if (bracketT) {
+    const part_repo = new CrudRepository<IBParticipants>(
+      context.knexConnection as any,
+      TABLE_NAMES.B_PARTICIPANT
+    );
+    if (tournament?.settings?.tournamentFormat === "1v1") {
+      players = await part_repo
+        .knexObj()
+        .join(
+          TABLE_NAMES.PRIVATE_PROFILE,
+          "private_profiles.id",
+          "b_participant.user_id"
+        )
+        .leftJoin(TABLE_NAMES.ELO_RATING, {
+          "elo_ratings.user_id": "private_profiles.id",
+        })
+        .where({ tournament_id: bracketT.id })
+        .where({
+          "elo_ratings.game_id": tournament.game,
+        })
+        .select([
+          "private_profiles.firstName",
+          "private_profiles.lastName",
+          "private_profiles.id",
+          "elo_ratings.elo_rating",
+        ])
+        .whereNotNull("b_participant.user_id");
+
+      pricePool =
+        Number(tournament?.bracketsMetadata?.playersLimit) *
+        Number(tournament?.settings?.entryFeeAmount);
+      currentPricePool = players.length
+        ? players.length * Number(tournament?.settings?.entryFeeAmount)
+        : 0;
+    } else {
+      players = await part_repo
+        .knexObj()
+        .select([
+          "private_profiles.firstName",
+          "private_profiles.lastName",
+          "private_profiles.id",
+          "elo_ratings.elo_rating",
+          "teams.elo_rating as team_elo_rating",
+          "teams.id as team_id",
+          "teams.name as team_name",
+        ])
+        .join(
+          TABLE_NAMES.B_TOURNAMENT,
+          "b_tournament.id",
+          "b_participant.tournament_id"
+        )
+        .join(
+          TABLE_NAMES.TOURNAMENT_INIVTES,
+          "tournament_invites.team_id",
+          "b_participant.team_id"
+        )
+        .join(TABLE_NAMES.TEAMS, "teams.id", "b_participant.team_id")
+        .where({ "b_participant.tournament_id": bracketT.id })
+        .join(
+          TABLE_NAMES.PRIVATE_PROFILE,
+          "private_profiles.id",
+          "tournament_invites.user_id"
+        )
+        .leftJoin(TABLE_NAMES.ELO_RATING, {
+          "elo_ratings.user_id": "private_profiles.id",
+          "elo_ratings.game_id": "teams.game_id",
+        })
+        .where("tournament_invites.tournament_id", tournamentId as string)
+        .whereNotNull("b_participant.team_id");
+
+      const grp_team = _.groupBy(players, "team_name");
+      currentPricePool = players.length
+        ? players.length * Number(tournament?.settings?.entryFeeAmount)
+        : 0;
+      players = _.keys(grp_team).map((k) => {
+        return {
+          team_name: k,
+          team_id: grp_team[k][0].team_id,
+          ...grp_team[k],
+        };
+      });
+      const playerCount =
+        TOURNAMENT_TYPE_NUMBER[
+          tournament?.settings?.tournamentFormat || "1v1"
+        ];
+      pricePool =
+        Number(tournament?.bracketsMetadata?.playersLimit) *
+        playerCount *
+        Number(tournament?.settings?.entryFeeAmount);
+    }
+
+    const connect = context.knexConnection;
+    const manager = new BracketsManager(
+      new BracketsCrud(connect as any) as any
+    );
+    const brackets = await manager.get.tournamentData(bracketT.id);
+    tournament = { ...tournament, brackets };
+    return {
+      ...tournament,
+      playerList: players,
+      pricingDetails: { pricePool, currentPricePool },
+    };
+  }
+}
+
 export async function listTournaments(
   params: ListTournamentType,
   context: PerRequestContext
@@ -120,8 +236,14 @@ export async function listTournaments(
     context.transaction as Knex.Transaction
   );
   const tournaments = await repository.getTournaments(params);
+  const result = await Promise.all(
+    tournaments.tournaments.map((t) =>
+      tournamentsWithPlayers(context, t.id as string, t))
+  );
 
-  return { data: tournaments };
+  return {
+    data: { tournaments: result, total: tournaments.total },
+  } as any;
 }
 
 export async function listTournament(
