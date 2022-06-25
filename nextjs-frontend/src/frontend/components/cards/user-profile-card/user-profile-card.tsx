@@ -163,7 +163,7 @@ export default function UserProfileCard(): JSX.Element {
         show={showAvatarPicker}
         maxFiles={1}
         minFiles={0}
-        maxFileSizeInBytes={1024 * 1204}
+        maxFileSizeInBytes={10000 * 10000}
       />
 
       <NoobFilePicker onFileSelected={onUploadBackground}
@@ -172,7 +172,7 @@ export default function UserProfileCard(): JSX.Element {
         show={showBackgroundPicker}
         maxFiles={1}
         minFiles={0}
-        maxFileSizeInBytes={1024 * 1204}
+        maxFileSizeInBytes={10000 * 10000}
       />
       {
         userProfile && (

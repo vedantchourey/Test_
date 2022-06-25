@@ -240,7 +240,7 @@ export default function DrawerLeft(): JSX.Element {
                 />
                 Free Agency
               </Button>
-              <Button variant="text" className={classes.buttonStyles}>
+              <Button variant="text" className={classes.buttonStyles} onClick={(): any => router.push("/account")}>
                 <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
                 Social
               </Button>
@@ -263,6 +263,14 @@ export default function DrawerLeft(): JSX.Element {
               >
                 <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
                 Match Hub
+              </Button>
+              <Button
+                variant="text"
+                className={classes.buttonStyles}
+                onClick={(): any => router.push("/store")}
+              >
+                <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
+                Store
               </Button>
               <Button
                 variant="text"
