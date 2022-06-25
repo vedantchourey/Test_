@@ -1,6 +1,6 @@
 import { Avatar, Box, Divider, Grid, IconButton, Typography } from '@mui/material';
 import { useState } from 'react';
-import { updateAvatar, updateProfileBackground } from '../../../service-clients/image-service-client';
+import { updateAvatar, updateProfileBackground, uploadImage } from '../../../service-clients/image-service-client';
 import { useAppDispatch, useAppSelector } from '../../../redux-store/redux-store';
 import { avatarBackgroundImageBlobUrlSelector, avatarImageBlobUrlSelector, isLoggedInSelector, userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
 import styles from './user-profile-card.module.css';
@@ -11,6 +11,8 @@ import { allowedImageExtensions } from '../../../../models/constants';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import FollowersModal from '../../followers-list-modal/followers-list-modal';
+import { v4 } from 'uuid';
+import { frontendSupabase } from '../../../services/supabase-frontend-service';
 
 export default function UserProfileCard(): JSX.Element {
   const userProfile = useAppSelector(userProfileSelector);
