@@ -22,11 +22,18 @@ export default function ChatCard(props: IChatCard): JSX.Element {
       onClick={props.onClick}
     >
       <img
-        src="/images/teams/player.png"
-        style={{ height: 50, width: 50, borderRadius: 10 }}
+        src="/images/16276393842661.png"
+        style={{
+          height: 50,
+          width: 50,
+          borderRadius: 10,
+          background: "rgba(0,0,0,0.4)",
+        }}
       />
       <Box ml={2} textAlign={"left"}>
-        <Typography textAlign={"left"} fontSize={18}>{props.name}</Typography>
+        <Typography textAlign={"left"} fontSize={18}>
+          {props.name}
+        </Typography>
         <Typography
           textAlign={"left"}
           variant="caption"
