@@ -1,6 +1,6 @@
 import { Avatar, Box, Divider, Grid, IconButton, Typography } from '@mui/material';
 import { useState } from 'react';
-import { updateAvatar, updateProfileBackground, uploadImage } from '../../../service-clients/image-service-client';
+import { updateAvatar, updateProfileBackground } from '../../../service-clients/image-service-client';
 import { useAppDispatch, useAppSelector } from '../../../redux-store/redux-store';
 import { avatarBackgroundImageBlobUrlSelector, avatarImageBlobUrlSelector, isLoggedInSelector, userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
 import styles from './user-profile-card.module.css';
@@ -11,8 +11,7 @@ import { allowedImageExtensions } from '../../../../models/constants';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import FollowersModal from '../../followers-list-modal/followers-list-modal';
-import { v4 } from 'uuid';
-import { frontendSupabase } from '../../../services/supabase-frontend-service';
+import moment from 'moment';
 
 export default function UserProfileCard(): JSX.Element {
   const userProfile = useAppSelector(userProfileSelector);
@@ -118,8 +117,8 @@ export default function UserProfileCard(): JSX.Element {
               <Typography variant='caption' fontSize={12}>
                 Member since
               </Typography>
-              <Typography sx={{ textAlign: 'left', mt: 1 }} variant='h3' fontSize={14}>
-                Nov 1, 2021
+              <Typography sx={{ textAlign: 'center', mt: 1 }} variant='h3' fontSize={14}>
+                {moment(userProfile?.createdAt).format("DD MMM YYYY")}
               </Typography>
             </Grid>
           </Grid>

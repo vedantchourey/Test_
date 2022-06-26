@@ -277,7 +277,7 @@ export async function tournamentDetails(
     const bracketT = await bracketTournamentRepo.select({
       tournament_uuid: tournamentId,
     });
-
+    
     let players: any = [];
     let pricePool = 0;
     let currentPricePool = 0;
@@ -385,10 +385,11 @@ export async function tournamentDetails(
       const brackets = await manager.get.tournamentData(bracketT.id);
       tournament = { ...tournament, brackets };
     }
+    
     return {
       data: {
         ...tournament,
-        playerList: players,
+        playerList: Object.values(_.groupBy(players, "id")).map((i) => i[0]),
         pricingDetails: { pricePool, currentPricePool },
       },
     } as any;
