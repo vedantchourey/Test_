@@ -222,7 +222,7 @@ const tournamentsWithPlayers = async (context: PerRequestContext, tournamentId: 
     tournament = { ...tournament, brackets };
     return {
       ...tournament,
-      playerList: players,
+      playerList: Object.values(_.groupBy(players, "id")).map((i) => i[0]),
       pricingDetails: { pricePool, currentPricePool },
     };
   }

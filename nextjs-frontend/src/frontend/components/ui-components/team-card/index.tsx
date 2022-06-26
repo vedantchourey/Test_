@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { ReactComponent as GameIcon } from "../../../../../public/icons/GameIcon_1.svg";
 import { ReactComponent as YouTubeIcon } from "../../../../../public/icons/YouTube_1.svg";
 import Image from "next/image";
@@ -8,6 +8,8 @@ import { allowedImageExtensions } from "../../../../models/constants";
 import { v4 } from "uuid";
 import { uploadImage } from "../../../service-clients/image-service-client";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
 
 const CardDesktop: React.FC<TeamCardProp> = ({name ="-", onChangeTeamLogo, team}) => {
   const teamLogo = team?.teamLogo
@@ -17,13 +19,16 @@ const CardDesktop: React.FC<TeamCardProp> = ({name ="-", onChangeTeamLogo, team}
   return (
     <Grid container columnSpacing={2}>
       <Grid item md={3} lg={2}>
-        <Button onClick={(): any => onChangeTeamLogo()}>
           <Image
             src={teamLogo || "/icons/Rectangle.svg"}
             width={"250px"}
             height={"250px"}
           />
-        </Button>
+          <Box position={"absolute"} mt={-7} ml={1}>
+            <IconButton onClick={(): any => onChangeTeamLogo()} color="primary">
+              <EditIcon />
+            </IconButton>
+          </Box>
       </Grid>
       <Grid item md={6} lg={10} display={"flex"} flexDirection={"column"}>
         <Typography color={"white"} textAlign="left" component="h4">
@@ -65,13 +70,16 @@ const CardMobile: React.FC<TeamCardProp> = ({name ="-", onChangeTeamLogo, team})
     <Grid container>
       <Grid item xs={12} display={"flex"}>
         <Box width={"65px"} height={"65px"} position="relative">
-          <Button onClick={(): any => onChangeTeamLogo()}>
-            <Image
-              src={teamLogo || "/icons/Rectangle.svg"}
-              width={"65px"}
-              height={"65px"}
-            />
-          </Button>
+          <Image
+            src={teamLogo || "/icons/Rectangle.svg"}
+            width={"65px"}
+            height={"65px"}
+          />
+          <Box position={"absolute"} mt={-7} ml={1}>
+            <IconButton onClick={(): any => onChangeTeamLogo()} color="primary">
+              <EditIcon />
+            </IconButton>
+          </Box>
         </Box>
         <Box marginLeft={2}>
           <Typography color={"white"} textAlign="left" component="h4">
@@ -154,8 +162,9 @@ const TeamCard: React.FC<TeamCardProp> = ({ children, name, team, refresh }) => 
           backgroundImage: `url(${teamCover || "/images/team-background.svg"})`,
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
+          display: "flex"
         }}
-        onClick={(): any => setCoverLogoPicker(true)}
+        // onClick={(): any => setCoverLogoPicker(true)}
       >
         {!isMobile ? (
           <CardDesktop
@@ -172,6 +181,11 @@ const TeamCard: React.FC<TeamCardProp> = ({ children, name, team, refresh }) => 
             team={team}
           />
         )}
+        <Box >
+            <IconButton onClick={(): any => setCoverLogoPicker(true)} color="primary">
+              <EditIcon />
+            </IconButton>
+          </Box>
       </div>
       <NoobFilePicker
         onFileSelected={async (file): Promise<any> => {

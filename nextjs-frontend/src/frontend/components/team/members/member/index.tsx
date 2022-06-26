@@ -129,7 +129,7 @@ const Member: React.FC<MemberProp> = ({
         />
         <img
           src={images[findCardType(elo || "0")].src}
-          style={{ zIndex: 1, width: "100%" }}
+          style={{ zIndex: 1, width: "100%", height: "64%" }}
         />
       </Box>
       {children && hover && <Box>{children}</Box>}
