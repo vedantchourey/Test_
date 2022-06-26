@@ -140,12 +140,11 @@ export default function Chat(props: { smallChat: boolean }): JSX.Element {
     return (
       <>
         {chatsList.map((i) => {
-          const findTeam = teamData.find(t => t.id === i.other_user);
+          const findTeam = teamData.find((t) => t.id === i.other_user);
           const teamLogo = findTeam?.teamLogo
                   ? frontendSupabase.storage.from("public-files").getPublicUrl(findTeam.teamLogo)
                       .publicURL as string
                   : "/images/16276393842661.png";
-          console.log('findTeam -> ', findTeam)
           return (
             <ChatCard
               key={i.id}

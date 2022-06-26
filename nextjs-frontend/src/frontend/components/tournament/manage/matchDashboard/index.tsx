@@ -115,7 +115,6 @@ const MatchDashboard: React.FC = (): JSX.Element => {
     tournamentList();
     fetchMatchResultReq();
   }, []);
-  
 
   const updateResult = async ({ id, tournament_id, draw, opponent1_id, winnerId }: any): Promise<void> => {
     let op1Result,

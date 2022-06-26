@@ -496,6 +496,7 @@ export const fetchMatchDetails = async (
       .knexObj()
       .select(USER_FEILDS)
       .where({ "b_participant.id": match?.opponent1.id });
+
     const opponent2 = participantRepo
       .knexObj()
       .select(USER_FEILDS)
@@ -514,7 +515,6 @@ export const fetchMatchDetails = async (
         .where({
           "elo_ratings.game_id": tournament.game,
         })
-        .where({ "b_participant.is_checked_in": true });
       opponent2
         .join(
           "private_profiles",
@@ -527,10 +527,11 @@ export const fetchMatchDetails = async (
         .where({
           "elo_ratings.game_id": tournament.game,
         })
-        .where({ "b_participant.is_checked_in": true });
+        const o1 = await opponent1;
+        const o2 = await opponent2;
       return {
-        opponent1: await opponent1,
-        opponent2: await opponent2,
+        opponent1: o1,
+        opponent2: o2,
       };
     }
     opponent1
