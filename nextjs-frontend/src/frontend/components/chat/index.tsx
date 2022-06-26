@@ -8,6 +8,8 @@ import { frontendSupabase } from "../../services/supabase-frontend-service";
 import ChatBox from "./ChatBox";
 import ChatCard from "./ChatCard";
 import ChatIcon from "@mui/icons-material/Chat";
+import { getAuthHeader } from "../../utils/headers";
+import axios from "axios";
 
 export default function Chat(props: { smallChat: boolean }): JSX.Element {
   const user = useAppSelector(userProfileSelector);
@@ -15,6 +17,7 @@ export default function Chat(props: { smallChat: boolean }): JSX.Element {
   const [currentChat, setCurrentChat] = useState<string | null>();
   const [currentChatName, setCurrentChatName] = useState("");
   const [supportChatChannel, setSupportChatChannel] = useState<boolean>(false);
+  const [teamData, setTeamData] = useState<any[]>([])
   const [loading, setLoading] = useState(false);
 
   const chatRef = useRef(chats);
@@ -55,6 +58,19 @@ export default function Chat(props: { smallChat: boolean }): JSX.Element {
     _setChats(updateChatList);
   };
 
+  const teamList = async (): Promise<void> => {
+    try {
+      const endpoint = "api/teams";
+      const headers = await getAuthHeader();
+      axios.get(endpoint, { headers: headers }).then((res) => {
+        setTeamData(res.data.result);
+      });
+    } catch (err) {
+      alert(err);
+    }
+  };
+
+
   useEffect(() => {
     fetchSupportChannel();
     fetchChannels();
@@ -62,6 +78,7 @@ export default function Chat(props: { smallChat: boolean }): JSX.Element {
   }, [user]);
 
   useEffect(() => {
+    teamList();
     const chatListener = frontendSupabase
       .from("chat_users")
       .on("*", (payload) => {
@@ -73,6 +90,7 @@ export default function Chat(props: { smallChat: boolean }): JSX.Element {
     return (): any => {
       chatListener.unsubscribe();
     };
+  
   }, []);
 
   const chatsList: IChatUsers[] = Object.values(chats).sort(
@@ -121,20 +139,29 @@ export default function Chat(props: { smallChat: boolean }): JSX.Element {
   const renderChatList = (): JSX.Element => {
     return (
       <>
-        {chatsList.map((i) => (
-          <ChatCard
-            key={i.id}
-            name={i.channel_name}
-            message={i.last_message}
-            onClick={(): void => {
-              setCurrentChat(null);
-              setTimeout((): void => {
-                setCurrentChatName(i.channel_name);
-                setCurrentChat(i.channel_id);
-              }, 200);
-            }}
-          />
-        ))}
+        {chatsList.map((i) => {
+          const findTeam = teamData.find(t => t.id === i.other_user);
+          const teamLogo = findTeam?.teamLogo
+                  ? frontendSupabase.storage.from("public-files").getPublicUrl(findTeam.teamLogo)
+                      .publicURL as string
+                  : "/images/16276393842661.png";
+          console.log('findTeam -> ', findTeam)
+          return (
+            <ChatCard
+              key={i.id}
+              image={teamLogo}
+              name={i.channel_name}
+              message={i.last_message}
+              onClick={(): void => {
+                setCurrentChat(null);
+                setTimeout((): void => {
+                  setCurrentChatName(i.channel_name);
+                  setCurrentChat(i.channel_id);
+                }, 200);
+              }}
+            />
+          );
+        })}
       </>
     );
   };

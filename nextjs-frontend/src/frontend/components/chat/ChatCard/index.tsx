@@ -4,6 +4,7 @@ import React from "react";
 interface IChatCard {
     name: string,
     message: string,
+    image: string;
     onClick: () => void,
 }
 
@@ -22,7 +23,7 @@ export default function ChatCard(props: IChatCard): JSX.Element {
       onClick={props.onClick}
     >
       <img
-        src="/images/16276393842661.png"
+        src={props.image}
         style={{
           height: 50,
           width: 50,
