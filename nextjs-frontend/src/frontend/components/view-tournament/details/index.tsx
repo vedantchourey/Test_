@@ -91,6 +91,12 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
               <Divider style={{ marginBottom: "30px", marginTop: "30px" }} />
               <Grid container rowSpacing={1} columnSpacing={5}>
                 <Grid item md={3}>
+                <Grid item md={12} display="flex" justifyContent={"flex-start"} mb={2}>
+                  <Typography marginRight={1}>
+                    Tournament Entry Status:
+                  </Typography>
+                  <Typography color="secondary"> Open </Typography>
+                </Grid>
                   <Box marginTop={1}>
                     <LinearProgress
                       variant="determinate"
@@ -128,7 +134,7 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                     </Box>
                   </Box>
                 </Grid>
-                <Grid item md={2}>
+                <Grid item md={3}>
                   <Typography className={classes.title}>
                     {" "}
                     Tournament Type
@@ -156,19 +162,14 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                     {data?.pricingDetails?.currentPricePool} Credits
                   </Typography>
                 </Grid>
-                <Grid item md={1}>
+                <Grid item md={2}>
                   <Typography className={classes.title}> Platform </Typography>
                   <Typography className={classes.subTitle}>
                     {" "}
                     {selectedPlatform?.displayName || "-"}{" "}
                   </Typography>
                 </Grid>
-                <Grid item md={2} display="flex" justifyContent={"flex-end"}>
-                  <Typography marginRight={1}>
-                    Tournament Entry Status:
-                  </Typography>
-                  <Typography color="secondary"> Open </Typography>
-                </Grid>
+                
               </Grid>
             </FormControl>
           </Grid>
