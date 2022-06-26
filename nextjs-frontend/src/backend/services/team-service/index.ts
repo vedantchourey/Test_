@@ -45,16 +45,24 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
           )
           .join("profiles", "profiles.id", "team_players.user_id")
           .join(TABLE_NAMES.WALLET, "wallet.userId", "private_profiles.id")
+          .join(TABLE_NAMES.ELO_RATING, {
+            "elo_ratings.user_id": "private_profiles.id",
+            "elo_ratings.game_id": "teams.game_id",
+          })
+
           .select([
             "teams.name",
             "teams.teamLogo",
             "teams.teamCover",
             "teams.id",
+            "teams.created_by",
             "private_profiles.firstName",
             "private_profiles.lastName",
             "private_profiles.id as user_id",
             "wallet.balance",
             "profiles.avatarUrl",
+            "private_profiles.won",
+            "private_profiles.lost",
           ])
           .whereIn(
             "teams.id",
@@ -78,18 +86,22 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
         return {
             result: _(data).groupBy("name")
                 .map(function (items, name) {
+                    const players = Object.values(_.groupBy(items, "user_id")).map((i) => i[0]);
                     return {
                         id: items[0].id,
                         name,
                         teamLogo: items[0].teamLogo,
+                        created_by: items[0].created_by,
                         teamCover: items[0].teamCover,
-                        players: _.map(items, (data) => {
+                        players: players.map((data) => {
                             return {
                                 user_id: data.user_id,
                                 lastName: data.lastName,
                                 firstName: data.firstName,
                                 avatarUrl: data.avatarUrl,
-                                balance: data.balance
+                                balance: data.balance,
+                                won: data.won,
+                                lost: data.lost,
                             }
                         })
                     };
