@@ -8,6 +8,8 @@ import ResultTile from "./opponent-tile/result-tile/result-tile";
 import { Player } from "./players";
 import React from "react";
 import { IMatchHubData } from "../../../../pages/match-hub";
+import { userProfileSelector } from "../../redux-store/authentication/authentication-selectors";
+import { useAppSelector } from "../../redux-store/redux-store";
 
 interface Props {
   data: IMatchHubData[];
@@ -42,6 +44,8 @@ export interface Match {
 }
 
 const MatchHub: React.FC<Props> = ({ data, onMatchHub, userDashboard }) => {
+  const user = useAppSelector(userProfileSelector);
+  
   return (
     <Container>
       <div>
@@ -68,6 +72,7 @@ const MatchHub: React.FC<Props> = ({ data, onMatchHub, userDashboard }) => {
               const opponent2Name = item.opponent2.user_id
                 ? `${item.opponent2.firstName} ${item.opponent2.lastName}`
                 : item.opponent2.name;
+                const myPlayer = item.opponent1.user_id === user?.id ? item.opponent1 : item.opponent2
               return (
                 <Grid key={item.opponent1.user_id} item xs={12}>
                   {!item.opponent1.result ? (
@@ -75,7 +80,7 @@ const MatchHub: React.FC<Props> = ({ data, onMatchHub, userDashboard }) => {
                   ) : (
                     <ResultTile
                       data={item}
-                      isWon={item.opponent1.result === "win"}
+                      isWon={myPlayer.result === "win"}
                       opponent1Name={opponent1Name}
                       opponent2Name={opponent2Name}
                     />
