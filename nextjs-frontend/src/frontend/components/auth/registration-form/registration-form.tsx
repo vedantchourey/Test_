@@ -127,6 +127,7 @@ export default function RegistrationForm(props: Props): JSX.Element {
             <TextField {...params}
               variant="filled"
               className={styles.inputRowItem}
+              disabled={true}
               error={propsHasError(errors, 'dateOfBirth')}
               helperText={getErrorForProp(errors, 'dateOfBirth')} />
           }
