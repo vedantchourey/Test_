@@ -68,7 +68,7 @@ const SliderComp: React.FC = (): JSX.Element => {
           headers: headers,
         })
         .then((res) => {
-          setData(res.data.data.tournaments);
+          setData(res.data.data.tournaments.filter((i: any) => i !== null));
           // console.log(res.data.data.tournaments);
         })
         .catch(function (error) {
