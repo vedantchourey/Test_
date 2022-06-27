@@ -40,7 +40,7 @@ export default function Create(): JSX.Element {
 
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [user?.id]);
 
   const _renderPosts = (): JSX.Element | React.ReactNode => {
     if (isFetchingPosts) {

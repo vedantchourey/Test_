@@ -240,7 +240,7 @@ export default function DrawerLeft(): JSX.Element {
                 />
                 Free Agency
               </Button>
-              <Button variant="text" className={classes.buttonStyles} onClick={(): any => router.push("/account")}>
+              <Button variant="text" className={classes.buttonStyles} onClick={(): any => router.push("/social")}>
                 <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
                 Social
               </Button>
