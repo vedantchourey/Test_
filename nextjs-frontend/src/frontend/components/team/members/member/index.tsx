@@ -125,6 +125,7 @@ const Member: React.FC<MemberProp> = ({
             width: "100%",
             zIndex: -1,
             cursor: "pointer",
+            height: "64%"
           }}
         />
         <img
