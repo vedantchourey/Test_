@@ -79,9 +79,12 @@ export const getWatchList = async (
   context: PerRequestContext
 ): Promise<IFreeAgencyMarketResponse | undefined> => {
   const watchListRepo = new CrudRepository<IWatchList>(context.knexConnection as Knex, TABLE_NAMES.WATCHLIST);
-  const users = await watchListRepo.knexObj()
+  const users = await watchListRepo
+    .knexObj()
     .join("private_profiles", "watchlist.playerId", "private_profiles.id")
     .join("profiles", "profiles.id", "watchlist.playerId")
+    .select("*")
+    .select("watchlist.id as id");
   return users
 };
 
