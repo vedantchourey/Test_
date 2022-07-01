@@ -28,7 +28,7 @@ export default function NoobPage(props: Props): JSX.Element {
     pinChat,
   } = props;
   const [enableChat, setEnableChat] = useState(false);
-  const [toggleChat, setToggleChat] = useState(pinChat ? true : false);
+  const [toggleChat, setToggleChat] = useState(pinChat ? false : false);
 
   const metaKeys = Object.keys(metaData);
 
@@ -85,7 +85,9 @@ export default function NoobPage(props: Props): JSX.Element {
             >
               <Typography>Chat</Typography>
               <IconButton
-                onClick={(): any => setToggleChat(pinChat ? true : !toggleChat)}
+                onClick={(): any =>
+                  setToggleChat(pinChat ? !toggleChat : !toggleChat)
+                }
               >
                 {toggleChat ? <CloseIcon /> : <KeyboardArrowUpIcon />}
               </IconButton>

@@ -217,7 +217,7 @@ const Home = (): JSX.Element => {
           </>
         )}
         <Container maxWidth="xl" className={styles.container}>
-          <Grid item xs={12} lg={9}>
+          <Grid item xs={12} lg={30}>
             <TabContext value={value}>
               <Box className={styles.tabBox}>
                 <TabList
@@ -267,14 +267,7 @@ const Home = (): JSX.Element => {
                   {newsData.map((i: any, key) => {
                     if (key < 3) {
                       return (
-                        <Grid
-                          item
-                          xs={12}
-                          lg={4}
-                          style={{
-                            marginRight: 20,
-                          }}
-                        >
+                        <Grid item xs={12} lg={4}>
                           <Box
                             className={styles.newsFeedImg}
                             style={{
@@ -297,47 +290,6 @@ const Home = (): JSX.Element => {
                       );
                     }
                   })}
-
-                  {/* <Grid item xs={12} lg={4}>
-                    <Box
-                      className={styles.newsFeedImg}
-                      style={{
-                        backgroundImage: "url('/images/newsfeed2.png')",
-                      }}
-                    >
-                      <Box className={styles.newsGrid}>
-                        <Button
-                          variant="text"
-                          className={styles.newsFeedButton}
-                        >
-                          SLIDER
-                        </Button>
-                        <Typography className={styles.newsFeedText}>
-                          Zensports signs casino deal for colorado expansion
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} lg={4}>
-                    <Box
-                      className={styles.newsFeedImg}
-                      style={{
-                        backgroundImage: "url('/images/newsfeed3.png')",
-                      }}
-                    >
-                      <Box className={styles.newsGrid}>
-                        <Button
-                          variant="text"
-                          className={styles.newsFeedButton}
-                        >
-                          ADVENTURE
-                        </Button>
-                        <Typography className={styles.newsFeedText}>
-                          Evil geniuses enters valorant with mixed-gender team
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Grid> */}
                 </Grid>
               </TabPanel>
               <TabPanel value="3" className={styles.tournamentContainer}>
@@ -488,7 +440,13 @@ const Home = (): JSX.Element => {
           </Grid>
           {isDesktop && (
             <>
-              <Grid item xs={12} lg={3} className={styles.mainSideBox}>
+              <Grid
+                item
+                xs={12}
+                lg={3}
+                className={styles.mainSideBox}
+                style={{ marginLeft: 20 }}
+              >
                 <Box className={styles.sideBox}>
                   <AliceCarousel
                     items={items}
