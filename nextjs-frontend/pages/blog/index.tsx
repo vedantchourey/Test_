@@ -92,13 +92,13 @@ export default function News(): JSX.Element {
 
   return (
     <NoobPage
-      title="Home"
+      title="Blog"
       metaData={{
         description: "Noob Storm home page",
       }}
     >
       <>
-        <Typography variant="h1">News</Typography>
+        <Typography variant="h1">Blogs</Typography>
         {!currentNews && (
           <Box display={"flex"} flexWrap={"wrap"}>
             {newsData.map((i: any, key) => (
