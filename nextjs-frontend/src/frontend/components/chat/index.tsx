@@ -10,8 +10,16 @@ import ChatCard from "./ChatCard";
 import ChatIcon from "@mui/icons-material/Chat";
 import { getAuthHeader } from "../../utils/headers";
 import axios from "axios";
+import { ParsedUrlQuery } from "querystring";
+import { useRouter } from "next/router";
+import { v4 } from "uuid";
 
 export default function Chat(props: { smallChat: boolean, social?: boolean }): JSX.Element {
+  const router = useRouter();
+  const query: ParsedUrlQuery = router.query;
+  const otheruser: string | string[] | undefined = query.user;
+  const name: string | string[] | undefined = query.name;
+
   const user = useAppSelector(userProfileSelector);
   const [chats, _setChats] = useState<object>({});
   const [currentChat, setCurrentChat] = useState<string | null>();
@@ -19,6 +27,21 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
   const [supportChatChannel, setSupportChatChannel] = useState<boolean>(false);
   const [teamData, setTeamData] = useState<any[]>([])
   const [loading, setLoading] = useState(false);
+
+  const checkChannel = async (): Promise<any> => {
+    const res = await frontendSupabase
+      .from("chat_users")
+      .select()
+      .eq("user_id", user?.id || "")
+      .eq("other_user", otheruser);
+      console.log('res -> ', res)
+      if (res.data?.length) {
+        setCurrentChat(res.data?.[0]?.channel_id || null);
+        setCurrentChatName(name as string);
+      } else {
+        createNewChat(otheruser as string, name as string);
+      }
+  };
 
   const chatRef = useRef(chats);
   const userRef = useRef(user);
@@ -72,9 +95,12 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
 
 
   useEffect(() => {
-    fetchSupportChannel();
-    fetchChannels();
-    userRef.current = user;
+    if(user){
+      fetchSupportChannel();
+      fetchChannels();
+      checkChannel();
+      userRef.current = user;
+    }
   }, [user]);
 
   useEffect(() => {
@@ -101,6 +127,45 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
       );
     }
   );
+
+  const createNewChat = async (other_user: string, name: string): Promise<any> => {
+    setLoading(true)
+    const channel_id = v4();
+    const res = await frontendSupabase.from("chat_users").insert({
+      channel_id,
+      user_id: user?.id || "",
+      other_user,
+      channel_name: name,
+      user_name: user?.username,
+    });
+    console.log("new create chat -> ", "channel_name");
+    if(res.data?.length) setCurrentChat(channel_id)
+    setCurrentChatName(name);
+    await frontendSupabase.from("chat_users").insert({
+      channel_id,
+      user_id: other_user,
+      other_user: user?.id || "",
+      channel_name: user?.username,
+      user_name: "support",
+    });
+    await frontendSupabase.from("messages").insert({
+      channel_id,
+      send_by: user?.id,
+      message: "Hey",
+      metadata: null,
+    });
+    await frontendSupabase
+      .from("chat_users")
+      .update({
+        last_message: "Hey",
+        updatedAt: new Date().toISOString,
+      })
+      .eq("channel_id", `${user?.id}_support`);
+    fetchSupportChannel();
+    fetchChannels();
+    setLoading(false);
+  };
+  
 
   const createSupportChat = async (): Promise<any> => {
     setLoading(true)
