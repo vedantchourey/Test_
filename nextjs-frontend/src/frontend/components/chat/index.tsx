@@ -34,7 +34,6 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
       .select()
       .eq("user_id", user?.id || "")
       .eq("other_user", otheruser);
-      console.log('res -> ', res)
       if (res.data?.length) {
         setCurrentChat(res.data?.[0]?.channel_id || null);
         setCurrentChatName(name as string);
@@ -138,7 +137,6 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
       channel_name: name,
       user_name: user?.username,
     });
-    console.log("new create chat -> ", "channel_name");
     if(res.data?.length) setCurrentChat(channel_id)
     setCurrentChatName(name);
     await frontendSupabase.from("chat_users").insert({

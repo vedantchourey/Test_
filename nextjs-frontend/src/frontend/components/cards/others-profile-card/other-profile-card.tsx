@@ -10,7 +10,6 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { blockUser, unBlockUser } from '../../../service-clients/block-service';
 import frontendConfig from '../../../utils/config/front-end-config';
 import FollowersModal from '../../followers-list-modal/followers-list-modal';
-import { frontendSupabase } from '../../../services/supabase-frontend-service';
 import { userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
 import { useAppSelector } from '../../../redux-store/redux-store';
 import { useRouter } from 'next/router';
@@ -21,7 +20,6 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
   const [showMenu, setShowMenu] = useState(false);
   const [openFollowersModal, setOpenFollowersModal] = useState(false);
   const [openFollowingModal, setOpenFollowingModal] = useState(false);
-  const userProfile = useAppSelector(userProfileSelector);
 
   const {
     totalFollowers,
