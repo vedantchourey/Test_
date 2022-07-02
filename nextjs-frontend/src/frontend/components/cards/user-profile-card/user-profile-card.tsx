@@ -1,5 +1,5 @@
 import { Avatar, Box, Divider, Grid, IconButton, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { updateAvatar, updateProfileBackground } from '../../../service-clients/image-service-client';
 import { useAppDispatch, useAppSelector } from '../../../redux-store/redux-store';
 import { avatarBackgroundImageBlobUrlSelector, avatarImageBlobUrlSelector, isLoggedInSelector, userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
@@ -12,6 +12,9 @@ import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternate
 import CollectionsIcon from '@mui/icons-material/Collections';
 import FollowersModal from '../../followers-list-modal/followers-list-modal';
 import moment from 'moment';
+import { getAuthHeader } from '../../../utils/headers';
+import axios from 'axios';
+import { frontendSupabase } from '../../../services/supabase-frontend-service';
 
 export default function UserProfileCard(): JSX.Element {
   const userProfile = useAppSelector(userProfileSelector);
@@ -23,6 +26,25 @@ export default function UserProfileCard(): JSX.Element {
   const avatarBackgroundImageBlobUrl = useAppSelector(avatarBackgroundImageBlobUrlSelector);
   const [openFollowersModal, setOpenFollowersModal] = useState(false);
   const [openFollowingModal, setOpenFollowingModal] = useState(false)
+  const [teamData, setTeamData] = useState<any[]>([])
+
+  const teamList = async (): Promise<void> => {
+    try {
+      const endpoint = "api/teams";
+      const headers = await getAuthHeader();
+      axios.get(endpoint, { headers: headers }).then((res) => {
+        setTeamData(res.data.result);
+      });
+    } catch (err) {
+      alert(err);
+    }
+  };
+
+  useEffect(() => {
+    if (userProfile?.id) {
+      teamList();
+    }
+  }, [userProfile]);
 
   async function onUploadAvatar(files: FileList | null): Promise<void> {
     setShowAvatarPicker(false);
@@ -72,24 +94,39 @@ export default function UserProfileCard(): JSX.Element {
 
   return (
     <Box className={styles.otherProfileCard}>
-      <Box className={styles.background} style={{
-        backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 1)), url(${avatarBackgroundImageBlobUrl} )`
-      }}>
-        <Box sx={{ textAlign: 'right', position: 'relative' }}>
-          <IconButton onClick={showUploadBackgroundPicker} sx={{ padding: '10px' }}>
+      <Box
+        className={styles.background}
+        style={{
+          backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 1)), url(${avatarBackgroundImageBlobUrl} )`,
+        }}
+      >
+        <Box sx={{ textAlign: "right", position: "relative" }}>
+          <IconButton
+            onClick={showUploadBackgroundPicker}
+            sx={{ padding: "10px" }}
+          >
             <AddPhotoAlternateOutlinedIcon />
           </IconButton>
         </Box>
         <Box className={styles.profileSection}>
-          <Box sx={{ position: 'relative' }}>
-            <Avatar sx={{ width: 85, height: 85, marginBottom: 2 }} alt="Remy Sharp" src={avatarImageBlobUrl || "/images/default-user-profile-background.jpg"}>
-            </Avatar>
-            <IconButton className={styles.selectImg} onClick={showUploadAvatarPicker} >
+          <Box sx={{ position: "relative" }}>
+            <Avatar
+              sx={{ width: 85, height: 85, marginBottom: 2 }}
+              alt="Remy Sharp"
+              src={
+                avatarImageBlobUrl ||
+                "/images/default-user-profile-background.jpg"
+              }
+            ></Avatar>
+            <IconButton
+              className={styles.selectImg}
+              onClick={showUploadAvatarPicker}
+            >
               {/* <img src='icons/gallery.svg' alt='icon' /> */}
               <CollectionsIcon />
             </IconButton>
           </Box>
-          <Typography variant='h3' fontSize={18} color='#695B6E' >
+          <Typography variant="h3" fontSize={18} color="#695B6E">
             @{userProfile?.username}
           </Typography>
         </Box>
@@ -99,25 +136,57 @@ export default function UserProfileCard(): JSX.Element {
       <Box className={styles.bottom}>
         <Box className={styles.detailsContainer} sx={{ width: "100%" }}>
           <Grid container p={2}>
-            <Grid item md={5} sx={{ textAlign: 'left' }}>
-              <Typography variant='caption' fontSize={12}>
+            <Grid item md={5} sx={{ textAlign: "left" }}>
+              <Typography variant="caption" fontSize={12}>
                 Team
               </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                <Avatar sx={{ mr: 1, width: 35, height: 35 }} alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-                <Typography variant='h3' fontSize={14}>
-                  Legend Club
-                </Typography>
-              </Box>
+              {teamData.map((t, idx) => {
+                const teamLogo = t?.teamLogo
+                  ? (frontendSupabase.storage
+                      .from("public-files")
+                      .getPublicUrl(t.teamLogo).publicURL as string)
+                  : "/static/images/avatar/3.jpg";
+                return (
+                  <Box
+                    sx={{ display: "flex", alignItems: "center", mt: 1 }}
+                    key={idx}
+                  >
+                    <Avatar
+                      sx={{ mr: 1, width: 35, height: 35 }}
+                      alt={t.name.toUpperCase()}
+                      src={teamLogo}
+                    />
+                    <Typography
+                      variant="h3"
+                      fontSize={14}
+                      textOverflow="ellipsis"
+                    >
+                      {t.name}
+                    </Typography>
+                  </Box>
+                );
+              })}
             </Grid>
-            <Grid item md={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Grid
+              item
+              md={2}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <div className={styles.verticalDivider} />
             </Grid>
-            <Grid item md={5} >
-              <Typography variant='caption' fontSize={12}>
+            <Grid item md={5}>
+              <Typography variant="caption" fontSize={12}>
                 Member since
               </Typography>
-              <Typography sx={{ textAlign: 'center', mt: 1 }} variant='h3' fontSize={14}>
+              <Typography
+                sx={{ textAlign: "center", mt: 1 }}
+                variant="h3"
+                fontSize={14}
+              >
                 {moment(userProfile?.createdAt).format("DD MMM YYYY")}
               </Typography>
             </Grid>
@@ -125,40 +194,61 @@ export default function UserProfileCard(): JSX.Element {
 
           <Divider sx={{ mb: 3 }} light className={styles.divider} />
           <Grid container>
-            <Grid item md={3} sx={{ textAlign: 'center' }}>
-              <Typography variant='caption' fontSize={14}>
+            <Grid item md={3} sx={{ textAlign: "center" }}>
+              <Typography variant="caption" fontSize={14}>
                 Followers
               </Typography>
-              <Typography sx={{ cursor: 'pointer' }} onClick={handleOpenFollowersModal} variant='h3' color='#6931F9' fontSize={16}>
+              <Typography
+                sx={{ cursor: "pointer" }}
+                onClick={handleOpenFollowersModal}
+                variant="h3"
+                color="#6931F9"
+                fontSize={16}
+              >
                 {userProfile?.totalFollowers || 0}
               </Typography>
             </Grid>
-            <Grid item md={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Grid
+              item
+              md={1}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
               <div className={styles.verticalDivider} />
             </Grid>
-            <Grid item md={4} sx={{ textAlign: 'center' }}>
-              <Typography variant='caption' fontSize={14}>
+            <Grid item md={4} sx={{ textAlign: "center" }}>
+              <Typography variant="caption" fontSize={14}>
                 Following
               </Typography>
-              <Typography onClick={handleOpenFollowingModal} sx={{ cursor: 'pointer' }} variant='h3' color='#6931F9' fontSize={16}>
+              <Typography
+                onClick={handleOpenFollowingModal}
+                sx={{ cursor: "pointer" }}
+                variant="h3"
+                color="#6931F9"
+                fontSize={16}
+              >
                 {userProfile?.totalFollowing || 0}
               </Typography>
             </Grid>
-            <Grid item md={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Grid
+              item
+              md={1}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
               <div className={styles.verticalDivider} />
             </Grid>
-            <Grid item md={3} sx={{ textAlign: 'center' }}>
-              <Typography variant='caption' fontSize={14}>
+            <Grid item md={3} sx={{ textAlign: "center" }}>
+              <Typography variant="caption" fontSize={14}>
                 Posts
               </Typography>
-              <Typography variant='h3' color='#6931F9' fontSize={16}>
+              <Typography variant="h3" color="#6931F9" fontSize={16}>
                 {userProfile?.totalPosts || 0}
               </Typography>
             </Grid>
           </Grid>
         </Box>
       </Box>
-      <NoobFilePicker onFileSelected={onUploadAvatar}
+      <NoobFilePicker
+        onFileSelected={onUploadAvatar}
         onError={(error): void => console.error(error)}
         allowedExtensions={allowedImageExtensions}
         show={showAvatarPicker}
@@ -167,7 +257,8 @@ export default function UserProfileCard(): JSX.Element {
         maxFileSizeInBytes={10000 * 10000}
       />
 
-      <NoobFilePicker onFileSelected={onUploadBackground}
+      <NoobFilePicker
+        onFileSelected={onUploadBackground}
         onError={(error): void => console.error(error)}
         allowedExtensions={allowedImageExtensions}
         show={showBackgroundPicker}
@@ -175,16 +266,24 @@ export default function UserProfileCard(): JSX.Element {
         minFiles={0}
         maxFileSizeInBytes={10000 * 10000}
       />
-      {
-        userProfile && (
-          <>
-            <FollowersModal handleClose={handleCloseFollowersModal} userData={userProfile} showModal={openFollowersModal} listType="followers" />
+      {userProfile && (
+        <>
+          <FollowersModal
+            handleClose={handleCloseFollowersModal}
+            userData={userProfile}
+            showModal={openFollowersModal}
+            listType="followers"
+          />
 
-            <FollowersModal handleClose={handleCloseFollowingModal} userData={userProfile} showModal={openFollowingModal} listType="following" />
-          </>
-        )
-      }
-    </Box >
-  )
+          <FollowersModal
+            handleClose={handleCloseFollowingModal}
+            userData={userProfile}
+            showModal={openFollowingModal}
+            listType="following"
+          />
+        </>
+      )}
+    </Box>
+  );
 }
 

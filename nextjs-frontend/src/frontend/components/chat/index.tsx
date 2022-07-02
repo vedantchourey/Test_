@@ -11,7 +11,7 @@ import ChatIcon from "@mui/icons-material/Chat";
 import { getAuthHeader } from "../../utils/headers";
 import axios from "axios";
 
-export default function Chat(props: { smallChat: boolean }): JSX.Element {
+export default function Chat(props: { smallChat: boolean, social?: boolean }): JSX.Element {
   const user = useAppSelector(userProfileSelector);
   const [chats, _setChats] = useState<object>({});
   const [currentChat, setCurrentChat] = useState<string | null>();
@@ -170,7 +170,8 @@ export default function Chat(props: { smallChat: boolean }): JSX.Element {
       bgcolor={"rgba(255,255,255,0.05)"}
       display={"flex"}
       flex={1}
-      height={props.smallChat ? "20%" : "80vh"}
+      overflow={"scroll"}
+      height={props.smallChat ? (props.social ? "80vh" : "20%") : "80vh"}
     >
       {props.smallChat ? (
         !currentChat ? (
@@ -200,14 +201,18 @@ export default function Chat(props: { smallChat: boolean }): JSX.Element {
         >
           {!supportChatChannel && user?.userRoles[0] !== "noob-admin" ? (
             <Box mt={2}>
-              <Button disabled={loading} onClick={(): any => createSupportChat()}>
+              <Button
+                disabled={loading}
+                onClick={(): any => createSupportChat()}
+              >
                 Create Support Chat
               </Button>
             </Box>
           ) : null}
           <Typography variant="h5" m={1} textAlign="left">
-          {user?.userRoles[0] === "noob-admin" ? "Support request" : "Friends"}
-            
+            {user?.userRoles[0] === "noob-admin"
+              ? "Support request"
+              : "Friends"}
           </Typography>
           {renderChatList()}
         </Box>
