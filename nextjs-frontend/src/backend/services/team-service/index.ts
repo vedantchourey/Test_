@@ -299,6 +299,14 @@ export const acceptInvite = async (secret: string, connection: Knex.Transaction)
                 user_name: userData.raw_user_meta_data.username, 
             });
 
+            const messagesRepo = new CrudRepository<IChatUsers>(connection, "chat_users");
+            await messagesRepo.create({
+                channel_id: invite.team_id,
+                send_by: invite.user_id,
+                message: "Hey, I just join team!",
+                metadata: null,
+            })
+
             await Promise.all([
                 team_invitation.update({ status: "ACCEPTED" }, { secret }),
                 deleteFAMEntry({ user_id: invite.user_id, game_id: teams.game_id, platform_id: teams.platform_id }, connection),
