@@ -75,6 +75,7 @@ const Bracket: React.FC<BracketProps> = ({
           if (findPlayer)
             return {
               ...i,
+              avatarUrl: findPlayer.avatarUrl,
               name: findPlayer?.firstName + " " + findPlayer?.lastName,
             };
           return { ...i, name: "NA" };

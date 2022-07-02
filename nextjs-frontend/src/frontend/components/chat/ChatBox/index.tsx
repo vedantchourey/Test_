@@ -10,6 +10,7 @@ interface IChatBox {
   channelName: string;
   userId: string;
   smallChat: boolean;
+  user?: any;
   onBack: () => void;
 }
 
@@ -29,9 +30,9 @@ export default function ChatBox(props: IChatBox): JSX.Element {
     if (text.length) {
       await frontendSupabase.from("messages").insert({
         channel_id: props.channelId,
-        send_by: props.userId,
+        send_by: props.user.id,
         message: text.trim(),
-        metadata: null,
+        metadata: null
       });
       await frontendSupabase
         .from("chat_users")
@@ -117,7 +118,10 @@ export default function ChatBox(props: IChatBox): JSX.Element {
       >
         <Box display={"flex"} flexDirection={"column"}>
           {messages.map((i) => {
-            const user = chatUsers.find((j) => j.user_id === i.send_by);
+            const user =
+              i.send_by === props.userId
+                ? { user_name: props.user.username }
+                : chatUsers.find((j) => j.user_id === i.send_by);
             return (
               <Box
                 display={"flex"}
@@ -146,13 +150,21 @@ export default function ChatBox(props: IChatBox): JSX.Element {
                     lineHeight={"5px"}
                     style={{ color: "rgba(255,255,255,0.5)" }}
                   >
-                    {user.user_name}
+                    {user?.user_name}
                   </Typography>
                   <Typography
                     fontSize={14}
                     textAlign={i.send_by === props.userId ? "right" : "left"}
                   >
                     {i.message}
+                  </Typography>
+                  <Typography
+                    fontSize={9}
+                    lineHeight={"5px"}
+                    textAlign={i.send_by === props.userId ? "right" : "left"}
+                    style={{ color: "rgba(255,255,255,0.5)" }}
+                  >
+                    {moment(new Date(i.created_at)).fromNow()}
                   </Typography>
                 </Box>
               </Box>

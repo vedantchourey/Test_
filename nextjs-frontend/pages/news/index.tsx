@@ -41,8 +41,6 @@ export default function News(): JSX.Element {
     }
   };
 
-  console.log("currentNews",currentNews);
-  
   const likeNews = async (): Promise<void> => {
     try {
       const endpoint = "/api/news/likenews";
@@ -58,7 +56,6 @@ export default function News(): JSX.Element {
           }
         )
         .then((res) => {
-          console.log("res", res);
           if (res.status === 200) {
             setLiked(true);
           }
@@ -67,7 +64,7 @@ export default function News(): JSX.Element {
           console.error(error);
           // setData([]);
         });
-    } catch (err) {}
+    } catch (err) {console.error(err);}
   };
   const unLikeNews = async (): Promise<void> => {
     try {
@@ -79,7 +76,6 @@ export default function News(): JSX.Element {
           headers: headers,
         })
         .then((res) => {
-          console.log("res", res);
           if (res.status === 200) {
             setLiked(false);
           }
@@ -87,7 +83,9 @@ export default function News(): JSX.Element {
         .catch(function (error) {
           console.error(error);
         });
-    } catch (err) {}
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   React.useEffect(() => {
@@ -188,7 +186,7 @@ export default function News(): JSX.Element {
                     alignItems: "center",
                     color: liked ? "primary.main" : "",
                   }}
-                  onClick={() => {
+                  onClick={(): any => {
                     if (liked) {
                       unLikeNews();
                     } else {

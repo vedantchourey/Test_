@@ -37,14 +37,16 @@ const deletnews = async (newsId: string): Promise<void> => {
         headers: headers,
       })
       .then((res) => {
-        if(res.status === 200){
+        if (res.status === 200) {
           fetchData();
         }
       })
       .catch(function (error) {
         console.error(error);
       });
-  } catch (err) {}
+  } catch (err) {
+    console.error(err);
+  }
 };
 
   const router = useRouter();
@@ -80,7 +82,7 @@ const deletnews = async (newsId: string): Promise<void> => {
     {
       title: "Action",
       renderCell: (row): any => {
-        return <DeleteOutlinedIcon  onClick={() => deletnews(row.id)}/>;
+        return <DeleteOutlinedIcon onClick={(): any => deletnews(row.id)}/>;
       },
       width: "5%",
     },

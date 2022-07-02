@@ -12,6 +12,7 @@ import {
 import axios from "axios";
 import { useRouter } from "next/router";
 import React from "react";
+import { frontendSupabase } from "../../services/supabase-frontend-service";
 import { getAuthHeader } from "../../utils/headers";
 
 export const HeadCell = styled(TableCell)(() => ({
@@ -39,6 +40,8 @@ export interface TeamData {
   id: string;
   name: string;
   players: Player[];
+  teamLogo: string;
+  teamCover: string;
 }
 
 const TeamListData: React.FC = () => {
@@ -72,6 +75,10 @@ const TeamListData: React.FC = () => {
             <Table>
               <TableBody>
                 {teamdata.map((item) => {
+                  const teamLogo = item.teamLogo
+                  ? frontendSupabase.storage.from("public-files").getPublicUrl(item.teamLogo)
+                      .publicURL
+                  : "/icons/Rectangle.svg";
                   return (
                     <NoobRow
                       sx={{
@@ -87,9 +94,10 @@ const TeamListData: React.FC = () => {
                       <NoobCell>
                         <Box alignItems="center" display="center">
                           <img
-                            src="/icons/Rectangle.svg"
+                            src={teamLogo || ""}
                             width={"65px"}
                             height={"65px"}
+                            style={{borderRadius: 5}}
                           />
                           <Box>
                             <Typography marginLeft={2} marginRight={2}>

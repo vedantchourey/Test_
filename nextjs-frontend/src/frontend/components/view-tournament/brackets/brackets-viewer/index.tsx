@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { frontendSupabase } from "../../../../services/supabase-frontend-service";
 import '../../../ui-components/typography/heading.module.css'
 
 const Component = ({ brackets }: { brackets: any }): any => {  
@@ -17,10 +18,16 @@ const Component = ({ brackets }: { brackets: any }): any => {
       // This is optional. You must do it before render().
       window.bracketsViewer.setParticipantImages(
         // @ts-expect-error: ignore
-        data?.participant?.map((participant) => ({
-          participantId: participant.id,
-          imageUrl: "/images/teams/Player.png"
-        }))
+        data?.participant?.map((participant) => {
+          return {
+            participantId: participant.id,
+            imageUrl: participant.avatarUrl
+              ? frontendSupabase.storage
+                  .from("public-files")
+                  .getPublicUrl(participant.avatarUrl).publicURL
+              : "/images/teams/Player.png",
+          };
+        })
       );
       // @ts-expect-error: ignore
       window.bracketsViewer.onMatchClicked = (match): any => {

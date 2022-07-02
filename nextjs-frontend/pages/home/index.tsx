@@ -1,5 +1,5 @@
 import { Fragment, useState, SyntheticEvent, useEffect } from "react";
-import { Typography, Grid, Button, Box, Container } from "@mui/material";
+import { Typography, Grid, Button, Box, Container, Skeleton } from "@mui/material";
 import styles from "./home.module.css";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
@@ -17,8 +17,7 @@ import { isDeviceTypeSelector } from "../../src/frontend/redux-store/layout/layo
 import { deviceTypes } from "../../src/frontend/redux-store/layout/device-types";
 import router from "next/router";
 import { userProfileSelector } from "../../src/frontend/redux-store/authentication/authentication-selectors";
-import { fetchUserFollowingList } from "../../src/frontend/service-clients/profile-service-client";
-import { getPostsByUserId } from "../../src/frontend/service-clients/post-service-client";
+import { getTopPosts } from "../../src/frontend/service-clients/post-service-client";
 import { IPostsResponse } from "../../src/frontend/service-clients/messages/i-posts-response";
 import PostCard from "../../src/frontend/components/account/posts/post-card";
 
@@ -39,14 +38,7 @@ const Home = (): JSX.Element => {
   const fetchPosts = async (): Promise<void> => {
     try {
       setIsFetchingPosts(true);
-      const followers = await fetchUserFollowingList(user?.id || "");
-      const fetchPostsBatch = followers.map((i) =>
-        getPostsByUserId(i.follower.id));
-      const posts: IPostsResponse[] = [];
-      const followerPosts = await Promise.all(fetchPostsBatch);
-      followerPosts.map((p: any) => {
-        p.map((fp: IPostsResponse) => posts.push(fp));
-      });
+      const posts: IPostsResponse[] = await getTopPosts();
       setPosts(posts);
     } finally {
       setIsFetchingPosts(false);
@@ -65,8 +57,9 @@ const Home = (): JSX.Element => {
 
   const _renderPosts = (): JSX.Element | React.ReactNode => {
     if (isFetchingPosts) {
-      return new Array(5).fill("")
-.map((data, i) => <h1 key={i}>Skeleton</h1>);
+      return new Array(5)
+        .fill("")
+        .map((i, key) => <Skeleton key={`${i}${key}`} />);
     }
     const jsx = posts.map((postData) => {
       return <PostCard key={postData.id} data={postData} row={true} />;
@@ -211,7 +204,7 @@ const Home = (): JSX.Element => {
                 </TabList>
                 <Button className={styles.viewAllButton}>VIEW All</Button>
               </Box>
-              <TabPanel value="1" className={styles.postContainer}>
+              <TabPanel value="1" className={styles.postContainer} style={{flexDirection: "column"}}>
                 {_renderPosts()}
               </TabPanel>
               <TabPanel value="2" className={styles.newsFeedContainer}>

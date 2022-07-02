@@ -194,7 +194,7 @@ const Team: React.FC = () => {
           description: "Noob Storm team page",
         }}
       >
-        <TeamCard name={team?.name}>
+        <TeamCard name={team?.name} team={team} refresh={fetchTeam}>
           <Box display={"flex"} justifyContent="space-between">
             {renderTabs()}
             {!isMobile ? (

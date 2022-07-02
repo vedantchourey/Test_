@@ -1,4 +1,4 @@
-import { ICreateNewsRequest, ICreateNewsResponse, INewsResponse } from './i-edit-news';
+import { ICreateNewsRequest, ICreateNewsResponse } from './i-edit-news';
 import { PerRequestContext } from '../../../utils/api-middle-ware/api-middleware-typings';
 import { NewsRepository } from '../../database/repositories/news-repository';
 import { validatePost } from './edit-news-validator';

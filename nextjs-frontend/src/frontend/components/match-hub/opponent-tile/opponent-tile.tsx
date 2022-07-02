@@ -8,6 +8,8 @@ import { useRouter } from "next/router";
 import styles from "./opponent-tile.module.css";
 import { IMatchHubData } from "../../../../../pages/match-hub";
 import moment from "moment";
+import { userProfileSelector } from "../../../redux-store/authentication/authentication-selectors";
+import { useAppSelector } from "../../../redux-store/redux-store";
 
 interface OpponentTileProps {
   onMatchHub?: (opponentData: IMatchHubData) => void;
@@ -22,6 +24,7 @@ const calculateDuration = (
 
 const OpponentTile: React.FC<OpponentTileProps> = ({ onMatchHub, data, userDashboard }) => {
   const router = useRouter();
+  const user = useAppSelector(userProfileSelector);
 
   React.useEffect(() => {
     const timerRef = window.setInterval(timerCallback, 1000);
@@ -70,6 +73,14 @@ const OpponentTile: React.FC<OpponentTileProps> = ({ onMatchHub, data, userDashb
       onMatchHub(data);
     }
   };
+  
+  let opponent_name = ""
+  if(data.opponent1.user_id === user?.id){
+    opponent_name = data.opponent2.user_id ? data.opponent2.firstName + " " + data.opponent2.lastName : "N/A"
+  } else{
+    opponent_name = data.opponent1.user_id ? data.opponent1.firstName + " " + data.opponent1.lastName : "N/A"
+  }
+
   return (
     <Grid container className={styles.opponentTileContainer}>
       <Grid item xs={2}>
@@ -79,7 +90,7 @@ const OpponentTile: React.FC<OpponentTileProps> = ({ onMatchHub, data, userDashb
           <span
             style={{ marginLeft: "8px" }}
             className={styles.opponentTileValue}
-          >{`${data.opponent1.firstName} ${data.opponent1.lastName}`}</span>
+          >{opponent_name}</span>
         </div>
       </Grid>
       <Grid item xs={3}>
