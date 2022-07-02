@@ -31,6 +31,7 @@ export interface Tournament {
   matchId: number;
   status: string;
   reportedBy: TournamentReporter;
+  reason: string,
   createdAt: Date;
 }
 
@@ -143,7 +144,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                             <Typography>{item?.matchId}</Typography>
                           </NoobCell>
                           <NoobCell>
-                            <Typography>Incorrect score</Typography>
+                            <Typography>{item?.reason}</Typography>
                           </NoobCell>
                           <NoobCell>
                             <Typography>

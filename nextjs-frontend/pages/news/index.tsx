@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import {
   Button,
   Card,
@@ -20,6 +21,7 @@ export default function News(): JSX.Element {
   const [newsData, setData] = useState<any[]>([]);
   const [currentNews, setCurrentNews] = useState<any>(null);
   const [liked, setLiked] = useState<any>(false);
+  const router = useRouter()
 
   const getleaderboardgamedata = async (gameId: string): Promise<void> => {
     try {
@@ -39,8 +41,8 @@ export default function News(): JSX.Element {
     }
   };
 
-  console.log("currentNews", currentNews);
-
+  console.log("currentNews",currentNews);
+  
   const likeNews = async (): Promise<void> => {
     try {
       const endpoint = "/api/news/likenews";
@@ -107,7 +109,8 @@ export default function News(): JSX.Element {
               <Card
                 sx={{ maxWidth: 345, m: 2 }}
                 key={key}
-                onClick={(): any => setCurrentNews(i)}
+                onClick={(): any => router.push(`/news/${i.id}`)}
+                // onClick={(): any => setCurrentNews(i)}
               >
                 <CardMedia
                   component="img"
