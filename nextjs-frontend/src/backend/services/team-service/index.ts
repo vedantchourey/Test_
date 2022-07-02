@@ -28,7 +28,7 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
     try {
         const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
         const team_players = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
-        let userId = query.user_id || user.id
+        const userId = query.user_id || user.id
 
         const teamPlayersQuery = team_players.find({
             user_id: userId
