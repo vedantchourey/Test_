@@ -97,13 +97,14 @@ export default async function signupUser(request: SignupRequest, context: PerReq
 
   // // add default ELO for all games
   const eloRatingMap = listOfGame.map(async (i) => {
-    const find = await eloRatingRepo.find({user_id: user.id, game_id: i.id, elo_rating: 750})
+    const find = await eloRatingRepo.find({user_id: user.id, game_id: i.id})
     if(find.length){
       return null
     }
     return eloRatingRepo.create({
       user_id: user.id,
-      game_id: i.id
+      game_id: i.id, 
+      elo_rating: 750
     })
   })
 
