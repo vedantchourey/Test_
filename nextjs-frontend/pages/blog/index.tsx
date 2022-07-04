@@ -100,6 +100,7 @@ export default function News(): JSX.Element {
       }}
     >
       <>
+
         <Typography variant="h1">Blogs</Typography>
         {!currentNews && (
           <Box display={"flex"} flexWrap={"wrap"}>
