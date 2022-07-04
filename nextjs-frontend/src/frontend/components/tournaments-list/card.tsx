@@ -75,7 +75,7 @@ const CardDesktop: React.FC<any> = ({
               <Grid item md={4} lg={4}>
                 <Button
                   variant="contained"
-                  color="secondary"
+                  color={moment(start_date).isBefore(moment()) ? "error" : "secondary"}
                   sx={{ color: "#FFFFFF" }}
                 >
                   {moment(start_date).isBefore(moment()) ? "Completed" : "On Going"}
@@ -96,10 +96,11 @@ const CardDesktop: React.FC<any> = ({
                 item
                 md={4}
                 lg={4}
+                fontSize={18}
                 className={styles.credit_font}
                 textAlign={"right"}
               >
-                {credits} Credits
+                {credits === 0 ? "Free Entry" : `${credits} Credits`} 
               </Grid>
               <Grid item md={2} mb={1} lg={2} textAlign={"right"}>
                 <Button
@@ -126,6 +127,7 @@ const CardMobile: React.FC<any> = ({
   platform,
   start_date,
   participants,
+  banner
 }: any): JSX.Element => {
   return (
     <Grid container columnSpacing={2} mt={5}>
@@ -136,7 +138,7 @@ const CardMobile: React.FC<any> = ({
               padding: { sm: "8px", xs: "8px", md: "8px", textAlign: "left" },
             }}
             style={{
-              backgroundImage: "url('/icons/card-tournament-mobile.svg')",
+              backgroundImage: `url(${banner})`,
               backgroundRepeat: "no-repeat",
               backgroundSize: "cover",
               color: "#FFFFFF",
@@ -215,6 +217,7 @@ const CardComp = ({
           platform={platform}
           start_date={start_date}
           participants={participants}
+          banner={banner}
         />
       ) : (
         <CardDesktop

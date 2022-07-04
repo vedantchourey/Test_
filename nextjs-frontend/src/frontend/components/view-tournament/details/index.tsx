@@ -22,6 +22,7 @@ import {
 import { IPlatformResponse } from "../../../service-clients/messages/i-platform-response";
 import { fetchAllPlatformsThunk } from "../../../redux-store/platforms/platform-slice";
 import ReactHtmlParser from "react-html-parser";
+import backendConfig from "../../../../backend/utils/config/backend-config";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -43,6 +44,8 @@ const useStyles = makeStyles(() =>
 interface DetailsProps {
   data: TournamentData;
 }
+
+const { credit_config } = backendConfig;
 
 const Details: React.FC<DetailsProps> = ({ data }) => {
   const classes = useStyles();
@@ -82,26 +85,34 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
               <div style={{ fontFamily: "Inter" }}>
                 {ReactHtmlParser(data.basic?.about || "")}
               </div>
-              {data.info?.contactOption?(
+              {data.info?.contactOption ? (
                 <Box display={"flex"} alignItems="center">
-                <Typography component={"span"} variant={"body2"} color={"rgba(105,50,249,1)"}>{data.info?.contactOption} :</Typography>
-                <Button style={{textTransform:"lowercase"}} onClick={contactOn}>{data.info?.contactUrl || "-"}</Button>
-              </Box>
-              ):null}
+                  <Typography
+                    component={"span"}
+                    variant={"body2"}
+                    color={"rgba(105,50,249,1)"}
+                  >
+                    {data.info?.contactOption} :
+                  </Typography>
+                  <Button
+                    style={{ textTransform: "lowercase" }}
+                    onClick={contactOn}
+                  >
+                    {data.info?.contactUrl || "-"}
+                  </Button>
+                </Box>
+              ) : null}
               <Divider style={{ marginBottom: "30px", marginTop: "30px" }} />
               <Grid container rowSpacing={1} columnSpacing={5}>
                 <Grid item md={3}>
-                <Grid item md={12} display="flex" justifyContent={"flex-start"} mb={2}>
-                  <Typography marginRight={1}>
-                    Tournament Entry Status:
-                  </Typography>
-                  <Typography color="secondary"> Open </Typography>
-                </Grid>
+                  
                   <Box marginTop={1}>
                     <LinearProgress
                       variant="determinate"
                       color={"secondary"}
-                      value={(currentSlot*100) / parseInt(totalSlots.toString())}
+                      value={
+                        (currentSlot * 100) / parseInt(totalSlots.toString())
+                      }
                     />
                   </Box>
                   <Box
@@ -111,7 +122,9 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                     justifyContent="space-between"
                   >
                     <Box width={"45%"} display="flex">
-                      <Typography marginRight={1}>{parseInt(totalSlots.toString())}</Typography>
+                      <Typography marginRight={1}>
+                        {parseInt(totalSlots.toString())}
+                      </Typography>
                       <Typography
                         color={"#5A5A5A"}
                         fontWeight={600}
@@ -122,7 +135,9 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                       </Typography>
                     </Box>
                     <Box width={"45%"} display="flex">
-                      <Typography marginRight={1}>{parseInt(totalSlots.toString()) - currentSlot}</Typography>
+                      <Typography marginRight={1}>
+                        {parseInt(totalSlots.toString()) - currentSlot}
+                      </Typography>
                       <Typography
                         color={"#5A5A5A"}
                         fontWeight={600}
@@ -134,7 +149,7 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                     </Box>
                   </Box>
                 </Grid>
-                <Grid item md={3}>
+                <Grid item md={2}>
                   <Typography className={classes.title}>
                     {" "}
                     Tournament Type
@@ -149,27 +164,40 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                       : "-"}{" "}
                   </Typography>
                 </Grid>
-                <Grid item md={2}>
+                {/* <Grid item md={2}>
                   <Typography className={classes.title}> Prize Pool</Typography>
                   <Typography className={classes.subTitle}>
                     {" "}
                     {data?.pricingDetails?.pricePool} Credits
                   </Typography>
-                </Grid>
+                </Grid> */}
                 <Grid item md={2}>
-                  <Typography className={classes.title}> Current Prize Pool</Typography>
+                  <Typography className={classes.title}>Prize Pool</Typography>
                   <Typography className={classes.subTitle}>
-                    {data?.pricingDetails?.currentPricePool} Credits
+                    {(data?.pricingDetails?.currentPricePool || 0) *
+                      credit_config.price_per_credit}{" "}
+                    INR
                   </Typography>
                 </Grid>
-                <Grid item md={2}>
+                <Grid item md={1}>
                   <Typography className={classes.title}> Platform </Typography>
                   <Typography className={classes.subTitle}>
                     {" "}
                     {selectedPlatform?.displayName || "-"}{" "}
                   </Typography>
                 </Grid>
-                
+                <Grid
+                    item
+                    md={3}
+                    display="flex"
+                    justifyContent={"flex-start"}
+                    mb={2}
+                  >
+                    <Typography marginRight={1}>
+                      Tournament Entry Status:
+                    </Typography>
+                    <Typography color="secondary"> Open </Typography>
+                  </Grid>
               </Grid>
             </FormControl>
           </Grid>
