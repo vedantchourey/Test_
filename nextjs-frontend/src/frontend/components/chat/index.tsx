@@ -8,14 +8,39 @@ import { frontendSupabase } from "../../services/supabase-frontend-service";
 import ChatBox from "./ChatBox";
 import ChatCard from "./ChatCard";
 import ChatIcon from "@mui/icons-material/Chat";
+import { getAuthHeader } from "../../utils/headers";
+import axios from "axios";
+import { ParsedUrlQuery } from "querystring";
+import { useRouter } from "next/router";
+import { v4 } from "uuid";
 
-export default function Chat(props: { smallChat: boolean }): JSX.Element {
+export default function Chat(props: { smallChat: boolean, social?: boolean }): JSX.Element {
+  const router = useRouter();
+  const query: ParsedUrlQuery = router.query;
+  const otheruser: string | string[] | undefined = query.user;
+  const name: string | string[] | undefined = query.name;
+
   const user = useAppSelector(userProfileSelector);
   const [chats, _setChats] = useState<object>({});
   const [currentChat, setCurrentChat] = useState<string | null>();
   const [currentChatName, setCurrentChatName] = useState("");
   const [supportChatChannel, setSupportChatChannel] = useState<boolean>(false);
+  const [teamData, setTeamData] = useState<any[]>([])
   const [loading, setLoading] = useState(false);
+
+  const checkChannel = async (): Promise<any> => {
+    const res = await frontendSupabase
+      .from("chat_users")
+      .select()
+      .eq("user_id", user?.id || "")
+      .eq("other_user", otheruser);
+      if (res.data?.length) {
+        setCurrentChat(res.data?.[0]?.channel_id || null);
+        setCurrentChatName(name as string);
+      } else {
+        createNewChat(otheruser as string, name as string);
+      }
+  };
 
   const chatRef = useRef(chats);
   const userRef = useRef(user);
@@ -55,13 +80,30 @@ export default function Chat(props: { smallChat: boolean }): JSX.Element {
     _setChats(updateChatList);
   };
 
+  const teamList = async (): Promise<void> => {
+    try {
+      const endpoint = "api/teams";
+      const headers = await getAuthHeader();
+      axios.get(endpoint, { headers: headers }).then((res) => {
+        setTeamData(res.data.result);
+      });
+    } catch (err) {
+      alert(err);
+    }
+  };
+
+
   useEffect(() => {
-    fetchSupportChannel();
-    fetchChannels();
-    userRef.current = user;
+    if(user){
+      fetchSupportChannel();
+      fetchChannels();
+      checkChannel();
+      userRef.current = user;
+    }
   }, [user]);
 
   useEffect(() => {
+    teamList();
     const chatListener = frontendSupabase
       .from("chat_users")
       .on("*", (payload) => {
@@ -73,6 +115,7 @@ export default function Chat(props: { smallChat: boolean }): JSX.Element {
     return (): any => {
       chatListener.unsubscribe();
     };
+  
   }, []);
 
   const chatsList: IChatUsers[] = Object.values(chats).sort(
@@ -83,6 +126,44 @@ export default function Chat(props: { smallChat: boolean }): JSX.Element {
       );
     }
   );
+
+  const createNewChat = async (other_user: string, name: string): Promise<any> => {
+    setLoading(true)
+    const channel_id = v4();
+    const res = await frontendSupabase.from("chat_users").insert({
+      channel_id,
+      user_id: user?.id || "",
+      other_user,
+      channel_name: name,
+      user_name: user?.username,
+    });
+    if(res.data?.length) setCurrentChat(channel_id)
+    setCurrentChatName(name);
+    await frontendSupabase.from("chat_users").insert({
+      channel_id,
+      user_id: other_user,
+      other_user: user?.id || "",
+      channel_name: user?.username,
+      user_name: "support",
+    });
+    await frontendSupabase.from("messages").insert({
+      channel_id,
+      send_by: user?.id,
+      message: "Hey",
+      metadata: null,
+    });
+    await frontendSupabase
+      .from("chat_users")
+      .update({
+        last_message: "Hey",
+        updatedAt: new Date().toISOString,
+      })
+      .eq("channel_id", `${user?.id}_support`);
+    fetchSupportChannel();
+    fetchChannels();
+    setLoading(false);
+  };
+  
 
   const createSupportChat = async (): Promise<any> => {
     setLoading(true)
@@ -121,20 +202,28 @@ export default function Chat(props: { smallChat: boolean }): JSX.Element {
   const renderChatList = (): JSX.Element => {
     return (
       <>
-        {chatsList.map((i) => (
-          <ChatCard
-            key={i.id}
-            name={i.channel_name}
-            message={i.last_message}
-            onClick={(): void => {
-              setCurrentChat(null);
-              setTimeout((): void => {
-                setCurrentChatName(i.channel_name);
-                setCurrentChat(i.channel_id);
-              }, 200);
-            }}
-          />
-        ))}
+        {chatsList.map((i) => {
+          const findTeam = teamData.find((t) => t.id === i.other_user);
+          const teamLogo = findTeam?.teamLogo
+                  ? frontendSupabase.storage.from("public-files").getPublicUrl(findTeam.teamLogo)
+                      .publicURL as string
+                  : "/images/16276393842661.png";
+          return (
+            <ChatCard
+              key={i.id}
+              image={teamLogo}
+              name={i.channel_name}
+              message={i.last_message}
+              onClick={(): void => {
+                setCurrentChat(null);
+                setTimeout((): void => {
+                  setCurrentChatName(i.channel_name);
+                  setCurrentChat(i.channel_id);
+                }, 200);
+              }}
+            />
+          );
+        })}
       </>
     );
   };
@@ -144,7 +233,8 @@ export default function Chat(props: { smallChat: boolean }): JSX.Element {
       bgcolor={"rgba(255,255,255,0.05)"}
       display={"flex"}
       flex={1}
-      height={props.smallChat ? "20%" : "80vh"}
+      overflow={"scroll"}
+      height={props.smallChat ? (props.social ? "80vh" : "20%") : "80vh"}
     >
       {props.smallChat ? (
         !currentChat ? (
@@ -174,14 +264,18 @@ export default function Chat(props: { smallChat: boolean }): JSX.Element {
         >
           {!supportChatChannel && user?.userRoles[0] !== "noob-admin" ? (
             <Box mt={2}>
-              <Button disabled={loading} onClick={(): any => createSupportChat()}>
+              <Button
+                disabled={loading}
+                onClick={(): any => createSupportChat()}
+              >
                 Create Support Chat
               </Button>
             </Box>
           ) : null}
           <Typography variant="h5" m={1} textAlign="left">
-          {user?.userRoles[0] === "noob-admin" ? "Support request" : "Friends"}
-            
+            {user?.userRoles[0] === "noob-admin"
+              ? "Support request"
+              : "Friends"}
           </Typography>
           {renderChatList()}
         </Box>

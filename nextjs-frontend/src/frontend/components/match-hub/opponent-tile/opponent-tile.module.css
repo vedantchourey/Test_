@@ -17,9 +17,9 @@
 }
 
 .opponentTileButton {
-    padding: 8px; 
+    /* padding: 8px;  */
     border-radius: 0; 
-    min-width: 160px;
-    min-height: 48px;
+    /* min-width: 160px; */
+    /* min-height: 48px; */
 
 }

@@ -40,7 +40,7 @@ const Transactions = (): any => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {(transaction || []).map((row: any): any => (
+                {(transaction.slice(0,15) || []).map((row: any): any => (
                   <TableRow key={row.action}>
                     <TableCell width={"33%"}>{row.type}</TableCell>
                     <TableCell width={"33%"}>

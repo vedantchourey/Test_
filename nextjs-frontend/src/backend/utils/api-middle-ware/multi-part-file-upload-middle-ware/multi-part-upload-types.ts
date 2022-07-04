@@ -2,11 +2,11 @@ import { createMultiPartMiddleWare } from './multi-part-form-upload';
 
 export const avatarImageMiddleware = createMultiPartMiddleWare({
   fit: 'inside',
-  allowedWidth: 156,
-  allowedHeight: 156,
+  allowedWidth: 2000,
+  allowedHeight: 2000,
   allowedTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
   limits: {
-    fileSize: 1024 * 1024, // 1 MB in bytes
+    fileSize: 1024 * 1024 * 5, // 1 MB in bytes
     files: 1
   }
 });
@@ -17,7 +17,7 @@ export const profileBackgroundImageMiddleware = createMultiPartMiddleWare({
   allowedHeight: 226 * 2,
   allowedTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
   limits: {
-    fileSize: 1024 * 1024, // 1 MB in bytes
+    fileSize: 1024 * 1024 * 5, // 1 MB in bytes
     files: 1
   }
 });
@@ -28,7 +28,7 @@ export const postImageMiddleware = createMultiPartMiddleWare({
   allowedHeight: 226 * 2,
   allowedTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
   limits: {
-    fileSize: 1024 * 1024, // 1 MB in bytes
+    fileSize: 1024 * 1024 * 5, // 1 MB in bytes
     files: 1
   }
 });

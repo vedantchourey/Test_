@@ -1,7 +1,7 @@
 import { BaseRepository } from "./base-repository";
 import { Knex } from "knex";
 import { IMatchDispute } from "../models/i-match-dispute";
-const keys = ["id", "tournamentId", "matchId", "status", "reportedBy", "createdAt"];
+const keys = ["id", "tournamentId", "matchId", "status", "reportedBy", "createdAt", "reason"];
 
 export class matchDisputeRepository extends BaseRepository<IMatchDispute> {
     constructor(transaction: Knex.Transaction | Knex) {

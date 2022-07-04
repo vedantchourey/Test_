@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 // Third party packages
-import { Button, Grid } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 
 // styles
@@ -84,11 +84,11 @@ const OpponentTile: React.FC<OpponentTileProps> = ({ onMatchHub, data, userDashb
   return (
     <Grid container className={styles.opponentTileContainer}>
       <Grid item xs={2}>
-        <p className={styles.opponentTileTitle}>Opponent:</p>
+        <Typography className={styles.opponentTileTitle} textAlign={"left"}>Opponent:</Typography>
         <div style={{ display: "flex", alignItems: "center" }}>
           <Image src="/images/legand-club.png" width={32} height={32} />
           <span
-            style={{ marginLeft: "8px" }}
+            style={{ marginLeft: "15px" }}
             className={styles.opponentTileValue}
           >{opponent_name}</span>
         </div>

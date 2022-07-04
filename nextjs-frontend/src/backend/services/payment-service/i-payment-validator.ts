@@ -17,7 +17,7 @@ export function validateUpdateOrder(body: any): any {
     razorpay_payment_id: Joi.string().required(),
     razorpay_order_id: Joi.string().required(),
     razorpay_signature: Joi.string().required(),
-    id: Joi.string().required(),
+    id: Joi.string().optional(),
   });
   const errors = model.validate(body, {
     abortEarly: false,
