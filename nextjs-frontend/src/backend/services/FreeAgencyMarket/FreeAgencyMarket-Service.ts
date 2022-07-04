@@ -98,7 +98,11 @@ export const getWatchList = async (
     .join("profiles", "profiles.id", "watchlist.playerId")
     .select("*")
     .select("watchlist.id as id");
-  return users
+    
+    const resultBatch = await Promise.all(
+      users.map((i: any) => fetchEloRating(context, i))
+    );
+    return resultBatch;
 };
 
 export interface IDeleteWatchListRequest {
