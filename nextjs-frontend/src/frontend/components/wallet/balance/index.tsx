@@ -15,9 +15,11 @@ import * as yup from "yup";
 import { walletDetaislSelector } from "../../../redux-store/wallet/wallet-selector";
 import { getAuthHeader } from "../../../utils/headers";
 import axios from "axios";
+import { userProfileSelector } from "../../../redux-store/authentication/authentication-selectors";
 
 const Balance = (): any => {
   const wallet = useAppSelector(walletDetaislSelector);
+  const user = useAppSelector(userProfileSelector);
   const [isVerified, setIsVerified] = useState(false);
   const validationSchema = yup.object({
     mobile: yup.string().required("Mobile is required"),
@@ -26,6 +28,26 @@ const Balance = (): any => {
     name: yup.string().required("Name code is required"),
     aadhar_no: yup.string().required("aadhar is required"),
   });
+
+  const addWithdrawRequest = async (): Promise<void> => {
+    const headers = await getAuthHeader();
+    axios
+      .post(
+        `/api/withdraw`,
+        {
+          userId: user?.id,
+        },
+        {
+          headers: headers,
+        }
+      )
+      .then(() => {
+        alert("Your withdraw reuqst is submitted");
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   const getKycDetails = async (): Promise<void> => {
     const headers = await getAuthHeader();
@@ -185,7 +207,7 @@ const Balance = (): any => {
                 justifyContent={"center"}
                 alignItems={"center"}
               >
-                {wallet?.balance} INR.
+                {wallet?.withdrawAmount} INR.
               </Typography>
             </Box>
           </Grid>
@@ -212,6 +234,7 @@ const Balance = (): any => {
                   ? "#F09633"
                   : "rgba(255,255,255,0.2)",
               }}
+              onClick={(): any => addWithdrawRequest()}
             >
               Withdraw
             </Button>

@@ -171,7 +171,7 @@ export default function DrawerLeft(): JSX.Element {
                 style={{ color: "white" }}
                 onClick={(): any => {
                   if (user?.userRoles[0] === "noob-admin") {
-                    router.push("tournament-dashboard");
+                    router.push("/tournament-dashboard");
                   } else{
                     router.push("/user-dashboard")
                   }
@@ -240,13 +240,13 @@ export default function DrawerLeft(): JSX.Element {
                 />
                 Free Agency
               </Button>
-              <Button variant="text" className={classes.buttonStyles}>
+              <Button variant="text" className={classes.buttonStyles} onClick={(): any => router.push("/social")}>
                 <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
                 Social
               </Button>
-              <Button variant="text" className={classes.buttonStyles} onClick={(): any => router.push("/news")}>
+              <Button variant="text" className={classes.buttonStyles} onClick={(): any => router.push("/blog")}>
                 <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
-                News
+                Blog
               </Button>
               <Button
                 variant="text"
@@ -263,6 +263,14 @@ export default function DrawerLeft(): JSX.Element {
               >
                 <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
                 Match Hub
+              </Button>
+              <Button
+                variant="text"
+                className={classes.buttonStyles}
+                onClick={(): any => router.push("/store")}
+              >
+                <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
+                Store
               </Button>
               <Button
                 variant="text"

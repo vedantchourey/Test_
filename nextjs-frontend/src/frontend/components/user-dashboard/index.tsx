@@ -3,10 +3,11 @@ import axios from "axios";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { IMatchHubData } from "../../../../pages/match-hub";
-import { userProfileSelector } from "../../redux-store/authentication/authentication-selectors";
+import { avatarImageBlobUrlSelector, userProfileSelector } from "../../redux-store/authentication/authentication-selectors";
 import { useAppSelector } from "../../redux-store/redux-store";
 import { IPostsResponse } from "../../service-clients/messages/i-posts-response";
 import { getPostsByUserId } from "../../service-clients/post-service-client";
+import { frontendSupabase } from "../../services/supabase-frontend-service";
 import { getAuthHeader } from "../../utils/headers";
 import PostCard from "../account/posts/post-card";
 import MatchHub from "../match-hub";
@@ -70,6 +71,7 @@ export default function index(): JSX.Element {
   }, []);
 
   const teamNames: Array<string> = data.map((i: any) => i.name);
+  const userAvatar = useAppSelector(avatarImageBlobUrlSelector);
 
   return (
     <Box textAlign={"left"}>
@@ -79,7 +81,7 @@ export default function index(): JSX.Element {
             <Grid xs={6}>
               <Box display={"flex"}>
                 <img
-                  src={user?.avatarUrl || "/images/16276393842661.png"}
+                  src={userAvatar || "/images/16276393842661.png"}
                   width={"130px"}
                   height={"130px"}
                   style={{
@@ -105,7 +107,9 @@ export default function index(): JSX.Element {
             </Grid>
           </Grid>
           <Divider />
-          <Typography textAlign={"left"} mt={2} mb={2}>My Posts</Typography>
+          <Typography textAlign={"left"} mt={2} mb={2}>
+            My Posts
+          </Typography>
           <Box display={"flex"} overflow={"scroll"}>
             {_renderPosts()}
           </Box>
@@ -133,7 +137,13 @@ export default function index(): JSX.Element {
                 key={`${i.id}`}
               >
                 <img
-                  src="/icons/Rectangle.svg"
+                  src={
+                    i?.teamLogo
+                      ? frontendSupabase.storage
+                          .from("public-files")
+                          .getPublicUrl(i.teamLogo).publicURL as string
+                      : "/icons/Rectangle.svg"
+                  }
                   width={"30px"}
                   height={"30px"}
                   style={{ marginTop: 5 }}

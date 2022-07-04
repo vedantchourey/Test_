@@ -6,9 +6,9 @@ import {
 import { NextApiRequest, NextApiResponse } from "next";
 import { ServiceResponse } from "../../../src/backend/services/common/contracts/service-response";
 import { PerRequestContext } from "../../../src/backend/utils/api-middle-ware/api-middleware-typings";
-import { fetchMatchResultsReq, submitMatchResult, submitMatchResultRequest } from "../../../src/backend/services/brackets-service/brackets-service";
 import { Knex } from "knex";
 import { authenticatedUserMiddleware } from "../../../src/backend/utils/api-middle-ware/auth-middle-ware";
+import { addWithdrawRequest, fetchWithdrawRequest, resolveWithdrawRequest } from "../../../src/backend/services/withdraw-request-service";
 
 export default createNextJsRouteHandler({
   post: {
@@ -17,7 +17,7 @@ export default createNextJsRouteHandler({
       res: NextApiResponse<ServiceResponse<any, any>>,
       context: PerRequestContext
     ) => {
-      const result = await submitMatchResultRequest(req.body, context.knexConnection as Knex);
+      const result: any = await addWithdrawRequest(req.body, context.transaction as Knex.Transaction);
       res.status(result?.errors?.length ? 500 : 200).json(result)
     },
     preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],
@@ -29,7 +29,7 @@ export default createNextJsRouteHandler({
       res: NextApiResponse<ServiceResponse<any, any>>,
       context: PerRequestContext
     ) => {
-      const result = await fetchMatchResultsReq(req.query, context.knexConnection as Knex);
+      const result: any = await fetchWithdrawRequest(context.transaction as Knex.Transaction);
       res.status(result?.errors?.length ? 500 : 200).json(result)
     },
     preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],
@@ -41,7 +41,10 @@ export default createNextJsRouteHandler({
       res: NextApiResponse<ServiceResponse<any, any>>,
       context: PerRequestContext
     ) => {      
-      const result = await submitMatchResult(req.body, context.knexConnection as Knex, context);
+      const result: any = await resolveWithdrawRequest(
+        req.body,
+        context.transaction as Knex.Transaction
+      );
       res.status(result?.errors?.length ? 500 : 200).json(result)
     },
     preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],

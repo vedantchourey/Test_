@@ -44,7 +44,7 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
           </p>
           <p
             className={styles.resultTileStatus}
-            style={{ color: isWon ? "green" : "red" }}
+            style={{ color: isWon ? "green" : "red", marginTop: 10 }}
           >
             {isWon ? "WON" : "LOST"}
           </p>

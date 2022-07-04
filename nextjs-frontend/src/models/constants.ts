@@ -24,6 +24,7 @@ export const TABLE_NAMES = {
   KYC_DETAILS: "kyc_details",
   PRODUCTS: "products",
   EMAIL_TEAM_INVITATION: "email_team_invitation",
+  WITHDRAWREQUEST: "withdraw_request"
 };
 
 export const STATUS = {

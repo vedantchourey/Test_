@@ -119,14 +119,14 @@ const PostCard = (props: IProps): JSX.Element => {
     <Grid
       item
       md={12}
-      // minHeight={props.row ? 450 : undefined}
+      minHeight={props.row ? 450 : undefined}
       minWidth={400}
       mr={props.row ? 2 : 0}
     >
       <Card
         className={styles.postCard}
         sx={{ mb: 3 }}
-        style={{ height: props.row ? "100%" : "auto" }}
+        // style={{ height: props.row ? "100%" : "auto" }}
         elevation={0}
       >
         <Box

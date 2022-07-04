@@ -113,118 +113,122 @@ export const persistTournament: NoobApiService<
 };
 
 const tournamentsWithPlayers = async (context: PerRequestContext, tournamentId: string, tournament: ITournament): Promise<any> => {
-  const bracketTournamentRepo = new BTournament(
-    context.transaction as Knex.Transaction
-  );
-  const bracketT = await bracketTournamentRepo.select({
-    tournament_uuid: tournamentId,
-  });
-
-  let players: any = [];
-  let pricePool = 0;
-  let currentPricePool = 0;
-  if (bracketT) {
-    const part_repo = new CrudRepository<IBParticipants>(
-      context.knexConnection as any,
-      TABLE_NAMES.B_PARTICIPANT
+  try{
+    const bracketTournamentRepo = new BTournament(
+      context.transaction as Knex.Transaction
     );
-    if (tournament?.settings?.tournamentFormat === "1v1") {
-      players = await part_repo
-        .knexObj()
-        .join(
-          TABLE_NAMES.PRIVATE_PROFILE,
-          "private_profiles.id",
-          "b_participant.user_id"
-        )
-        .leftJoin(TABLE_NAMES.ELO_RATING, {
-          "elo_ratings.user_id": "private_profiles.id",
-        })
-        .where({ tournament_id: bracketT.id })
-        .where({
-          "elo_ratings.game_id": tournament.game,
-        })
-        .select([
-          "private_profiles.firstName",
-          "private_profiles.lastName",
-          "private_profiles.id",
-          "elo_ratings.elo_rating",
-        ])
-        .whereNotNull("b_participant.user_id");
-
-      pricePool =
-        Number(tournament?.bracketsMetadata?.playersLimit) *
-        Number(tournament?.settings?.entryFeeAmount);
-      currentPricePool = players.length
-        ? players.length * Number(tournament?.settings?.entryFeeAmount)
-        : 0;
-    } else {
-      players = await part_repo
-        .knexObj()
-        .select([
-          "private_profiles.firstName",
-          "private_profiles.lastName",
-          "private_profiles.id",
-          "elo_ratings.elo_rating",
-          "teams.elo_rating as team_elo_rating",
-          "teams.id as team_id",
-          "teams.name as team_name",
-        ])
-        .join(
-          TABLE_NAMES.B_TOURNAMENT,
-          "b_tournament.id",
-          "b_participant.tournament_id"
-        )
-        .join(
-          TABLE_NAMES.TOURNAMENT_INIVTES,
-          "tournament_invites.team_id",
-          "b_participant.team_id"
-        )
-        .join(TABLE_NAMES.TEAMS, "teams.id", "b_participant.team_id")
-        .where({ "b_participant.tournament_id": bracketT.id })
-        .join(
-          TABLE_NAMES.PRIVATE_PROFILE,
-          "private_profiles.id",
-          "tournament_invites.user_id"
-        )
-        .leftJoin(TABLE_NAMES.ELO_RATING, {
-          "elo_ratings.user_id": "private_profiles.id",
-          "elo_ratings.game_id": "teams.game_id",
-        })
-        .where("tournament_invites.tournament_id", tournamentId as string)
-        .whereNotNull("b_participant.team_id");
-
-      const grp_team = _.groupBy(players, "team_name");
-      currentPricePool = players.length
-        ? players.length * Number(tournament?.settings?.entryFeeAmount)
-        : 0;
-      players = _.keys(grp_team).map((k) => {
-        return {
-          team_name: k,
-          team_id: grp_team[k][0].team_id,
-          ...grp_team[k],
-        };
-      });
-      const playerCount =
-        TOURNAMENT_TYPE_NUMBER[
-          tournament?.settings?.tournamentFormat || "1v1"
-        ];
-      pricePool =
-        Number(tournament?.bracketsMetadata?.playersLimit) *
-        playerCount *
-        Number(tournament?.settings?.entryFeeAmount);
+    const bracketT = await bracketTournamentRepo.select({
+      tournament_uuid: tournamentId,
+    });
+  
+    let players: any = [];
+    let pricePool = 0;
+    let currentPricePool = 0;
+    if (bracketT) {
+      const part_repo = new CrudRepository<IBParticipants>(
+        context.knexConnection as any,
+        TABLE_NAMES.B_PARTICIPANT
+      );
+      if (tournament?.settings?.tournamentFormat === "1v1") {
+        players = await part_repo
+          .knexObj()
+          .join(
+            TABLE_NAMES.PRIVATE_PROFILE,
+            "private_profiles.id",
+            "b_participant.user_id"
+          )
+          .leftJoin(TABLE_NAMES.ELO_RATING, {
+            "elo_ratings.user_id": "private_profiles.id",
+          })
+          .where({ tournament_id: bracketT.id })
+          .where({
+            "elo_ratings.game_id": tournament.game,
+          })
+          .select([
+            "private_profiles.firstName",
+            "private_profiles.lastName",
+            "private_profiles.id",
+            "elo_ratings.elo_rating",
+          ])
+          .whereNotNull("b_participant.user_id");
+  
+        pricePool =
+          Number(tournament?.bracketsMetadata?.playersLimit) *
+          Number(tournament?.settings?.entryFeeAmount);
+        currentPricePool = players.length
+          ? players.length * Number(tournament?.settings?.entryFeeAmount)
+          : 0;
+      } else {
+        players = await part_repo
+          .knexObj()
+          .select([
+            "private_profiles.firstName",
+            "private_profiles.lastName",
+            "private_profiles.id",
+            "elo_ratings.elo_rating",
+            "teams.elo_rating as team_elo_rating",
+            "teams.id as team_id",
+            "teams.name as team_name",
+          ])
+          .join(
+            TABLE_NAMES.B_TOURNAMENT,
+            "b_tournament.id",
+            "b_participant.tournament_id"
+          )
+          .join(
+            TABLE_NAMES.TOURNAMENT_INIVTES,
+            "tournament_invites.team_id",
+            "b_participant.team_id"
+          )
+          .join(TABLE_NAMES.TEAMS, "teams.id", "b_participant.team_id")
+          .where({ "b_participant.tournament_id": bracketT.id })
+          .join(
+            TABLE_NAMES.PRIVATE_PROFILE,
+            "private_profiles.id",
+            "tournament_invites.user_id"
+          )
+          .leftJoin(TABLE_NAMES.ELO_RATING, {
+            "elo_ratings.user_id": "private_profiles.id",
+            "elo_ratings.game_id": "teams.game_id",
+          })
+          .where("tournament_invites.tournament_id", tournamentId as string)
+          .whereNotNull("b_participant.team_id");
+  
+        const grp_team = _.groupBy(players, "team_name");
+        currentPricePool = players.length
+          ? players.length * Number(tournament?.settings?.entryFeeAmount)
+          : 0;
+        players = _.keys(grp_team).map((k) => {
+          return {
+            team_name: k,
+            team_id: grp_team[k][0].team_id,
+            ...grp_team[k],
+          };
+        });
+        const playerCount =
+          TOURNAMENT_TYPE_NUMBER[
+            tournament?.settings?.tournamentFormat || "1v1"
+          ];
+        pricePool =
+          Number(tournament?.bracketsMetadata?.playersLimit) *
+          playerCount *
+          Number(tournament?.settings?.entryFeeAmount);
+      }
+  
+      const connect = context.knexConnection;
+      const manager = new BracketsManager(
+        new BracketsCrud(connect as any) as any
+      );
+      const brackets = await manager.get.tournamentData(bracketT.id);
+      tournament = { ...tournament, brackets };
+      return {
+        ...tournament,
+        playerList: Object.values(_.groupBy(players, "id")).map((i) => i[0]),
+        pricingDetails: { pricePool, currentPricePool },
+      };
     }
-
-    const connect = context.knexConnection;
-    const manager = new BracketsManager(
-      new BracketsCrud(connect as any) as any
-    );
-    const brackets = await manager.get.tournamentData(bracketT.id);
-    tournament = { ...tournament, brackets };
-    return {
-      ...tournament,
-      playerList: players,
-      pricingDetails: { pricePool, currentPricePool },
-    };
+  } catch(er){
+    console.error('er -> ', er);
   }
 }
 
@@ -242,7 +246,10 @@ export async function listTournaments(
   );
 
   return {
-    data: { tournaments: result, total: tournaments.total },
+    data: {
+      tournaments: result.filter((i) => i !== null),
+      total: tournaments.total,
+    },
   } as any;
 }
 
@@ -277,7 +284,7 @@ export async function tournamentDetails(
     const bracketT = await bracketTournamentRepo.select({
       tournament_uuid: tournamentId,
     });
-
+    
     let players: any = [];
     let pricePool = 0;
     let currentPricePool = 0;
@@ -385,10 +392,11 @@ export async function tournamentDetails(
       const brackets = await manager.get.tournamentData(bracketT.id);
       tournament = { ...tournament, brackets };
     }
+    
     return {
       data: {
         ...tournament,
-        playerList: players,
+        playerList: Object.values(_.groupBy(players, "id")).map((i) => i[0]),
         pricingDetails: { pricePool, currentPricePool },
       },
     } as any;
@@ -495,6 +503,7 @@ export const fetchMatchDetails = async (
       .knexObj()
       .select(USER_FEILDS)
       .where({ "b_participant.id": match?.opponent1.id });
+
     const opponent2 = participantRepo
       .knexObj()
       .select(USER_FEILDS)
@@ -513,7 +522,6 @@ export const fetchMatchDetails = async (
         .where({
           "elo_ratings.game_id": tournament.game,
         })
-        .where({ "b_participant.is_checked_in": true });
       opponent2
         .join(
           "private_profiles",
@@ -526,10 +534,11 @@ export const fetchMatchDetails = async (
         .where({
           "elo_ratings.game_id": tournament.game,
         })
-        .where({ "b_participant.is_checked_in": true });
+        const o1 = await opponent1;
+        const o2 = await opponent2;
       return {
-        opponent1: await opponent1,
-        opponent2: await opponent2,
+        opponent1: o1,
+        opponent2: o2,
       };
     }
     opponent1
