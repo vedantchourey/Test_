@@ -26,11 +26,11 @@ const findCardType = (
   elo: string
 ): "silver" | "bronze" | "diamond" | "gold" | "ruby" => {
   const eloNum = parseInt(elo);
-  if (eloNum >= 0 && eloNum < 1000) return "bronze";
+  if (eloNum < 1000) return "bronze";
   if (eloNum >= 1000 && eloNum < 1250) return "silver";
   if (eloNum >= 1250 && eloNum < 1500) return "gold";
   if (eloNum >= 1500 && eloNum < 2000) return "diamond";
-  if (eloNum >= 2000 && eloNum < 1000000000) return "ruby";
+  if (eloNum >= 2000) return "ruby";
   return "bronze";
 };
 

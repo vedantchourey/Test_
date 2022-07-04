@@ -64,7 +64,8 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
             "profiles.avatarUrl",
             "private_profiles.won",
             "private_profiles.lost",
-            "team_players.is_owner"
+            "team_players.is_owner",
+            "elo_ratings.elo_rating as elo_rating"
           ])
           .whereIn(
             "teams.id",
@@ -106,6 +107,7 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
                                 won: data.won,
                                 lost: data.lost,
                                 is_owner: data.is_owner,
+                                elo_rating: data.elo_rating,
                             }
                         })
                     };

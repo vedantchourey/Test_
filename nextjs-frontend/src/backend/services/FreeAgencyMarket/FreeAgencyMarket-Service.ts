@@ -13,7 +13,8 @@ import { IEloRating } from "../database/models/i-elo-rating";
 
 const fetchEloRating = async (context: PerRequestContext, data: any): Promise<any> => {
   const famRepo = new CrudRepository<IEloRating>(context.knexConnection as Knex, TABLE_NAMES.ELO_RATING);
-  const result: any = await famRepo.knexObj().where("user_id", data.user_id).where("game_id", data.game_id);
+  const result: any = await famRepo.knexObj().where("user_id", data.user_id)
+.where("game_id", data.game_id);
   return ({
     ...data,
     elo_rating: result[0].elo_rating
