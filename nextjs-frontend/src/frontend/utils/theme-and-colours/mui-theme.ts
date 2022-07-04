@@ -27,6 +27,9 @@ const noobTheme = createTheme({
       main: 'rgba(255, 0, 0, 0.62)',
     },
     divider: '#B39DDB',
+    pinkButton:{
+      main:'#EF5DA8',
+    },
     common: {
       white: '#fff'
     }
