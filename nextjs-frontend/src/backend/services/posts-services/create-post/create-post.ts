@@ -6,6 +6,9 @@ import { isThereAnyError } from '../../../../common/utils/validation/validator';
 import { Knex } from 'knex';
 import { ServiceResponse } from '../../common/contracts/service-response';
 import { getLinkPreview } from '../../../../common/url-preview/url-preview';
+// import { CrudRepository } from '../../database/repositories/crud-repository';
+// import { IReporedPost } from '../../database/models/i-reported-post';
+// import { TABLE_NAMES } from '../../../../models/constants';
 
 interface PreviewResponse {
    url: string; 
@@ -81,3 +84,7 @@ export async function createPost(req: ICreatePostRequest, context: PerRequestCon
     } as unknown as ICreatePostResponse
   }
 }
+
+// export const reportPost = async (connection: Knex.Transaction, user: any, req: any) => {
+//     new CrudRepository<IReporedPost>(connection, TABLE_NAMES.REPORTED_POST);
+// }

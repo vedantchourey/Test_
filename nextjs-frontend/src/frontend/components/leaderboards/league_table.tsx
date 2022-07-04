@@ -158,7 +158,6 @@ const LeagueTableData: React.FC = () => {
                     <NoobRow sx={{ display: { sm: "flex", xs: "flex", md: "table-row" }, flexDirection: { sm: "column", xs: "column" } }} key={item.rank}>
                       <NoobCell>
                         <Typography>{item.rank}<sup>{item.subtext}</sup></Typography>
-
                       </NoobCell>
                       <NoobCell>
                         <Box alignItems="center" display="center">
