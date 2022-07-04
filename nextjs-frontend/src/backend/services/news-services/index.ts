@@ -4,6 +4,8 @@ import { editNews } from './edit-news/edit-news'
 import { likeNews } from './like-news/like-news'
 import { unlikeNews } from './unlike-news/unlike-news'
 import { deleteNews } from './delete-news/delete-news'
+import { NewsLikeCount } from './like-count/like-count'
+import { newsDetail } from './news-detail/news-detail'
 
 export {
     createNews,
@@ -11,5 +13,7 @@ export {
     editNews,
     likeNews,
     unlikeNews,
-    deleteNews
+    deleteNews,
+    NewsLikeCount,
+    newsDetail
 }

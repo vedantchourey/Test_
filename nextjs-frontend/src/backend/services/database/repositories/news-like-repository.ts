@@ -30,4 +30,12 @@ export class NewsLikesRepository extends BaseRepository<INewsLike> {
       .del();
   }
 
+  likeCount(like: INewsLike): Promise<any> {    
+    return this.entities()
+      .where({
+        newsId: like.newsId
+      })
+      .count();
+  }
+
 }

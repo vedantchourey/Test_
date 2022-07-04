@@ -22,7 +22,7 @@ export class NewsRepository extends BaseRepository<INews> {
     return ids[0] as string;
   }
 
-  async getNewsUsingId(id: string): Promise<INews | undefined> {
+  async getNewsUsingId(id: string): Promise<INews | any> {
     return await this.entities()
                .select('*')
                .where({id: id})

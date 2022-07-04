@@ -32,6 +32,7 @@ export interface Tournament {
   status: string;
   reason: string;
   reportedBy: TournamentReporter;
+  reason: string,
   createdAt: Date;
 }
 
