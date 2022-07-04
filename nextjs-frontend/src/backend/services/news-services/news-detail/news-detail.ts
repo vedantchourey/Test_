@@ -9,7 +9,7 @@ export const newsDetail = async (req: any, context: PerRequestContext): Promise<
   const Likerepository = new NewsLikesRepository(context.transaction as Knex.Transaction);
   const newsId = req?.newsId as string;
   const count = await Likerepository.likeCount({ newsId: newsId })
-  var detail = await repository.getNewsUsingId(newsId)
+  const detail = await repository.getNewsUsingId(newsId)
   
   detail.likeCount = count.length ? count[0].count : "0"
   return {

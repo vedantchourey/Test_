@@ -1,9 +1,6 @@
 import { useRouter } from 'next/router'
 import {
     Button,
-    Card,
-    CardContent,
-    CardMedia,
     Typography,
   } from "@mui/material";
   import { Box } from "@mui/system";
@@ -42,7 +39,9 @@ import {
           .catch(function (error) {
             console.error(error);
           });
-      } catch (err) {}
+      } catch (err) {
+        console.error(err)
+      }
     };
   
     const likeNews = async (): Promise<void> => {
@@ -60,7 +59,6 @@ import {
             }
           )
           .then((res) => {
-            console.log("res", res);
             if (res.status === 200) {
               setLiked(true);
             }
@@ -68,7 +66,9 @@ import {
           .catch(function (error) {
             console.error(error);
           });
-      } catch (err) {}
+      } catch (err) {
+        console.error(err);
+      }
     };
     const unLikeNews = async (): Promise<void> => {
       try {
@@ -80,7 +80,6 @@ import {
             headers: headers,
           })
           .then((res) => {
-            console.log("res", res);
             if (res.status === 200) {
               setLiked(false);
             }
@@ -88,7 +87,9 @@ import {
           .catch(function (error) {
             console.error(error);
           });
-      } catch (err) {}
+      } catch (err) {
+        console.error(err);
+      }
     };
   
     React.useEffect(() => {
@@ -150,7 +151,7 @@ import {
                       alignItems: "center",
                       color: liked ? "primary.main" : "",
                     }}
-                    onClick={() => {
+                    onClick={(): any => {
                       if (liked) {
                         unLikeNews();
                       } else {
@@ -163,8 +164,7 @@ import {
                     Like
                   </Box>
                   <Box sx={{ display: "flex", alignItems: "center", ml: 2 }} 
-                    onClick={() =>  navigator.clipboard.writeText(currentURL)}
-                  >
+                    onClick={(): any => navigator.clipboard.writeText(currentURL)}>
                     <ShareOutlinedIcon />
                     Share
                   </Box>
