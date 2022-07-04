@@ -22,7 +22,7 @@ const TournamentDashboardTable: React.FC = () => {
       .get("/api/tournaments/list")
       .then((res) => {
         if(res.data.data && res.data.data.tournaments){
-          setData(res.data.data.tournaments);
+          setData(res.data.data.tournaments.filter((i: any) => i !== null));
         }
         setLoading(false)
         
