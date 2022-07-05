@@ -161,7 +161,7 @@ const Home = (): JSX.Element => {
 
   return (
     <Fragment>
-      <Grid container>
+      <Grid container xs={12}>
         {isDesktop && (
           <>
             <Grid item xs={12} lg={9}>
@@ -191,28 +191,51 @@ const Home = (): JSX.Element => {
         )}
         {!isDesktop && (
           <>
-            <Grid item xs={12} lg={9}>
-              <Box className={styles.backgroundImgMobile}>
-                <div className={styles.bgImgContainer}>
-                  <Typography className={styles.text1Mobile}>
-                    PIXIEFREAK GAMING
-                  </Typography>
-                  <Typography className={styles.text2Mobile}>
-                    We organize eSports tournaments for professional and amateur
-                    gamers
-                  </Typography>
-                  <Button variant="text" className={styles.button1}>
-                    Read More
-                  </Button>
-                </div>
-              </Box>
-            </Grid>
-            <Grid item xs={12} lg={3}>
-              <div className={styles.imgContainer}>
+            <Grid item xs={12}>
+              <Typography
+                style={{
+                  marginTop: 42,
+                  color: "white",
+                  fontFamily: "Inter",
+                  fontStyle: "normal",
+                  fontWeight: "700",
+                  fontSize: 16,
+                  textTransform: "uppercase",
+                }}
+              >
+                PIXIEFREAK GAMING
+              </Typography>
+              <Typography
+                style={{
+                  marginTop: 16,
+                  color: "white",
+                  fontFamily: "Chakra Petch",
+                  fontStyle: "normal",
+                  fontWeight: "700",
+                  fontSize: 18,
+                  textTransform: "uppercase",
+                  marginBottom: 22,
+                }}
+              >
+                We organize eSports tournaments for professional and amateur
+                gamers
+              </Typography>
+              <Button variant="text" className={styles.button1}>
+                Read More
+              </Button>
+              <Grid
+                container
+                direction={"row"}
+                style={{
+                  justifyContent: "space-between",
+                  flexGrow: 1,
+                  marginTop: 42,
+                }}
+              >
                 <img src="/images/home1.png" className={styles.img1} />
                 <img src="/images/home2.png" className={styles.img1} />
                 <img src="/images/home3.png" className={styles.img1} />
-              </div>
+              </Grid>
             </Grid>
           </>
         )}
