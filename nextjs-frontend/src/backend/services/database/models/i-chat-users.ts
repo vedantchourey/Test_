@@ -7,4 +7,5 @@ export interface IChatUsers {
   channel_name: string;
   updated_at: string;
   last_message: string;
+  type: string;
 }

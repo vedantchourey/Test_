@@ -26,8 +26,24 @@ export async function signIn(request: SignInRequest): Promise<SupabaseFetchRespo
     email: request.email,
     password: request.password
   });
+  
   if (result.error != null) {
     return {isError: true, error: result.error}
+  }
+  const data = await frontendSupabase
+    .from("user_last_seen")
+    .select()
+    .eq("user_id", result.user?.id);
+
+  if (data.body?.length) {
+    await frontendSupabase
+      .from("user_last_seen")
+      .update({ last_seen: new Date() })
+      .eq("user_id", result.user?.id);
+  } else {
+    await frontendSupabase
+      .from("user_last_seen")
+      .insert({ user_id: result.user?.id, last_seen: new Date() });
   }
   return {isError: false, ...result.session as Session};
 }
