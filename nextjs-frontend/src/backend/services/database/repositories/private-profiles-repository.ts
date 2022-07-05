@@ -22,6 +22,7 @@ export class PrivateProfilesRepository extends BaseRepository<IPrivateProfile> {
                .select('countryId')
                .select('stateId')
                .select('agreeToTnc')
+               .select('withdrawAmount')
                .select('createdAt')
                .select('updatedAt')
                .where({id: id})

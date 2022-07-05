@@ -114,7 +114,7 @@ export const walletDetails = async (
     const transaction: ITransaction[] | undefined = await transactionRepo.find({
       walletId: wallet.id
     })
-    return { wallet, transaction }
+    return { wallet, transaction, user }
   } catch (ex) {
     if (connection?.rollback) connection?.rollback();
     return { errors: ["Something went wrong"] };

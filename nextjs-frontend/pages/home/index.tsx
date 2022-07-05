@@ -205,7 +205,10 @@ const Home = (): JSX.Element => {
                 <Button className={styles.viewAllButton}>VIEW All</Button>
               </Box>
               <TabPanel value="1" className={styles.postContainer} style={{flexDirection: "column"}}>
-                {_renderPosts()}
+                <Box display={"flex"}>
+                  {_renderPosts()}
+                </Box>
+                
               </TabPanel>
               <TabPanel value="2" className={styles.newsFeedContainer}>
                 <Grid container columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}>

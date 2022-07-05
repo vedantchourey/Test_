@@ -186,7 +186,7 @@ const Permissions: React.FC<PermissionProps> = ({ players, team }) => {
                             color={"white"}
                             variant="body2"
                           >
-                            {player.user_id === user?.id
+                            {player.user_id === team?.created_by
                               ? "Team Owner"
                               : "Team Member"}
                           </Typography>

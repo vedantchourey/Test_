@@ -29,7 +29,6 @@ const basicQueryParams = createQueryParamsMiddleWare({
         const { knexConnection } = context
         {
             const repository = new CrudRepository<IBMatch>(knexConnection as Knex, TABLE_NAMES.B_MATCH);
-
             const matchId = params["matchId"];
             const match: IBMatch = await repository.findById(matchId as string);
             if (match == null)

@@ -7,9 +7,11 @@ import {
   FormControl,
   FormControlLabel,
   Grid,
+  MenuItem,
   OutlinedInput,
   Radio,
   RadioGroup,
+  Select,
 } from "@mui/material";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormLabel from "../../../ui-components/formlabel";
@@ -225,13 +227,12 @@ const EliminateBracket = React.forwardRef<
                     control={
                       <Checkbox
                         checked={formik.values.thirdPlace}
-                        onChange={(): void =>{
+                        onChange={(): void => {
                           changeHandler(
                             "thirdPlace",
                             !formik.values.thirdPlace
-                          )
-                        }
-                        }
+                          );
+                        }}
                       />
                     }
                     label="Enable Third Place Match"
@@ -249,13 +250,33 @@ const EliminateBracket = React.forwardRef<
           <Grid item xs={6}>
             <FormControl fullWidth>
               <FormLabel label="Bracket Size(# of Players)"></FormLabel>
-              <TextField
-                type="number"
+              <Select
                 value={formik.values.playersLimit}
-                onChange={(event): void =>
+                onChange={(event: any): void =>
                   changeHandler("playersLimit", event.target.value)
                 }
-              />
+                fullWidth
+                sx={{ m: 1 }}
+              >
+                <MenuItem key={8} value={8}>
+                  8
+                </MenuItem>
+                <MenuItem key={16} value={16}>
+                  16
+                </MenuItem>
+                <MenuItem key={32} value={32}>
+                  32
+                </MenuItem>
+                <MenuItem key={64} value={64}>
+                  64
+                </MenuItem>
+                <MenuItem key={128} value={128}>
+                  128
+                </MenuItem>
+                <MenuItem key={256} value={256}>
+                  256
+                </MenuItem>
+              </Select>
               {formik.touched.playersLimit &&
               Boolean(formik.errors.playersLimit) ? (
                 <FormHelperText>{formik.errors.playersLimit}</FormHelperText>

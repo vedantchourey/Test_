@@ -113,11 +113,11 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
     } else if (formik.values.winner === match.opponent1.id) {
       op1Result = "win";
       op2Result = "lose";
-      op1Score = 10;
+      op1Score = 1;
     } else {
       op1Result = "lose";
       op2Result = "win";
-      op2Score = 10;
+      op2Score = 1;
     }
 
     const request = {

@@ -68,7 +68,7 @@ const CardDesktop: React.FC<any> = ({
                 {total_slots} TOTAL SLOTS
               </Grid>
               <Grid item md={3} lg={3} textAlign={"right"}>
-                {left_slots} LEFT SLOTS
+                {total_slots - left_slots} LEFT SLOTS
               </Grid>
             </Grid>
             <Grid container columnSpacing={2} mt={1}>
