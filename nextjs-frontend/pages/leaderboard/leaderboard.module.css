@@ -23,6 +23,11 @@
 	width: 42px;
 	height: 42px;
 }
+.scrollImage{
+	height: 90px;
+	width: 90px;
+	margin: 10px;
+}
 .text {
 	text-align: left;
 	margin-bottom: 20px;
