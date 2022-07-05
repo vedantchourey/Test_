@@ -1,7 +1,7 @@
-import Image from "next/image";
+// import Image from "next/image";
 import React from "react";
 // Third party packages
-import { Button, Grid, Typography } from "@mui/material";
+import { Avatar, Button, Grid, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 
 // styles
@@ -10,6 +10,7 @@ import { IMatchHubData } from "../../../../../pages/match-hub";
 import moment from "moment";
 import { userProfileSelector } from "../../../redux-store/authentication/authentication-selectors";
 import { useAppSelector } from "../../../redux-store/redux-store";
+import { frontendSupabase } from "../../../services/supabase-frontend-service";
 
 interface OpponentTileProps {
   onMatchHub?: (opponentData: IMatchHubData) => void;
@@ -22,7 +23,11 @@ const calculateDuration = (
   now: moment.Moment = moment()
 ): moment.Duration => moment.duration(eventTime.diff(now), "milliseconds");
 
-const OpponentTile: React.FC<OpponentTileProps> = ({ onMatchHub, data, userDashboard }) => {
+const OpponentTile: React.FC<OpponentTileProps> = ({
+  onMatchHub,
+  data,
+  userDashboard,
+}) => {
   const router = useRouter();
   const user = useAppSelector(userProfileSelector);
 
@@ -67,30 +72,48 @@ const OpponentTile: React.FC<OpponentTileProps> = ({ onMatchHub, data, userDashb
   const matchHubHandler = (): void => {
     if (userDashboard) {
       router.push(`/match-hub`);
-      return
+      return;
     }
     if (onMatchHub) {
       onMatchHub(data);
     }
   };
-  
-  let opponent_name = ""
-  if(data.opponent1.user_id === user?.id){
-    opponent_name = data.opponent2.user_id ? data.opponent2.firstName + " " + data.opponent2.lastName : "N/A"
-  } else{
-    opponent_name = data.opponent1.user_id ? data.opponent1.firstName + " " + data.opponent1.lastName : "N/A"
+
+  let opponent_name = "";
+  let opponent_data: any = {};
+  if (data.opponent1.user_id === user?.id) {
+    opponent_name = data.opponent2.user_id
+      ? data.opponent2.firstName + " " + data.opponent2.lastName
+      : "N/A";
+    opponent_data = data.opponent2;
+  } else {
+    opponent_name = data.opponent1.user_id
+      ? data.opponent1.firstName + " " + data.opponent1.lastName
+      : "N/A";
+    opponent_data = data.opponent1;
   }
+
+  const opponentImage = opponent_data.avatarUrl
+    ? frontendSupabase.storage
+        .from("public-files")
+        .getPublicUrl(opponent_data.avatarUrl).publicURL
+    : undefined;
 
   return (
     <Grid container className={styles.opponentTileContainer}>
       <Grid item xs={2}>
-        <Typography className={styles.opponentTileTitle} textAlign={"left"}>Opponent:</Typography>
+        <Typography className={styles.opponentTileTitle} textAlign={"left"}>
+          Opponent:
+        </Typography>
         <div style={{ display: "flex", alignItems: "center" }}>
-          <Image src="/images/legand-club.png" width={32} height={32} />
+          {/* <Image src="/images/legand-club.png" width={32} height={32} /> */}
+          <Avatar src={opponentImage || "/images/legand-club.png"} alt={opponent_name} />
           <span
             style={{ marginLeft: "15px" }}
             className={styles.opponentTileValue}
-          >{opponent_name}</span>
+          >
+            {opponent_name}
+          </span>
         </div>
       </Grid>
       <Grid item xs={3}>
