@@ -321,7 +321,7 @@ export default function Chat(props: {
               {c.type === "Support" && "Support"}
             </Typography>
             {c.values.map((i) => {
-              const findTeam = teamData.find((t) => t.id === i.other_user);
+              const findTeam = teamData?.find((t) => t.id === i.other_user);
               const teamLogo = findTeam?.teamLogo
                 ? (frontendSupabase.storage
                     .from("public-files")
@@ -369,9 +369,6 @@ export default function Chat(props: {
               borderRightWidth: 1,
             }}
           >
-            <Typography variant="h5" m={1} textAlign="left">
-              Friends
-            </Typography>
             {renderChatList()}
           </Box>
         ) : null
@@ -428,46 +425,49 @@ export default function Chat(props: {
           </Box>
         )
       )}
-      <Box
-        flex={props.smallChat ? 0 : 0.25}
-        style={{
-          borderLeftStyle: "solid",
-          borderLeftColor: "rgba(255,255,255,0.1)",
-          borderLeftWidth: 1,
-        }}
-      >
-        <Typography variant={"h6"} m={2}>
-          Add Members
-        </Typography>
+
+      {!props.smallChat && (
         <Box
-          sx={{
-            marginLeft: 1,
-            marginRight: 1,
-            backgroundColor: "rgba(255,255,255,0.08)",
-            alignItems: "center",
-            alignSelf: "center",
-            display: "flex",
-            borderRadius: 3,
-            paddingRight: 2,
+          flex={props.smallChat ? 0 : 0.25}
+          style={{
+            borderLeftStyle: "solid",
+            borderLeftColor: "rgba(255,255,255,0.1)",
+            borderLeftWidth: 1,
           }}
         >
-          <TextField
-            placeholder="Search anything..."
-            variant="standard"
-            InputProps={{
-              disableUnderline: true,
+          <Typography variant={"h6"} m={2}>
+            Add Members
+          </Typography>
+          <Box
+            sx={{
+              marginLeft: 1,
+              marginRight: 1,
+              backgroundColor: "rgba(255,255,255,0.08)",
+              alignItems: "center",
+              alignSelf: "center",
+              display: "flex",
+              borderRadius: 3,
+              paddingRight: 2,
             }}
-            margin="none"
-            sx={{ marginBottom: 0, padding: 1, flex: 1 }}
-            onChange={(e): void => {
-              searchByUserName(e.target.value);
-            }}
-            id="userSearchInput"
-          />
-          <SearchIcon color="primary" />
+          >
+            <TextField
+              placeholder="Search anything..."
+              variant="standard"
+              InputProps={{
+                disableUnderline: true,
+              }}
+              margin="none"
+              sx={{ marginBottom: 0, padding: 1, flex: 1 }}
+              onChange={(e): void => {
+                searchByUserName(e.target.value);
+              }}
+              id="userSearchInput"
+            />
+            <SearchIcon color="primary" />
+          </Box>
+          {renderResults()}
         </Box>
-        {renderResults()}
-      </Box>
+      )}
     </Box>
   );
 }
