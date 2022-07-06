@@ -98,7 +98,7 @@ export default function MobileDrawer(): JSX.Element {
         <IconButton className={styles.bottomHeaderIcons} >
           <Icon><NotificationsOutlinedIcon /></Icon>
         </IconButton>
-        <IconButton className={styles.bottomHeaderIcons} >
+        <IconButton className={styles.bottomHeaderIcons} onClick={(): Promise<boolean> => router.push('/chat')}>
           <Icon><ChatBubbleOutlineOutlinedIcon /></Icon>
         </IconButton>
       </div>
