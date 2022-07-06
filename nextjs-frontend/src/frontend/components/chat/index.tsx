@@ -1,4 +1,16 @@
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  CircularProgress,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemText,
+  TextField,
+  Typography,
+} from "@mui/material";
 import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
 import { IChatUsers } from "../../../backend/services/database/models/i-chat-users";
@@ -13,8 +25,17 @@ import axios from "axios";
 import { ParsedUrlQuery } from "querystring";
 import { useRouter } from "next/router";
 import { v4 } from "uuid";
+import styles from "../header/logged-in-user-menu.module.css";
+import SearchIcon from "@mui/icons-material/Search";
+import _ from "lodash";
+import { searchPeopleByText } from "../../service-clients/search-service-client";
+import { ISearchPeopleByUsernameResponse } from "../../service-clients/messages/i-search";
+import frontendConfig from "../../utils/config/front-end-config";
 
-export default function Chat(props: { smallChat: boolean, social?: boolean }): JSX.Element {
+export default function Chat(props: {
+  smallChat: boolean;
+  social?: boolean;
+}): JSX.Element {
   const router = useRouter();
   const query: ParsedUrlQuery = router.query;
   const otheruser: string | string[] | undefined = query.user;
@@ -25,21 +46,27 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
   const [currentChat, setCurrentChat] = useState<string | null>();
   const [currentChatName, setCurrentChatName] = useState("");
   const [supportChatChannel, setSupportChatChannel] = useState<boolean>(false);
-  const [teamData, setTeamData] = useState<any[]>([])
+  const [teamData, setTeamData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [userList, setUserList] = useState<ISearchPeopleByUsernameResponse[]>(
+    []
+  );
+  const [isFetching, setIsFetching] = useState(false);
 
-  const checkChannel = async (): Promise<any> => {
-    if (otheruser && name) {
+  const checkChannel = async (oUser?: string, oName?: string): Promise<any> => {
+    const _otheruser = oUser || otheruser;
+    const _name = oName || name;
+    if (_otheruser && _name) {
       const res = await frontendSupabase
         .from("chat_users")
         .select()
         .eq("user_id", user?.id || "")
-        .eq("other_user", otheruser);
+        .eq("other_user", _otheruser);
       if (res.data?.length) {
         setCurrentChat(res.data?.[0]?.channel_id || null);
         setCurrentChatName(name as string);
       } else {
-        createNewChat(otheruser as string, name as string);
+        createNewChat(_otheruser as string, _name as string);
       }
     }
   };
@@ -62,10 +89,16 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
   };
 
   const fetchChannels = async (): Promise<void> => {
-    const res = await frontendSupabase
-      .from("chat_users")
-      .select()
-      .eq("user_id", user?.userRoles[0] === "noob-admin" ? "support" : user?.id);
+    const query = frontendSupabase.from("chat_users").select();
+
+    if (user?.userRoles[0] === "noob-admin")
+      query.or(`user_id.eq.${user?.id},user_id.eq.support`);
+    else {
+      query.eq("user_id", user?.id);
+    }
+
+    const res = await query;
+
     const data: any = {};
 
     if (!res.error) {
@@ -94,9 +127,8 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
     }
   };
 
-
   useEffect(() => {
-    if(user){
+    if (user) {
       fetchSupportChannel();
       fetchChannels();
       checkChannel();
@@ -119,6 +151,54 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
     };
   }, []);
 
+  const renderResults = (): JSX.Element => {
+    if (isFetching) {
+      return (
+        <List
+          // className={styles.searchListLoder}
+          sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+        >
+          <CircularProgress />
+        </List>
+      );
+    } else if (!isFetching && userList.length) {
+      return (
+        <List sx={{ width: "100%", maxWidth: 360 }}>
+          {userList.map((data, i) => (
+            <ListItem key={Date.now() + i}>
+              <ListItemButton
+                onClick={
+                  (): unknown => checkChannel(data.id, data.username)
+                }
+                sx={{ padding: "2px 18px", my: 1 }}
+              >
+                <ListItemAvatar>
+                  <Avatar
+                    sx={{ width: 35, height: 35 }}
+                    alt="profile image"
+                    src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${data.avatarUrl}`}
+                  >
+                    {data.username.split("")[0].toUpperCase()}
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText className={styles.listText}>
+                  <Typography>@{data.username}</Typography>
+                </ListItemText>
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      );
+    } 
+      return (
+        <></>
+        /*  <List className={styles.searchListLoder} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+           <h1>No data found</h1>
+         </List> */
+      );
+    
+  };
+
   const chatsList: IChatUsers[] = Object.values(chats).sort(
     (a: IChatUsers, b: IChatUsers) => {
       return (
@@ -128,8 +208,11 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
     }
   );
 
-  const createNewChat = async (other_user: string, name: string): Promise<any> => {
-    setLoading(true)
+  const createNewChat = async (
+    other_user: string,
+    name: string
+  ): Promise<any> => {
+    setLoading(true);
     const channel_id = v4();
     const res = await frontendSupabase.from("chat_users").insert({
       channel_id,
@@ -139,7 +222,7 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
       user_name: user?.username,
       channel_type: "one-to-one",
     });
-    if(res.data?.length) setCurrentChat(channel_id)
+    if (res.data?.length) setCurrentChat(channel_id);
     setCurrentChatName(name);
     await frontendSupabase.from("chat_users").insert({
       channel_id,
@@ -166,10 +249,9 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
     fetchChannels();
     setLoading(false);
   };
-  
 
   const createSupportChat = async (): Promise<any> => {
-    setLoading(true)
+    setLoading(true);
     await frontendSupabase.from("chat_users").insert({
       channel_id: `${user?.id}_support`,
       user_id: user?.id || "",
@@ -177,6 +259,7 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
       channel_name: "support",
       user_name: user?.username,
       channel_type: "one-to-one",
+      type: "support",
     });
     await frontendSupabase.from("chat_users").insert({
       channel_id: `${user?.id}_support`,
@@ -185,6 +268,7 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
       channel_name: user?.username,
       user_name: "support",
       channel_type: "one-to-one",
+      type: "support",
     });
     await frontendSupabase.from("messages").insert({
       channel_id: `${user?.id}_support`,
@@ -204,33 +288,65 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
     setLoading(false);
   };
 
+  async function searchByUserName(username: string): Promise<void> {
+    setIsFetching(true);
+    setUserList([]);
+    if (!username) {
+      setIsFetching(false);
+      return;
+    }
+    const response = await searchPeopleByText({ search: username });
+    if (response.length) setUserList(response);
+    setIsFetching(false);
+  }
+
   const renderChatList = (): JSX.Element => {
+    const chatByGroup = _(chatsList)
+      .groupBy("channel_type")
+      .map(function (items, type) {
+        return {
+          type,
+          values: items,
+        };
+      })
+      .value();
     return (
       <>
-        {chatsList.map((i) => {
-          const findTeam = teamData.find((t) => t.id === i.other_user);
-          const teamLogo = findTeam?.teamLogo
-                  ? frontendSupabase.storage.from("public-files").getPublicUrl(findTeam.teamLogo)
-                      .publicURL as string
-                  : "/images/16276393842661.png";
-          return (
-            <ChatCard
-              key={i.id}
-              image={teamLogo}
-              name={i.channel_name}
-              otherUser={i.other_user}
-              message={i.last_message}
-              type={i.type}
-              onClick={(): void => {
-                setCurrentChat(null);
-                setTimeout((): void => {
-                  setCurrentChatName(i.channel_name);
-                  setCurrentChat(i.channel_id);
-                }, 200);
-              }}
-            />
-          );
-        })}
+        {chatByGroup.map((c) => (
+          <>
+            <Typography variant={"h6"} m={1}>
+              {c.type === "team" && "Team"}
+              {c.type === "one-to-one" && "Friends"}
+              {c.type === "group" && "Groups"}
+              {c.type === "Support" && "Support"}
+            </Typography>
+            {c.values.map((i) => {
+              const findTeam = teamData.find((t) => t.id === i.other_user);
+              const teamLogo = findTeam?.teamLogo
+                ? (frontendSupabase.storage
+                    .from("public-files")
+                    .getPublicUrl(findTeam.teamLogo).publicURL as string)
+                : "/images/16276393842661.png";
+              return (
+                <ChatCard
+                  key={i.id}
+                  image={teamLogo}
+                  name={i.channel_name}
+                  otherUser={i.other_user}
+                  message={i.last_message}
+                  type={i.type}
+                  onClick={(): void => {
+                    setCurrentChat(null);
+                    setTimeout((): void => {
+                      setCurrentChatName(i.channel_name);
+                      setCurrentChat(i.channel_id);
+                    }, 200);
+                  }}
+                />
+              );
+            })}
+          </>
+        ))}
       </>
     );
   };
@@ -279,11 +395,11 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
               </Button>
             </Box>
           ) : null}
-          <Typography variant="h5" m={1} textAlign="left">
+          {/* <Typography variant="h5" m={1} textAlign="left">
             {user?.userRoles[0] === "noob-admin"
               ? "Support request"
               : "Friends"}
-          </Typography>
+          </Typography> */}
           {renderChatList()}
         </Box>
       )}
@@ -301,7 +417,7 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
         !props.smallChat && (
           <Box
             display={"flex"}
-            flex={0.75}
+            flex={0.5}
             alignItems={"center"}
             justifyContent={"center"}
             height={"100%"}
@@ -312,6 +428,46 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
           </Box>
         )
       )}
+      <Box
+        flex={props.smallChat ? 0 : 0.25}
+        style={{
+          borderLeftStyle: "solid",
+          borderLeftColor: "rgba(255,255,255,0.1)",
+          borderLeftWidth: 1,
+        }}
+      >
+        <Typography variant={"h6"} m={2}>
+          Add Members
+        </Typography>
+        <Box
+          sx={{
+            marginLeft: 1,
+            marginRight: 1,
+            backgroundColor: "rgba(255,255,255,0.08)",
+            alignItems: "center",
+            alignSelf: "center",
+            display: "flex",
+            borderRadius: 3,
+            paddingRight: 2,
+          }}
+        >
+          <TextField
+            placeholder="Search anything..."
+            variant="standard"
+            InputProps={{
+              disableUnderline: true,
+            }}
+            margin="none"
+            sx={{ marginBottom: 0, padding: 1, flex: 1 }}
+            onChange={(e): void => {
+              searchByUserName(e.target.value);
+            }}
+            id="userSearchInput"
+          />
+          <SearchIcon color="primary" />
+        </Box>
+        {renderResults()}
+      </Box>
     </Box>
   );
 }

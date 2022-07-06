@@ -71,7 +71,6 @@ export default function ChatCard(props: IChatCard): JSX.Element {
               minHeight: 12,
               minWidth: 12,
               borderRadius: 20,
-              position: "absolute",
               marginLeft: 38,
               marginTop: -12
             }}
