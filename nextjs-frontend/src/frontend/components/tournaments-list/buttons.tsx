@@ -10,16 +10,22 @@ const ButtonComp: React.FC<any> = ({ formats = [], setFormat, format }) => {
       {isMobile ? (
         <>
           <Grid item xs={6} lg={2} md={2}>
-            <Select value={"teamsize"} fullWidth={true}>
-              <MenuItem value="teamsize">Team Size</MenuItem>
-              {formats &&
-                formats.map((game: any, i: number) => {
-                  return (
-                    <MenuItem value={game.id} key={i}>
-                      {game.displayName}
-                    </MenuItem>
-                  );
-                })}
+            <Select
+              value={format || "Team Size"}
+              onChange={(e): any =>
+                setFormat(e.target.value === "Team Size" ? "" : e.target.value)
+              }
+              placeholder={"Select Team size"}
+              fullWidth={true}
+            >
+              <MenuItem value="Team Size">Team Size</MenuItem>
+              {(formats || []).map((format: any, i: number) => {
+                return (
+                  <MenuItem value={format} key={i}>
+                    {format}
+                  </MenuItem>
+                );
+              })}
             </Select>
           </Grid>
           {/* <Grid item xs={6} lg={2} md={2}>
