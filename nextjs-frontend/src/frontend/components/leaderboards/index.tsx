@@ -1,16 +1,12 @@
-import {
-  Box
-} from "@mui/material";
+import { Box } from "@mui/material";
 import React from "react";
-import commonStyles from '../../styles/common.module.css';
+import commonStyles from "../../styles/common.module.css";
 import NoobPage from "../page/noob-page";
 import LeaderBoardCard from "../ui-components/leaderboard";
 import Heading from "../ui-components/typography/heading";
 import LeagueTableData from "./league_table";
 
-
 const LeaderBoard: React.FC = () => {
-
   return (
     <NoobPage
       title="League Table"
@@ -23,7 +19,8 @@ const LeaderBoard: React.FC = () => {
           <Heading divider heading={"League Table"} />
         </div>
         <Box marginY={2}>
-          <LeagueTableData /></Box>
+          <LeagueTableData />
+        </Box>
       </LeaderBoardCard>
     </NoobPage>
   );

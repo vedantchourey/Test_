@@ -202,10 +202,10 @@ const Leaderboard = (): JSX.Element => {
                     },
                   }}
                 >
-                  {leaderboardgamedata.map((item) => (
+                  {leaderboardgamedata.slice(3, leaderboardgamedata.length).map((item, idx) => (
                     <TableRow key={item.id}>
                       <TableCell align="center" component="th" scope="row">
-                        {item.id}
+                        {idx+3}
                         <sup>th</sup>
                       </TableCell>
                       <TableCell>

@@ -11,6 +11,7 @@ import { isLoggedInSelector, userProfileSelector } from "../../redux-store/authe
 import { screenWidthSelector } from "../../redux-store/layout/layout-selectors";
 import { useAppSelector } from "../../redux-store/redux-store";
 import { signOut } from "../../service-clients/auth-service-client";
+import { frontendSupabase } from "../../services/supabase-frontend-service";
 import LoginModal from "../auth/login-modal/login-modal";
 import TwitchIcon from "../icons/twitch-icon";
 import YoutubeIcon from "../icons/youtube-icon";
@@ -69,6 +70,21 @@ export default function DrawerLeft(): JSX.Element {
   const screenWidth = useAppSelector(screenWidthSelector);
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const user = useAppSelector(userProfileSelector);
+
+  React.useEffect(() => {
+    let timeout;
+    if (user?.id) {
+      timeout = setInterval(async () => {
+        await frontendSupabase
+          .from("user_last_seen")
+          .update({ last_seen: new Date() })
+          .eq("user_id", user.id);
+      }, 1000 * 60); 
+    }else if(timeout){
+        clearInterval(timeout)
+      }
+  }, [user])
+  
 
   // const username = useAppSelector(userNameSelector);
   // const wallet = useAppSelector(walletDetaislSelector);

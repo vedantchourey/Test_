@@ -64,6 +64,8 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
             "profiles.avatarUrl",
             "private_profiles.won",
             "private_profiles.lost",
+            "team_players.is_owner",
+            "elo_ratings.elo_rating as elo_rating"
           ])
           .whereIn(
             "teams.id",
@@ -88,11 +90,12 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
             result: _(data).groupBy("name")
                 .map(function (items, name) {
                     const players = Object.values(_.groupBy(items, "user_id")).map((i) => i[0]);
+                    const owner = players.find((p) => p.is_owner === true);
                     return {
                         id: items[0].id,
                         name,
                         teamLogo: items[0].teamLogo,
-                        created_by: items[0].created_by,
+                        created_by: owner.user_id,
                         teamCover: items[0].teamCover,
                         players: players.map((data) => {
                             return {
@@ -103,6 +106,8 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
                                 balance: data.balance,
                                 won: data.won,
                                 lost: data.lost,
+                                is_owner: data.is_owner,
+                                elo_rating: data.elo_rating,
                             }
                         })
                     };

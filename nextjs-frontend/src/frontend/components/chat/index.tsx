@@ -29,17 +29,19 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
   const [loading, setLoading] = useState(false);
 
   const checkChannel = async (): Promise<any> => {
-    const res = await frontendSupabase
-      .from("chat_users")
-      .select()
-      .eq("user_id", user?.id || "")
-      .eq("other_user", otheruser);
+    if (otheruser && name) {
+      const res = await frontendSupabase
+        .from("chat_users")
+        .select()
+        .eq("user_id", user?.id || "")
+        .eq("other_user", otheruser);
       if (res.data?.length) {
         setCurrentChat(res.data?.[0]?.channel_id || null);
         setCurrentChatName(name as string);
       } else {
         createNewChat(otheruser as string, name as string);
       }
+    }
   };
 
   const chatRef = useRef(chats);
@@ -115,7 +117,6 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
     return (): any => {
       chatListener.unsubscribe();
     };
-  
   }, []);
 
   const chatsList: IChatUsers[] = Object.values(chats).sort(
@@ -136,6 +137,7 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
       other_user,
       channel_name: name,
       user_name: user?.username,
+      channel_type: "one-to-one",
     });
     if(res.data?.length) setCurrentChat(channel_id)
     setCurrentChatName(name);
@@ -145,6 +147,7 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
       other_user: user?.id || "",
       channel_name: user?.username,
       user_name: "support",
+      channel_type: "one-to-one",
     });
     await frontendSupabase.from("messages").insert({
       channel_id,
@@ -173,6 +176,7 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
       other_user: "support",
       channel_name: "support",
       user_name: user?.username,
+      channel_type: "one-to-one",
     });
     await frontendSupabase.from("chat_users").insert({
       channel_id: `${user?.id}_support`,
@@ -180,6 +184,7 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
       other_user: user?.id || "",
       channel_name: user?.username,
       user_name: "support",
+      channel_type: "one-to-one",
     });
     await frontendSupabase.from("messages").insert({
       channel_id: `${user?.id}_support`,
@@ -213,7 +218,9 @@ export default function Chat(props: { smallChat: boolean, social?: boolean }): J
               key={i.id}
               image={teamLogo}
               name={i.channel_name}
+              otherUser={i.other_user}
               message={i.last_message}
+              type={i.type}
               onClick={(): void => {
                 setCurrentChat(null);
                 setTimeout((): void => {

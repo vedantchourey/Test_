@@ -15,7 +15,7 @@
 }
 
 .credit_font{
-  background: -webkit-linear-gradient(#EF507E, #F09633);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  /* background: -webkit-linear-gradient(#EF507E, #F09633); */
+  color: #ffffff;
+  font-weight: bold;
 }
