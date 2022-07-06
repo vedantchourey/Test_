@@ -199,6 +199,7 @@ const PostCard = (props: IProps): JSX.Element => {
                     fullWidth
                     className={styles.postCardOptionsBtn}
                     sx={{ color: "red", borderRadius: "0px" }}
+                    onClick={(): any => navigator.clipboard.writeText(`http://localhost:3000/social/${values.id}`)}
                   >
                     <img src="/icons/copy.svg" alt="icon" />
                     Copy Link
