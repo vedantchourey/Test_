@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Card, CardActions, CardContent, IconButton, Modal, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Slider, { Settings } from "react-slick";
@@ -8,6 +8,8 @@ import "slick-carousel/slick/slick.css";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import { getAuthHeader } from "../../../utils/headers";
 import Member, { MemberProp } from "../../team/members/member";
+import CloseIcon from "@mui/icons-material/Close";
+import Image from "@mui/icons-material/Image";
 
 export const NoobButton = styled(Button)(() => ({
   color: "white",
@@ -41,6 +43,7 @@ const settings: Settings = {
 const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any }> = ({ teamId, params }) => {
   const [data, setData] = useState<MemberProp[] | []>([]);
   const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const fetchUsers = async (): Promise<void> => {
     const headers = await getAuthHeader();
@@ -63,6 +66,94 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
       setData(players);
     });
   };
+
+  const OfferModal = () => {
+    return (
+      <Modal
+        open={isModalOpen}
+        style={{ position: 'absolute', top: '456px', left: '399px' }}
+        onClose={(): void => {
+          setIsModalOpen(false);
+        }}
+      >
+      <Card sx={{ width: '641px', height: '498px', marginHorizontal: 30 }}>
+      <CardContent>
+        <CardContent>
+        <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+        <Typography>
+          Send offer to Recruite
+        </Typography>
+        <IconButton onClick={() => setIsModalOpen(false)}>
+          <img src='/icons/close.svg' alt='icon'/>
+        </IconButton>
+        </Box>
+        </CardContent>
+
+      <CardContent>
+      <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
+        <img src="/images/team1.png" style={{ width: 50, height: 50, marginRight: 20, resize: 'both' }}/>
+        <Box>
+          <Typography>
+            Legend Club
+          </Typography>
+      </Box>
+      </Box>
+      </CardContent>
+
+
+      <CardContent>
+        <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+        <Typography>
+          Your message
+        </Typography>
+        <Typography color={'GrayText'}>
+          Max 100 words
+        </Typography>
+        </Box>
+
+        <Box>
+        <TextField
+          placeholder="Type here..."
+          fullWidth={true}
+          multiline={true}
+          rows={7}
+        />
+        </Box>
+      </CardContent>
+
+      <Box display={'flex'} alignItems={'center'} justifyContent={'space-around'}>
+        <Button
+          variant="contained"
+          style={{
+            color: "white",
+            padding: "10px 10px",
+            width: "230px",
+          }}
+          onClick={(): any =>
+            null
+          }
+        >
+          Cancel Offer
+        </Button>
+        <Button
+          style={{
+            background: "linear-gradient(180deg, #EF507E 0%, #F09633 100%)",
+            color: "white",
+            padding: "10px 10px",
+            width: "230px",
+          }}
+          onClick={(): void => {
+            null
+          }}
+        >
+          Send Offer
+        </Button>
+      </Box>
+      </CardContent>
+    </Card>
+      </Modal>
+    )
+  }
 
   const addToWatchList = async (playerId: string): Promise<void> => {
     setLoading(true);
@@ -106,6 +197,7 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
 
   return (
     <React.Fragment>
+      <OfferModal/>
       <Box>
         <Box marginY={2} width={"70vw"}>
           <Slider {...settings}>
@@ -126,7 +218,7 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
                         + Add to Watch List
                       </NoobButton>
                     </Box>
-                    {teamId && (
+                    {(
                       <Box textAlign="center" mt={2} mb={12}>
                         <NoobButton
                           variant="contained"
@@ -134,10 +226,10 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
                           style={{ backgroundColor: "#F09633" }}
                           fullWidth={true}
                           onClick={(): void => {
-                            sendInvitation(player.id || "");
+                            setIsModalOpen(true);
                           }}
                         >
-                          Send Offer to Recurit
+                          Send Offer to Recruit
                         </NoobButton>
                       </Box>
                     )}
