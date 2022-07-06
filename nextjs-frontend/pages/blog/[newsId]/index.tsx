@@ -106,7 +106,7 @@ import {
           description: "Noob Storm home page",
         }}
       >
-        <>  
+        <>
           {currentNews && (
             <Box textAlign={"left"}>
               <Button onClick={(): any => setCurrentNews(null)}>Back</Button>
@@ -159,20 +159,32 @@ import {
                       }
                     }}
                   >
-                    <Box mr={1}>{currentNews.likeCount} </Box>
+                    <Box mr={1}>
+                      {liked
+                        ? parseInt(currentNews.likeCount) + 1
+                        : currentNews.likeCount}{" "}
+                    </Box>
                     <ThumbUpOffAltIcon />
                     Like
                   </Box>
-                  <Box sx={{ display: "flex", alignItems: "center", ml: 2 }} 
-                    onClick={(): any => navigator.clipboard.writeText(currentURL)}>
+                  <Box
+                    sx={{ display: "flex", alignItems: "center", ml: 2 }}
+                    onClick={(): any =>
+                      navigator.clipboard.writeText(currentURL)
+                    }
+                  >
                     <ShareOutlinedIcon />
                     Share
                   </Box>
                 </Box>
               </Box>
-  
+
               <div
-                style={{ fontFamily: "Inter", textAlign: "left", marginTop: 20 }}
+                style={{
+                  fontFamily: "Inter",
+                  textAlign: "left",
+                  marginTop: 20,
+                }}
               >
                 {ReactHtmlParser(currentNews.description)}
               </div>

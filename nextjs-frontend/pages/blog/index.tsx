@@ -108,7 +108,7 @@ export default function News(): JSX.Element {
               <Card
                 sx={{ maxWidth: 345, m: 2 }}
                 key={key}
-                onClick={(): any => router.push(`/news/${i.id}`)}
+                onClick={(): any => router.push(`/blog/${i.id}`)}
                 // onClick={(): any => setCurrentNews(i)}
               >
                 <CardMedia
