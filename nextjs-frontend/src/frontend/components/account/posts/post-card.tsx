@@ -19,6 +19,8 @@ import { useAppSelector } from '../../../redux-store/redux-store';
 import { userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
 import Image from '../../../components/utils/supabase-image';
 import config from '../../../utils/config/front-end-config';
+import axios from "axios";
+import { getAuthHeader } from "../../../utils/headers";
 
 interface IProps {
   data: IPostsResponse;
@@ -113,6 +115,18 @@ const PostCard = (props: IProps): JSX.Element => {
     setIsDeleted(true);
   }
 
+  const reportPost = async (): Promise<void> => {
+    const headers = await getAuthHeader();
+    axios
+      .post("/api/report-post/reportcreate",{post_id: values.id}, { headers: headers })
+      .then((res) => {
+        // setData(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   if (isDeleted) return <></>;
 
   return (
@@ -177,6 +191,7 @@ const PostCard = (props: IProps): JSX.Element => {
                       borderTopLeftRadius: "5px !important",
                       borderTopRightRadius: "5px !important",
                     }}
+                    onClick={(): any => reportPost()}
                   >
                     <img src="/icons/error.svg" alt="icon" />
                     Report Post

@@ -19,9 +19,9 @@ export default createNextJsRouteHandler({
       context: PerRequestContext
     ) => {
       const reportRepo = new reportRepository(context.transaction as Knex.Transaction);
-      const repostId = req.query?.repostId as string;
-      const result = await reportRepo.delete(repostId);
-      res.status(result ? 400 : 200).json({data: "deleted successfully"});
+      const reportId = req.query?.reportId as string;
+      const result = await reportRepo.delete(reportId);
+      res.status(result ? 200 : 400).json({data: "deleted successfully"});
     },
     preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],
     postHooks: [commitOrRollBackTransactionMiddleWare],

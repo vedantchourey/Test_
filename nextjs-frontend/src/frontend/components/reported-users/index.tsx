@@ -14,7 +14,7 @@ const ReportedUsers: React.FC = () => {
   const fetchData = async (): Promise<void> => {
     const headers = await getAuthHeader();
     axios
-      .get("/api/news/newslist", { headers: headers })
+      .get("/api/report-post/reportlist", { headers: headers })
       .then((res) => {
         setData(res.data);
       })
@@ -27,13 +27,13 @@ const ReportedUsers: React.FC = () => {
     fetchData();
   }, []);
 
-const deletnews = async (newsId: string): Promise<void> => {
+const deletreport = async (reportId: string): Promise<void> => {
   try {
-    const endpoint = "/api/news/deleteNews";
+    const endpoint = "/api/report-post/reportdelete";
     const headers = await getAuthHeader();
     axios
       .get(endpoint, {
-        params: { newsId: newsId },
+        params: { reportId: reportId },
         headers: headers,
       })
       .then((res) => {
@@ -59,16 +59,16 @@ const deletnews = async (newsId: string): Promise<void> => {
       width: "10%",
     },
     {
-      title: "Title",
+      title: "Post",
       renderCell: (row): any => {
-        return row.title;
+        return row.post_id;
       },
       width: "10%",
     },
     {
       title: "Author Name",
       renderCell: (row): any => {
-        return row.author;
+        return row.reported_by;
       },
       width: "10%",
     },
@@ -82,7 +82,7 @@ const deletnews = async (newsId: string): Promise<void> => {
     {
       title: "Action",
       renderCell: (row): any => {
-        return <DeleteOutlinedIcon onClick={(): any => deletnews(row.id)}/>;
+        return <DeleteOutlinedIcon onClick={(): any => deletreport(row.id)}/>;
       },
       width: "5%",
     },
@@ -90,7 +90,7 @@ const deletnews = async (newsId: string): Promise<void> => {
 
   return (
     <NoobPage
-      title={"News Page"}
+      title={"Report"}
       metaData={{
         description: "Noob Storm home page",
       }}
@@ -102,7 +102,7 @@ const deletnews = async (newsId: string): Promise<void> => {
         <Grid item md={9} lg={10} paddingRight={2}>
           <Grid container columnSpacing={2}>
             <Grid item md={12}>
-              <Grid container columnSpacing={1}>
+              {/* <Grid container columnSpacing={1}>
                 <Grid item md={9.6}></Grid>
                 <Grid item md={2.4}>
                   <Button
@@ -118,11 +118,11 @@ const deletnews = async (newsId: string): Promise<void> => {
                     Create News
                   </Button>
                 </Grid>
-              </Grid>
+              </Grid> */}
             </Grid>
             <Grid item md={12}>
               <NoobTable
-                title={"News Page"}
+                title={"Report"}
                 colConf={conf}
                 data={data}
               ></NoobTable>
