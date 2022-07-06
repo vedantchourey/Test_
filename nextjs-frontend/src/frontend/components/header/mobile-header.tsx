@@ -89,16 +89,16 @@ export default function MobileDrawer(): JSX.Element {
         <IconButton className={styles.bottomHeaderIcons} onClick={(): Promise<boolean> => router.push('/')}>
           <Icon><HomeOutlinedIcon /></Icon>
         </IconButton>
-        <IconButton className={styles.bottomHeaderIcons}>
+        <IconButton className={styles.bottomHeaderIcons} onClick={(): Promise<boolean> => router.push('/tournaments-list')}>
           <Icon><EqualizerOutlinedIcon /></Icon>
         </IconButton>
-        <IconButton className={styles.bottomHeaderIcons}>
+        <IconButton className={styles.bottomHeaderIcons} onClick={(): Promise<boolean> => router.push('/leaderboard')}>
           <Icon><MilitaryTechOutlinedIcon /></Icon>
         </IconButton>
-        <IconButton className={styles.bottomHeaderIcons}>
+        <IconButton className={styles.bottomHeaderIcons} >
           <Icon><NotificationsOutlinedIcon /></Icon>
         </IconButton>
-        <IconButton className={styles.bottomHeaderIcons}>
+        <IconButton className={styles.bottomHeaderIcons} >
           <Icon><ChatBubbleOutlineOutlinedIcon /></Icon>
         </IconButton>
       </div>

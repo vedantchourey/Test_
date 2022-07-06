@@ -75,10 +75,16 @@ const CardDesktop: React.FC<any> = ({
               <Grid item md={4} lg={4}>
                 <Button
                   variant="contained"
-                  color={moment(start_date).isBefore(moment()) ? "secondary" : "pinkButton"}
+                  color={
+                    moment(start_date).isBefore(moment())
+                      ? "secondary"
+                      : "pinkButton"
+                  }
                   sx={{ color: "#FFFFFF" }}
                 >
-                  {moment(start_date).isBefore(moment()) ? "Completed" : "On Going"}
+                  {moment(start_date).isBefore(moment())
+                    ? "Completed"
+                    : "On Going"}
                 </Button>
               </Grid>
             </Grid>
@@ -121,12 +127,15 @@ const CardDesktop: React.FC<any> = ({
 };
 
 const CardMobile: React.FC<any> = ({
+  id,
   tournament_name,
   tournament_type,
   platform,
   start_date,
   participants,
+  banner,
 }: any): JSX.Element => {
+  const router = useRouter();
   return (
     <Grid container columnSpacing={2} mt={5}>
       <Grid item xs={12}>
@@ -136,7 +145,7 @@ const CardMobile: React.FC<any> = ({
               padding: { sm: "8px", xs: "8px", md: "8px", textAlign: "left" },
             }}
             style={{
-              backgroundImage: "url('/icons/card-tournament-mobile.svg')",
+              backgroundImage: `url(${banner})`,
               backgroundRepeat: "no-repeat",
               backgroundSize: "cover",
               color: "#FFFFFF",
@@ -174,7 +183,14 @@ const CardMobile: React.FC<any> = ({
                 {platform}
               </Grid>
               <Grid item xs={6} textAlign={"right"}>
-                <Button variant="contained">View More -{">"}</Button>
+                <Button
+                  variant="contained"
+                  onClick={(): any =>
+                    router.push(`/view-tournament/${id}/details`)
+                  }
+                >
+                  View More -{">"}
+                </Button>
               </Grid>
             </Grid>
           </Box>
@@ -210,9 +226,11 @@ const CardComp = ({
     <>
       {isMobile ? (
         <CardMobile
+          id={id}
           tournament_name={tournament_name}
           tournament_type={tournament_type}
           platform={platform}
+          banner={banner}
           start_date={start_date}
           participants={participants}
         />
