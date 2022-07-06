@@ -95,7 +95,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
           <IconButton aria-label="back" size="small" onClick={props.onBack}>
             <ArrowBackIcon />
           </IconButton>
-          <Typography textAlign={"left"} ml={1} lineHeight={"35px"}>
+          <Typography textAlign={"left"} ml={1} lineHeight={"35px"} color="#FFFFFF">
             {props.channelName}
           </Typography>
         </Box>
@@ -155,6 +155,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
                   <Typography
                     fontSize={14}
                     textAlign={i.send_by === props.userId ? "right" : "left"}
+                    color={"#FFFFFF"}
                   >
                     {i.message}
                   </Typography>
