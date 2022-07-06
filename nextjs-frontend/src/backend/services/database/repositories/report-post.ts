@@ -27,7 +27,7 @@ export class reportRepository extends BaseRepository<IReport> {
     }
 
 
-    async find(query: any): Promise<IReport[] | undefined> {
+    async find(): Promise<IReport[] | undefined> {
         return this.entities()
             .select(...keys)
     }

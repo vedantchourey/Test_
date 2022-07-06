@@ -119,9 +119,6 @@ const PostCard = (props: IProps): JSX.Element => {
     const headers = await getAuthHeader();
     axios
       .post("/api/report-post/reportcreate",{post_id: values.id}, { headers: headers })
-      .then((res) => {
-        // setData(res.data);
-      })
       .catch((err) => {
         console.error(err);
       });

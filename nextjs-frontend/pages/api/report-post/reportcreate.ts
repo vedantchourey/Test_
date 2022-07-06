@@ -15,9 +15,7 @@ export default createNextJsRouteHandler({
       req: NextApiRequest,
       res: NextApiResponse<ServiceResponse<null, any>>,
       context: PerRequestContext
-    ) => {
-        console.log(req.body);
-        
+    ) => {        
       const result = await createReport(req.body, context);
       res.status(result.errors ? 400 : 200).json(result);
     },

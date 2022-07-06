@@ -1,6 +1,6 @@
-import { Button, Grid, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import React from "react";
 import NoobPage from "../page/noob-page";
 import DashboardSideBar from "../ui-components/dashboard-sidebar";
@@ -49,7 +49,7 @@ const deletreport = async (reportId: string): Promise<void> => {
   }
 };
 
-  const router = useRouter();
+  // const router = useRouter();
   const conf: NoobColumnConf<any>[] = [
     {
       title: "",

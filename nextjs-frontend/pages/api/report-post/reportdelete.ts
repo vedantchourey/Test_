@@ -6,7 +6,6 @@ import {
   beginTransactionMiddleWare,
   commitOrRollBackTransactionMiddleWare,
 } from "../../../src/backend/utils/api-middle-ware/transaction-middle-ware";
-import { getAllRepost } from "../../../src/backend/services/report-services/report-list";
 import { reportRepository } from './../../../src/backend/services/database/repositories/report-post';
 import { authenticatedUserMiddleware } from "../../../src/backend/utils/api-middle-ware/auth-middle-ware";
 import { Knex } from 'knex';

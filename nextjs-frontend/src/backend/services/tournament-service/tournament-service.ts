@@ -817,16 +817,16 @@ export const fetchUserMatchsHistorySingle = async (
     const { user } = context;
 
     //fetching team tournaments entries
-    const inviteRepo = new CrudRepository<ITournamentInvites>(
-      context.knexConnection as Knex,
-      TABLE_NAMES.TOURNAMENT_INIVTES
-    );
+    // const inviteRepo = new CrudRepository<ITournamentInvites>(
+    //   context.knexConnection as Knex,
+    //   TABLE_NAMES.TOURNAMENT_INIVTES
+    // );
 
-    const team_tournaments = await inviteRepo.find(
-      { user_id: user?.id, status: STATUS.ACCEPTED },
-      ["team_id"]
-    );
-    const team_ids = team_tournaments.map((x: any) => x.team_id);
+    // const team_tournaments = await inviteRepo.find(
+    //   { user_id: user?.id, status: STATUS.ACCEPTED },
+    //   ["team_id"]
+    // );
+    // const team_ids = team_tournaments.map((x: any) => x.team_id);
 
     //fetching all the participant id for single and team
     const participantRepo = new CrudRepository<IBParticipants>(
