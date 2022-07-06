@@ -98,7 +98,7 @@ export default function News(): JSX.Element {
       }}
     >
       <>
-        <Typography variant="h1">News</Typography>
+        <Typography variant="h1" style={{marginTop:"20px"}}>News</Typography>
         {!currentNews && (
           <Box display={"flex"} flexWrap={"wrap"}>
             {newsData.map((i: any, key) => (

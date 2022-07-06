@@ -182,7 +182,7 @@ export default function Chat(props: { smallChat: boolean }): JSX.Element {
               borderRightWidth: 1,
             }}
           >
-            <Typography variant="h5" m={1} textAlign="left">
+            <Typography variant="h5" m={1} textAlign="left" color="#FFFFFF">
               Friends
             </Typography>
             {renderChatList()}
@@ -205,7 +205,7 @@ export default function Chat(props: { smallChat: boolean }): JSX.Element {
               </Button>
             </Box>
           ) : null}
-          <Typography variant="h5" m={1} textAlign="left">
+          <Typography variant="h5" m={1} textAlign="left" color="#FFFFFF">
           {user?.userRoles[0] === "noob-admin" ? "Support request" : "Friends"}
             
           </Typography>

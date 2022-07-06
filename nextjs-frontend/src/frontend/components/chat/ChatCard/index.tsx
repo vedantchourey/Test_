@@ -32,7 +32,7 @@ export default function ChatCard(props: IChatCard): JSX.Element {
         }}
       />
       <Box ml={2} textAlign={"left"}>
-        <Typography textAlign={"left"} fontSize={18}>
+        <Typography textAlign={"left"} fontSize={18} color="#FFFFFF">
           {props.name}
         </Typography>
         <Typography
