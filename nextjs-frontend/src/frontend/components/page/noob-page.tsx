@@ -7,21 +7,28 @@ import { useAppSelector } from "../../redux-store/redux-store";
 import NoobFooter from "../footer";
 import NoobHeader from "../header/noob-header";
 import SideHeader from "../header/sideheader";
-import CloseIcon from '@mui/icons-material/Close';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import CloseIcon from "@mui/icons-material/Close";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 interface Props {
   title: string;
   metaData: { [key: string]: string };
   favIcon?: string;
   children: React.ReactElement;
-  hideChat?: boolean
+  hideChat?: boolean;
+  pinChat?: boolean;
 }
 
 export default function NoobPage(props: Props): JSX.Element {
-  const { metaData, favIcon = "/noob-fav.ico", title, children } = props;
+  const {
+    metaData,
+    favIcon = "/noob-fav.ico",
+    title,
+    children,
+    pinChat,
+  } = props;
   const [enableChat, setEnableChat] = useState(false);
-  const [toggleChat, setToggleChat] = useState(false)
+  const [toggleChat, setToggleChat] = useState(pinChat ? true : false);
 
   const metaKeys = Object.keys(metaData);
 
@@ -77,7 +84,9 @@ export default function NoobPage(props: Props): JSX.Element {
               pr={2}
             >
               <Typography>Chat</Typography>
-              <IconButton onClick={(): any => setToggleChat(!toggleChat)}>
+              <IconButton
+                onClick={(): any => setToggleChat(pinChat ? true : !toggleChat)}
+              >
                 {toggleChat ? <CloseIcon /> : <KeyboardArrowUpIcon />}
               </IconButton>
             </Box>
