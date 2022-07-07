@@ -73,7 +73,7 @@ export default function DrawerLeft(): JSX.Element {
   const screenWidth = useAppSelector(screenWidthSelector);
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const user = useAppSelector(userProfileSelector);
-  const userRef = useRef<any>(user)
+  const userRef = useRef<any>(user);
 
   React.useEffect(() => {
     setInterval(async () => {
@@ -87,7 +87,7 @@ export default function DrawerLeft(): JSX.Element {
   }, []);
 
   React.useEffect(() => {
-    userRef.current = user
+    userRef.current = user;
   }, [user]);
 
   // const username = useAppSelector(userNameSelector);
@@ -280,6 +280,25 @@ export default function DrawerLeft(): JSX.Element {
                 className={classes.buttonStyles}
                 onClick={(): any => router.push("/blog")}
               >
+                <img
+                  src="/icons/Vector-Tournaments.png"
+                  className={classes.imgStyle}
+                />
+                Free Agency
+              </Button>
+              <Button
+                variant="text"
+                className={classes.buttonStyles}
+                onClick={(): any => router.push("/social")}
+              >
+                <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
+                Social
+              </Button>
+              <Button
+                variant="text"
+                className={classes.buttonStyles}
+                onClick={(): any => router.push("/news")}
+              >
                 <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
                 Blog
               </Button>
@@ -348,7 +367,11 @@ export default function DrawerLeft(): JSX.Element {
                 />
                 Leaderboards
               </Button>
-              <Button variant="text" className={classes.buttonStyles}>
+              <Button
+                variant="text"
+                className={classes.buttonStyles}
+                onClick={(): any => router.push("/support")}
+              >
                 <img
                   src="/icons/Vector-Support.png"
                   className={classes.imgStyle}

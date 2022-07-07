@@ -56,7 +56,7 @@ export default function Create(): JSX.Element {
     <NoobPage
       title="Social"
       metaData={{ description: "Noob storm home page" }}
-      hideChat={true}
+      pinChat={true}
     >
       <AuthGuard
         requiredRoles={requiredRoles}

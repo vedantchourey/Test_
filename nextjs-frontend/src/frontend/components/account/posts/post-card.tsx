@@ -8,27 +8,36 @@ import {
   List,
   ListItem,
   Button,
-  Grid
+  Grid,
 } from "@mui/material";
 import styles from "./post.module.css";
 import { IPostsResponse } from "../../../service-clients/messages/i-posts-response";
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import CommentsModal from './comments-modal'
-import { checkIsPostLiked, likePost, unlikePost, getPostLikesCount, getPostCommentsCount, deletePost as removePost } from '../../../service-clients/post-service-client'
-import { useAppSelector } from '../../../redux-store/redux-store';
-import { userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
-import Image from '../../../components/utils/supabase-image';
-import config from '../../../utils/config/front-end-config';
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import CommentsModal from "./comments-modal";
+import {
+  checkIsPostLiked,
+  likePost,
+  unlikePost,
+  getPostLikesCount,
+  getPostCommentsCount,
+  deletePost as removePost,
+} from "../../../service-clients/post-service-client";
+import { useAppSelector } from "../../../redux-store/redux-store";
+import { userProfileSelector } from "../../../redux-store/authentication/authentication-selectors";
+import Image from "../../../components/utils/supabase-image";
+import config from "../../../utils/config/front-end-config";
 import axios from "axios";
 import { getAuthHeader } from "../../../utils/headers";
 
 interface IProps {
   data: IPostsResponse;
-  row?: boolean
+  row?: boolean;
+  isDesktop?: boolean;
 }
 
 // eslint-disable-next-line no-useless-escape
-const URL_REGEX = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
+const URL_REGEX =
+  /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&//=]*)/;
 
 const PostCard = (props: IProps): JSX.Element => {
   const user = useAppSelector(userProfileSelector);
@@ -41,42 +50,46 @@ const PostCard = (props: IProps): JSX.Element => {
   const imgUrl = props.data.postImgUrl;
   const avatarUrl = props.data.postOwner.avatarUrl;
 
-  const handleOpenComments = (): void => setOpenCommentsModal((pre) => !pre)
+  const handleOpenComments = (): void => setOpenCommentsModal((pre) => !pre);
   const handleCloseComments = (): void => setOpenCommentsModal(false);
   const handleCloseMenu = (): void => setShowMenu(false);
-  const handleToggleMenu = (): void => setShowMenu((pre) => !pre)
+  const handleToggleMenu = (): void => setShowMenu((pre) => !pre);
 
   useEffect(() => {
-    fetchPostData()
-  }, [])
+    fetchPostData();
+  }, []);
 
   const fetchPostData = async (): Promise<void> => {
     const payload = {
       userId: user?.id,
-      postId: values.id
+      postId: values.id,
     };
     const isPostLiked = checkIsPostLiked(payload);
     const postLikesCount = getPostLikesCount(payload.postId);
     const postCommentsCount = getPostCommentsCount(payload.postId);
-    const [p1, p2, p3] = await Promise.all([isPostLiked, postLikesCount, postCommentsCount]);
+    const [p1, p2, p3] = await Promise.all([
+      isPostLiked,
+      postLikesCount,
+      postCommentsCount,
+    ]);
     if (!p1.error) {
       setValues((prevVals: IPostsResponse) => {
-        return { ...prevVals, ...{ isLiked: p1.isLiked || false } }
+        return { ...prevVals, ...{ isLiked: p1.isLiked || false } };
       });
     }
 
     if (p2.totalLikes?.toString()) {
       setValues((prevVals: IPostsResponse) => {
-        return { ...prevVals, ...{ totalLikes: p2.totalLikes || 0 } }
+        return { ...prevVals, ...{ totalLikes: p2.totalLikes || 0 } };
       });
     }
     if (p3.totalComments?.toString()) {
       setValues((prevVals: IPostsResponse) => {
-        return { ...prevVals, ...{ totalComments: p3.totalComments || 0 } }
+        return { ...prevVals, ...{ totalComments: p3.totalComments || 0 } };
       });
     }
     setIsFetchingMeta(false);
-  }
+  };
 
   const addLike = async (): Promise<void> => {
     const postId = values.id;
@@ -84,11 +97,11 @@ const PostCard = (props: IProps): JSX.Element => {
       return {
         ...pre,
         isLiked: true,
-        totalLikes: values.totalLikes + 1
-      }
-    })
+        totalLikes: values.totalLikes + 1,
+      };
+    });
     likePost(postId);
-  }
+  };
 
   const removeLike = async (): Promise<void> => {
     const postId = values.id;
@@ -96,11 +109,11 @@ const PostCard = (props: IProps): JSX.Element => {
       return {
         ...pre,
         isLiked: false,
-        totalLikes: values.totalLikes - 1
-      }
-    })
+        totalLikes: values.totalLikes - 1,
+      };
+    });
     unlikePost(postId);
-  }
+  };
 
   const toggleLike = (): void => {
     if (!values.isLiked) {
@@ -108,12 +121,12 @@ const PostCard = (props: IProps): JSX.Element => {
     } else {
       removeLike();
     }
-  }
+  };
 
   const deletePost = (): void => {
     removePost(values.id);
     setIsDeleted(true);
-  }
+  };
 
   const reportPost = async (): Promise<void> => {
     const headers = await getAuthHeader();
@@ -131,7 +144,7 @@ const PostCard = (props: IProps): JSX.Element => {
       item
       md={12}
       minHeight={props.row ? 450 : undefined}
-      minWidth={400}
+      minWidth={props.isDesktop ? 400 : 0}
       mr={props.row ? 2 : 0}
     >
       <Card
