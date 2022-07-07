@@ -44,12 +44,17 @@ const imagedata: any = {
   corp: "/images/game2.svg",
 };
 
+const allstatus = ["complete", "ongoing", "pending"];
+const allcredits = ["1-5", "6-10", "11-15", "16-20", "20+"];
+
 const SliderComp: React.FC = (): JSX.Element => {
   const formats = useAppSelector(allFormatsSelector);
   const formatsFetchStatus = useAppSelector(formatsFetchStatusSelector);
   const isDesktop = useAppSelector((x) =>
     isDeviceTypeSelector(x, deviceTypes.desktop));
   const [format, setFormat] = useState("");
+  const [status, setStatus] = useState("");
+  const [credits, setCredits] = useState("");
   const [loading, setLoading] = useState(false);
 
   const [tournamentsData, setData] = React.useState<TournamentData[]>([]);
@@ -68,6 +73,8 @@ const SliderComp: React.FC = (): JSX.Element => {
             game: first ? "" : game_id,
             limit: 50,
             format,
+            status,
+            amount: credits,
           },
           headers: headers,
         })
@@ -104,8 +111,7 @@ const SliderComp: React.FC = (): JSX.Element => {
     if (games?.[0]?.id) {
       setTournamentsData(games[0].id, true);
     }
-  }, [games, format]);
-
+  }, [games, format, status, credits]);
 
   return (
     <>
@@ -152,7 +158,17 @@ const SliderComp: React.FC = (): JSX.Element => {
         ))}
       </Box>
 
-      <ButtonComp formats={formats} setFormat={setFormat} format={format} />
+      <ButtonComp
+        formats={formats}
+        setFormat={setFormat}
+        format={format}
+        allstatus={allstatus}
+        status={status}
+        setStatus={setStatus}
+        allcredits={allcredits}
+        credits={credits}
+        setCredits={setCredits}
+      />
       <Grid container columnSpacing={2} mt={5}>
         {tournamentsData.map((data: any) => {
           const startDateTime = moment(data.startDate).format(

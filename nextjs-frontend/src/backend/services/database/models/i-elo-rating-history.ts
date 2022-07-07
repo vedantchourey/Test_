@@ -4,5 +4,6 @@ export interface IEloRatingHistory {
     game_id: string;
     tournament_id: string;
     user_id: string;
+    team_id: string;
     match_id: number;
 }

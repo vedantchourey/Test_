@@ -135,6 +135,9 @@ const DashboardSideBar: React.FC = () => {
             variant="contained"
             component={"a"}
             fullWidth
+            onClick={(): Promise<boolean> =>
+              router.push("/reported-users", undefined, { shallow: true })
+            }
             classes={{ root: classes.button }}
             startIcon={<PersonIcon />}
           >

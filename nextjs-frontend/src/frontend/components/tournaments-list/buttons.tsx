@@ -1,7 +1,17 @@
 import { Grid, MenuItem, Select, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
 
-const ButtonComp: React.FC<any> = ({ formats = [], setFormat, format }) => {
+const ButtonComp: React.FC<any> = ({ 
+  formats = [],
+  setFormat,
+  format,
+  allstatus,
+  status,
+  setStatus,
+  allcredits,
+  credits,
+  setCredits
+   }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -63,18 +73,41 @@ const ButtonComp: React.FC<any> = ({ formats = [], setFormat, format }) => {
                   </MenuItem>
                 );
               })}
-            </Select>
-          </Grid>
-          <Grid item xs={6} lg={2} md={2} justifyContent={"flex-end"}></Grid>
-          {/* <Grid item xs={6} lg={2} md={2}>
-              <Select value={"status"} fullWidth={true}>
+            </Select >
+              <Select 
+              sx={{mx:2}}
+              value={status || "status"}
+              onChange={(e): any =>
+                setStatus(e.target.value === "status" ? "" : e.target.value)
+              }
+              >
                 <MenuItem value="status">Status</MenuItem>
+                {allstatus.map((item: any, i: number) => {
+                  return (
+                    <MenuItem value={item} key={i}>
+                      {item.charAt(0).toUpperCase() + item.slice(1)}
+                    </MenuItem>
+                  );
+                })}
               </Select>
+              <Select 
+              value={credits || "credits"}
+              onChange={(e): any =>
+                setCredits(e.target.value === "credits" ? "" : e.target.value)
+              }>
+                <MenuItem value="credits">Credits</MenuItem>
+                {allcredits.map((item: any, i: number) => {
+                  return (
+                    <MenuItem value={item} key={i}>
+                      {item.charAt(0).toUpperCase() + item.slice(1)}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+          </Grid>
+          {/* <Grid item xs={12} textAlign={"right"}>
             </Grid>
-            <Grid item xs={12} lg={2} md={2}>
-              <Select value={"entryfee"} fullWidth={true}>
-                <MenuItem value="entryfee">Entry Fee</MenuItem>
-              </Select>
+            <Grid item xs={12} textAlign={"right"}>
             </Grid> */}
         </>
       )}
