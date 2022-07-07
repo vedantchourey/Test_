@@ -75,8 +75,7 @@ const CardDesktop: React.FC<any> = ({
               <Grid item md={4} lg={4}>
                 <Button
                   variant="contained"
-                  color={moment(start_date).isBefore(moment()) ? "secondary" : "pinkButton"}
-                  sx={{ color: "#FFFFFF" }}
+                  color={moment(start_date).isBefore(moment()) ? "secondary" : "info"}
                 >
                   {moment(start_date).isBefore(moment())
                     ? "Completed"
@@ -230,7 +229,6 @@ const CardComp = ({
           banner={banner}
           start_date={start_date}
           participants={participants}
-          banner={banner}
         />
       ) : (
         <CardDesktop
