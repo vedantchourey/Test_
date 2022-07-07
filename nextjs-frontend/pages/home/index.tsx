@@ -105,7 +105,14 @@ const Home = (): JSX.Element => {
     }
     const jsx = posts.map((postData, index) => {
       if (index < 3) {
-        return <PostCard key={postData.id} data={postData} row={true} />;
+        return (
+          <PostCard
+            key={postData.id}
+            data={postData}
+            row={true}
+            isDesktop={isDesktop}
+          />
+        );
       }
     });
     return jsx;
@@ -239,250 +246,448 @@ const Home = (): JSX.Element => {
             </Grid>
           </>
         )}
-        <Container maxWidth="xl" className={styles.container}>
-          <Grid item xs={12} lg={30}>
-            <TabContext value={value}>
-              <Box className={styles.tabBox}>
+        {isDesktop ? (
+          <>
+            <Container maxWidth="xl" className={styles.container}>
+              <Grid item xs={12} lg={30}>
+                <TabContext value={value}>
+                  <Box className={styles.tabBox}>
+                    <TabList
+                      onChange={handleChange}
+                      aria-label="lab API tabs example"
+                    >
+                      <Tab
+                        value="1"
+                        className={styles.tab}
+                        icon={<StarRateIcon />}
+                        iconPosition="start"
+                        label="TOP POSTS"
+                      />
+                      <Tab
+                        value="2"
+                        className={styles.tab}
+                        icon={<StorageIcon />}
+                        iconPosition="start"
+                        label="NEW FEED"
+                      />
+                      <Tab
+                        value="3"
+                        className={styles.tab}
+                        icon={<EmojiEventsIcon />}
+                        iconPosition="start"
+                        label="TOURNAMENTS"
+                      />
+                    </TabList>
+                    <Button
+                      className={styles.viewAllButton}
+                      onClick={async (): Promise<void> => {
+                        await router.push("tournaments-list");
+                      }}
+                    >
+                      VIEW All
+                    </Button>
+                  </Box>
+                  <TabPanel
+                    value="1"
+                    className={styles.postContainer}
+                    style={{ flexDirection: "column" }}
+                  >
+                    <Box display={"flex"}>{_renderPosts()}</Box>
+                  </TabPanel>
+                  <TabPanel value="2" className={styles.newsFeedContainer}>
+                    <Grid container columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}>
+                      {newsData.map((i: any, key) => {
+                        if (key < 3) {
+                          return (
+                            <Grid item xs={12} lg={4}>
+                              <Box
+                                className={styles.newsFeedImg}
+                                style={{
+                                  backgroundImage: `url(${i.image})`,
+                                }}
+                              >
+                                <Box className={styles.newsGrid}>
+                                  <Button
+                                    variant="text"
+                                    className={styles.newsFeedButton}
+                                  >
+                                    SHOOTERS
+                                  </Button>
+                                  <Typography className={styles.newsFeedText}>
+                                    {i.title}
+                                  </Typography>
+                                </Box>
+                              </Box>
+                            </Grid>
+                          );
+                        }
+                      })}
+                    </Grid>
+                  </TabPanel>
+                  <TabPanel value="3" className={styles.tournamentContainer}>
+                    <Grid container columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}>
+                      <Grid item xs={12} lg={4}>
+                        <img
+                          src="/images/tournament1.png"
+                          className={styles.newsFeedImg}
+                        />
+                        <Box style={{ marginTop: "-355px" }}>
+                          <Box className={styles.tournamentTopContainer}>
+                            <Button
+                              variant="text"
+                              style={{ background: "#F08743" }}
+                              className={styles.tournamentButton}
+                            >
+                              Completed
+                            </Button>
+                          </Box>
+                          <Box className={styles.textMainContainer}>
+                            <Box className={styles.textContainer}>
+                              <Typography className={styles.tContainerText1}>
+                                TOURNAMENT TYPE
+                              </Typography>
+                              <Typography className={styles.tContainerText2}>
+                                Round Robin
+                              </Typography>
+                            </Box>
+                            <Box className={styles.textContainer}>
+                              <Typography className={styles.tContainerText1}>
+                                PLATFORM
+                              </Typography>
+                              <Typography className={styles.tContainerText2}>
+                                PC
+                              </Typography>
+                            </Box>
+                          </Box>
+                          <Box className={styles.tournamentBottomContainer}>
+                            <Typography className={styles.tournamentText1}>
+                              ENDPOINTGG VS CEX ESPORTS [2]
+                            </Typography>
+                            <Typography className={styles.tournamentText2}>
+                              10 OCT 2018 14:35 PM
+                            </Typography>
+                            <img
+                              src="/images/arrow1.png"
+                              className={styles.arrowImg}
+                            />
+                          </Box>
+                        </Box>
+                      </Grid>
+                      <Grid item xs={12} lg={4}>
+                        <img
+                          src="/images/tournament1.png"
+                          className={styles.newsFeedImg}
+                        />
+                        <Box style={{ marginTop: "-355px" }}>
+                          <Box className={styles.tournamentTopContainer}>
+                            <Button
+                              variant="text"
+                              style={{ background: "#EF5DA8" }}
+                              className={styles.tournamentButton}
+                            >
+                              ON-going
+                            </Button>
+                          </Box>
+                          <Box className={styles.textMainContainer}>
+                            <Box className={styles.textContainer}>
+                              <Typography className={styles.tContainerText1}>
+                                TOURNAMENT TYPE
+                              </Typography>
+                              <Typography className={styles.tContainerText2}>
+                                Round Robin
+                              </Typography>
+                            </Box>
+                            <Box className={styles.textContainer}>
+                              <Typography className={styles.tContainerText1}>
+                                PLATFORM
+                              </Typography>
+                              <Typography className={styles.tContainerText2}>
+                                PC
+                              </Typography>
+                            </Box>
+                          </Box>
+                          <Box className={styles.tournamentBottomContainer}>
+                            <Typography className={styles.tournamentText1}>
+                              ENDPOINTGG VS CEX ESPORTS [2]
+                            </Typography>
+                            <Typography className={styles.tournamentText2}>
+                              10 OCT 2018 14:35 PM
+                            </Typography>
+                            <img
+                              src="/images/arrow1.png"
+                              className={styles.arrowImg}
+                            />
+                          </Box>
+                        </Box>
+                      </Grid>
+                      <Grid item xs={12} lg={4}>
+                        <img
+                          src="/images/tournament1.png"
+                          className={styles.newsFeedImg}
+                        />
+                        <Box style={{ marginTop: "-355px" }}>
+                          <Box className={styles.tournamentTopContainer}>
+                            <Button
+                              variant="text"
+                              className={styles.tournamentButton}
+                            >
+                              OPEN
+                            </Button>
+                          </Box>
+                          <Box className={styles.textMainContainer}>
+                            <Box className={styles.textContainer}>
+                              <Typography className={styles.tContainerText1}>
+                                TOURNAMENT TYPE
+                              </Typography>
+                              <Typography className={styles.tContainerText2}>
+                                Round Robin
+                              </Typography>
+                            </Box>
+                            <Box className={styles.textContainer}>
+                              <Typography className={styles.tContainerText1}>
+                                PLATFORM
+                              </Typography>
+                              <Typography className={styles.tContainerText2}>
+                                PC
+                              </Typography>
+                            </Box>
+                          </Box>
+                          <Box className={styles.tournamentBottomContainer}>
+                            <Typography className={styles.tournamentText1}>
+                              ENDPOINTGG VS CEX ESPORTS [2]
+                            </Typography>
+                            <Typography className={styles.tournamentText2}>
+                              10 OCT 2018 14:35 PM
+                            </Typography>
+                            <img
+                              src="/images/arrow1.png"
+                              className={styles.arrowImg}
+                            />
+                          </Box>
+                        </Box>
+                      </Grid>
+                    </Grid>
+                  </TabPanel>
+                </TabContext>
+              </Grid>
+              {isDesktop && (
+                <>
+                  <Grid
+                    item
+                    xs={12}
+                    lg={3}
+                    className={styles.mainSideBox}
+                    style={{ marginLeft: 20 }}
+                  >
+                    <Box className={styles.sideBox}>
+                      <AliceCarousel
+                        items={items}
+                        responsive={responsive}
+                        autoPlay={true}
+                        autoPlayInterval={10000}
+                        infinite={true}
+                      />
+                    </Box>
+                  </Grid>
+                </>
+              )}
+            </Container>
+          </>
+        ) : (
+          <>
+            <Grid container xs={12} style={{ marginTop: 33 }}>
+              <TabContext value={value}>
                 <TabList
                   onChange={handleChange}
                   aria-label="lab API tabs example"
                 >
-                  <Tab
-                    value="1"
-                    className={styles.tab}
-                    icon={<StarRateIcon />}
-                    iconPosition="start"
-                    label="TOP POSTS"
-                  />
-                  <Tab
-                    value="2"
-                    className={styles.tab}
-                    icon={<StorageIcon />}
-                    iconPosition="start"
-                    label="NEW FEED"
-                  />
-                  <Tab
-                    value="3"
-                    className={styles.tab}
-                    icon={<EmojiEventsIcon />}
-                    iconPosition="start"
-                    label="TOURNAMENTS"
-                  />
+                  <Tab value="1" label="TOP POSTS" />
+                  <Tab value="2" label="NEW FEED" />
+                  <Tab value="3" label="TOURNAMENTS" />
                 </TabList>
-                <Button
-                  className={styles.viewAllButton}
-                  onClick={async (): Promise<void> => {
-                    await router.push("tournaments-list");
-                  }}
-                >
-                  VIEW All
-                </Button>
-              </Box>
-              <TabPanel
-                value="1"
-                className={styles.postContainer}
-                style={{ flexDirection: "column" }}
-              >
-                <Box display={"flex"}>{_renderPosts()}</Box>
-              </TabPanel>
-              <TabPanel value="2" className={styles.newsFeedContainer}>
-                <Grid container columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}>
-                  {newsData.map((i: any, key) => {
-                    if (key < 3) {
-                      return (
-                        <Grid item xs={12} lg={4}>
-                          <Box
-                            className={styles.newsFeedImg}
-                            style={{
-                              backgroundImage: `url(${i.image})`,
-                            }}
-                          >
-                            <Box className={styles.newsGrid}>
-                              <Button
-                                variant="text"
-                                className={styles.newsFeedButton}
-                              >
-                                SHOOTERS
-                              </Button>
-                              <Typography className={styles.newsFeedText}>
-                                {i.title}
-                              </Typography>
+                <TabPanel value="1">
+                  <Grid item xs={12}>
+                    {_renderPosts()}
+                  </Grid>
+                </TabPanel>
+                <TabPanel value="2">
+                  <Grid container columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}>
+                    {newsData.map((i: any, key) => {
+                      if (key < 3) {
+                        return (
+                          <Grid item xs={12} lg={4} style={{ marginTop: 25 }}>
+                            <Box
+                              className={styles.newsFeedImg}
+                              style={{
+                                backgroundImage: `url(${i.image})`,
+                              }}
+                            >
+                              <Box className={styles.newsGrid}>
+                                <Button
+                                  variant="text"
+                                  className={styles.newsFeedButton}
+                                >
+                                  SHOOTERS
+                                </Button>
+                                <Typography className={styles.newsFeedText}>
+                                  {i.title}
+                                </Typography>
+                              </Box>
                             </Box>
+                          </Grid>
+                        );
+                      }
+                    })}
+                  </Grid>
+                </TabPanel>
+                <TabPanel value="3">
+                  <Grid container columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}>
+                    <Grid item xs={12} lg={4} style={{ marginTop: 25 }}>
+                      <img
+                        src="/images/tournament1.png"
+                        className={styles.newsFeedImg}
+                      />
+                      <Box style={{ marginTop: "-355px" }}>
+                        <Box className={styles.tournamentTopContainer}>
+                          <Button
+                            variant="text"
+                            style={{ background: "#F08743" }}
+                            className={styles.tournamentButton}
+                          >
+                            Completed
+                          </Button>
+                        </Box>
+                        <Box className={styles.textMainContainer}>
+                          <Box className={styles.textContainer}>
+                            <Typography className={styles.tContainerText1}>
+                              TOURNAMENT TYPE
+                            </Typography>
+                            <Typography className={styles.tContainerText2}>
+                              Round Robin
+                            </Typography>
                           </Box>
-                        </Grid>
-                      );
-                    }
-                  })}
-                </Grid>
-              </TabPanel>
-              <TabPanel value="3" className={styles.tournamentContainer}>
-                <Grid container columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}>
-                  <Grid item xs={12} lg={4}>
-                    <img
-                      src="/images/tournament1.png"
-                      className={styles.newsFeedImg}
-                    />
-                    <Box style={{ marginTop: "-355px" }}>
-                      <Box className={styles.tournamentTopContainer}>
-                        <Button
-                          variant="text"
-                          style={{ background: "#F08743" }}
-                          className={styles.tournamentButton}
-                        >
-                          Completed
-                        </Button>
-                      </Box>
-                      <Box className={styles.textMainContainer}>
-                        <Box className={styles.textContainer}>
-                          <Typography className={styles.tContainerText1}>
-                            TOURNAMENT TYPE
-                          </Typography>
-                          <Typography className={styles.tContainerText2}>
-                            Round Robin
-                          </Typography>
+                          <Box className={styles.textContainer}>
+                            <Typography className={styles.tContainerText1}>
+                              PLATFORM
+                            </Typography>
+                            <Typography className={styles.tContainerText2}>
+                              PC
+                            </Typography>
+                          </Box>
                         </Box>
-                        <Box className={styles.textContainer}>
-                          <Typography className={styles.tContainerText1}>
-                            PLATFORM
+                        <Box className={styles.tournamentBottomContainer}>
+                          <Typography className={styles.tournamentText1}>
+                            ENDPOINTGG VS CEX ESPORTS [2]
                           </Typography>
-                          <Typography className={styles.tContainerText2}>
-                            PC
+                          <Typography className={styles.tournamentText2}>
+                            10 OCT 2018 14:35 PM
                           </Typography>
+                          <img
+                            src="/images/arrow1.png"
+                            className={styles.arrowImg}
+                          />
                         </Box>
                       </Box>
-                      <Box className={styles.tournamentBottomContainer}>
-                        <Typography className={styles.tournamentText1}>
-                          ENDPOINTGG VS CEX ESPORTS [2]
-                        </Typography>
-                        <Typography className={styles.tournamentText2}>
-                          10 OCT 2018 14:35 PM
-                        </Typography>
-                        <img
-                          src="/images/arrow1.png"
-                          className={styles.arrowImg}
-                        />
+                    </Grid>
+                    <Grid item xs={12} lg={4} style={{ marginTop: 25 }}>
+                      <img
+                        src="/images/tournament1.png"
+                        className={styles.newsFeedImg}
+                      />
+                      <Box style={{ marginTop: "-355px" }}>
+                        <Box className={styles.tournamentTopContainer}>
+                          <Button
+                            variant="text"
+                            style={{ background: "#EF5DA8" }}
+                            className={styles.tournamentButton}
+                          >
+                            ON-going
+                          </Button>
+                        </Box>
+                        <Box className={styles.textMainContainer}>
+                          <Box className={styles.textContainer}>
+                            <Typography className={styles.tContainerText1}>
+                              TOURNAMENT TYPE
+                            </Typography>
+                            <Typography className={styles.tContainerText2}>
+                              Round Robin
+                            </Typography>
+                          </Box>
+                          <Box className={styles.textContainer}>
+                            <Typography className={styles.tContainerText1}>
+                              PLATFORM
+                            </Typography>
+                            <Typography className={styles.tContainerText2}>
+                              PC
+                            </Typography>
+                          </Box>
+                        </Box>
+                        <Box className={styles.tournamentBottomContainer}>
+                          <Typography className={styles.tournamentText1}>
+                            ENDPOINTGG VS CEX ESPORTS [2]
+                          </Typography>
+                          <Typography className={styles.tournamentText2}>
+                            10 OCT 2018 14:35 PM
+                          </Typography>
+                          <img
+                            src="/images/arrow1.png"
+                            className={styles.arrowImg}
+                          />
+                        </Box>
                       </Box>
-                    </Box>
+                    </Grid>
+                    <Grid item xs={12} lg={4} style={{ marginTop: 25 }}>
+                      <img
+                        src="/images/tournament1.png"
+                        className={styles.newsFeedImg}
+                      />
+                      <Box style={{ marginTop: "-355px" }}>
+                        <Box className={styles.tournamentTopContainer}>
+                          <Button
+                            variant="text"
+                            className={styles.tournamentButton}
+                          >
+                            OPEN
+                          </Button>
+                        </Box>
+                        <Box className={styles.textMainContainer}>
+                          <Box className={styles.textContainer}>
+                            <Typography className={styles.tContainerText1}>
+                              TOURNAMENT TYPE
+                            </Typography>
+                            <Typography className={styles.tContainerText2}>
+                              Round Robin
+                            </Typography>
+                          </Box>
+                          <Box className={styles.textContainer}>
+                            <Typography className={styles.tContainerText1}>
+                              PLATFORM
+                            </Typography>
+                            <Typography className={styles.tContainerText2}>
+                              PC
+                            </Typography>
+                          </Box>
+                        </Box>
+                        <Box className={styles.tournamentBottomContainer}>
+                          <Typography className={styles.tournamentText1}>
+                            ENDPOINTGG VS CEX ESPORTS [2]
+                          </Typography>
+                          <Typography className={styles.tournamentText2}>
+                            10 OCT 2018 14:35 PM
+                          </Typography>
+                          <img
+                            src="/images/arrow1.png"
+                            className={styles.arrowImg}
+                          />
+                        </Box>
+                      </Box>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} lg={4}>
-                    <img
-                      src="/images/tournament1.png"
-                      className={styles.newsFeedImg}
-                    />
-                    <Box style={{ marginTop: "-355px" }}>
-                      <Box className={styles.tournamentTopContainer}>
-                        <Button
-                          variant="text"
-                          style={{ background: "#EF5DA8" }}
-                          className={styles.tournamentButton}
-                        >
-                          ON-going
-                        </Button>
-                      </Box>
-                      <Box className={styles.textMainContainer}>
-                        <Box className={styles.textContainer}>
-                          <Typography className={styles.tContainerText1}>
-                            TOURNAMENT TYPE
-                          </Typography>
-                          <Typography className={styles.tContainerText2}>
-                            Round Robin
-                          </Typography>
-                        </Box>
-                        <Box className={styles.textContainer}>
-                          <Typography className={styles.tContainerText1}>
-                            PLATFORM
-                          </Typography>
-                          <Typography className={styles.tContainerText2}>
-                            PC
-                          </Typography>
-                        </Box>
-                      </Box>
-                      <Box className={styles.tournamentBottomContainer}>
-                        <Typography className={styles.tournamentText1}>
-                          ENDPOINTGG VS CEX ESPORTS [2]
-                        </Typography>
-                        <Typography className={styles.tournamentText2}>
-                          10 OCT 2018 14:35 PM
-                        </Typography>
-                        <img
-                          src="/images/arrow1.png"
-                          className={styles.arrowImg}
-                        />
-                      </Box>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} lg={4}>
-                    <img
-                      src="/images/tournament1.png"
-                      className={styles.newsFeedImg}
-                    />
-                    <Box style={{ marginTop: "-355px" }}>
-                      <Box className={styles.tournamentTopContainer}>
-                        <Button
-                          variant="text"
-                          className={styles.tournamentButton}
-                        >
-                          OPEN
-                        </Button>
-                      </Box>
-                      <Box className={styles.textMainContainer}>
-                        <Box className={styles.textContainer}>
-                          <Typography className={styles.tContainerText1}>
-                            TOURNAMENT TYPE
-                          </Typography>
-                          <Typography className={styles.tContainerText2}>
-                            Round Robin
-                          </Typography>
-                        </Box>
-                        <Box className={styles.textContainer}>
-                          <Typography className={styles.tContainerText1}>
-                            PLATFORM
-                          </Typography>
-                          <Typography className={styles.tContainerText2}>
-                            PC
-                          </Typography>
-                        </Box>
-                      </Box>
-                      <Box className={styles.tournamentBottomContainer}>
-                        <Typography className={styles.tournamentText1}>
-                          ENDPOINTGG VS CEX ESPORTS [2]
-                        </Typography>
-                        <Typography className={styles.tournamentText2}>
-                          10 OCT 2018 14:35 PM
-                        </Typography>
-                        <img
-                          src="/images/arrow1.png"
-                          className={styles.arrowImg}
-                        />
-                      </Box>
-                    </Box>
-                  </Grid>
-                </Grid>
-              </TabPanel>
-            </TabContext>
-          </Grid>
-          {isDesktop && (
-            <>
-              <Grid
-                item
-                xs={12}
-                lg={3}
-                className={styles.mainSideBox}
-                style={{ marginLeft: 20 }}
-              >
-                <Box className={styles.sideBox}>
-                  <AliceCarousel
-                    items={items}
-                    responsive={responsive}
-                    autoPlay={true}
-                    autoPlayInterval={10000}
-                    infinite={true}
-                  />
-                </Box>
-              </Grid>
-            </>
-          )}
-        </Container>
+                </TabPanel>
+              </TabContext>
+            </Grid>
+          </>
+        )}
       </Grid>
     </Fragment>
   );

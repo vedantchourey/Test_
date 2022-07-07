@@ -1,4 +1,10 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Typography,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import Chat from "../../components/chat";
@@ -34,13 +40,16 @@ export default function NoobPage(props: Props): JSX.Element {
 
   const isLoggedIn = useAppSelector(isLoggedInSelector);
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   useEffect(() => {
     setTimeout(() => setEnableChat(true), 4000);
   }, []);
 
   return (
     <>
-      <SideHeader />
+      {isMobile ? null : <SideHeader />}
       <div>
         <Head>
           <title>{title}</title>
@@ -49,7 +58,10 @@ export default function NoobPage(props: Props): JSX.Element {
           ))}
           <link rel="icon" href={favIcon} />
         </Head>
-        <Box sx={{ display: "flex" }} maxWidth={"100vw"}>
+        <Box
+          sx={{ display: "flex", marginTop: isMobile ? 10 : 0 }}
+          maxWidth={"100vw"}
+        >
           <NoobHeader />
           <Box
             style={{ minHeight: "1040px" }}

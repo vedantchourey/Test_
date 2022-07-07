@@ -96,7 +96,9 @@ const Leaderboard = (): JSX.Element => {
   const appDispatch = useAppDispatch();
   const games = useAppSelector(allGamesSelector);
   const gamesFetchStatus = useAppSelector(gamesFetchStatusSelector);
-  const [selectedGame, setSelectedGame] = React.useState<String>(games[0].id);
+  const [selectedGame, setSelectedGame] = React.useState<String>(
+    games.length > 0 ? games[0].id : ""
+  );
 
   React.useEffect(() => {
     if (games.length) {
@@ -246,25 +248,29 @@ const Leaderboard = (): JSX.Element => {
                     },
                   }}
                 >
-                  {leaderboardgamedata.slice(3, leaderboardgamedata.length).map((item, idx) => (
-                    <TableRow key={item.id}>
-                      <TableCell align="center" component="th" scope="row">
-                        {idx+3}
-                        <sup>th</sup>
-                      </TableCell>
-                      <TableCell>
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                          <span>
-                            <img src="/icons/Ellipse 4.png" />
-                          </span>
-                          <span style={{ padding: "10px" }}>
-                            {item.userDetails.username}
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell>{item.elo_rating}</TableCell>
-                    </TableRow>
-                  ))}
+                  {leaderboardgamedata
+                    .slice(3, leaderboardgamedata.length)
+                    .map((item, idx) => (
+                      <TableRow key={item.id}>
+                        <TableCell align="center" component="th" scope="row">
+                          {idx + 3}
+                          <sup>th</sup>
+                        </TableCell>
+                        <TableCell>
+                          <div
+                            style={{ display: "flex", alignItems: "center" }}
+                          >
+                            <span>
+                              <img src="/icons/Ellipse 4.png" />
+                            </span>
+                            <span style={{ padding: "10px" }}>
+                              {item.userDetails.username}
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell>{item.elo_rating}</TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
               </Table>
             </TableContainer>
