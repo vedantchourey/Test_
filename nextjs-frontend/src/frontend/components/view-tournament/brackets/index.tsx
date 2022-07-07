@@ -113,7 +113,7 @@ const Bracket: React.FC<BracketProps> = ({
       <Box
           display={"flex"}
           flexWrap={"nowrap"}
-          maxWidth={"70vw"}
+          maxWidth={"100vw"}
           overflow={"scroll"}
           className="hide-scrollbar"
         >
