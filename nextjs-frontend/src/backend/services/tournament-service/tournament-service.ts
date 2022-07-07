@@ -809,6 +809,188 @@ export const fetchUserMatchs = async (
     return getErrorObject(ex);
   }
 };
+
+export const fetchUserMatchsHistorySingle = async (
+  context: PerRequestContext
+): Promise<any | IError> => {
+  try {
+    const { user } = context;
+
+    //fetching team tournaments entries
+    // const inviteRepo = new CrudRepository<ITournamentInvites>(
+    //   context.knexConnection as Knex,
+    //   TABLE_NAMES.TOURNAMENT_INIVTES
+    // );
+
+    // const team_tournaments = await inviteRepo.find(
+    //   { user_id: user?.id, status: STATUS.ACCEPTED },
+    //   ["team_id"]
+    // );
+    // const team_ids = team_tournaments.map((x: any) => x.team_id);
+
+    //fetching all the participant id for single and team
+    const participantRepo = new CrudRepository<IBParticipants>(
+      context.knexConnection as Knex,
+      TABLE_NAMES.B_PARTICIPANT
+    );
+
+    const tournaments = await participantRepo
+      .knexObj()
+      .where("user_id", user?.id)
+      // .orWhereIn("team_id", team_ids)
+      .select(["id", "tournament_id", "user_id"]);
+
+    if (!tournaments?.length) {
+      return [];
+    }
+
+    //fetching matches
+    const matchRepo = new CrudRepository<IBMatch>(
+      context.knexConnection as Knex,
+      TABLE_NAMES.B_MATCH
+    );
+
+    const matches = await matchRepo
+      .knexObj()
+      .where({"status": "4"})
+      .join("b_stage", "b_stage.id", "b_match.stage_id")
+      .join("b_tournament", "b_tournament.id", "b_stage.tournament_id")
+      .join(
+        TABLE_NAMES.TOURNAMENTS,
+        "tournamentsData.id",
+        "b_tournament.tournament_uuid"
+      )
+      .whereRaw(
+        `(opponent1->>'id') in (${tournaments.map((x: any) => `'${x.id}'`)}) 
+        or (opponent2->>'id') in (${tournaments.map((x: any) => `'${x.id}'`)}) `
+      )
+      .select([
+        "b_match.id as match_id",
+        "tournamentsData.id as tournament_id",
+        "tournamentsData.name as tournament_name",
+        "b_match.opponent1",
+        "b_match.opponent2",
+        "b_stage.type",
+        "b_match.status as status"
+      ])
+
+      // console.log(matches);
+      
+
+    const part_id: any[] = [];
+    matches.forEach((x: any) => {
+      part_id.push(x.opponent1.id);
+      part_id.push(x.opponent2.id);
+    });    
+
+    //fetch all participants of the match
+    const part_list = await participantRepo
+      .knexObj()
+      .whereIn("id", part_id)
+      .whereNotNull("user_id")
+      .orWhereNotNull("team_id");
+
+    const groupPartList = _.groupBy(part_list, "id");
+    const opponents: any[] = [];
+    const opp_teams: any[] = [];
+
+    part_list.forEach((part: any) => {
+      if (part.user_id) opponents.push(part.user_id);
+      if (part.team_id) opp_teams.push(part.team_id);
+    });
+
+    const userRepo = new CrudRepository<IPrivateProfile>(
+      context.knexConnection as Knex,
+      TABLE_NAMES.PRIVATE_PROFILE
+    );
+
+    const teamRepo = new CrudRepository<ITeams>(
+      context.knexConnection as Knex,
+      TABLE_NAMES.TEAMS
+    );
+
+    const [opp_users_list] = await Promise.all([
+      // fetching opponents details for single tournament
+      await userRepo
+        .knexObj()
+        .whereIn("id", [...opponents, user?.id])
+        .select(USER_FEILDS)
+        .select("id as user_id"),
+    ]);
+
+    const opp_users = await Promise.all(
+      opp_users_list.map((i: any) => getUserWithElo(i.user_id, i, context))
+    );
+
+    const [teams] = await Promise.all([
+      await teamRepo
+        .knexObj()
+        .whereIn("id", opp_teams)
+        .select(["id as team_id", "name", "platform_id", "game_id"]),
+    ]);
+
+    const teams_grouped = _.groupBy(teams, "team_id");
+    const opp_user_grouped = _.groupBy(opp_users, "user_id");
+
+    // concatinating matchs and opponents/user details
+
+    const result = Promise.all(
+      matches.map(async (match: any) => {
+        let { opponent1, opponent2 } = match;
+        if (
+          opponent1.id &&
+          groupPartList[opponent1.id] &&
+          groupPartList[opponent1.id].length
+        ) {
+          const participant = groupPartList?.[opponent1.id]?.[0];
+          if (participant.user_id)
+            opponent1 = {
+              ...opponent1,
+              ...opp_user_grouped[participant.user_id][0],
+            };
+          if (participant.team_id)
+            opponent1 = {
+              ...opponent1,
+              ...teams_grouped?.[participant.team_id]?.[0],
+            };
+        }
+        if (
+          opponent2.id &&
+          groupPartList[opponent2.id] &&
+          groupPartList[opponent2.id].length
+        ) {
+          const participant = groupPartList[opponent2.id][0];
+          if (participant.user_id)
+            opponent2 = {
+              ...opponent2,
+              ...opp_user_grouped[participant.user_id][0],
+            };
+          if (participant.team_id)
+            opponent2 = {
+              ...opponent2,
+              ...teams_grouped?.[participant.team_id]?.[0],
+            };
+        }
+
+        const tournament = await tournamentDetails(
+          context,
+          match.tournament_id
+        );
+        return {
+          ...match,
+          tournament: tournament.data,
+          opponent1,
+          opponent2,
+        };
+      })
+    );
+
+    return result;
+  } catch (ex: any) {
+    return getErrorObject(ex);
+  }
+};
+
 const formatTeamsData = (data: any): any => {
   const grouped = _.groupBy(data, "team_id") as any;
   const result = Object.keys(grouped).map((key) => {

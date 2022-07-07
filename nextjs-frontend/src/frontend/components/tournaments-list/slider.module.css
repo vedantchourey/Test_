@@ -14,6 +14,19 @@
   letter-spacing: -0.011em;
 }
 
+.choose_Game{
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: #FFFFFF;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.image{
+  height: 90px;
+  width: 90px;
+  margin: 10px;
+}
+
 .credit_font{
   /* background: -webkit-linear-gradient(#EF507E, #F09633); */
   color: #ffffff;

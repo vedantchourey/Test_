@@ -6,7 +6,7 @@ import { updateComment } from './update-comment/update-comment';
 import { unlikePost } from './unlike-post/unlike-post';
 import { deleteComment } from './delete-comment/delete-comment';
 import { deletePost } from './delete-post/delete-post';
-
+import {getPostById} from './postbyid'
 export {
   createPost,
   likePost,
@@ -15,5 +15,6 @@ export {
   updateComment,
   unlikePost,
   deleteComment,
-  deletePost
+  deletePost,
+  getPostById
 }

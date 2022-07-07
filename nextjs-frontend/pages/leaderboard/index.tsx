@@ -124,15 +124,16 @@ const Leaderboard = (): JSX.Element => {
           <Typography className={styles.text}>Choose Game</Typography>
           <Box
             mt={5}
-            sx={{ maxWidth: "lg" }}
+            sx={{ maxWidth: isDesktop?"1400px":"400px" }}
             display={"flex"}
             flexWrap={"nowrap"}
             overflow={"scroll"}
             className="hide-scrollbar"
           >
             {games.map((data) => (
-              <Button key={1} data-value="1">
                 <img
+                key={1} data-value="1"
+                className={styles.scrollImage}
                   src={imagedata[data.code]}
                   onClick={(): any => {
                     setSelectedGame(data.id);
@@ -145,7 +146,6 @@ const Leaderboard = (): JSX.Element => {
                     borderStyle: "solid",
                   }}
                 />
-              </Button>
             ))}
           </Box>
           {isDesktop && (
@@ -236,7 +236,7 @@ const Leaderboard = (): JSX.Element => {
                       Rank
                     </TableCell>
                     <TableCell style={{ width: "65%" }}>Username</TableCell>
-                    <TableCell style={{ width: "25%" }}>Elo Rating</TableCell>
+                    {isDesktop&&(<TableCell style={{ width: "25%" }}>Elo Rating</TableCell>)}
                   </TableRow>
                 </TableHead>
                 <TableBody

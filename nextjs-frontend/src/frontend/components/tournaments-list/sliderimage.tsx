@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Grid,
   Typography,
 } from "@mui/material";
@@ -24,6 +23,9 @@ import { TournamentData } from "../tournament";
 import Loader from "../ui-components/loader";
 import ButtonComp from "./buttons";
 import CardComp from "./card";
+import styles from "./slider.module.css";
+import { isDeviceTypeSelector } from "../../redux-store/layout/layout-selectors";
+import { deviceTypes } from "../../redux-store/layout/device-types";
 
 const imagedata: any = {
   FIFA_22: "/images/game1.svg",
@@ -42,10 +44,17 @@ const imagedata: any = {
   corp: "/images/game2.svg",
 };
 
+const allstatus = ["complete", "ongoing", "pending"];
+const allcredits = ["1-5", "6-10", "11-15", "16-20", "20+"];
+
 const SliderComp: React.FC = (): JSX.Element => {
   const formats = useAppSelector(allFormatsSelector);
   const formatsFetchStatus = useAppSelector(formatsFetchStatusSelector);
+  const isDesktop = useAppSelector((x) =>
+    isDeviceTypeSelector(x, deviceTypes.desktop));
   const [format, setFormat] = useState("");
+  const [status, setStatus] = useState("");
+  const [credits, setCredits] = useState("");
   const [loading, setLoading] = useState(false);
 
   const [tournamentsData, setData] = React.useState<TournamentData[]>([]);
@@ -64,6 +73,8 @@ const SliderComp: React.FC = (): JSX.Element => {
             game: first ? "" : game_id,
             limit: 50,
             format,
+            status,
+            amount: credits,
           },
           headers: headers,
         })
@@ -100,13 +111,12 @@ const SliderComp: React.FC = (): JSX.Element => {
     if (games?.[0]?.id) {
       setTournamentsData(games[0].id, true);
     }
-  }, [games, format]);
-
+  }, [games, format, status, credits]);
 
   return (
     <>
       <Loader loading={loading} />
-      <Typography textAlign={"left"}>Choose Game</Typography>
+      <Typography textAlign={"left"} className={styles.choose_Game}>Choose your Game</Typography>
       {/* {isMobile ? (
         <Grid mt={5} sx={{ maxWidth: "sm" }}>
           <AliceCarousel
@@ -130,24 +140,35 @@ const SliderComp: React.FC = (): JSX.Element => {
       )} */}
       <Box
         mt={5}
-        sx={{ maxWidth: "lg" }}
+        sx={{ maxWidth:isDesktop?"1400px":"400px"}}
         display={"flex"}
         flexWrap={"nowrap"}
         overflow={"scroll"}
         className="hide-scrollbar"
       >
         {games.map((data) => (
-          <Button key={1} data-value="1">
             <img
+              key={1}
+              data-value="1"
               src={imagedata[data.code]}
+              className={styles.image}
               onClick={(): any => setTournamentsData(data.id)}
               role="presentation"
             />
-          </Button>
         ))}
       </Box>
 
-      <ButtonComp formats={formats} setFormat={setFormat} format={format} />
+      <ButtonComp
+        formats={formats}
+        setFormat={setFormat}
+        format={format}
+        allstatus={allstatus}
+        status={status}
+        setStatus={setStatus}
+        allcredits={allcredits}
+        credits={credits}
+        setCredits={setCredits}
+      />
       <Grid container columnSpacing={2} mt={5}>
         {tournamentsData.map((data: any) => {
           const startDateTime = moment(data.startDate).format(
