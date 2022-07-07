@@ -65,7 +65,6 @@
 }
 
 .background {
-  padding: 40px 26px;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
   background-repeat: no-repeat;
@@ -138,5 +137,6 @@
   }
   .divider {
     margin-top: 20px;
+    color: "rgba(255, 255, 255, 0.1)";
   }
 }
