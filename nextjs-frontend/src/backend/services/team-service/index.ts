@@ -55,6 +55,8 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
             "teams.name",
             "teams.teamLogo",
             "teams.teamCover",
+            "teams.game_id",
+            "teams.platform_id",
             "teams.id",
             "teams.created_by",
             "private_profiles.firstName",
@@ -97,6 +99,8 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
                         teamLogo: items[0].teamLogo,
                         created_by: owner.user_id,
                         teamCover: items[0].teamCover,
+                        gameId: items[0].game_id,
+                        platformId: items[0].platform_id,
                         players: players.map((data) => {
                             return {
                                 user_id: data.user_id,
