@@ -68,6 +68,7 @@ export const enterToFreeAgencyMarket = async (
 
 export interface IAddToWatchListRequest {
   playerId: string;
+  gameId: string;
 }
 
 export const addToWatchList = async (
@@ -78,6 +79,7 @@ export const addToWatchList = async (
   const watchListRepo = new watchlistRepository(transaction);
   const checkExisting = await watchListRepo.find({
     playerId: req.playerId,
+    gameId: req.gameId,
     userId: context.user?.id || "",
   });
   if (checkExisting?.length) return getErrorObject("Already added in watchlist");
@@ -85,6 +87,7 @@ export const addToWatchList = async (
   const result = await watchListRepo.create({
     playerId: req.playerId,
     userId: context.user?.id || "",
+    gameId: req.gameId
   });
   return result;
 };
@@ -101,7 +104,8 @@ export const getWatchList = async (
     .select("watchlist.id as id");
     
     const resultBatch = await Promise.all(
-      users.map((i: any) => fetchEloRating(context, i))
+      users.map((i: any) =>
+        fetchEloRating(context, { ...i, user_id: i.playerId, game_id: i.gameId }))
     );
     return resultBatch;
 };
