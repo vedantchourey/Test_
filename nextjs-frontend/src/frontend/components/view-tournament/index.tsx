@@ -6,6 +6,9 @@ import {
   DialogTitle,
   Grid,
   Typography,
+  Select,
+  OutlinedInput,
+  MenuItem,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useRouter } from "next/router";
@@ -32,6 +35,8 @@ import { useAppSelector } from "../../redux-store/redux-store";
 import { userProfileSelector } from "../../redux-store/authentication/authentication-selectors";
 import TeamSelection, { Team } from "./team-selection";
 import Loader from "../ui-components/loader";
+import { isDeviceTypeSelector } from "../../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from "../../../../src/frontend/redux-store/layout/device-types";
 
 interface JoinTeamType {
   tournamentId: string;
@@ -80,6 +85,15 @@ const calculateDuration = (
   now: moment.Moment = moment()
 ): moment.Duration => moment.duration(eventTime.diff(now), "milliseconds");
 
+const tabs: { title: string; url: string }[] = [
+  { title: "Details", url: "Details" },
+  { title: "Participants", url: "Participants" },
+  { title: "Rules", url: "Rules" },
+  { title: "Prizes", url: "Prizes" },
+  { title: "Bracket", url: "Bracket" },
+  { title: "Contact", url: "Contact" },
+];
+
 const ViewTournament: React.FC = () => {
   const user = useAppSelector(userProfileSelector);
   const [data, setData] = React.useState<TournamentData>({});
@@ -95,6 +109,9 @@ const ViewTournament: React.FC = () => {
   const [isSuccessJoined, setSuccessJoined] = React.useState(false);
   const [openSuccessModal, setOpenSuccessModal] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const isDesktop = useAppSelector((x) =>
+  isDeviceTypeSelector(x, deviceTypes.desktop));
+  let page="";
 
   const fetchTeams = async (): Promise<void> => {
     const headers = await getAuthHeader();
@@ -412,6 +429,7 @@ const ViewTournament: React.FC = () => {
   };
 
   const onTabClick = (tab: string): void => {
+    page=tab;
     if (!tab || tab === "") return;
     router.push(getUrl(), getAsURL(tab.toLowerCase()), { shallow: true });
   };
@@ -492,7 +510,7 @@ const ViewTournament: React.FC = () => {
         <Loader loading={loading} />
 
         <ViewCard>
-          <Grid container>
+          <Grid container >
             <Grid item xs={6}>
               {data.basic?.sponsor && (
                 <img
@@ -540,12 +558,29 @@ const ViewTournament: React.FC = () => {
           </Grid>
         </ViewCard>
         <Box marginX={"70px"}>
-          <NavTabs
+          {isDesktop&&(<NavTabs
             items={items.map((item) => item.title)}
             current={getCurrent()}
             onClick={onTabClick}
             altNav
-          />
+          />)}
+          {!isDesktop&&(
+            <Select
+            value={page}
+            input={<OutlinedInput />}
+            onChange={(e: any): void => onTabClick(e.target.value)}
+            fullWidth
+            sx={{ m: 1 }}
+          >
+            {tabs.map((tab) => {
+              return (
+                <MenuItem key={tab.url} value={tab.url}>
+                  {tab.title}
+                </MenuItem>
+              );
+            })}
+          </Select>
+          )}
         </Box>
         {renderComponent()}
       </React.Fragment>
