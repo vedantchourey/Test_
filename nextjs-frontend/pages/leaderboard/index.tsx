@@ -96,7 +96,7 @@ const Leaderboard = (): JSX.Element => {
   const appDispatch = useAppDispatch();
   const games = useAppSelector(allGamesSelector);
   const gamesFetchStatus = useAppSelector(gamesFetchStatusSelector);
-  const [selectedGame, setSelectedGame] = React.useState<String>(
+  const [selectedGame, setSelectedGame] = React.useState<string>(
     games.length > 0 ? games[0].id : ""
   );
 
@@ -112,8 +112,7 @@ const Leaderboard = (): JSX.Element => {
   }, [appDispatch, gamesFetchStatus]);
 
   const isDesktop = useAppSelector((x) =>
-    isDeviceTypeSelector(x, deviceTypes.desktop)
-  );
+    isDeviceTypeSelector(x, deviceTypes.desktop));
   return (
     <NoobPage
       title="Leaderboard"

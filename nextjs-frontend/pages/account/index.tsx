@@ -9,7 +9,7 @@ import {
 } from "../../src/frontend/redux-store/authentication/authentication-selectors";
 import UserProfileCard from "../../src/frontend/components/cards/user-profile-card/user-profile-card";
 import NoobPage from "../../src/frontend/components/page/noob-page";
-import { Box, Divider, Grid, Tab, SxProps, styled, Tabs } from "@mui/material";
+import { Box, Divider, Grid, Tab } from "@mui/material";
 import commonStyles from "../../src/frontend/styles/common.module.css";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import CreatePostInput from "../../src/frontend/components/account/posts/create-post-input";
@@ -19,16 +19,6 @@ import { IPostsResponse } from "../../src/frontend/service-clients/messages/i-po
 import { withProtected } from "../../src/frontend/components/auth-wrapper/auth-wrapper";
 
 type TabsProps = "posts" | "about" | "activity";
-
-const tabStyles: SxProps = {
-  textTransform: "capitalize",
-  fontWeight: 400,
-  marginRight: 2,
-  borderRadius: 2,
-  minHeight: 42,
-  background: "rgba(255,255,255,0.1)",
-  border: "none",
-};
 
 function Account(): JSX.Element {
   const router = useRouter();
@@ -65,7 +55,8 @@ function Account(): JSX.Element {
 
   const _renderPosts = (): JSX.Element | React.ReactNode => {
     if (isFetchingPosts) {
-      return new Array(5).fill("").map((data, i) => <h1 key={i}>Skeleton</h1>);
+      return new Array(5).fill("")
+.map((data, i) => <h1 key={i}>Skeleton</h1>);
     }
     const jsx = posts.map((postData) => {
       return <PostCard key={postData.id} data={postData} />;

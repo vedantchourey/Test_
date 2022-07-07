@@ -9,7 +9,7 @@ import {
   MenuItem,
   Button,
 } from "@mui/material";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import {
   updateAvatar,
   updateProfileBackground,
@@ -56,10 +56,10 @@ export default function UserProfileCard(): JSX.Element {
   const [teamData, setTeamData] = useState<any[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleClick = (event: React.MouseEvent<HTMLElement>): void => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+  const handleClose = (): void => {
     setAnchorEl(null);
   };
 
@@ -170,7 +170,6 @@ export default function UserProfileCard(): JSX.Element {
             style={{ marginTop: 50, textAlign: "center" }}
           >
             <MenuItem
-              onClick={() => {}}
               style={{ width: 220, maxWidth: 215, paddingLeft: 35 }}
             >
               Remove picture

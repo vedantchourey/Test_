@@ -32,8 +32,7 @@ import axios from "axios";
 
 const Home = (): JSX.Element => {
   const isDesktop = useAppSelector((x) =>
-    isDeviceTypeSelector(x, deviceTypes.desktop)
-  );
+    isDeviceTypeSelector(x, deviceTypes.desktop));
   const user = useAppSelector(userProfileSelector);
   const [newsData, setNewsData] = useState<any[]>([]);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);

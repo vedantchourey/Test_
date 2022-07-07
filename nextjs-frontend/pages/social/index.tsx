@@ -26,8 +26,7 @@ export default function Create(): JSX.Element {
       setIsFetchingPosts(true);
       const followers = await fetchUserFollowingList(user?.id || "");
       const fetchPostsBatch = followers.map((i) =>
-        getPostsByUserId(i.follower.id)
-      );
+        getPostsByUserId(i.follower.id));
       const posts: IPostsResponse[] = [];
       const followerPosts = await Promise.all(fetchPostsBatch);
       followerPosts.map((p: any) => {
@@ -45,7 +44,8 @@ export default function Create(): JSX.Element {
 
   const _renderPosts = (): JSX.Element | React.ReactNode => {
     if (isFetchingPosts) {
-      return new Array(5).fill("").map((data, i) => <Skeleton key={i} />);
+      return new Array(5).fill("")
+.map((data, i) => <Skeleton key={i} />);
     }
     const jsx = posts.map((postData) => {
       return <PostCard key={postData.id} data={postData} row={true} />;
