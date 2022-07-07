@@ -75,7 +75,7 @@ const CardDesktop: React.FC<any> = ({
               <Grid item md={4} lg={4}>
                 <Button
                   variant="contained"
-                  color={moment(start_date).isBefore(moment()) ? "error" : "secondary"}
+                  color={moment(start_date).isBefore(moment()) ? "secondary" : "pinkButton"}
                   sx={{ color: "#FFFFFF" }}
                 >
                   {moment(start_date).isBefore(moment())
