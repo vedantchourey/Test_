@@ -1,6 +1,8 @@
+// import { Settings } from 'react-slick';
 import { BaseRepository } from "./base-repository";
 import { Knex } from "knex";
 import { ITournament } from "../models/i-tournaments";
+import moment from "moment";
 import { ListTournamentType } from "../../tournament-service/list-tournaments-request";
 import { IListTournamentResponse } from "../../tournament-service/i-tournament-response";
 const keys = [
@@ -47,6 +49,7 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
     let options: {
       game?: string;
       status?: string;
+      amount?: string;
       settings?: {
         tournamentFormat: string;
       };
@@ -57,27 +60,77 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
         })
       : (options = null);
 
-    params.status ? (options = { ...options, status: params.status }) : null;
-
     const limit = params.limit || 5;
     const query = this.entities()
       .select(...keys)
-      .where(options ? options : {});
+      .where(options ? options : {})
 
-    if (params?.format) {
-      query.whereRaw("cast(settings->>? as varchar) = ?", [
-        "tournamentFormat",
-        params?.format ? params?.format : "$tournamentFormat",
-      ]);
-    }
+      if (params?.format) {
+        query.whereRaw("cast(settings->>? as varchar) = ?", [
+          "tournamentFormat",
+          params?.format ? params?.format : "$tournamentFormat",
+        ]);
+      }
+      
+      result = await query
 
-    if (params.page) {
-      result = await query.offset((params.page - 1) * limit).limit(limit);
-    }
-    result = await query.limit(limit);
-    const count = await this.entities().count();
+      if(params?.status){
+        result = result.filter((_doc: any) => {        
+           if(moment(_doc.startDate).isBefore(moment())) {
+            if(params?.status === "complete"){
+              return _doc
+            }
+           } else if(moment(_doc.startDate).isSame(moment(), "day")){
+              if(moment(moment(moment(_doc.startDate).format('YYYY-MM-DD')
+.toString()+' '+_doc.startTime)).isBefore(moment())){
+                if(params?.status === "complete"){
+                  return _doc
+                }
+              } else if(params?.status === "ongoing"){
+                  return _doc
+                }
+            } else if(params?.status === "pending"){
+                return _doc
+              } 
+        })
+      }
+
+      if(params?.amount){
+        result = result.filter((_doc: any) => {
+          if(params.amount === "1-5"){
+            if(_doc?.settings?.entryFeeAmount >= 1 && _doc?.settings?.entryFeeAmount <= 5){
+              return _doc
+            }
+          } else if(params.amount === "6-10"){
+            if(_doc?.settings?.entryFeeAmount >= 6 && _doc?.settings?.entryFeeAmount <= 10){
+              return _doc
+            }
+          } else if(params.amount === "11-15"){
+            if(_doc?.settings?.entryFeeAmount >= 11 && _doc?.settings?.entryFeeAmount <= 15){
+              return _doc
+            }
+          } else if(params.amount === "16-20"){
+            if(_doc?.settings?.entryFeeAmount >= 16 && _doc?.settings?.entryFeeAmount <= 20){
+              return _doc
+            }
+          } else if(params.amount === "20+"){
+            if(_doc?.settings?.entryFeeAmount > 20){
+              return _doc
+            }
+          }
+        })
+      }
+
+      const counts = [...result]
+
+      if (params?.page) {
+        result = result.slice((params.page - 1) * limit, params.page * limit);
+      } else {
+        result = result.slice((1 - 1) * limit, Number(limit));
+      }
+
     return {
-      total: count[0].count,
+      total: counts.length,
       tournaments: result,
     };
   }

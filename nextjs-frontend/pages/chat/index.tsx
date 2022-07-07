@@ -6,7 +6,7 @@ export default function ChatPage(): JSX.Element {
   return (
     <NoobPage title="Chat" metaData={{}} hideChat={true}>
       <>
-        <h1>Chat</h1>
+        <h1 style={{margin:"20px",color:"#FFFFFF"}}>Chat</h1>
         <Chat smallChat={false} />
       </>
     </NoobPage>

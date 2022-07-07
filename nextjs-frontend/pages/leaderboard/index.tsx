@@ -11,11 +11,17 @@ import React, { Fragment } from "react";
 import "react-alice-carousel/lib/alice-carousel.css";
 import NoobPage from "../../src/frontend/components/page/noob-page";
 import Heading from "../../src/frontend/components/ui-components/typography/heading";
-import { allGamesSelector, gamesFetchStatusSelector } from "../../src/frontend/redux-store/games/game-selectors";
+import {
+  allGamesSelector,
+  gamesFetchStatusSelector,
+} from "../../src/frontend/redux-store/games/game-selectors";
 import { fetchAllGamesThunk } from "../../src/frontend/redux-store/games/game-slice";
 import { deviceTypes } from "../../src/frontend/redux-store/layout/device-types";
 import { isDeviceTypeSelector } from "../../src/frontend/redux-store/layout/layout-selectors";
-import { useAppDispatch, useAppSelector } from "../../src/frontend/redux-store/redux-store";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../src/frontend/redux-store/redux-store";
 import { getAuthHeader } from "../../src/frontend/utils/headers";
 import styles from "./leaderboard.module.css";
 
@@ -68,7 +74,6 @@ const imagedata: any = {
 };
 
 const Leaderboard = (): JSX.Element => {
-
   const [leaderboardgamedata, setData] = React.useState<Gameinfo[]>([]);
   const getleaderboardgamedata = async (gameId: string): Promise<void> => {
     try {
@@ -91,9 +96,12 @@ const Leaderboard = (): JSX.Element => {
   const appDispatch = useAppDispatch();
   const games = useAppSelector(allGamesSelector);
   const gamesFetchStatus = useAppSelector(gamesFetchStatusSelector);
+  const [selectedGame, setSelectedGame] = React.useState<string>(
+    games.length > 0 ? games[0].id : ""
+  );
 
   React.useEffect(() => {
-    if(games.length){
+    if (games.length) {
       getleaderboardgamedata(games[0].id);
     }
   }, [games]);
@@ -116,20 +124,28 @@ const Leaderboard = (): JSX.Element => {
           <Typography className={styles.text}>Choose Game</Typography>
           <Box
             mt={5}
-            sx={{ maxWidth: "lg" }}
+            sx={{ maxWidth: isDesktop?"1400px":"400px" }}
             display={"flex"}
             flexWrap={"nowrap"}
             overflow={"scroll"}
             className="hide-scrollbar"
           >
             {games.map((data) => (
-              <Button key={1} data-value="1">
                 <img
+                key={1} data-value="1"
+                className={styles.scrollImage}
                   src={imagedata[data.code]}
-                  onClick={(): any => getleaderboardgamedata(data.id)}
+                  onClick={(): any => {
+                    setSelectedGame(data.id);
+                    getleaderboardgamedata(data.id);
+                  }}
                   role="presentation"
+                  style={{
+                    borderWidth: data.id === selectedGame ? 3 : 0,
+                    borderColor: "#6932F9",
+                    borderStyle: "solid",
+                  }}
                 />
-              </Button>
             ))}
           </Box>
           {isDesktop && (
@@ -139,10 +155,39 @@ const Leaderboard = (): JSX.Element => {
               columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}
               className={styles.mainContainer}
             >
-              {leaderboardgamedata.slice(0, 3).map((item) => (
+              {leaderboardgamedata.slice(0, 3).map((item, index) => (
                 <Grid item xs={12} lg={4} key={item.id}>
                   <Box className={styles.container}>
-                    <img src="/icons/Male.png" className={styles.img1} />
+                    <Box
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <Typography
+                        style={{
+                          paddingLeft: "35%",
+                        }}
+                        fontSize={10}
+                      >
+                        {index === 0 ? "1st" : index === 1 ? "2nd" : "3rd"}
+                      </Typography>
+                      <img
+                        src="/icons/Male.png"
+                        className={styles.img1}
+                        style={{
+                          borderWidth: 5,
+                          borderColor:
+                            index === 0
+                              ? "#FFAA2E"
+                              : index === 1
+                              ? "#C05C00"
+                              : "#979797",
+                          borderStyle: "groove",
+                        }}
+                      />
+                    </Box>
+
                     <Box style={{ marginLeft: "45px" }}>
                       <Box className={styles.box1}>
                         <Typography className={styles.text1}>
@@ -191,7 +236,7 @@ const Leaderboard = (): JSX.Element => {
                       Rank
                     </TableCell>
                     <TableCell style={{ width: "65%" }}>Username</TableCell>
-                    <TableCell style={{ width: "25%" }}>Elo Rating</TableCell>
+                    {isDesktop&&(<TableCell style={{ width: "25%" }}>Elo Rating</TableCell>)}
                   </TableRow>
                 </TableHead>
                 <TableBody
@@ -202,25 +247,29 @@ const Leaderboard = (): JSX.Element => {
                     },
                   }}
                 >
-                  {leaderboardgamedata.slice(3, leaderboardgamedata.length).map((item, idx) => (
-                    <TableRow key={item.id}>
-                      <TableCell align="center" component="th" scope="row">
-                        {idx+3}
-                        <sup>th</sup>
-                      </TableCell>
-                      <TableCell>
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                          <span>
-                            <img src="/icons/Ellipse 4.png" />
-                          </span>
-                          <span style={{ padding: "10px" }}>
-                            {item.userDetails.username}
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell>{item.elo_rating}</TableCell>
-                    </TableRow>
-                  ))}
+                  {leaderboardgamedata
+                    .slice(3, leaderboardgamedata.length)
+                    .map((item, idx) => (
+                      <TableRow key={item.id}>
+                        <TableCell align="center" component="th" scope="row">
+                          {idx + 3}
+                          <sup>th</sup>
+                        </TableCell>
+                        <TableCell>
+                          <div
+                            style={{ display: "flex", alignItems: "center" }}
+                          >
+                            <span>
+                              <img src="/icons/Ellipse 4.png" />
+                            </span>
+                            <span style={{ padding: "10px" }}>
+                              {item.userDetails.username}
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell>{item.elo_rating}</TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
               </Table>
             </TableContainer>

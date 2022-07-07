@@ -66,6 +66,17 @@
 	letter-spacing: -0.011em;
 	color: #FFFFFF;
 }
+.text2Mobile {
+	width: 343px;
+	height: 69px;
+	text-align: left;
+	font-weight: 700;
+	font-size: 18px;
+	line-height: 23px;
+	letter-spacing: -0.011em;
+	text-transform: uppercase;
+	color: #FFFFFF;
+}
 .tab {
 	width: 180px;
 	margin-right: 20px;

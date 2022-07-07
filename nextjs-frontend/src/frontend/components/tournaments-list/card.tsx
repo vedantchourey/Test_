@@ -75,10 +75,11 @@ const CardDesktop: React.FC<any> = ({
               <Grid item md={4} lg={4}>
                 <Button
                   variant="contained"
-                  color={moment(start_date).isBefore(moment()) ? "error" : "secondary"}
-                  sx={{ color: "#FFFFFF" }}
+                  color={moment(start_date).isBefore(moment()) ? "secondary" : "info"}
                 >
-                  {moment(start_date).isBefore(moment()) ? "Completed" : "On Going"}
+                  {moment(start_date).isBefore(moment())
+                    ? "Completed"
+                    : "On Going"}
                 </Button>
               </Grid>
             </Grid>
@@ -122,6 +123,7 @@ const CardDesktop: React.FC<any> = ({
 };
 
 const CardMobile: React.FC<any> = ({
+  id,
   tournament_name,
   tournament_type,
   platform,
@@ -129,6 +131,7 @@ const CardMobile: React.FC<any> = ({
   participants,
   banner
 }: any): JSX.Element => {
+  const router = useRouter();
   return (
     <Grid container columnSpacing={2} mt={5}>
       <Grid item xs={12}>
@@ -176,7 +179,14 @@ const CardMobile: React.FC<any> = ({
                 {platform}
               </Grid>
               <Grid item xs={6} textAlign={"right"}>
-                <Button variant="contained">View More -{">"}</Button>
+                <Button
+                  variant="contained"
+                  onClick={(): any =>
+                    router.push(`/view-tournament/${id}/details`)
+                  }
+                >
+                  View More -{">"}
+                </Button>
               </Grid>
             </Grid>
           </Box>
@@ -212,12 +222,13 @@ const CardComp = ({
     <>
       {isMobile ? (
         <CardMobile
+          id={id}
           tournament_name={tournament_name}
           tournament_type={tournament_type}
           platform={platform}
+          banner={banner}
           start_date={start_date}
           participants={participants}
-          banner={banner}
         />
       ) : (
         <CardDesktop

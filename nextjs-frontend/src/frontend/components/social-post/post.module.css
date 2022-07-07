@@ -1,0 +1,184 @@
+.postCard {
+    background: none !important;
+    border: 2px solid #201736;
+    padding: 18px 28px 44px 28px;
+}
+
+.postCardOptionsContainer {
+    position: absolute;
+    width: 200px;
+    right: 64px;
+    margin-top: 4px;
+    padding: 0;
+    box-shadow: 24;
+    border-radius: 16px !important;
+    z-index: 4;
+}
+.postCardOptionsBtn img {
+    margin-right: 10px;
+}
+.postCardOptionsBtn {
+    font-weight: 500;
+    text-transform: capitalize !important;
+    padding: 8px 10px;
+    background-color: white !important;
+    border-bottom: solid 1px #e5e4e5;
+}
+
+.postCardOptionsBtn {
+    border-radius: 0;
+}
+
+.flexRow {
+    display: inline-flex;
+}
+
+.postImg {
+    margin: 30px 0 !important;
+}
+
+.actionButtons {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    bottom: -10px;
+}
+.blurContainer {
+    backdrop-filter: blur(5px);
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 6px 12px;
+    border-radius: 10px;
+}
+.blurContainer div {
+    display: flex;
+    align-items: center;
+}
+
+.postBtn:hover {
+    background-color: transparent;
+}
+.postBtn span:focus-visible {
+    outline: none;
+}
+
+.postAvatar {
+    border-radius: 50%;
+}
+
+.postVideo {
+    height: 300px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.previewImageCancel {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background-color: rgba(0, 0, 0, 1);
+    padding: 2px !important;
+}
+
+.previewImageStyle {
+    border-radius: 2px;
+    width: 100px;
+    max-height: 100px;
+    object-fit: cover;
+}
+.customTextArea {
+    margin: 10px 0;
+    border-radius: 15px;
+    padding: 22px 0 22px 12px;
+    background-color: none !important;
+}
+.textArea {
+    padding: 5px 0;
+}
+.textArea ::placeholder {
+    color: #4d465e;
+    font-weight: 500;
+}
+
+.commentsContainer {
+    position: relative;
+    padding-bottom: 80px;
+}
+.renderPosts {
+    display: flex;
+    flex-direction: column-reverse;
+    height: 430px;
+    overflow: auto;
+    margin-top: 70px !important;
+}
+.renderPosts::-webkit-scrollbar {
+    width: 8px;
+}
+.renderPosts::-webkit-scrollbar-thumb {
+    background: #211933;
+    border-radius: 10px;
+}
+
+.appBar {
+    background-image: none !important;
+    box-shadow: none;
+    padding-right: 0 !important;
+    background-color: #08001c;
+}
+.customToolBar {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+    border-bottom: 1px solid #211933;
+    margin: 0 16px;
+}
+.commentCard {
+    margin-top: 80px;
+    margin: 12px 20px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid #211933;
+}
+.commentAvatar {
+    border: 2px solid #6932f9 !important;
+    border-radius: 9999px !important;
+}
+.commetActionBtn {
+    display: flex;
+    align-items: center;
+}
+.commentInputCotainer {
+    width: 100%;
+    padding: 20px;
+    bottom: 0px;
+    position: fixed;
+    background-color: #08001c;
+    padding-top: 0 !important;
+}
+.commentInput {
+    padding: 12px;
+    border-radius: 10px;
+    background-color: #100626;
+    /* background-color: #6932f9; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@media screen and (max-width: 600px) {
+    .mainModalContainer {
+        width: -webkit-fill-available;
+        top: 60%;
+        padding: 1px;
+    }
+    .commentsContainer {
+        height: 692px;
+        padding-bottom: 112px;
+    }
+    .commentInputCotainer {
+        padding-bottom: 40px;
+    }
+    .postCardOptionsContainer {
+        margin: auto;
+        width: 80%;
+    }
+}

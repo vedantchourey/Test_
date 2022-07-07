@@ -25,13 +25,12 @@ export default function Create(): JSX.Element {
     try {
       setIsFetchingPosts(true);
       const followers = await fetchUserFollowingList(user?.id || "");
-      const fetchPostsBatch = followers.map((i) =>
-        getPostsByUserId(i.follower.id));
+      const fetchPostsBatch = followers.map((i) => getPostsByUserId(i.follower.id));
       const posts: IPostsResponse[] = [];
       const followerPosts = await Promise.all(fetchPostsBatch);
       followerPosts.map((p: any) => {
         p.map((fp: IPostsResponse) => posts.push(fp));
-      });
+      });      
       setPosts(posts);
     } finally {
       setIsFetchingPosts(false);
@@ -39,7 +38,7 @@ export default function Create(): JSX.Element {
   };
 
   useEffect(() => {
-    fetchPosts();
+    fetchPosts();       
   }, [user?.id]);
 
   const _renderPosts = (): JSX.Element | React.ReactNode => {
@@ -47,7 +46,7 @@ export default function Create(): JSX.Element {
       return new Array(5).fill("")
 .map((data, i) => <Skeleton key={i} />);
     }
-    const jsx = posts.map((postData) => {
+    const jsx = posts.map((postData) => {      
       return <PostCard key={postData.id} data={postData} row={true} />;
     });
     return jsx;
@@ -57,7 +56,7 @@ export default function Create(): JSX.Element {
     <NoobPage
       title="Social"
       metaData={{ description: "Noob storm home page" }}
-      hideChat={true}
+      pinChat={true}
     >
       <AuthGuard
         requiredRoles={requiredRoles}
