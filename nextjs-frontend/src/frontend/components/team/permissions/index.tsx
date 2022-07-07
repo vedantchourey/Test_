@@ -72,11 +72,12 @@ const Permissions: React.FC<PermissionProps> = ({ players, team }) => {
     axios
       .post("/api/teams/discard", data, {
         headers: headers,
-      }).then(() => {
+      })
+      .then(() => {
         router.push("/teamlist");
       })
       .catch(() => {
-        alert("Player already added in Watch list");
+        alert("Something want wrong!");
       })
       .finally(() => setLoading(false));
   };
@@ -90,14 +91,36 @@ const Permissions: React.FC<PermissionProps> = ({ players, team }) => {
     axios
       .post("/api/teams/leave-team", data, {
         headers: headers,
-      }).then(() => {
-          router.push("/teamlist")
+      })
+      .then(() => {
+        router.push("/teamlist");
       })
       .catch(() => {
-        alert("Player already added in Watch list");
+        alert("Something want wrong!");
       })
       .finally(() => setLoading(false));
   };
+
+  const removeMemeber = async (member_id: string): Promise<void> => {
+    setLoading(true);
+    const data = {
+      team_id: team?.id || "",
+      member_id,
+    };
+    const headers = await getAuthHeader();
+    axios
+      .post("/api/teams/remove-member", data, {
+        headers: headers,
+      })
+      .then(() => {
+        router.push("/teamlist");
+      })
+      .catch(() => {
+        alert("Something want wrong!");
+      })
+      .finally(() => setLoading(false));
+  };
+  
 
   return (
     <React.Fragment>
@@ -186,21 +209,26 @@ const Permissions: React.FC<PermissionProps> = ({ players, team }) => {
                             color={"white"}
                             variant="body2"
                           >
-                            {player.user_id === user?.id
+                            {player.user_id === team?.created_by
                               ? "Team Owner"
                               : "Team Member"}
                           </Typography>
                         </Box>
                       </NoobCell>
-                      {/* <NoobCell>
-                        <Box
-                          display={"flex"}
-                          justifyContent="space-between"
-                          alignContent={"center"}
-                        >
-                          <CloseIcon color="warning" />{" "}
-                        </Box>
-                      </NoobCell> */}
+                      <NoobCell>
+                        {/* {teamOwner && player.user_id !== user?.id && ( */}
+                          <NoobButton
+                            size="small"
+                            className="delete"
+                            variant="contained"
+                            style={{ margin: "0px 10px" }}
+                            disabled={loading}
+                            onClick={(): any => removeMemeber(player.user_id)}
+                          >
+                            Remove
+                          </NoobButton>
+                        {/* )} */}
+                      </NoobCell>
                     </NoobRow>
                   );
                 })}

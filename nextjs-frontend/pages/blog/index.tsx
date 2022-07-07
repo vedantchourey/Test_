@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import {
   Button,
   Card,
@@ -20,6 +21,7 @@ export default function News(): JSX.Element {
   const [newsData, setData] = useState<any[]>([]);
   const [currentNews, setCurrentNews] = useState<any>(null);
   const [liked, setLiked] = useState<any>(false);
+  const router = useRouter()
 
   const getleaderboardgamedata = async (gameId: string): Promise<void> => {
     try {
@@ -92,20 +94,22 @@ export default function News(): JSX.Element {
 
   return (
     <NoobPage
-      title="Home"
+      title="Blog"
       metaData={{
         description: "Noob Storm home page",
       }}
     >
       <>
-        <Typography variant="h1" style={{marginTop:"20px"}}>News</Typography>
+
+        <Typography variant="h1">Blogs</Typography>
         {!currentNews && (
           <Box display={"flex"} flexWrap={"wrap"}>
             {newsData.map((i: any, key) => (
               <Card
                 sx={{ maxWidth: 345, m: 2 }}
                 key={key}
-                onClick={(): any => setCurrentNews(i)}
+                onClick={(): any => router.push(`/blog/${i.id}`)}
+                // onClick={(): any => setCurrentNews(i)}
               >
                 <CardMedia
                   component="img"

@@ -44,6 +44,7 @@ import { IBMatch } from "../database/models/i-b-match";
 import { IPrivateProfile } from "../database/models/i-private-profile";
 import { ITeams } from "../database/models/i-teams";
 import { IEloRating } from "../database/models/i-elo-rating";
+import { IProfile } from "../database/models/i-profile";
 
 const getTournamentInviteObj = (
   knexConnection: Knex
@@ -747,11 +748,18 @@ export const fetchUserMatchs = async (
           groupPartList[opponent1.id].length
         ) {
           const participant = groupPartList?.[opponent1.id]?.[0];
-          if (participant.user_id)
+          if (participant.user_id){
+            const profileRepo = new CrudRepository<IProfile>(
+              context.knexConnection as Knex,
+              "profiles"
+            );
+            const data = await profileRepo.findById(participant.user_id)
             opponent1 = {
               ...opponent1,
+              ...data,
               ...opp_user_grouped[participant.user_id][0],
             };
+          }
           if (participant.team_id)
             opponent1 = {
               ...opponent1,
@@ -764,11 +772,18 @@ export const fetchUserMatchs = async (
           groupPartList[opponent2.id].length
         ) {
           const participant = groupPartList[opponent2.id][0];
-          if (participant.user_id)
+          if (participant.user_id) {
+            const profileRepo = new CrudRepository<IProfile>(
+              context.knexConnection as Knex,
+              "profiles"
+            );
+            const data = await profileRepo.findById(participant.user_id)
             opponent2 = {
               ...opponent2,
+              ...data,
               ...opp_user_grouped[participant.user_id][0],
             };
+          }
           if (participant.team_id)
             opponent2 = {
               ...opponent2,

@@ -527,10 +527,20 @@ const ViewTournament: React.FC = () => {
               alignSelf="flex-end"
             >
               <Box marginRight="16px">
-                <Typography>
-                  <span style={{ color: "#FF0000" }}> Round 1 begins in :</span>{" "}
-                  {countDown}
-                </Typography>
+                {countDown !== "00:00:00" ? (
+                  <Typography>
+                    <span style={{ color: "#FF0000" }}>
+                      Round 1 begins in :
+                    </span>{" "}
+                    {countDown}
+                  </Typography>
+                ) : (
+                  <Typography>
+                    <span style={{ color: "#FF0000" }}>
+                      Tournament already started
+                    </span>
+                  </Typography>
+                )}
               </Box>
 
               <Box marginRight="16px">

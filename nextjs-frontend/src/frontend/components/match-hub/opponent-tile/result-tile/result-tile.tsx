@@ -1,11 +1,12 @@
-import Image from "next/image";
+// import Image from "next/image";
 
 // Third party packages
-import { Button, Grid } from "@mui/material";
+import { Avatar, Button, Grid } from "@mui/material";
 
 // styles
 import styles from "./result-tile.module.css";
 import { IMatchHubData } from "../../../../../../pages/match-hub";
+import { frontendSupabase } from "../../../../services/supabase-frontend-service";
 
 interface ResultTileProps {
   isWon?: boolean;
@@ -18,6 +19,18 @@ interface ResultTileProps {
 const ResultTile: React.FC<ResultTileProps> = (props) => {
   const { isWon, child, opponent1Name="-", opponent2Name="-" } = props;
 
+  const opponent1Image = props.data.opponent1.avatarUrl
+    ? frontendSupabase.storage
+        .from("public-files")
+        .getPublicUrl(props.data.opponent1.avatarUrl).publicURL
+    : undefined;
+
+  const opponent2Image = props.data.opponent2.avatarUrl
+    ? frontendSupabase.storage
+        .from("public-files")
+        .getPublicUrl(props.data.opponent2.avatarUrl).publicURL
+    : undefined;
+
   return (
     <Grid container width={"100%"} className={styles.resultTileContainer}>
       <Grid item xs={3}>
@@ -26,7 +39,7 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
           className={styles.resultTileButton}
           style={{ marginRight: "16px" }}
         >
-          <Image src="/images/legand-club.png" width={32} height={32} />
+          <Avatar src={opponent1Image || undefined} alt={opponent1Name} />
           <span
             style={{ marginLeft: "16px" }}
             className={styles.resultTileValue}
@@ -71,7 +84,7 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
           >
             {opponent2Name}
           </span>
-          <Image src="/images/legand-club.png" width={32} height={32} />
+          <Avatar src={opponent2Image || undefined} alt={opponent2Name} />
         </Button>
       </Grid>
     </Grid>

@@ -7,10 +7,14 @@ import { createStyles, makeStyles } from "@mui/styles";
 import { useRouter } from "next/router";
 import * as React from "react";
 import { useRef, useState } from "react";
-import { isLoggedInSelector, userProfileSelector } from "../../redux-store/authentication/authentication-selectors";
+import {
+  isLoggedInSelector,
+  userProfileSelector,
+} from "../../redux-store/authentication/authentication-selectors";
 import { screenWidthSelector } from "../../redux-store/layout/layout-selectors";
 import { useAppSelector } from "../../redux-store/redux-store";
 import { signOut } from "../../service-clients/auth-service-client";
+import { frontendSupabase } from "../../services/supabase-frontend-service";
 import LoginModal from "../auth/login-modal/login-modal";
 import TwitchIcon from "../icons/twitch-icon";
 import YoutubeIcon from "../icons/youtube-icon";
@@ -69,6 +73,22 @@ export default function DrawerLeft(): JSX.Element {
   const screenWidth = useAppSelector(screenWidthSelector);
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const user = useAppSelector(userProfileSelector);
+  const userRef = useRef<any>(user)
+
+  React.useEffect(() => {
+    setInterval(async () => {
+      if (userRef.current?.id) {
+        await frontendSupabase
+          .from("user_last_seen")
+          .update({ last_seen: new Date() })
+          .eq("user_id", userRef.current?.id);
+      }
+    }, 1000 * 45);
+  }, []);
+
+  React.useEffect(() => {
+    userRef.current = user
+  }, [user]);
 
   // const username = useAppSelector(userNameSelector);
   // const wallet = useAppSelector(walletDetaislSelector);
@@ -172,8 +192,8 @@ export default function DrawerLeft(): JSX.Element {
                 onClick={(): any => {
                   if (user?.userRoles[0] === "noob-admin") {
                     router.push("/tournament-dashboard");
-                  } else{
-                    router.push("/user-dashboard")
+                  } else {
+                    router.push("/user-dashboard");
                   }
                 }}
               >
@@ -229,57 +249,94 @@ export default function DrawerLeft(): JSX.Element {
                 />
                 Tournaments
               </Button>
+              {isLoggedIn && (
+                <Button
+                  variant="text"
+                  className={classes.buttonStyles}
+                  onClick={gotoFreeAgencyMarketPage}
+                >
+                  <img
+                    src="/icons/Vector-Tournaments.png"
+                    className={classes.imgStyle}
+                  />
+                  Free Agency
+                </Button>
+              )}
+              {isLoggedIn && (
+                <Button
+                  variant="text"
+                  className={classes.buttonStyles}
+                  onClick={(): any => router.push("/social")}
+                >
+                  <img
+                    src="/icons/Vector-FAQ.png"
+                    className={classes.imgStyle}
+                  />
+                  Social
+                </Button>
+              )}
               <Button
                 variant="text"
                 className={classes.buttonStyles}
-                onClick={gotoFreeAgencyMarketPage}
-              >
-                <img
-                  src="/icons/Vector-Tournaments.png"
-                  className={classes.imgStyle}
-                />
-                Free Agency
-              </Button>
-              <Button variant="text" className={classes.buttonStyles} onClick={(): any => router.push("/social")}>
-                <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
-                Social
-              </Button>
-              <Button variant="text" className={classes.buttonStyles} onClick={(): any => router.push("/news")}>
-                <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
-                News
-              </Button>
-              <Button
-                variant="text"
-                className={classes.buttonStyles}
-                onClick={(): any => router.push("/chat")}
+                onClick={(): any => router.push("/blog")}
               >
                 <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
-                Chat
+                Blog
               </Button>
-              <Button
-                variant="text"
-                className={classes.buttonStyles}
-                onClick={(): any => router.push("/match-hub")}
-              >
-                <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
-                Match Hub
-              </Button>
-              <Button
-                variant="text"
-                className={classes.buttonStyles}
-                onClick={(): any => router.push("/store")}
-              >
-                <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
-                Store
-              </Button>
-              <Button
-                variant="text"
-                className={classes.buttonStyles}
-                onClick={gotoTeamListPage}
-              >
-                <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
-                My Teams
-              </Button>
+              {isLoggedIn && (
+                <Button
+                  variant="text"
+                  className={classes.buttonStyles}
+                  onClick={(): any => router.push("/chat")}
+                >
+                  <img
+                    src="/icons/Vector-FAQ.png"
+                    className={classes.imgStyle}
+                  />
+                  Chat
+                </Button>
+              )}
+
+              {isLoggedIn && (
+                <Button
+                  variant="text"
+                  className={classes.buttonStyles}
+                  onClick={(): any => router.push("/match-hub")}
+                >
+                  <img
+                    src="/icons/Vector-FAQ.png"
+                    className={classes.imgStyle}
+                  />
+                  Match Hub
+                </Button>
+              )}
+              {isLoggedIn && (
+                <Button
+                  variant="text"
+                  className={classes.buttonStyles}
+                  onClick={(): any => router.push("/store")}
+                >
+                  <img
+                    src="/icons/Vector-FAQ.png"
+                    className={classes.imgStyle}
+                  />
+                  Store
+                </Button>
+              )}
+              {isLoggedIn && (
+                <Button
+                  variant="text"
+                  className={classes.buttonStyles}
+                  onClick={gotoTeamListPage}
+                >
+                  <img
+                    src="/icons/Vector-FAQ.png"
+                    className={classes.imgStyle}
+                  />
+                  My Teams
+                </Button>
+              )}
+
               <Button
                 variant="text"
                 className={classes.buttonStyles}

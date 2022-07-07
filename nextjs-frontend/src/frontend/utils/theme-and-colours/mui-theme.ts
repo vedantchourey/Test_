@@ -53,7 +53,7 @@ const noobTheme = createTheme({
       fontWeight: "700",
       lineHeight: "24px",
       letterSpacing: "-0.011em",
-      textAlign: "center",
+      // textAlign: "center",
       color: "#FFFFFF",
     },
     body1: {
@@ -63,7 +63,7 @@ const noobTheme = createTheme({
       fontWeight: '500',
       lineHeight: '24px',
       letterSpacing: '-0.011em',
-      textAlign: "center",
+      // textAlign: "center",
     },
     // body2:{
     //   fontFamily: 'Inter',

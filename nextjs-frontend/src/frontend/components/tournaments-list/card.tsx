@@ -75,11 +75,7 @@ const CardDesktop: React.FC<any> = ({
               <Grid item md={4} lg={4}>
                 <Button
                   variant="contained"
-                  color={
-                    moment(start_date).isBefore(moment())
-                      ? "secondary"
-                      : "pinkButton"
-                  }
+                  color={moment(start_date).isBefore(moment()) ? "error" : "secondary"}
                   sx={{ color: "#FFFFFF" }}
                 >
                   {moment(start_date).isBefore(moment())
@@ -102,10 +98,11 @@ const CardDesktop: React.FC<any> = ({
                 item
                 md={4}
                 lg={4}
+                fontSize={18}
                 className={styles.credit_font}
                 textAlign={"right"}
               >
-                {credits} Credits
+                {credits === 0 ? "Free Entry" : `${credits} Credits`} 
               </Grid>
               <Grid item md={2} mb={1} lg={2} textAlign={"right"}>
                 <Button
@@ -133,7 +130,7 @@ const CardMobile: React.FC<any> = ({
   platform,
   start_date,
   participants,
-  banner,
+  banner
 }: any): JSX.Element => {
   const router = useRouter();
   return (
@@ -233,6 +230,7 @@ const CardComp = ({
           banner={banner}
           start_date={start_date}
           participants={participants}
+          banner={banner}
         />
       ) : (
         <CardDesktop

@@ -4,6 +4,7 @@ export interface INews {
   subtitle: string;
   author: string;
   image: string;
+  count?: string;
   description: string;
   created_at?: string;
   updated_at?: string;

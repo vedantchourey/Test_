@@ -99,66 +99,90 @@ export default function LoginModal(props: Props): JSX.Element {
   const onClickLostPassword = async (): Promise<void> => {
     await router.push('/reset-password')
   };
-  const handleKeypress = (e: { keyCode: number; }): void => {
+  const handleKeypress = (e: { key: any; }): void => {
       //it triggers by pressing the enter key
-    if (e.keyCode === 0) {
-      // onClickLogin();
+    if (e.key === "Enter") {
+      onClickLogin();
     }
   };
 
   return (
-    <CustomLoginDialog open={show} onClose={onClose} top={top} right={right} color="#08001C" 
-    onKeyPress ={handleKeypress}>
-      <div className={styles.content}>
-        <div className={styles.header}>
-          <div className={styles.headerTitle}>
-            <Typography>Sign In</Typography>
+    <CustomLoginDialog
+      open={show}
+      onClose={onClose}
+      top={top}
+      right={right}
+      color="#08001C"
+      onKeyPress={handleKeypress}
+    >
+      <form onSubmit={onClickLogin}>
+        <div className={styles.content}>
+          <div className={styles.header}>
+            <div className={styles.headerTitle}>
+              <Typography>Sign In</Typography>
+            </div>
+            <div className={styles.headerButtons}>
+              <IconButton onClick={onClose} disabled={isBusy}>
+                <CancelIcon />
+              </IconButton>
+            </div>
           </div>
-          <div className={styles.headerButtons}>
-            <IconButton onClick={onClose} disabled={isBusy}>
-              <CancelIcon />
-            </IconButton>
+          <div className={styles.row}>
+            <TextField
+              id="email"
+              label="Email"
+              variant="filled"
+              className={styles.inputRowItem}
+              value={request.email}
+              error={propsHasError(errors, "email")}
+              helperText={getErrorForProp(errors, "email")}
+              onChange={(event): void =>
+                setRequest({ ...request, email: event.target.value })
+              }
+              disabled={isBusy}
+            />
+          </div>
+          <div className={styles.row}>
+            <TextField
+              id="password"
+              label="Password"
+              variant="filled"
+              type="password"
+              className={styles.inputRowItem}
+              value={request.password}
+              error={propsHasError(errors, "password")}
+              helperText={getErrorForProp(errors, "password")}
+              onChange={(event): void =>
+                setRequest({ ...request, password: event.target.value })
+              }
+              disabled={isBusy}
+            />
+          </div>
+          <div className={styles.row}>
+            <FormHelperText
+              style={{ display: loginError ? "" : "none" }}
+              error={true}
+            >
+              {loginError?.message}
+            </FormHelperText>
+          </div>
+          <div className={styles.row}>
+            <Typography>
+              <Link onClick={onClickLostPassword}>Lost your password</Link>
+            </Typography>
+          </div>
+          <div className={styles.row}>
+            <Button
+              type={"button"}
+              className={styles.actionButton}
+              onClick={onClickLogin}
+              disabled={isBusy}
+            >
+              <Typography>Log In</Typography>
+            </Button>
           </div>
         </div>
-        <div className={styles.row}>
-          <TextField id="email"
-            label="Email"
-            variant="filled"
-            className={styles.inputRowItem}
-            value={request.email}
-            error={propsHasError(errors, 'email')}
-            helperText={getErrorForProp(errors, 'email')}
-            onChange={(event): void => setRequest({ ...request, email: event.target.value })}
-            disabled={isBusy}
-          />
-        </div>
-        <div className={styles.row}>
-          <TextField id="password"
-            label="Password"
-            variant="filled"
-            type="password"
-            className={styles.inputRowItem}
-            value={request.password}
-            error={propsHasError(errors, 'password')}
-            helperText={getErrorForProp(errors, 'password')}
-            onChange={(event): void => setRequest({ ...request, password: event.target.value })}
-            disabled={isBusy}
-          />
-        </div>
-        <div className={styles.row}>
-          <FormHelperText style={{ display: loginError ? '' : 'none' }} error={true}>{loginError?.message}</FormHelperText>
-        </div>
-        <div className={styles.row}>
-          <Typography><Link onClick={onClickLostPassword}>Lost your password</Link></Typography>
-        </div>
-        <div className={styles.row}>
-          <Button type={'button'} className={styles.actionButton}
-            onClick={onClickLogin}
-            disabled={isBusy}>
-            <Typography>Log In</Typography>
-          </Button>
-        </div>
-      </div>
+      </form>
     </CustomLoginDialog>
-  )
+  );
 }

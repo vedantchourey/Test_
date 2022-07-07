@@ -28,9 +28,10 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
     try {
         const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
         const team_players = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
+        const userId = query.user_id || user.id
 
         const teamPlayersQuery = team_players.find({
-            user_id: user.id
+            user_id: userId
         }, ["team_id"]);
 
         const teamIds = await teamPlayersQuery;
@@ -63,6 +64,8 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
             "profiles.avatarUrl",
             "private_profiles.won",
             "private_profiles.lost",
+            "team_players.is_owner",
+            "elo_ratings.elo_rating as elo_rating"
           ])
           .whereIn(
             "teams.id",
@@ -87,11 +90,12 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
             result: _(data).groupBy("name")
                 .map(function (items, name) {
                     const players = Object.values(_.groupBy(items, "user_id")).map((i) => i[0]);
+                    const owner = players.find((p) => p.is_owner === true);
                     return {
                         id: items[0].id,
                         name,
                         teamLogo: items[0].teamLogo,
-                        created_by: items[0].created_by,
+                        created_by: owner.user_id,
                         teamCover: items[0].teamCover,
                         players: players.map((data) => {
                             return {
@@ -102,6 +106,8 @@ export const fetchTeams = async (connection: Knex.Transaction, user: any, query:
                                 balance: data.balance,
                                 won: data.won,
                                 lost: data.lost,
+                                is_owner: data.is_owner,
+                                elo_rating: data.elo_rating,
                             }
                         })
                     };
@@ -297,6 +303,14 @@ export const acceptInvite = async (secret: string, connection: Knex.Transaction)
                 channel_name: teams.name,
                 user_name: userData.raw_user_meta_data.username, 
             });
+
+            const messagesRepo = new CrudRepository<IChatUsers>(connection, "chat_users");
+            await messagesRepo.create({
+                channel_id: invite.team_id,
+                send_by: invite.user_id,
+                message: "Hey, I just join team!",
+                metadata: null,
+            })
 
             await Promise.all([
                 team_invitation.update({ status: "ACCEPTED" }, { secret }),

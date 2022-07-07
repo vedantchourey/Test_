@@ -73,7 +73,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
 
   return (
     <Box
-      flex={props.smallChat ? 1 : 0.75}
+      flex={props.smallChat ? 1 : 0.5}
       display={"flex"}
       flexDirection={"column"}
       justifyContent={"flex-end"}

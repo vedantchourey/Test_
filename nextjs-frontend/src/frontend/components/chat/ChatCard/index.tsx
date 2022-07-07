@@ -1,14 +1,43 @@
-import { Box, Typography } from "@mui/material";
-import React from "react";
+import { Avatar, Box, Typography } from "@mui/material";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { frontendSupabase } from "../../../services/supabase-frontend-service";
 
 interface IChatCard {
     name: string,
     message: string,
     image: string;
+    otherUser: string,
     onClick: () => void,
+    type: string
 }
 
 export default function ChatCard(props: IChatCard): JSX.Element {
+  const [lastSeenTime, setLastSeenTime] = useState<any>(null)
+  const fetchLastSeen = async (): Promise<void> => {
+    const lLastSeenReq = await frontendSupabase
+    .from("user_last_seen")
+    .select()
+    .eq("user_id", props.otherUser);
+    if(lLastSeenReq?.data?.[0]?.last_seen){
+      setLastSeenTime(lLastSeenReq?.data?.[0]?.last_seen);
+    }
+  }
+
+  useEffect(() => {
+    fetchLastSeen();
+    const lastSeenListener = frontendSupabase
+      .from("user_last_seen")
+      .on("*", (payload) => {
+        if (payload.new.user_id === props.otherUser)
+          setLastSeenTime(payload.new.last_seen);
+      })
+      .subscribe();
+    return (): any => {
+      lastSeenListener.unsubscribe();
+    };
+  }, []);
+
   return (
     <Box
       p={1}
@@ -22,15 +51,34 @@ export default function ChatCard(props: IChatCard): JSX.Element {
       // }}
       onClick={props.onClick}
     >
-      <img
-        src={props.image}
-        style={{
-          height: 50,
-          width: 50,
-          borderRadius: 10,
-          background: "rgba(0,0,0,0.4)",
-        }}
-      />
+      <Box>
+        <Avatar
+          src={props.image}
+          style={{
+            height: 50,
+            width: 50,
+            // borderRadius: 10,
+            background: "rgba(0,0,0,0.4)",
+          }}
+        />
+        {lastSeenTime &&
+        moment(lastSeenTime).isBefore(moment().add(4, "minutes")) ? (
+          <div
+            style={{
+              background: "green",
+              maxHeight: 12,
+              maxWidth: 12,
+              minHeight: 12,
+              minWidth: 12,
+              borderRadius: 20,
+              marginLeft: 38,
+              marginTop: -12
+            }}
+          />
+        ) : null}
+      </Box>
+
+      
       <Box ml={2} textAlign={"left"}>
         <Typography textAlign={"left"} fontSize={18} color="#FFFFFF">
           {props.name}

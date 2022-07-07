@@ -9,6 +9,17 @@ import { IFreeAgencyMarket } from "../database/models/i-free-agency-market";
 import { TABLE_NAMES } from "../../../models/constants";
 import { IWatchList } from "../database/models/i-watchlist";
 import { ITeams } from "../database/models/i-teams";
+import { IEloRating } from "../database/models/i-elo-rating";
+
+const fetchEloRating = async (context: PerRequestContext, data: any): Promise<any> => {
+  const famRepo = new CrudRepository<IEloRating>(context.knexConnection as Knex, TABLE_NAMES.ELO_RATING);
+  const result: any = await famRepo.knexObj().where("user_id", data.user_id)
+.where("game_id", data.game_id);
+  return ({
+    ...data,
+    elo_rating: result[0].elo_rating
+  })
+}
 
 
 export const listFreeAgencyMarket = async (
@@ -24,7 +35,10 @@ export const listFreeAgencyMarket = async (
   if (param.platformId) query.where("platform_id", param.platformId)
 
   const users = await query;
-  return users;
+  const resultBatch = await Promise.all(
+    users.map((i: any) => fetchEloRating(context, i))
+  );
+  return resultBatch;
 };
 
 export interface IEnterFAMRequest {
@@ -79,10 +93,17 @@ export const getWatchList = async (
   context: PerRequestContext
 ): Promise<IFreeAgencyMarketResponse | undefined> => {
   const watchListRepo = new CrudRepository<IWatchList>(context.knexConnection as Knex, TABLE_NAMES.WATCHLIST);
-  const users = await watchListRepo.knexObj()
+  const users = await watchListRepo
+    .knexObj()
     .join("private_profiles", "watchlist.playerId", "private_profiles.id")
     .join("profiles", "profiles.id", "watchlist.playerId")
-  return users
+    .select("*")
+    .select("watchlist.id as id");
+    
+    const resultBatch = await Promise.all(
+      users.map((i: any) => fetchEloRating(context, i))
+    );
+    return resultBatch;
 };
 
 export interface IDeleteWatchListRequest {

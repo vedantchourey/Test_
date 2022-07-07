@@ -1,12 +1,19 @@
 import {
+  Avatar,
   Box,
   Button,
+  CircularProgress,
   Grid,
   IconButton,
   InputBase,
+  ListItem,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemText,
   ListSubheader,
   Popover,
   Typography,
+  List
 } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -19,9 +26,13 @@ import {
 import { useAppDispatch, useAppSelector } from "../../redux-store/redux-store";
 import { walletDetaislSelector } from "../../redux-store/wallet/wallet-selector";
 import { setWalletDetails } from "../../redux-store/wallet/wallet.-slice";
+import { ISearchPeopleByUsernameResponse } from "../../service-clients/messages/i-search";
+import { searchPeopleByText } from "../../service-clients/search-service-client";
 import { getAuthHeader } from "../../utils/headers";
 import style from "./desktop-sidebar.module.css";
 import BasicPopover from "./notification-popover";
+import styles from './logged-in-user-menu.module.css';
+import frontendConfig from "../../utils/config/front-end-config";
 
 export default function SideHeader(): JSX.Element {
   const isLoggedIn = useAppSelector(isLoggedInSelector);
@@ -33,6 +44,9 @@ export default function SideHeader(): JSX.Element {
     null
   );
   const avatarImageBlobUrl = useAppSelector(avatarImageBlobUrlSelector);
+
+  const [userList, setUserList] = React.useState<ISearchPeopleByUsernameResponse[]>([])
+  const [isFetching, setIsFetching] = React.useState(false)
 
   const fetchNotifications = async (): Promise<void> => {
     const headers = await getAuthHeader();
@@ -115,8 +129,67 @@ export default function SideHeader(): JSX.Element {
     setAnchorEl(null);
   };
 
+  async function searchByUserName(username: string): Promise<void> {
+    setIsFetching(true);
+    setUserList([]);
+    if (!username) {
+      setIsFetching(false);
+      return;
+    }
+    const response = await searchPeopleByText({ search: username });
+    if (response.length) setUserList(response);
+    setIsFetching(false)
+  }
+
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
+
+  const renderResults = (): JSX.Element => {
+    if (isFetching) {
+      return (
+        <List className={styles.searchListLoder} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+          <CircularProgress />
+        </List>
+      )
+    }
+    
+    else if (!isFetching && userList.length) {
+      return (
+        <List className={styles.searchList} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+          {userList.map((data, i) => (
+            <ListItem key={Date.now() + i}>
+              <ListItemButton onClick={(): unknown => router.replace(`/account/${data.username}`)} sx={{ padding: '2px 18px', my: 1 }}>
+                <ListItemAvatar>
+                  <Avatar sx={{ width: 35, height: 35 }} alt="profile image" src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${data.avatarUrl}`}>
+                    {data.username.split('')[0].toUpperCase()}
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText className={styles.listText}>
+                  <Typography>
+                    @{data.username}
+                  </Typography>
+                  {/* <Typography variant="caption" color='#F08743'>
+                    {data.firstName} {data.lastName}
+                  </Typography> */}
+                </ListItemText>
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      )
+    }
+
+    // eslint-disable-next-line no-else-return
+    else {
+      return (
+        <></>
+        /*  <List className={styles.searchListLoder} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+           <h1>No data found</h1>
+         </List> */
+      )
+    }
+
+  }
 
   return (
     <>
@@ -136,15 +209,22 @@ export default function SideHeader(): JSX.Element {
                   size="small"
                   placeholder="Search anything..."
                   sx={{ p: 1 }}
+                  onChange={(e): any => {
+                    searchByUserName(e.target.value)
+                  }}
                 />
                 <IconButton sx={{ mr: 1 }}>
                   <img src="/icons/search-icon.png" />
                 </IconButton>
+                {renderResults()}
               </Box>
               <IconButton onClick={handleClick} sx={{ mr: 1, ml: 1 }}>
                 <img src="/icons/notification-icon.svg" />
               </IconButton>
-              <Button variant="text" onClick={(): any => router.push("/account")}>
+              <Button
+                variant="text"
+                onClick={(): any => router.push("/account")}
+              >
                 <img
                   src={avatarImageBlobUrl || "/images/16276393842661.png"}
                   className={style.img3}
@@ -152,7 +232,7 @@ export default function SideHeader(): JSX.Element {
                   style={{ height: "50px", width: "50px" }}
                 />
               </Button>
-              
+
               <Box>
                 <Typography className={style.text1}>{username}</Typography>
                 <Button
@@ -184,16 +264,16 @@ export default function SideHeader(): JSX.Element {
         }}
       >
         <ListSubheader
-           sx={{
-             fontStyle: "norma",
-             fontSize: "20px",
-             fontWeight: 700,
-             fontFamily: "Inter",
-             color: "#FFFFFF",
-           }}
-         >
-           Notifications
-         </ListSubheader>
+          sx={{
+            fontStyle: "norma",
+            fontSize: "20px",
+            fontWeight: 700,
+            fontFamily: "Inter",
+            color: "#FFFFFF",
+          }}
+        >
+          Notifications
+        </ListSubheader>
         {notifications.map((i: any, idx: number) => (
           <BasicPopover
             message={i.message}
@@ -207,9 +287,7 @@ export default function SideHeader(): JSX.Element {
             key={idx}
           />
         ))}
-        <Button variant="text">
-          View All
-        </Button>
+        <Button variant="text">View All</Button>
       </Popover>
     </>
   );

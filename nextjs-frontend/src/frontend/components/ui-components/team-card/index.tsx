@@ -1,8 +1,7 @@
-import React from "react";
-import { Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
+import React, { useEffect } from "react";
+import { Avatar, Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { ReactComponent as GameIcon } from "../../../../../public/icons/GameIcon_1.svg";
 import { ReactComponent as YouTubeIcon } from "../../../../../public/icons/YouTube_1.svg";
-import Image from "next/image";
 import NoobFilePicker from "../../utils/noob-file-picker";
 import { allowedImageExtensions } from "../../../../models/constants";
 import { v4 } from "uuid";
@@ -19,16 +18,16 @@ const CardDesktop: React.FC<TeamCardProp> = ({name ="-", onChangeTeamLogo, team}
   return (
     <Grid container columnSpacing={2}>
       <Grid item md={3} lg={2}>
-          <Image
-            src={teamLogo || "/icons/Rectangle.svg"}
-            width={"250px"}
-            height={"250px"}
-          />
-          <Box position={"absolute"} mt={-7} ml={1}>
-            <IconButton onClick={(): any => onChangeTeamLogo()} color="primary">
-              <EditIcon />
-            </IconButton>
-          </Box>
+        <Avatar
+          src={teamLogo || "/icons/Rectangle.svg"}
+          sx={{ width: 150, height: 150, marginBottom: 2 }}
+        />
+        <IconButton
+          sx={{ position: "absolute", backgroundColor: "#6932F9", mt: -7, ml: 2 }}
+          onClick={(): any => onChangeTeamLogo()}
+        >
+          <EditIcon />
+        </IconButton>
       </Grid>
       <Grid item md={6} lg={10} display={"flex"} flexDirection={"column"}>
         <Typography color={"white"} textAlign="left" component="h4">
@@ -70,10 +69,9 @@ const CardMobile: React.FC<TeamCardProp> = ({name ="-", onChangeTeamLogo, team})
     <Grid container>
       <Grid item xs={12} display={"flex"}>
         <Box width={"65px"} height={"65px"} position="relative">
-          <Image
+          <Avatar
             src={teamLogo || "/icons/Rectangle.svg"}
-            width={"65px"}
-            height={"65px"}
+            sx={{ width: 85, height: 85, marginBottom: 2 }}
           />
           <Box position={"absolute"} mt={-7} ml={1}>
             <IconButton onClick={(): any => onChangeTeamLogo()} color="primary">
@@ -153,14 +151,30 @@ const TeamCard: React.FC<TeamCardProp> = ({ children, name, team, refresh }) => 
         .publicURL
     : undefined;
 
+    useEffect(() => {
+      if (teamLogoPicker) {
+        setTimeout(() => setTeamLogoPicker(false), 500);
+      }
+    }, [teamLogoPicker]);
+
+    useEffect(() => {
+      if (coverLogoPicker) {
+        setTimeout(() => setCoverLogoPicker(false), 500);
+      }
+    }, [coverLogoPicker]);
+    
+
   return (
     <Box sx={{ marginX: { md: "70px", sm: "10px", xs: "10px" } }}>
       <div
         style={{
           padding: 20,
           marginBottom: 20,
-          backgroundImage: `url(${teamCover || "/images/team-background.svg"})`,
+          backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 0.8)), url(${teamCover || "/images/team-background.svg"} )`,
           backgroundRepeat: "no-repeat",
+          backgroundClip: "border-box",
+          backgroundOrigin: "border-box",
+          borderRadius: 10,
           backgroundSize: "cover",
           display: "flex"
         }}
