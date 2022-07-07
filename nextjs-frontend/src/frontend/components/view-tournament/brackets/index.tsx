@@ -110,20 +110,15 @@ const Bracket: React.FC<BracketProps> = ({
 
         {/* </Grid> */}
       </Box>
-      <Box marginX={"70px"} marginY={2}>
-        <Grid
-          container
-          style={{ overflow: "scroll" }}
-          columnSpacing={2}
-          rowSpacing={1}
-          className={"hide-scrollbar"}
+      <Box
+          display={"flex"}
+          flexWrap={"nowrap"}
+          maxWidth={"70vw"}
+          overflow={"scroll"}
+          className="hide-scrollbar"
         >
-          <div className="bracket">
-            
-            {bData && <DoubleElimination brackets={bData} />}
-          </div>
-        </Grid>
-      </Box>
+         {bData && <DoubleElimination brackets={bData} />} 
+        </Box>
     </>
   );
 };
