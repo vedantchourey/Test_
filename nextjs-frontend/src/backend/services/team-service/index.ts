@@ -361,7 +361,7 @@ export const acceptInvite = async (secret: string, connection: Knex.Transaction)
                 user_name: userData.raw_user_meta_data.username, 
             });
 
-            const messagesRepo = new CrudRepository<IChatUsers>(connection, "chat_users");
+            const messagesRepo = new CrudRepository<IChatUsers>(connection, "messages");
             await messagesRepo.create({
                 channel_id: invite.team_id,
                 send_by: invite.user_id,

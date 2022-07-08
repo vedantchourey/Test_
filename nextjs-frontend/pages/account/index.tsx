@@ -100,7 +100,8 @@ function Account(): JSX.Element {
 
   const _renderPosts = (): JSX.Element | React.ReactNode => {
     if (isFetchingPosts) {
-      return new Array(5).fill("").map((data, i) => <h1 key={i}>Skeleton</h1>);
+      return new Array(5).fill("")
+.map((data, i) => <h1 key={i}>Skeleton</h1>);
     }
     const jsx = posts.map((postData) => {
       return <PostCard key={postData.id} data={postData} />;
@@ -150,10 +151,10 @@ function Account(): JSX.Element {
                           <NoobCell>Participants</NoobCell>
                           <NoobCell>Status</NoobCell>
                         </NoobRow>
-                        {data.map((i) => {
-                          const game = games.find(g => g.id === i.game)
+                        {data.map((i, idx) => {
+                          const game = games.find((g) => g.id === i.game)
                           return (
-                            <NoobRow>
+                            <NoobRow key={idx}>
                               <NoobCell>{game?.displayName}</NoobCell>
                               <NoobCell>
                                 {i.settings?.tournamentFormat}

@@ -23,6 +23,7 @@ import axios from "axios";
 import { getAuthHeader } from "../../utils/headers";
 import Loader from "../ui-components/loader";
 import MatchHistory from "./match-history";
+import { IMatchHubData } from "../../../../pages/match-hub";
 
 export const NoobTab = styled(Tab)(() => ({
   textTransform: "capitalize",
@@ -59,6 +60,12 @@ const Team: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [team, setTeam] = React.useState<TeamType | undefined>(undefined);
   const [loading, setLoading] = React.useState(false);
+  const [data, setData] = React.useState<IMatchHubData[]>([]);
+
+  const matchHistory = data.filter(
+    (i) => i.opponent1.team_id === query.id || i.opponent2.team_id === query.id
+  );
+
 
   const fetchTeam = async (): Promise<void> => {
     if (query.id) {
@@ -80,8 +87,21 @@ const Team: React.FC = () => {
     }
   };
 
+  const fetchData = async (): Promise<void> => {
+    const headers = await getAuthHeader();
+    axios
+      .get("/api/tournaments/user-matchs", { headers: headers })
+      .then((res) => {
+        setData(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   React.useEffect(() => {
     fetchTeam();
+    fetchData();
   }, [query.id]);
 
   const renderComponent = (): JSX.Element => {
@@ -95,7 +115,7 @@ const Team: React.FC = () => {
     }
     switch (page) {
       case "match/history":
-        return <MatchHistory />;
+        return <MatchHistory data={matchHistory} />;
       case "permissions":
         return <Permissions team={team} players={team?.players || []} />;
       case "members":
@@ -143,6 +163,7 @@ const Team: React.FC = () => {
     router.push("/team/view/[...slug]", `/team/view/${tab}`, { shallow: true });
   };
 
+  
   const renderTabs = (): JSX.Element | JSX.Element[] => {
     if (isMobile) {
       let page;

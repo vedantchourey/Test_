@@ -671,7 +671,7 @@ export const fetchUserMatchs = async (
       )
       .whereRaw(
         `(opponent1->>'id') in (${tournaments.map((x: any) => `'${x.id}'`)}) 
-    or (opponent2->>'id') in (${tournaments.map((x: any) => `'${x.id}'`)}) `
+        or (opponent2->>'id') in (${tournaments.map((x: any) => `'${x.id}'`)}) `
       )
       .select([
         "b_match.id as match_id",
