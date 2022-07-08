@@ -13,7 +13,7 @@ const keys = ["id",
 export class NewsRepository extends BaseRepository<INews> {
   constructor(transaction: Knex.Transaction) {
     super(transaction, 'news');
-  }
+  }  
 
   async createNews(news: INews): Promise<string> {
     const ids = await this.entities()
@@ -48,3 +48,14 @@ export class NewsRepository extends BaseRepository<INews> {
   }
 
 }
+
+// export class NewsRepositoryLess<T> {
+//   constructor(
+//     protected tableName: string
+//   ) {}
+
+//   async fetch(): Promise<INews[]> {
+//     return await this.entities()
+//                .select(...keys);
+//   }
+// }

@@ -6,7 +6,7 @@ import { unlikeNews } from './unlike-news/unlike-news'
 import { deleteNews } from './delete-news/delete-news'
 import { NewsLikeCount } from './like-count/like-count'
 import { newsDetail } from './news-detail/news-detail'
-
+import { newsListWithoutToken } from './news-list/newsListWithoutToken'
 export {
     createNews,
     newsList,
@@ -15,5 +15,6 @@ export {
     unlikeNews,
     deleteNews,
     NewsLikeCount,
-    newsDetail
+    newsDetail,
+    newsListWithoutToken
 }
