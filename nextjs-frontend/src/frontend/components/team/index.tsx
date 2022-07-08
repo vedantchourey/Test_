@@ -49,6 +49,7 @@ interface TeamType {
   id: string;
   name: string;
   created_by: string;
+  team_elo_rating: string;
   players: Player[];
 }
 
@@ -65,7 +66,6 @@ const Team: React.FC = () => {
   const matchHistory = data.filter(
     (i) => i.opponent1.team_id === query.id || i.opponent2.team_id === query.id
   );
-
 
   const fetchTeam = async (): Promise<void> => {
     if (query.id) {
@@ -232,9 +232,8 @@ const Team: React.FC = () => {
                 <Typography color={"white"}>
                   Team Elo Rating:
                   <span style={{ color: "#F09633", marginLeft: "30px" }}>
-                    {" "}
-                    356{" "}
-                  </span>{" "}
+                    {team?.team_elo_rating}
+                  </span>
                 </Typography>
               </Box>
             ) : null}

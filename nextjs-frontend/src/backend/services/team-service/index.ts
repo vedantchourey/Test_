@@ -101,6 +101,7 @@ export const fetchTeams = async (
         "teams.platform_id",
         "teams.id",
         "teams.created_by",
+        "teams.elo_rating as team_elo_rating",
         "private_profiles.firstName",
         "private_profiles.lastName",
         "private_profiles.id as user_id",
@@ -150,6 +151,7 @@ export const fetchTeams = async (
           teamCover: items[0].teamCover,
           gameId: items[0].game_id,
           platformId: items[0].platform_id,
+          team_elo_rating: items[0].team_elo_rating,
           players: players.map((data) => {
             return {
               user_id: data.user_id,
