@@ -38,9 +38,22 @@ const ButtonComp: React.FC<any> = ({
               })}
             </Select>
           </Grid>
-          {/* <Grid item xs={6} lg={2} md={2}>
-              <Select value={"status"} fullWidth={true}>
+          <Grid item xs={6} lg={2} md={2}>
+          <Select 
+              value={status || "status"}
+              onChange={(e): any =>
+                setStatus(e.target.value === "status" ? "" : e.target.value)
+              }
+              fullWidth={true}
+              >
                 <MenuItem value="status">Status</MenuItem>
+                {allstatus.map((item: any, i: number) => {
+                  return (
+                    <MenuItem value={item} key={i}>
+                      {item.charAt(0).toUpperCase() + item.slice(1)}
+                    </MenuItem>
+                  );
+                })}
               </Select>
             </Grid>
             <Grid
@@ -50,10 +63,22 @@ const ButtonComp: React.FC<any> = ({
               md={2}
               sx={{ marginTop: { sm: "8px", xs: "8px" } }}
             >
-              <Select value={"entryfee"} fullWidth={true}>
-                <MenuItem value="entryfee">Entry Fee</MenuItem>
+              <Select 
+              value={credits || "credits"}
+              onChange={(e): any =>
+                setCredits(e.target.value === "credits" ? "" : e.target.value)
+              }
+              fullWidth={true}>
+                <MenuItem value="credits">Credits</MenuItem>
+                {allcredits.map((item: any, i: number) => {
+                  return (
+                    <MenuItem value={item} key={i}>
+                      {item.charAt(0).toUpperCase() + item.slice(1)}
+                    </MenuItem>
+                  );
+                })}
               </Select>
-            </Grid> */}
+            </Grid>
         </>
       ) : (
         <>
