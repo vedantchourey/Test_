@@ -84,7 +84,7 @@ export default function DrawerLeft(): JSX.Element {
           .eq("user_id", userRef.current?.id);
       }
     }, 1000 * 45);
-  }, []);
+  }, [userRef]);
 
   React.useEffect(() => {
     userRef.current = user;
