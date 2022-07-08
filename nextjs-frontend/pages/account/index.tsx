@@ -1,7 +1,7 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useAppSelector } from "../../src/frontend/redux-store/redux-store";
+import { useAppDispatch, useAppSelector } from "../../src/frontend/redux-store/redux-store";
 import {
   authCheckStatusSelector,
   isLoggedInSelector,
@@ -9,7 +9,18 @@ import {
 } from "../../src/frontend/redux-store/authentication/authentication-selectors";
 import UserProfileCard from "../../src/frontend/components/cards/user-profile-card/user-profile-card";
 import NoobPage from "../../src/frontend/components/page/noob-page";
-import { Box, Divider, Grid, Tab } from "@mui/material";
+import {
+  Box,
+  Divider,
+  Grid,
+  Tab,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Typography,
+} from "@mui/material";
 import commonStyles from "../../src/frontend/styles/common.module.css";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import CreatePostInput from "../../src/frontend/components/account/posts/create-post-input";
@@ -17,30 +28,64 @@ import PostCard from "../../src/frontend/components/account/posts/post-card";
 import { getPostsByUserId } from "../../src/frontend/service-clients/post-service-client";
 import { IPostsResponse } from "../../src/frontend/service-clients/messages/i-posts-response";
 import { withProtected } from "../../src/frontend/components/auth-wrapper/auth-wrapper";
+import { getAuthHeader } from "../../src/frontend/utils/headers";
+import axios from "axios";
+import styled from "@emotion/styled";
+import { ITournament } from "../../src/backend/services/database/models/i-tournaments";
+import moment from "moment";
+import { allGamesSelector } from "../../src/frontend/redux-store/games/game-selectors";
+import { fetchAllGamesThunk } from "../../src/frontend/redux-store/games/game-slice";
 
 type TabsProps = "posts" | "about" | "activity";
+
+const NoobRow = styled(TableRow)(() => ({
+  align: "center",
+}));
+
+const NoobCell = styled(TableCell)(() => ({
+  border: "1px solid #ffffff1a",
+  alignItems: "center",
+}));
 
 function Account(): JSX.Element {
   const router = useRouter();
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const checkStatus = useAppSelector(authCheckStatusSelector);
   const user = useAppSelector(userProfileSelector);
+  const [data, setData] = React.useState<ITournament[]>([]);
 
   const [activeTab, setActiveTab] = useState<TabsProps>("posts");
   const [isFetchingPosts, setIsFetchingPosts] = useState<boolean>(true);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
+  
+  const appDispatch = useAppDispatch();
+  const games = useAppSelector(allGamesSelector);
 
   useEffect(() => {
     (async (): Promise<unknown> => {
+      appDispatch(fetchAllGamesThunk());
       if (checkStatus !== "success") return;
       if (isLoggedIn) return;
       await router.push("/");
     })();
   });
 
+  const fetchData = async (): Promise<void> => {
+    const headers = await getAuthHeader();
+    axios
+      .get("/api/tournaments/user-matches-history-single", { headers: headers })
+      .then((res) => {
+        setData(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   useEffect(() => {
     try {
       (async (): Promise<void> => {
+        fetchData();
         const posts = await getPostsByUserId(user?.id || "");
         setPosts(posts);
       })();
@@ -55,8 +100,7 @@ function Account(): JSX.Element {
 
   const _renderPosts = (): JSX.Element | React.ReactNode => {
     if (isFetchingPosts) {
-      return new Array(5).fill("")
-.map((data, i) => <h1 key={i}>Skeleton</h1>);
+      return new Array(5).fill("").map((data, i) => <h1 key={i}>Skeleton</h1>);
     }
     const jsx = posts.map((postData) => {
       return <PostCard key={postData.id} data={postData} />;
@@ -94,7 +138,50 @@ function Account(): JSX.Element {
                   <CreatePostInput setPosts={setPosts} />
                   {_renderPosts()}
                 </TabPanel>
-                <TabPanel sx={{ p: 0 }} value="activity"></TabPanel>
+                <TabPanel sx={{ p: 0 }} value="activity">
+                  Match activity
+                  <TableContainer>
+                    <Table>
+                      <TableBody>
+                        <NoobRow>
+                          <NoobCell>Game</NoobCell>
+                          <NoobCell>Type</NoobCell>
+                          <NoobCell>Date</NoobCell>
+                          <NoobCell>Participants</NoobCell>
+                          <NoobCell>Status</NoobCell>
+                        </NoobRow>
+                        {data.map((i) => {
+                          const game = games.find(g => g.id === i.game)
+                          return (
+                            <NoobRow>
+                              <NoobCell>{game?.displayName}</NoobCell>
+                              <NoobCell>
+                                {i.settings?.tournamentFormat}
+                              </NoobCell>
+                              <NoobCell>
+                                {moment(i.startDate).format("DD MMM YYYY")}
+                              </NoobCell>
+                              <NoobCell>
+                                {i.bracketsMetadata?.playersLimit} Participants
+                              </NoobCell>
+                              <NoobCell>
+                                {moment(i.startDate).isAfter(moment()) ? (
+                                  <Typography color={"#6931F9"}>
+                                    Open
+                                  </Typography>
+                                ) : (
+                                  <Typography color={"green"}>
+                                    Completed
+                                  </Typography>
+                                )}
+                              </NoobCell>
+                            </NoobRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </TabPanel>
               </TabContext>
             </Box>
           </Grid>
