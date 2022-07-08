@@ -124,7 +124,7 @@ const Leaderboard = (): JSX.Element => {
           <Typography className={styles.text}>Choose Game</Typography>
           <Box
             mt={5}
-            sx={{ maxWidth: isDesktop?"1400px":"400px" }}
+            sx={{ maxWidth: isDesktop?"1400px":"300px" }}
             display={"flex"}
             flexWrap={"nowrap"}
             overflow={"scroll"}
@@ -267,7 +267,7 @@ const Leaderboard = (): JSX.Element => {
                             </span>
                           </div>
                         </TableCell>
-                        <TableCell>{item.elo_rating}</TableCell>
+                        {isDesktop&&(<TableCell>{item.elo_rating}</TableCell>)}
                       </TableRow>
                     ))}
                 </TableBody>

@@ -509,7 +509,7 @@ const ViewTournament: React.FC = () => {
         <Loader loading={loading} />
 
         <ViewCard>
-          <Grid container >
+          <Grid container alignItems={"center"}>
             <Grid item xs={6}>
               {data.basic?.sponsor && (
                 <img
@@ -520,7 +520,7 @@ const ViewTournament: React.FC = () => {
             </Grid>
             <Grid
               item
-              display="flex"
+              display={isDesktop?"flex":"grid"}
               alignItems="center"
               justifyContent={"flex-end"}
             >
