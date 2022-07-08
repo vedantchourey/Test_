@@ -22,109 +22,162 @@ const fields = ["id", "game_id", "name", "platform_id"]
 import { IChannel } from "../database/models/i-channel";
 import { IChatUsers } from "../database/models/i-chat-users";
 import { IEmailTeamInvitation } from "../database/models/i-email-team-invitation";
+import { IEloRatingHistory } from "../database/models/i-elo-rating-history";
+
+const fetchEloRating = async (
+  connection: Knex.Transaction,
+  data: any
+): Promise<any> => {
+  try {
+    const eloRatingHistoryRepo = new CrudRepository<IEloRatingHistory>(
+      connection as Knex,
+      TABLE_NAMES.ELO_RATING_HISTORY
+    );
+    const history = await eloRatingHistoryRepo
+      .knexObj()
+      .where("team_id", data.id);
+
+    return {
+      ...data,
+      loss: (history || []).filter((i: any) => parseInt(i.elo_rating) < 0)
+        .length,
+      won: (history || []).filter((i: any) => parseInt(i.elo_rating) > 0)
+        .length,
+      elo_rating: history?.[0]?.elo_rating || "0",
+    };
+  } catch (err) {
+    return {
+      ...data,
+      lost: "0",
+      won: "0",
+      elo_rating: "0",
+    };
+  }
+};
 
 
-export const fetchTeams = async (connection: Knex.Transaction, user: any, query: any): Promise<ISuccess | IError> => {
-    try {
-        const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
-        const team_players = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
-        const userId = query.user_id || user.id
+export const fetchTeams = async (
+  connection: Knex.Transaction,
+  user: any,
+  query: any
+): Promise<ISuccess | IError> => {
+  try {
+    const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
+    const team_players = new CrudRepository<ITeamPlayers>(
+      connection,
+      TABLE_NAMES.TEAM_PLAYERS
+    );
+    const userId = query.user_id || user.id;
 
-        const teamPlayersQuery = team_players.find({
-            user_id: userId
-        }, ["team_id"]);
+    const teamPlayersQuery = team_players.find(
+      {
+        user_id: userId,
+      },
+      ["team_id"]
+    );
 
-        const teamIds = await teamPlayersQuery;
+    const teamIds = await teamPlayersQuery;
 
-        const teamQuery = teams
-          .knexObj()
-          .join(TABLE_NAMES.TEAM_PLAYERS, "team_players.team_id", "teams.id")
-          .join(
-            TABLE_NAMES.PRIVATE_PROFILE,
-            "private_profiles.id",
-            "team_players.user_id"
-          )
-          .join("profiles", "profiles.id", "team_players.user_id")
-          .join(TABLE_NAMES.WALLET, "wallet.userId", "private_profiles.id")
-          .join(TABLE_NAMES.ELO_RATING, {
-            "elo_ratings.user_id": "private_profiles.id",
-            "elo_ratings.game_id": "teams.game_id",
-          })
+    const teamQuery = teams
+      .knexObj()
+      .join(TABLE_NAMES.TEAM_PLAYERS, "team_players.team_id", "teams.id")
+      .join(
+        TABLE_NAMES.PRIVATE_PROFILE,
+        "private_profiles.id",
+        "team_players.user_id"
+      )
+      .join("profiles", "profiles.id", "team_players.user_id")
+      .join(TABLE_NAMES.WALLET, "wallet.userId", "private_profiles.id")
+      .join(TABLE_NAMES.ELO_RATING, {
+        "elo_ratings.user_id": "private_profiles.id",
+        "elo_ratings.game_id": "teams.game_id",
+      })
 
-          .select([
-            "teams.name",
-            "teams.teamLogo",
-            "teams.teamCover",
-            "teams.game_id",
-            "teams.platform_id",
-            "teams.id",
-            "teams.created_by",
-            "private_profiles.firstName",
-            "private_profiles.lastName",
-            "private_profiles.id as user_id",
-            "wallet.balance",
-            "profiles.avatarUrl",
-            "private_profiles.won",
-            "private_profiles.lost",
-            "team_players.is_owner",
-            "elo_ratings.elo_rating as elo_rating"
-          ])
-          .whereIn(
-            "teams.id",
-            teamIds.map((item: any): any => item.team_id)
-          );
+      .select([
+        "teams.name",
+        "teams.teamLogo",
+        "teams.teamCover",
+        "teams.game_id",
+        "teams.platform_id",
+        "teams.id",
+        "teams.created_by",
+        "private_profiles.firstName",
+        "private_profiles.lastName",
+        "private_profiles.id as user_id",
+        "wallet.balance",
+        "profiles.avatarUrl",
+        "private_profiles.won",
+        "private_profiles.lost",
+        "team_players.is_owner",
+        "elo_ratings.elo_rating as elo_rating",
+      ])
+      .whereIn(
+        "teams.id",
+        teamIds.map((item: any): any => item.team_id)
+      );
 
-        if (query.id) {
-            teamQuery.where("teams.id", query.id)
-        }
-        if (query.tournament_id) {
-            const tour_repo = new CrudRepository<ITournament>(connection, TABLE_NAMES.TOURNAMENTS);
-            const { game, settings } = await tour_repo.findById(query.tournament_id, ["game", "settings"]);
-            if (game && settings) {
-                teamQuery.where("teams.game_id", game)
-                teamQuery.where("teams.platform_id", settings.platform)
-            }
-        }
-        const data = await teamQuery;
-        if (!data.length) return getErrorObject("No Teams found")
-
-        return {
-            result: _(data).groupBy("name")
-                .map(function (items, name) {
-                    const players = Object.values(_.groupBy(items, "user_id")).map((i) => i[0]);
-                    const owner = players.find((p) => p.is_owner === true);
-                    return {
-                        id: items[0].id,
-                        name,
-                        teamLogo: items[0].teamLogo,
-                        created_by: owner.user_id,
-                        teamCover: items[0].teamCover,
-                        gameId: items[0].game_id,
-                        platformId: items[0].platform_id,
-                        players: players.map((data) => {
-                            return {
-                                user_id: data.user_id,
-                                lastName: data.lastName,
-                                firstName: data.firstName,
-                                avatarUrl: data.avatarUrl,
-                                balance: data.balance,
-                                won: data.won,
-                                lost: data.lost,
-                                is_owner: data.is_owner,
-                                elo_rating: data.elo_rating,
-                            }
-                        })
-                    };
-                })
-                .value()
-        };
-
-
-    } catch (ex: any) {
-        if (ex?.code === 23505) return getErrorObject("Team with same name already exists")
-        return getErrorObject("Something went wrong" + ex.message)
+    if (query.id) {
+      teamQuery.where("teams.id", query.id);
     }
-}
+    if (query.tournament_id) {
+      const tour_repo = new CrudRepository<ITournament>(
+        connection,
+        TABLE_NAMES.TOURNAMENTS
+      );
+      const { game, settings } = await tour_repo.findById(query.tournament_id, [
+        "game",
+        "settings",
+      ]);
+      if (game && settings) {
+        teamQuery.where("teams.game_id", game);
+        teamQuery.where("teams.platform_id", settings.platform);
+      }
+    }
+    const data = await teamQuery;
+    if (!data.length) return getErrorObject("No Teams found");
+    const result = _(data)
+      .groupBy("name")
+      .map(function (items, name) {
+        const players = Object.values(_.groupBy(items, "user_id")).map(
+          (i) => i[0]
+        );
+        const owner = players.find((p) => p.is_owner === true);
+        return {
+          id: items[0].id,
+          name,
+          teamLogo: items[0].teamLogo,
+          created_by: owner.user_id,
+          teamCover: items[0].teamCover,
+          gameId: items[0].game_id,
+          platformId: items[0].platform_id,
+          players: players.map((data) => {
+            return {
+              user_id: data.user_id,
+              lastName: data.lastName,
+              firstName: data.firstName,
+              avatarUrl: data.avatarUrl,
+              balance: data.balance,
+              won: data.won,
+              lost: data.lost,
+              is_owner: data.is_owner,
+              elo_rating: data.elo_rating,
+            };
+          }),
+        };
+      })
+      .value();
+
+    const resultWithElo: any[] = await Promise.all(
+      result.map((i) => fetchEloRating(connection, i))
+    );
+
+    return { result: resultWithElo };
+  } catch (ex: any) {
+    if (ex?.code === 23505)
+      return getErrorObject("Team with same name already exists");
+    return getErrorObject("Something went wrong" + ex.message);
+  }
+};
 
 export const createTeams = async (req: ITeamCreateRequest,
     connection: Knex.Transaction,

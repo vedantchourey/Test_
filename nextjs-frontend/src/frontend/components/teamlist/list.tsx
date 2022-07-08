@@ -42,6 +42,9 @@ export interface TeamData {
   players: Player[];
   teamLogo: string;
   teamCover: string;
+  won: string;
+  loss: string;
+  elo_rating: string;
 }
 
 const TeamListData: React.FC = () => {
@@ -89,7 +92,7 @@ const TeamListData: React.FC = () => {
                       onClick={(): void => {
                         handleNavigation(item.id);
                       }}
-                      style={{cursor: "pointer"}}
+                      style={{ cursor: "pointer" }}
                     >
                       <NoobCell>
                         <Box alignItems="center" display="center">
@@ -97,7 +100,7 @@ const TeamListData: React.FC = () => {
                             src={teamLogo || ""}
                             width={"65px"}
                             height={"65px"}
-                            style={{borderRadius: 5}}
+                            style={{ borderRadius: 5 }}
                           />
                           <Box>
                             <Typography marginLeft={2} marginRight={2}>
@@ -107,6 +110,11 @@ const TeamListData: React.FC = () => {
                           </Box>
                         </Box>
                       </NoobCell>
+                      <NoobCell>
+                        Game: {parseInt(item.won) + parseInt(item.loss)}
+                      </NoobCell>
+                      <NoobCell>won: {parseInt(item.won)}</NoobCell>
+                      <NoobCell>ELO: {parseInt(item.elo_rating)}</NoobCell>
                     </NoobRow>
                   );
                 })}
