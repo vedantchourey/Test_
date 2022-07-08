@@ -10,6 +10,9 @@ import {
   Button,
   Grid,
 } from "@mui/material";
+import Stack from "@mui/material/Stack";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import styles from "./post.module.css";
 import { IPostsResponse } from "../../../service-clients/messages/i-posts-response";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -34,6 +37,12 @@ interface IProps {
   row?: boolean;
   isDesktop?: boolean;
 }
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  props,
+  ref
+) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 // eslint-disable-next-line no-useless-escape
 const URL_REGEX =
@@ -128,11 +137,40 @@ const PostCard = (props: IProps): JSX.Element => {
     setIsDeleted(true);
   };
 
+  const [open, setOpen] = useState({
+    report: false,
+    copylink: false,
+    error:false
+  });
+
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen({
+      report: false,
+      copylink: false,
+      error:false
+    });
+  };
+
   const reportPost = async (): Promise<void> => {
     const headers = await getAuthHeader();
     axios
-      .post("/api/report-post/reportcreate",{post_id: values.id}, { headers: headers })
+      .post(
+        "/api/report-post/reportcreate",
+        { post_id: values.id },
+        { headers: headers }
+      )
+      .then(() => {
+        setOpen({ ...open, report: true });
+      })
       .catch((err) => {
+        setOpen({ ...open, error: true });
         console.error(err);
       });
   };
@@ -140,224 +178,234 @@ const PostCard = (props: IProps): JSX.Element => {
   if (isDeleted) return <></>;
 
   return (
-    <Grid
-      item
-      md={12}
-      minHeight={props.row ? 450 : undefined}
-      minWidth={props.isDesktop ? 400 : 0}
-      mr={props.row ? 2 : 0}
-    >
-      <Card
-        className={styles.postCard}
-        sx={{ mb: 3 }}
-        // style={{ height: props.row ? "100%" : "auto" }}
-        elevation={0}
+    <>
+      <Grid
+        item
+        md={12}
+        minHeight={props.row ? 450 : undefined}
+        minWidth={props.isDesktop ? 400 : 0}
+        mr={props.row ? 2 : 0}
       >
-        <Box
-          sx={{
-            width: "100%",
-            display: "inline-flex",
-            justifyContent: "space-between",
-          }}
+        <Card
+          className={styles.postCard}
+          sx={{ mb: 3 }}
+          // style={{ height: props.row ? "100%" : "auto" }}
+          elevation={0}
         >
-          <Box sx={{ display: "flex" }}>
-            <Image
-              bucket={config.storage.publicBucket}
-              filePath={avatarUrl || ""}
-              isPublicBucket={true}
-              width={50}
-              height={50}
-              className={styles.postAvatar}
-            />
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "baseline",
-                paddingLeft: "10px",
-              }}
-            >
-              <Typography variant={"h3"} fontSize={15} fontWeight={400}>
-                {values.postOwner.username}
-              </Typography>
-              <Typography variant="subtitle2" color="#575265">
-                {new Date(values.createdAt).toDateString()}
-              </Typography>
+          <Box
+            sx={{
+              width: "100%",
+              display: "inline-flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <Box sx={{ display: "flex" }}>
+              <Image
+                bucket={config.storage.publicBucket}
+                filePath={avatarUrl || ""}
+                isPublicBucket={true}
+                width={50}
+                height={50}
+                className={styles.postAvatar}
+              />
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "baseline",
+                  paddingLeft: "10px",
+                }}
+              >
+                <Typography variant={"h3"} fontSize={15} fontWeight={400}>
+                  {values.postOwner.username}
+                </Typography>
+                <Typography variant="subtitle2" color="#575265">
+                  {new Date(values.createdAt).toDateString()}
+                </Typography>
+              </Box>
             </Box>
-          </Box>
 
-          <div>
-            <IconButton sx={{ padding: "10px" }} onClick={handleToggleMenu}>
-              <MoreHorizIcon />
-            </IconButton>
-            {showMenu && (
-              <List className={styles.postCardOptionsContainer}>
-                <ListItem disablePadding>
-                  <Button
-                    fullWidth
-                    className={styles.postCardOptionsBtn}
-                    sx={{
-                      color: "red",
-                      borderTopLeftRadius: "5px !important",
-                      borderTopRightRadius: "5px !important",
-                    }}
-                    onClick={(): any => reportPost()}
-                  >
-                    <img src="/icons/error.svg" alt="icon" />
-                    Report Post
-                  </Button>
-                </ListItem>
-                <ListItem disablePadding>
-                  <Button
-                    fullWidth
-                    className={styles.postCardOptionsBtn}
-                    sx={{ color: "red", borderRadius: "0px" }}
-                    onClick={(): any => navigator.clipboard.writeText(`http://localhost:3000/social/${values.id}`)}
-                  >
-                    <img src="/icons/copy.svg" alt="icon" />
-                    Copy Link
-                  </Button>
-                </ListItem>
-                {values.postOwner.id === user?.id && (
+            <div>
+              <IconButton sx={{ padding: "10px" }} onClick={handleToggleMenu}>
+                <MoreHorizIcon />
+              </IconButton>
+              {showMenu && (
+                <List className={styles.postCardOptionsContainer}>
+                  <ListItem disablePadding onClick={(): any => reportPost()}>
+                    <Button
+                      fullWidth
+                      className={styles.postCardOptionsBtn}
+                      sx={{
+                        color: "red",
+                        borderTopLeftRadius: "5px !important",
+                        borderTopRightRadius: "5px !important",
+                      }}
+                    >
+                      <img src="/icons/error.svg" alt="icon" />
+                      Report Post
+                    </Button>
+                  </ListItem>
                   <ListItem disablePadding>
                     <Button
                       fullWidth
-                      onClick={deletePost}
                       className={styles.postCardOptionsBtn}
-                      sx={{ color: "black" }}
-                    >
-                      Delete Post
-                    </Button>
-                  </ListItem>
-                )}
-                <ListItem disablePadding>
-                  <Button
-                    fullWidth
-                    onClick={handleCloseMenu}
-                    className={styles.postCardOptionsBtn}
-                    sx={{
-                      color: "black",
-                      borderBottomLeftRadius: "5px !important",
-                      borderBottomRightRadius: "5px !important",
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </ListItem>
-              </List>
-            )}
-          </div>
-        </Box>
-        <Typography
-          sx={{ marginBottom: !values.postImgUrl ? 10 : 0 }}
-          my={2}
-          align="left"
-          fontSize={14}
-          fontWeight={300}
-          paragraph
-        >
-          {values.postContent.split(" ").map((part) =>
-            URL_REGEX.test(part) ? (
-              <a href={part} target="_blank" rel="noreferrer">
-                {part}{" "}
-              </a>
-            ) : (
-              part + " "
-            ))}
-        </Typography>
-
-        <Box sx={{ position: "relative" }}>
-          {imgUrl && (
-            <>
-              {/* Action Button Blur Container */}
-              {values.postType === "url" ? (
-                <div style={{ overflow: "hidden" }}>
-                  <a href={values.postUrl} target="_blank" rel="noreferrer">
-                    <img
-                      className={styles.postImg}
-                      src={values.postImgUrl}
-                      style={{ width: "100%", height: 300, objectFit: "cover" }}
-                      key={values.id}
-                    />
-                    <div
-                      style={{
-                        position: "absolute",
-                        width: "100%",
-                        background: "rgba(0,0,0,0.4)",
-                        bottom: 80,
-                        padding: "10px 0",
+                      sx={{ color: "red", borderRadius: "0px" }}
+                      onClick={(): any => {
+                        navigator.clipboard.writeText(
+                          `http://localhost:3000/social/${values.id}`
+                        );
+                        setOpen({ ...open, copylink: true });
                       }}
                     >
-                      {values.urlPostTitle && (
-                        <Typography style={{ color: "white" }}>
-                          {values.urlPostTitle}
-                        </Typography>
-                      )}
-                    </div>
-                  </a>
-                </div>
-              ) : (
-                <Image
-                  className={styles.postImg}
-                  bucket={config.storage.publicBucket}
-                  filePath={imgUrl || ""}
-                  isPublicBucket={true}
-                  height={600}
-                  width={1400}
-                  layout="responsive"
-                  objectFit="contain"
-                  key={values.id}
-                />
+                      <img src="/icons/copy.svg" alt="icon" />
+                      Copy Link
+                    </Button>
+                  </ListItem>
+                  {values.postOwner.id === user?.id && (
+                    <ListItem disablePadding>
+                      <Button
+                        fullWidth
+                        onClick={deletePost}
+                        className={styles.postCardOptionsBtn}
+                        sx={{ color: "black" }}
+                      >
+                        Delete Post
+                      </Button>
+                    </ListItem>
+                  )}
+                  <ListItem disablePadding>
+                    <Button
+                      fullWidth
+                      onClick={handleCloseMenu}
+                      className={styles.postCardOptionsBtn}
+                      sx={{
+                        color: "black",
+                        borderBottomLeftRadius: "5px !important",
+                        borderBottomRightRadius: "5px !important",
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </ListItem>
+                </List>
               )}
+            </div>
+          </Box>
+          <Typography
+            sx={{ marginBottom: !values.postImgUrl ? 10 : 0 }}
+            my={2}
+            align="left"
+            fontSize={14}
+            fontWeight={300}
+            paragraph
+          >
+            {values.postContent.split(" ").map((part) =>
+              URL_REGEX.test(part) ? (
+                <a href={part} target="_blank" rel="noreferrer">
+                  {part}{" "}
+                </a>
+              ) : (
+                part + " "
+              )
+            )}
+          </Typography>
 
-              {/*  <CardMedia
+          <Box sx={{ position: "relative" }}>
+            {imgUrl && (
+              <>
+                {/* Action Button Blur Container */}
+                {values.postType === "url" ? (
+                  <div style={{ overflow: "hidden" }}>
+                    <a href={values.postUrl} target="_blank" rel="noreferrer">
+                      <img
+                        className={styles.postImg}
+                        src={values.postImgUrl}
+                        style={{
+                          width: "100%",
+                          height: 300,
+                          objectFit: "cover",
+                        }}
+                        key={values.id}
+                      />
+                      <div
+                        style={{
+                          position: "absolute",
+                          width: "100%",
+                          background: "rgba(0,0,0,0.4)",
+                          bottom: 80,
+                          padding: "10px 0",
+                        }}
+                      >
+                        {values.urlPostTitle && (
+                          <Typography style={{ color: "white" }}>
+                            {values.urlPostTitle}
+                          </Typography>
+                        )}
+                      </div>
+                    </a>
+                  </div>
+                ) : (
+                  <Image
+                    className={styles.postImg}
+                    bucket={config.storage.publicBucket}
+                    filePath={imgUrl || ""}
+                    isPublicBucket={true}
+                    height={600}
+                    width={1400}
+                    layout="responsive"
+                    objectFit="contain"
+                    key={values.id}
+                  />
+                )}
+
+                {/*  <CardMedia
                 component="img"
                 className={styles.postImage}
                 image={imgUrl || ""}
                 alt="user avatar"
                 
               /> */}
-            </>
-          )}
+              </>
+            )}
 
-          {!isFetchingMeta && (
-            <Box className={styles.actionButtons}>
-              <Box className={styles.blurContainer}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <Box>
-                    <IconButton
-                      onClick={toggleLike}
-                      className={styles.postBtn}
-                      sx={{ padding: "12px" }}
-                    >
-                      <img
-                        src={
-                          values.isLiked
-                            ? "/icons/heart-filled.svg"
-                            : "/icons/heart.svg"
-                        }
-                        alt="icon"
-                        key={values.totalLikes}
-                      />
-                    </IconButton>
-                    <Typography>{values?.totalLikes || 0}</Typography>
-                  </Box>
-                  <Box mx={1}>
-                    <IconButton
-                      className={styles.postBtn}
-                      onClick={handleOpenComments}
-                      sx={{ padding: "15px" }}
-                    >
-                      <img src="/icons/message.svg" alt="icon" />
-                    </IconButton>
-                    <Typography>{values.totalComments || 0}</Typography>
-                  </Box>
-                  {/*  <Box>
+            {!isFetchingMeta && (
+              <Box className={styles.actionButtons}>
+                <Box className={styles.blurContainer}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Box>
+                      <IconButton
+                        onClick={toggleLike}
+                        className={styles.postBtn}
+                        sx={{ padding: "12px" }}
+                      >
+                        <img
+                          src={
+                            values.isLiked
+                              ? "/icons/heart-filled.svg"
+                              : "/icons/heart.svg"
+                          }
+                          alt="icon"
+                          key={values.totalLikes}
+                        />
+                      </IconButton>
+                      <Typography>{values?.totalLikes || 0}</Typography>
+                    </Box>
+                    <Box mx={1}>
+                      <IconButton
+                        className={styles.postBtn}
+                        onClick={handleOpenComments}
+                        sx={{ padding: "15px" }}
+                      >
+                        <img src="/icons/message.svg" alt="icon" />
+                      </IconButton>
+                      <Typography>{values.totalComments || 0}</Typography>
+                    </Box>
+                    {/*  <Box>
                       <IconButton
                         className={styles.postBtn}
                       >
@@ -365,21 +413,49 @@ const PostCard = (props: IProps): JSX.Element => {
                       </IconButton>
                       5
                     </Box> */}
+                  </Box>
                 </Box>
               </Box>
-            </Box>
-          )}
-          {/* <Box mt={5} sx={{ textAlign: 'center' }}>
+            )}
+            {/* <Box mt={5} sx={{ textAlign: 'center' }}>
             <img width={85} src='/images/noobstorm-logo-small.png' />
           </Box> */}
-        </Box>
-      </Card>
-      <CommentsModal
-        isModalOpen={openCommentsModal}
-        handleClose={handleCloseComments}
-        postId={values.id}
-      />
-    </Grid>
+          </Box>
+        </Card>
+        <CommentsModal
+          isModalOpen={openCommentsModal}
+          handleClose={handleCloseComments}
+          postId={values.id}
+        />
+      </Grid>
+      <Snackbar
+        open={open.report}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity="warning" sx={{ width: "100%" }}>
+          Post Reporeted successfully.
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={open.copylink}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+          Copy Link successfully.
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={open.error}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
+          Somthing went wrong. try again later!
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 

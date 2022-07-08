@@ -70,9 +70,8 @@ const Home = (): JSX.Element => {
   const getleaderboardgamedata = async (gameId: string): Promise<void> => {
     try {
       const endpoint = "/api/news/newslist";
-      const headers = await getAuthHeader();
       axios
-        .get(endpoint, { params: { game_id: gameId }, headers: headers })
+        .get(endpoint, { params: { game_id: gameId } })
         .then((res) => {
           setNewsData(sortRecentPost(res.data));
         })
@@ -81,7 +80,7 @@ const Home = (): JSX.Element => {
           setNewsData([]);
         });
     } catch (err) {
-      alert(err);
+      console.error(err);
     }
   };
 
@@ -125,25 +124,23 @@ const Home = (): JSX.Element => {
   const TournamentsData = async (): Promise<void> => {
     try {
       const endpoint = "/api/tournaments/list";
-      const headers = await getAuthHeader();
       axios
         .get(endpoint, {
           params: {
             game: "",
             limit: 3,
           },
-          headers: headers,
         })
         .then((res) => {
           setData(res.data.data.tournaments.filter((i: any) => i !== null));
         })
         .catch(function (error) {
           setData([]);
-          console.error(error)
+          console.error(error);
         })
         .finally((): void => {});
     } catch (err) {
-      console.error(err)
+      console.error(err);
     }
   };
 
@@ -373,8 +370,13 @@ const Home = (): JSX.Element => {
                               <Box className={styles.tournamentTopContainer}>
                                 <Button
                                   variant="text"
-                                  style={{ background: moment(startDateTime).isBefore(moment())
-                                    ? "#F08743" : "#EF5DA8" }}
+                                  style={{
+                                    background: moment(startDateTime).isBefore(
+                                      moment()
+                                    )
+                                      ? "#F08743"
+                                      : "#EF5DA8",
+                                  }}
                                   className={styles.tournamentButton}
                                 >
                                   {moment(startDateTime).isBefore(moment())
