@@ -44,17 +44,23 @@ const getPostById =async (postId:string): Promise<IPostsResponse> => {
   return result.data[0] as IPostsResponse;
 }
 
-export const getTopPosts = async (): Promise<IPostsResponse[]> => {
-  const res = await frontendSupabase.from('post_likes').select("*");
-  const postsLikeList = _.groupBy(res.body, "postId");
-  const listOfPost = Object.values(postsLikeList)
-  const listOfTopPost = listOfPost
-    .sort((a, b) => b.length - a.length)
-    .slice(0, 5)
-    .map((i) => i[0].postId);
-  const postBatch = listOfTopPost.map((postId: string) => getPostById(postId));
-  const result = await Promise.all(postBatch);
-  return result;
+export const getTopPosts = async (): Promise<IPostsResponse[] | undefined> => {
+  try {    
+    const res = await frontendSupabase.from('post_likes').select("*");
+    const postsLikeList = _.groupBy(res.body, "postId");
+    const listOfPost = Object.values(postsLikeList)
+    const listOfTopPost = listOfPost
+      .sort((a, b) => b.length - a.length)
+      .slice(0, 5)
+      .map((i) => i[0].postId);
+    const postBatch = listOfTopPost.map((postId: string) => getPostById(postId));
+    const result = await Promise.all(postBatch);
+    console.log(result);
+    
+    return result;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export const createPost = async (

@@ -17,7 +17,7 @@ const Home: NextPage = () => {
     >
       <>
         {/* <Heading heading="Homepage" /> */}
-        {isLoggedIn && <NewHome />}
+        {<NewHome />}
       </>
     </NoobPage>
   );

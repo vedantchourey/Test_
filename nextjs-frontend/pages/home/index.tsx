@@ -56,7 +56,7 @@ const Home = (): JSX.Element => {
   const fetchPosts = async (): Promise<void> => {
     try {
       setIsFetchingPosts(true);
-      const posts: IPostsResponse[] = await getTopPosts();
+      const posts: IPostsResponse[] | undefined = await getTopPosts();
 
       setPosts(sortRecentPost(posts));
     } finally {
