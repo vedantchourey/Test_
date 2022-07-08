@@ -63,7 +63,7 @@ const Member: React.FC<MemberProp> = ({
             alignItems: "center",
           }}
         >
-          <Typography noWrap fontSize={"0.9 em"}>
+          <Typography noWrap fontSize={"0.9 em"} textAlign={"center"}>
             {name}
           </Typography>
         </div>
@@ -80,7 +80,7 @@ const Member: React.FC<MemberProp> = ({
             justifyContent: "center",
           }}
         >
-          <Typography color={"#fff"} fontSize={"0.9 em"}>
+          <Typography color={"#fff"} fontSize={"0.9 em"} textAlign={"center"}>
             {games}
           </Typography>
         </div>
@@ -97,7 +97,7 @@ const Member: React.FC<MemberProp> = ({
             justifyContent: "center",
           }}
         >
-          <Typography color={"#fff"} fontSize={"0.9 em"}>
+          <Typography color={"#fff"} fontSize={"0.9 em"} textAlign={"center"}>
             {won}
           </Typography>
         </div>
@@ -114,7 +114,7 @@ const Member: React.FC<MemberProp> = ({
             justifyContent: "center",
           }}
         >
-          <Typography color={"#fff"} fontSize={"0.9 em"}>
+          <Typography color={"#fff"} fontSize={"0.9 em"} textAlign={"center"}>
             {elo}
           </Typography>
         </div>
