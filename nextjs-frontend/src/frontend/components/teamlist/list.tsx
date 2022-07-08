@@ -101,7 +101,7 @@ const TeamListData: React.FC = () => {
                             src={teamLogo || ""}
                             width={"65px"}
                             height={"65px"}
-                            style={{ borderRadius: 5 }}
+                            style={{ borderRadius: 65  }}
                           />
                           <Box>
                             <Typography marginLeft={2} marginRight={2}>
