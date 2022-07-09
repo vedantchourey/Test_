@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import { Button, Typography } from "@mui/material";
-import Stack from "@mui/material/Stack";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import { Box } from "@mui/system";
@@ -110,7 +109,7 @@ export default function NewsView(): JSX.Element {
   const handleClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string
-  ) => {
+  ): void => {
     if (reason === "clickaway") {
       return;
     }

@@ -10,7 +10,6 @@ import {
   Button,
   Grid,
 } from "@mui/material";
-import Stack from "@mui/material/Stack";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import styles from "./post.module.css";
@@ -146,9 +145,9 @@ const PostCard = (props: IProps): JSX.Element => {
   const handleClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string
-  ) => {
+  ): void => {
     if (reason === "clickaway") {
-      return;
+      return 
     }
 
     setOpen({
@@ -306,8 +305,7 @@ const PostCard = (props: IProps): JSX.Element => {
                 </a>
               ) : (
                 part + " "
-              )
-            )}
+              ))}
           </Typography>
 
           <Box sx={{ position: "relative" }}>

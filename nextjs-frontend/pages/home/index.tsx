@@ -21,7 +21,6 @@ import moment from "moment";
 import TwitchIcon from "../../src/frontend/components/icons/twitch-icon";
 import YoutubeIcon from "../../src/frontend/components/icons/youtube-icon";
 import { useAppSelector } from "../../src/frontend/redux-store/redux-store";
-import { allGamesSelector } from "../../src/frontend/redux-store/games/game-selectors";
 import { isDeviceTypeSelector } from "../../src/frontend/redux-store/layout/layout-selectors";
 import { deviceTypes } from "../../src/frontend/redux-store/layout/device-types";
 import router from "next/router";
@@ -29,13 +28,11 @@ import { userProfileSelector } from "../../src/frontend/redux-store/authenticati
 import { getTopPosts } from "../../src/frontend/service-clients/post-service-client";
 import { IPostsResponse } from "../../src/frontend/service-clients/messages/i-posts-response";
 import PostCard from "../../src/frontend/components/account/posts/post-card";
-import { getAuthHeader } from "../../src/frontend/utils/headers";
 import axios from "axios";
 
 const Home = (): JSX.Element => {
   const isDesktop = useAppSelector((x) =>
-    isDeviceTypeSelector(x, deviceTypes.desktop)
-  );
+    isDeviceTypeSelector(x, deviceTypes.desktop));
   const user = useAppSelector(userProfileSelector);
   const [newsData, setNewsData] = useState<any[]>([]);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
@@ -138,7 +135,6 @@ const Home = (): JSX.Element => {
           setData([]);
           console.error(error);
         })
-        .finally((): void => {});
     } catch (err) {
       console.error(err);
     }
@@ -356,12 +352,12 @@ const Home = (): JSX.Element => {
                   </TabPanel>
                   <TabPanel value="3" className={styles.tournamentContainer}>
                     <Grid container columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}>
-                      {tournamentsData.map((data: any) => {
+                      {tournamentsData.map((data: any, i: number) => {
                         const startDateTime = moment(data.startDate).format(
                           "D MMM YYYY hh:mm A"
                         );
                         return (
-                          <Grid item xs={12} lg={4}>
+                          <Grid item xs={12} lg={4} key={i}>
                             <img
                               src="/images/tournament1.png"
                               className={styles.newsFeedImg}

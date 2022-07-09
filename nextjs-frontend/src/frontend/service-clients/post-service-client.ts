@@ -54,12 +54,10 @@ export const getTopPosts = async (): Promise<IPostsResponse[] | undefined> => {
       .slice(0, 5)
       .map((i) => i[0].postId);
     const postBatch = listOfTopPost.map((postId: string) => getPostById(postId));
-    const result = await Promise.all(postBatch);
-    console.log(result);
-    
+    const result = await Promise.all(postBatch);    
     return result;
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 };
 
