@@ -2,17 +2,21 @@ import {
   Avatar,
   Box,
   Button,
+  Card,
   CircularProgress,
+  Grid,
+  IconButton,
   List,
   ListItem,
   ListItemAvatar,
   ListItemButton,
   ListItemText,
+  Modal,
   TextField,
   Typography,
 } from "@mui/material";
 import moment from "moment";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { IChatUsers } from "../../../backend/services/database/models/i-chat-users";
 import { userProfileSelector } from "../../redux-store/authentication/authentication-selectors";
 import { useAppSelector } from "../../redux-store/redux-store";
@@ -31,6 +35,7 @@ import _ from "lodash";
 import { searchPeopleByText } from "../../service-clients/search-service-client";
 import { ISearchPeopleByUsernameResponse } from "../../service-clients/messages/i-search";
 import frontendConfig from "../../utils/config/front-end-config";
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function Chat(props: {
   smallChat: boolean;
@@ -51,8 +56,16 @@ export default function Chat(props: {
   const [userList, setUserList] = useState<ISearchPeopleByUsernameResponse[]>(
     []
   );
+  const [userListForGroup, setUserListForGroup] = useState<ISearchPeopleByUsernameResponse[]>(
+    []
+  );
+  const [selectedUserListForGroup, setSelectedUserListForGroup] = useState<ISearchPeopleByUsernameResponse[]>(
+    []
+  );
   const [isFetching, setIsFetching] = useState(false);
-
+  const [searchText, setSearchText] = useState("");
+  const [groupName, setGroupName] = useState("");
+  const [open, setOpen] = useState(false);
   const checkChannel = async (oUser?: string, oName?: string): Promise<any> => {
     const _otheruser = oUser || otheruser;
     const _name = oName || name;
@@ -151,7 +164,7 @@ export default function Chat(props: {
     };
   }, []);
 
-  const renderResults = (): JSX.Element => {
+  const renderResults = (group?: boolean): JSX.Element => {
     if (isFetching) {
       return (
         <List
@@ -161,15 +174,23 @@ export default function Chat(props: {
           <CircularProgress />
         </List>
       );
-    } else if (!isFetching && userList.length) {
+    } else if (
+      !isFetching &&
+      (group ?  userListForGroup.length : userList.length)
+    ) {
       return (
-        <List sx={{ width: "100%", maxWidth: 360 }}>
-          {userList.map((data, i) => (
+        <List sx={{ width: "100%" }}>
+          {_.differenceBy(userListForGroup, selectedUserListForGroup, "username").map((data, i) => (
             <ListItem key={Date.now() + i}>
               <ListItemButton
-                onClick={
-                  (): unknown => checkChannel(data.id, data.username)
-                }
+                onClick={(): void => {
+                  if (group) {
+                    setSelectedUserListForGroup([
+                      ...selectedUserListForGroup,
+                      data,
+                    ]);
+                  } else checkChannel(data.id, data.username);
+                }}
                 sx={{ padding: "2px 18px", my: 1 }}
               >
                 <ListItemAvatar>
@@ -250,6 +271,41 @@ export default function Chat(props: {
     setLoading(false);
   };
 
+  const createNewGroupChat = async (): Promise<any> => {
+    setLoading(true);
+    const channel_id = v4();
+    const res = await frontendSupabase.from("chat_users").insert({
+      channel_id,
+      user_id: user?.id || "",
+      other_user: channel_id,
+      channel_name: groupName,
+      user_name: user?.username,
+      channel_type: "group",
+    });
+    
+    setCurrentChatName(groupName);
+    await Promise.all(selectedUserListForGroup.map((u) =>
+      frontendSupabase.from("chat_users").insert({
+        channel_id,
+        user_id: u.id,
+        other_user: channel_id,
+        channel_name: groupName,
+        user_name: u.username,
+        channel_type: "group",
+      })
+    ));
+    
+    if (res.data?.length) setCurrentChat(channel_id);
+    setOpen(false);
+    setGroupName("");
+    setSelectedUserListForGroup([]);
+    setUserListForGroup([]);
+
+    fetchSupportChannel();
+    fetchChannels();
+    setLoading(false);
+  };
+
   const createSupportChat = async (): Promise<any> => {
     setLoading(true);
     await frontendSupabase.from("chat_users").insert({
@@ -288,7 +344,7 @@ export default function Chat(props: {
     setLoading(false);
   };
 
-  async function searchByUserName(username: string): Promise<void> {
+  async function searchByUserName(username: string, group: boolean = false): Promise<void> {
     setIsFetching(true);
     setUserList([]);
     if (!username) {
@@ -296,7 +352,12 @@ export default function Chat(props: {
       return;
     }
     const response = await searchPeopleByText({ search: username });
-    if (response.length) setUserList(response);
+    if (response.length) {
+      if(group)
+        setUserListForGroup(response);
+      else
+        setUserList(response);
+    }
     setIsFetching(false);
   }
 
@@ -392,11 +453,11 @@ export default function Chat(props: {
               </Button>
             </Box>
           ) : null}
-          {/* <Typography variant="h5" m={1} textAlign="left">
-            {user?.userRoles[0] === "noob-admin"
-              ? "Support request"
-              : "Friends"}
-          </Typography> */}
+          <Box mt={2}>
+            <Button disabled={loading} onClick={(): any => setOpen(true)}>
+              Create Group
+            </Button>
+          </Box>
           {renderChatList()}
         </Box>
       )}
@@ -456,18 +517,170 @@ export default function Chat(props: {
               InputProps={{
                 disableUnderline: true,
               }}
+              value={searchText}
               margin="none"
               sx={{ marginBottom: 0, padding: 1, flex: 1 }}
               onChange={(e): void => {
-                searchByUserName(e.target.value);
+                setSearchText(e.target.value);
+                searchByUserName(e.target.value, true);
               }}
               id="userSearchInput"
             />
             <SearchIcon color="primary" />
           </Box>
-          {renderResults()}
+          {/* {renderResults()} */}
         </Box>
       )}
+      <Modal
+        open={open}
+        onClose={() => {
+          setOpen(false);
+          setGroupName("");
+          setSelectedUserListForGroup([]);
+          setUserListForGroup([]);
+        }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        sx={{
+          display: "flex",
+          height: "100vh",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Grid container>
+          <Grid md={3} xs={0} />
+          <Grid
+            item
+            md={6}
+            xs={12}
+            alignItems={"center"}
+            justifyContent={"center"}
+          >
+            <Card>
+              <Box p={2}>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                  Create Group
+                </Typography>
+                <Box display={"flex"}>
+                  <Box
+                    flex={0.5}
+                    sx={{
+                      backgroundColor: "rgba(255,255,255,0.08)",
+                      alignItems: "center",
+                      alignSelf: "center",
+                      display: "flex",
+                      borderRadius: 3,
+                      paddingRight: 2,
+                      mr: 1,
+                    }}
+                  >
+                    <TextField
+                      placeholder="Group Name"
+                      variant="standard"
+                      InputProps={{
+                        disableUnderline: true,
+                      }}
+                      value={groupName}
+                      margin="none"
+                      sx={{ marginBottom: 0, padding: 1, flex: 1 }}
+                      onChange={(e): void => {
+                        setGroupName(e.target.value);
+                      }}
+                      id="userSearchInput"
+                    />
+                  </Box>
+
+                  <Box
+                    flex={0.5}
+                    sx={{
+                      backgroundColor: "rgba(255,255,255,0.08)",
+                      alignItems: "center",
+                      alignSelf: "center",
+                      display: "flex",
+                      borderRadius: 3,
+                      paddingRight: 2,
+                      ml: 1,
+                    }}
+                  >
+                    <TextField
+                      placeholder="Search anything..."
+                      variant="standard"
+                      InputProps={{
+                        disableUnderline: true,
+                      }}
+                      value={searchText}
+                      margin="none"
+                      sx={{ marginBottom: 0, padding: 1, flex: 1 }}
+                      onChange={(e): void => {
+                        setSearchText(e.target.value);
+                        searchByUserName(e.target.value, true);
+                      }}
+                      id="userSearchInput"
+                    />
+                    <SearchIcon color="primary" />
+                  </Box>
+                </Box>
+                {selectedUserListForGroup.map((data, i) => (
+                  <ListItem key={Date.now() + i}>
+                    <ListItemButton sx={{ padding: "2px 5px" }}>
+                      <ListItemAvatar>
+                        <Avatar
+                          sx={{ width: 35, height: 35 }}
+                          alt="profile image"
+                          src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${data.avatarUrl}`}
+                        >
+                          {data.username.split("")[0].toUpperCase()}
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText className={styles.listText}>
+                        <Typography>@{data.username}</Typography>
+                      </ListItemText>
+                      <ListItemText
+                        style={{ display: "flex", justifyContent: "flex-end" }}
+                        onClick={(): any =>
+                          setSelectedUserListForGroup(
+                            selectedUserListForGroup.filter(
+                              (i) => i.username !== data.username
+                            )
+                          )
+                        }
+                      >
+                        <IconButton>
+                          <CloseIcon />
+                        </IconButton>
+                      </ListItemText>
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+                {renderResults(true)}
+                <Box display={"flex"} mt={2} justifyContent="flex-end">
+                  <Button
+                    variant="outlined"
+                    sx={{ mr: 1 }}
+                    onClick={() => {
+                      setOpen(false);
+                      setGroupName("");
+                      setSelectedUserListForGroup([]);
+                      setUserListForGroup([]);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="contained"
+                    sx={{ ml: 1 }}
+                    onClick={() => createNewGroupChat()}
+                    disabled={!selectedUserListForGroup.length || !groupName || loading}
+                  >
+                    Create
+                  </Button>
+                </Box>
+              </Box>
+            </Card>
+          </Grid>
+        </Grid>
+      </Modal>
     </Box>
   );
 }
