@@ -318,7 +318,9 @@ const Home = (): JSX.Element => {
                     className={styles.postContainer}
                     style={{ flexDirection: "column" }}
                   >
-                    <Box display={"flex"}>{_renderPosts()}</Box>
+                    <Box display={"flex"} overflow={"scroll"} maxWidth={"57vw"}>
+                      {_renderPosts()}
+                    </Box>
                   </TabPanel>
                   <TabPanel value="2" className={styles.newsFeedContainer}>
                     <Grid container columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}>

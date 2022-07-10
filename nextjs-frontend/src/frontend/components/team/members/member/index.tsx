@@ -19,7 +19,9 @@ export interface MemberProp {
   won?: string;
   games?: string;
   id?: string;
+  username?: string;
   children?: JSX.Element;
+  onClick?: () => void;
 }
 
 const findCardType = (
@@ -40,7 +42,8 @@ const Member: React.FC<MemberProp> = ({
   won,
   elo,
   children,
-  profileImage
+  profileImage,
+  onClick,
 }) => {
   const [hover, setHover] = useState(false);
   return (
@@ -51,6 +54,11 @@ const Member: React.FC<MemberProp> = ({
       onMouseLeave={(): void => {
         setHover(false);
       }}
+      onClick={() => {
+        console.log('onClick -> ', onClick);
+        if (onClick) onClick();
+      }}
+      sx={{ cursor: "pointer" }}
     >
       <Box width={"100%"} position="relative">
         <div
@@ -125,7 +133,7 @@ const Member: React.FC<MemberProp> = ({
             width: "100%",
             zIndex: -1,
             cursor: "pointer",
-            height: "64%"
+            height: "64%",
           }}
         />
         <img
