@@ -114,6 +114,7 @@ export interface Player {
   won?: string;
   lost?: string;
   avatarUrl?: string;
+  username?: string;
 }
 
 interface TeamMembersProps {
@@ -136,6 +137,16 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team }) => {
   };
   const [email, setEmail] = React.useState<string | undefined>(undefined);
   const [error, setError] = React.useState<string | undefined>(undefined);
+  const [data, setData] = React.useState<any>({
+    datasets: [
+      {
+        label: "Dataset 1",
+        data: [],
+        borderColor: "rgb(105, 49, 249)",
+        backgroundColor: "rgb(105, 49, 249)",
+      },
+    ],
+  })
 
   async function gotoFreeAgencyMarketPage(): Promise<void> {
     await router.push({
@@ -144,21 +155,31 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team }) => {
     });
   }
 
-  const data = {
-    datasets: [
-      {
-        label: "Dataset 1",
-        data: team?.eloHistory?.map((i: any) => ({
-          x: moment(i.created_at).format("DD/MM/YYYY"),
-          y: parseInt(i.elo_rating),
-        })),
-        borderColor: "rgb(105, 49, 249)",
-        backgroundColor: "rgb(105, 49, 249)",
-      },
-    ],
+  const fetchDataForGraph = async () => {
+    const res = await frontendSupabase
+      .from("elo_ratings_history")
+      .select("*")
+      .eq("team_id", teamId);
+    if (res.data?.length) {
+      const data = {
+        datasets: [
+          {
+            label: "Dataset 1",
+            data: res.data?.map((i: any) => ({
+              x: moment(i.created_at).format("DD/MM/YYYY"),
+              y: parseInt(i.elo_rating),
+            })),
+            borderColor: "rgb(105, 49, 249)",
+            backgroundColor: "rgb(105, 49, 249)",
+          },
+        ],
+      };
+      setData(data);
+    }
   };
 
   React.useEffect(() => {
+    fetchDataForGraph();
     const newList: any[] = players.map((player) => {
       return {
         image: "/images/teams/player.png",
@@ -166,6 +187,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team }) => {
         tags: ["Games", "Won", "Elo"],
         name: `${player.firstName} ${player.lastName}`,
         games: Number(player.won) + Number(player.lost),
+        username: player.username,
         won: player.won,
         elo: player.elo_rating || "0",
         profileImage: player.avatarUrl
@@ -202,7 +224,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team }) => {
         <Box marginY={2} width={"70vw"}>
           <Slider {...settings}>
             {playerList.map((player) => {
-              return <Member key={player.name} {...player} />;
+              return <Member key={player.name} {...player} onClick={() => {router.push(`/account/${player.username}`)}} />;
             })}
             <Box>
               <Box
@@ -232,6 +254,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team }) => {
                   fontWeight="700"
                   fontSize={"17px"}
                   lineHeight={"18px"}
+                  textAlign="center"
                 >
                   Add Player
                 </Typography>

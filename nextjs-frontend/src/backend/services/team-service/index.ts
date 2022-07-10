@@ -23,6 +23,9 @@ import { IChannel } from "../database/models/i-channel";
 import { IChatUsers } from "../database/models/i-chat-users";
 import { IEmailTeamInvitation } from "../database/models/i-email-team-invitation";
 import { IEloRatingHistory } from "../database/models/i-elo-rating-history";
+import { sendEmail } from "../email-service";
+import { SendMailOptions } from "nodemailer";
+import frontendConfig from "../../../frontend/utils/config/front-end-config";
 
 const fetchEloRating = async (
   connection: Knex.Transaction,
@@ -107,6 +110,7 @@ export const fetchTeams = async (
         "private_profiles.id as user_id",
         "wallet.balance",
         "profiles.avatarUrl",
+        "profiles.username as username",
         "private_profiles.won",
         "private_profiles.lost",
         "team_players.is_owner",
@@ -156,6 +160,7 @@ export const fetchTeams = async (
             return {
               user_id: data.user_id,
               lastName: data.lastName,
+              username: data.username,
               firstName: data.firstName,
               avatarUrl: data.avatarUrl,
               balance: data.balance,
@@ -261,6 +266,13 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
         const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
         const team_info = await teams.findById(req.team_id);
 
+        const mailOptions: SendMailOptions = {
+          from: "dev.codesymphony@zohomail.in",
+          to: req?.email,
+          subject: "Noobstorm Team Invitation",
+          text: `You have new team invitation for ${team_info?.name} open website from here ${frontendConfig.baseAppUrl}`,
+        };
+
         // validating all the users
         if (req?.email) {
           const emailTeamInvitationRepo =
@@ -287,13 +299,14 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
               "secret",
             ]);
 
+            await sendEmail(mailOptions)
+
             return { message: "Invite send successfully", result } as any;
           }
         }
 
         // validation team id and whether the requested user is the owner of the team
         if (!team_info) return getErrorObject("Team id does not exisits");
-        if (team_info.created_by !== user.id) return getErrorObject("Not authorises to send invitation");
 
         // checking if users already in the team 
         const team_players = new CrudRepository<ITeamPlayers>(connection, TABLE_NAMES.TEAM_PLAYERS);
@@ -322,9 +335,11 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
             status: STATUS.PENDING,
             data: { secret }
         }
+
         await Promise.all([
             team_invitation.create(data),
-            addNotifications(notification, connection)
+            addNotifications(notification, connection),
+            sendEmail(mailOptions)
         ])
 
         return { message: "Invite send successfully" } as any
