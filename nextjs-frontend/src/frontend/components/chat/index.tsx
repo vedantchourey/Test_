@@ -16,7 +16,7 @@ import {
   Typography,
 } from "@mui/material";
 import moment from "moment";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IChatUsers } from "../../../backend/services/database/models/i-chat-users";
 import { userProfileSelector } from "../../redux-store/authentication/authentication-selectors";
 import { useAppSelector } from "../../redux-store/redux-store";
@@ -176,7 +176,7 @@ export default function Chat(props: {
       );
     } else if (
       !isFetching &&
-      (group ?  userListForGroup.length : userList.length)
+      (group ? userListForGroup.length : userList.length)
     ) {
       return (
         <List sx={{ width: "100%" }}>
@@ -292,8 +292,7 @@ export default function Chat(props: {
         channel_name: groupName,
         user_name: u.username,
         channel_type: "group",
-      })
-    ));
+      })));
     
     if (res.data?.length) setCurrentChat(channel_id);
     setOpen(false);
@@ -344,7 +343,7 @@ export default function Chat(props: {
     setLoading(false);
   };
 
-  async function searchByUserName(username: string, group: boolean = false): Promise<void> {
+  async function searchByUserName(username: string, group = false): Promise<void> {
     setIsFetching(true);
     setUserList([]);
     if (!username) {
@@ -533,7 +532,7 @@ export default function Chat(props: {
       )}
       <Modal
         open={open}
-        onClose={() => {
+        onClose={(): any => {
           setOpen(false);
           setGroupName("");
           setSelectedUserListForGroup([]);
@@ -658,7 +657,7 @@ export default function Chat(props: {
                   <Button
                     variant="outlined"
                     sx={{ mr: 1 }}
-                    onClick={() => {
+                    onClick={(): any => {
                       setOpen(false);
                       setGroupName("");
                       setSelectedUserListForGroup([]);
@@ -670,7 +669,7 @@ export default function Chat(props: {
                   <Button
                     variant="contained"
                     sx={{ ml: 1 }}
-                    onClick={() => createNewGroupChat()}
+                    onClick={(): any => createNewGroupChat()}
                     disabled={!selectedUserListForGroup.length || !groupName || loading}
                   >
                     Create

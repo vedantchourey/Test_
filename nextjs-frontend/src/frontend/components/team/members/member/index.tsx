@@ -54,8 +54,7 @@ const Member: React.FC<MemberProp> = ({
       onMouseLeave={(): void => {
         setHover(false);
       }}
-      onClick={() => {
-        console.log('onClick -> ', onClick);
+      onClick={(): any => {
         if (onClick) onClick();
       }}
       sx={{ cursor: "pointer" }}
