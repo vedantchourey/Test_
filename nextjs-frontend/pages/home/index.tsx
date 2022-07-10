@@ -82,8 +82,8 @@ const Home = (): JSX.Element => {
   };
 
   useEffect(() => {
-    if (user?.id) fetchPosts();
-  }, [user]);
+    fetchPosts();
+  }, []);
 
   useEffect(() => {
     getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257");
@@ -318,7 +318,7 @@ const Home = (): JSX.Element => {
                     className={styles.postContainer}
                     style={{ flexDirection: "column" }}
                   >
-                    <Box display={"flex"} overflow={"scroll"} maxWidth={"57vw"}>
+                    <Box overflow={"scroll"} maxWidth={"57vw"}>
                       {_renderPosts()}
                     </Box>
                   </TabPanel>

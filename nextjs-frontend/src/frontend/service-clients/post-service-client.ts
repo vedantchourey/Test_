@@ -46,7 +46,9 @@ const getPostById =async (postId:string): Promise<IPostsResponse> => {
 
 export const getTopPosts = async (): Promise<IPostsResponse[] | undefined> => {
   try {    
+    console.log('frontendSupabase -> ', frontendSupabase);
     const res = await frontendSupabase.from('post_likes').select("*");
+    console.log('getTopPosts res -> ', res)
     const postsLikeList = _.groupBy(res.body, "postId");
     const listOfPost = Object.values(postsLikeList)
     const listOfTopPost = listOfPost
