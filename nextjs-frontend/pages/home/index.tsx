@@ -24,7 +24,6 @@ import { useAppSelector } from "../../src/frontend/redux-store/redux-store";
 import { isDeviceTypeSelector } from "../../src/frontend/redux-store/layout/layout-selectors";
 import { deviceTypes } from "../../src/frontend/redux-store/layout/device-types";
 import router from "next/router";
-import { userProfileSelector } from "../../src/frontend/redux-store/authentication/authentication-selectors";
 import { getTopPosts } from "../../src/frontend/service-clients/post-service-client";
 import { IPostsResponse } from "../../src/frontend/service-clients/messages/i-posts-response";
 import PostCard from "../../src/frontend/components/account/posts/post-card";
@@ -33,7 +32,6 @@ import axios from "axios";
 const Home = (): JSX.Element => {
   const isDesktop = useAppSelector((x) =>
     isDeviceTypeSelector(x, deviceTypes.desktop));
-  const user = useAppSelector(userProfileSelector);
   const [newsData, setNewsData] = useState<any[]>([]);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
   const [isFetchingPosts, setIsFetchingPosts] = useState<boolean>(true);

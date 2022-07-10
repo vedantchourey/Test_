@@ -123,7 +123,7 @@ interface TeamMembersProps {
   team: any;
 }
 
-const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team }) => {
+const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
   const theme = useTheme();
   const router = useRouter();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -155,7 +155,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team }) => {
     });
   }
 
-  const fetchDataForGraph = async () => {
+  const fetchDataForGraph = async (): Promise<any> => {
     const res = await frontendSupabase
       .from("elo_ratings_history")
       .select("*")
@@ -223,8 +223,8 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team }) => {
 
         <Box marginY={2} width={"70vw"}>
           <Slider {...settings}>
-            {playerList.map((player) => {
-              return <Member key={player.name} {...player} onClick={() => {router.push(`/account/${player.username}`)}} />;
+            {playerList.map((player): any => {
+              return <Member key={player.name} {...player} onClick={(): any => {router.push(`/account/${player.username}`)}} />;
             })}
             <Box>
               <Box
