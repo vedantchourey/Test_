@@ -231,7 +231,7 @@ const Home = (): JSX.Element => {
                         autoPlay={true}
                         disableButtonsControls={true}
                         disableDotsControls={true}
-                        autoPlayInterval={1000}
+                        autoPlayInterval={10000}
                         infinite={true}
                       />
               </div>
@@ -293,7 +293,7 @@ const Home = (): JSX.Element => {
                         autoPlay={true}
                         disableButtonsControls={true}
                         disableDotsControls={true}
-                        autoPlayInterval={1000}
+                        autoPlayInterval={10000}
                         infinite={true}
                       />
               </div></Grid>
