@@ -277,12 +277,12 @@ const Leaderboard = (): JSX.Element => {
                     },
                   }}
                 >
-                  {leaderboardgamedata
-                    .slice(3, leaderboardgamedata.length)
+                  {leaderboardgamedata 
+                    .slice(isDesktop?3:0, leaderboardgamedata.length)
                     .map((item, idx) => (
                       <TableRow key={item.id}>
                         <TableCell align="center" component="th" scope="row">
-                          {idx + 4}
+                          {idx + (isDesktop?4:1)}
                           <sup>th</sup>
                         </TableCell>
                         <TableCell>
