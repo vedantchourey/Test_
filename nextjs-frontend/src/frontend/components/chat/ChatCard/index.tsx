@@ -14,6 +14,8 @@ interface IChatCard {
 
 export default function ChatCard(props: IChatCard): JSX.Element {
   const [lastSeenTime, setLastSeenTime] = useState<any>(null)
+  const [currentMoment, setCurrentMoment] = useState(moment())
+
   const fetchLastSeen = async (): Promise<void> => {
     const lLastSeenReq = await frontendSupabase
     .from("user_last_seen")
@@ -33,7 +35,9 @@ export default function ChatCard(props: IChatCard): JSX.Element {
           setLastSeenTime(payload.new.last_seen);
       })
       .subscribe();
+    const momentInterval = setInterval(() => setCurrentMoment(moment()), 1000 * 30);
     return (): any => {
+      clearInterval(momentInterval);
       lastSeenListener.unsubscribe();
     };
   }, []);
@@ -44,11 +48,6 @@ export default function ChatCard(props: IChatCard): JSX.Element {
       display={"flex"}
       alignItems={"center"}
       style={{ cursor: "pointer" }}
-      // style={{
-      //   borderBottomColor: "rgba(255,255,255,0.1)",
-      //   borderBottomWidth: 1,
-      //   borderBottomStyle: "solid",
-      // }}
       onClick={props.onClick}
     >
       <Box>
@@ -62,9 +61,11 @@ export default function ChatCard(props: IChatCard): JSX.Element {
           }}
         />
         {lastSeenTime &&
-        moment(lastSeenTime).isBefore(moment().add(4, "minutes")) ? (
+        moment(lastSeenTime).add(1, "minute")
+.isAfter(currentMoment) ? (
           <div
             style={{
+              zIndex: 99,
               background: "green",
               maxHeight: 12,
               maxWidth: 12,
@@ -72,13 +73,12 @@ export default function ChatCard(props: IChatCard): JSX.Element {
               minWidth: 12,
               borderRadius: 20,
               marginLeft: 38,
-              marginTop: -12
+              marginTop: -12,
             }}
           />
         ) : null}
       </Box>
 
-      
       <Box ml={2} textAlign={"left"}>
         <Typography textAlign={"left"} fontSize={18} color="#FFFFFF">
           {props.name}

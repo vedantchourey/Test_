@@ -3,7 +3,6 @@ import React from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
-import moment from "moment";
 import { Chart, ArcElement } from "chart.js";
 Chart.register(ArcElement);
 import {
@@ -11,32 +10,12 @@ import {
   NoobTableHead,
   NoobTableRow,
 } from "../../ui-components/table/AltTable";
+import { IMatchHubData } from "../../../../../pages/match-hub";
+import { userProfileSelector } from "../../../redux-store/authentication/authentication-selectors";
+import { useAppSelector } from "../../../redux-store/redux-store";
 
-function createData(
-  team1: string,
-  team2: string,
-  date: string,
-  status: string
-):any {
-  return {team1, team2, date, status };
-}
-
-const rows = [
-  createData(
-    " Old Legends",
-    "Best Legends",
-    moment().format("DD.MM.YYYY"),
-    "win"
-  ),
-  createData(
-    "Old Legends",
-    "Best Legends",
-    moment().format("DD.MM.YYYY"),
-    "win"
-  ),
-];
-
-const MatchHistory:React.FC = () => {
+const MatchHistory: React.FC<{ data: IMatchHubData[] }> = (props) => {
+  const user = useAppSelector(userProfileSelector);
   return (
     <Grid container>
       <Grid item xs={12} sm={12} md={8}>
@@ -45,32 +24,46 @@ const MatchHistory:React.FC = () => {
             <NoobTableHead>
               <NoobTableRow style={{ color: "#201146" }}>
                 <NoobTableCell>Teams</NoobTableCell>
-                <NoobTableCell>Date</NoobTableCell>
                 <NoobTableCell>Status</NoobTableCell>
               </NoobTableRow>
             </NoobTableHead>
             <TableBody>
-              {rows.map((row) => (
-                <NoobTableRow key={row.status}>
-                  <NoobTableCell
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Typography>{row.team1}</Typography>
-                    <Typography color={"#F09633"}>VS</Typography>
-                    <Typography>{row.team2}</Typography>
-                  </NoobTableCell>
-                  <NoobTableCell>{row.date}</NoobTableCell>
-                  <NoobTableCell>{row.status}</NoobTableCell>
-                </NoobTableRow>
-              ))}
+              {props.data.map((row, idx) => {
+                const opponent1Name = row.opponent1.user_id
+                ? `${row.opponent1.firstName} ${row.opponent1.lastName}`
+                : row.opponent1.name || "N/A";
+              const opponent2Name = row.opponent2.user_id
+                ? `${row.opponent2.firstName} ${row.opponent2.lastName}`
+                : row.opponent2.name || "N/A";
+                const myPlayer =
+                row.opponent1.user_id === user?.id
+                  ? row.opponent1
+                  : row.opponent2;
+                return (
+                  <NoobTableRow key={idx}>
+                    <NoobTableCell
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Typography>{opponent1Name}</Typography>
+                      <Typography color={"#F09633"}>VS</Typography>
+                      <Typography>{opponent2Name}</Typography>
+                    </NoobTableCell>
+                    <NoobTableCell>
+                      {myPlayer.result
+                        ? myPlayer.result === "win"
+                          ? "Win"
+                          : "Loss"
+                        : "-"}
+                    </NoobTableCell>
+                  </NoobTableRow>
+                );})}
             </TableBody>
           </Table>
         </TableContainer>
       </Grid>
-    
     </Grid>
   );
 };

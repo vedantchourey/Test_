@@ -45,6 +45,7 @@ export interface TeamData {
   won: string;
   loss: string;
   elo_rating: string;
+  team_elo_rating: string;
 }
 
 const TeamListData: React.FC = () => {
@@ -100,7 +101,7 @@ const TeamListData: React.FC = () => {
                             src={teamLogo || ""}
                             width={"65px"}
                             height={"65px"}
-                            style={{ borderRadius: 5 }}
+                            style={{ borderRadius: 65 }}
                           />
                           <Box>
                             <Typography marginLeft={2} marginRight={2}>
@@ -114,7 +115,7 @@ const TeamListData: React.FC = () => {
                         Game: {parseInt(item.won) + parseInt(item.loss)}
                       </NoobCell>
                       <NoobCell>won: {parseInt(item.won)}</NoobCell>
-                      <NoobCell>ELO: {parseInt(item.elo_rating)}</NoobCell>
+                      <NoobCell>ELO: {parseInt(item.team_elo_rating)}</NoobCell>
                     </NoobRow>
                   );
                 })}

@@ -2,14 +2,23 @@ import { Knex } from "knex";
 import { PerRequestContext } from "../../utils/api-middle-ware/api-middleware-typings";
 import { reportRepository } from "../database/repositories/report-post";
 import { IReport } from "../database/models/i-report";
+import { CrudRepository } from "../database/repositories/crud-repository";
+import { TABLE_NAMES } from "../../../models/constants";
 
 export const getAllRepost = async (
-  context: PerRequestContext,
+  connection: Knex.Transaction
 ): Promise<any | undefined> => {
-  const transaction = context.transaction as Knex.Transaction;  
-  const reportRepo = new reportRepository(transaction);
-  const result = await reportRepo.fetch();
-  
+  // const transaction = context.transaction as Knex.Transaction;
+  // const reportRepo = new reportRepository(transaction);
+  const reportRepo = new CrudRepository<IReport>(
+    connection,
+    TABLE_NAMES.REPORTED_POST
+  );
+  const result = await reportRepo
+    .knexObj()
+    .join("profiles", "profiles.id", "reported_post.reported_by")
+    .select("*");
+
   return result;
 };
 

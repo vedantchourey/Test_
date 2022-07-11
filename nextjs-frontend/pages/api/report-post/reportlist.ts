@@ -8,6 +8,7 @@ import {
 } from "../../../src/backend/utils/api-middle-ware/transaction-middle-ware";
 import { getAllRepost } from "../../../src/backend/services/report-services/report-list";
 import { authenticatedUserMiddleware } from "../../../src/backend/utils/api-middle-ware/auth-middle-ware";
+import { Knex } from "knex";
 
 export default createNextJsRouteHandler({
   get: {
@@ -16,7 +17,7 @@ export default createNextJsRouteHandler({
       res: NextApiResponse<ServiceResponse<null, any>>,
       context: PerRequestContext
     ) => {
-      const result = await getAllRepost(context);
+      const result = await getAllRepost(context.transaction as Knex.Transaction);
       res.status(result.errors ? 400 : 200).json(result);
     },
     preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],

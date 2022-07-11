@@ -1,6 +1,5 @@
-import { Grid, Typography } from "@mui/material";
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-// import { useRouter } from "next/router";
+import { Button, Grid, Typography } from "@mui/material";
+import { useRouter } from "next/router";
 import React from "react";
 import NoobPage from "../page/noob-page";
 import DashboardSideBar from "../ui-components/dashboard-sidebar";
@@ -10,6 +9,7 @@ import { getAuthHeader } from "../../utils/headers";
 
 const ReportedUsers: React.FC = () => {
   const [data, setData] = React.useState([]);
+  const router = useRouter();
 
   const fetchData = async (): Promise<void> => {
     const headers = await getAuthHeader();
@@ -56,7 +56,7 @@ const deletreport = async (reportId: string): Promise<void> => {
       renderCell: (row, index): JSX.Element => {
         return <Typography color="white">{index + 1}</Typography>;
       },
-      width: "10%",
+      width: "2%",
     },
     {
       title: "Post",
@@ -66,9 +66,9 @@ const deletreport = async (reportId: string): Promise<void> => {
       width: "10%",
     },
     {
-      title: "Author Name",
+      title: "Reported By",
       renderCell: (row): any => {
-        return row.reported_by;
+        return row.username;
       },
       width: "10%",
     },
@@ -82,7 +82,16 @@ const deletreport = async (reportId: string): Promise<void> => {
     {
       title: "Action",
       renderCell: (row): any => {
-        return <DeleteOutlinedIcon onClick={(): any => deletreport(row.id)}/>;
+        return (
+          <>
+            <Button onClick={(): any => router.push(`/social/${row.post_id}`)}>
+              Visit
+            </Button>
+            <Button onClick={(): any => deletreport(row.id)}>
+              Delete
+            </Button>
+          </>
+        );
       },
       width: "5%",
     },

@@ -1,5 +1,5 @@
 import React from "react";
-import FreeAgencyMarket from "../../../src/frontend/components/free-agency-market";
+import FreeAgencyMarket from "../../../../src/frontend/components/free-agency-market";
 
 const FreeAgencyMarketPage: React.FC<void> = () => {
   return (
