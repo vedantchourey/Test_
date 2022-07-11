@@ -190,6 +190,18 @@ const Home = (): JSX.Element => {
     </div>,
   ];
 
+  const topImageCarousel=[
+    <div data-value="1" key={"1"}>
+<img src="/images/home1.png" className={styles.img1} />
+    </div>,
+    <div data-value="2" key={"2"}>
+<img src="/images/home2.png" className={styles.img1} />
+    </div>,
+    <div data-value="3" key={"3"}>
+<img src="/images/home3.png" className={styles.img1} />
+    </div>
+  ]
+
   return (
     <Fragment>
       <Grid container xs={12}>
@@ -213,9 +225,15 @@ const Home = (): JSX.Element => {
             </Grid>
             <Grid item xs={12} lg={3}>
               <div className={styles.imgContainer}>
-                <img src="/images/home1.png" className={styles.img1} />
-                <img src="/images/home2.png" className={styles.img1} />
-                <img src="/images/home3.png" className={styles.img1} />
+                <AliceCarousel
+                        items={topImageCarousel}
+                        responsive={responsive}
+                        autoPlay={true}
+                        disableButtonsControls={true}
+                        disableDotsControls={true}
+                        autoPlayInterval={1000}
+                        infinite={true}
+                      />
               </div>
             </Grid>
           </>
@@ -254,7 +272,7 @@ const Home = (): JSX.Element => {
               <Button variant="text" className={styles.button1}>
                 Read More
               </Button>
-              <Grid
+              {/* <Grid
                 container
                 direction={"row"}
                 style={{
@@ -266,7 +284,19 @@ const Home = (): JSX.Element => {
                 <img src="/images/home1.png" className={styles.img1} />
                 <img src="/images/home2.png" className={styles.img1} />
                 <img src="/images/home3.png" className={styles.img1} />
-              </Grid>
+              </Grid> */}
+              <Grid>
+              <div style={{marginTop: 42,width:'200px',alignSelf:'center'}}>
+                <AliceCarousel
+                        items={topImageCarousel}
+                        responsive={responsive}
+                        autoPlay={true}
+                        disableButtonsControls={true}
+                        disableDotsControls={true}
+                        autoPlayInterval={1000}
+                        infinite={true}
+                      />
+              </div></Grid>
             </Grid>
           </>
         )}
