@@ -262,7 +262,7 @@ export default function DrawerLeft(): JSX.Element {
                   Free Agency
                 </Button>
               )}
-              {isLoggedIn && (
+              {/* {isLoggedIn && (
                 <Button
                   variant="text"
                   className={classes.buttonStyles}
@@ -274,8 +274,8 @@ export default function DrawerLeft(): JSX.Element {
                   />
                   Social
                 </Button>
-              )}
-              <Button
+              )} */}
+              {/* <Button
                 variant="text"
                 className={classes.buttonStyles}
                 onClick={(): any => router.push("/blog")}
@@ -285,7 +285,7 @@ export default function DrawerLeft(): JSX.Element {
                   className={classes.imgStyle}
                 />
                 Free Agency
-              </Button>
+              </Button> */}
               <Button
                 variant="text"
                 className={classes.buttonStyles}

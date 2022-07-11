@@ -282,7 +282,7 @@ const Leaderboard = (): JSX.Element => {
                     .map((item, idx) => (
                       <TableRow key={item.id}>
                         <TableCell align="center" component="th" scope="row">
-                          {idx + 3}
+                          {idx + 4}
                           <sup>th</sup>
                         </TableCell>
                         <TableCell>
