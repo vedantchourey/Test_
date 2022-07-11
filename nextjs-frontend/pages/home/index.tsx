@@ -360,6 +360,7 @@ const Home = (): JSX.Element => {
                                 className={styles.newsFeedImg}
                                 style={{
                                   backgroundImage: `url(${i.image})`,
+                                  backgroundSize: "cover",
                                 }}
                               >
                                 <Box className={styles.newsGrid}>
