@@ -355,13 +355,13 @@ const Home = (): JSX.Element => {
                       {newsData.map((i: any, key) => {
                         if (key < 3) {
                           return (
-                            <Grid item xs={12} lg={4}>
-                              <Box
+                            <Grid item xs={12} lg={4} >
+                              <Button
                                 className={styles.newsFeedImg}
                                 style={{
                                   backgroundImage: `url(${i.image})`,
-                                  backgroundSize: "cover",
                                 }}
+                                onClick={(): any => router.push(`/blog/${i.id}`)}
                               >
                                 <Box className={styles.newsGrid}>
                                   <Button
@@ -374,7 +374,7 @@ const Home = (): JSX.Element => {
                                     {i.title}
                                   </Typography>
                                 </Box>
-                              </Box>
+                              </Button>
                             </Grid>
                           );
                         }
