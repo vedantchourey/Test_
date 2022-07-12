@@ -115,6 +115,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         flex={1}
         flexDirection={"column-reverse"}
         overflow="scroll"
+        className={"hide-scrollbar"}
       >
         <Box display={"flex"} flexDirection={"column"}>
           {messages.map((i) => {

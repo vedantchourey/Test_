@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   CircularProgress,
+  Fab,
   Grid,
   IconButton,
   List,
@@ -15,6 +16,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
 import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
 import { IChatUsers } from "../../../backend/services/database/models/i-chat-users";
@@ -417,6 +419,7 @@ export default function Chat(props: {
       display={"flex"}
       flex={1}
       overflow={"scroll"}
+      className={"hide-scrollbar"}
       height={props.smallChat ? (props.social ? "80vh" : "20%") : "80vh"}
     >
       {props.smallChat ? (
@@ -441,6 +444,7 @@ export default function Chat(props: {
             borderRightWidth: 1,
             overflow: "scroll",
           }}
+          className={"hide-scrollbar"}
         >
           {!supportChatChannel && user?.userRoles[0] !== "noob-admin" ? (
             <Box mt={2}>
@@ -452,12 +456,16 @@ export default function Chat(props: {
               </Button>
             </Box>
           ) : null}
-          <Box mt={2}>
-            <Button disabled={loading} onClick={(): any => setOpen(true)}>
-              Create Group
-            </Button>
-          </Box>
           {renderChatList()}
+          <Box position={"absolute"} bottom={10} marginLeft={"1vw"}>
+            <Fab
+              color="primary"
+              aria-label="add"
+              onClick={(): any => setOpen(true)}
+            >
+              <AddIcon />
+            </Fab>
+          </Box>
         </Box>
       )}
 
@@ -670,7 +678,9 @@ export default function Chat(props: {
                     variant="contained"
                     sx={{ ml: 1 }}
                     onClick={(): any => createNewGroupChat()}
-                    disabled={!selectedUserListForGroup.length || !groupName || loading}
+                    disabled={
+                      !selectedUserListForGroup.length || !groupName || loading
+                    }
                   >
                     Create
                   </Button>
