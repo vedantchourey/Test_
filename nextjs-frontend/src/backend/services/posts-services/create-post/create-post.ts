@@ -25,8 +25,6 @@ interface PreviewResponse {
 
 
 export async function createPost(req: ICreatePostRequest, context: PerRequestContext): Promise<ServiceResponse<Partial<ICreatePostRequest>, ICreatePostResponse>> {
-  const errors = await validatePost(req);
-  if (isThereAnyError(errors)) return {errors: errors}
   const repository = new PostsRepository(context.transaction as Knex.Transaction);
 
   const regex = /\bhttps?:\/\/\S+/gi;
