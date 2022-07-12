@@ -149,6 +149,20 @@ const DashboardSideBar: React.FC = () => {
             variant="contained"
             component={"a"}
             fullWidth
+            onClick={(): Promise<boolean> =>
+              router.push("/support-tickets", undefined, { shallow: true })
+            }
+            classes={{ root: classes.button }}
+            startIcon={<PersonIcon />}
+          >
+            Support
+          </Button>
+        </Grid>
+        <Grid item marginX={2}>
+          <Button
+            variant="contained"
+            component={"a"}
+            fullWidth
             classes={{ root: classes.button }}
             startIcon={<LogIcon />}
           >
