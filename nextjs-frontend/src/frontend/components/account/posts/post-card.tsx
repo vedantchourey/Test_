@@ -54,6 +54,7 @@ const PostCard = (props: IProps): JSX.Element => {
   const [showMenu, setShowMenu] = useState(false);
   const [isFetchingMeta, setIsFetchingMeta] = useState<boolean>(true);
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
+  const [readMore, setReadMore] = useState(false);
 
   const imgUrl = props.data.postImgUrl;
   const avatarUrl = props.data.postOwner.avatarUrl;
@@ -139,7 +140,7 @@ const PostCard = (props: IProps): JSX.Element => {
   const [open, setOpen] = useState({
     report: false,
     copylink: false,
-    error:false
+    error: false,
   });
 
   const handleClose = (
@@ -147,13 +148,13 @@ const PostCard = (props: IProps): JSX.Element => {
     reason?: string
   ): void => {
     if (reason === "clickaway") {
-      return 
+      return;
     }
 
     setOpen({
       report: false,
       copylink: false,
-      error:false
+      error: false,
     });
   };
 
@@ -291,7 +292,12 @@ const PostCard = (props: IProps): JSX.Element => {
             </div>
           </Box>
           <Typography
-            sx={{ marginBottom: !values.postImgUrl ? 10 : 0 }}
+            sx={{
+              display: "-webkit-box",
+              overflow: "hidden",
+              WebkitBoxOrient: "vertical",
+              WebkitLineClamp: readMore ? 0 : 5,
+            }}
             my={2}
             align="left"
             fontSize={14}
@@ -305,8 +311,21 @@ const PostCard = (props: IProps): JSX.Element => {
                 </a>
               ) : (
                 part + " "
-              ))}
+              )
+            )}
           </Typography>
+          <Button
+            style={{
+              color: "#FFFFFF",
+              fontSize: 14,
+              marginBottom: !values.postImgUrl ? 50 : 0,
+            }}
+            onClick={(): any => {
+              setReadMore(!readMore);
+            }}
+          >
+            {readMore ? `Read less...` : `Read More...`}
+          </Button>
 
           <Box sx={{ position: "relative" }}>
             {imgUrl && (
@@ -444,11 +463,7 @@ const PostCard = (props: IProps): JSX.Element => {
           Copy Link successfully.
         </Alert>
       </Snackbar>
-      <Snackbar
-        open={open.error}
-        autoHideDuration={6000}
-        onClose={handleClose}
-      >
+      <Snackbar open={open.error} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
           Somthing went wrong. try again later!
         </Alert>
