@@ -11,8 +11,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { IMessages } from "../../../../backend/services/database/models/i-messages";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import CloseIcon from '@mui/icons-material/Close';
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import CloseIcon from "@mui/icons-material/Close";
+import { IChatUsers } from "../../../../backend/services/database/models/i-chat-users";
 
 interface IChatBox {
   channelId: string;
@@ -20,6 +21,7 @@ interface IChatBox {
   userId: string;
   smallChat: boolean;
   user?: any;
+  data?: IChatUsers;
   onBack: () => void;
 }
 
@@ -52,12 +54,25 @@ export default function ChatBox(props: IChatBox): JSX.Element {
     }
   };
 
-  const fetchMessages = async (): Promise<void> => {
+  const removeUserFromGroup = async (userId: string): Promise<void> => {
+    const chatUsersRes = await frontendSupabase
+      .from("chat_users")
+      .delete()
+      .eq("channel_id", props.channelId)
+      .eq("user_id", userId);
+    setchatUsers(chatUsersRes.data || []);
+    await fetchUsers();
+  };
+
+  const fetchUsers = async (): Promise<void> => {
     const chatUsersRes = await frontendSupabase
       .from("chat_users")
       .select("*")
       .eq("channel_id", props.channelId);
     setchatUsers(chatUsersRes.data || []);
+  }
+
+  const fetchMessages = async (): Promise<void> => {
     const messages = await frontendSupabase
       .from("messages")
       .select("*")
@@ -66,6 +81,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
   };
 
   useEffect(() => {
+    fetchUsers();
     fetchMessages();
     const messageListener = frontendSupabase
       .from("messages")
@@ -112,14 +128,16 @@ export default function ChatBox(props: IChatBox): JSX.Element {
             >
               {props.channelName}
             </Typography>
-            <IconButton
-              aria-label="back"
-              size="small"
-              onClick={(): any => setInfoSection(!infoSection)}
-              style={{ color: "rgba(255,255,255,0.3)" }}
-            >
-              <InfoOutlinedIcon />
-            </IconButton>
+            {props.data?.channel_type === "group" && (
+              <IconButton
+                aria-label="back"
+                size="small"
+                onClick={(): any => setInfoSection(!infoSection)}
+                style={{ color: "rgba(255,255,255,0.3)" }}
+              >
+                <InfoOutlinedIcon />
+              </IconButton>
+            )}
           </Box>
 
           <Typography
@@ -279,7 +297,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
             {chatUsers.map((u, idx) => (
               <Box display={"flex"} justifyContent="space-between" key={idx}>
                 <Typography>{u.user_name}</Typography>
-                <Button>Remove</Button>
+                <Button onClick={(): any => removeUserFromGroup(u.user_id)}>Remove</Button>
               </Box>
             ))}
           </Box>

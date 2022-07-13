@@ -16,7 +16,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from "@mui/icons-material/Add";
 import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
 import { IChatUsers } from "../../../backend/services/database/models/i-chat-users";
@@ -37,7 +37,7 @@ import _ from "lodash";
 import { searchPeopleByText } from "../../service-clients/search-service-client";
 import { ISearchPeopleByUsernameResponse } from "../../service-clients/messages/i-search";
 import frontendConfig from "../../utils/config/front-end-config";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function Chat(props: {
   smallChat: boolean;
@@ -51,6 +51,7 @@ export default function Chat(props: {
   const user = useAppSelector(userProfileSelector);
   const [chats, _setChats] = useState<object>({});
   const [currentChat, setCurrentChat] = useState<string | null>();
+  const [currentChatData, setCurrentChatData] = useState<any>();
   const [currentChatName, setCurrentChatName] = useState("");
   const [supportChatChannel, setSupportChatChannel] = useState<boolean>(false);
   const [teamData, setTeamData] = useState<any[]>([]);
@@ -59,12 +60,12 @@ export default function Chat(props: {
     []
   );
   const [createGroup, setCreateGroup] = useState(false);
-  const [userListForGroup, setUserListForGroup] = useState<ISearchPeopleByUsernameResponse[]>(
-    []
-  );
-  const [selectedUserListForGroup, setSelectedUserListForGroup] = useState<ISearchPeopleByUsernameResponse[]>(
-    []
-  );
+  const [userListForGroup, setUserListForGroup] = useState<
+    ISearchPeopleByUsernameResponse[]
+  >([]);
+  const [selectedUserListForGroup, setSelectedUserListForGroup] = useState<
+    ISearchPeopleByUsernameResponse[]
+  >([]);
   const [isFetching, setIsFetching] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [groupName, setGroupName] = useState("");
@@ -80,6 +81,7 @@ export default function Chat(props: {
         .eq("other_user", _otheruser);
       if (res.data?.length) {
         setCurrentChat(res.data?.[0]?.channel_id || null);
+        setCurrentChatData(res.data?.[0]);
         setCurrentChatName(name as string);
       } else {
         createNewChat(_otheruser as string, _name as string);
@@ -222,14 +224,13 @@ export default function Chat(props: {
           ))}
         </List>
       );
-    } 
-      return (
-        <></>
-        /*  <List className={styles.searchListLoder} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+    }
+    return (
+      <></>
+      /*  <List className={styles.searchListLoder} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
            <h1>No data found</h1>
          </List> */
-      );
-    
+    );
   };
 
   const chatsList: IChatUsers[] = Object.values(chats).sort(
@@ -255,7 +256,11 @@ export default function Chat(props: {
       user_name: user?.username,
       channel_type: "one-to-one",
     });
-    if (res.data?.length) setCurrentChat(channel_id);
+
+    if (res.data?.length) {
+      setCurrentChat(channel_id);
+      setCurrentChatData(res.data?.[0]);
+    }
     setCurrentChatName(name);
     await frontendSupabase.from("chat_users").insert({
       channel_id,
@@ -294,19 +299,24 @@ export default function Chat(props: {
       user_name: user?.username,
       channel_type: "group",
     });
-    
+
     setCurrentChatName(groupName);
-    await Promise.all(selectedUserListForGroup.map((u) =>
-      frontendSupabase.from("chat_users").insert({
-        channel_id,
-        user_id: u.id,
-        other_user: channel_id,
-        channel_name: groupName,
-        user_name: u.username,
-        channel_type: "group",
-      })));
-    
-    if (res.data?.length) setCurrentChat(channel_id);
+    await Promise.all(
+      selectedUserListForGroup.map((u) =>
+        frontendSupabase.from("chat_users").insert({
+          channel_id,
+          user_id: u.id,
+          other_user: channel_id,
+          channel_name: groupName,
+          user_name: u.username,
+          channel_type: "group",
+        }))
+    );
+
+    if (res.data?.length) {
+      setCurrentChat(channel_id);
+      setCurrentChatData(res.data?.[0]);
+    }
     setOpen(false);
     setCreateGroup(false);
     setGroupName("");
@@ -356,7 +366,10 @@ export default function Chat(props: {
     setLoading(false);
   };
 
-  async function searchByUserName(username: string, group = false): Promise<void> {
+  async function searchByUserName(
+    username: string,
+    group = false
+  ): Promise<void> {
     setIsFetching(true);
     setUserList([]);
     if (!username) {
@@ -365,10 +378,8 @@ export default function Chat(props: {
     }
     const response = await searchPeopleByText({ search: username });
     if (response.length) {
-      if(group)
-        setUserListForGroup(response);
-      else
-        setUserList(response);
+      if (group) setUserListForGroup(response);
+      else setUserList(response);
     }
     setIsFetching(false);
   }
@@ -383,7 +394,7 @@ export default function Chat(props: {
         };
       })
       .value();
-      
+
     return (
       <>
         {chatByGroup.map((c) => (
@@ -411,8 +422,10 @@ export default function Chat(props: {
                   type={i.channel_type}
                   onClick={(): void => {
                     setCurrentChat(null);
+                    setCurrentChatData(null);
                     setTimeout((): void => {
                       setCurrentChatName(i.channel_name);
+                      setCurrentChatData(i);
                       setCurrentChat(i.channel_id);
                     }, 200);
                   }}
@@ -473,8 +486,12 @@ export default function Chat(props: {
           channelName={currentChatName}
           channelId={currentChat}
           userId={user?.id || ""}
-          onBack={(): any => setCurrentChat(undefined)}
+          onBack={(): any => {
+            setCurrentChat(undefined);
+            setCurrentChatData(null);
+          }}
           user={user}
+          data={currentChatData}
           smallChat={props.smallChat}
         />
       ) : (
@@ -599,7 +616,12 @@ export default function Chat(props: {
                       />
                     </Box>
                   ) : (
-                    <Button variant="outlined" onClick={(): any => setCreateGroup(true)}>Create Group</Button>
+                    <Button
+                      variant="outlined"
+                      onClick={(): any => setCreateGroup(true)}
+                    >
+                      Create Group
+                    </Button>
                   )}
                 </Box>
                 {selectedUserListForGroup.map((data, i) => (
