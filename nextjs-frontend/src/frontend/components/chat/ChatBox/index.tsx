@@ -11,6 +11,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { IMessages } from "../../../../backend/services/database/models/i-messages";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 interface IChatBox {
   channelId: string;
@@ -25,6 +26,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
   const [messages, _setMessages] = useState<IMessages[]>([]);
   const [chatUsers, setchatUsers] = useState<any[]>([]);
   const [text, setText] = useState<string>("");
+  const [infoSection, setInfoSection] = useState(false);
 
   const messageRef = useRef<IMessages[]>(messages);
 
@@ -84,7 +86,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         display={"flex"}
         flexDirection={"column"}
         justifyContent={"flex-end"}
-        flex={0.7}
+        flex={infoSection ? 0.7 : 1}
       >
         <Box
           p={2}
@@ -109,6 +111,10 @@ export default function ChatBox(props: IChatBox): JSX.Element {
             >
               {props.channelName}
             </Typography>
+            <IconButton aria-label="back" size="small" onClick={(): any => setInfoSection(!infoSection)} style={{color: "rgba(255,255,255,0.3)"}}>
+              <InfoOutlinedIcon />
+            </IconButton>
+            
           </Box>
 
           <Typography
@@ -213,7 +219,8 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         </Box>
       </Box>
       <Box
-        flex={0.3}
+        flex={infoSection ? 0.3 : 0}
+        display={infoSection ? "block" : "none"}
         style={{
           borderLeftColor: "rgba(255,255,255,0.1)",
           borderLeftWidth: 1,
@@ -256,10 +263,9 @@ export default function ChatBox(props: IChatBox): JSX.Element {
           <Typography variant="caption">Participants</Typography>
           <Box mt={1}>
             {chatUsers.map((u) => (
-              <Box>
-                <Typography>
-                  {u.user_name}
-                </Typography>
+              <Box display={"flex"} justifyContent="space-between">
+                <Typography>{u.user_name}</Typography>
+                <Button>Remove</Button>
               </Box>
             ))}
           </Box>
