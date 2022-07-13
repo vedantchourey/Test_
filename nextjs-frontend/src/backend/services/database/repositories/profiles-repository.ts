@@ -41,7 +41,7 @@ export class ProfilesRepository extends BaseRepository<IProfile> {
 
   async block(userId: string, value: string): Promise<number> {
     return this.entities()
-               .update({isBlocked: value === "false" ? false : true, updatedAt: nowAsISOString()})
+               .update({isBlocked: value !== "false", updatedAt: nowAsISOString()})
                .where({id: userId})
   }
 

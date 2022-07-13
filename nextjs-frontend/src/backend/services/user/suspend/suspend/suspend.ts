@@ -10,7 +10,7 @@ export async function suspend(req: any, context: PerRequestContext): Promise<Ser
     if (isThereAnyError(errors)) return {errors: errors}
     const repository = new ProfilesRepository(context.transaction as Knex.Transaction);
 
-    var thismonth = new Date();
+    const thismonth = new Date();
     thismonth.setDate(thismonth.getDate() + 90);
     thismonth.setHours(0, 0, 0, 0);    
     return {

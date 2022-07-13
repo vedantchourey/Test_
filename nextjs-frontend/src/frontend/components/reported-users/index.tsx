@@ -1,8 +1,6 @@
 import { Button, Grid, Typography } from "@mui/material";
-import { useRouter } from "next/router";
 import React from "react";
 import NoobPage from "../page/noob-page";
-import moment from 'moment'
 import DashboardSideBar from "../ui-components/dashboard-sidebar";
 import NoobTable, { NoobColumnConf } from "../ui-components/table";
 import axios from "axios";
@@ -11,17 +9,13 @@ import { frontendSupabase } from "../../services/supabase-frontend-service";
 
 const ReportedUsers: React.FC = () => {
   const [data, setData] = React.useState([]);
-  const router = useRouter();
 
   const fetchUsers = async (): Promise<void> => {
     const messages: any = await frontendSupabase
       .from("profiles")
       .select("*")
-      // .or(`isBlocked.eq.true, suspended.gt.${new Date()}`);
-      // .or(`suspended.gt.${new Date()}`)
-      // .eq("isBlocked", true)
 
-      var Data: any = []
+      const Data: any = []
       if(messages.data?.length){
         messages.data.filter((_doc: any) => {
           if(_doc.isBlocked || new Date(_doc.suspended) > new Date()){
