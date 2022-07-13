@@ -154,7 +154,7 @@ function Account(): JSX.Element {
                         {data.map((i, idx) => {
                           const game = games.find((g) => g.id === i.game)
                           return (
-                            <NoobRow key={idx}>
+                            <NoobRow key={idx} onClick={()=>{router.push(`view-tournament/${game?.id}/details`)}}>
                               <NoobCell>{game?.displayName}</NoobCell>
                               <NoobCell>
                                 {i.settings?.tournamentFormat}
