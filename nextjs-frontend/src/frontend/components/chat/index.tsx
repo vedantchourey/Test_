@@ -58,6 +58,7 @@ export default function Chat(props: {
   const [userList, setUserList] = useState<ISearchPeopleByUsernameResponse[]>(
     []
   );
+  const [createGroup, setCreateGroup] = useState(false);
   const [userListForGroup, setUserListForGroup] = useState<ISearchPeopleByUsernameResponse[]>(
     []
   );
@@ -84,6 +85,11 @@ export default function Chat(props: {
         createNewChat(_otheruser as string, _name as string);
       }
     }
+    setOpen(false);
+    setCreateGroup(false);
+    setGroupName("");
+    setSelectedUserListForGroup([]);
+    setUserListForGroup([]);
   };
 
   const chatRef = useRef(chats);
@@ -167,6 +173,9 @@ export default function Chat(props: {
   }, []);
 
   const renderResults = (group?: boolean): JSX.Element => {
+    console.log('userList -> ', userList)
+    console.log('userListForGroup -> ', userListForGroup)
+    console.log('group -> ', group);
     if (isFetching) {
       return (
         <List
@@ -182,7 +191,11 @@ export default function Chat(props: {
     ) {
       return (
         <List sx={{ width: "100%" }}>
-          {_.differenceBy(userListForGroup, selectedUserListForGroup, "username").map((data, i) => (
+          {_.differenceBy(
+            group ? userListForGroup : userList,
+            selectedUserListForGroup,
+            "username"
+          ).map((data, i) => (
             <ListItem key={Date.now() + i}>
               <ListItemButton
                 onClick={(): void => {
@@ -298,6 +311,7 @@ export default function Chat(props: {
     
     if (res.data?.length) setCurrentChat(channel_id);
     setOpen(false);
+    setCreateGroup(false);
     setGroupName("");
     setSelectedUserListForGroup([]);
     setUserListForGroup([]);
@@ -422,52 +436,39 @@ export default function Chat(props: {
       className={"hide-scrollbar"}
       height={props.smallChat ? (props.social ? "80vh" : "20%") : "80vh"}
     >
-      {props.smallChat ? (
-        !currentChat ? (
-          <Box
-            flex={props.smallChat ? 1 : 0.25}
-            style={{
-              borderRightStyle: "solid",
-              borderRightColor: "rgba(255,255,255,0.1)",
-              borderRightWidth: 1,
-            }}
-          >
-            {renderChatList()}
+      <Box
+        flex={props.smallChat ? 1 : 0.25}
+        style={{
+          borderRightStyle: "solid",
+          borderRightColor: "rgba(255,255,255,0.1)",
+          borderRightWidth: 1,
+          overflow: "scroll",
+        }}
+        display={props.smallChat && currentChat ? "none" : "block"}
+        className={"hide-scrollbar"}
+      >
+        {!supportChatChannel && user?.userRoles[0] !== "noob-admin" ? (
+          <Box mt={2}>
+            <Button disabled={loading} onClick={(): any => createSupportChat()}>
+              Create Support Chat
+            </Button>
           </Box>
-        ) : null
-      ) : (
+        ) : null}
+        {renderChatList()}
         <Box
-          flex={props.smallChat ? 1 : 0.25}
-          style={{
-            borderRightStyle: "solid",
-            borderRightColor: "rgba(255,255,255,0.1)",
-            borderRightWidth: 1,
-            overflow: "scroll",
-          }}
-          className={"hide-scrollbar"}
+          position={"absolute"}
+          bottom={10}
+          marginLeft={props.smallChat ? "21vw" : "16vw"}
         >
-          {!supportChatChannel && user?.userRoles[0] !== "noob-admin" ? (
-            <Box mt={2}>
-              <Button
-                disabled={loading}
-                onClick={(): any => createSupportChat()}
-              >
-                Create Support Chat
-              </Button>
-            </Box>
-          ) : null}
-          {renderChatList()}
-          <Box position={"absolute"} bottom={10} marginLeft={"1vw"}>
-            <Fab
-              color="primary"
-              aria-label="add"
-              onClick={(): any => setOpen(true)}
-            >
-              <AddIcon />
-            </Fab>
-          </Box>
+          <Fab
+            color="primary"
+            aria-label="add"
+            onClick={(): any => setOpen(true)}
+          >
+            <AddIcon />
+          </Fab>
         </Box>
-      )}
+      </Box>
 
       {currentChat ? (
         <ChatBox
@@ -482,7 +483,7 @@ export default function Chat(props: {
         !props.smallChat && (
           <Box
             display={"flex"}
-            flex={0.5}
+            flex={0.75}
             alignItems={"center"}
             justifyContent={"center"}
             height={"100%"}
@@ -494,7 +495,7 @@ export default function Chat(props: {
         )
       )}
 
-      {!props.smallChat && (
+      {/* {!props.smallChat && (
         <Box
           flex={props.smallChat ? 0 : 0.25}
           style={{
@@ -535,13 +536,14 @@ export default function Chat(props: {
             />
             <SearchIcon color="primary" />
           </Box>
-          {/* {renderResults()} */}
+          {renderResults()}
         </Box>
-      )}
+      )} */}
       <Modal
         open={open}
         onClose={(): any => {
           setOpen(false);
+          setCreateGroup(false);
           setGroupName("");
           setSelectedUserListForGroup([]);
           setUserListForGroup([]);
@@ -571,35 +573,7 @@ export default function Chat(props: {
                 </Typography>
                 <Box display={"flex"}>
                   <Box
-                    flex={0.5}
-                    sx={{
-                      backgroundColor: "rgba(255,255,255,0.08)",
-                      alignItems: "center",
-                      alignSelf: "center",
-                      display: "flex",
-                      borderRadius: 3,
-                      paddingRight: 2,
-                      mr: 1,
-                    }}
-                  >
-                    <TextField
-                      placeholder="Group Name"
-                      variant="standard"
-                      InputProps={{
-                        disableUnderline: true,
-                      }}
-                      value={groupName}
-                      margin="none"
-                      sx={{ marginBottom: 0, padding: 1, flex: 1 }}
-                      onChange={(e): void => {
-                        setGroupName(e.target.value);
-                      }}
-                      id="userSearchInput"
-                    />
-                  </Box>
-
-                  <Box
-                    flex={0.5}
+                    flex={createGroup ? 0.5 : 1}
                     sx={{
                       backgroundColor: "rgba(255,255,255,0.08)",
                       alignItems: "center",
@@ -611,7 +585,7 @@ export default function Chat(props: {
                     }}
                   >
                     <TextField
-                      placeholder="Search anything..."
+                      placeholder="Search by username"
                       variant="standard"
                       InputProps={{
                         disableUnderline: true,
@@ -621,12 +595,41 @@ export default function Chat(props: {
                       sx={{ marginBottom: 0, padding: 1, flex: 1 }}
                       onChange={(e): void => {
                         setSearchText(e.target.value);
-                        searchByUserName(e.target.value, true);
+                        searchByUserName(e.target.value, createGroup);
                       }}
-                      id="userSearchInput"
                     />
                     <SearchIcon color="primary" />
                   </Box>
+                  {createGroup ? (
+                    <Box
+                      flex={0.5}
+                      sx={{
+                        backgroundColor: "rgba(255,255,255,0.08)",
+                        alignItems: "center",
+                        alignSelf: "center",
+                        display: "flex",
+                        borderRadius: 3,
+                        paddingRight: 2,
+                        mr: 1,
+                      }}
+                    >
+                      <TextField
+                        placeholder="Group Name"
+                        variant="standard"
+                        InputProps={{
+                          disableUnderline: true,
+                        }}
+                        value={groupName}
+                        margin="none"
+                        sx={{ marginBottom: 0, padding: 1, flex: 1 }}
+                        onChange={(e): void => {
+                          setGroupName(e.target.value);
+                        }}
+                      />
+                    </Box>
+                  ) : (
+                    <Button variant="outlined" onClick={() => setCreateGroup(true)}>Create Group</Button>
+                  )}
                 </Box>
                 {selectedUserListForGroup.map((data, i) => (
                   <ListItem key={Date.now() + i}>
@@ -660,13 +663,14 @@ export default function Chat(props: {
                     </ListItemButton>
                   </ListItem>
                 ))}
-                {renderResults(true)}
+                {renderResults(createGroup)}
                 <Box display={"flex"} mt={2} justifyContent="flex-end">
                   <Button
                     variant="outlined"
                     sx={{ mr: 1 }}
                     onClick={(): any => {
                       setOpen(false);
+                      setCreateGroup(false);
                       setGroupName("");
                       setSelectedUserListForGroup([]);
                       setUserListForGroup([]);
