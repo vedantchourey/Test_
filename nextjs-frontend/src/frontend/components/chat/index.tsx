@@ -495,7 +495,7 @@ export default function Chat(props: {
         )
       )}
 
-      {/* {!props.smallChat && (
+      {/* {!props.smallChat && currentChat && (
         <Box
           flex={props.smallChat ? 0 : 0.25}
           style={{
@@ -505,38 +505,11 @@ export default function Chat(props: {
           }}
         >
           <Typography variant={"h6"} m={2}>
-            Add Members
+            Info
           </Typography>
-          <Box
-            sx={{
-              marginLeft: 1,
-              marginRight: 1,
-              backgroundColor: "rgba(255,255,255,0.08)",
-              alignItems: "center",
-              alignSelf: "center",
-              display: "flex",
-              borderRadius: 3,
-              paddingRight: 2,
-            }}
-          >
-            <TextField
-              placeholder="Search anything..."
-              variant="standard"
-              InputProps={{
-                disableUnderline: true,
-              }}
-              value={searchText}
-              margin="none"
-              sx={{ marginBottom: 0, padding: 1, flex: 1 }}
-              onChange={(e): void => {
-                setSearchText(e.target.value);
-                searchByUserName(e.target.value, true);
-              }}
-              id="userSearchInput"
-            />
-            <SearchIcon color="primary" />
+          <Box display={"flex"} justifyContent={"center"}>
+            <Avatar style={{height: 120, width: 120}} />          
           </Box>
-          {renderResults()}
         </Box>
       )} */}
       <Modal

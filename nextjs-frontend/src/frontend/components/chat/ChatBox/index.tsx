@@ -1,4 +1,11 @@
-import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  IconButton,
+  TextField,
+  Typography,
+} from "@mui/material";
 import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
 import { IMessages } from "../../../../backend/services/database/models/i-messages";
@@ -32,7 +39,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         channel_id: props.channelId,
         send_by: props.user.id,
         message: text.trim(),
-        metadata: null
+        metadata: null,
       });
       await frontendSupabase
         .from("chat_users")
@@ -72,133 +79,191 @@ export default function ChatBox(props: IChatBox): JSX.Element {
   }, []);
 
   return (
-    <Box
-      flex={props.smallChat ? 1 : 0.75}
-      display={"flex"}
-      flexDirection={"column"}
-      justifyContent={"flex-end"}
-      // pl={1}
-      // pr={1}
-    >
+    <Box display={"flex"} flex={props.smallChat ? 1 : 0.75}>
       <Box
-        p={2}
-        style={{
-          borderBottomColor: "rgba(255,255,255,0.1)",
-          borderBottomWidth: 1,
-          borderBottomStyle: "solid",
-        }}
-        display="flex"
-        justifyContent={"space-between"}
-        alignItems={"center"}
+        display={"flex"}
+        flexDirection={"column"}
+        justifyContent={"flex-end"}
+        flex={0.7}
       >
-        <Box display={"flex"}>
-          <IconButton aria-label="back" size="small" onClick={props.onBack}>
-            <ArrowBackIcon />
-          </IconButton>
-          <Typography textAlign={"left"} ml={1} lineHeight={"35px"} color="#FFFFFF">
-            {props.channelName}
+        <Box
+          p={2}
+          style={{
+            borderBottomColor: "rgba(255,255,255,0.1)",
+            borderBottomWidth: 1,
+            borderBottomStyle: "solid",
+          }}
+          display="flex"
+          justifyContent={"space-between"}
+          alignItems={"center"}
+        >
+          <Box display={"flex"}>
+            <IconButton aria-label="back" size="small" onClick={props.onBack}>
+              <ArrowBackIcon />
+            </IconButton>
+            <Typography
+              textAlign={"left"}
+              ml={1}
+              lineHeight={"35px"}
+              color="#FFFFFF"
+            >
+              {props.channelName}
+            </Typography>
+          </Box>
+
+          <Typography
+            textAlign={"left"}
+            variant="caption"
+            color={"rgba(255,255,255,0.5)"}
+          >
+            {moment().format("dddd, MMMM DD YYYY")}
+          </Typography>
+          {/* <Typography textAlign={"left"}> </Typography> */}
+        </Box>
+        <Box
+          p={1}
+          display={"flex"}
+          flex={1}
+          flexDirection={"column-reverse"}
+          overflow="scroll"
+          className={"hide-scrollbar"}
+        >
+          <Box display={"flex"} flexDirection={"column"}>
+            {messages.map((i) => {
+              const user =
+                i.send_by === props.userId
+                  ? { user_name: props.user.username }
+                  : chatUsers.find((j) => j.user_id === i.send_by);
+              return (
+                <Box
+                  display={"flex"}
+                  justifyContent={
+                    i.send_by === props.userId ? "flex-end" : "flex-start"
+                  }
+                  p={1}
+                  key={i.id}
+                >
+                  <Box
+                    bgcolor={
+                      i.send_by === props.userId
+                        ? "rgb(105, 49, 249)"
+                        : "rgba(255,255,255,0.05)"
+                    }
+                    pl={2}
+                    pr={2}
+                    pt={1}
+                    pb={1}
+                    borderRadius={2}
+                    minWidth={100}
+                  >
+                    <Typography
+                      fontSize={9}
+                      textAlign={i.send_by === props.userId ? "right" : "left"}
+                      lineHeight={"5px"}
+                      style={{ color: "rgba(255,255,255,0.5)" }}
+                    >
+                      {user?.user_name}
+                    </Typography>
+                    <Typography
+                      fontSize={14}
+                      textAlign={i.send_by === props.userId ? "right" : "left"}
+                      color={"#FFFFFF"}
+                    >
+                      {i.message}
+                    </Typography>
+                    <Typography
+                      fontSize={9}
+                      lineHeight={"5px"}
+                      textAlign={i.send_by === props.userId ? "right" : "left"}
+                      style={{ color: "rgba(255,255,255,0.5)" }}
+                    >
+                      {moment(new Date(i.created_at)).fromNow()}
+                    </Typography>
+                  </Box>
+                </Box>
+              );
+            })}
+          </Box>
+        </Box>
+        <Box display={"flex"} justifyContent="center" m={1}>
+          <TextField
+            margin="none"
+            style={{ marginBottom: 0 }}
+            fullWidth={true}
+            value={text}
+            onKeyPress={(e): void => {
+              if (e.key === "Enter") {
+                sendMessage();
+              }
+            }}
+            onChange={(e): void => {
+              setText(e.target.value);
+            }}
+          />
+          <Button
+            size="small"
+            variant="text"
+            sx={{ padding: 0 }}
+            onClick={(): void => {
+              sendMessage();
+            }}
+          >
+            Send
+          </Button>
+        </Box>
+      </Box>
+      <Box
+        flex={0.3}
+        style={{
+          borderLeftColor: "rgba(255,255,255,0.1)",
+          borderLeftWidth: 1,
+          borderLeftStyle: "solid",
+        }}
+      >
+        <Box
+          style={{
+            borderBottomColor: "rgba(255,255,255,0.1)",
+            borderBottomWidth: 1,
+            borderBottomStyle: "solid",
+          }}
+          p={2}
+        >
+          <Typography
+            textAlign={"left"}
+            ml={1}
+            lineHeight={"35px"}
+            color="#FFFFFF"
+          >
+            Info
           </Typography>
         </Box>
 
-        <Typography
-          textAlign={"left"}
-          variant="caption"
-          color={"rgba(255,255,255,0.5)"}
-        >
-          {moment().format("dddd, MMMM DD YYYY")}
-        </Typography>
-        {/* <Typography textAlign={"left"}> </Typography> */}
-      </Box>
-      <Box
-        p={1}
-        display={"flex"}
-        flex={1}
-        flexDirection={"column-reverse"}
-        overflow="scroll"
-        className={"hide-scrollbar"}
-      >
-        <Box display={"flex"} flexDirection={"column"}>
-          {messages.map((i) => {
-            const user =
-              i.send_by === props.userId
-                ? { user_name: props.user.username }
-                : chatUsers.find((j) => j.user_id === i.send_by);
-            return (
-              <Box
-                display={"flex"}
-                justifyContent={
-                  i.send_by === props.userId ? "flex-end" : "flex-start"
-                }
-                p={1}
-                key={i.id}
-              >
-                <Box
-                  bgcolor={
-                    i.send_by === props.userId
-                      ? "rgb(105, 49, 249)"
-                      : "rgba(255,255,255,0.05)"
-                  }
-                  pl={2}
-                  pr={2}
-                  pt={1}
-                  pb={1}
-                  borderRadius={2}
-                  minWidth={100}
-                >
-                  <Typography
-                    fontSize={9}
-                    textAlign={i.send_by === props.userId ? "right" : "left"}
-                    lineHeight={"5px"}
-                    style={{ color: "rgba(255,255,255,0.5)" }}
-                  >
-                    {user?.user_name}
-                  </Typography>
-                  <Typography
-                    fontSize={14}
-                    textAlign={i.send_by === props.userId ? "right" : "left"}
-                    color={"#FFFFFF"}
-                  >
-                    {i.message}
-                  </Typography>
-                  <Typography
-                    fontSize={9}
-                    lineHeight={"5px"}
-                    textAlign={i.send_by === props.userId ? "right" : "left"}
-                    style={{ color: "rgba(255,255,255,0.5)" }}
-                  >
-                    {moment(new Date(i.created_at)).fromNow()}
-                  </Typography>
-                </Box>
-              </Box>
-            );
-          })}
+        <Box display={"flex"} justifyContent="center" mt={2}>
+          <Avatar style={{ height: 150, width: 150 }} />
         </Box>
-      </Box>
-      <Box display={"flex"} justifyContent="center" m={1}>
-        <TextField
-          margin="none"
-          style={{ marginBottom: 0 }}
-          fullWidth={true}
-          value={text}
-          onKeyPress={(e): void => {
-            if (e.key === "Enter") {
-              sendMessage();
-            }
-          }}
-          onChange={(e): void => {
-            setText(e.target.value);
-          }}
-        />
-        <Button
-          size="small"
-          variant="text"
-          sx={{ padding: 0 }}
-          onClick={(): void => {
-            sendMessage();
-          }}
-        >
-          Send
-        </Button>
+        <Box display={"flex"} justifyContent="center" mt={2}>
+          <Typography
+            textAlign={"left"}
+            ml={1}
+            lineHeight={"35px"}
+            variant={"h5"}
+            color="#FFFFFF"
+          >
+            {props.channelName}
+          </Typography>
+        </Box>
+        <Box p={2}>
+          <Typography variant="caption">Participants</Typography>
+          <Box mt={1}>
+            {chatUsers.map((u) => (
+              <Box>
+                <Typography>
+                  {u.user_name}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+        </Box>
       </Box>
     </Box>
   );
