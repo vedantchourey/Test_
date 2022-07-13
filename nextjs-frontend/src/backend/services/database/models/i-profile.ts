@@ -6,6 +6,8 @@ export interface IProfile {
   updatedAt: string;
   avatarUrl?: string;
   profileBackgroundImageUrl?: string;
+  isBlocked?: boolean;
+  suspended?: Date;
 }
 
 export interface ISearchUser {

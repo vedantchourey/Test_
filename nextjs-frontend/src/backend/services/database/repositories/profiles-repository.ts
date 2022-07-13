@@ -39,6 +39,18 @@ export class ProfilesRepository extends BaseRepository<IProfile> {
                .where({id: userId})
   }
 
+  async block(userId: string, value: string): Promise<number> {
+    return this.entities()
+               .update({isBlocked: value === "false" ? false : true, updatedAt: nowAsISOString()})
+               .where({id: userId})
+  }
+
+  async suspend(userId: string, value: Date): Promise<number> {
+    return this.entities()
+               .update({suspended: value, updatedAt: nowAsISOString()})
+               .where({id: userId})
+  }
+
   async updateProfileBackground(userId: string, url: string): Promise<number> {
     return this.entities()
                .update({profileBackgroundImageUrl: url, updatedAt: nowAsISOString()})

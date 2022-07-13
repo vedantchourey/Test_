@@ -68,7 +68,7 @@ const NoobTable: <Type>(props:NoobTableProp<Type>)=>JSX.Element = ({
   data = [],
   paginate,
   title,
-  totalRecords = data.length,
+  totalRecords = data?.length,
   loading=false
 }) => {
   const handlePageChange = (
@@ -92,7 +92,7 @@ const NoobTable: <Type>(props:NoobTableProp<Type>)=>JSX.Element = ({
     if(loading){
       return <NoobTableRow><NoobTableCell colSpan={colConf.length} style={{textAlign:"center"}}>Loading..</NoobTableCell></NoobTableRow>;
     }
-    const rows = data.map((item, index) => {
+    const rows = data?.map((item, index) => {
       let rowIndex = index;
       if(paginate){
         rowIndex = paginate.currentPage*paginate.recordsPerPage+index;
