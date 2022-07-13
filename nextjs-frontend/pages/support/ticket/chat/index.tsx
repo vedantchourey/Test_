@@ -50,8 +50,6 @@ const NoobTicketCreatePage = (props: Props): JSX.Element => {
             <TicketChats ticketNumber={ticketNumber} ticketSubject={ticketSubject} chats={chats} />
           </Container>
 
-          <NewsletterPoster />
-
         </Box>
       </React.Fragment>
     </NoobPage>

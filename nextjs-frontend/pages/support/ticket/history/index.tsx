@@ -58,7 +58,6 @@ const NoobTicketHistoryPage = ({ tickets }: Props): JSX.Element => {
             ))}
           </Container>
 
-          <NewsletterPoster />
         </Box>
 
       </React.Fragment>

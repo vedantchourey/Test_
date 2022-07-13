@@ -36,7 +36,7 @@ const NoobTicketCreatePage: NextPage = () => {
             <CreateTicketForm />
 
           </Container>
-          <NewsletterPoster />
+          
         </Box>
       </React.Fragment>
     </NoobPage>

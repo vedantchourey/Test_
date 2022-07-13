@@ -84,8 +84,6 @@ const NoobSupportPage: NextPage = () => {
             ))}
           </Grid>
 
-          <NewsletterPoster />
-
         </Box>
 
       </React.Fragment>
