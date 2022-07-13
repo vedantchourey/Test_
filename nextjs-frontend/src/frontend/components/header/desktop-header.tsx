@@ -185,45 +185,32 @@ export default function DrawerLeft(): JSX.Element {
                 />
               </Button>
             </div>
-            <div className={style.container1}>
-              <Button
-                variant="text"
-                style={{ color: "white" }}
-                onClick={(): any => {
-                  if (user?.userRoles[0] === "noob-admin") {
-                    router.push("/tournament-dashboard");
-                  } else {
-                    router.push("/user-dashboard");
-                  }
-                }}
-              >
-                Dashboard
-              </Button>
-              <span className={style.border}></span>
-              <Button
-                variant="text"
-                style={{ color: "white" }}
-                onClick={gotoTeamListPage}
-              >
-                Account
-              </Button>
-            </div>
-            {/*{isLoggedIn && (
-              <div className={style.container4}>
-                <img src="/images/16276393842661.png" className={style.img3} />
-                <Box>
-                  <Typography className={style.text1}>{username}</Typography>
-                  <Button
-                    variant="text"
-                    className={style.button4}
-                    onClick={(): any => router.push("/wallet/info")}
-                    startIcon={<img src="/icons/Vector-Wallet.png" />}
-                  >
-                    {wallet?.balance}
-                  </Button>
-                </Box>
+
+            {isLoggedIn && (
+              <div className={style.container1}>
+                <Button
+                  variant="text"
+                  style={{ color: "white" }}
+                  onClick={(): any => {
+                    if (user?.userRoles[0] === "noob-admin") {
+                      router.push("/tournament-dashboard");
+                    } else {
+                      router.push("/user-dashboard");
+                    }
+                  }}
+                >
+                  Dashboard
+                </Button>
+                <span className={style.border}></span>
+                <Button
+                  variant="text"
+                  style={{ color: "white" }}
+                  onClick={gotoTeamListPage}
+                >
+                  Account
+                </Button>
               </div>
-            )}*/}
+            )}
 
             <div className={style.container2}>
               <Button
@@ -378,24 +365,6 @@ export default function DrawerLeft(): JSX.Element {
                 />
                 Support
               </Button>
-              {/*<Button variant="text" className={classes.buttonStyles}>
-                <img
-                  src="/icons/Vector-Message.png"
-                  className={classes.imgStyle}
-                />
-                Message
-              </Button>
-              <Button variant="text" className={classes.buttonStyles}>
-                <img
-                  src="/icons/Vector-Aboutus.png"
-                  className={classes.imgStyle}
-                />
-                About Us
-              </Button>
-              <Button variant="text" className={classes.buttonStyles}>
-                <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
-                FAQ
-            </Button>*/}
               {isLoggedIn && (
                 <Button
                   variant="text"
