@@ -6,6 +6,7 @@ import gold from "./images/gold_Card.png";
 import ruby from "./images/ruby_Card.png";
 import silver from "./images/silver_Card.png";
 import Player from "./images/Player.png";
+import { useRouter } from "next/router";
 
 const images = { bronze, diamond, gold, ruby, silver, Player };
 
@@ -46,6 +47,7 @@ const Member: React.FC<MemberProp> = ({
   onClick,
 }) => {
   const [hover, setHover] = useState(false);
+  const router=useRouter();
   return (
     <Box
       onMouseEnter={(): void => {
@@ -55,7 +57,8 @@ const Member: React.FC<MemberProp> = ({
         setHover(false);
       }}
       onClick={(): any => {
-        if (onClick) onClick();
+        //if (onClick) onClick();
+        router.push(`/account/${name.split(' ')[0]}`)
       }}
       sx={{ cursor: "pointer" }}
     >
