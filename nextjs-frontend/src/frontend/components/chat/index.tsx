@@ -407,15 +407,18 @@ export default function Chat(props: {
             </Typography>
             {c.values.map((i) => {
               const findTeam = teamData?.find((t) => t.id === i.other_user);
-              const teamLogo = findTeam?.teamLogo
-                ? (frontendSupabase.storage
-                    .from("public-files")
-                    .getPublicUrl(findTeam.teamLogo).publicURL as string)
-                : "/images/16276393842661.png";
+              const chatIcon =
+                i.chat_image || findTeam?.teamLogo
+                  ? (frontendSupabase.storage
+                      .from("public-files")
+                      .getPublicUrl(i.chat_image || findTeam?.teamLogo)
+                      .publicURL as string)
+                  : "/images/16276393842661.png";
+
               return (
                 <ChatCard
                   key={i.id}
-                  image={teamLogo}
+                  image={chatIcon}
                   name={i.channel_name}
                   otherUser={i.other_user}
                   message={i.last_message}
@@ -425,7 +428,7 @@ export default function Chat(props: {
                     setCurrentChatData(null);
                     setTimeout((): void => {
                       setCurrentChatName(i.channel_name);
-                      setCurrentChatData(i);
+                      setCurrentChatData({ ...i, chat_image: chatIcon });
                       setCurrentChat(i.channel_id);
                     }, 200);
                   }}

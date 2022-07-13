@@ -14,6 +14,10 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import { IChatUsers } from "../../../../backend/services/database/models/i-chat-users";
+import NoobFilePicker from "../../utils/noob-file-picker";
+import { uploadImage } from "../../../service-clients/image-service-client";
+import { v4 } from "uuid";
+import { allowedImageExtensions } from "../../../../models/constants";
 
 interface IChatBox {
   channelId: string;
@@ -30,6 +34,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
   const [chatUsers, setchatUsers] = useState<any[]>([]);
   const [text, setText] = useState<string>("");
   const [infoSection, setInfoSection] = useState(false);
+  const [logoPicker, setLogoPicker] = React.useState(false)
 
   const messageRef = useRef<IMessages[]>(messages);
 
@@ -278,7 +283,15 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         </Box>
 
         <Box display={"flex"} justifyContent="center" mt={2}>
-          <Avatar style={{ height: 150, width: 150 }} />
+          <Avatar
+            src={props?.data?.chat_image}
+            style={{ height: 150, width: 150 }}
+          />
+        </Box>
+        <Box display={"flex"} justifyContent="center" mt={2}>
+          <Button onClick={(): any => setLogoPicker(true)}>
+            Change Team Image
+          </Button>
         </Box>
         <Box display={"flex"} justifyContent="center" mt={2}>
           <Typography
@@ -297,12 +310,46 @@ export default function ChatBox(props: IChatBox): JSX.Element {
             {chatUsers.map((u, idx) => (
               <Box display={"flex"} justifyContent="space-between" key={idx}>
                 <Typography>{u.user_name}</Typography>
-                <Button onClick={(): any => removeUserFromGroup(u.user_id)}>Remove</Button>
+                <Button onClick={(): any => removeUserFromGroup(u.user_id)}>
+                  Remove
+                </Button>
               </Box>
             ))}
           </Box>
         </Box>
       </Box>
+      <NoobFilePicker
+        onFileSelected={async (file): Promise<any> => {
+          if (file?.length) {
+            const fileName = `${v4()}.png`;
+            const { data, error } = await uploadImage(
+              "public-files",
+              `chat/group/${fileName}`,
+              file[0]
+            );
+            if (error) {
+              alert("Some error while update team logo");
+            } else {
+              await frontendSupabase
+                .from("chat_users")
+                .update({
+                  chat_image: (data?.Key || "").replace("public-files/", ""),
+                })
+                .eq("channel_id", props.channelId);
+            }
+          }
+          setLogoPicker(false);
+        }}
+        onError={(error): void => {
+          console.error(error);
+          setLogoPicker(false);
+        }}
+        allowedExtensions={allowedImageExtensions}
+        show={logoPicker}
+        maxFiles={1}
+        minFiles={0}
+        maxFileSizeInBytes={10000 * 10000}
+      />
     </Box>
   );
 }

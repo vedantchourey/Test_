@@ -8,5 +8,6 @@ export interface IChatUsers {
   channel_type: string;
   updated_at: string;
   last_message: string;
+  chat_image?: string;
   type: string;
 }
