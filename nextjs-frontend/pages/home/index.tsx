@@ -352,7 +352,7 @@ const Home = (): JSX.Element => {
                     className={styles.postContainer}
                     style={{ flexDirection: "column" }}
                   >
-                    <Box overflow={"scroll"} maxWidth={"57vw"}>
+                    <Box overflow={"scroll"} maxWidth={"57vw"} display={"flex"} className={"hide-scrollbar"}>
                       {_renderPosts()}
                     </Box>
                   </TabPanel>

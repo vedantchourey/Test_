@@ -183,7 +183,7 @@ const PostCard = (props: IProps): JSX.Element => {
         item
         md={12}
         minHeight={props.row ? 450 : undefined}
-        minWidth={props.isDesktop ? 400 : 0}
+        minWidth={props.isDesktop ? 280 : 0}
         mr={props.row ? 2 : 0}
       >
         <Card
