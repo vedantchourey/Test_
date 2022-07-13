@@ -339,6 +339,7 @@ const Home = (): JSX.Element => {
                     <Button
                       className={styles.viewAllButton}
                       onClick={async (): Promise<void> => {
+                        value==="1"?await router.push("social"):
                         value === "2"
                           ? await router.push("blog")
                           : await router.push("tournaments-list");
