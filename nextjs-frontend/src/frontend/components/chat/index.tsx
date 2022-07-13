@@ -411,7 +411,7 @@ export default function Chat(props: {
                 i.chat_image || findTeam?.teamLogo
                   ? (frontendSupabase.storage
                       .from("public-files")
-                      .getPublicUrl(i.chat_image || findTeam?.teamLogo)
+                      .getPublicUrl(i.channel_type === "group" ? i.chat_image : findTeam?.teamLogo)
                       .publicURL as string)
                   : "/images/16276393842661.png";
 
