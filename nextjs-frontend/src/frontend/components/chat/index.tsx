@@ -16,7 +16,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from "@mui/icons-material/Add";
 import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
 import { IChatUsers } from "../../../backend/services/database/models/i-chat-users";
@@ -37,7 +37,7 @@ import _ from "lodash";
 import { searchPeopleByText } from "../../service-clients/search-service-client";
 import { ISearchPeopleByUsernameResponse } from "../../service-clients/messages/i-search";
 import frontendConfig from "../../utils/config/front-end-config";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function Chat(props: {
   smallChat: boolean;
@@ -51,6 +51,7 @@ export default function Chat(props: {
   const user = useAppSelector(userProfileSelector);
   const [chats, _setChats] = useState<object>({});
   const [currentChat, setCurrentChat] = useState<string | null>();
+  const [currentChatData, setCurrentChatData] = useState<any>();
   const [currentChatName, setCurrentChatName] = useState("");
   const [supportChatChannel, setSupportChatChannel] = useState<boolean>(false);
   const [teamData, setTeamData] = useState<any[]>([]);
@@ -58,12 +59,13 @@ export default function Chat(props: {
   const [userList, setUserList] = useState<ISearchPeopleByUsernameResponse[]>(
     []
   );
-  const [userListForGroup, setUserListForGroup] = useState<ISearchPeopleByUsernameResponse[]>(
-    []
-  );
-  const [selectedUserListForGroup, setSelectedUserListForGroup] = useState<ISearchPeopleByUsernameResponse[]>(
-    []
-  );
+  const [createGroup, setCreateGroup] = useState(false);
+  const [userListForGroup, setUserListForGroup] = useState<
+    ISearchPeopleByUsernameResponse[]
+  >([]);
+  const [selectedUserListForGroup, setSelectedUserListForGroup] = useState<
+    ISearchPeopleByUsernameResponse[]
+  >([]);
   const [isFetching, setIsFetching] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [groupName, setGroupName] = useState("");
@@ -79,11 +81,17 @@ export default function Chat(props: {
         .eq("other_user", _otheruser);
       if (res.data?.length) {
         setCurrentChat(res.data?.[0]?.channel_id || null);
+        setCurrentChatData(res.data?.[0]);
         setCurrentChatName(name as string);
       } else {
         createNewChat(_otheruser as string, _name as string);
       }
     }
+    setOpen(false);
+    setCreateGroup(false);
+    setGroupName("");
+    setSelectedUserListForGroup([]);
+    setUserListForGroup([]);
   };
 
   const chatRef = useRef(chats);
@@ -182,7 +190,11 @@ export default function Chat(props: {
     ) {
       return (
         <List sx={{ width: "100%" }}>
-          {_.differenceBy(userListForGroup, selectedUserListForGroup, "username").map((data, i) => (
+          {_.differenceBy(
+            group ? userListForGroup : userList,
+            selectedUserListForGroup,
+            "username"
+          ).map((data, i) => (
             <ListItem key={Date.now() + i}>
               <ListItemButton
                 onClick={(): void => {
@@ -212,14 +224,13 @@ export default function Chat(props: {
           ))}
         </List>
       );
-    } 
-      return (
-        <></>
-        /*  <List className={styles.searchListLoder} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+    }
+    return (
+      <></>
+      /*  <List className={styles.searchListLoder} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
            <h1>No data found</h1>
          </List> */
-      );
-    
+    );
   };
 
   const chatsList: IChatUsers[] = Object.values(chats).sort(
@@ -245,7 +256,11 @@ export default function Chat(props: {
       user_name: user?.username,
       channel_type: "one-to-one",
     });
-    if (res.data?.length) setCurrentChat(channel_id);
+
+    if (res.data?.length) {
+      setCurrentChat(channel_id);
+      setCurrentChatData(res.data?.[0]);
+    }
     setCurrentChatName(name);
     await frontendSupabase.from("chat_users").insert({
       channel_id,
@@ -284,20 +299,26 @@ export default function Chat(props: {
       user_name: user?.username,
       channel_type: "group",
     });
-    
+
     setCurrentChatName(groupName);
-    await Promise.all(selectedUserListForGroup.map((u) =>
-      frontendSupabase.from("chat_users").insert({
-        channel_id,
-        user_id: u.id,
-        other_user: channel_id,
-        channel_name: groupName,
-        user_name: u.username,
-        channel_type: "group",
-      })));
-    
-    if (res.data?.length) setCurrentChat(channel_id);
+    await Promise.all(
+      selectedUserListForGroup.map((u) =>
+        frontendSupabase.from("chat_users").insert({
+          channel_id,
+          user_id: u.id,
+          other_user: channel_id,
+          channel_name: groupName,
+          user_name: u.username,
+          channel_type: "group",
+        }))
+    );
+
+    if (res.data?.length) {
+      setCurrentChat(channel_id);
+      setCurrentChatData(res.data?.[0]);
+    }
     setOpen(false);
+    setCreateGroup(false);
     setGroupName("");
     setSelectedUserListForGroup([]);
     setUserListForGroup([]);
@@ -345,7 +366,10 @@ export default function Chat(props: {
     setLoading(false);
   };
 
-  async function searchByUserName(username: string, group = false): Promise<void> {
+  async function searchByUserName(
+    username: string,
+    group = false
+  ): Promise<void> {
     setIsFetching(true);
     setUserList([]);
     if (!username) {
@@ -354,10 +378,8 @@ export default function Chat(props: {
     }
     const response = await searchPeopleByText({ search: username });
     if (response.length) {
-      if(group)
-        setUserListForGroup(response);
-      else
-        setUserList(response);
+      if (group) setUserListForGroup(response);
+      else setUserList(response);
     }
     setIsFetching(false);
   }
@@ -372,6 +394,7 @@ export default function Chat(props: {
         };
       })
       .value();
+
     return (
       <>
         {chatByGroup.map((c) => (
@@ -384,23 +407,28 @@ export default function Chat(props: {
             </Typography>
             {c.values.map((i) => {
               const findTeam = teamData?.find((t) => t.id === i.other_user);
-              const teamLogo = findTeam?.teamLogo
-                ? (frontendSupabase.storage
-                    .from("public-files")
-                    .getPublicUrl(findTeam.teamLogo).publicURL as string)
-                : "/images/16276393842661.png";
+              const chatIcon =
+                i.chat_image || findTeam?.teamLogo
+                  ? (frontendSupabase.storage
+                      .from("public-files")
+                      .getPublicUrl(i.channel_type === "group" ? i.chat_image : findTeam?.teamLogo)
+                      .publicURL as string)
+                  : "/images/16276393842661.png";
+
               return (
                 <ChatCard
                   key={i.id}
-                  image={teamLogo}
+                  image={chatIcon}
                   name={i.channel_name}
                   otherUser={i.other_user}
                   message={i.last_message}
-                  type={i.type}
+                  type={i.channel_type}
                   onClick={(): void => {
                     setCurrentChat(null);
+                    setCurrentChatData(null);
                     setTimeout((): void => {
                       setCurrentChatName(i.channel_name);
+                      setCurrentChatData({ ...i, chat_image: chatIcon });
                       setCurrentChat(i.channel_id);
                     }, 200);
                   }}
@@ -422,67 +450,58 @@ export default function Chat(props: {
       className={"hide-scrollbar"}
       height={props.smallChat ? (props.social ? "80vh" : "20%") : "80vh"}
     >
-      {props.smallChat ? (
-        !currentChat ? (
-          <Box
-            flex={props.smallChat ? 1 : 0.25}
-            style={{
-              borderRightStyle: "solid",
-              borderRightColor: "rgba(255,255,255,0.1)",
-              borderRightWidth: 1,
-            }}
-          >
-            {renderChatList()}
+      <Box
+        flex={props.smallChat ? 1 : 0.25}
+        style={{
+          borderRightStyle: "solid",
+          borderRightColor: "rgba(255,255,255,0.1)",
+          borderRightWidth: 1,
+          overflow: "scroll",
+        }}
+        display={props.smallChat && currentChat ? "none" : "block"}
+        className={"hide-scrollbar"}
+      >
+        {!supportChatChannel && user?.userRoles[0] !== "noob-admin" ? (
+          <Box mt={2}>
+            <Button disabled={loading} onClick={(): any => createSupportChat()}>
+              Create Support Chat
+            </Button>
           </Box>
-        ) : null
-      ) : (
+        ) : null}
+        {renderChatList()}
         <Box
-          flex={props.smallChat ? 1 : 0.25}
-          style={{
-            borderRightStyle: "solid",
-            borderRightColor: "rgba(255,255,255,0.1)",
-            borderRightWidth: 1,
-            overflow: "scroll",
-          }}
-          className={"hide-scrollbar"}
+          position={"absolute"}
+          bottom={10}
+          marginLeft={props.smallChat ? "21vw" : "16vw"}
         >
-          {!supportChatChannel && user?.userRoles[0] !== "noob-admin" ? (
-            <Box mt={2}>
-              <Button
-                disabled={loading}
-                onClick={(): any => createSupportChat()}
-              >
-                Create Support Chat
-              </Button>
-            </Box>
-          ) : null}
-          {renderChatList()}
-          <Box position={"absolute"} bottom={10} marginLeft={"1vw"}>
-            <Fab
-              color="primary"
-              aria-label="add"
-              onClick={(): any => setOpen(true)}
-            >
-              <AddIcon />
-            </Fab>
-          </Box>
+          <Fab
+            color="primary"
+            aria-label="add"
+            onClick={(): any => setOpen(true)}
+          >
+            <AddIcon />
+          </Fab>
         </Box>
-      )}
+      </Box>
 
       {currentChat ? (
         <ChatBox
           channelName={currentChatName}
           channelId={currentChat}
           userId={user?.id || ""}
-          onBack={(): any => setCurrentChat(undefined)}
+          onBack={(): any => {
+            setCurrentChat(undefined);
+            setCurrentChatData(null);
+          }}
           user={user}
+          data={currentChatData}
           smallChat={props.smallChat}
         />
       ) : (
         !props.smallChat && (
           <Box
             display={"flex"}
-            flex={0.5}
+            flex={0.75}
             alignItems={"center"}
             justifyContent={"center"}
             height={"100%"}
@@ -494,7 +513,7 @@ export default function Chat(props: {
         )
       )}
 
-      {!props.smallChat && (
+      {/* {!props.smallChat && currentChat && (
         <Box
           flex={props.smallChat ? 0 : 0.25}
           style={{
@@ -504,44 +523,18 @@ export default function Chat(props: {
           }}
         >
           <Typography variant={"h6"} m={2}>
-            Add Members
+            Info
           </Typography>
-          <Box
-            sx={{
-              marginLeft: 1,
-              marginRight: 1,
-              backgroundColor: "rgba(255,255,255,0.08)",
-              alignItems: "center",
-              alignSelf: "center",
-              display: "flex",
-              borderRadius: 3,
-              paddingRight: 2,
-            }}
-          >
-            <TextField
-              placeholder="Search anything..."
-              variant="standard"
-              InputProps={{
-                disableUnderline: true,
-              }}
-              value={searchText}
-              margin="none"
-              sx={{ marginBottom: 0, padding: 1, flex: 1 }}
-              onChange={(e): void => {
-                setSearchText(e.target.value);
-                searchByUserName(e.target.value, true);
-              }}
-              id="userSearchInput"
-            />
-            <SearchIcon color="primary" />
+          <Box display={"flex"} justifyContent={"center"}>
+            <Avatar style={{height: 120, width: 120}} />          
           </Box>
-          {/* {renderResults()} */}
         </Box>
-      )}
+      )} */}
       <Modal
         open={open}
         onClose={(): any => {
           setOpen(false);
+          setCreateGroup(false);
           setGroupName("");
           setSelectedUserListForGroup([]);
           setUserListForGroup([]);
@@ -571,35 +564,7 @@ export default function Chat(props: {
                 </Typography>
                 <Box display={"flex"}>
                   <Box
-                    flex={0.5}
-                    sx={{
-                      backgroundColor: "rgba(255,255,255,0.08)",
-                      alignItems: "center",
-                      alignSelf: "center",
-                      display: "flex",
-                      borderRadius: 3,
-                      paddingRight: 2,
-                      mr: 1,
-                    }}
-                  >
-                    <TextField
-                      placeholder="Group Name"
-                      variant="standard"
-                      InputProps={{
-                        disableUnderline: true,
-                      }}
-                      value={groupName}
-                      margin="none"
-                      sx={{ marginBottom: 0, padding: 1, flex: 1 }}
-                      onChange={(e): void => {
-                        setGroupName(e.target.value);
-                      }}
-                      id="userSearchInput"
-                    />
-                  </Box>
-
-                  <Box
-                    flex={0.5}
+                    flex={createGroup ? 0.5 : 1}
                     sx={{
                       backgroundColor: "rgba(255,255,255,0.08)",
                       alignItems: "center",
@@ -611,7 +576,7 @@ export default function Chat(props: {
                     }}
                   >
                     <TextField
-                      placeholder="Search anything..."
+                      placeholder="Search by username"
                       variant="standard"
                       InputProps={{
                         disableUnderline: true,
@@ -621,12 +586,46 @@ export default function Chat(props: {
                       sx={{ marginBottom: 0, padding: 1, flex: 1 }}
                       onChange={(e): void => {
                         setSearchText(e.target.value);
-                        searchByUserName(e.target.value, true);
+                        searchByUserName(e.target.value, createGroup);
                       }}
-                      id="userSearchInput"
                     />
                     <SearchIcon color="primary" />
                   </Box>
+                  {createGroup ? (
+                    <Box
+                      flex={0.5}
+                      sx={{
+                        backgroundColor: "rgba(255,255,255,0.08)",
+                        alignItems: "center",
+                        alignSelf: "center",
+                        display: "flex",
+                        borderRadius: 3,
+                        paddingRight: 2,
+                        mr: 1,
+                      }}
+                    >
+                      <TextField
+                        placeholder="Group Name"
+                        variant="standard"
+                        InputProps={{
+                          disableUnderline: true,
+                        }}
+                        value={groupName}
+                        margin="none"
+                        sx={{ marginBottom: 0, padding: 1, flex: 1 }}
+                        onChange={(e): void => {
+                          setGroupName(e.target.value);
+                        }}
+                      />
+                    </Box>
+                  ) : (
+                    <Button
+                      variant="outlined"
+                      onClick={(): any => setCreateGroup(true)}
+                    >
+                      Create Group
+                    </Button>
+                  )}
                 </Box>
                 {selectedUserListForGroup.map((data, i) => (
                   <ListItem key={Date.now() + i}>
@@ -660,13 +659,14 @@ export default function Chat(props: {
                     </ListItemButton>
                   </ListItem>
                 ))}
-                {renderResults(true)}
+                {renderResults(createGroup)}
                 <Box display={"flex"} mt={2} justifyContent="flex-end">
                   <Button
                     variant="outlined"
                     sx={{ mr: 1 }}
                     onClick={(): any => {
                       setOpen(false);
+                      setCreateGroup(false);
                       setGroupName("");
                       setSelectedUserListForGroup([]);
                       setUserListForGroup([]);
