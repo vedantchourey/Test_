@@ -173,9 +173,6 @@ export default function Chat(props: {
   }, []);
 
   const renderResults = (group?: boolean): JSX.Element => {
-    console.log('userList -> ', userList)
-    console.log('userListForGroup -> ', userListForGroup)
-    console.log('group -> ', group);
     if (isFetching) {
       return (
         <List
@@ -386,6 +383,7 @@ export default function Chat(props: {
         };
       })
       .value();
+      
     return (
       <>
         {chatByGroup.map((c) => (
@@ -410,7 +408,7 @@ export default function Chat(props: {
                   name={i.channel_name}
                   otherUser={i.other_user}
                   message={i.last_message}
-                  type={i.type}
+                  type={i.channel_type}
                   onClick={(): void => {
                     setCurrentChat(null);
                     setTimeout((): void => {
@@ -601,7 +599,7 @@ export default function Chat(props: {
                       />
                     </Box>
                   ) : (
-                    <Button variant="outlined" onClick={() => setCreateGroup(true)}>Create Group</Button>
+                    <Button variant="outlined" onClick={(): any => setCreateGroup(true)}>Create Group</Button>
                   )}
                 </Box>
                 {selectedUserListForGroup.map((data, i) => (

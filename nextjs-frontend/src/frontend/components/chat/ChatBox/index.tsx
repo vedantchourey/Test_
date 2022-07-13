@@ -12,6 +12,7 @@ import { IMessages } from "../../../../backend/services/database/models/i-messag
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface IChatBox {
   channelId: string;
@@ -83,7 +84,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
   return (
     <Box display={"flex"} flex={props.smallChat ? 1 : 0.75}>
       <Box
-        display={"flex"}
+        display={props.smallChat && infoSection ? "none" : "flex"}
         flexDirection={"column"}
         justifyContent={"flex-end"}
         flex={infoSection ? 0.7 : 1}
@@ -111,10 +112,14 @@ export default function ChatBox(props: IChatBox): JSX.Element {
             >
               {props.channelName}
             </Typography>
-            <IconButton aria-label="back" size="small" onClick={(): any => setInfoSection(!infoSection)} style={{color: "rgba(255,255,255,0.3)"}}>
+            <IconButton
+              aria-label="back"
+              size="small"
+              onClick={(): any => setInfoSection(!infoSection)}
+              style={{ color: "rgba(255,255,255,0.3)" }}
+            >
               <InfoOutlinedIcon />
             </IconButton>
-            
           </Box>
 
           <Typography
@@ -219,7 +224,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         </Box>
       </Box>
       <Box
-        flex={infoSection ? 0.3 : 0}
+        flex={infoSection ? (props.smallChat ? 1 : 0.3) : 0}
         display={infoSection ? "block" : "none"}
         style={{
           borderLeftColor: "rgba(255,255,255,0.1)",
@@ -233,6 +238,8 @@ export default function ChatBox(props: IChatBox): JSX.Element {
             borderBottomWidth: 1,
             borderBottomStyle: "solid",
           }}
+          display={"flex"}
+          justifyContent={"space-between"}
           p={2}
         >
           <Typography
@@ -243,6 +250,13 @@ export default function ChatBox(props: IChatBox): JSX.Element {
           >
             Info
           </Typography>
+          <IconButton
+            aria-label="back"
+            size="small"
+            onClick={(): any => setInfoSection(false)}
+          >
+            <CloseIcon />
+          </IconButton>
         </Box>
 
         <Box display={"flex"} justifyContent="center" mt={2}>
@@ -262,8 +276,8 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         <Box p={2}>
           <Typography variant="caption">Participants</Typography>
           <Box mt={1}>
-            {chatUsers.map((u) => (
-              <Box display={"flex"} justifyContent="space-between">
+            {chatUsers.map((u, idx) => (
+              <Box display={"flex"} justifyContent="space-between" key={idx}>
                 <Typography>{u.user_name}</Typography>
                 <Button>Remove</Button>
               </Box>
