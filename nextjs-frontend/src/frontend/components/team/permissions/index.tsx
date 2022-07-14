@@ -216,7 +216,7 @@ const Permissions: React.FC<PermissionProps> = ({ players, team }) => {
                         </Box>
                       </NoobCell>
                       <NoobCell>
-                        {/* {teamOwner && player.user_id !== user?.id && ( */}
+                        {teamOwner && player.user_id !== user?.id && (
                           <NoobButton
                             size="small"
                             className="delete"
@@ -227,7 +227,7 @@ const Permissions: React.FC<PermissionProps> = ({ players, team }) => {
                           >
                             Remove
                           </NoobButton>
-                        {/* )} */}
+                        )}
                       </NoobCell>
                     </NoobRow>
                   );

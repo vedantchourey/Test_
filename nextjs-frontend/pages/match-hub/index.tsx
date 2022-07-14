@@ -9,7 +9,6 @@ import { Box } from "@mui/material";
 import axios from "axios";
 import { getAuthHeader } from "../../src/frontend/utils/headers";
 import { TournamentData } from "../../src/frontend/components/tournament";
-import Chat from "../../src/frontend/components/chat";
 
 export interface IMatchHubData extends Match {
   tournament: TournamentData | any;
@@ -50,10 +49,7 @@ const MatchHubPage: NextPage = () => {
             match={match}
             onBack={(): void => setMatch(undefined)}
           />
-        )}
-        <Box p={3}>
-          <Chat smallChat={false} social={false} />
-        </Box>
+        )} 
       </Box>
     </NoobPage>
   );

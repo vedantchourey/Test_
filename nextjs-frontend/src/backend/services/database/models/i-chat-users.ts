@@ -5,7 +5,9 @@ export interface IChatUsers {
   usre_id: string;
   other_user: string;
   channel_name: string;
+  channel_type: string;
   updated_at: string;
   last_message: string;
+  chat_image?: string;
   type: string;
 }

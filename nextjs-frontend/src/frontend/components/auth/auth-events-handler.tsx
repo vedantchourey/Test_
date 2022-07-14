@@ -10,9 +10,12 @@ import { useEffect } from 'react';
 import { clearUserProfile, fetchUserProfileThunk, setAvatarBackgroundBlob, setAvatarBlob, setCheckLoginStatus, setIsLoggedIn } from '../../redux-store/authentication/authentication-slice';
 import { refreshSession } from '../../service-clients/auth-service-client';
 import { frontendSupabase } from '../../services/supabase-frontend-service';
+import { setWalletDetails } from "../../redux-store/wallet/wallet.-slice";
 import { setIsLoading } from '../../redux-store/screen-animations/screen-animation-slice';
 import { downloadImage } from '../../service-clients/image-service-client';
 import Router, { useRouter } from 'next/router';
+import { getAuthHeader } from '../../utils/headers';
+import axios from 'axios';
 
 export default function AuthEventsHandler(): JSX.Element | null {
   const status = useAppSelector(authCheckStatusSelector);
@@ -22,6 +25,14 @@ export default function AuthEventsHandler(): JSX.Element | null {
   const forceFetchAvatar = useAppSelector(forceFetchAvatarImageBlobSelector);
   const forceFetchAvatarBackground = useAppSelector(forceFetchAvatarBackgroundImageBlobSelector);
   const router = useRouter();
+
+  const fetchWalletDetails = async (): Promise<void> => {
+    const headers = await getAuthHeader();
+    const { data } = await axios.get(`/api/wallet/details`, {
+      headers,
+    });
+    if (data) appDispatch(setWalletDetails(data));
+  };
 
   useEffect(() => {
     (async (): Promise<void> => {
@@ -54,6 +65,7 @@ export default function AuthEventsHandler(): JSX.Element | null {
         appDispatch(setIsLoggedIn({ isLoggedIn: session?.user != null, username: session?.user?.user_metadata?.username }));
         appDispatch(fetchUserProfileThunk());
         appDispatch(setCheckLoginStatus('success'));
+        fetchWalletDetails();
       } else if (event === 'SIGNED_OUT') {
         appDispatch(setIsLoggedIn({ isLoggedIn: false, username: undefined }));
         appDispatch(clearUserProfile());

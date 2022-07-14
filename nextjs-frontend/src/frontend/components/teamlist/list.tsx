@@ -78,11 +78,31 @@ const TeamListData: React.FC = () => {
           <TableContainer>
             <Table>
               <TableBody>
+                <NoobRow
+                  sx={{
+                    display: { sm: "flex", xs: "flex", md: "table-row" },
+                    flexDirection: { sm: "column", xs: "column" },
+                  }}
+                >
+                  <NoobCell>
+                    <Typography variant="subtitle1" textAlign={"center"} color={"#6932F9"}>TEAM NAME</Typography>
+                  </NoobCell>
+                  <NoobCell>
+                    <Typography variant="subtitle1" textAlign={"center"} color={"#6932F9"}>Game</Typography>
+                  </NoobCell>
+                  <NoobCell>
+                    <Typography variant="subtitle1" textAlign={"center"} color={"#6932F9"}>WON</Typography>
+                  </NoobCell>
+                  <NoobCell>
+                    <Typography variant="subtitle1" textAlign={"center"} color={"#6932F9"}>ELO</Typography>
+                  </NoobCell>
+                </NoobRow>
                 {teamdata.map((item) => {
                   const teamLogo = item.teamLogo
-                  ? frontendSupabase.storage.from("public-files").getPublicUrl(item.teamLogo)
-                      .publicURL
-                  : "/icons/Rectangle.svg";
+                    ? frontendSupabase.storage
+                        .from("public-files")
+                        .getPublicUrl(item.teamLogo).publicURL
+                    : "/icons/Rectangle.svg";
                   return (
                     <NoobRow
                       sx={{
@@ -96,11 +116,11 @@ const TeamListData: React.FC = () => {
                       style={{ cursor: "pointer" }}
                     >
                       <NoobCell>
-                        <Box alignItems="center" display="center">
+                        <Box alignItems="center" display="flex">
                           <img
                             src={teamLogo || ""}
-                            width={"65px"}
-                            height={"65px"}
+                            width={"45px"}
+                            height={"45px"}
                             style={{ borderRadius: 65 }}
                           />
                           <Box>
@@ -112,10 +132,10 @@ const TeamListData: React.FC = () => {
                         </Box>
                       </NoobCell>
                       <NoobCell>
-                        Game: {parseInt(item.won) + parseInt(item.loss)}
+                        {parseInt(item.won) + parseInt(item.loss)}
                       </NoobCell>
-                      <NoobCell>won: {parseInt(item.won)}</NoobCell>
-                      <NoobCell>ELO: {parseInt(item.team_elo_rating)}</NoobCell>
+                      <NoobCell>{parseInt(item.won)}</NoobCell>
+                      <NoobCell>{parseInt(item.team_elo_rating)}</NoobCell>
                     </NoobRow>
                   );
                 })}

@@ -1,4 +1,4 @@
-import { Button, IconButton, Typography, useTheme } from "@mui/material";
+import { Button, useTheme } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -16,8 +16,6 @@ import { useAppSelector } from "../../redux-store/redux-store";
 import { signOut } from "../../service-clients/auth-service-client";
 import { frontendSupabase } from "../../services/supabase-frontend-service";
 import LoginModal from "../auth/login-modal/login-modal";
-import TwitchIcon from "../icons/twitch-icon";
-import YoutubeIcon from "../icons/youtube-icon";
 import {
   ComponentDimensions,
   createFromRef,
@@ -173,9 +171,9 @@ export default function DrawerLeft(): JSX.Element {
             variant="permanent"
             classes={{ paper: classes.drawerPaper }}
           >
-            <div>
+            <div style={{ textAlign: "center" }}>
               <Button
-                style={{ backgroundColor: "transparent" }}
+                style={{ backgroundColor: "transparent"}}
                 onClick={gotoHomePage}
               >
                 <img
@@ -185,45 +183,32 @@ export default function DrawerLeft(): JSX.Element {
                 />
               </Button>
             </div>
-            <div className={style.container1}>
-              <Button
-                variant="text"
-                style={{ color: "white" }}
-                onClick={(): any => {
-                  if (user?.userRoles[0] === "noob-admin") {
-                    router.push("/tournament-dashboard");
-                  } else {
-                    router.push("/user-dashboard");
-                  }
-                }}
-              >
-                Dashboard
-              </Button>
-              <span className={style.border}></span>
-              <Button
-                variant="text"
-                style={{ color: "white" }}
-                onClick={gotoTeamListPage}
-              >
-                Account
-              </Button>
-            </div>
-            {/*{isLoggedIn && (
-              <div className={style.container4}>
-                <img src="/images/16276393842661.png" className={style.img3} />
-                <Box>
-                  <Typography className={style.text1}>{username}</Typography>
-                  <Button
-                    variant="text"
-                    className={style.button4}
-                    onClick={(): any => router.push("/wallet/info")}
-                    startIcon={<img src="/icons/Vector-Wallet.png" />}
-                  >
-                    {wallet?.balance}
-                  </Button>
-                </Box>
+
+            {isLoggedIn && (
+              <div className={style.container1}>
+                <Button
+                  variant="text"
+                  style={{ color: "white" }}
+                  onClick={(): any => {
+                    if (user?.userRoles[0] === "noob-admin") {
+                      router.push("/tournament-dashboard");
+                    } else {
+                      router.push("/user-dashboard");
+                    }
+                  }}
+                >
+                  Dashboard
+                </Button>
+                <span className={style.border}></span>
+                <Button
+                  variant="text"
+                  style={{ color: "white" }}
+                  onClick={gotoTeamListPage}
+                >
+                  Account
+                </Button>
               </div>
-            )}*/}
+            )}
 
             <div className={style.container2}>
               <Button
@@ -274,26 +259,15 @@ export default function DrawerLeft(): JSX.Element {
                   />
                   Social
                 </Button>
-              )} */}
+              )}
               {/* <Button
-                variant="text"
-                className={classes.buttonStyles}
-                onClick={(): any => router.push("/blog")}
-              >
-                <img
-                  src="/icons/Vector-Tournaments.png"
-                  className={classes.imgStyle}
-                />
-                Free Agency
-              </Button> */}
-              <Button
                 variant="text"
                 className={classes.buttonStyles}
                 onClick={(): any => router.push("/social")}
               >
                 <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
                 Social
-              </Button>
+              </Button> */}
               <Button
                 variant="text"
                 className={classes.buttonStyles}
@@ -378,24 +352,6 @@ export default function DrawerLeft(): JSX.Element {
                 />
                 Support
               </Button>
-              {/*<Button variant="text" className={classes.buttonStyles}>
-                <img
-                  src="/icons/Vector-Message.png"
-                  className={classes.imgStyle}
-                />
-                Message
-              </Button>
-              <Button variant="text" className={classes.buttonStyles}>
-                <img
-                  src="/icons/Vector-Aboutus.png"
-                  className={classes.imgStyle}
-                />
-                About Us
-              </Button>
-              <Button variant="text" className={classes.buttonStyles}>
-                <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
-                FAQ
-            </Button>*/}
               {isLoggedIn && (
                 <Button
                   variant="text"
@@ -444,8 +400,8 @@ export default function DrawerLeft(): JSX.Element {
                 </div>
               )} */}
             </div>
-            <div className={style.container3}>
-              <Box className={classes.boxStyle}>
+            <div className={style.container3} style={{minHeight: 400}}>
+              {/* <Box className={classes.boxStyle}>
                 <img src="/images/16276393842661.png" className={style.img2} />
                 <Typography className={style.text1}>
                   Always keep in touch with your friends and watch their
@@ -494,7 +450,7 @@ export default function DrawerLeft(): JSX.Element {
                   {" "}
                   NOOBSTORM{" "}
                 </Button>
-              </Typography>
+              </Typography> */}
             </div>
           </Drawer>
         </div>

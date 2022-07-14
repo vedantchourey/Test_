@@ -114,6 +114,9 @@ export default function NoobDesktopFooter(): JSX.Element {
             </Box>
           </Grid>
         </Grid>
+        <Typography color={"rgba(255,255,255,0.5)"} variant="subtitle1" style={{ fontSize: "13px" }} textAlign={"center"} mt={4}>
+        Copyright © 2021. All Rights Reserved By NOOBSTORM
+      </Typography>
       </Container>
     </div >
   )

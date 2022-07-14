@@ -23,6 +23,7 @@ interface Props {
   children: React.ReactElement;
   hideChat?: boolean;
   pinChat?: boolean;
+  hideHeaders?: boolean;
 }
 
 export default function NoobPage(props: Props): JSX.Element {
@@ -49,20 +50,21 @@ export default function NoobPage(props: Props): JSX.Element {
 
   return (
     <>
-      {isMobile ? null : <SideHeader />}
+      {isMobile ? null : !props.hideHeaders && <SideHeader />}
       <div>
-        <Head>
+        {!props.hideHeaders && <Head>
           <title>{title}</title>
           {metaKeys.map((key, index) => (
             <meta key={index} name={key} content={metaData[key]} />
           ))}
           <link rel="icon" href={favIcon} />
-        </Head>
+        </Head>}
+        
         <Box
           sx={{ display: "flex", marginTop: isMobile ? 10 : 0 }}
           maxWidth={"100vw"}
         >
-          <NoobHeader />
+          {!props.hideHeaders && <NoobHeader />}
           <Box
             style={{ minHeight: "1040px" }}
             component="main"
@@ -71,19 +73,18 @@ export default function NoobPage(props: Props): JSX.Element {
             {children}
           </Box>
         </Box>
-        <NoobFooter />
-        {isLoggedIn && enableChat && !props.hideChat && (
+        {!props.hideHeaders && <NoobFooter />}
+        {isLoggedIn && enableChat && !props.hideChat && !props.hideHeaders && (
           <div
             style={{
               display: "flex",
               flexDirection: "column",
               background: "#08001C",
-              padding: 10,
               position: "fixed",
               right: 0,
               bottom: 0,
-              borderRadius: 5,
-              zIndex: 9999,
+              borderRadius: 10,
+              zIndex: 100,
               width: 450,
               height: toggleChat ? 500 : 50,
             }}
@@ -94,6 +95,8 @@ export default function NoobPage(props: Props): JSX.Element {
               justifyContent={"space-between"}
               pl={2}
               pr={2}
+              bgcolor={"#6931F9"}
+              borderRadius={"10px 10px 0 0"}
             >
               <Typography>Chat</Typography>
               <IconButton
