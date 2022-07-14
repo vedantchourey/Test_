@@ -454,7 +454,7 @@ const Home = (): JSX.Element => {
                                 <img
                                   src="/images/arrow1.png"
                                   className={styles.arrowImg}
-                                  onClick={() => {
+                                  onClick={():void => {
                                     router.push(
                                       `/view-tournament/${data.id}/details`
                                     );
@@ -604,7 +604,7 @@ const Home = (): JSX.Element => {
                               <img
                                 src="/images/arrow1.png"
                                 className={styles.arrowImg}
-                                onClick={() => {
+                                onClick={():void => {
                                   router.push(
                                     `/view-tournament/${data.id}/details`
                                   );
