@@ -5,7 +5,7 @@ import commonStyles from '../../../../src/frontend/styles/common.module.css'
 import { Container, Divider, Typography } from '@mui/material'
 import Heading from '../../../../src/frontend/components/ui-components/typography/heading'
 import { Box } from '@mui/system'
-import NewsletterPoster from '../../../../src/frontend/components/newsletter-poster'
+// import NewsletterPoster from '../../../../src/frontend/components/newsletter-poster'
 import CreateTicketForm from '../../../../src/frontend/components/support/ticket/create-ticket'
 
 const NoobTicketCreatePage: NextPage = () => {
@@ -36,7 +36,7 @@ const NoobTicketCreatePage: NextPage = () => {
             <CreateTicketForm />
 
           </Container>
-          <NewsletterPoster />
+          {/* <NewsletterPoster /> */}
         </Box>
       </React.Fragment>
     </NoobPage>
