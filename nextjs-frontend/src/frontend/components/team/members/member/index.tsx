@@ -44,7 +44,6 @@ const Member: React.FC<MemberProp> = ({
   elo,
   children,
   profileImage,
-  onClick,
 }) => {
   const [hover, setHover] = useState(false);
   const router=useRouter();

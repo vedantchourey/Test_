@@ -3,7 +3,7 @@ import NoobPage from '../../../../src/frontend/components/page/noob-page'
 import commonStyles from '../../../../src/frontend/styles/common.module.css'
 import { Container, Divider, Typography, Box } from '@mui/material'
 import Heading from '../../../../src/frontend/components/ui-components/typography/heading'
-import NewsletterPoster from '../../../../src/frontend/components/newsletter-poster'
+//import NewsletterPoster from '../../../../src/frontend/components/newsletter-poster'
 import TicketHisoryCard from '../../../../src/frontend/components/support/ticket/history/ticketHistoryCard'
 
 interface TicketObject {
