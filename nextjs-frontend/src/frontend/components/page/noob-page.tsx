@@ -80,12 +80,11 @@ export default function NoobPage(props: Props): JSX.Element {
               display: "flex",
               flexDirection: "column",
               background: "#08001C",
-              padding: 10,
               position: "fixed",
               right: 0,
               bottom: 0,
-              borderRadius: 5,
-              zIndex: 9999,
+              borderRadius: 10,
+              zIndex: 100,
               width: 450,
               height: toggleChat ? 500 : 50,
             }}
@@ -96,6 +95,8 @@ export default function NoobPage(props: Props): JSX.Element {
               justifyContent={"space-between"}
               pl={2}
               pr={2}
+              bgcolor={"#6931F9"}
+              borderRadius={"10px 10px 0 0"}
             >
               <Typography>Chat</Typography>
               <IconButton
