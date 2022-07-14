@@ -1,5 +1,5 @@
 export interface ICreatePostRequest {
-    postContent: string | undefined,
+    postContent: string,
     postImgUrl: string
 }
 
