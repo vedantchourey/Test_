@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { PerRequestContext } from '../../../utils/api-middle-ware/api-middleware-typings';
 import { SupportRepository } from '../../database/repositories/support-repository';
 import { validatePost } from './create-support-validator';
@@ -10,10 +11,12 @@ export async function createTicket(req: any, context: PerRequestContext): Promis
   if (isThereAnyError(errors)) return {errors: errors}
   const repository = new SupportRepository(context.transaction as Knex.Transaction);
 
-  const getLastId: any = await repository.lastId()
+  // const getLastId: any = await repository.lastId()
+
+  const RandomeDate = new Date().getFullYear()+"-"+moment().format("MM")+moment().format("DD")+(Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000)
   
   const ticketId = await repository.createTicket({
-      id: new Date().getFullYear()+'-'+(getLastId ? (parseInt(getLastId?.id.split("-")[1])+1) : 1 ),
+      id: RandomeDate,
       message: req.message,
       type: req.type,
       subject: req.subject,
