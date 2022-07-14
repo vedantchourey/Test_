@@ -44,7 +44,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
 
   useEffect(() => {
     getComments();
-  }, [])
+  }, [props.isModalOpen])
 
   const getComments = async (): Promise<void> => {
     const data = await getPostComments(props.postId);

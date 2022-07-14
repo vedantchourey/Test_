@@ -41,6 +41,61 @@ body {
   font-family: 'Chakra Petch';
 }
 
+html::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	/* border-radius: 10px; */
+	background-color: rgba(255,255,255,0.1);
+}
+
+html::-webkit-scrollbar
+{
+	width: 12px;
+	background-color: rgba(0,0,0,0.3);
+}
+
+html::-webkit-scrollbar-thumb
+{
+	border-radius: 0px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: rgba(0,0,0,0.3);
+}
+
+div::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	/* border-radius: 10px; */
+	background-color: rgba(255,255,255,0.1);
+}
+
+div::-webkit-scrollbar
+{
+	width: 12px;
+	background-color: rgba(0,0,0,0.3);
+}
+
+div::-webkit-scrollbar-thumb
+{
+	border-radius: 0px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: rgba(0,0,0,0.3);
+}
+
+.hide-scrollbar::-webkit-scrollbar-track
+{
+	display: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar
+{
+	display: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar-thumb
+{
+	display: none;
+}
+
 *,
 ::after,
 ::before {
@@ -70,12 +125,12 @@ a:hover {
   background-color: transparent;
 }
 
-.hide-scrollbar::-webkit-scrollbar {
+/* .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
 .brackets-viewer::-webkit-scrollbar {
   display: none;
-}
+} */
 
 /* .slick-slide {
   margin: 0 27px!important;

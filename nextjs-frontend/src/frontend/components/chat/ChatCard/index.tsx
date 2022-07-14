@@ -4,27 +4,44 @@ import React, { useEffect, useState } from "react";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 
 interface IChatCard {
-    name: string,
-    message: string,
-    image: string;
-    otherUser: string,
-    onClick: () => void,
-    type: string
+  name: string;
+  message: string;
+  image: string;
+  otherUser: string;
+  onClick: () => void;
+  type: string;
 }
 
 export default function ChatCard(props: IChatCard): JSX.Element {
-  const [lastSeenTime, setLastSeenTime] = useState<any>(null)
-  const [currentMoment, setCurrentMoment] = useState(moment())
+  const [lastSeenTime, setLastSeenTime] = useState<any>(null);
+  const [currentMoment, setCurrentMoment] = useState(moment());
+  const [chatImage, setChatImage] = useState(props.image);
 
   const fetchLastSeen = async (): Promise<void> => {
+    if (props.type === "one-to-one") {
+      const userDataReq = await frontendSupabase
+        .from("profiles")
+        .select()
+        .eq("id", props.otherUser);
+      if (userDataReq?.data?.[0]) {
+        const chatImage = userDataReq?.data?.[0]
+          ? (frontendSupabase.storage
+              .from("public-files")
+              .getPublicUrl(userDataReq?.data?.[0]?.avatarUrl)
+              .publicURL as string)
+          : props.image;
+        setChatImage(chatImage as string);
+      }
+    }
+    props.type;
     const lLastSeenReq = await frontendSupabase
-    .from("user_last_seen")
-    .select()
-    .eq("user_id", props.otherUser);
-    if(lLastSeenReq?.data?.[0]?.last_seen){
+      .from("user_last_seen")
+      .select()
+      .eq("user_id", props.otherUser);
+    if (lLastSeenReq?.data?.[0]?.last_seen) {
       setLastSeenTime(lLastSeenReq?.data?.[0]?.last_seen);
     }
-  }
+  };
 
   useEffect(() => {
     fetchLastSeen();
@@ -35,7 +52,10 @@ export default function ChatCard(props: IChatCard): JSX.Element {
           setLastSeenTime(payload.new.last_seen);
       })
       .subscribe();
-    const momentInterval = setInterval(() => setCurrentMoment(moment()), 1000 * 30);
+    const momentInterval = setInterval(
+      () => setCurrentMoment(moment()),
+      1000 * 30
+    );
     return (): any => {
       clearInterval(momentInterval);
       lastSeenListener.unsubscribe();
@@ -52,7 +72,7 @@ export default function ChatCard(props: IChatCard): JSX.Element {
     >
       <Box>
         <Avatar
-          src={props.image}
+          src={chatImage}
           style={{
             height: 50,
             width: 50,
