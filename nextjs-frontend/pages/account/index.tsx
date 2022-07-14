@@ -84,7 +84,6 @@ function Account(): JSX.Element {
         console.error(err);
       });
   };
-  console.log('data -> ', "tournament_uuid")
 
   useEffect(() => {
     try {
@@ -162,7 +161,7 @@ function Account(): JSX.Element {
                           return (
                             <NoobRow
                               key={idx}
-                              onClick={() => {
+                              onClick={():void => {
                                 router.push(
                                   `/view-tournament/${i.tournament_uuid}/details`
                                 );
