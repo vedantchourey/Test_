@@ -256,7 +256,7 @@ export default function UserProfileCard(): JSX.Element {
                     <Box
                       sx={{ display: "flex", alignItems: "center", mt: 1, cursor: "pointer" }}
                       key={idx}
-                      onClick={() => router.push(`/team/view/${t.id}/members`)}
+                      onClick={(): any => router.push(`/team/view/${t.id}/members`)}
                     >
                       <Avatar
                         sx={{ mr: 1, width: 35, height: 35 }}

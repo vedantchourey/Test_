@@ -1,12 +1,13 @@
-import * as React from 'react';
-import { useAppSelector } from '../../redux-store/redux-store';
-import { isDeviceTypeSelector } from '../../redux-store/layout/layout-selectors';
-import { deviceTypes } from '../../redux-store/layout/device-types';
-import NoobDesktopFooter from './noob-desktop-footer';
-import NoobMobileFooter from './noob-mobile-footer';
+import * as React from "react";
+import { useAppSelector } from "../../redux-store/redux-store";
+import { isDeviceTypeSelector } from "../../redux-store/layout/layout-selectors";
+import { deviceTypes } from "../../redux-store/layout/device-types";
+import NoobDesktopFooter from "./noob-desktop-footer";
+import NoobMobileFooter from "./noob-mobile-footer";
 
 export default function NoobFooter(): JSX.Element {
-  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
+  const isDesktop = useAppSelector((x) =>
+    isDeviceTypeSelector(x, deviceTypes.desktop));
   return (
     <nav>
       {isDesktop && <NoobDesktopFooter />}

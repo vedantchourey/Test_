@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
 import { Avatar, Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { ReactComponent as GameIcon } from "../../../../../public/icons/GameIcon_1.svg";
-import { ReactComponent as YouTubeIcon } from "../../../../../public/icons/YouTube_1.svg";
 import NoobFilePicker from "../../utils/noob-file-picker";
 import { allowedImageExtensions } from "../../../../models/constants";
 import { v4 } from "uuid";
@@ -30,31 +28,9 @@ const CardDesktop: React.FC<TeamCardProp> = ({name ="-", onChangeTeamLogo, team}
         </IconButton>
       </Grid>
       <Grid item md={6} lg={10} display={"flex"} flexDirection={"column"}>
-        <Typography color={"white"} textAlign="left" component="h4">
+        <Typography color={"white"} textAlign="left" variant="h4">
           {name}
         </Typography>
-        <Box display={"flex"} marginTop="30px">
-          <Box
-            border={"1px solid #31274A"}
-            height="48px"
-            width={"48px"}
-            display="flex"
-            alignItems={"center"}
-            justifyContent="center"
-          >
-            <GameIcon />
-          </Box>
-          <Box
-            border={"1px solid #31274A"}
-            height="48px"
-            width={"48px"}
-            display="flex"
-            alignItems={"center"}
-            justifyContent="center"
-          >
-            <YouTubeIcon />
-          </Box>
-        </Box>
       </Grid>
     </Grid>
   );
@@ -80,9 +56,8 @@ const CardMobile: React.FC<TeamCardProp> = ({name ="-", onChangeTeamLogo, team})
           </Box>
         </Box>
         <Box marginLeft={2}>
-          <Typography color={"white"} textAlign="left" component="h4">
-            {" "}
-            {name}{" "}
+          <Typography color={"white"} textAlign="left" variant="h4">
+            {name}
           </Typography>
           <Box
             style={{
@@ -104,28 +79,6 @@ const CardMobile: React.FC<TeamCardProp> = ({name ="-", onChangeTeamLogo, team})
               </Typography>{" "}
             </Typography>
           </Box>
-        </Box>
-      </Grid>
-      <Grid item xs={12} display="flex" marginTop={4}>
-        <Box
-          border={"1px solid #31274A"}
-          height="48px"
-          width={"48px"}
-          display="flex"
-          alignItems={"center"}
-          justifyContent="center"
-        >
-          <GameIcon />
-        </Box>
-        <Box
-          border={"1px solid #31274A"}
-          height="48px"
-          width={"48px"}
-          display="flex"
-          alignItems={"center"}
-          justifyContent="center"
-        >
-          <YouTubeIcon />
         </Box>
       </Grid>
     </Grid>
