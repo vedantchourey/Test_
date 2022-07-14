@@ -33,8 +33,9 @@ import axios from "axios";
 import styled from "@emotion/styled";
 import { ITournament } from "../../src/backend/services/database/models/i-tournaments";
 import moment from "moment";
-import { allGamesSelector } from "../../src/frontend/redux-store/games/game-selectors";
+import { allGamesSelector, gamesFetchStatusSelector } from "../../src/frontend/redux-store/games/game-selectors";
 import { fetchAllGamesThunk } from "../../src/frontend/redux-store/games/game-slice";
+import SocialMedia from "../social";
 
 type TabsProps = "posts" | "about" | "activity";
 
@@ -60,15 +61,17 @@ function Account(): JSX.Element {
   
   const appDispatch = useAppDispatch();
   const games = useAppSelector(allGamesSelector);
+  const gamesFetchStatus = useAppSelector(gamesFetchStatusSelector);
 
   useEffect(() => {
     (async (): Promise<unknown> => {
+      if (gamesFetchStatus !== "idle") return;
       appDispatch(fetchAllGamesThunk());
       if (checkStatus !== "success") return;
       if (isLoggedIn) return;
       await router.push("/");
     })();
-  });
+  }, [user]);
 
   const fetchData = async (): Promise<void> => {
     const headers = await getAuthHeader();
@@ -128,6 +131,7 @@ function Account(): JSX.Element {
                   <TabList onChange={handleChange} value={activeTab}>
                     <Tab label="Posts" value="posts" />
                     <Tab label="Match activity" value="activity" />
+                    <Tab label="Social" value="social" />
                   </TabList>
                 </Box>
 
@@ -182,6 +186,9 @@ function Account(): JSX.Element {
                       </TableBody>
                     </Table>
                   </TableContainer>
+                </TabPanel>
+                <TabPanel sx={{ p: 0 }} value="social">
+                  <SocialMedia hideChat={true} />
                 </TabPanel>
               </TabContext>
             </Box>

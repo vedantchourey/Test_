@@ -54,6 +54,7 @@ export default function UserProfileCard(): JSX.Element {
   const [openFollowersModal, setOpenFollowersModal] = useState(false);
   const [openFollowingModal, setOpenFollowingModal] = useState(false);
   const [teamData, setTeamData] = useState<any[]>([]);
+  const [removeBgImage, setRemoveBgImage] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>): void => {
@@ -100,6 +101,7 @@ export default function UserProfileCard(): JSX.Element {
     try {
       appDispatch(setIsLoading(true));
       await updateProfileBackground(files[0]);
+      setRemoveBgImage(false);
       appDispatch(fetchUserProfileThunk());
       appDispatch(forceFetchAvatarBackgroundImageBlob());
     } finally {
@@ -107,9 +109,13 @@ export default function UserProfileCard(): JSX.Element {
     }
   }
 
-  const showUploadAvatarPicker = (): void => setShowAvatarPicker(true);
+  const showUploadAvatarPicker = (): void => {
+    setShowAvatarPicker(true);
+    setTimeout((): any => setShowAvatarPicker(false), 500);
+  };
   const showUploadBackgroundPicker = (): void => {
     setShowBackgroundPicker(true);
+    setTimeout((): any => setShowBackgroundPicker(false), 500);
     setAnchorEl(null);
   };
 
@@ -134,7 +140,9 @@ export default function UserProfileCard(): JSX.Element {
       <Box
         className={styles.background}
         style={{
-          backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 1)), url(${avatarBackgroundImageBlobUrl} )`,
+          backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 1)), url(${
+            !removeBgImage && avatarBackgroundImageBlobUrl
+          } )`,
         }}
       >
         <Box
@@ -171,6 +179,18 @@ export default function UserProfileCard(): JSX.Element {
           >
             <MenuItem
               style={{ width: 220, maxWidth: 215, paddingLeft: 35 }}
+              onClick={async (): Promise<any> => {
+                appDispatch(setIsLoading(true));
+                setAnchorEl(null);
+                await frontendSupabase
+                  .from("profiles")
+                  .update({ profileBackgroundImageUrl: null })
+                  .eq("id", userProfile?.id);
+                appDispatch(fetchUserProfileThunk());
+                appDispatch(forceFetchAvatarBackgroundImageBlob());
+                setRemoveBgImage(true);
+                appDispatch(setIsLoading(false));
+              }}
             >
               Remove picture
             </MenuItem>
@@ -186,7 +206,7 @@ export default function UserProfileCard(): JSX.Element {
         <Box className={styles.profileSection}>
           <Box sx={{ position: "relative" }}>
             <Avatar
-              sx={{ width: 85, height: 85, marginBottom: 2, marginTop: 5 }}
+              sx={{ width: 120, height: 120, marginBottom: 2, marginTop: 5 }}
               alt="Remy Sharp"
               src={
                 avatarImageBlobUrl ||
