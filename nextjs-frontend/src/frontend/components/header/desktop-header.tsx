@@ -1,4 +1,4 @@
-import { Button, IconButton, Typography, useTheme } from "@mui/material";
+import { Button, useTheme } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -16,8 +16,6 @@ import { useAppSelector } from "../../redux-store/redux-store";
 import { signOut } from "../../service-clients/auth-service-client";
 import { frontendSupabase } from "../../services/supabase-frontend-service";
 import LoginModal from "../auth/login-modal/login-modal";
-import TwitchIcon from "../icons/twitch-icon";
-import YoutubeIcon from "../icons/youtube-icon";
 import {
   ComponentDimensions,
   createFromRef,
@@ -173,9 +171,9 @@ export default function DrawerLeft(): JSX.Element {
             variant="permanent"
             classes={{ paper: classes.drawerPaper }}
           >
-            <div>
+            <div style={{ textAlign: "center" }}>
               <Button
-                style={{ backgroundColor: "transparent" }}
+                style={{ backgroundColor: "transparent"}}
                 onClick={gotoHomePage}
               >
                 <img
@@ -263,17 +261,6 @@ export default function DrawerLeft(): JSX.Element {
                 </Button>
               )}
               {/* <Button
-                variant="text"
-                className={classes.buttonStyles}
-                onClick={(): any => router.push("/blog")}
-              >
-                <img
-                  src="/icons/Vector-Tournaments.png"
-                  className={classes.imgStyle}
-                />
-                Free Agency
-              </Button>
-              <Button
                 variant="text"
                 className={classes.buttonStyles}
                 onClick={(): any => router.push("/social")}
@@ -413,8 +400,8 @@ export default function DrawerLeft(): JSX.Element {
                 </div>
               )} */}
             </div>
-            <div className={style.container3}>
-              <Box className={classes.boxStyle}>
+            <div className={style.container3} style={{minHeight: 400}}>
+              {/* <Box className={classes.boxStyle}>
                 <img src="/images/16276393842661.png" className={style.img2} />
                 <Typography className={style.text1}>
                   Always keep in touch with your friends and watch their
@@ -463,7 +450,7 @@ export default function DrawerLeft(): JSX.Element {
                   {" "}
                   NOOBSTORM{" "}
                 </Button>
-              </Typography>
+              </Typography> */}
             </div>
           </Drawer>
         </div>

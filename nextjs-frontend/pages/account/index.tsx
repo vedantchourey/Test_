@@ -161,7 +161,7 @@ function Account(): JSX.Element {
                           return (
                             <NoobRow
                               key={idx}
-                              onClick={():void => {
+                              onClick={(): void => {
                                 router.push(
                                   `/view-tournament/${i.tournament_uuid}/details`
                                 );

@@ -20,13 +20,17 @@ const TeamList: React.FC = () => {
         <div className={commonStyles.container}>
           <Heading divider heading={"Team List"} />
         </div>
+        <Box display={"flex"} justifyContent="center">
         <Button
           onClick={(): void => {
             route.push("/team/create");
           }}
+          variant={"contained"}
         >
           Create Team
         </Button>
+        </Box>
+        
         <Box marginY={2}>
           <TeamListData />
         </Box>
