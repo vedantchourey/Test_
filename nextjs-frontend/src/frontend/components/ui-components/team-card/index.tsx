@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
 import { Avatar, Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { ReactComponent as GameIcon } from "../../../../../public/icons/GameIcon_1.svg";
-import { ReactComponent as YouTubeIcon } from "../../../../../public/icons/YouTube_1.svg";
 import NoobFilePicker from "../../utils/noob-file-picker";
 import { allowedImageExtensions } from "../../../../models/constants";
 import { v4 } from "uuid";
@@ -30,31 +28,13 @@ const CardDesktop: React.FC<TeamCardProp> = ({name ="-", onChangeTeamLogo, team}
         </IconButton>
       </Grid>
       <Grid item md={6} lg={10} display={"flex"} flexDirection={"column"}>
+<<<<<<< HEAD
         <Typography color={"white"} textAlign="left" component="h4" style={{fontSize:'25px',fontWeight:'bold'}}>
+=======
+        <Typography color={"white"} textAlign="left" variant="h4">
+>>>>>>> 4e2f2a839439a168cbbe283347639f8d3d44777e
           {name}
         </Typography>
-        <Box display={"flex"} marginTop="30px">
-          <Box
-            border={"1px solid #31274A"}
-            height="48px"
-            width={"48px"}
-            display="flex"
-            alignItems={"center"}
-            justifyContent="center"
-          >
-            <GameIcon />
-          </Box>
-          <Box
-            border={"1px solid #31274A"}
-            height="48px"
-            width={"48px"}
-            display="flex"
-            alignItems={"center"}
-            justifyContent="center"
-          >
-            <YouTubeIcon />
-          </Box>
-        </Box>
       </Grid>
     </Grid>
   );
@@ -104,28 +84,6 @@ const CardMobile: React.FC<TeamCardProp> = ({name ="-", onChangeTeamLogo, team})
               </Typography>{" "}
             </Typography>
           </Box>
-        </Box>
-      </Grid>
-      <Grid item xs={12} display="flex" marginTop={4}>
-        <Box
-          border={"1px solid #31274A"}
-          height="48px"
-          width={"48px"}
-          display="flex"
-          alignItems={"center"}
-          justifyContent="center"
-        >
-          <GameIcon />
-        </Box>
-        <Box
-          border={"1px solid #31274A"}
-          height="48px"
-          width={"48px"}
-          display="flex"
-          alignItems={"center"}
-          justifyContent="center"
-        >
-          <YouTubeIcon />
         </Box>
       </Grid>
     </Grid>

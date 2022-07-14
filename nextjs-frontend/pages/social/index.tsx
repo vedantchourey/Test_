@@ -15,7 +15,7 @@ import Chat from "../../src/frontend/components/chat";
 
 const requiredRoles: NoobUserRole[] = ["noob-admin"];
 
-export default function Create(): JSX.Element {
+export default function SocialMedia(props: {hideChat: boolean}): JSX.Element {
   const [isFetchingPosts, setIsFetchingPosts] = useState(true);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
 
@@ -56,20 +56,23 @@ export default function Create(): JSX.Element {
     <NoobPage
       title="Social"
       metaData={{ description: "Noob storm home page" }}
-      pinChat={true}
+      hideChat={props.hideChat}
+      hideHeaders={props.hideChat}
     >
       <AuthGuard
         requiredRoles={requiredRoles}
         renderOnCheckFailure={(): JSX.Element => <NotFound />}
       >
         <Grid container>
-          <Grid xs={8}>
+          <Grid xs={props.hideChat ? 12 : 8}>
             <CreatePostInput setPosts={setPosts} />
             {_renderPosts()}
           </Grid>
-          <Grid xs={4} p={2}>
-            <Chat smallChat={true} social={true} />
-          </Grid>
+          {!props.hideChat && (
+            <Grid xs={4} p={2}>
+              <Chat smallChat={true} social={true} />
+            </Grid>
+          )}
         </Grid>
       </AuthGuard>
     </NoobPage>

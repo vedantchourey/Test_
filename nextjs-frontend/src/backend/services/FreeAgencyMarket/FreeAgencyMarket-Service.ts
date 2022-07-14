@@ -71,6 +71,7 @@ export const enterToFreeAgencyMarket = async (
   const transaction = context.transaction as Knex.Transaction;
   const freeAgencyMarketRepo = new freeAgencyMarketRepository(transaction);
   const existing_entry = await freeAgencyMarketRepo.find({ user_id: context.user?.id, ...req })
+  
 
   if (existing_entry?.length) return getErrorObject("User entry for game id and platform id already exists");
 
