@@ -84,6 +84,7 @@ function Account(): JSX.Element {
         console.error(err);
       });
   };
+  console.log('data -> ', "tournament_uuid")
 
   useEffect(() => {
     try {
@@ -149,6 +150,7 @@ function Account(): JSX.Element {
                     <Table>
                       <TableBody>
                         <NoobRow>
+                          <NoobCell>Tournament Name</NoobCell>
                           <NoobCell>Game</NoobCell>
                           <NoobCell>Type</NoobCell>
                           <NoobCell>Date</NoobCell>
@@ -158,7 +160,16 @@ function Account(): JSX.Element {
                         {data.map((i, idx) => {
                           const game = games.find((g) => g.id === i.game)
                           return (
-                            <NoobRow key={idx}>
+                            <NoobRow
+                              key={idx}
+                              onClick={() => {
+                                router.push(
+                                  `/view-tournament/${i.tournament_uuid}/details`
+                                );
+                              }}
+                              style={{ cursor: "pointer" }}
+                            >
+                              <NoobCell>{i?.name}</NoobCell>
                               <NoobCell>{game?.displayName}</NoobCell>
                               <NoobCell>
                                 {i.settings?.tournamentFormat}

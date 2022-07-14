@@ -128,14 +128,14 @@ export default function CreatePostInput(props: IProps): JSX.Element {
         <TextField
           placeholder={`What's happening?`}
           sx={{
-            '& .MuiInput-root': {
-              fontWeight: 300
-            }
+            "& .MuiInput-root": {
+              fontWeight: 300,
+            },
           }}
           fullWidth
           multiline
           autoFocus
-          minRows={3}
+          minRows={1}
           value={request.postContent}
           error={propsHasError(errors, "postContent")}
           helperText={getErrorForProp(errors, "postContent")}
@@ -170,25 +170,25 @@ export default function CreatePostInput(props: IProps): JSX.Element {
               })
               .catch((error) => {
                 alert(error);
-              })
+              });
           }}
           // eslint-disable-next-line no-console
-          onError={(): void => console.log('Error')}
-          allowedExtensions={['.jpeg', '.jpg', '.png']}
+          onError={(): void => console.log("Error")}
+          allowedExtensions={[".jpeg", ".jpg", ".png"]}
           show={showPicker}
           maxFiles={1}
           minFiles={0}
           maxFileSizeInBytes={1024 * 1204}
         />
       </CardContent>
-
-      <CardContent>
-        {isUploading && (
+      
+      {isUploading && (
+        <CardContent>
           <Box sx={{ textAlign: "center" }}>
             <CircularProgress color="inherit" />
           </Box>
-        )}
-      </CardContent>
+        </CardContent>
+      )}
 
       <CardActions
         sx={{ display: "flex", justifyContent: "end", gap: "15px", px: 3 }}
@@ -218,7 +218,7 @@ export default function CreatePostInput(props: IProps): JSX.Element {
                   </IconButton>
                 </Tooltip>
               </Grid>
-            )
+            );
           }
         })}
 

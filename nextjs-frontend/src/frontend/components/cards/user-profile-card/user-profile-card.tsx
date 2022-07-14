@@ -40,8 +40,10 @@ import moment from "moment";
 import { getAuthHeader } from "../../../utils/headers";
 import axios from "axios";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
+import { useRouter } from "next/router";
 
 export default function UserProfileCard(): JSX.Element {
+  const router = useRouter()
   const userProfile = useAppSelector(userProfileSelector);
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
   const [showBackgroundPicker, setShowBackgroundPicker] = useState(false);
@@ -252,8 +254,9 @@ export default function UserProfileCard(): JSX.Element {
                     : "/static/images/avatar/3.jpg";
                   return (
                     <Box
-                      sx={{ display: "flex", alignItems: "center", mt: 1 }}
+                      sx={{ display: "flex", alignItems: "center", mt: 1, cursor: "pointer" }}
                       key={idx}
+                      onClick={() => router.push(`/team/view/${t.id}/members`)}
                     >
                       <Avatar
                         sx={{ mr: 1, width: 35, height: 35 }}
