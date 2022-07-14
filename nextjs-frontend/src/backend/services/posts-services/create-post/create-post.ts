@@ -1,8 +1,8 @@
 import { ICreatePostRequest, ICreatePostResponse, IPostsResponse } from './i-create-post';
 import { PerRequestContext } from '../../../utils/api-middle-ware/api-middleware-typings';
 import { PostsRepository } from '../../database/repositories/posts-repository';
-import { validatePost } from './create-post-validator';
-import { isThereAnyError } from '../../../../common/utils/validation/validator';
+// import { validatePost } from './create-post-validator';
+// import { isThereAnyError } from '../../../../common/utils/validation/validator';
 import { Knex } from 'knex';
 import { ServiceResponse } from '../../common/contracts/service-response';
 import { getLinkPreview } from '../../../../common/url-preview/url-preview';
