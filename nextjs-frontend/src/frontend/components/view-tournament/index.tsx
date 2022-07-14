@@ -109,9 +109,9 @@ const ViewTournament: React.FC = () => {
   const [isSuccessJoined, setSuccessJoined] = React.useState(false);
   const [openSuccessModal, setOpenSuccessModal] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [page,setPage]=React.useState("Details")
   const isDesktop = useAppSelector((x) =>
   isDeviceTypeSelector(x, deviceTypes.desktop));
-  let page="";
 
   const fetchTeams = async (): Promise<void> => {
     const headers = await getAuthHeader();
@@ -429,7 +429,6 @@ const ViewTournament: React.FC = () => {
   };
 
   const onTabClick = (tab: string): void => {
-    page=tab;
     if (!tab || tab === "") return;
     router.push(getUrl(), getAsURL(tab.toLowerCase()), { shallow: true });
   };
@@ -510,7 +509,7 @@ const ViewTournament: React.FC = () => {
         <Loader loading={loading} />
 
         <ViewCard>
-          <Grid container >
+          <Grid container alignItems={"center"}>
             <Grid item xs={6}>
               {data.basic?.sponsor && (
                 <img
@@ -521,10 +520,9 @@ const ViewTournament: React.FC = () => {
             </Grid>
             <Grid
               item
-              display="flex"
+              display={isDesktop?"flex":"grid"}
               alignItems="center"
               justifyContent={"flex-end"}
-              alignSelf="flex-end"
             >
               <Box marginRight="16px">
                 {countDown !== "00:00:00" ? (
@@ -578,7 +576,7 @@ const ViewTournament: React.FC = () => {
             <Select
             value={page}
             input={<OutlinedInput />}
-            onChange={(e: any): void => onTabClick(e.target.value)}
+            onChange={(e: any): void =>{onTabClick(e.target.value),setPage(e.target.value)}}
             fullWidth
             sx={{ m: 1 }}
           >

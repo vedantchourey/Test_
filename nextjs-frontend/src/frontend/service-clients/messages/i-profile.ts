@@ -10,6 +10,8 @@ export interface IProfileResponse {
   totalPosts: number;
   totalFollowing: number;
   isPrivate: boolean;
+  isBlocked: boolean;
+  suspended: Date;
 }
 
 export interface IOthersProfileResponse {

@@ -25,6 +25,7 @@ const Participants: React.FC<ParticipantsProps> = ({ data }) => {
                   key={item.id || item.team_id}
                   item
                   md={6}
+                  xs={6}
                   border={"1px solid rgba(255, 255, 255, 0.1)"}
                 >
                   <Box display="flex" alignItems="center" padding={2}>

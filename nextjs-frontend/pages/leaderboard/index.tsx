@@ -124,28 +124,29 @@ const Leaderboard = (): JSX.Element => {
           <Typography className={styles.text}>Choose Game</Typography>
           <Box
             mt={5}
-            sx={{ maxWidth: isDesktop?"1400px":"400px" }}
+            sx={{ maxWidth: isDesktop?"1400px":"300px" }}
             display={"flex"}
             flexWrap={"nowrap"}
             overflow={"scroll"}
             className="hide-scrollbar"
           >
             {games.map((data) => (
-                <img
-                key={1} data-value="1"
+              <img
+                key={1}
+                data-value="1"
                 className={styles.scrollImage}
-                  src={imagedata[data.code]}
-                  onClick={(): any => {
-                    setSelectedGame(data.id);
-                    getleaderboardgamedata(data.id);
-                  }}
-                  role="presentation"
-                  style={{
-                    borderWidth: data.id === selectedGame ? 3 : 0,
-                    borderColor: "#6932F9",
-                    borderStyle: "solid",
-                  }}
-                />
+                src={imagedata[data.code]}
+                onClick={(): any => {
+                  setSelectedGame(data.id);
+                  getleaderboardgamedata(data.id);
+                }}
+                role="presentation"
+                style={{
+                  borderWidth: data.id === selectedGame ? 3 : 0,
+                  borderColor: "#6932F9",
+                  borderStyle: "solid",
+                }}
+              />
             ))}
           </Box>
           {isDesktop && (
@@ -164,19 +165,44 @@ const Leaderboard = (): JSX.Element => {
                         flexDirection: "column",
                       }}
                     >
-                      <Typography
+                      <Box
+                        display={"flex"}
                         style={{
-                          paddingLeft: "35%",
+                          justifyContent: "center",
+                          alignItems: "center",
                         }}
-                        fontSize={10}
                       >
-                        {index === 0 ? "1st" : index === 1 ? "2nd" : "3rd"}
-                      </Typography>
+                        <Typography
+                          style={{
+                            paddingLeft: "35%",
+                          }}
+                          fontSize={10}
+                          textAlign="center"
+                        >
+                          {index === 0 ? "1st" : index === 1 ? "2nd" : "3rd"}
+                        </Typography>
+                        {index === 0 && (
+                          <img
+                            src="/images/winnerCrown.png"
+                            style={{ height: 10, width: 10, marginLeft: 5 }}
+                          />
+                        )}
+                      </Box>
                       <img
-                        src="/icons/Male.png"
+                        src={
+                          index === 0
+                            ? "/images/winner1.png"
+                            : index === 1
+                            ? "/images/winner2.png"
+                            : "/images/winner3.png"
+                        }
+                        className={styles.borderImage}
+                      />
+                      <img
+                        src={"/icons/Male.png"}
                         className={styles.img1}
                         style={{
-                          borderWidth: 5,
+                          position: "absolute",
                           borderColor:
                             index === 0
                               ? "#FFAA2E"
@@ -184,6 +210,7 @@ const Leaderboard = (): JSX.Element => {
                               ? "#C05C00"
                               : "#979797",
                           borderStyle: "groove",
+                          borderWidth: 5,
                         }}
                       />
                     </Box>
@@ -236,7 +263,9 @@ const Leaderboard = (): JSX.Element => {
                       Rank
                     </TableCell>
                     <TableCell style={{ width: "65%" }}>Username</TableCell>
-                    {isDesktop&&(<TableCell style={{ width: "25%" }}>Elo Rating</TableCell>)}
+                    {isDesktop && (
+                      <TableCell style={{ width: "25%" }}>Elo Rating</TableCell>
+                    )}
                   </TableRow>
                 </TableHead>
                 <TableBody
@@ -247,12 +276,12 @@ const Leaderboard = (): JSX.Element => {
                     },
                   }}
                 >
-                  {leaderboardgamedata
-                    .slice(3, leaderboardgamedata.length)
+                  {leaderboardgamedata 
+                    .slice(isDesktop?3:0, leaderboardgamedata.length)
                     .map((item, idx) => (
                       <TableRow key={item.id}>
                         <TableCell align="center" component="th" scope="row">
-                          {idx + 3}
+                          {idx + (isDesktop?4:1)}
                           <sup>th</sup>
                         </TableCell>
                         <TableCell>
@@ -267,7 +296,7 @@ const Leaderboard = (): JSX.Element => {
                             </span>
                           </div>
                         </TableCell>
-                        <TableCell>{item.elo_rating}</TableCell>
+                        {isDesktop&&(<TableCell>{item.elo_rating}</TableCell>)}
                       </TableRow>
                     ))}
                 </TableBody>

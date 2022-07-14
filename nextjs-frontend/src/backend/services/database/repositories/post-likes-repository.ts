@@ -37,13 +37,17 @@ export class PostLikesRepository extends BaseRepository<ILike> {
   }
 
   async isLiked(postId: string, userId: string | undefined): Promise<boolean> {
-    const like = await this.entities()
-                            .select('*')
-                            .where({
-                              postId: postId,
-                              likedBy: userId
-                            })
-                            .first();
-    return like != null;
+    try {
+      const like = await this.entities()
+                              .select('*')
+                              .where({
+                                postId: postId,
+                                likedBy: userId
+                              })
+                              .first();
+      return like !== false;
+    } catch(e){
+      return false
+    }
   }
 }

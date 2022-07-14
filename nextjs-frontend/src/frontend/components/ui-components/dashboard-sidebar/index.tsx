@@ -136,12 +136,40 @@ const DashboardSideBar: React.FC = () => {
             component={"a"}
             fullWidth
             onClick={(): Promise<boolean> =>
+              router.push("/reported-post", undefined, { shallow: true })
+            }
+            classes={{ root: classes.button }}
+            startIcon={<PersonIcon />}
+          >
+            Reported Post
+          </Button>
+        </Grid>
+        <Grid item marginX={2}>
+          <Button
+            variant="contained"
+            component={"a"}
+            fullWidth
+            onClick={(): Promise<boolean> =>
               router.push("/reported-users", undefined, { shallow: true })
             }
             classes={{ root: classes.button }}
             startIcon={<PersonIcon />}
           >
             Reported Users
+          </Button>
+        </Grid>
+        <Grid item marginX={2}>
+          <Button
+            variant="contained"
+            component={"a"}
+            fullWidth
+            onClick={(): Promise<boolean> =>
+              router.push("/support-tickets", undefined, { shallow: true })
+            }
+            classes={{ root: classes.button }}
+            startIcon={<PersonIcon />}
+          >
+            Support
           </Button>
         </Grid>
         <Grid item marginX={2}>

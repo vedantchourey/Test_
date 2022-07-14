@@ -1,8 +1,8 @@
 import { ICreatePostRequest, ICreatePostResponse, IPostsResponse } from './i-create-post';
 import { PerRequestContext } from '../../../utils/api-middle-ware/api-middleware-typings';
 import { PostsRepository } from '../../database/repositories/posts-repository';
-import { validatePost } from './create-post-validator';
-import { isThereAnyError } from '../../../../common/utils/validation/validator';
+// import { validatePost } from './create-post-validator';
+// import { isThereAnyError } from '../../../../common/utils/validation/validator';
 import { Knex } from 'knex';
 import { ServiceResponse } from '../../common/contracts/service-response';
 import { getLinkPreview } from '../../../../common/url-preview/url-preview';
@@ -25,8 +25,6 @@ interface PreviewResponse {
 
 
 export async function createPost(req: ICreatePostRequest, context: PerRequestContext): Promise<ServiceResponse<Partial<ICreatePostRequest>, ICreatePostResponse>> {
-  const errors = await validatePost(req);
-  if (isThereAnyError(errors)) return {errors: errors}
   const repository = new PostsRepository(context.transaction as Knex.Transaction);
 
   const regex = /\bhttps?:\/\/\S+/gi;

@@ -247,7 +247,7 @@ export default function DrawerLeft(): JSX.Element {
                   Free Agency
                 </Button>
               )}
-              {isLoggedIn && (
+              {/* {isLoggedIn && (
                 <Button
                   variant="text"
                   className={classes.buttonStyles}
