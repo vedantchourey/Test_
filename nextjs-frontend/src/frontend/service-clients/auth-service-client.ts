@@ -22,30 +22,50 @@ export async function signUp(request: SignupRequest): Promise<NoobPostResponse<S
 
 
 export async function signIn(request: SignInRequest): Promise<SupabaseFetchResponse<(Session | null)>> {
-  const result = await frontendSupabase.auth.signIn({
-    email: request.email,
-    password: request.password
-  });
-  
-  if (result.error != null) {
-    return {isError: true, error: result.error}
-  }
-  const data = await frontendSupabase
-    .from("user_last_seen")
-    .select()
-    .eq("user_id", result.user?.id);
 
-  if (data.body?.length) {
-    await frontendSupabase
-      .from("user_last_seen")
-      .update({ last_seen: new Date() })
-      .eq("user_id", result.user?.id);
-  } else {
-    await frontendSupabase
-      .from("user_last_seen")
-      .insert({ user_id: result.user?.id, last_seen: new Date() });
+    const result = await frontendSupabase.auth.signIn({
+      email: request.email,
+      password: request.password
+    });
+    
+    if (result.error != null) {
+      return {isError: true, error: result.error}
+    }
+    
+    const isBlocked: any = await frontendSupabase
+    .from("profiles")
+    .select("*")
+    .eq("id", result.user?.id)
+    .limit(1)
+    if (isBlocked.body?.length) {
+    if(isBlocked.body[0]?.isBlocked){
+      signOut()
+      return { isError: true, error: {status: 400, message: "account is blocked" } }
+    }
+    if(new Date(isBlocked.body[0]?.suspended) > new Date()){
+      signOut()
+      return { isError: true, error: {status: 400, message: "account is suspended" } }
+    }
   }
-  return {isError: false, ...result.session as Session};
+
+    
+    const data = await frontendSupabase
+      .from("user_last_seen")
+      .select()
+      .eq("user_id", result.user?.id);
+  
+    if (data.body?.length) {
+      await frontendSupabase
+        .from("user_last_seen")
+        .update({ last_seen: new Date() })
+        .eq("user_id", result.user?.id);
+    } else {
+      await frontendSupabase
+        .from("user_last_seen")
+        .insert({ user_id: result.user?.id, last_seen: new Date() });
+    }
+    return {isError: false, ...result.session as Session};
+  
 }
 
 export async function resetPassword(request: ResetPasswordRequest): Promise<NoobPostResponse<ResetPasswordRequest, ResetPasswordResponse>> {

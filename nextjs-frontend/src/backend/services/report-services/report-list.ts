@@ -17,6 +17,8 @@ export const getAllRepost = async (
   const result = await reportRepo
     .knexObj()
     .join("profiles", "profiles.id", "reported_post.reported_by")
+    // .join("posts", "posts.id", "reported_post.post_id")
+    // .join("profiles", "profiles.id", "reported_post.postedBy")
     .select("*");
 
   return result;
