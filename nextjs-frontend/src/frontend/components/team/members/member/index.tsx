@@ -44,6 +44,7 @@ const Member: React.FC<MemberProp> = ({
   elo,
   children,
   profileImage,
+  username,
 }) => {
   const [hover, setHover] = useState(false);
   const router=useRouter();
@@ -57,7 +58,7 @@ const Member: React.FC<MemberProp> = ({
       }}
       onClick={(): any => {
         //if (onClick) onClick();
-        router.push(`/account/${name.split(' ')[0]}`)
+        router.push(`/account/${username}`)
       }}
       sx={{ cursor: "pointer" }}
     >

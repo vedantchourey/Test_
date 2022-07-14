@@ -52,6 +52,7 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
     axios.get("/api/free-agency-market/list", { headers: headers, params }).then((res) => {
       const players: MemberProp[] = res.data.map((item: any) => ({
         name: `${item.username}`,
+        username:`${item.username}`,
         id: item.user_id,
         image: "/images/teams/player.png",
         type: "bronze",
