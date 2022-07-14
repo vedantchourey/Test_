@@ -18,12 +18,12 @@
 }
 .imgContainer {
 	display: flex;
-	flex-direction: column;
 	position: absolute;
-	justify-content: space-around;
+	justify-content: center;
 	top: 300px;
-	align-items: flex-end;
-  width: 300px;
+	align-items: center;
+  width: 200px;
+  margin-left: 100px;
 }
 .img1 {
 	width: 108px;
@@ -164,6 +164,8 @@
 	background: linear-gradient(180deg, rgba(17, 0, 63, 0) 0%, #11003F 100%);
 	width: 310px;
 	height: 368px;
+	justify-content: flex-start;
+	background-size: cover;
 }
 .newsFeedText {
 	font-weight: 700;
@@ -177,6 +179,7 @@
 .newsFeedButton {
 	display: flex;
 	align-items: flex-start;
+	align-self: flex-start;
 	padding: 7px 22px;
 	margin: 15px 0px 0px 20px;
 	background: #6932F9;

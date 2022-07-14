@@ -4,6 +4,7 @@ import {
   Typography,
   useTheme,
   useMediaQuery,
+  Button,
 } from "@mui/material";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
@@ -89,24 +90,17 @@ export default function NoobPage(props: Props): JSX.Element {
               height: toggleChat ? 500 : 50,
             }}
           >
-            <Box
-              display={"flex"}
-              alignItems="center"
-              justifyContent={"space-between"}
-              pl={2}
-              pr={2}
-              bgcolor={"#6931F9"}
-              borderRadius={"10px 10px 0 0"}
+            <Button
+              onClick={(): any =>
+                setToggleChat(pinChat ? !toggleChat : !toggleChat)
+              }
+              style={{justifyContent:"space-between"}}
             >
-              <Typography>Chat</Typography>
-              <IconButton
-                onClick={(): any =>
-                  setToggleChat(pinChat ? !toggleChat : !toggleChat)
-                }
-              >
+              <Typography style={{color:"#FFFFFF"}}>Chat</Typography>
+              <IconButton>
                 {toggleChat ? <CloseIcon /> : <KeyboardArrowUpIcon />}
               </IconButton>
-            </Box>
+            </Button>
             {toggleChat && <Chat smallChat={true} />}
           </div>
         )}
