@@ -311,8 +311,7 @@ const PostCard = (props: IProps): JSX.Element => {
                 </a>
               ) : (
                 part + " "
-              )
-            )}
+              ))}
           </Typography>
           <Button
             style={{
