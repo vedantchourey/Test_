@@ -6,7 +6,7 @@ import commonStyles from '../../src/frontend/styles/common.module.css'
 import { Divider, Typography, Icon, Grid, Card, CardContent } from '@mui/material'
 import Heading from '../../src/frontend/components/ui-components/typography/heading'
 import { Box } from '@mui/system'
-import NewsletterPoster from '../../src/frontend/components/newsletter-poster'
+// import NewsletterPoster from '../../src/frontend/components/newsletter-poster'
 import HistoryIcon from '@mui/icons-material/History';
 import styles from './support.module.css';
 // import LiveChatIcon from '../../src/frontend/components/icons/live-chat-icon'
@@ -84,7 +84,7 @@ const NoobSupportPage: NextPage = () => {
             ))}
           </Grid>
 
-          <NewsletterPoster />
+          {/* <NewsletterPoster /> */}
 
         </Box>
 
