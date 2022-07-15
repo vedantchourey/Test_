@@ -107,8 +107,8 @@ export default function News(): JSX.Element {
           <Box display={"flex"} flexWrap={"wrap"}>
             {newsData
               .sort(function (a, b) {
-                var dateA = new Date(a.created_at).getTime();
-                var dateB = new Date(b.created_at).getTime();
+                const dateA = new Date(a.created_at).getTime();
+                const dateB = new Date(b.created_at).getTime();
                 return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
               })
               .map((i: any, key) => (

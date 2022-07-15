@@ -94,7 +94,7 @@ export default function NoobPage(props: Props): JSX.Element {
               onClick={(): any =>
                 setToggleChat(pinChat ? !toggleChat : !toggleChat)
               }
-              style={{justifyContent:"space-between"}}
+              style={{justifyContent:"space-between",	backgroundColor: "#6931F9"}}
             >
               <Typography style={{color:"#FFFFFF"}}>Chat</Typography>
               <IconButton>
