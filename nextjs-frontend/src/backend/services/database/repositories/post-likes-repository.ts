@@ -38,7 +38,7 @@ export class PostLikesRepository extends BaseRepository<ILike> {
 
   async isLiked(postId: string, userId: string | undefined): Promise<boolean> {
     try {
-      const like = await this.entities()
+      const like: any = await this.entities()
                               .select('*')
                               .where({
                                 postId: postId,
