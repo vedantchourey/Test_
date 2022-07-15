@@ -56,13 +56,11 @@ const Member: React.FC<MemberProp> = ({
       onMouseLeave={(): void => {
         setHover(false);
       }}
-      onClick={(): any => {
-        //if (onClick) onClick();
-        router.push(`/account/${username}`)
-      }}
       sx={{ cursor: "pointer" }}
     >
-      <Box width={"100%"} position="relative">
+      <Box width={"100%"} position="relative" onClick={(): any => {
+        router.push(`/account/${username}`)
+      }}>
         <div
           style={{
             position: "absolute",
