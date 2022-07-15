@@ -45,7 +45,7 @@ export class PostLikesRepository extends BaseRepository<ILike> {
                                 likedBy: userId
                               })
                               .first();
-      return true;
+      return like !== false ;
     } catch(e){
       return false
     }
