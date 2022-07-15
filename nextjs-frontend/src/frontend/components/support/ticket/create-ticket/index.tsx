@@ -8,8 +8,10 @@ import {
 import commonStyles from "../../../../styles/common.module.css";
 import { getAuthHeader } from "../../../../utils/headers";
 import styles from "./create-ticket.module.css";
+import { useRouter } from "next/router";
 
 export default function CreateTicketForm(): JSX.Element {
+  const router = useRouter();
   const [errors] = useState({});
   const [request, setRequest] = useState({
     subject: "",
@@ -47,7 +49,9 @@ export default function CreateTicketForm(): JSX.Element {
           {
             headers: headers,
           }
-        )
+        ).then((): any => {
+          router.push("/support/ticket/history")
+        })
         .catch(function (error) {
           console.error(error);
         });

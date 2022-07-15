@@ -1,5 +1,4 @@
-import Link from 'next/link'
-import { Box, Button, Card, CardActions, CardContent, CardHeader, Container, Divider, Grid, Typography } from "@mui/material";
+import { Box, Card, CardActions, CardContent, CardHeader, Container, Divider, Grid, Typography } from "@mui/material";
 import TicketIcon from "../../../icons/ticket-icon";
 import MessageIcon from "../../../icons/message-icon";
 import styles from './ticket-history.module.css'
@@ -14,7 +13,7 @@ interface Props {
   commentCount: number
 }
 
-export default function TicketHisoryCard({ _id, answer, created_at, ticketNumber, query, status, commentCount }: Props): JSX.Element {
+export default function TicketHisoryCard({ answer, created_at, ticketNumber, query, status, commentCount }: Props): JSX.Element {
   return (
     <Card className={styles.cardBackground} sx={{ my: 5 }}>
       <Container>
@@ -54,11 +53,11 @@ export default function TicketHisoryCard({ _id, answer, created_at, ticketNumber
               </Box>
             </Grid>
             <Grid item ml='auto' className={styles.cardButton} xs={12} md={3}>
-              <Link href={`/support/ticket/chat?ticketId=${_id}`}>
+              {/* <Link href={`/support/ticket/chat?ticketId=${_id}`}>
                 <a>
                   <Button variant='contained'>VIEW TICKET</Button>
                 </a>
-              </Link>
+              </Link> */}
             </Grid>
           </Grid>
         </CardActions>
