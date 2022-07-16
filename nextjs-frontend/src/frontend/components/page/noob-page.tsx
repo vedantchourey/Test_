@@ -88,6 +88,7 @@ export default function NoobPage(props: Props): JSX.Element {
               zIndex: 100,
               width: 450,
               height: toggleChat ? 500 : 50,
+              background: "linear-gradient(180deg, #0D17AD 0%, #09128C 48.77%, #000772 100%)"
             }}
           >
             <Button
