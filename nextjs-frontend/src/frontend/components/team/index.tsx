@@ -27,10 +27,10 @@ import { IMatchHubData } from "../../../../pages/match-hub";
 
 export const NoobTab = styled(Tab)(() => ({
   textTransform: "capitalize",
-  border: "1px solid #31274A",
+  //border: "1px solid #31274A",
   "&.Mui-selected": {
-    background: "#6932F9",
-    color: "white",
+    //background: "#6932F9",
+    color: "#6932F9",
     border: "0px",
   },
 }));
