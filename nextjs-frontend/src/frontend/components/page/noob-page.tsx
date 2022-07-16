@@ -80,7 +80,6 @@ export default function NoobPage(props: Props): JSX.Element {
             style={{
               display: "flex",
               flexDirection: "column",
-              background: "#08001C",
               position: "fixed",
               right: 0,
               bottom: 0,
