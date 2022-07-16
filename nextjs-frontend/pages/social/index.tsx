@@ -10,7 +10,7 @@ import { userProfileSelector } from "../../src/frontend/redux-store/authenticati
 import { useAppSelector } from "../../src/frontend/redux-store/redux-store";
 import PostCard from "../../src/frontend/components/account/posts/post-card";
 import { Grid, Skeleton } from "@mui/material";
-import CreatePostInput from "../../src/frontend/components/account/posts/create-post-input";
+// import CreatePostInput from "../../src/frontend/components/account/posts/create-post-input";
 import Chat from "../../src/frontend/components/chat";
 
 const requiredRoles: NoobUserRole[] = ["noob-admin"];
