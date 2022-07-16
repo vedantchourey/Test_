@@ -247,11 +247,11 @@ export default function DrawerLeft(): JSX.Element {
                   Free Agency
                 </Button>
               )}
-              {/* {isLoggedIn && (
+              {isLoggedIn && (
                 <Button
                   variant="text"
                   className={classes.buttonStyles}
-                  onClick={(): any => router.push("/social")}
+                  onClick={(): any => router.push({pathname:"/account",query:{tab:"social"}})}
                 >
                   <img
                     src="/icons/Vector-FAQ.png"
@@ -260,7 +260,7 @@ export default function DrawerLeft(): JSX.Element {
                   Social
                 </Button>
               )}
-              {/* <Button
+               {/* <Button
                 variant="text"
                 className={classes.buttonStyles}
                 onClick={(): any => router.push("/social")}

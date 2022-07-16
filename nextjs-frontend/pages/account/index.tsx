@@ -37,7 +37,7 @@ import { allGamesSelector, gamesFetchStatusSelector } from "../../src/frontend/r
 import { fetchAllGamesThunk } from "../../src/frontend/redux-store/games/game-slice";
 import SocialMedia from "../social";
 
-type TabsProps = "posts" | "about" | "activity";
+type TabsProps = "posts" | "social" | "activity";
 
 const NoobRow = styled(TableRow)(() => ({
   align: "center",
@@ -55,7 +55,7 @@ function Account(): JSX.Element {
   const user = useAppSelector(userProfileSelector);
   const [data, setData] = React.useState<ITournament[]>([]);
 
-  const [activeTab, setActiveTab] = useState<TabsProps>("posts");
+  const [activeTab, setActiveTab] = useState<string>("posts");
   const [isFetchingPosts, setIsFetchingPosts] = useState<boolean>(true);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
   
@@ -87,6 +87,10 @@ function Account(): JSX.Element {
 
   useEffect(() => {
     try {
+      if(router?.query?.tab){
+        const tab=router.query.tab.toString();
+        setActiveTab(tab);
+      }
       (async (): Promise<void> => {
         fetchData();
         const posts = await getPostsByUserId(user?.id || "");
