@@ -7,7 +7,7 @@ import { userProfileSelector } from "../src/frontend/redux-store/authentication/
 
 const Home: NextPage = () => {
   const user: any = useAppSelector(userProfileSelector);
-  if(user?.suspended < new Date()){
+  if(user?.suspended && user?.suspended < new Date()){
     return (
       <NoobPage
         title="Home"
@@ -17,8 +17,6 @@ const Home: NextPage = () => {
       >
         <>
         {"susped"}
-          {/* <Heading heading="Homepage" /> */}
-          {/* <NewHome /> */}
         </>
       </NoobPage>
     );
@@ -33,21 +31,10 @@ const Home: NextPage = () => {
       >
         <>
         blocked
-          {/* <Heading heading="Homepage" /> */}
-          {/* <NewHome /> */}
         </>
       </NoobPage>
     );
   }
-
-    //   if(isBlocked.body[0]?.isBlocked){
-    //   // throw 'account is blocked';
-    //   return { isError: true, error: "account is blocked" }
-    // }
-    // if(isBlocked.body[0]?.suspended < new Date()){
-    //   // throw "account is suspended"
-    //   return { isError: true, error: "account is suspended" }
-    // }
   return (
     <NoobPage
       title="Home"
@@ -56,7 +43,6 @@ const Home: NextPage = () => {
       }}
     >
       <>
-        {/* <Heading heading="Homepage" /> */}
         <NewHome />
       </>
     </NoobPage>
