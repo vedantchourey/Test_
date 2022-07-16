@@ -89,10 +89,6 @@ function Account(): JSX.Element {
 
   useEffect(() => {
     try {
-      if(router?.query?.tab){
-        const tab=router.query.tab.toString();
-        setActiveTab(tab);
-      }
       (async (): Promise<void> => {
         fetchData();
         const posts = await getPostsByUserId(user?.id || "");
