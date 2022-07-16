@@ -2,21 +2,21 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
-import { createStyles, makeStyles } from "@mui/styles";
+//import { createStyles, makeStyles } from "@mui/styles";
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    tabs: {
-      width: "100%",
-      borderRadius: "10px",
-      background: "#100626",
-      marginBottom: "10px",
-    },
-    selectedAlt:{
-      background:"rgba(105, 50, 249, 1)",
-      color:"white!important"
-    }
-  }));
+// const useStyles = makeStyles(() =>
+//   createStyles({
+//     tabs: {
+//       width: "100%",
+//       borderRadius: "10px",
+//       background: "#100626",
+//       marginBottom: "10px",
+//     },
+//     selectedAlt:{
+//       background:"rgba(105, 50, 249, 1)",
+//       color:"white!important"
+//     }
+//   }));
 
 interface NavProps {
   items: string[];
@@ -31,9 +31,9 @@ const NavTabs: React.FC<NavProps> = ({
   action = null,
   current = "",
   onClick,
-  altNav=false
+  //altNav=false
 }) => {
-  const classes = useStyles();
+ // const classes = useStyles();
 
   const handleChange = (
     event: React.SyntheticEvent,
@@ -53,12 +53,13 @@ const NavTabs: React.FC<NavProps> = ({
     <React.Fragment>
       <Tabs
         value={getSelected()}
-        classes={{ root: classes.tabs }}
+        //classes={{ root: classes.tabs }}
+        style={{marginBottom:"20px"}}
         onChange={handleChange}
         aria-label="nav tabs"
       >
         {items.map((tab) => {
-          return <Tab key={tab} label={tab} classes={{selected:((altNav && classes.selectedAlt)?classes.selectedAlt:'')}}></Tab>;
+          return <Tab key={tab} label={tab} /*classes={{selected:((altNav && classes.selectedAlt)?classes.selectedAlt:'')}}*/></Tab>;
         })}
         {action ? (
           <Box
