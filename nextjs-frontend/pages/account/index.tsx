@@ -36,6 +36,7 @@ import moment from "moment";
 import { allGamesSelector, gamesFetchStatusSelector } from "../../src/frontend/redux-store/games/game-selectors";
 import { fetchAllGamesThunk } from "../../src/frontend/redux-store/games/game-slice";
 import SocialMedia from "../social";
+import { ParsedUrlQuery } from "querystring";
 
 type TabsProps = "posts" | "social" | "activity";
 
@@ -50,12 +51,13 @@ const NoobCell = styled(TableCell)(() => ({
 
 function Account(): JSX.Element {
   const router = useRouter();
+  const query: ParsedUrlQuery = router.query;
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const checkStatus = useAppSelector(authCheckStatusSelector);
   const user = useAppSelector(userProfileSelector);
   const [data, setData] = React.useState<ITournament[]>([]);
 
-  const [activeTab, setActiveTab] = useState<string>("posts");
+  const [activeTab, setActiveTab] = useState<TabsProps>(query.default ? "social" : "posts");
   const [isFetchingPosts, setIsFetchingPosts] = useState<boolean>(true);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
   

@@ -33,7 +33,7 @@ interface IPrivatePublicProfileResponse {
   isError: boolean
 }
 
-export async function fetchUserProfile(): Promise<IProfileResponse> {
+export async function fetchUserProfile(): Promise<any> {
   const user = await authenticatedUser();
   if (user == null) throw new Error('User cannot be null');
   const profiles = await frontendSupabase.from('profiles')

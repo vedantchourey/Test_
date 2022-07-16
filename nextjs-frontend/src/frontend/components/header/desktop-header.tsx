@@ -173,7 +173,7 @@ export default function DrawerLeft(): JSX.Element {
           >
             <div style={{ textAlign: "center" }}>
               <Button
-                style={{ backgroundColor: "transparent"}}
+                style={{ backgroundColor: "transparent" }}
                 onClick={gotoHomePage}
               >
                 <img
@@ -251,7 +251,7 @@ export default function DrawerLeft(): JSX.Element {
                 <Button
                   variant="text"
                   className={classes.buttonStyles}
-                  onClick={(): any => router.push({pathname:"/account",query:{tab:"social"}})}
+                  onClick={(): any => router.push("/account?default=social")}
                 >
                   <img
                     src="/icons/Vector-FAQ.png"
@@ -260,7 +260,8 @@ export default function DrawerLeft(): JSX.Element {
                   Social
                 </Button>
               )}
-               {/* <Button
+
+              {/* <Button
                 variant="text"
                 className={classes.buttonStyles}
                 onClick={(): any => router.push("/social")}
@@ -400,7 +401,7 @@ export default function DrawerLeft(): JSX.Element {
                 </div>
               )} */}
             </div>
-            <div className={style.container3} style={{minHeight: 400}}>
+            <div className={style.container3} style={{ minHeight: 400 }}>
               {/* <Box className={classes.boxStyle}>
                 <img src="/images/16276393842661.png" className={style.img2} />
                 <Typography className={style.text1}>
