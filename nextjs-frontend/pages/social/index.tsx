@@ -65,7 +65,7 @@ export default function SocialMedia(props: {hideChat: boolean}): JSX.Element {
       >
         <Grid container>
           <Grid xs={props.hideChat ? 12 : 8}>
-            <CreatePostInput setPosts={setPosts} />
+            {/* <CreatePostInput setPosts={setPosts} /> */}
             {_renderPosts()}
           </Grid>
           {!props.hideChat && (
