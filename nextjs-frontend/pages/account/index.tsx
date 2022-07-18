@@ -38,7 +38,7 @@ import { fetchAllGamesThunk } from "../../src/frontend/redux-store/games/game-sl
 import SocialMedia from "../social";
 import { ParsedUrlQuery } from "querystring";
 
-type TabsProps = "posts" | "about" | "social";
+type TabsProps = "posts" | "social" | "activity";
 
 const NoobRow = styled(TableRow)(() => ({
   align: "center",
