@@ -186,7 +186,7 @@ const PostCard = (props: IProps): JSX.Element => {
         minHeight={props.row ? 450 : undefined}
         minWidth={props.isDesktop ? 280 : 0}
         mr={props.row ? 2 : 0}
-        onClick={():any=>{router.push(`social/${values.id}`)}}
+        //onClick={():any=>{router.push(`social/${values.id}`)}}
       >
         <Card
           className={styles.postCard}
