@@ -47,7 +47,7 @@ export default function SocialMedia(props: {hideChat: boolean}): JSX.Element {
 .map((data, i) => <Skeleton key={i} />);
     }
     const jsx = posts.map((postData) => {      
-      return <PostCard key={postData.id} data={postData} row={true} />;
+      return <PostCard key={postData.id} data={postData} />;
     });
     return jsx;
   };
