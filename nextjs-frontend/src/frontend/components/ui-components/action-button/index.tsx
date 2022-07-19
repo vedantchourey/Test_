@@ -34,6 +34,7 @@ export interface Props {
   items: ActionItem[][];
   buttonOnly?: boolean;
   error?: string;
+  disabled?:boolean;
 }
 
 const ActionButton: React.FC<Props> = ({
@@ -42,6 +43,7 @@ const ActionButton: React.FC<Props> = ({
   items = [],
   buttonOnly = false,
   error,
+  disabled,
 }) => {
   const styles = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -76,6 +78,7 @@ const ActionButton: React.FC<Props> = ({
           aria-controls={open ? id : undefined}
           aria-expanded={open ? "true" : undefined}
           onClick={handleButtonClick}
+          disabled={disabled}
         >
           Join Now
         </Button>

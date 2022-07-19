@@ -560,6 +560,7 @@ const ViewTournament: React.FC = () => {
                   buttonOnly={playerLimit === 1}
                   items={getActionItems()}
                   id={"action-item"}
+                  disabled={countDown !== "00:00:00"?false:true}
                 />
               ) : null}
             </Grid>
