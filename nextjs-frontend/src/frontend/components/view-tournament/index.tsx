@@ -247,6 +247,7 @@ const ViewTournament: React.FC = () => {
           setLoading(false);
           console.error(err);
         });
+        
     }
   }, [router.query.id]);
 
@@ -554,12 +555,16 @@ const ViewTournament: React.FC = () => {
               </Box>
 
               {!isSuccessJoined ? (
+                
+                
                 <ActionButton
+                  data={data}
                   error={regError}
                   onClick={onSinglePlayerJoin}
                   buttonOnly={playerLimit === 1}
                   items={getActionItems()}
                   id={"action-item"}
+                  userId={user?.id}
                   disabled={countDown !== "00:00:00"?false:true}
                 />
               ) : null}
