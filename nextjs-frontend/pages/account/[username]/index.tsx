@@ -23,7 +23,7 @@ import moment from "moment";
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
 import {ITournament} from "../../../src/backend/services/database/models/i-tournaments";
-import { allGamesSelector, gamesFetchStatusSelector } from "../../../src/frontend/redux-store/games/game-selectors";
+import { allGamesSelector } from "../../../src/frontend/redux-store/games/game-selectors";
 import { getAuthHeader } from "../../../src/frontend/utils/headers";
 import axios from "axios";
 

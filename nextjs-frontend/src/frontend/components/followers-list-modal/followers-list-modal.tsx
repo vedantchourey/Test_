@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Modal, AppBar, IconButton, Divider, Avatar } from '@mui/material';
+import { Box, Typography, Modal, AppBar, IconButton, Divider } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import styles from './followers-list-modal.module.css';
 import { fetchUserFollowerList, fetchUserFollowingList } from '../../service-clients/profile-service-client';
 import { IOthersProfileResponse, IProfileResponse } from "../../service-clients/messages/i-profile";
 import { IFollowersList } from '../../service-clients/messages/i-followers-list-response';
-import { useRouter } from "next/router";
 import Followersmodal from "./followers-modal";
 
 interface IProps {
@@ -29,7 +28,6 @@ const style = {
 
 const FollowersModal = ({ handleClose, userData, showModal, listType }: IProps): JSX.Element => {
   const [list, setList] = useState<IFollowersList[]>([]);
-  const router = useRouter()
 
   useEffect(() => {
     (async (): Promise<void> => {
@@ -64,7 +62,7 @@ const FollowersModal = ({ handleClose, userData, showModal, listType }: IProps):
         <Divider />
         <Box sx={{ p: 3 }} className={styles.userListContainer}>
           {list.length ? list.map((data, i) => (
-            <Followersmodal username={data.follower.username}/>
+            <Followersmodal username={data.follower.username} key={i}/>
           )) : (
             <Box>
               <Typography>

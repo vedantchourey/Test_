@@ -30,7 +30,6 @@ import Image from "../../../components/utils/supabase-image";
 import config from "../../../utils/config/front-end-config";
 import axios from "axios";
 import { getAuthHeader } from "../../../utils/headers";
-import router from "next/router";
 
 interface IProps {
   data: IPostsResponse;
