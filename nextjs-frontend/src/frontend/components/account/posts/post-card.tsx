@@ -313,18 +313,19 @@ const PostCard = (props: IProps): JSX.Element => {
                 part + " "
               ))}
           </Typography>
-          <Button
-            style={{
-              color: "#FFFFFF",
-              fontSize: 14,
-              marginBottom: !values.postImgUrl ? 50 : 0,
-            }}
-            onClick={(): any => {
-              setReadMore(!readMore);
-            }}
-          >
-            {readMore ? `Read less...` : `Read More...`}
-          </Button>
+            <Button
+              style={{
+                color: "#FFFFFF",
+                fontSize: 14,
+                marginBottom: !values.postImgUrl ? 50 : 0,
+                visibility: values.postContent.length > 450 ? 'visible' : 'hidden'
+              }}
+              onClick={(): any => {
+                setReadMore(!readMore);
+              }}
+            >
+              {readMore ? `Read less...` : `Read More...`}
+            </Button>
 
           <Box sx={{ position: "relative" }}>
             {imgUrl && (
@@ -385,8 +386,8 @@ const PostCard = (props: IProps): JSX.Element => {
             )}
 
             {!isFetchingMeta && (
-              <Box className={styles.actionButtons}>
-                <Box className={styles.blurContainer}>
+              <Box className={styles.actionButtons} >
+                <Box className={styles.blurContainer} >
                   <Box
                     sx={{
                       display: "flex",

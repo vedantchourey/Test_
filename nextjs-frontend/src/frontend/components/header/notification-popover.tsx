@@ -26,7 +26,7 @@ export default function BasicPopover(props: Props): JSX.Element {
   const { message, onAccept, onDecline } = props;
   return (
     <List
-      sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+      sx={{ width: "100%", minWidth: 500, bgcolor: "background.paper" }}
     >
       {/* <Divider variant="middle" component="li" /> */}
       <ListItem alignItems="flex-start">

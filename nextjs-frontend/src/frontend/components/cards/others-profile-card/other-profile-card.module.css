@@ -4,10 +4,13 @@
     border-top-right-radius: 12px;
     background-repeat: no-repeat;
     background-size: cover;
+    background-position-x: center;
+    height: 75%;
 }
 .otherProfileCard {
     border-radius: 15px;
     color: white;
+    height: 100%;
 }
 .profileSection {
     display: flex;

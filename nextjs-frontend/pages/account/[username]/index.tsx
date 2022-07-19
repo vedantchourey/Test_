@@ -35,7 +35,7 @@ function UserAccount(): JSX.Element {
         setIsFetchingUserData(false);
       }
     })();
-  }, []);
+  }, [username]);
 
   useEffect(() => {
     if (!userData) return;

@@ -56,19 +56,29 @@ const MemberButton = ({ setParam }: any): JSX.Element => {
             <Box sx={{ mr: 2, width: "100%" }}>
               <GameDropDown
                 label="Game"
-                placeholder="Search by  Games"
+                placeholder="Search by Games"
                 onChange={(d: string | undefined): void => setGameId(d)}
                 value={gameId}
                 inputClassName={styles.inputItem}
                 autoCompleteClassName={styles.inputItem}
               />
             </Box>
-            <Box sx={{ width: "100%" }}>
+            <Box sx={{mr: 2, width: "100%" }}>
               <PlatformDropDown
                 label="Platform"
                 placeholder="Select Platform"
                 allowAll
                 onChange={(id: any): void => setPlatformId(id)}
+                inputClassName={styles.inputItem}
+                autoCompleteClassName={styles.inputItem}
+                value={platformId}
+              />
+            </Box>
+            <Box sx={{ width: "100%" }}>
+              <GameDropDown
+                label="Range"
+                placeholder="Select Range"
+                onChange={(id: any): void => setGameId(id)}
                 inputClassName={styles.inputItem}
                 autoCompleteClassName={styles.inputItem}
                 value={platformId}

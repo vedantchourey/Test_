@@ -5,6 +5,9 @@ import {
   TextField,
   Typography,
   useMediaQuery,
+  Select,
+  MenuItem,
+  OutlinedInput,
   useTheme,
 } from "@mui/material";
 import React from "react";
@@ -52,7 +55,8 @@ export const options = {
   },
   plugins: {
     legend: {
-      position: "top" as const,
+      // position: "top" as const,
+      display: false,
     },
     title: {
       display: true,
@@ -137,6 +141,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
   };
   const [email, setEmail] = React.useState<string | undefined>(undefined);
   const [error, setError] = React.useState<string | undefined>(undefined);
+  const [selectedTime, setSelectedTime] = React.useState<string>('All')
   const [data, setData] = React.useState<any>({
     datasets: [
       {
@@ -146,7 +151,14 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
         backgroundColor: "rgb(105, 49, 249)",
       },
     ],
-  })
+  });
+
+  const graphTime: string[] = [
+    "All",
+    "Weekly",
+    "Monthly",
+    "Yearly",
+  ];
 
   async function gotoFreeAgencyMarketPage(): Promise<void> {
     await router.push({
@@ -214,6 +226,10 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
         }
       });
   };
+
+  const changeGraphTime = (item: string): void => {
+    setSelectedTime(item)
+  }
   return (
     <React.Fragment>
       <Box>
@@ -224,7 +240,15 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
         <Box marginY={2} width={"70vw"}>
           <Slider {...settings}>
             {playerList.map((player): any => {
-              return <Member key={player.name} {...player} onClick={(): any => {router.push(`/account/${player.username}`)}} />;
+              return (
+                <Member
+                  key={player.name}
+                  {...player}
+                  onClick={(): any => {
+                    router.push(`/account/${player.username}`);
+                  }}
+                />
+              );
             })}
             <Box>
               <Box
@@ -268,6 +292,20 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
           <Typography color={"white"} variant={"h5"}>
             Team Graph
           </Typography>
+          <Select
+            value={selectedTime}
+            input={<OutlinedInput />}
+            onChange={(e: any): void => changeGraphTime(e.target.value)}
+            sx={{ m: 1 }}
+          >
+            {graphTime.map((item): any => {
+              return (
+                <MenuItem key={item} value={item}>
+                  {item}
+                </MenuItem>
+              );
+            })}
+          </Select>
           <Line options={options} data={data} />
         </Box>
       ) : null}

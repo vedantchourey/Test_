@@ -262,6 +262,7 @@ export default function SideHeader(): JSX.Element {
           vertical: "top",
           horizontal: "center",
         }}
+        sx={{textAlign:'center'}}
       >
         <ListSubheader
           sx={{
@@ -270,21 +271,23 @@ export default function SideHeader(): JSX.Element {
             fontWeight: 700,
             fontFamily: "Inter",
             color: "#FFFFFF",
+            minWidth: 500
           }}
         >
           Notifications
         </ListSubheader>
         {notifications.map((i: any, idx: number) => (
+          idx < 10 &&
           <BasicPopover
-            message={i.message}
-            onAccept={(): void => {
-              submitNotification(i.id, "ACCEPTED");
-            }}
-            onDecline={(): void => {
-              submitNotification(i.id, "REJECT");
-            }}
-            isActionRequired={i.isActionRequired}
-            key={idx}
+          message={i.message}
+          onAccept={(): void => {
+            submitNotification(i.id, "ACCEPTED");
+          }}
+          onDecline={(): void => {
+            submitNotification(i.id, "REJECT");
+          }}
+          isActionRequired={i.isActionRequired}
+          key={idx}
           />
         ))}
         <Button variant="text">View All</Button>

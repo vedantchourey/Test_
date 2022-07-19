@@ -1,4 +1,12 @@
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  Typography,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -124,7 +132,7 @@ const Leaderboard = (): JSX.Element => {
           <Typography className={styles.text}>Choose Game</Typography>
           <Box
             mt={5}
-            sx={{ maxWidth: isDesktop?"1400px":"300px" }}
+            sx={{ maxWidth: isDesktop ? "1400px" : "300px" }}
             display={"flex"}
             flexWrap={"nowrap"}
             overflow={"scroll"}
@@ -149,6 +157,10 @@ const Leaderboard = (): JSX.Element => {
               />
             ))}
           </Box>
+          <FormControlLabel
+            control={<Checkbox />}
+            label={<Typography className={styles.button}>Team</Typography>}
+          />
           {isDesktop && (
             <Grid
               container
@@ -235,9 +247,6 @@ const Leaderboard = (): JSX.Element => {
                               className={styles.img2}
                             />
                           </Box>
-                          <Typography className={styles.text3}>
-                            Legend Club
-                          </Typography>
                         </Box>
                       </Box>
                     </Box>
@@ -248,7 +257,7 @@ const Leaderboard = (): JSX.Element => {
           )}
           <div style={{ padding: "10px" }}>
             <TableContainer component={Paper} className={styles.mainTable}>
-              <Table>
+              <Table stickyHeader>
                 <TableHead>
                   <TableRow
                     sx={{
@@ -274,14 +283,15 @@ const Leaderboard = (): JSX.Element => {
                       border: 1,
                       borderColor: "rgba(255, 255, 255, 0.1)",
                     },
+
                   }}
                 >
-                  {leaderboardgamedata 
-                    .slice(isDesktop?3:0, leaderboardgamedata.length)
+                  {leaderboardgamedata
+                    .slice(isDesktop ? 3 : 0, leaderboardgamedata.length)
                     .map((item, idx) => (
                       <TableRow key={item.id}>
                         <TableCell align="center" component="th" scope="row">
-                          {idx + (isDesktop?4:1)}
+                          {idx + (isDesktop ? 4 : 1)}
                           <sup>th</sup>
                         </TableCell>
                         <TableCell>
@@ -296,7 +306,7 @@ const Leaderboard = (): JSX.Element => {
                             </span>
                           </div>
                         </TableCell>
-                        {isDesktop&&(<TableCell>{item.elo_rating}</TableCell>)}
+                        {isDesktop && <TableCell>{item.elo_rating}</TableCell>}
                       </TableRow>
                     ))}
                 </TableBody>
