@@ -55,7 +55,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
       });
       await frontendSupabase
         .from("chat_users")
-        .update({ last_message: text, updatedAt: new Date().toISOString })
+        .update({ last_message: text, updatedAt: new Date().toISOString, last_message_by: props.user.username })
         .eq("channel_id", props.channelId);
       setText("");
     }

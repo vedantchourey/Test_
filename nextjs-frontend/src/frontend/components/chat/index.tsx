@@ -525,7 +525,7 @@ export default function Chat(props: {
         className={"hide-scrollbar"}
       >
         {!supportChatChannel && user?.userRoles[0] !== "noob-admin" ? (
-          <Box mt={2}>
+          <Box mt={2} display={"none"}>
             <Button disabled={loading} onClick={(): any => createSupportChat()}>
               Create Support Chat
             </Button>
