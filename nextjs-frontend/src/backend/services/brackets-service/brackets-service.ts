@@ -64,7 +64,7 @@ export const persistBrackets = async (req: ITournament): Promise<any> => {
         .returning("*");
     }
     const data = {
-      name: req?.bracketsMetadata?.type,
+      name: req?.bracketsMetadata?.type === "DOUBLE" ? "DOUBLE ELIMINATION" : "SINGLE ELIMINATION",
       tournamentId: Number(tournament[0].id),
       type:
         req?.bracketsMetadata?.type === "SINGLE"

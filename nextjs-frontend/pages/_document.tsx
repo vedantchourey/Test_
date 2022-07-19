@@ -10,8 +10,8 @@ class NoobDocument extends Document {
         <Head>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=Inter:wght@100;300;500;700;900&display=swap" rel="stylesheet" />
-          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/brackets-viewer@latest/dist/brackets-viewer.min.css" />
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brackets-viewer@latest/dist/brackets-viewer.min.js"></script>
+          <link rel="stylesheet" href="/assets/brackets-viewer.min.css" />
+          <script type="text/javascript" src="/assets/brackets-viewer.min.js"></script>
         </Head>
         <body>
           <Main />
