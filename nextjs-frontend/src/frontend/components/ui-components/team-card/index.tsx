@@ -28,7 +28,7 @@ const CardDesktop: React.FC<TeamCardProp> = ({name ="-", onChangeTeamLogo, team}
         </IconButton>
       </Grid>
       <Grid item md={6} lg={10} display={"flex"} flexDirection={"column"}>
-        <Typography color={"white"} textAlign="left" variant="h4">
+        <Typography color={"white"} textAlign="left" component="h4" style={{fontSize:'25px',fontWeight:'bold'}}>
           {name}
         </Typography>
       </Grid>
@@ -56,8 +56,9 @@ const CardMobile: React.FC<TeamCardProp> = ({name ="-", onChangeTeamLogo, team})
           </Box>
         </Box>
         <Box marginLeft={2}>
-          <Typography color={"white"} textAlign="left" variant="h4">
-            {name}
+          <Typography color={"white"} textAlign="left" component="h4" style={{fontSize:'20px',fontWeight:'bold'}}>
+            {" "}
+            {name}{" "}
           </Typography>
           <Box
             style={{

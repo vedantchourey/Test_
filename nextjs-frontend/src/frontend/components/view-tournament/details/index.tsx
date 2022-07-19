@@ -69,7 +69,7 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
 
   const contactOn = ():void=>{
     if(data.info?.contactUrl){
-      window.open(data.info?.contactUrl,"_blank");
+      window.open(data.info?.contactUrl);
     }
   }
 

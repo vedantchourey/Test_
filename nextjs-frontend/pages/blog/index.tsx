@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 import {
   Button,
   Card,
@@ -21,7 +21,7 @@ export default function News(): JSX.Element {
   const [newsData, setData] = useState<any[]>([]);
   const [currentNews, setCurrentNews] = useState<any>(null);
   const [liked, setLiked] = useState<any>(false);
-  const router = useRouter()
+  const router = useRouter();
 
   const getleaderboardgamedata = async (gameId: string): Promise<void> => {
     try {
@@ -64,7 +64,9 @@ export default function News(): JSX.Element {
           console.error(error);
           // setData([]);
         });
-    } catch (err) {console.error(err);}
+    } catch (err) {
+      console.error(err);
+    }
   };
   const unLikeNews = async (): Promise<void> => {
     try {
@@ -100,46 +102,51 @@ export default function News(): JSX.Element {
       }}
     >
       <>
-
         <Typography variant="h1">Blogs</Typography>
         {!currentNews && (
           <Box display={"flex"} flexWrap={"wrap"}>
-            {newsData.map((i: any, key) => (
-              <Card
-                sx={{ maxWidth: 345, m: 2 }}
-                key={key}
-                onClick={(): any => router.push(`/blog/${i.id}`)}
-                // onClick={(): any => setCurrentNews(i)}
-              >
-                <CardMedia
-                  component="img"
-                  height="240"
-                  image={i.image}
-                  alt="green iguana"
-                />
-                <CardContent>
-                  <Typography
-                    gutterBottom
-                    variant="h5"
-                    fontSize={16}
-                    textAlign={"left"}
-                    component="div"
-                  >
-                    {i.title}
-                  </Typography>
-                  <Typography
-                    textAlign={"left"}
-                    variant="h1"
-                    fontSize={14}
-                    mt={1}
-                    color={"#6931F9"}
-                  >
-                    Author: {i.author} / Publishing Date:{" "}
-                    {moment(i.created_at).format("DD MMM YYYY")}
-                  </Typography>
-                </CardContent>
-              </Card>
-            ))}
+            {newsData
+              .sort(function (a, b) {
+                const dateA = new Date(a.created_at).getTime();
+                const dateB = new Date(b.created_at).getTime();
+                return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
+              })
+              .map((i: any, key) => (
+                <Card
+                  sx={{ maxWidth: 345, m: 2 }}
+                  key={key}
+                  onClick={(): any => router.push(`/blog/${i.id}`)}
+                  // onClick={(): any => setCurrentNews(i)}
+                >
+                  <CardMedia
+                    component="img"
+                    height="240"
+                    image={i.image}
+                    alt="green iguana"
+                  />
+                  <CardContent>
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      fontSize={16}
+                      textAlign={"left"}
+                      component="div"
+                    >
+                      {i.title}
+                    </Typography>
+                    <Typography
+                      textAlign={"left"}
+                      variant="h1"
+                      fontSize={14}
+                      mt={1}
+                      color={"#6931F9"}
+                    >
+                      Author: {i.author} / Publishing Date:{" "}
+                      {moment(i.created_at).format("DD MMM YYYY")}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              ))}
           </Box>
         )}
 

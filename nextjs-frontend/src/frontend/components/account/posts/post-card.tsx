@@ -30,6 +30,7 @@ import Image from "../../../components/utils/supabase-image";
 import config from "../../../utils/config/front-end-config";
 import axios from "axios";
 import { getAuthHeader } from "../../../utils/headers";
+import router from "next/router";
 
 interface IProps {
   data: IPostsResponse;
@@ -183,8 +184,9 @@ const PostCard = (props: IProps): JSX.Element => {
         item
         md={12}
         minHeight={props.row ? 450 : undefined}
-        minWidth={props.isDesktop ? 400 : 0}
+        minWidth={props.isDesktop ? 280 : 0}
         mr={props.row ? 2 : 0}
+        onClick={():any=>{router.push(`social/${values.id}`)}}
       >
         <Card
           className={styles.postCard}

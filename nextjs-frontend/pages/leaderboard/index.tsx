@@ -32,6 +32,7 @@ import {
 } from "../../src/frontend/redux-store/redux-store";
 import { getAuthHeader } from "../../src/frontend/utils/headers";
 import styles from "./leaderboard.module.css";
+import { useRouter } from "next/router";
 
 // const createData = (
 //   rank: HTMLParagraphElement,
@@ -83,6 +84,7 @@ const imagedata: any = {
 
 const Leaderboard = (): JSX.Element => {
   const [leaderboardgamedata, setData] = React.useState<Gameinfo[]>([]);
+  const router=useRouter();
   const getleaderboardgamedata = async (gameId: string): Promise<void> => {
     try {
       const endpoint = "/api/leaderboard";
@@ -169,7 +171,7 @@ const Leaderboard = (): JSX.Element => {
               className={styles.mainContainer}
             >
               {leaderboardgamedata.slice(0, 3).map((item, index) => (
-                <Grid item xs={12} lg={4} key={item.id}>
+                <Grid item xs={12} lg={4} key={item.id} onClick={():any=>{router.push(`account/${item.userDetails.username}`)}}>
                   <Box className={styles.container}>
                     <Box
                       style={{
@@ -289,7 +291,7 @@ const Leaderboard = (): JSX.Element => {
                   {leaderboardgamedata
                     .slice(isDesktop ? 3 : 0, leaderboardgamedata.length)
                     .map((item, idx) => (
-                      <TableRow key={item.id}>
+                      <TableRow key={item.id} onClick={():any=>{router.push(`account/${item.userDetails.username}`)}}>
                         <TableCell align="center" component="th" scope="row">
                           {idx + (isDesktop ? 4 : 1)}
                           <sup>th</sup>

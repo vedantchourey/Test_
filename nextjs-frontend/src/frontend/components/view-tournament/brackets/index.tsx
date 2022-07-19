@@ -80,6 +80,16 @@ const Bracket: React.FC<BracketProps> = ({
             };
           return { ...i, name: "NA" };
         }
+        if (i.team_id) {
+          const findPlayer: any = players.find((p) => p.team_id === i.team_id);
+          if (findPlayer)
+            return {
+              ...i,
+              avatarUrl: findPlayer.avatarUrl,
+              name: findPlayer.team_name,
+            };
+          return { ...i, name: "NA" };
+        }
         return { ...i, name: "NA" };
       }),
     };
@@ -111,14 +121,14 @@ const Bracket: React.FC<BracketProps> = ({
         {/* </Grid> */}
       </Box>
       <Box
-          display={"flex"}
-          flexWrap={"nowrap"}
-          maxWidth={"100vw"}
-          overflow={"scroll"}
-          className="hide-scrollbar"
-        >
-         {bData && <DoubleElimination brackets={bData} />} 
-        </Box>
+        display={"flex"}
+        flexWrap={"nowrap"}
+        maxWidth={"100vw"}
+        overflow={"scroll"}
+        className="hide-scrollbar"
+      >
+        {bData && <DoubleElimination brackets={bData} />}
+      </Box>
     </>
   );
 };

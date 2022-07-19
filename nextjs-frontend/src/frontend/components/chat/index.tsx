@@ -66,6 +66,7 @@ export default function Chat(props: {
   const [selectedUserListForGroup, setSelectedUserListForGroup] = useState<
     ISearchPeopleByUsernameResponse[]
   >([]);
+  const [addInGroup, setAddInGroup] = useState("");
   const [isFetching, setIsFetching] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [groupName, setGroupName] = useState("");
@@ -88,6 +89,7 @@ export default function Chat(props: {
       }
     }
     setOpen(false);
+    setAddInGroup("");
     setCreateGroup(false);
     setGroupName("");
     setSelectedUserListForGroup([]);
@@ -112,6 +114,7 @@ export default function Chat(props: {
   };
 
   const fetchChannels = async (): Promise<void> => {
+    setLoading(true);
     const query = frontendSupabase.from("chat_users").select();
 
     if (user?.userRoles[0] === "noob-admin")
@@ -130,6 +133,7 @@ export default function Chat(props: {
       });
     }
     setChats(data);
+    setLoading(false);
   };
 
   const updateChat = (id: string, data: IChatUsers): void => {
@@ -149,30 +153,6 @@ export default function Chat(props: {
       alert(err);
     }
   };
-
-  useEffect(() => {
-    if (user) {
-      fetchSupportChannel();
-      fetchChannels();
-      checkChannel();
-      userRef.current = user;
-    }
-  }, [user]);
-
-  useEffect(() => {
-    teamList();
-    const chatListener = frontendSupabase
-      .from("chat_users")
-      .on("*", (payload) => {
-        if (payload.new.user_id === userRef.current?.id) {
-          updateChat(payload.new.channel_id, payload.new);
-        }
-      })
-      .subscribe();
-    return (): any => {
-      chatListener.unsubscribe();
-    };
-  }, []);
 
   const renderResults = (group?: boolean): JSX.Element => {
     if (isFetching) {
@@ -198,6 +178,9 @@ export default function Chat(props: {
             <ListItem key={Date.now() + i}>
               <ListItemButton
                 onClick={(): void => {
+                  if (addInGroup) {
+                    addMemberInGroup(addInGroup, data);
+                  }
                   if (group) {
                     setSelectedUserListForGroup([
                       ...selectedUserListForGroup,
@@ -288,6 +271,44 @@ export default function Chat(props: {
     setLoading(false);
   };
 
+  const addMemberInGroup = async (
+    channel_id: string,
+    player: ISearchPeopleByUsernameResponse
+  ): Promise<void> => {
+    setLoading(true);
+    const chatsData: any = chats;
+    const group = chatsData[channel_id] as any;
+    const check = await frontendSupabase
+      .from("chat_users")
+      .select("*")
+      .eq("channel_id", channel_id)
+      .eq("user_id", player?.id);
+    if (check.data?.length) {
+      const addUserData = {
+        ...group,
+        channel_id,
+        user_id: player?.id || "",
+        other_user: channel_id,
+        channel_name: group.channel_name,
+        user_name: player?.username,
+        channel_type: "group",
+      };
+      delete addUserData.id;
+
+      await frontendSupabase.from("chat_users").insert(addUserData);
+    }
+
+    setOpen(false);
+    setAddInGroup("");
+    setCreateGroup(false);
+    setGroupName("");
+    setSelectedUserListForGroup([]);
+    setUserListForGroup([]);
+    fetchSupportChannel();
+    fetchChannels();
+    setLoading(false);
+  };
+
   const createNewGroupChat = async (): Promise<any> => {
     setLoading(true);
     const channel_id = v4();
@@ -318,6 +339,7 @@ export default function Chat(props: {
       setCurrentChatData(res.data?.[0]);
     }
     setOpen(false);
+    setAddInGroup("");
     setCreateGroup(false);
     setGroupName("");
     setSelectedUserListForGroup([]);
@@ -411,8 +433,11 @@ export default function Chat(props: {
                 i.chat_image || findTeam?.teamLogo
                   ? (frontendSupabase.storage
                       .from("public-files")
-                      .getPublicUrl(i.channel_type === "group" ? i.chat_image : findTeam?.teamLogo)
-                      .publicURL as string)
+                      .getPublicUrl(
+                        i.channel_type === "group"
+                          ? i.chat_image
+                          : findTeam?.teamLogo
+                      ).publicURL as string)
                   : "/images/16276393842661.png";
 
               return (
@@ -441,6 +466,44 @@ export default function Chat(props: {
     );
   };
 
+  useEffect(() => {
+    if (user) {
+      fetchSupportChannel();
+      fetchChannels();
+      checkChannel();
+      userRef.current = user;
+    }
+  }, [user]);
+
+  useEffect(() => {
+    teamList();
+    const chatListener = frontendSupabase
+      .from("chat_users")
+      .on("*", (payload) => {
+        if (payload.new.user_id === userRef.current?.id) {
+          updateChat(payload.new.channel_id, payload.new);
+        }
+      })
+      .subscribe();
+    return (): any => {
+      chatListener.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (addInGroup.length) {
+      setOpen(true);
+    }
+  }, [addInGroup]);
+
+  if(loading) {
+    return (
+      <Box display={"flex"} height={400} alignItems={"center"} justifyContent={"center"}>
+        <CircularProgress />
+      </Box>
+    )
+  }
+
   return (
     <Box
       bgcolor={"rgba(255,255,255,0.05)"}
@@ -462,7 +525,7 @@ export default function Chat(props: {
         className={"hide-scrollbar"}
       >
         {!supportChatChannel && user?.userRoles[0] !== "noob-admin" ? (
-          <Box mt={2}>
+          <Box mt={2} display={"none"}>
             <Button disabled={loading} onClick={(): any => createSupportChat()}>
               Create Support Chat
             </Button>
@@ -496,6 +559,8 @@ export default function Chat(props: {
           user={user}
           data={currentChatData}
           smallChat={props.smallChat}
+          addMember={(cid): any => setAddInGroup(cid)}
+          fetchChat={fetchChannels}
         />
       ) : (
         !props.smallChat && (
@@ -535,6 +600,7 @@ export default function Chat(props: {
         onClose={(): any => {
           setOpen(false);
           setCreateGroup(false);
+          setAddInGroup("");
           setGroupName("");
           setSelectedUserListForGroup([]);
           setUserListForGroup([]);
@@ -591,7 +657,7 @@ export default function Chat(props: {
                     />
                     <SearchIcon color="primary" />
                   </Box>
-                  {createGroup ? (
+                  {createGroup && !addInGroup ? (
                     <Box
                       flex={0.5}
                       sx={{
@@ -619,12 +685,14 @@ export default function Chat(props: {
                       />
                     </Box>
                   ) : (
-                    <Button
-                      variant="outlined"
-                      onClick={(): any => setCreateGroup(true)}
-                    >
-                      Create Group
-                    </Button>
+                    !addInGroup && (
+                      <Button
+                        variant="outlined"
+                        onClick={(): any => setCreateGroup(true)}
+                      >
+                        Create Group
+                      </Button>
+                    )
                   )}
                 </Box>
                 {selectedUserListForGroup.map((data, i) => (
@@ -666,6 +734,7 @@ export default function Chat(props: {
                     sx={{ mr: 1 }}
                     onClick={(): any => {
                       setOpen(false);
+                      setAddInGroup("");
                       setCreateGroup(false);
                       setGroupName("");
                       setSelectedUserListForGroup([]);
