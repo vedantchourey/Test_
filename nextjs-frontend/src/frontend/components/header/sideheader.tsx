@@ -170,9 +170,7 @@ export default function SideHeader(): JSX.Element {
                   <Typography>
                     @{data.username}
                   </Typography>
-                  {/* <Typography variant="caption" color='#F08743'>
-                    {data.firstName} {data.lastName}
-                  </Typography> */}
+                  
                 </ListItemText>
               </ListItemButton>
             </ListItem>
