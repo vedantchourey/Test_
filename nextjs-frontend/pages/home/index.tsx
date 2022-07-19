@@ -338,6 +338,7 @@ const Home = (): JSX.Element => {
                     <Button
                       className={styles.viewAllButton}
                       onClick={async (): Promise<void> => {
+                        value==="1"?await router.push("social"):
                         value === "2"
                           ? await router.push("blog")
                           : await router.push("tournaments-list");
@@ -351,7 +352,7 @@ const Home = (): JSX.Element => {
                     className={styles.postContainer}
                     style={{ flexDirection: "column" }}
                   >
-                    <Box overflow={"scroll"} maxWidth={"57vw"}>
+                    <Box overflow={"scroll"} maxWidth={"57vw"} display={"flex"} className={"hide-scrollbar"}>
                       {_renderPosts()}
                     </Box>
                   </TabPanel>

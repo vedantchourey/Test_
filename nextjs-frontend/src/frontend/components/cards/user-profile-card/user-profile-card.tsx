@@ -163,7 +163,7 @@ export default function UserProfileCard(): JSX.Element {
             size="small"
             startIcon={<AddPhotoAlternateOutlinedIcon />}
           >
-            Edit backgroud picture
+            Edit background picture
           </Button>
           <Menu
             anchorEl={anchorEl}

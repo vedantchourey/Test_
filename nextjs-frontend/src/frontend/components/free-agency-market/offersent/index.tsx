@@ -54,6 +54,7 @@ const WatchTeamMembers: React.FC = () => {
       .then((res) => {
         const players: MemberProp[] = res.data.result.map((item: any) => ({
           name: `${item.player.firstName} ${item.player.lastName}`,
+          username:`${item.player.username}`,
           id: item.secret,
           image: "/images/teams/player.png",
           type: "bronze",
