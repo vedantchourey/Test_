@@ -10,8 +10,10 @@ export interface IMatch {
 }
 
 export interface IPlayers {
-  id: string;
-  username: string;
+  id?: string;
+  username?: string;
+  team_id?: string;
+  team_name?: string;
 }
 export interface IBrackets {
   matches: IMatch[];

@@ -102,5 +102,6 @@
     "ts-node": "^10.4.0",
     "typescript": "4.5.2",
     "url-loader": "^4.1.1"
-  }
+  },
+"eslintIgnore": ["brackets-viewer.min.js", "stage-form-creator.min.js"]
 }

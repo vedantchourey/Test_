@@ -615,7 +615,7 @@ const ViewTournament: React.FC = () => {
           backgroundImageUrl={data?.basic?.banner || ""}
         >
           <HeadSubSection
-            time={moment(data.basic?.startDate).format("DD/MM/YYYY HH:MM A")}
+            time={moment(data.basic?.startDate).format("DD/MM/YYYY") + " " + moment(data.basic?.startTime).format("hh:mm A")}
           />
         </Heading>
         {renderTournament()}

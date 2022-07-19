@@ -267,7 +267,7 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
         const team_info = await teams.findById(req.team_id);
 
         const mailOptions: SendMailOptions = {
-          from: "dev.codesymphony@zohomail.in",
+          from: "dev@noobstorm.gg",
           to: req?.email,
           subject: "Noobstorm Team Invitation",
           text: `You have new team invitation for ${team_info?.name} open website from here ${frontendConfig.baseAppUrl}`,
