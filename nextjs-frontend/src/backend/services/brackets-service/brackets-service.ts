@@ -312,9 +312,10 @@ export const registerTeamTournament = async (
       .whereNull("b_participant.team_id")
       .select("b_participant.id")
       .first();
+
     if (!data) getErrorObject("Tournament is full");
 
-    await participant.update({ team_id: req.team_id }, { id: data.id });
+    const res = await participant.update({ team_id: req.team_id }, { id: data.id });
 
     return { message: "Team register in successfull" };
   } catch (ex) {
