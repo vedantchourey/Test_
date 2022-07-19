@@ -24,7 +24,10 @@ import {
   getEloRating,
   getErrorObject,
 } from "../common/helper/utils.service";
-import { addTournamentInvites, tournamentDetails } from "../tournament-service/tournament-service";
+import {
+  addTournamentInvites,
+  tournamentDetails,
+} from "../tournament-service/tournament-service";
 import { ITournamentInvites } from "../database/models/i-tournament-invites";
 import { debitBalance } from "../wallet-service/wallet-service";
 import _ from "lodash";
@@ -52,7 +55,8 @@ export const persistBrackets = async (req: ITournament): Promise<any> => {
     let playerCount = Number(req?.bracketsMetadata?.playersLimit);
     playerCount = nextPowerOf2(playerCount);
 
-    const grandFinal = req?.bracketsMetadata?.type !== "SINGLE" ? {grandFinal: "double"} : {};
+    const grandFinal =
+      req?.bracketsMetadata?.type !== "SINGLE" ? { grandFinal: "double" } : {};
 
     if (tournament && tournament.length) {
       await deleteBracket(connection, tournament[0].id, tournament[0].stage_id);
@@ -64,7 +68,10 @@ export const persistBrackets = async (req: ITournament): Promise<any> => {
         .returning("*");
     }
     const data = {
-      name: req?.bracketsMetadata?.type === "DOUBLE" ? "DOUBLE ELIMINATION" : "SINGLE ELIMINATION",
+      name:
+        req?.bracketsMetadata?.type === "DOUBLE"
+          ? "DOUBLE ELIMINATION"
+          : "SINGLE ELIMINATION",
       tournamentId: Number(tournament[0].id),
       type:
         req?.bracketsMetadata?.type === "SINGLE"
@@ -275,10 +282,7 @@ export const registerIndividualTournament = async (
       }
     }
 
-    await participant.update(
-      { user_id: user.id },
-      { id: data.id }
-    );
+    await participant.update({ user_id: user.id }, { id: data.id });
 
     return { message: "User register in successfull" };
   } catch (ex) {
@@ -386,6 +390,7 @@ export const checkInTeamTournament = async (
       knexConnection,
       TABLE_NAMES.TOURNAMENT_INIVTES
     );
+
     const [invite] = await repo.find({
       tournament_id: req.tournamentId,
       user_id: user.id,
@@ -449,37 +454,48 @@ export const submitMatchResult = async (
       TABLE_NAMES.MATCH_RESULT_REQUEST
     );
 
-    const tournamentData: any = await tournamentDetails(context, req.tournament_id)
-    const matchData: any = tournamentData?.data?.brackets?.match?.sort((a: any, b: any) => a.id - b.id)
+    const tournamentData: any = await tournamentDetails(
+      context,
+      req.tournament_id
+    );
+
+    const matchData: any = tournamentData?.data?.brackets?.match?.sort(
+      (a: any, b: any) => a.id - b.id
+    );
+
     const matchByGroup = _.groupBy(matchData, "group_id");
-    const selectMatchGroup = matchByGroup[Object.keys(matchByGroup).sort((a: any, b: any) => b.id - a.id)[0]];
-    
+    const selectMatchGroup =
+      matchByGroup[
+        Object.keys(matchByGroup).sort((a: any, b: any) => b.id - a.id)[0]
+      ];
+
     const finalMatch = selectMatchGroup[selectMatchGroup.length - 1];
     const semiMatch = selectMatchGroup[selectMatchGroup.length - 2];
     const qMatch = selectMatchGroup[selectMatchGroup.length - 3];
 
     const pricePool = tournamentData?.data?.pricingDetails?.pricePool;
-    const price_per_credit = backendConfig.credit_config.price_per_credit
+    const price_per_credit = backendConfig.credit_config.price_per_credit;
 
-    const finalWinerPrice = pricePool ? pricePool * 0.6 * price_per_credit : 0
-    const semiFinalWinerPrice = pricePool ? pricePool * 0.3 * price_per_credit : 0
-    const qFinalWinerPrice = pricePool ? pricePool * 0.1 * price_per_credit : 0
+    const finalWinerPrice = pricePool ? pricePool * 0.6 * price_per_credit : 0;
+    const semiFinalWinerPrice = pricePool
+      ? pricePool * 0.3 * price_per_credit
+      : 0;
+    const qFinalWinerPrice = pricePool ? pricePool * 0.1 * price_per_credit : 0;
 
-
-    let data: any
+    let data: any;
     if (!req.forceUpdate) {
       data = await repos.findById(req.id);
       if (!data) return getErrorObject("Invalid match Id");
-    } else{
-      data= {
+    } else {
+      data = {
         match_id: req.id,
         opponent1: req.opponent1,
         opponent2: req.opponent2,
         screenshot: "",
         tournament_id: req.tournament_id,
-      }
+      };
     }
-    
+
     const repo = new CrudRepository<IBMatch>(
       knexConnection,
       TABLE_NAMES.B_MATCH
@@ -487,13 +503,16 @@ export const submitMatchResult = async (
     const match: IBMatch = await repo.findById(data?.match_id);
 
     let winningPrice: any;
-    const winnerPlayer = data.opponent1.result === "lose" ? data.opponent1.user_id : data.opponent1.user_id
+    const winnerPlayer =
+      data.opponent1.result === "lose"
+        ? data.opponent1.user_id
+        : data.opponent1.user_id;
 
-    if (finalMatch.id === data?.match_id) winningPrice = finalWinerPrice;
-    if (semiMatch.id === data?.match_id) winningPrice = semiFinalWinerPrice;
-    if (qMatch.id === data?.match_id) winningPrice = qFinalWinerPrice;
+    if (finalMatch?.id === data?.match_id) winningPrice = finalWinerPrice;
+    if (semiMatch?.id === data?.match_id) winningPrice = semiFinalWinerPrice;
+    if (qMatch?.id === data?.match_id) winningPrice = qFinalWinerPrice;
 
-    if(winningPrice > 0){
+    if (winningPrice > 0) {
       const users = new CrudRepository<IPrivateProfile>(
         knexConnection,
         TABLE_NAMES.PRIVATE_PROFILE
@@ -505,7 +524,6 @@ export const submitMatchResult = async (
       );
     }
 
-    
     const manager = new BracketsManager(
       new BracketsCrud(knexConnection as any) as any
     );
@@ -514,20 +532,22 @@ export const submitMatchResult = async (
       id: Number(match.id),
       opponent1: {
         id: Number(match.opponent1.id),
-        score: data.opponent1.score, 
-        result: data.opponent1.result as any
+        score: data.opponent1.score,
+        result: data.opponent1.result as any,
       },
       opponent2: {
         id: Number(match.opponent2.id),
-        score: data.opponent2.score, 
-        result: data.opponent2.result as any
+        score: data.opponent2.score,
+        result: data.opponent2.result as any,
       },
     });
+
     await Promise.all([
       updateELORating(match, data, knexConnection),
       repo.update({ screenshot: data.screenshot }, { id: Number(match.id) }),
       !req.forceUpdate ? closeMatchResultRequest(data, knexConnection) : {},
     ]);
+
     return match;
   } catch (ex) {
     return getErrorObject("Something went wrong");
