@@ -40,7 +40,7 @@ export default function SideHeader(): JSX.Element {
   const wallet = useAppSelector(walletDetaislSelector);
   const router = useRouter();
   const [notifications, setNotifications] = React.useState<any>([]);
-  const [notificationLength,setNotificationLength]=React.useState<number>(12);
+  const [notificationLength,setNotificationLength]=React.useState<number>(0);
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
