@@ -315,7 +315,7 @@ export const registerTeamTournament = async (
 
     if (!data) getErrorObject("Tournament is full");
 
-    const res = await participant.update({ team_id: req.team_id }, { id: data.id });
+    await participant.update({ team_id: req.team_id }, { id: data.id });
 
     return { message: "Team register in successfull" };
   } catch (ex) {

@@ -365,6 +365,8 @@ export async function tournamentDetails(
           .where("tournament_invites.tournament_id", tournamentId as string)
           .whereNotNull("b_participant.team_id");
 
+          
+
         const grp_team = _.groupBy(players, "team_name");
         currentPricePool = players.length
           ? players.length * Number(tournament?.settings?.entryFeeAmount)
@@ -397,7 +399,10 @@ export async function tournamentDetails(
     return {
       data: {
         ...tournament,
-        playerList: Object.values(_.groupBy(players, "id")).map((i) => i[0]),
+        playerList:
+          tournament?.settings?.tournamentFormat === "1v1"
+            ? Object.values(_.groupBy(players, "id")).map((i) => i[0])
+            : players,
         pricingDetails: { pricePool, currentPricePool },
       },
     } as any;
