@@ -54,6 +54,7 @@ const WatchTeamMembers: React.FC<{teamId: string | string[] | undefined}> = ({te
       .then((res) => {
         const players: MemberProp[] = res.data.map((item: any) => ({
           name: `${item.firstName} ${item.lastName}`,
+          username:`${item.username}`,
           id: item.id,
           image: "/images/teams/player.png",
           type: "bronze",

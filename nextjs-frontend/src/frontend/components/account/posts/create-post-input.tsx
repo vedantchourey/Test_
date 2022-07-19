@@ -229,6 +229,9 @@ export default function CreatePostInput(props: IProps): JSX.Element {
             size="small"
             onClick={(): void => {
               setShowPicker(true);
+              setTimeout(() => {
+                setShowPicker(false)
+              }, 500);
             }}
           >
             <ImageIcon />

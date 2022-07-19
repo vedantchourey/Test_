@@ -5,7 +5,7 @@ import commonStyles from '../../../../src/frontend/styles/common.module.css'
 import { Container, Divider, Typography } from '@mui/material'
 import Heading from '../../../../src/frontend/components/ui-components/typography/heading'
 import { Box } from '@mui/system'
-// import NewsletterPoster from '../../../../src/frontend/components/newsletter-poster'
+//import NewsletterPoster from '../../../../src/frontend/components/newsletter-poster'
 import TicketChats from '../../../../src/frontend/components/support/ticket/chat'
 
 interface Chat {
@@ -49,8 +49,6 @@ const NoobTicketCreatePage = (props: Props): JSX.Element => {
           <Container maxWidth='md'>
             <TicketChats ticketNumber={ticketNumber} ticketSubject={ticketSubject} chats={chats} />
           </Container>
-
-          {/* <NewsletterPoster /> */}
 
         </Box>
       </React.Fragment>
