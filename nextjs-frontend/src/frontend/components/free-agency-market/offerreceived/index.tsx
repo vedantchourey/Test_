@@ -103,7 +103,7 @@ const Permissions: React.FC = () => {
                   <NoobRow>
                     <NoobCell>
                       <Box display="flex" alignItems={"center"}>
-                        <Typography marginRight={12}>Username</Typography>
+                        <Typography marginRight={12}>Received By</Typography>
                         <Typography>Team Name</Typography>
                       </Box>
                     </NoobCell>
