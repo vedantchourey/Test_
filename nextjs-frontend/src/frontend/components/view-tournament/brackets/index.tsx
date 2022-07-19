@@ -86,7 +86,7 @@ const Bracket: React.FC<BracketProps> = ({
     setBData(null);
     setTimeout(() => setBData(data), 500);
   }, [brackets]);
-
+  
   return (
     <>
       <Box marginX={"70px"} marginY={2}>

@@ -258,6 +258,12 @@ const EliminateBracket = React.forwardRef<
                 fullWidth
                 sx={{ m: 1 }}
               >
+                <MenuItem key={2} value={2}>
+                  2
+                </MenuItem>
+                <MenuItem key={4} value={4}>
+                  4
+                </MenuItem>
                 <MenuItem key={8} value={8}>
                   8
                 </MenuItem>
