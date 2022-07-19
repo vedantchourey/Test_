@@ -27,6 +27,8 @@ interface IChatBox {
   user?: any;
   data?: IChatUsers;
   onBack: () => void;
+  fetchChat: () => Promise<void>;
+  addMember: (channelId: string) => void;
 }
 
 export default function ChatBox(props: IChatBox): JSX.Element {
@@ -293,6 +295,14 @@ export default function ChatBox(props: IChatBox): JSX.Element {
             Change Team Image
           </Button>
         </Box>
+        <Box mt={1} mb={1}>
+          <Button
+            fullWidth
+            onClick={(): any => props.addMember(props.channelId)}
+          >
+            Add new member
+          </Button>
+        </Box>
         <Box display={"flex"} justifyContent="center" mt={2}>
           <Typography
             textAlign={"left"}
@@ -337,6 +347,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
                 })
                 .eq("channel_id", props.channelId);
             }
+            await props.fetchChat();
           }
           setLogoPicker(false);
         }}
