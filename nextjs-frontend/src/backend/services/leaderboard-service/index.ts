@@ -33,7 +33,7 @@ async function fetchLeaderBoard(req: any, knexConnection: Knex.Transaction): Pro
       .knexObj()
       .where("game_id", req.game_id)
       .orderBy("elo_rating", "desc")
-      .limit(10);
+      .limit(100);
       const dataBatch = data.map((i: any) => findUserWithLeaderboard(i.user_id, i, knexConnection))
       const response = await Promise.all(dataBatch)
     return response;
