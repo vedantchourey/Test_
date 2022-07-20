@@ -13,7 +13,7 @@ import {
   ListSubheader,
   Popover,
   Typography,
-  List
+  List,
 } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -31,7 +31,7 @@ import { searchPeopleByText } from "../../service-clients/search-service-client"
 import { getAuthHeader } from "../../utils/headers";
 import style from "./desktop-sidebar.module.css";
 import BasicPopover from "./notification-popover";
-import styles from './logged-in-user-menu.module.css';
+import styles from "./logged-in-user-menu.module.css";
 import frontendConfig from "../../utils/config/front-end-config";
 
 export default function SideHeader(): JSX.Element {
@@ -45,8 +45,10 @@ export default function SideHeader(): JSX.Element {
   );
   const avatarImageBlobUrl = useAppSelector(avatarImageBlobUrlSelector);
 
-  const [userList, setUserList] = React.useState<ISearchPeopleByUsernameResponse[]>([])
-  const [isFetching, setIsFetching] = React.useState(false)
+  const [userList, setUserList] = React.useState<
+    ISearchPeopleByUsernameResponse[]
+  >([]);
+  const [isFetching, setIsFetching] = React.useState(false);
 
   const fetchNotifications = async (): Promise<void> => {
     const headers = await getAuthHeader();
@@ -138,7 +140,7 @@ export default function SideHeader(): JSX.Element {
     }
     const response = await searchPeopleByText({ search: username });
     if (response.length) setUserList(response);
-    setIsFetching(false)
+    setIsFetching(false);
   }
 
   const open = Boolean(anchorEl);
@@ -147,27 +149,38 @@ export default function SideHeader(): JSX.Element {
   const renderResults = (): JSX.Element => {
     if (isFetching) {
       return (
-        <List className={styles.searchListLoder} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+        <List
+          className={styles.searchListLoder}
+          sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+        >
           <CircularProgress />
         </List>
-      )
-    }
-    
-    else if (!isFetching && userList.length) {
+      );
+    } else if (!isFetching && userList.length) {
       return (
-        <List className={styles.searchList} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+        <List
+          className={styles.searchList}
+          sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+        >
           {userList.map((data, i) => (
             <ListItem key={Date.now() + i}>
-              <ListItemButton onClick={(): unknown => router.replace(`/account/${data.username}`)} sx={{ padding: '2px 18px', my: 1 }}>
+              <ListItemButton
+                onClick={(): unknown =>
+                  router.replace(`/account/${data.username}`)
+                }
+                sx={{ padding: "2px 18px", my: 1 }}
+              >
                 <ListItemAvatar>
-                  <Avatar sx={{ width: 35, height: 35 }} alt="profile image" src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${data.avatarUrl}`}>
-                    {data.username.split('')[0].toUpperCase()}
+                  <Avatar
+                    sx={{ width: 35, height: 35 }}
+                    alt="profile image"
+                    src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${data.avatarUrl}`}
+                  >
+                    {data.username.split("")[0].toUpperCase()}
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText className={styles.listText}>
-                  <Typography>
-                    @{data.username}
-                  </Typography>
+                  <Typography>@{data.username}</Typography>
                   {/* <Typography variant="caption" color='#F08743'>
                     {data.firstName} {data.lastName}
                   </Typography> */}
@@ -176,7 +189,7 @@ export default function SideHeader(): JSX.Element {
             </ListItem>
           ))}
         </List>
-      )
+      );
     }
 
     // eslint-disable-next-line no-else-return
@@ -186,10 +199,9 @@ export default function SideHeader(): JSX.Element {
         /*  <List className={styles.searchListLoder} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
            <h1>No data found</h1>
          </List> */
-      )
+      );
     }
-
-  }
+  };
 
   return (
     <>
@@ -210,7 +222,7 @@ export default function SideHeader(): JSX.Element {
                   placeholder="Search anything..."
                   sx={{ p: 1 }}
                   onChange={(e): any => {
-                    searchByUserName(e.target.value)
+                    searchByUserName(e.target.value);
                   }}
                 />
                 <IconButton sx={{ mr: 1 }}>
@@ -262,7 +274,7 @@ export default function SideHeader(): JSX.Element {
           vertical: "top",
           horizontal: "center",
         }}
-        sx={{textAlign:'center'}}
+        sx={{ textAlign: "center" }}
       >
         <ListSubheader
           sx={{
@@ -271,26 +283,33 @@ export default function SideHeader(): JSX.Element {
             fontWeight: 700,
             fontFamily: "Inter",
             color: "#FFFFFF",
-            minWidth: 500
+            minWidth: 500,
           }}
         >
           Notifications
         </ListSubheader>
-        {notifications.map((i: any, idx: number) => (
-          idx < 10 &&
-          <BasicPopover
-          message={i.message}
-          onAccept={(): void => {
-            submitNotification(i.id, "ACCEPTED");
-          }}
-          onDecline={(): void => {
-            submitNotification(i.id, "REJECT");
-          }}
-          isActionRequired={i.isActionRequired}
-          key={idx}
-          />
-        ))}
-        <Button variant="text">View All</Button>
+        {notifications.map(
+          (i: any, idx: number) =>
+            idx < 10 && (
+              <BasicPopover
+                message={i.message}
+                onAccept={(): void => {
+                  submitNotification(i.id, "ACCEPTED");
+                }}
+                onDecline={(): void => {
+                  submitNotification(i.id, "REJECT");
+                }}
+                isActionRequired={i.isActionRequired}
+                key={idx}
+              />
+            )
+        )}
+        <Button
+          variant="text"
+          onClick={(e): any => router.push(`/notification`)}
+        >
+          View All
+        </Button>
       </Popover>
     </>
   );
