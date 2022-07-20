@@ -275,13 +275,26 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
     fetchTeam();
   }, [params]);
 
+  const filterData = data.filter((p) => {
+    if (params.level === "all") return p.elo;
+    if (params.level === "bronze") return parseInt(p.elo || "0") < 1000;
+    if (params.level === "silver")
+      return parseInt(p.elo || "0") >= 1000 && parseInt(p.elo || "0") < 1250;
+    if (params.level === "gold")
+      return parseInt(p.elo || "0") >= 1250 && parseInt(p.elo || "0") < 1500;
+    if (params.level === "diamond")
+      return parseInt(p.elo || "0") >= 1500 && parseInt(p.elo || "0") < 2000;
+    if (params.level === "ruby") return parseInt(p.elo || "0") >= 2000;
+    return p.elo;
+  });
+
   return (
     <React.Fragment>
       <OfferModal/>
       <Box>
         <Box marginY={2} width={"70vw"}>
           <Slider {...settings}>
-            {data.map((player: any) => {
+            {filterData.map((player: any) => {
               return (
                 <Member key={player.firstName} {...player}>
                   <>
