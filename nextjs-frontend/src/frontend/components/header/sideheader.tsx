@@ -306,7 +306,7 @@ export default function SideHeader(): JSX.Element {
         )}
         <Button
           variant="text"
-          onClick={(e): any => router.push(`/notification`)}
+          onClick={(): any => router.push(`/notification`)}
         >
           View All
         </Button>
