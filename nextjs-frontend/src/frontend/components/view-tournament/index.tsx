@@ -494,6 +494,7 @@ const ViewTournament: React.FC = () => {
             team={selectedTeam}
             onJoin={onTeamJoin}
             error={regError}
+            data={data}
             entryFees={parseInt(data.settings?.entryFeeAmount || "0") || 0}
           />
         </ViewCard>
@@ -553,10 +554,6 @@ const ViewTournament: React.FC = () => {
                   </span>
                 </Typography>
               </Box>
-
-              {!isSuccessJoined ? (
-                
-                
                 <ActionButton
                   data={data}
                   error={regError}
@@ -567,7 +564,6 @@ const ViewTournament: React.FC = () => {
                   userId={user?.id}
                   disabled={countDown !== "00:00:00"?false:true}
                 />
-              ) : null}
             </Grid>
           </Grid>
         </ViewCard>

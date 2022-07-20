@@ -12,6 +12,7 @@ import {
 import React from "react";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import { TournamentData } from "../../tournament";
 
 interface Player {
   firstName: string;
@@ -33,6 +34,7 @@ interface TeamProps {
   onJoin?: (teamId: string, selectedUsers: string[]) => void;
   error?: string;
   entryFees:number;
+  data?:TournamentData;
 }
 
 const TeamSelection: React.FC<TeamProps> = ({
@@ -41,7 +43,8 @@ const TeamSelection: React.FC<TeamProps> = ({
   onBack,
   onJoin,
   error,
-  entryFees
+  entryFees,
+  data
 }) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -116,8 +119,8 @@ const TeamSelection: React.FC<TeamProps> = ({
               </Typography>
             )}
             {!isSmallScreen ? (
-              <Button disabled={!hasEnoughPlayerSelected()} variant="contained" onClick={registerTeam} sx={{borderRadius:0}}>
-                Join Now
+              <Button disabled={!hasEnoughPlayerSelected() || data?.playerList?.filter((i:any)=>i.team_id===team.id).length?true:false} variant="contained" onClick={registerTeam} sx={{borderRadius:0}}>
+               {data?.playerList?.filter((i:any)=>i.team_id===team.id).length?"Joined":"Join now"}
               </Button>
             ) : null}
             <Button sx={{ marginLeft: 1,borderRadius:0 }} onClick={backHandler} >
