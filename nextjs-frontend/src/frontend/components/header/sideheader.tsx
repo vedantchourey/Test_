@@ -40,6 +40,7 @@ export default function SideHeader(): JSX.Element {
   const wallet = useAppSelector(walletDetaislSelector);
   const router = useRouter();
   const [notifications, setNotifications] = React.useState<any>([]);
+  const [notificationLength,setNotificationLength]=React.useState<number>(0);
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
@@ -70,6 +71,7 @@ export default function SideHeader(): JSX.Element {
           data: i,
           isActionRequired: i.is_action_required,
         }));
+        setNotificationLength(notificatiosData?.length);
         setNotifications(notificatiosData);
       })
       .catch((err) => {
@@ -168,9 +170,7 @@ export default function SideHeader(): JSX.Element {
                   <Typography>
                     @{data.username}
                   </Typography>
-                  {/* <Typography variant="caption" color='#F08743'>
-                    {data.firstName} {data.lastName}
-                  </Typography> */}
+                  
                 </ListItemText>
               </ListItemButton>
             </ListItem>
@@ -218,7 +218,8 @@ export default function SideHeader(): JSX.Element {
                 </IconButton>
                 {renderResults()}
               </Box>
-              <IconButton onClick={handleClick} sx={{ mr: 1, ml: 1 }}>
+              <IconButton onClick={handleClick} sx={{ mr: 1, ml: 1 }} >
+              {notificationLength>0&&<Typography className={style.notification}>{notificationLength}</Typography>}
                 <img src="/icons/notification-icon.svg" />
               </IconButton>
               <Button

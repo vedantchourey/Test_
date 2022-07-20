@@ -9,6 +9,7 @@ import {
 import { createStyles, makeStyles } from "@mui/styles";
 import Image from "next/image";
 import React from "react";
+import { TournamentData } from "../../tournament";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -34,6 +35,9 @@ export interface Props {
   items: ActionItem[][];
   buttonOnly?: boolean;
   error?: string;
+  disabled?:boolean;
+  data?:TournamentData;
+  userId?:string;
 }
 
 const ActionButton: React.FC<Props> = ({
@@ -42,13 +46,22 @@ const ActionButton: React.FC<Props> = ({
   items = [],
   buttonOnly = false,
   error,
+  disabled,
+  data,
+  userId,
 }) => {
   const styles = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const [backColor,setBackcolor]=React.useState<string>("linear-gradient(180deg, #EF507E 0%, #F09633 100%)");
   const handleClick = (event: React.MouseEvent<HTMLElement>): void => {
     setAnchorEl(event.currentTarget);
   };
+  const [joinText,setJoinText]=React.useState<string>("Join Now");
+
+  React.useEffect(()=>{
+    data?.playerList?.filter((i:any)=>i.id===userId).length&& (setBackcolor("#006A3E"),setJoinText("Joined"));
+  },[data]);
 
   const handleButtonClick = ():void => {
     if (onClick) {
@@ -68,7 +81,7 @@ const ActionButton: React.FC<Props> = ({
       <Box>
         <Button
           style={{
-            background: "linear-gradient(180deg, #EF507E 0%, #F09633 100%)",
+            background: backColor,
             color: "white",
             padding: "16px 43px",
             width: "189px",
@@ -76,8 +89,9 @@ const ActionButton: React.FC<Props> = ({
           aria-controls={open ? id : undefined}
           aria-expanded={open ? "true" : undefined}
           onClick={handleButtonClick}
+          disabled={disabled}
         >
-          Join Now
+          {joinText}
         </Button>
         {error && (
           <Typography color={"red"} textAlign={"left"} marginTop={1}>
@@ -119,11 +133,12 @@ const ActionButton: React.FC<Props> = ({
         aria-controls={open ? id : undefined}
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
+        //disabled={disabled}
         endIcon={
           <Image src={"/icons/Downarrow.svg"} height={"12px"} width={"12px"} />
         }
       >
-        Join Now
+        {joinText}
       </Button>
       {error && (
           <Typography color={"red"} textAlign={"left"} marginTop={1}>
