@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Box,
   Button,
   Divider,
@@ -31,7 +32,7 @@ export default function BasicPopover(props: Props): JSX.Element {
       {/* <Divider variant="middle" component="li" /> */}
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
-          <img alt="Travis Howard" src={message.image} />
+          <Avatar alt="Travis Howard" src={message.image} style={{height: 55, width: 55}} />
         </ListItemAvatar>
         <ListItemText
           secondary={
@@ -58,7 +59,7 @@ export default function BasicPopover(props: Props): JSX.Element {
           }
         />
       </ListItem>
-      <Divider variant="middle" component="li" />
+      <Divider variant="middle" />
     </List>
   );
 }

@@ -4,6 +4,8 @@ export interface INotifications {
   user_id: string;
   is_action_required: boolean;
   status?: string;
+  sent_by?: string | null;
+  message?: string | null;
   data?: {
     tournament_id?: string;
     request_by?: string;

@@ -39,6 +39,7 @@ import { IEloRatingHistory } from "../database/models/i-elo-rating-history";
 import { IEloRating } from "../database/models/i-elo-rating";
 import { PerRequestContext } from "../../utils/api-middle-ware/api-middleware-typings";
 import backendConfig from "../../utils/config/backend-config";
+import { INotifications } from "../database/models/i-notifications";
 
 export const persistBrackets = async (req: ITournament): Promise<any> => {
   const connection = createKnexConnection();
@@ -200,13 +201,15 @@ export const sendTeamTournamentInvites = async (
     return getErrorObject("Some users have invites pending");
   }
 
-  const notifications: any = [];
+  const notifications: INotifications[] = [];
   const new_invites: any = [];
 
   req.user_list.forEach((id) => {
     notifications.push({
       type: "TOURNAMENT_INVITE",
       user_id: id,
+      sent_by: req.userId,
+      message: `You have new invitation for ${tournament.name}`,
       is_action_required: true,
       data: {
         tournament_id: req.tournamentId,
@@ -427,7 +430,8 @@ export const checkInTeamTournament = async (
 
 export const submitMatchResultRequest = async (
   req: IMatchResultRequest,
-  knexConnection: Knex
+  knexConnection: Knex,
+  user: any
 ): Promise<any> => {
   try {
     const errors = await validateMatchResult(req);
@@ -437,6 +441,17 @@ export const submitMatchResultRequest = async (
       TABLE_NAMES.MATCH_RESULT_REQUEST
     );
     const result = repo.create(req);
+
+    const notificationObj: INotifications = {
+      type: "MATCH_RESULT",
+      user_id: user.id,
+      sent_by: user.id,
+      message: `${user?.user_metadata?.username} added match scroe.`,
+      is_action_required: true,
+      data: {},
+    }
+    
+    await addNotifications(notificationObj, knexConnection);
     return result;
   } catch (ex) {
     return getErrorObject();

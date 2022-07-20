@@ -21,6 +21,30 @@ export function getImageSignedUrl(bucket: string, filename: string): Promise<{ s
   return frontendSupabase.storage.from(bucket).createSignedUrl(filename, 60);
 }
 
+export async function getUserProfileImage(
+  id: string,
+  data: object
+): Promise<object> {
+  const user = await frontendSupabase
+    .from("profiles")
+    .select("avatarUrl")
+    .eq("id", id);
+  if (user.error) {
+    return data;
+  } 
+    if (user.data.length && user.data[0].avatarUrl) {
+      return {
+        ...data,
+        publicURL: frontendSupabase.storage
+          .from("public-files")
+          .getPublicUrl(user.data[0].avatarUrl).publicURL,
+      };
+    } 
+      return data;
+    
+  
+}
+
 
 export function uploadImage(bucket: string, filename: string, file: File): Promise<{ data: { Key: string } | null; error: Error | null }> {
   return frontendSupabase.storage

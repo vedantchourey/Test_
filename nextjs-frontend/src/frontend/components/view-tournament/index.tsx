@@ -565,7 +565,7 @@ const ViewTournament: React.FC = () => {
                   items={getActionItems()}
                   id={"action-item"}
                   userId={user?.id}
-                  disabled={countDown !== "00:00:00"?false:true}
+                  disabled={countDown === "00:00:00"}
                 />
               ) : null}
             </Grid>
