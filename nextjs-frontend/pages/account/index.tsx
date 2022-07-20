@@ -132,8 +132,8 @@ function Account(): JSX.Element {
                 <Box>
                   <TabList onChange={handleChange} value={activeTab}>
                     <Tab label="Posts" value="posts" />
-                    <Tab label="Match activity" value="activity" />
                     <Tab label="Social" value="social" />
+                    <Tab label="Match activity" value="activity" />
                   </TabList>
                 </Box>
 
@@ -146,7 +146,6 @@ function Account(): JSX.Element {
                   {_renderPosts()}
                 </TabPanel>
                 <TabPanel sx={{ p: 0 }} value="activity">
-                  Match activity
                   <TableContainer>
                     <Table>
                       <TableBody>
