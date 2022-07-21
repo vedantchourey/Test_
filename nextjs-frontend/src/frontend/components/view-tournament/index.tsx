@@ -106,7 +106,6 @@ const ViewTournament: React.FC = () => {
   const [teams, setTeams] = React.useState<Team[]>([]);
   const [regError, setRegError] = React.useState();
   const [selectedTeam, setSelectedTeam] = React.useState<Team | undefined>();
-  const [isSuccessJoined, setSuccessJoined] = React.useState(false);
   const [openSuccessModal, setOpenSuccessModal] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [page,setPage]=React.useState("Details")
@@ -443,7 +442,6 @@ const ViewTournament: React.FC = () => {
       .post("/api/tournaments/register", payload, { headers: { ...headers } })
       .then(() => {
         setOpenSuccessModal(true);
-        setSuccessJoined(true);
       })
       .catch((err) => {
         console.error(err);
@@ -562,7 +560,7 @@ const ViewTournament: React.FC = () => {
                   items={getActionItems()}
                   id={"action-item"}
                   userId={user?.id}
-                  disabled={countDown !== "00:00:00"?false:true}
+                  disabled={countDown === "00:00:00"}
                 />
             </Grid>
           </Grid>

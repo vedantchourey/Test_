@@ -119,7 +119,7 @@ const TeamSelection: React.FC<TeamProps> = ({
               </Typography>
             )}
             {!isSmallScreen ? (
-              <Button disabled={!hasEnoughPlayerSelected() || data?.playerList?.filter((i:any)=>i.team_id===team.id).length?true:false} variant="contained" onClick={registerTeam} sx={{borderRadius:0}}>
+              <Button disabled={Boolean(!hasEnoughPlayerSelected() || data?.playerList?.filter((i:any)=>i.team_id===team.id).length)} variant="contained" onClick={registerTeam} sx={{borderRadius:0}}>
                {data?.playerList?.filter((i:any)=>i.team_id===team.id).length?"Joined":"Join now"}
               </Button>
             ) : null}
