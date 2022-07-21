@@ -1,11 +1,11 @@
 .backgroundImg {
 	height: 468px;
-	background: radial-gradient(50% 50% at 50% 50%, rgba(8, 0, 29, 0.7) 0%, rgba(8, 0, 29, 0.8) 46.24%, rgba(8, 0, 29, 0.9) 100%), url('/images/home.png');
+	width: 1000px;
+	background: radial-gradient(50% 50% at 50% 50%, rgba(8, 0, 29, 0.7) 0%, rgba(8, 0, 29, 0.8) 46.24%, rgba(8, 0, 29, 0.9) 100%)
 }
 .backgroundImgMobile {
-	background-image: url('/images/home_mobile.png');
 	margin-top: -40px;
-	width: 345px;
+	width: 440px;
 	height: 493px;
 	background: radial-gradient(50% 50% at 50% 50%, rgba(8, 0, 29, 0.7) 0%, rgba(8, 0, 29, 0.8) 46.24%, rgba(8, 0, 29, 0.9) 100%);
 }
@@ -13,8 +13,9 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
-	width: 860px;
+	width: 400px;
 	height: 222px;
+	padding-top: 50px;
 }
 .imgContainer {
 	display: flex;
@@ -58,24 +59,24 @@
 	border-radius: 0px;
 }
 .text1Mobile {
-	width: 161px;
-	height: 24px;
-	font-weight: 700;
-	font-size: 16px;
-	line-height: 24px;
-	letter-spacing: -0.011em;
-	color: #FFFFFF;
+	margin-top: 42px;
+    color: white;
+	font-family: Inter;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16;
+    text-transform: uppercase;
 }
 .text2Mobile {
-	width: 343px;
-	height: 69px;
-	text-align: left;
-	font-weight: 700;
-	font-size: 18px;
-	line-height: 23px;
-	letter-spacing: -0.011em;
-	text-transform: uppercase;
-	color: #FFFFFF;
+	margin-top: 16px;
+    color: white;
+    font-family: Chakra Petch;
+    font-style: normal;
+    font-weight:700;
+    font-size: 18;
+	text-transform:  uppercase;
+    margin-bottom: 22px;
+	flex-wrap: wrap;
 }
 .tab {
 	width: 180px;
