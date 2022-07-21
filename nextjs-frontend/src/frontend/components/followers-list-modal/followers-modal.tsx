@@ -5,6 +5,7 @@ import { getUserProfileByUsername } from "../../service-clients/profile-service-
 import Image from "../../components/utils/supabase-image";
 import config from "../../utils/config/front-end-config";
 import { useRouter } from "next/router";
+import { unFollowUser,followUser } from "../../service-clients/follow-service";
 
 export default function Followersmodal({ username }: any): JSX.Element {
   const [data, setData] = useState<any>([]);
@@ -48,6 +49,7 @@ export default function Followersmodal({ username }: any): JSX.Element {
       <Button
         className={styles.followBtn}
         variant={data.isFollowing ? "outlined" : "contained"}
+        onClick={():void=>{data.isFollowing?unFollowUser(data.id):followUser(data.id)}}
       >
         {data.isFollowing ? "Unfollow" : "Follow"}
       </Button>
