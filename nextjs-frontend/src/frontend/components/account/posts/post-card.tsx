@@ -30,6 +30,8 @@ import Image from "../../../components/utils/supabase-image";
 import config from "../../../utils/config/front-end-config";
 import axios from "axios";
 import { getAuthHeader } from "../../../utils/headers";
+import {isDeviceTypeSelector} from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from "../../../../../src/frontend/redux-store/layout/device-types";
 
 interface IProps {
   data: IPostsResponse;
@@ -58,6 +60,8 @@ const PostCard = (props: IProps): JSX.Element => {
 
   const imgUrl = props.data.postImgUrl;
   const avatarUrl = props.data.postOwner.avatarUrl;
+  const isMobile = useAppSelector((x) =>
+    isDeviceTypeSelector(x, deviceTypes.desktop));
 
   const handleOpenComments = (): void => setOpenCommentsModal((pre) => !pre);
   const handleCloseComments = (): void => setOpenCommentsModal(false);
@@ -314,7 +318,7 @@ const PostCard = (props: IProps): JSX.Element => {
                 part + " "
               ))}
           </Typography>
-          {values.postContent.length>500?
+          {values.postContent.length>500&&!isMobile||values.postContent.length>250&&isMobile?
           <Button
           style={{
             color: "#FFFFFF",
