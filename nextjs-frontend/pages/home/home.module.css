@@ -1,6 +1,7 @@
 .backgroundImg {
 	height: 468px;
-	background: radial-gradient(50% 50% at 50% 50%, rgba(8, 0, 29, 0.7) 0%, rgba(8, 0, 29, 0.8) 46.24%, rgba(8, 0, 29, 0.9) 100%), url('/images/home.png');
+	width: 1024px;
+	/* background: radial-gradient(50% 50% at 50% 50%, rgba(8, 0, 29, 0.7) 0%, rgba(8, 0, 29, 0.8) 46.24%, rgba(8, 0, 29, 0.9) 100%), url('/images/home.png'); */
 }
 .backgroundImgMobile {
 	background-image: url('/images/home_mobile.png');
@@ -15,6 +16,7 @@
 	justify-content: space-around;
 	width: 860px;
 	height: 222px;
+	padding-top: 50px;
 }
 .imgContainer {
 	display: flex;

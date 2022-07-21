@@ -192,23 +192,7 @@ const Home = (): JSX.Element => {
 
   const topImageCarousel = [
     <div data-value="1" key={"1"}>
-      <img src="/images/home1.png" className={styles.img1} />
-    </div>,
-    <div data-value="2" key={"2"}>
-      <img src="/images/home2.png" className={styles.img1} />
-    </div>,
-    <div data-value="3" key={"3"}>
-      <img src="/images/home3.png" className={styles.img1} />
-    </div>,
-  ];
-
-  return (
-    <Fragment>
-      <Grid container xs={12}>
-        {isDesktop && (
-          <>
-            <Grid item xs={12} lg={9}>
-              <Box className={styles.backgroundImg}>
+      <Box className={styles.backgroundImg} style={{background:'url(/images/home1.png)'}}>
                 <div className={styles.bgImgContainer}>
                   <Typography className={styles.text1}>
                     PIXIEFREAK GAMING
@@ -222,9 +206,48 @@ const Home = (): JSX.Element => {
                   </Button>
                 </div>
               </Box>
-            </Grid>
-            <Grid item xs={12} lg={3}>
-              <div className={styles.imgContainer}>
+    </div>,
+    <div data-value="2" key={"2"}>
+      <Box className={styles.backgroundImg} style={{background:'url(/images/home2.png)'}}>
+                <div className={styles.bgImgContainer}>
+                  <Typography className={styles.text1}>
+                    PIXIEFREAK GAMING
+                  </Typography>
+                  <Typography className={styles.text2}>
+                    We organize eSports tournaments for professional and amateur
+                    gamers
+                  </Typography>
+                  <Button variant="text" className={styles.button1}>
+                    Read More
+                  </Button>
+                </div>
+              </Box>
+    </div>,
+    <div data-value="3" key={"3"}>
+      <Box className={styles.backgroundImg} style={{background:'url(/images/home3.png)'}}>
+                <div className={styles.bgImgContainer} >
+                  <Typography className={styles.text1}>
+                    PIXIEFREAK GAMING
+                  </Typography>
+                  <Typography className={styles.text2}>
+                    We organize eSports tournaments for professional and amateur
+                    gamers
+                  </Typography>
+                  <Button variant="text" className={styles.button1}>
+                    Read More
+                  </Button>
+                </div>
+              </Box>
+    </div>,
+  ];
+
+  return (
+    <Fragment>
+      <Grid container xs={12}>
+        {isDesktop && (
+          <>
+            <Grid item xs={12} lg={12}>
+            <div className={styles.backgroundImg}>
                 <AliceCarousel
                   items={topImageCarousel}
                   responsive={responsive}
@@ -234,7 +257,7 @@ const Home = (): JSX.Element => {
                   autoPlayInterval={10000}
                   infinite={true}
                 />
-              </div>
+              </div> 
             </Grid>
           </>
         )}

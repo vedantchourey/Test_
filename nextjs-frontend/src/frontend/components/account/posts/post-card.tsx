@@ -314,18 +314,19 @@ const PostCard = (props: IProps): JSX.Element => {
                 part + " "
               ))}
           </Typography>
+          {values.postContent.length>500?
           <Button
-            style={{
-              color: "#FFFFFF",
-              fontSize: 14,
-              marginBottom: !values.postImgUrl ? 50 : 0,
-            }}
-            onClick={(): any => {
-              setReadMore(!readMore);
-            }}
-          >
-            {readMore ? `Read less...` : `Read More...`}
-          </Button>
+          style={{
+            color: "#FFFFFF",
+            fontSize: 14,
+            marginBottom: !values.postImgUrl ? 50 : 0,
+          }}
+          onClick={(): any => {
+            setReadMore(!readMore);
+          }}
+        >
+          {readMore ? `Read less...` : `Read More...`}
+        </Button>:null}
 
           <Box sx={{ position: "relative" }}>
             {imgUrl && (
