@@ -1,10 +1,17 @@
-import { Button, Grid, OutlinedInput, Typography } from "@mui/material";
+import {
+  Button,
+  Grid,
+  OutlinedInput,
+  Typography,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import { createStyles, makeStyles } from "@mui/styles";
 import { Box } from "@mui/system";
 import { useFormik } from "formik";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import Dropzone from "react-dropzone";
 import { v4 } from "uuid";
 import * as yup from "yup";
@@ -33,7 +40,8 @@ const useStyles = makeStyles(() =>
       alignItems: "center",
       flexDirection: "column",
     },
-  }));
+  })
+);
 
 export interface BasicData {
   title: string;
@@ -41,6 +49,7 @@ export interface BasicData {
   authorname: string;
   description: string;
   banner: string;
+  category: string;
 }
 
 interface BasicPorps {
@@ -49,10 +58,12 @@ interface BasicPorps {
 }
 const NewsPage: React.FC<BasicPorps> = ({ onSave, data }) => {
   const style = useStyles();
+  const allCategory = ["Shooters", "Adventure", "Slider"];
   const validationSchema = yup.object({
     title: yup.string().required("Title is required"),
     subtitle: yup.string().required("Subtitle is required"),
     authorname: yup.string().required("Author Name is required"),
+    category: yup.string().required("Category is required"),
     description: yup.string(),
     banner: yup.string().nullable(),
   });
@@ -62,6 +73,7 @@ const NewsPage: React.FC<BasicPorps> = ({ onSave, data }) => {
       title: data?.title || "",
       subtitle: data?.subtitle || "",
       authorname: data?.authorname || "",
+      category: data?.category || "",
       description: data?.description || "",
       banner: data?.banner || "",
     },
@@ -189,6 +201,54 @@ const NewsPage: React.FC<BasicPorps> = ({ onSave, data }) => {
                         <FormHelperText>
                           {" "}
                           {formik.errors.authorname}{" "}
+                        </FormHelperText>
+                      ) : null}
+                    </FormControl>
+                  </Grid>
+
+                  <Grid item xs={6}>
+                    <FormControl fullWidth variant="standard">
+                      <FormLabel label="Category"></FormLabel>
+                      {/* <Select
+                        value={formik.values.category || "Select Category"}
+                        onChange={(e) => {
+                          e.target.value === "Select Category"
+                            ? formik.handleChange("category")("")
+                            : formik.handleChange("category")(e.target.value);
+                        }}
+                        fullWidth={true}
+                        input={<OutlinedInput />}
+                        className={style.inputBox}
+                      >
+                        <MenuItem value="Select Category">
+                          Select category
+                        </MenuItem>
+                        {allCategory.map((item: any, i: number) => {
+                          return (
+                            <MenuItem value={item} key={i}>
+                              {item}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select> */}
+                      <OutlinedInput
+                        id="category"
+                        name="category"
+                        placeholder="Select Category"
+                        onChange={formik.handleChange}
+                        value={formik.values.category}
+                        className={style.inputBox}
+                        onBlur={formik.handleBlur}
+                        error={
+                          formik.touched.category &&
+                          Boolean(formik.errors.category)
+                        }
+                      />
+                      {formik.touched.category &&
+                      Boolean(formik.errors.category) ? (
+                        <FormHelperText>
+                          {" "}
+                          {formik.errors.category}{" "}
                         </FormHelperText>
                       ) : null}
                     </FormControl>
