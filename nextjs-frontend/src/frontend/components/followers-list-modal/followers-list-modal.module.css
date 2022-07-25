@@ -1,11 +1,12 @@
 .appBar {
-    background-color: white !important;
+    background-color: #08001c !important;
     box-shadow: none;
     border-radius: 10px;
     padding: 16px;
+    background-image: none;
 }
 .appBar button {
-    color: black !important;
+    color: white !important;
 }
 .userListContainer {
     height: 440px;

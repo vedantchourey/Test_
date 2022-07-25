@@ -20,7 +20,7 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  bgcolor: 'white',
+  bgcolor: '#08001c',
   boxShadow: 24,
   width: 500,
   borderRadius: '10px'
@@ -47,7 +47,7 @@ const FollowersModal = ({ handleClose, userData, showModal, listType }: IProps):
       <Box sx={style}>
         <AppBar position="static" className={styles.appBar}>
           <Box sx={{ textAlign: 'center', position: 'relative' }}>
-            <Typography variant="h3" color='black' fontSize={20}>
+            <Typography variant="h3" color='white' fontSize={20}>
               {
                 listType === 'followers' ? 'Followers' : 'Following'
               }

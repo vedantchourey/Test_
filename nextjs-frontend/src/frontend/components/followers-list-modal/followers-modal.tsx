@@ -41,14 +41,14 @@ export default function Followersmodal({ username }: any): JSX.Element {
           </Avatar>
         )}
         <Box sx={{ cursor: "pointer" }}>
-          <Typography sx={{ ml: 3 }} variant="h3" color="black" fontSize={16}>
+          <Typography sx={{ ml: 3 }} variant="h3" color="white" fontSize={16}>
             {username}
           </Typography>
         </Box>
       </Box>
-      <Button className={styles.followBtn} variant="contained">
+      {/* <Button className={styles.followBtn} variant="contained">
         Follow
-      </Button>
+      </Button> */}
     </Box>
   );
 }
