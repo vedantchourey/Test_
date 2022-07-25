@@ -30,7 +30,8 @@ import Image from "../../../components/utils/supabase-image";
 import config from "../../../utils/config/front-end-config";
 import axios from "axios";
 import { getAuthHeader } from "../../../utils/headers";
-import router from "next/router";
+import {isDeviceTypeSelector} from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from "../../../../../src/frontend/redux-store/layout/device-types";
 
 interface IProps {
   data: IPostsResponse;
@@ -59,6 +60,8 @@ const PostCard = (props: IProps): JSX.Element => {
 
   const imgUrl = props.data.postImgUrl;
   const avatarUrl = props.data.postOwner.avatarUrl;
+  const isMobile = useAppSelector((x) =>
+    isDeviceTypeSelector(x, deviceTypes.desktop));
 
   const handleOpenComments = (): void => setOpenCommentsModal((pre) => !pre);
   const handleCloseComments = (): void => setOpenCommentsModal(false);
@@ -186,7 +189,7 @@ const PostCard = (props: IProps): JSX.Element => {
         minHeight={props.row ? 450 : undefined}
         minWidth={props.isDesktop ? 280 : 0}
         mr={props.row ? 2 : 0}
-        onClick={():any=>{router.push(`social/${values.id}`)}}
+        //onClick={():any=>{router.push(`social/${values.id}`)}}
       >
         <Card
           className={styles.postCard}

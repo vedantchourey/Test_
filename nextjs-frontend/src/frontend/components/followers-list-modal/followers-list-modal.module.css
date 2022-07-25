@@ -33,3 +33,7 @@
     width: 120px;
     border-radius: 8px;
 }
+.profileAvatar{
+    border: 2px solid #6932f9 !important;
+    border-radius: 9999px !important;
+}

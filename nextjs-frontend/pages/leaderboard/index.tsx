@@ -207,8 +207,8 @@ const Leaderboard = (): JSX.Element => {
                           index === 0
                             ? "/images/winner1.png"
                             : index === 1
-                            ? "/images/winner2.png"
-                            : "/images/winner3.png"
+                            ? "/images/winner3.png"
+                            : "/images/winner2.png"
                         }
                         className={styles.borderImage}
                       />

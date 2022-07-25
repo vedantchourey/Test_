@@ -17,7 +17,7 @@ export default createNextJsRouteHandler({
       res: NextApiResponse<ServiceResponse<any, any>>,
       context: PerRequestContext
     ) => {
-      const result = await submitMatchResultRequest(req.body, context.knexConnection as Knex);
+      const result = await submitMatchResultRequest(req.body, context.knexConnection as Knex, context.user);
       res.status(result?.errors?.length ? 500 : 200).json(result)
     },
     preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],

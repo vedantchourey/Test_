@@ -56,11 +56,12 @@ const FreeAgencyMarket: React.FC = (): JSX.Element => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const [teamId] = useState(query.teamId)
-  const [param,setParam] = useState({
-    platformId:"",
-    gameId:""
-  })
+  const [teamId] = useState(query.teamId);
+  const [param, setParam] = useState({
+    platformId: "",
+    gameId: "",
+    level: "all",
+  });
 
   const renderComponent = (): JSX.Element => {
     let page;
@@ -113,7 +114,7 @@ const FreeAgencyMarket: React.FC = (): JSX.Element => {
     router.push(
       `/free-agency-market/view/[...slug]`,
       `/free-agency-market/view/${tab.url}${teamId ? `?teamId=${teamId}` : ""}`,
-      {shallow: true}
+      { shallow: true }
     );
   };
 
@@ -167,7 +168,7 @@ const FreeAgencyMarket: React.FC = (): JSX.Element => {
             </Tabs>
           </Grid>
           <Grid>
-            <MemberButton setParam={setParam}/>
+            <MemberButton setParam={setParam} />
           </Grid>
         </>
       );

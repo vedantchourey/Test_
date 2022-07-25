@@ -33,6 +33,8 @@ import style from "./desktop-sidebar.module.css";
 import BasicPopover from "./notification-popover";
 import styles from "./logged-in-user-menu.module.css";
 import frontendConfig from "../../utils/config/front-end-config";
+import { getUserProfileImage } from "../../service-clients/image-service-client";
+import { INotifications } from "../../../backend/services/database/models/i-notifications";
 
 export default function SideHeader(): JSX.Element {
   const isLoggedIn = useAppSelector(isLoggedInSelector);
@@ -40,6 +42,7 @@ export default function SideHeader(): JSX.Element {
   const wallet = useAppSelector(walletDetaislSelector);
   const router = useRouter();
   const [notifications, setNotifications] = React.useState<any>([]);
+  const [notificationLength,setNotificationLength]=React.useState<number>(0);
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
@@ -56,22 +59,25 @@ export default function SideHeader(): JSX.Element {
       .get("/api/notifications", {
         headers: { ...headers },
       })
-      .then((res) => {
-        const notificatiosData = (res?.data?.data || [])?.map((i: any) => ({
-          id: i.id,
-          message:
-            i.type === "TOURNAMENT_INVITE"
-              ? {
-                  image: "/icons/notification-data-image.svg",
-                  text: "You have new tournament invitations",
-                }
-              : {
-                  image: "/icons/notification-data-image.svg",
-                  text: "New notifications",
-                },
-          data: i,
-          isActionRequired: i.is_action_required,
-        }));
+      .then(async (res) => {
+        const notificationWithImages = await Promise.all(
+          ((res?.data?.data as Array<INotifications>) || []).map((i) =>
+            getUserProfileImage(i.sent_by || "", i))
+        );
+        
+        const notificatiosData = notificationWithImages.map((i: any) => {
+          return {
+            id: i.id,
+            publicURL: i.publicURL,
+            message:{
+                    image: i.publicURL,
+                    text: i.message,
+                  },
+            data: i,
+            isActionRequired: i.is_action_required,
+          };
+        });
+        setNotificationLength(notificatiosData?.length);
         setNotifications(notificatiosData);
       })
       .catch((err) => {
@@ -181,9 +187,6 @@ export default function SideHeader(): JSX.Element {
                 </ListItemAvatar>
                 <ListItemText className={styles.listText}>
                   <Typography>@{data.username}</Typography>
-                  {/* <Typography variant="caption" color='#F08743'>
-                    {data.firstName} {data.lastName}
-                  </Typography> */}
                 </ListItemText>
               </ListItemButton>
             </ListItem>
@@ -230,7 +233,8 @@ export default function SideHeader(): JSX.Element {
                 </IconButton>
                 {renderResults()}
               </Box>
-              <IconButton onClick={handleClick} sx={{ mr: 1, ml: 1 }}>
+              <IconButton onClick={handleClick} sx={{ mr: 1, ml: 1 }} >
+              {notificationLength>0&&<Typography className={style.notification}>{notificationLength}</Typography>}
                 <img src="/icons/notification-icon.svg" />
               </IconButton>
               <Button

@@ -190,15 +190,78 @@ const Home = (): JSX.Element => {
     </div>,
   ];
 
-  const topImageCarousel = [
-    <div data-value="1" key={"1"}>
+  const sideImageCarousel = [
+    <div data-value={"1"} key={"1"}>
       <img src="/images/home1.png" className={styles.img1} />
     </div>,
-    <div data-value="2" key={"2"}>
+    <div data-value={"2"} key={"2"}>
       <img src="/images/home2.png" className={styles.img1} />
     </div>,
-    <div data-value="3" key={"3"}>
+    <div data-value={"3"} key={"3"}>
       <img src="/images/home3.png" className={styles.img1} />
+    </div>,
+  ];
+
+  const topImageCarousel = [
+    <div data-value="1" key={"1"}>
+      <Box style={{ height: 400, width: 1000 }}>
+        <img
+          src="/images/home1.png"
+          style={{ height: 400, width: 1000, position: "absolute" }}
+        />
+        <Box className={styles.backgroundImg} style={{ position: "absolute" }}>
+          <div className={styles.bgImgContainer}>
+            <Typography className={isDesktop?styles.text1:styles.text1Mobile}>PIXIEFREAK GAMING</Typography>
+            <Typography className={isDesktop?styles.text2:styles.text2Mobile}>
+              We organize eSports tournaments for professional and amateur
+              gamers
+            </Typography>
+            <Button variant="text" className={styles.button1}>
+              Read More
+            </Button>
+          </div>
+        </Box>
+      </Box>
+    </div>,
+    <div data-value="2" key={"2"}>
+      <Box style={{ height: 400, width: 1000 }}>
+        <img
+          src="/images/home2.png"
+          style={{ height: 400, width: 1000, position: "absolute" }}
+        />
+        <Box className={styles.backgroundImg} style={{ position: "absolute" }}>
+          <div className={styles.bgImgContainer}>
+            <Typography className={isDesktop?styles.text1:styles.text1Mobile}>PIXIEFREAK GAMING</Typography>
+            <Typography className={isDesktop?styles.text2:styles.text2Mobile}>
+              We organize eSports tournaments for professional and amateur
+              gamers
+            </Typography>
+            <Button variant="text" className={styles.button1}>
+              Read More
+            </Button>
+          </div>
+        </Box>
+      </Box>
+    </div>,
+    <div data-value="3" key={"3"}>
+      <Box style={{ height: 400, width: 1000 }}>
+        <img
+          src="/images/home3.png"
+          style={{ height: 400, width: 1000, position: "absolute" }}
+        />
+        <Box className={styles.backgroundImg} style={{ position: "absolute" }}>
+          <div className={styles.bgImgContainer}>
+            <Typography className={isDesktop?styles.text1:styles.text1Mobile}>PIXIEFREAK GAMING</Typography>
+            <Typography className={isDesktop?styles.text2:styles.text2Mobile}>
+              We organize eSports tournaments for professional and amateur
+              gamers
+            </Typography>
+            <Button variant="text" className={styles.button1}>
+              Read More
+            </Button>
+          </div>
+        </Box>
+      </Box>
     </div>,
   ];
 
@@ -208,25 +271,22 @@ const Home = (): JSX.Element => {
         {isDesktop && (
           <>
             <Grid item xs={12} lg={9}>
-              <Box className={styles.backgroundImg}>
-                <div className={styles.bgImgContainer}>
-                  <Typography className={styles.text1}>
-                    PIXIEFREAK GAMING
-                  </Typography>
-                  <Typography className={styles.text2}>
-                    We organize eSports tournaments for professional and amateur
-                    gamers
-                  </Typography>
-                  <Button variant="text" className={styles.button1}>
-                    Read More
-                  </Button>
-                </div>
-              </Box>
+              <div className={styles.backgroundImg}>
+                <AliceCarousel
+                  items={topImageCarousel}
+                  responsive={responsive}
+                  autoPlay={true}
+                  disableButtonsControls={true}
+                  disableDotsControls={true}
+                  autoPlayInterval={10000}
+                  infinite={true}
+                />
+              </div>
             </Grid>
             <Grid item xs={12} lg={3}>
               <div className={styles.imgContainer}>
                 <AliceCarousel
-                  items={topImageCarousel}
+                  items={sideImageCarousel}
                   responsive={responsive}
                   autoPlay={true}
                   disableButtonsControls={true}
@@ -241,56 +301,24 @@ const Home = (): JSX.Element => {
         {!isDesktop && (
           <>
             <Grid item xs={12}>
-              <Typography
-                style={{
-                  marginTop: 42,
-                  color: "white",
-                  fontFamily: "Inter",
-                  fontStyle: "normal",
-                  fontWeight: "700",
-                  fontSize: 16,
-                  textTransform: "uppercase",
-                }}
-              >
-                PIXIEFREAK GAMING
-              </Typography>
-              <Typography
-                style={{
-                  marginTop: 16,
-                  color: "white",
-                  fontFamily: "Chakra Petch",
-                  fontStyle: "normal",
-                  fontWeight: "700",
-                  fontSize: 18,
-                  textTransform: "uppercase",
-                  marginBottom: 22,
-                }}
-              >
-                We organize eSports tournaments for professional and amateur
-                gamers
-              </Typography>
-              <Button variant="text" className={styles.button1}>
-                Read More
-              </Button>
-              {/* <Grid
-                container
-                direction={"row"}
-                style={{
-                  justifyContent: "space-between",
-                  flexGrow: 1,
-                  marginTop: 42,
-                }}
-              >
-                <img src="/images/home1.png" className={styles.img1} />
-                <img src="/images/home2.png" className={styles.img1} />
-                <img src="/images/home3.png" className={styles.img1} />
-              </Grid> */}
+            
+              <div className={styles.backgroundImgMobile}>
+                <AliceCarousel
+                  items={topImageCarousel}
+                  responsive={responsive}
+                  autoPlay={true}
+                  disableButtonsControls={true}
+                  disableDotsControls={true}
+                  autoPlayInterval={10000}
+                  infinite={true}
+                />
+              </div>
               <Grid>
                 <div
                   style={{ marginTop: 42, width: "200px", alignSelf: "center" }}
                 >
                   <AliceCarousel
-                    items={topImageCarousel}
+                    items={sideImageCarousel}
                     responsive={responsive}
                     autoPlay={true}
                     disableButtonsControls={true}
@@ -338,8 +366,9 @@ const Home = (): JSX.Element => {
                     <Button
                       className={styles.viewAllButton}
                       onClick={async (): Promise<void> => {
-                        value==="1"?await router.push("social"):
-                        value === "2"
+                        value === "1"
+                          ? await router.push("social")
+                          : value === "2"
                           ? await router.push("blog")
                           : await router.push("tournaments-list");
                       }}
@@ -352,7 +381,12 @@ const Home = (): JSX.Element => {
                     className={styles.postContainer}
                     style={{ flexDirection: "column" }}
                   >
-                    <Box overflow={"scroll"} maxWidth={"57vw"} display={"flex"} className={"hide-scrollbar"}>
+                    <Box
+                      overflow={"scroll"}
+                      maxWidth={"57vw"}
+                      display={"flex"}
+                      className={"hide-scrollbar"}
+                    >
                       {_renderPosts()}
                     </Box>
                   </TabPanel>
@@ -455,7 +489,7 @@ const Home = (): JSX.Element => {
                                 <img
                                   src="/images/arrow1.png"
                                   className={styles.arrowImg}
-                                  onClick={():void => {
+                                  onClick={(): void => {
                                     router.push(
                                       `/view-tournament/${data.id}/details`
                                     );
@@ -605,7 +639,7 @@ const Home = (): JSX.Element => {
                               <img
                                 src="/images/arrow1.png"
                                 className={styles.arrowImg}
-                                onClick={():void => {
+                                onClick={(): void => {
                                   router.push(
                                     `/view-tournament/${data.id}/details`
                                   );

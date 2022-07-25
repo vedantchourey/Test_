@@ -333,7 +333,9 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
             user_id: playerId || player_data?.id || "",
             is_action_required: true,
             status: STATUS.PENDING,
-            data: { secret }
+            data: { secret },
+            sent_by: user.id,
+            message: `${user.user_metadata.username} is invited to you to join ${team_info.name} Team.`
         }
 
         await Promise.all([
