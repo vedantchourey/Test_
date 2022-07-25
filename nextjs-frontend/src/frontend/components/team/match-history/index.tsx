@@ -13,9 +13,12 @@ import {
 import { IMatchHubData } from "../../../../../pages/match-hub";
 import { userProfileSelector } from "../../../redux-store/authentication/authentication-selectors";
 import { useAppSelector } from "../../../redux-store/redux-store";
+import { useRouter } from "next/router";
 
 const MatchHistory: React.FC<{ data: IMatchHubData[] }> = (props) => {
   const user = useAppSelector(userProfileSelector);
+  const router=useRouter();
+  
   return (
     <Grid container>
       <Grid item xs={12} sm={12} md={8}>
@@ -23,8 +26,9 @@ const MatchHistory: React.FC<{ data: IMatchHubData[] }> = (props) => {
           <Table>
             <NoobTableHead>
               <NoobTableRow style={{ color: "#201146" }}>
-                <NoobTableCell>Teams</NoobTableCell>
+                <NoobTableCell>Opponent Teams</NoobTableCell>
                 <NoobTableCell>Status</NoobTableCell>
+                <NoobTableCell>Tournament Name</NoobTableCell>
               </NoobTableRow>
             </NoobTableHead>
             <TableBody>
@@ -46,10 +50,11 @@ const MatchHistory: React.FC<{ data: IMatchHubData[] }> = (props) => {
                         display: "flex",
                         justifyContent: "space-between",
                       }}
+                      onClick={():void=>{router.push(`/team/view/${row.opponent1.user_id === user?.id ? row.opponent1.team_id:row.opponent2.team_id}/members`)}}
                     >
-                      <Typography>{opponent1Name}</Typography>
-                      <Typography color={"#F09633"}>VS</Typography>
-                      <Typography>{opponent2Name}</Typography>
+                      {/* <Typography>{opponent1Name}</Typography>
+                      <Typography color={"#F09633"}>VS</Typography> */}
+                      <Typography>{row.opponent1.user_id === user?.id ? row.opponent1.name:row.opponent2.name}</Typography>
                     </NoobTableCell>
                     <NoobTableCell>
                       {myPlayer.result
@@ -57,6 +62,9 @@ const MatchHistory: React.FC<{ data: IMatchHubData[] }> = (props) => {
                           ? "Win"
                           : "Loss"
                         : "-"}
+                    </NoobTableCell>
+                    <NoobTableCell onClick={():void=>{router.push(`/view-tournament/${row.tournament_id}/details`)}}>
+                      <Typography>{row.tournament_name}</Typography>
                     </NoobTableCell>
                   </NoobTableRow>
                 );})}

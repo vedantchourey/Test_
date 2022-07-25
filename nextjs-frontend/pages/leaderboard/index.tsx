@@ -263,7 +263,9 @@ const Leaderboard = (): JSX.Element => {
                     <TableCell style={{ width: "8%" }} align="center">
                       Rank
                     </TableCell>
-                    <TableCell style={{ width: "65%" }}>Username</TableCell>
+                    <TableCell style={{ width: "50%" }}>Username</TableCell>
+                    <TableCell style={{ width: "10%" }}>Games Played</TableCell>
+                    <TableCell style={{ width: "10%" }}>Wins</TableCell>
                     {isDesktop && (
                       <TableCell style={{ width: "25%" }}>Elo Rating</TableCell>
                     )}
@@ -296,6 +298,12 @@ const Leaderboard = (): JSX.Element => {
                               {item.userDetails.username}
                             </span>
                           </div>
+                        </TableCell>
+                        <TableCell align="center" component="th" scope="row">
+                          {item.userDetails.GamePlayed}
+                        </TableCell>
+                        <TableCell align="center" component="th" scope="row">
+                          {item.userDetails.Wins}
                         </TableCell>
                         {isDesktop&&(<TableCell>{item.elo_rating}</TableCell>)}
                       </TableRow>
