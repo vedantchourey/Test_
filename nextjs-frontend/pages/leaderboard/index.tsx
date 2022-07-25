@@ -123,7 +123,6 @@ const Leaderboard = (): JSX.Element => {
       <Fragment>
         <Container maxWidth="xl">
           <Heading divider heading={"LEADERBOARD"} />
-          <Typography className={styles.text}>Choose Game</Typography>
           <Box
             mt={5}
             sx={{ maxWidth: isDesktop?"1400px":"300px" }}
