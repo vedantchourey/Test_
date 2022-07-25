@@ -33,12 +33,12 @@ const MatchHistory: React.FC<{ data: IMatchHubData[] }> = (props) => {
             </NoobTableHead>
             <TableBody>
               {props.data.map((row, idx) => {
-                const opponent1Name = row.opponent1.user_id
-                ? `${row.opponent1.firstName} ${row.opponent1.lastName}`
-                : row.opponent1.name || "N/A";
-              const opponent2Name = row.opponent2.user_id
-                ? `${row.opponent2.firstName} ${row.opponent2.lastName}`
-                : row.opponent2.name || "N/A";
+              //   const opponent1Name = row.opponent1.user_id
+              //   ? `${row.opponent1.firstName} ${row.opponent1.lastName}`
+              //   : row.opponent1.name || "N/A";
+              // const opponent2Name = row.opponent2.user_id
+              //   ? `${row.opponent2.firstName} ${row.opponent2.lastName}`
+              //   : row.opponent2.name || "N/A";
                 const myPlayer =
                 row.opponent1.user_id === user?.id
                   ? row.opponent1
