@@ -97,6 +97,10 @@ const SliderComp: React.FC = (): JSX.Element => {
   const games = useAppSelector(allGamesSelector);
   const gamesFetchStatus = useAppSelector(gamesFetchStatusSelector);
 
+  const [selectedGame, setSelectedGame] = React.useState<string>(
+    games.length > 0 ? games[0].id : ""
+  );
+
   React.useEffect(() => {
     if (gamesFetchStatus !== "idle") return;
     appDispatch(fetchAllGamesThunk());
@@ -152,8 +156,16 @@ const SliderComp: React.FC = (): JSX.Element => {
               data-value="1"
               src={imagedata[data.code]}
               className={styles.image}
-              onClick={(): any => setTournamentsData(data.id)}
+              onClick={(): any => {
+                setTournamentsData(data.id)
+                setSelectedGame(data.id);
+              }}
               role="presentation"
+              style={{
+                borderWidth: data.id === selectedGame ? 3 : 0,
+                borderColor: "#6932F9",
+                borderStyle: "solid",
+              }}
             />
         ))}
       </Box>
