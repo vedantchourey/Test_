@@ -5,7 +5,7 @@ import { getUserProfileByUsername } from "../../service-clients/profile-service-
 import Image from "../../components/utils/supabase-image";
 import config from "../../utils/config/front-end-config";
 import { useRouter } from "next/router";
-
+import { unFollowUser,followUser } from "../../service-clients/follow-service";
 
 export default function Followersmodal({ username }: any): JSX.Element {
   const [data, setData] = useState<any>([]);
@@ -17,12 +17,7 @@ export default function Followersmodal({ username }: any): JSX.Element {
   }, []);
   return (
     <Box className={styles.userList}>
-      <Box
-        sx={{ display: "flex", alignItems: "center" }}
-        onClick={():void => {
-          router.push(`account/${username}`);
-        }}
-      >
+      <Box sx={{ display: "flex", alignItems: "center" }}>
         {data?.avatarUrl ? (
           <Image
             bucket={config.storage.publicBucket}
@@ -40,7 +35,12 @@ export default function Followersmodal({ username }: any): JSX.Element {
             {username.split("")[0].toUpperCase()}
           </Avatar>
         )}
-        <Box sx={{ cursor: "pointer" }}>
+        <Box
+          sx={{ cursor: "pointer" }}
+          onClick={(): void => {
+            router.push(`account/${username}`);
+          }}
+        >
           <Typography sx={{ ml: 3 }} variant="h3" color="white" fontSize={16}>
             {username}
           </Typography>

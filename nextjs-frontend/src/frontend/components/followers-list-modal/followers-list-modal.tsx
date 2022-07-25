@@ -23,7 +23,7 @@ const style = {
   bgcolor: '#08001c',
   boxShadow: 24,
   width: 500,
-  borderRadius: '10px'
+  borderRadius: '10px',
 };
 
 const FollowersModal = ({ handleClose, userData, showModal, listType }: IProps): JSX.Element => {
