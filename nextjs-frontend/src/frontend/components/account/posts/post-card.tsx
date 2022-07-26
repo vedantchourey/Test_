@@ -60,8 +60,6 @@ const PostCard = (props: IProps): JSX.Element => {
 
   const imgUrl = props.data.postImgUrl;
   const avatarUrl = props.data.postOwner.avatarUrl;
-  const isMobile = useAppSelector((x) =>
-    isDeviceTypeSelector(x, deviceTypes.desktop));
 
   const handleOpenComments = (): void => setOpenCommentsModal((pre) => !pre);
   const handleCloseComments = (): void => setOpenCommentsModal(false);
@@ -318,7 +316,7 @@ const PostCard = (props: IProps): JSX.Element => {
                 part + " "
               ))}
           </Typography>
-          {values.postContent.length>500&&!isMobile||values.postContent.length>250&&isMobile?
+          {values.postContent.length> 250 ?
           <Button
           style={{
             color: "#FFFFFF",
