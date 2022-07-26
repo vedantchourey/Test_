@@ -59,9 +59,7 @@ const TeamSelection: React.FC<TeamProps> = ({
     return selected + 1 <= maxPlayer;
   };
 
-  const hasEnoughPlayerSelected = ():boolean =>{
-    console.log(selectedPlayer);
-    
+  const hasEnoughPlayerSelected = ():boolean =>{ 
     return Object.keys(selectedPlayer).filter(
       (key) => selectedPlayer[key]
     ).length === maxPlayer;
@@ -175,8 +173,8 @@ const TeamSelection: React.FC<TeamProps> = ({
       })}
       <Grid item xs={12} display="flex" flexDirection={"column"} alignItems="center">
         {isSmallScreen ? (
-          <Button disabled={!hasEnoughPlayerSelected()} variant="contained" onClick={registerTeam} sx={{marginY:1,borderRadius:0,width:"200px"}}>
-            Join Now
+          <Button disabled={Boolean(!hasEnoughPlayerSelected()||data?.playerList?.filter((i:any)=>i.team_id===team.id).length)} variant="contained" onClick={registerTeam} sx={{marginY:1,borderRadius:0,width:"200px"}}>
+            {data?.playerList?.filter((i:any)=>i.team_id===team.id).length?"Joined":"Join now"}
           </Button>
         ) : null}
         {isSmallScreen && error && (
