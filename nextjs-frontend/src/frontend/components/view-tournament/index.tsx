@@ -493,7 +493,7 @@ const ViewTournament: React.FC = () => {
             onJoin={onTeamJoin}
             error={regError}
             data={data}
-            entryFees={parseInt(data.settings?.entryFeeAmount || "0") || 0}
+          entryFees={/*parseInt(data.settings?.entryFeeAmount || "0") || 0*/1000}
           />
         </ViewCard>
       )

@@ -60,6 +60,8 @@ const TeamSelection: React.FC<TeamProps> = ({
   };
 
   const hasEnoughPlayerSelected = ():boolean =>{
+    console.log(selectedPlayer);
+    
     return Object.keys(selectedPlayer).filter(
       (key) => selectedPlayer[key]
     ).length === maxPlayer;
@@ -141,8 +143,8 @@ const TeamSelection: React.FC<TeamProps> = ({
             <Box
               sx={{
                 background: selectedPlayer[player.user_id]
-                  ? "#F08743"
-                  : "#100626",
+                  ? (hasEnoughCredit(player.balance)?"#F08743":"#FF0000")
+                  : "#100626"
               }}
               display="flex"
               alignItems={"center"}
@@ -156,7 +158,7 @@ const TeamSelection: React.FC<TeamProps> = ({
                 </Typography>
               </Box>
               <Box display="Flex" alignItems={"center"} justifyContent="center">
-                <IconButton disabled={!hasEnoughCredit(player.balance)} onClick={():void => onPlayerSelect(player.user_id)}>
+                <IconButton /*disabled={!hasEnoughCredit(player.balance)}*/ onClick={():void => onPlayerSelect(player.user_id)}>
                   {selectedPlayer[player.user_id] ? (
                     <RemoveIcon height={"14px"} width="14px" />
                   ) : (
@@ -165,6 +167,9 @@ const TeamSelection: React.FC<TeamProps> = ({
                 </IconButton>
               </Box>
             </Box>
+            {selectedPlayer[player.user_id] && !hasEnoughCredit(player.balance)?
+            <Typography style={{color:"#FF0000",padding:10,margin:10,backgroundColor:"rgba(255, 0, 0, 0.1)",borderRadius:10}}>This user does not have enough funds to participate in the tournament.</Typography>:
+            null}
           </Grid>
         );
       })}

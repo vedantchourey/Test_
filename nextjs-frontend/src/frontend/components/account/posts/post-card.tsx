@@ -273,8 +273,6 @@ const PostCard = (props: IProps): JSX.Element => {
                       </Button>
                     </ListItem>
                   )}
-                  {values.postOwner.id === user?.id?
-                  null:
                   <ListItem disablePadding>
                     <Button
                       fullWidth
@@ -288,7 +286,7 @@ const PostCard = (props: IProps): JSX.Element => {
                     >
                       Cancel
                     </Button>
-                  </ListItem>}
+                  </ListItem>
                 </List>
               )}
             </div>
