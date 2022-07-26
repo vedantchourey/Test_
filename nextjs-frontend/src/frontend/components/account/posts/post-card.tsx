@@ -30,7 +30,7 @@ import Image from "../../../components/utils/supabase-image";
 import config from "../../../utils/config/front-end-config";
 import axios from "axios";
 import { getAuthHeader } from "../../../utils/headers";
-import {isDeviceTypeSelector} from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
 import { deviceTypes } from "../../../../../src/frontend/redux-store/layout/device-types";
 
 interface IProps {
@@ -187,7 +187,7 @@ const PostCard = (props: IProps): JSX.Element => {
         minHeight={props.row ? 450 : undefined}
         minWidth={props.isDesktop ? 280 : 0}
         mr={props.row ? 2 : 0}
-        //onClick={():any=>{router.push(`social/${values.id}`)}}
+      //onClick={():any=>{router.push(`social/${values.id}`)}}
       >
         <Card
           className={styles.postCard}
@@ -316,19 +316,19 @@ const PostCard = (props: IProps): JSX.Element => {
                 part + " "
               ))}
           </Typography>
-          {values.postContent.length> 250 ?
-          <Button
-          style={{
-            color: "#FFFFFF",
-            fontSize: 14,
-            marginBottom: !values.postImgUrl ? 50 : 0,
-          }}
-          onClick={(): any => {
-            setReadMore(!readMore);
-          }}
-        >
-          {readMore ? `Read less...` : `Read More...`}
-        </Button>:null}
+          {values.postContent.length > 250 ?
+            <Button
+              style={{
+                color: "#FFFFFF",
+                fontSize: 14,
+                marginBottom: !values.postImgUrl ? 50 : 0,
+              }}
+              onClick={(): any => {
+                setReadMore(!readMore);
+              }}
+            >
+              {readMore ? `Read less...` : `Read More...`}
+            </Button> : null}
 
           <Box sx={{ position: "relative" }}>
             {imgUrl && (
@@ -383,14 +383,13 @@ const PostCard = (props: IProps): JSX.Element => {
                 className={styles.postImage}
                 image={imgUrl || ""}
                 alt="user avatar"
-                
               /> */}
               </>
             )}
 
             {!isFetchingMeta && (
-              <Box className={styles.actionButtons}>
-                <Box className={styles.blurContainer}>
+              <Box className={styles.actionButtons} >
+                <Box className={styles.blurContainer} >
                   <Box
                     sx={{
                       display: "flex",

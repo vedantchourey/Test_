@@ -5,6 +5,9 @@ import {
   TextField,
   Typography,
   useMediaQuery,
+  Select,
+  MenuItem,
+  OutlinedInput,
   useTheme,
 } from "@mui/material";
 import React from "react";
@@ -52,7 +55,8 @@ export const options = {
   },
   plugins: {
     legend: {
-      position: "top" as const,
+      // position: "top" as const,
+      display: false,
     },
     title: {
       display: true,
@@ -137,6 +141,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
   };
   const [email, setEmail] = React.useState<string | undefined>(undefined);
   const [error, setError] = React.useState<string | undefined>(undefined);
+  const [selectedTime, setSelectedTime] = React.useState<string>("All");
   const [data, setData] = React.useState<any>({
     datasets: [
       {
@@ -146,7 +151,9 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
         backgroundColor: "rgb(105, 49, 249)",
       },
     ],
-  })
+  });
+
+  const graphTime: string[] = ["All", "Weekly", "Monthly", "Yearly"];
 
   async function gotoFreeAgencyMarketPage(): Promise<void> {
     await router.push({
@@ -155,20 +162,43 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
     });
   }
 
+  const dublicateData: any = []
+  const mydate = selectedTime === "Weekly" ? 7 : selectedTime === "Monthly" ? 30 : 365
+  for (let i = mydate; i > 0; i--) {
+      const fixTime: any = new Date()
+      const removeHours: any = new Date(parseInt(fixTime.setHours(fixTime.getUTCHours() - fixTime.getUTCHours())))
+      const removeMinuts: any = new Date(parseInt(removeHours.setMinutes(removeHours.getUTCMinutes() - removeHours.getUTCMinutes())))
+      const myTime: any = new Date(parseInt(removeMinuts.setSeconds(removeMinuts.getUTCSeconds() - removeMinuts.getUTCSeconds())))
+      dublicateData.push({
+          x: moment(new Date(parseInt(myTime.setUTCDate(myTime.getUTCDate() - i )))).format("DD/MM/YYYY"),
+          y: 0,
+      })
+  }
+
   const fetchDataForGraph = async (): Promise<any> => {
     const res = await frontendSupabase
       .from("elo_ratings_history")
       .select("*")
       .eq("team_id", teamId);
     if (res.data?.length) {
+      const graphdata: any = res.data?.map((i: any) => ({
+        x: moment(i.created_at).format("DD/MM/YYYY"),
+        y: parseInt(i.elo_rating),
+      }));
+
+        for (let i = 0; i < dublicateData.length; i++) {
+            for (let j = 0; j < graphdata.length; j++) {              
+                if(dublicateData[i].x === graphdata[j].x){
+                    dublicateData[i].y = graphdata[j].y
+                }
+            }
+        }       
+      
       const data = {
         datasets: [
           {
             label: "Dataset 1",
-            data: res.data?.map((i: any) => ({
-              x: moment(i.created_at).format("DD/MM/YYYY"),
-              y: parseInt(i.elo_rating),
-            })),
+            data: selectedTime === "All" ? graphdata : dublicateData,
             borderColor: "rgb(105, 49, 249)",
             backgroundColor: "rgb(105, 49, 249)",
           },
@@ -198,7 +228,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
       };
     });
     setPlayerList(newList);
-  }, [players]);
+  }, [players,selectedTime]);
   const invitePlayer = async (): Promise<void> => {
     const payLoad = { email: email, team_id: teamId };
     const headers = await getAuthHeader();
@@ -214,6 +244,10 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
         }
       });
   };
+
+  const changeGraphTime = (item: string): void => {
+    setSelectedTime(item);
+  };
   return (
     <React.Fragment>
       <Box>
@@ -224,7 +258,15 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
         <Box marginY={2} width={"70vw"}>
           <Slider {...settings}>
             {playerList.map((player): any => {
-              return <Member key={player.name} {...player} onClick={(): any => {router.push(`/account/${player.username}`)}} />;
+              return (
+                <Member
+                  key={player.name}
+                  {...player}
+                  onClick={(): any => {
+                    router.push(`/account/${player.username}`);
+                  }}
+                />
+              );
             })}
             <Box>
               <Box
@@ -268,6 +310,20 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
           <Typography color={"white"} variant={"h5"}>
             Team Graph
           </Typography>
+          <Select
+            value={selectedTime}
+            input={<OutlinedInput />}
+            onChange={(e: any): void => changeGraphTime(e.target.value)}
+            sx={{ m: 1 }}
+          >
+            {graphTime.map((item): any => {
+              return (
+                <MenuItem key={item} value={item}>
+                  {item}
+                </MenuItem>
+              );
+            })}
+          </Select>
           <Line options={options} data={data} />
         </Box>
       ) : null}
