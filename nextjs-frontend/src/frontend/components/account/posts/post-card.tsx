@@ -30,8 +30,6 @@ import Image from "../../../components/utils/supabase-image";
 import config from "../../../utils/config/front-end-config";
 import axios from "axios";
 import { getAuthHeader } from "../../../utils/headers";
-import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
-import { deviceTypes } from "../../../../../src/frontend/redux-store/layout/device-types";
 
 interface IProps {
   data: IPostsResponse;
