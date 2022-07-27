@@ -33,6 +33,7 @@ import {
 import { getAuthHeader } from "../../src/frontend/utils/headers";
 import styles from "./leaderboard.module.css";
 import { useRouter } from "next/router";
+import { frontendSupabase } from "../../src/frontend/services/supabase-frontend-service";
 
 // const createData = (
 //   rank: HTMLParagraphElement,
@@ -67,6 +68,7 @@ export interface Gameinfo {
   lost:any;
   won:any;
   name:any;
+  teamLogo:any;
 }
 
 const imagedata: any = {
@@ -98,6 +100,8 @@ const Leaderboard = (): JSX.Element => {
       axios
         .get(endpoint, { params: { game_id: gameId }, headers: headers })
         .then((res) => {
+          console.log(res);
+          
           setData(res.data);
         })
         .catch(function (error) {
@@ -176,7 +180,13 @@ const Leaderboard = (): JSX.Element => {
               columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}
               className={styles.mainContainer}
             >
-              {leaderboardgamedata.slice(0, 3).map((item, index) => (
+              {leaderboardgamedata.slice(0, 3).map((item, index) => {
+                const image=isTeam?(item.teamLogo
+                ? frontendSupabase.storage
+                    .from("public-files")
+                    .getPublicUrl(item.teamLogo).publicURL
+                : "/icons/Rectangle.svg"):("/icons/Male.png")
+                return(
                 <Grid item xs={12} lg={4} key={item.id} onClick={():any=>{router.push(`account/${item.userDetails.username}`)}}>
                   <Box className={styles.container}>
                     <Box
@@ -219,7 +229,7 @@ const Leaderboard = (): JSX.Element => {
                         className={styles.borderImage}
                       />
                       <img
-                        src={"/icons/Male.png"}
+                        src={image || ""}
                         className={styles.img1}
                         style={{
                           position: "absolute",
@@ -259,8 +269,8 @@ const Leaderboard = (): JSX.Element => {
                       </Box>
                     </Box>
                   </Box>
-                </Grid>
-              ))}
+                </Grid>)
+})}
             </Grid>
           )}
           <div style={{ padding: "10px" }}>
@@ -298,7 +308,13 @@ const Leaderboard = (): JSX.Element => {
                 >
                   {leaderboardgamedata
                     .slice(isDesktop ? 3 : 0, leaderboardgamedata.length)
-                    .map((item, idx) => (
+                    .map((item, idx) => {
+                      const image=isTeam?(item.teamLogo
+                        ? frontendSupabase.storage
+                            .from("public-files")
+                            .getPublicUrl(item.teamLogo).publicURL
+                        : "/icons/Rectangle.svg"):("/icons/Male.png")
+                      return(
                       <TableRow key={item.id} onClick={():any=>{router.push(`account/${item.userDetails.username}`)}}>
                         <TableCell align="center" component="th" scope="row">
                           {idx + (isDesktop ? 4 : 1)}
@@ -309,7 +325,10 @@ const Leaderboard = (): JSX.Element => {
                             style={{ display: "flex", alignItems: "center" }}
                           >
                             <span>
-                              <img src="/icons/Ellipse 4.png" />
+                              <img src={image || ""} 
+                              width={"45px"}
+                            height={"45px"}
+                            style={{ borderRadius: 65 }}/>
                             </span>
                             <span style={{ padding: "10px" }}>
                             {isTeam?item.name:item.userDetails.username}
@@ -324,7 +343,7 @@ const Leaderboard = (): JSX.Element => {
                         </TableCell>
                         {isDesktop&&(<TableCell>{item.elo_rating}</TableCell>)}
                       </TableRow>
-                    ))}
+                    )})}
                 </TableBody>
               </Table>
             </TableContainer>
