@@ -1,4 +1,5 @@
 import { Knex } from "knex";
+import _ from "lodash";
 import { TABLE_NAMES } from "../../../models/constants";
 import { getErrorObject } from "../common/helper/utils.service";
 import { IEloRating } from "../database/models/i-elo-rating";
@@ -97,7 +98,7 @@ async function fetchLeaderBoard(
       findUserWithLeaderboard(i.user_id, i, knexConnection));
     const response = await Promise.all(dataBatch);
 
-    return response;
+    return Object.values(_.groupBy(response, "id")).map((i) => i[0]);
   } catch (err) {
     return getErrorObject();
   }

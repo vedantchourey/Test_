@@ -148,6 +148,7 @@ const TeamListData: React.FC = () => {
                               <Avatar
                                 alt={p.firstName}
                                 src={image || undefined}
+                                key={p.firstName}
                               >
                                 {p.firstName[0]}
                               </Avatar>

@@ -410,7 +410,7 @@ const Home = (): JSX.Element => {
                                     variant="text"
                                     className={styles.newsFeedButton}
                                   >
-                                    SHOOTERS
+                                    {i.label}
                                   </Button>
                                   <Typography className={styles.newsFeedText}>
                                     {i.title}
