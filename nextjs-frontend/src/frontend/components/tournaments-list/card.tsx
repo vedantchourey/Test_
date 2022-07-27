@@ -27,7 +27,8 @@ const CardDesktop: React.FC<any> = ({
   const router = useRouter();
   const isOnGoing = moment(start_date).isBetween(
     moment().hour(0),
-    moment().hour(23).minute(59)
+    moment().hour(23)
+.minute(59)
   );
   return (
     <Grid item lg={6} md={6} mb={2}>
