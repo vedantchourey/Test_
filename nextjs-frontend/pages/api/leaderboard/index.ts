@@ -17,7 +17,8 @@ export default createNextJsRouteHandler({
             res: NextApiResponse<ServiceResponse<any, ISuccess | IError>>,
             context: PerRequestContext
         ) => {
-            const result: any = await fetchLeaderBoard(req.query, context.transaction as Knex.Transaction);
+            const isTeam = req.query.isTeam === "true";
+            const result: any = await fetchLeaderBoard(req.query, context.transaction as Knex.Transaction, isTeam);
             res.status(result?.errors?.length ? 500 : 200).json(result)
         },
         preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],
