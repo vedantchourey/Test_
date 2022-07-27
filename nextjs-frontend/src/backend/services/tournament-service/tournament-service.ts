@@ -816,10 +816,12 @@ export const fetchUserMatchs = async (
 };
 
 export const fetchUserMatchsHistorySingle = async (
-  context: PerRequestContext
+  context: PerRequestContext,
+  params: any,
 ): Promise<any | IError> => {
   try {
     const { user } = context;
+    const userId= params.userId;
     const participantRepo = new CrudRepository<IBParticipants>(
       context.knexConnection as Knex,
       TABLE_NAMES.B_PARTICIPANT
@@ -837,7 +839,7 @@ export const fetchUserMatchsHistorySingle = async (
         "tournamentsData.id",
         "b_tournament.tournament_uuid"
       )
-      .where("user_id", user?.id)
+      .where("user_id", userId)
       .select("*");
 
     return tournaments;
