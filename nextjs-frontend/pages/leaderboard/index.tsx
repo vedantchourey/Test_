@@ -63,6 +63,10 @@ export interface Gameinfo {
   user_id: string;
   created_at: string;
   userDetails: any;
+  loss:any;
+  lost:any;
+  won:any;
+  name:any;
 }
 
 const imagedata: any = {
@@ -85,9 +89,11 @@ const imagedata: any = {
 const Leaderboard = (): JSX.Element => {
   const [leaderboardgamedata, setData] = React.useState<Gameinfo[]>([]);
   const router=useRouter();
+  const [isTeam,setIsTeam]=React.useState<boolean>(false);
+
   const getleaderboardgamedata = async (gameId: string): Promise<void> => {
     try {
-      const endpoint = "/api/leaderboard";
+      const endpoint = `/api/leaderboard?isTeam=${isTeam}`;
       const headers = await getAuthHeader();
       axios
         .get(endpoint, { params: { game_id: gameId }, headers: headers })
@@ -114,7 +120,7 @@ const Leaderboard = (): JSX.Element => {
     if (games.length) {
       getleaderboardgamedata(games[0].id);
     }
-  }, [games]);
+  }, [games,isTeam]);
 
   React.useEffect(() => {
     if (gamesFetchStatus !== "idle") return;
@@ -160,6 +166,7 @@ const Leaderboard = (): JSX.Element => {
           </Box>
           <FormControlLabel
             control={<Checkbox />}
+            onChange={():void=>{setIsTeam(!isTeam)}}
             label={<Typography className={styles.button}>Team</Typography>}
           />
           {isDesktop && (
@@ -231,7 +238,7 @@ const Leaderboard = (): JSX.Element => {
                     <Box style={{ marginLeft: "45px" }}>
                       <Box className={styles.box1}>
                         <Typography className={styles.text1}>
-                          {item.userDetails.username}
+                          {isTeam?item.name:item.userDetails.username}
                         </Typography>
                         <Box className={styles.box2}>
                           <Typography className={styles.text2}>
@@ -305,15 +312,15 @@ const Leaderboard = (): JSX.Element => {
                               <img src="/icons/Ellipse 4.png" />
                             </span>
                             <span style={{ padding: "10px" }}>
-                              {item.userDetails.username}
+                            {isTeam?item.name:item.userDetails.username}
                             </span>
                           </div>
                         </TableCell>
                         <TableCell align="center" component="th" scope="row">
-                          {item.userDetails.GamePlayed}
+                          {isTeam?(item.loss+item.won):parseInt(item.lost)+parseInt(item.won)}
                         </TableCell>
                         <TableCell align="center" component="th" scope="row">
-                          {item.userDetails.Wins}
+                          {isTeam?item.won:parseInt(item.won)}
                         </TableCell>
                         {isDesktop&&(<TableCell>{item.elo_rating}</TableCell>)}
                       </TableRow>
