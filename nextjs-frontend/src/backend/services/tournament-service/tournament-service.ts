@@ -821,7 +821,7 @@ export const fetchUserMatchsHistorySingle = async (
 ): Promise<any | IError> => {
   try {
     const { user } = context;
-    const userId= params.userId;
+    const userId= params.userId || user?.id;
     const participantRepo = new CrudRepository<IBParticipants>(
       context.knexConnection as Knex,
       TABLE_NAMES.B_PARTICIPANT
