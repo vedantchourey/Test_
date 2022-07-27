@@ -100,8 +100,6 @@ const Leaderboard = (): JSX.Element => {
       axios
         .get(endpoint, { params: { game_id: gameId }, headers: headers })
         .then((res) => {
-          console.log(res);
-          
           setData(res.data);
         })
         .catch(function (error) {
@@ -180,14 +178,14 @@ const Leaderboard = (): JSX.Element => {
               columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}
               className={styles.mainContainer}
             >
-              {leaderboardgamedata.slice(0, 3).map((item, index) => {
+              {leaderboardgamedata?.slice(0, 3)?.map((item, index) => {
                 const image=isTeam?(item.teamLogo
                 ? frontendSupabase.storage
                     .from("public-files")
                     .getPublicUrl(item.teamLogo).publicURL
                 : "/icons/Rectangle.svg"):("/icons/Male.png")
                 return(
-                <Grid item xs={12} lg={4} key={item.id} onClick={():any=>{router.push(`account/${item.userDetails.username}`)}}>
+                <Grid item xs={12} lg={4} key={item.id} onClick={():any=>{isTeam?router.push(`/team/view/${item.id}/members`):router.push(`account/${item.userDetails.username}`)}}>
                   <Box className={styles.container}>
                     <Box
                       style={{
@@ -248,7 +246,7 @@ const Leaderboard = (): JSX.Element => {
                     <Box style={{ marginLeft: "45px" }}>
                       <Box className={styles.box1}>
                         <Typography className={styles.text1}>
-                          {isTeam?item.name:item.userDetails.username}
+                          {isTeam?item.name:item?.userDetails?.username}
                         </Typography>
                         <Box className={styles.box2}>
                           <Typography className={styles.text2}>
@@ -257,6 +255,14 @@ const Leaderboard = (): JSX.Element => {
                           <Button variant="text" className={styles.button1}>
                             {item.elo_rating}
                           </Button>
+                        </Box>
+                        <Box className={styles.box2}>
+                          <Typography className={styles.text2} style={{color:'white'}}>
+                            Game Played: {isTeam?(item.loss+item.won):(parseInt(item.lost)+parseInt(item.won))}
+                          </Typography>
+                          <Typography className={styles.text2} style={{color:'white'}}>
+                            Wins: {isTeam?(item.won):(parseInt(item.won))}
+                          </Typography>
                         </Box>
                         <Box className={styles.box3}>
                           <Box className={styles.box4}>
@@ -307,7 +313,7 @@ const Leaderboard = (): JSX.Element => {
                   }}
                 >
                   {leaderboardgamedata
-                    .slice(isDesktop ? 3 : 0, leaderboardgamedata.length)
+                    ?.slice(isDesktop ? 3 : 0, leaderboardgamedata.length)
                     .map((item, idx) => {
                       const image=isTeam?(item.teamLogo
                         ? frontendSupabase.storage
@@ -315,7 +321,7 @@ const Leaderboard = (): JSX.Element => {
                             .getPublicUrl(item.teamLogo).publicURL
                         : "/icons/Rectangle.svg"):("/icons/Male.png")
                       return(
-                      <TableRow key={item.id} onClick={():any=>{router.push(`account/${item.userDetails.username}`)}}>
+                      <TableRow key={item.id} onClick={():any=>{isTeam?router.push(`/team/view/${item.id}/members`):router.push(`account/${item.userDetails.username}`)}}>
                         <TableCell align="center" component="th" scope="row">
                           {idx + (isDesktop ? 4 : 1)}
                           <sup>th</sup>
@@ -331,7 +337,7 @@ const Leaderboard = (): JSX.Element => {
                             style={{ borderRadius: 65 }}/>
                             </span>
                             <span style={{ padding: "10px" }}>
-                            {isTeam?item.name:item.userDetails.username}
+                            {isTeam?item.name:item?.userDetails?.username}
                             </span>
                           </div>
                         </TableCell>
