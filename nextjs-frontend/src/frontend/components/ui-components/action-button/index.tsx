@@ -81,7 +81,7 @@ const ActionButton: React.FC<Props> = ({
       <Box>
         <Button
           style={{
-            background: backColor,
+            background: backColor==="#006A3E"?backColor:disabled?"grey":"linear-gradient(180deg, #EF507E 0%, #F09633 100%)",
             color: "white",
             padding: "16px 43px",
             width: "189px",
@@ -125,7 +125,7 @@ const ActionButton: React.FC<Props> = ({
     <Box display="flex" flexDirection={"column"}>
       <Button
         style={{
-          background: "linear-gradient(180deg, #EF507E 0%, #F09633 100%)",
+          background: disabled?"grey":"linear-gradient(180deg, #EF507E 0%, #F09633 100%)",
           color: "white",
           padding: "16px 43px",
           width: "189px",
@@ -133,7 +133,7 @@ const ActionButton: React.FC<Props> = ({
         aria-controls={open ? id : undefined}
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
-        //disabled={disabled}
+        disabled={disabled}
         endIcon={
           <Image src={"/icons/Downarrow.svg"} height={"12px"} width={"12px"} />
         }

@@ -287,7 +287,7 @@ const Home = (): JSX.Element => {
 
   return (
     <Fragment>
-      <Grid container xs={12}>
+      <Grid container>
         {isDesktop && (
           <>
             <Grid item xs={12} lg={9}>
@@ -432,7 +432,7 @@ const Home = (): JSX.Element => {
                                   color: "white",
                                 }}
                               >
-                                Shooters
+                                {i.label}
                               </Typography>
                               <CardMedia
                                 component="img"

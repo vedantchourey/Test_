@@ -17,7 +17,7 @@ export default createNextJsRouteHandler({
       res: NextApiResponse<ServiceResponse<null, IListTournamentResponse>>,
       context: PerRequestContext
     ) => {
-      const result = await fetchUserMatchsHistorySingle(context);
+      const result = await fetchUserMatchsHistorySingle(context, req.query);
       res.status(result.errors ? 400 : 200).json(result);
     },
     preHooks: [beginTransactionMiddleWare,authenticatedUserMiddleware],

@@ -16,6 +16,12 @@ import axios from "axios";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { getAuthHeader } from "../../../utils/headers";
+import { useAppSelector } from "../../../redux-store/redux-store";
+import { allGamesSelector } from "../../../redux-store/games/game-selectors";
+import { useAppDispatch } from "../../../redux-store/redux-store";
+import { fetchAllGamesThunk } from "../../../redux-store/games/game-slice";
+import { gamesFetchStatusSelector } from "../../../redux-store/games/game-selectors";
+
 
 export const NoobCell = styled(TableCell)(() => ({
   border: "0px",
@@ -34,6 +40,7 @@ interface IData {
   date: string;
   invite_key: string;
   teamId: string;
+  gameId:string;
 }
 
 export const NoobButton = styled(Button)(() => ({
@@ -53,6 +60,16 @@ const Permissions: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<IData[] | []>([]);
+  
+
+  const appDispatch = useAppDispatch();
+  const games = useAppSelector(allGamesSelector);
+  const gamesFetchStatus = useAppSelector(gamesFetchStatusSelector);
+
+  React.useEffect(() => {
+    if (gamesFetchStatus !== "idle") return;
+    appDispatch(fetchAllGamesThunk());
+  }, [appDispatch, gamesFetchStatus]);
 
   const fetchTeam = async (): Promise<void> => {
     const headers = await getAuthHeader();
@@ -65,6 +82,7 @@ const Permissions: React.FC = () => {
           teamname: ["/icons/Rectangle.svg", item.team.name],
           date: moment(item.created_at).format("DD/MM/YYYY HH:MM"),
           teamId: item.team.id,
+          gameId: item.team.game_id,
           invite_key: item.secret
         }));
         setData(players);
@@ -103,8 +121,13 @@ const Permissions: React.FC = () => {
                   <NoobRow>
                     <NoobCell>
                       <Box display="flex" alignItems={"center"}>
-                        <Typography marginRight={12}>Username</Typography>
+                        <Typography marginRight={12}>Received By</Typography>
                         <Typography>Team Name</Typography>
+                      </Box>
+                    </NoobCell>
+                    <NoobCell>
+                      <Box display="flex" alignItems={"center"}>
+                        <Typography>Game Name</Typography>
                       </Box>
                     </NoobCell>
                     <NoobCell>
@@ -139,6 +162,11 @@ const Permissions: React.FC = () => {
                           <Typography marginLeft={2}>
                             {item.teamname[1]}
                           </Typography>
+                        </Box>
+                      </NoobCell>
+                      <NoobCell>
+                        <Box display="flex" alignItems={"center"}>
+                          <Typography>{games.find((i:any)=>i.id===item.gameId)?.displayName}</Typography>
                         </Box>
                       </NoobCell>
                       <NoobCell>

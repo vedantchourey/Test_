@@ -30,8 +30,6 @@ import Image from "../../../components/utils/supabase-image";
 import config from "../../../utils/config/front-end-config";
 import axios from "axios";
 import { getAuthHeader } from "../../../utils/headers";
-import {isDeviceTypeSelector} from "../../../../../src/frontend/redux-store/layout/layout-selectors";
-import { deviceTypes } from "../../../../../src/frontend/redux-store/layout/device-types";
 
 interface IProps {
   data: IPostsResponse;
@@ -60,9 +58,6 @@ const PostCard = (props: IProps): JSX.Element => {
 
   const imgUrl = props.data.postImgUrl;
   const avatarUrl = props.data.postOwner.avatarUrl;
-  const isMobile = useAppSelector((x) =>
-    isDeviceTypeSelector(x, deviceTypes.desktop));
-
   const handleOpenComments = (): void => setOpenCommentsModal((pre) => !pre);
   const handleCloseComments = (): void => setOpenCommentsModal(false);
   const handleCloseMenu = (): void => setShowMenu(false);
@@ -318,19 +313,19 @@ const PostCard = (props: IProps): JSX.Element => {
                 part + " "
               ))}
           </Typography>
-          {values.postContent.length>500&&!isMobile||values.postContent.length>250&&isMobile?
-          <Button
-          style={{
-            color: "#FFFFFF",
-            fontSize: 14,
-            marginBottom: !values.postImgUrl ? 50 : 0,
-          }}
-          onClick={(): any => {
-            setReadMore(!readMore);
-          }}
-        >
-          {readMore ? `Read less...` : `Read More...`}
-        </Button>:null}
+            <Button
+              style={{
+                color: "#FFFFFF",
+                fontSize: 14,
+                marginBottom: !values.postImgUrl ? 50 : 0,
+                visibility: values.postContent.length > 450 ? 'visible' : 'hidden'
+              }}
+              onClick={(): any => {
+                setReadMore(!readMore);
+              }}
+            >
+              {readMore ? `Read less...` : `Read More...`}
+            </Button>
 
           <Box sx={{ position: "relative" }}>
             {imgUrl && (
@@ -391,8 +386,8 @@ const PostCard = (props: IProps): JSX.Element => {
             )}
 
             {!isFetchingMeta && (
-              <Box className={styles.actionButtons}>
-                <Box className={styles.blurContainer}>
+              <Box className={styles.actionButtons} >
+                <Box className={styles.blurContainer} >
                   <Box
                     sx={{
                       display: "flex",

@@ -22,6 +22,7 @@ const NewsPageFormCard: React.FC<void> = () => {
           author: data.authorname,
           image: data.banner,
           description: data.description,
+          label: data.label,
         },
         { headers: headers }
       )
