@@ -41,10 +41,12 @@ import { getAuthHeader } from "../../../utils/headers";
 import axios from "axios";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import { useRouter } from "next/router";
+import AvtarModal from "./avtar-modal";
 
 export default function UserProfileCard(): JSX.Element {
   const router = useRouter()
   const userProfile = useAppSelector(userProfileSelector);
+  const [openAvatarsModal, setOpenAvatarModal] = useState<boolean>(false);
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
   const [showBackgroundPicker, setShowBackgroundPicker] = useState(false);
   const appDispatch = useAppDispatch();
@@ -66,6 +68,8 @@ export default function UserProfileCard(): JSX.Element {
     setAnchorEl(null);
   };
 
+  const handleCloseAvtar = (): void => setOpenAvatarModal(false);
+
   const teamList = async (): Promise<void> => {
     try {
       const endpoint = "api/teams";
@@ -84,10 +88,24 @@ export default function UserProfileCard(): JSX.Element {
     }
   }, [userProfile]);
 
+  async function onUploadDefaultAvatar(files: FileList | null): Promise<void> {
+    setShowAvatarPicker(false);
+    if (files == null || files.length === 0) return;
+    try {
+      appDispatch(setIsLoading(true));
+      await updateAvatar(files[0]);
+      appDispatch(fetchUserProfileThunk());
+      appDispatch(forceFetchAvatarImageBlob());
+    } finally {
+      appDispatch(setIsLoading(false));
+    }
+  }
+
   async function onUploadAvatar(files: FileList | null): Promise<void> {
     setShowAvatarPicker(false);
     if (files == null || files.length === 0) return;
     try {
+      console.log("files[0]",files[0]);      
       appDispatch(setIsLoading(true));
       await updateAvatar(files[0]);
       appDispatch(fetchUserProfileThunk());
@@ -111,8 +129,12 @@ export default function UserProfileCard(): JSX.Element {
     }
   }
 
+  const showUploadDefaultAvatarPicker = (): void => {
+    setOpenAvatarModal(true)
+  };
   const showUploadAvatarPicker = (): void => {
     setShowAvatarPicker(true);
+    handleCloseAvtar()
     setTimeout((): any => setShowAvatarPicker(false), 500);
   };
   const showUploadBackgroundPicker = (): void => {
@@ -217,7 +239,7 @@ export default function UserProfileCard(): JSX.Element {
             ></Avatar>
             <IconButton
               className={styles.selectImg}
-              onClick={showUploadAvatarPicker}
+              onClick={showUploadDefaultAvatarPicker}
             >
               {/* <img src='icons/gallery.svg' alt='icon' /> */}
               <CollectionsIcon />
@@ -232,6 +254,12 @@ export default function UserProfileCard(): JSX.Element {
             @{userProfile?.username}
           </Typography>
         </Box>
+
+        <AvtarModal
+          isModalOpen={openAvatarsModal}
+          handleClose={handleCloseAvtar}
+          handleCustomUploadAvatarPicker={showUploadAvatarPicker}
+        />
 
         <Divider sx={{ mb: 2 }} light className={styles.divider} />
         <Box className={styles.bottom}>

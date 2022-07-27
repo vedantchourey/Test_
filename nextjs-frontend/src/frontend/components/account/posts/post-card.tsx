@@ -7,8 +7,10 @@ import {
   Box,
   List,
   ListItem,
+  ListItemText,
   Button,
   Grid,
+  Popover,
 } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
@@ -30,8 +32,9 @@ import Image from "../../../components/utils/supabase-image";
 import config from "../../../utils/config/front-end-config";
 import axios from "axios";
 import { getAuthHeader } from "../../../utils/headers";
-import {isDeviceTypeSelector} from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
 import { deviceTypes } from "../../../../../src/frontend/redux-store/layout/device-types";
+import { frontendSupabase } from "../../../services/supabase-frontend-service";
 
 interface IProps {
   data: IPostsResponse;
@@ -57,16 +60,29 @@ const PostCard = (props: IProps): JSX.Element => {
   const [isFetchingMeta, setIsFetchingMeta] = useState<boolean>(true);
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
   const [readMore, setReadMore] = useState(false);
+  const [likeList, setLikeList] = useState([]);
 
   const imgUrl = props.data.postImgUrl;
   const avatarUrl = props.data.postOwner.avatarUrl;
   const isMobile = useAppSelector((x) =>
-    isDeviceTypeSelector(x, deviceTypes.desktop));
+    isDeviceTypeSelector(x, deviceTypes.desktop)
+  );
 
   const handleOpenComments = (): void => setOpenCommentsModal((pre) => !pre);
   const handleCloseComments = (): void => setOpenCommentsModal(false);
   const handleCloseMenu = (): void => setShowMenu(false);
   const handleToggleMenu = (): void => setShowMenu((pre) => !pre);
+
+  const fetchUsers = async (post_id: string): Promise<void> => {
+    
+    const likeLists: any = await frontendSupabase
+      .from("post_likes")
+      .select("*")
+      .eq("postId", post_id)
+
+      setLikeList(likeLists.data)
+    
+  };
 
   useEffect(() => {
     fetchPostData();
@@ -180,6 +196,20 @@ const PostCard = (props: IProps): JSX.Element => {
   };
 
   if (isDeleted) return <></>;
+
+  const [anchorEl, setAnchorEl] = React.useState<any>(null);
+
+  const handleClickPopover = (event: any): void => {
+    fetchUsers(values.id)
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClosePopover = (): void => {
+    setAnchorEl(null);
+  };
+
+  const openPopover = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
 
   return (
     <>
@@ -316,21 +346,23 @@ const PostCard = (props: IProps): JSX.Element => {
                 </a>
               ) : (
                 part + " "
-              ))}
+              )
+            )}
           </Typography>
-            <Button
-              style={{
-                color: "#FFFFFF",
-                fontSize: 14,
-                marginBottom: !values.postImgUrl ? 50 : 0,
-                visibility: values.postContent.length > 450 ? 'visible' : 'hidden'
-              }}
-              onClick={(): any => {
-                setReadMore(!readMore);
-              }}
-            >
-              {readMore ? `Read less...` : `Read More...`}
-            </Button>
+          <Button
+            style={{
+              color: "#FFFFFF",
+              fontSize: 14,
+              marginBottom: !values.postImgUrl ? 50 : 0,
+              visibility:
+                values.postContent.length > 450 ? "visible" : "hidden",
+            }}
+            onClick={(): any => {
+              setReadMore(!readMore);
+            }}
+          >
+            {readMore ? `Read less...` : `Read More...`}
+          </Button>
 
           <Box sx={{ position: "relative" }}>
             {imgUrl && (
@@ -391,8 +423,8 @@ const PostCard = (props: IProps): JSX.Element => {
             )}
 
             {!isFetchingMeta && (
-              <Box className={styles.actionButtons} >
-                <Box className={styles.blurContainer} >
+              <Box className={styles.actionButtons}>
+                <Box className={styles.blurContainer}>
                   <Box
                     sx={{
                       display: "flex",
@@ -415,8 +447,47 @@ const PostCard = (props: IProps): JSX.Element => {
                           key={values.totalLikes}
                         />
                       </IconButton>
-                      <Typography>{values?.totalLikes || 0}</Typography>
+                      <Typography
+                        aria-describedby={id}
+                        onClick={handleClickPopover}
+                      >
+                        {values?.totalLikes || 0}
+                      </Typography>
                     </Box>
+                    <Popover
+                      id={id}
+                      open={openPopover}
+                      anchorEl={anchorEl}
+                      onClose={handleClosePopover}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
+                      }}
+                    >
+                      <List
+                        sx={{
+                          width: "100%",
+                          maxWidth: 360,
+                          bgcolor: "background.paper",
+                          position: "relative",
+                          overflow: "auto",
+                          maxHeight: 300,
+                          "& ul": { padding: 0 },
+                        }}
+                        subheader={<li />}
+                      >
+                            <ul>
+                              {likeList.map((item: any) => (
+                                <ListItem>
+                                  {item?.likedBy}
+                                </ListItem>
+                              ))}
+                            </ul>
+                      </List>
+                      {/* <Typography sx={{ p: 2 }}>
+                        The content of the Popover.
+                      </Typography> */}
+                    </Popover>
                     <Box mx={1}>
                       <IconButton
                         className={styles.postBtn}
