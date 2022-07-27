@@ -1,11 +1,11 @@
-import { Box, Typography, Avatar, Button } from "@mui/material";
+import { Box, Typography, Avatar } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import styles from "./followers-list-modal.module.css";
 import { getUserProfileByUsername } from "../../service-clients/profile-service-client";
 import Image from "../../components/utils/supabase-image";
 import config from "../../utils/config/front-end-config";
 import { useRouter } from "next/router";
-import { unFollowUser,followUser } from "../../service-clients/follow-service";
+//import { unFollowUser,followUser } from "../../service-clients/follow-service";
 
 export default function Followersmodal({ username }: any): JSX.Element {
   const [data, setData] = useState<any>([]);
@@ -46,13 +46,9 @@ export default function Followersmodal({ username }: any): JSX.Element {
           </Typography>
         </Box>
       </Box>
-      <Button
-        className={styles.followBtn}
-        variant={data.isFollowing ? "outlined" : "contained"}
-        onClick={():void=>{data.isFollowing?unFollowUser(data.id):followUser(data.id)}}
-      >
-        {data.isFollowing ? "Unfollow" : "Follow"}
-      </Button>
+      {/* <Button className={styles.followBtn} variant="contained">
+        Follow
+      </Button> */}
     </Box>
   );
 }

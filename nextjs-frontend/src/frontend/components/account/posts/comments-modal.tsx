@@ -156,7 +156,8 @@ const CommentsModal = (props: IProps): JSX.Element => {
 
   const _renderComments = (): JSX.Element[] | JSX.Element | void[] => {
     if (isFetchingComments) {
-      return new Array(20).fill("").map((_, i) => {
+      return new Array(20).fill("")
+.map((_, i) => {
         return (
           <Box key={i} sx={{ px: 2 }} mb={3}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>

@@ -131,7 +131,6 @@ const Leaderboard = (): JSX.Element => {
       <Fragment>
         <Container maxWidth="xl">
           <Heading divider heading={"LEADERBOARD"} />
-          <Typography className={styles.text}>Choose Game</Typography>
           <Box
             mt={5}
             sx={{ maxWidth: isDesktop ? "1400px" : "300px" }}
@@ -273,7 +272,9 @@ const Leaderboard = (): JSX.Element => {
                     <TableCell style={{ width: "8%" }} align="center">
                       Rank
                     </TableCell>
-                    <TableCell style={{ width: "65%" }}>Username</TableCell>
+                    <TableCell style={{ width: "50%" }}>Username</TableCell>
+                    <TableCell style={{ width: "10%" }}>Games Played</TableCell>
+                    <TableCell style={{ width: "10%" }}>Wins</TableCell>
                     {isDesktop && (
                       <TableCell style={{ width: "25%" }}>Elo Rating</TableCell>
                     )}
@@ -308,7 +309,13 @@ const Leaderboard = (): JSX.Element => {
                             </span>
                           </div>
                         </TableCell>
-                        {isDesktop && <TableCell>{item.elo_rating}</TableCell>}
+                        <TableCell align="center" component="th" scope="row">
+                          {item.userDetails.GamePlayed}
+                        </TableCell>
+                        <TableCell align="center" component="th" scope="row">
+                          {item.userDetails.Wins}
+                        </TableCell>
+                        {isDesktop&&(<TableCell>{item.elo_rating}</TableCell>)}
                       </TableRow>
                     ))}
                 </TableBody>

@@ -123,7 +123,7 @@ export const getPostCommentsCount = async (postId: string): Promise<{ totalComme
   
   export const getCommentLikesCount = async (Id: string): Promise<{ totalLikes: number | null }> => {
 
-    var result: any = await frontendSupabase.from('comment_likes')
+    const result: any = await frontendSupabase.from('comment_likes')
     .select("id")
     .eq("commentId", Id)
 

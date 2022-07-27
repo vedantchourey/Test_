@@ -25,6 +25,11 @@ const CardDesktop: React.FC<any> = ({
   banner,
 }: any) => {
   const router = useRouter();
+  const isOnGoing = moment(start_date).isBetween(
+    moment().hour(0),
+    moment().hour(23)
+.minute(59)
+  );
   return (
     <Grid item lg={6} md={6} mb={2}>
       <Box>
@@ -75,11 +80,19 @@ const CardDesktop: React.FC<any> = ({
               <Grid item md={4} lg={4}>
                 <Button
                   variant="contained"
-                  color={moment(start_date).isBefore(moment()) ? "secondary" : "info"}
+                  sx={{
+                    background: isOnGoing
+                      ? "rgba(249, 49, 193, 1)"
+                      : moment(start_date).isBefore(moment().add(1, "day"))
+                      ? "rgba(249, 85, 49, 1)"
+                      : "rgba(105, 49, 249, 1)",
+                  }}
                 >
-                  {moment(start_date).isBefore(moment())
+                  {isOnGoing
+                    ? "On Going"
+                    : moment(start_date).isBefore(moment())
                     ? "Completed"
-                    : "On Going"}
+                    : "Upcoming"}
                 </Button>
               </Grid>
             </Grid>
@@ -101,7 +114,7 @@ const CardDesktop: React.FC<any> = ({
                 className={styles.credit_font}
                 textAlign={"right"}
               >
-                {credits === 0 ? "Free Entry" : `${credits} Credits`} 
+                {credits === 0 ? "Free Entry" : `${credits} Credits`}
               </Grid>
               <Grid item md={2} mb={1} lg={2} textAlign={"right"}>
                 <Button
@@ -129,7 +142,7 @@ const CardMobile: React.FC<any> = ({
   platform,
   start_date,
   participants,
-  banner
+  banner,
 }: any): JSX.Element => {
   const router = useRouter();
   return (

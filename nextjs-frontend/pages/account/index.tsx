@@ -79,7 +79,7 @@ function Account(): JSX.Element {
   const fetchData = async (): Promise<void> => {
     const headers = await getAuthHeader();
     axios
-      .get("/api/tournaments/user-matches-history-single", { headers: headers })
+      .get("/api/tournaments/user-matches-history-single", { headers: headers,params:{userId:user?.id} })
       .then((res) => {
         setData(res.data);
       })
