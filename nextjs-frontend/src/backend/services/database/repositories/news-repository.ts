@@ -9,6 +9,7 @@ const keys = ["id",
     "image",
     "description",
     "created_at",
+    "label"
 ];
 export class NewsRepository extends BaseRepository<INews> {
   constructor(transaction: Knex.Transaction) {
