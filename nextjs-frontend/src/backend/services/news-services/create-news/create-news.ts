@@ -16,8 +16,7 @@ export async function createNews(req: ICreateNewsRequest, context: PerRequestCon
         subtitle: req.subtitle,
         author: req.author,
         image: req.image,
-        description: req.description,
-        category:req.category,
+        description: req.description
     });
 
     const createdPost = await repository.getNewsUsingId(newsId as string);
