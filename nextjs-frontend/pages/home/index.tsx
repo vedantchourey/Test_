@@ -1,4 +1,5 @@
 import { Fragment, useState, SyntheticEvent, useEffect } from "react";
+import { CardContent, CardMedia, Card } from "@mui/material";
 import {
   Typography,
   Grid,
@@ -211,8 +212,14 @@ const Home = (): JSX.Element => {
         />
         <Box className={styles.backgroundImg} style={{ position: "absolute" }}>
           <div className={styles.bgImgContainer}>
-            <Typography className={isDesktop?styles.text1:styles.text1Mobile}>PIXIEFREAK GAMING</Typography>
-            <Typography className={isDesktop?styles.text2:styles.text2Mobile}>
+            <Typography
+              className={isDesktop ? styles.text1 : styles.text1Mobile}
+            >
+              PIXIEFREAK GAMING
+            </Typography>
+            <Typography
+              className={isDesktop ? styles.text2 : styles.text2Mobile}
+            >
               We organize eSports tournaments for professional and amateur
               gamers
             </Typography>
@@ -231,8 +238,14 @@ const Home = (): JSX.Element => {
         />
         <Box className={styles.backgroundImg} style={{ position: "absolute" }}>
           <div className={styles.bgImgContainer}>
-            <Typography className={isDesktop?styles.text1:styles.text1Mobile}>PIXIEFREAK GAMING</Typography>
-            <Typography className={isDesktop?styles.text2:styles.text2Mobile}>
+            <Typography
+              className={isDesktop ? styles.text1 : styles.text1Mobile}
+            >
+              PIXIEFREAK GAMING
+            </Typography>
+            <Typography
+              className={isDesktop ? styles.text2 : styles.text2Mobile}
+            >
               We organize eSports tournaments for professional and amateur
               gamers
             </Typography>
@@ -251,8 +264,14 @@ const Home = (): JSX.Element => {
         />
         <Box className={styles.backgroundImg} style={{ position: "absolute" }}>
           <div className={styles.bgImgContainer}>
-            <Typography className={isDesktop?styles.text1:styles.text1Mobile}>PIXIEFREAK GAMING</Typography>
-            <Typography className={isDesktop?styles.text2:styles.text2Mobile}>
+            <Typography
+              className={isDesktop ? styles.text1 : styles.text1Mobile}
+            >
+              PIXIEFREAK GAMING
+            </Typography>
+            <Typography
+              className={isDesktop ? styles.text2 : styles.text2Mobile}
+            >
               We organize eSports tournaments for professional and amateur
               gamers
             </Typography>
@@ -301,7 +320,6 @@ const Home = (): JSX.Element => {
         {!isDesktop && (
           <>
             <Grid item xs={12}>
-            
               <div className={styles.backgroundImgMobile}>
                 <AliceCarousel
                   items={topImageCarousel}
@@ -391,33 +409,58 @@ const Home = (): JSX.Element => {
                     </Box>
                   </TabPanel>
                   <TabPanel value="2" className={styles.newsFeedContainer}>
-                    <Grid container columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}>
+                    <Grid
+                      container
+                      columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}
+                      display="flex"
+                    >
                       {newsData.map((i: any, key) => {
                         if (key < 3) {
                           return (
-                            <Grid item xs={12} lg={4}>
-                              <Button
-                                className={styles.newsFeedImg}
+                            <Card
+                              sx={{ maxWidth: 280, m: 2 }}
+                              key={key}
+                              onClick={(): any => router.push(`/blog/${i.id}`)}
+                            >
+                              <Typography
                                 style={{
-                                  backgroundImage: `url(${i.image})`,
+                                  position: "absolute",
+                                  backgroundColor: "#6932F9",
+                                  margin: "15px",
+                                  padding: "5px 25px",
+                                  color: "white",
                                 }}
-                                onClick={(): any =>
-                                  router.push(`/blog/${i.id}`)
-                                }
                               >
-                                <Box className={styles.newsGrid}>
-                                  <Button
-                                    variant="text"
-                                    className={styles.newsFeedButton}
-                                  >
-                                    {i.label}
-                                  </Button>
-                                  <Typography className={styles.newsFeedText}>
-                                    {i.title}
-                                  </Typography>
-                                </Box>
-                              </Button>
-                            </Grid>
+                                {i.label}
+                              </Typography>
+                              <CardMedia
+                                component="img"
+                                height="240"
+                                image={i.image}
+                                alt="green iguana"
+                              />
+                              <CardContent>
+                                <Typography
+                                  gutterBottom
+                                  variant="h5"
+                                  fontSize={16}
+                                  textAlign={"left"}
+                                  component="div"
+                                >
+                                  {i.title}
+                                </Typography>
+                                <Typography
+                                  textAlign={"left"}
+                                  variant="h1"
+                                  fontSize={14}
+                                  mt={1}
+                                  color={"#6931F9"}
+                                >
+                                  Author: {i.author} / Publishing Date:{" "}
+                                  {moment(i.created_at).format("DD MMM YYYY")}
+                                </Typography>
+                              </CardContent>
+                            </Card>
                           );
                         }
                       })}
@@ -549,27 +592,50 @@ const Home = (): JSX.Element => {
                     {newsData.map((i: any, key) => {
                       if (key < 3) {
                         return (
-                          <Grid item xs={12} lg={4} style={{ marginTop: 25 }}>
-                            <Button
-                              className={styles.newsFeedImg}
+                          <Card
+                            sx={{ maxWidth: 400, m: 2 }}
+                            key={key}
+                            onClick={(): any => router.push(`/blog/${i.id}`)}
+                          >
+                            <Typography
                               style={{
-                                backgroundImage: `url(${i.image})`,
+                                position: "absolute",
+                                backgroundColor: "#6932F9",
+                                margin: "15px",
+                                padding: "5px 25px",
+                                color: "white",
                               }}
-                              onClick={(): any => router.push(`/blog/${i.id}`)}
                             >
-                              <Box className={styles.newsGrid}>
-                                <Button
-                                  variant="text"
-                                  className={styles.newsFeedButton}
-                                >
-                                  SHOOTERS
-                                </Button>
-                                <Typography className={styles.newsFeedText}>
-                                  {i.title}
-                                </Typography>
-                              </Box>
-                            </Button>
-                          </Grid>
+                              Shooters
+                            </Typography>
+                            <CardMedia
+                              component="img"
+                              height="240"
+                              image={i.image}
+                              alt="green iguana"
+                            />
+                            <CardContent>
+                              <Typography
+                                gutterBottom
+                                variant="h5"
+                                fontSize={16}
+                                textAlign={"left"}
+                                component="div"
+                              >
+                                {i.title}
+                              </Typography>
+                              <Typography
+                                textAlign={"left"}
+                                variant="h1"
+                                fontSize={14}
+                                mt={1}
+                                color={"#6931F9"}
+                              >
+                                Author: {i.author} / Publishing Date:{" "}
+                                {moment(i.created_at).format("DD MMM YYYY")}
+                              </Typography>
+                            </CardContent>
+                          </Card>
                         );
                       }
                     })}
