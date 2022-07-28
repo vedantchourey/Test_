@@ -30,7 +30,6 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../src/frontend/redux-store/redux-store";
-import { getAuthHeader } from "../../src/frontend/utils/headers";
 import styles from "./leaderboard.module.css";
 import { useRouter } from "next/router";
 
