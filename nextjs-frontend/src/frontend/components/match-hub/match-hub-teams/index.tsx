@@ -73,6 +73,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
   const [uploadResults, setUploadResults] = React.useState(false);
   const [resultStatus, setResultStatus] = React.useState(false);
   const [data, setData] = React.useState<PlayerData | undefined>();
+  const [loading, setLoading] = React.useState(false);
   const [matchReportSubmited, setMatchReportSubmited] = React.useState(false)
   const [team, setTeam] = React.useState<any[]>([]);
   const [chatChannel, setChatChannel] = React.useState<any>(undefined)
@@ -102,14 +103,17 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
 
     const fetchTeam = async (): Promise<void> => {
       const headers = await getAuthHeader();
+      setLoading(true);
       axios
         .get("/api/teams", { headers: headers })
         .then((res) => {
           if (res.data.result && res.data.result.length > 0) {
             setTeam(res.data.result);
           }
+          setLoading(false);
         })
         .catch((err) => {
+          setLoading(false);
           console.error(err);
         });
     };
