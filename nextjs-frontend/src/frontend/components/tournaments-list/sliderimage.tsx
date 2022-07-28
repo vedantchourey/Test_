@@ -66,7 +66,6 @@ const SliderComp: React.FC = (): JSX.Element => {
     try {
       setLoading(true);
       const endpoint = "/api/tournaments/list";
-      const headers = await getAuthHeader();
       axios
         .get(endpoint, {
           params: {
@@ -75,8 +74,7 @@ const SliderComp: React.FC = (): JSX.Element => {
             format,
             status,
             amount: credits,
-          },
-          headers: headers,
+          }
         })
         .then((res) => {
           setData(res.data.data.tournaments.filter((i: any) => i !== null));

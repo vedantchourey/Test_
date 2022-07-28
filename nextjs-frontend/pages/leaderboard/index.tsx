@@ -101,7 +101,7 @@ const Leaderboard = (): JSX.Element => {
       const endpoint = `/api/leaderboard?isTeam=${isTeam}`;
       const headers = await getAuthHeader();
       axios
-        .get(endpoint, { params: { game_id: gameId }, headers: headers })
+        .get(endpoint, { params: { game_id: gameId } })
         .then((res) => {
           setData(res.data);
         })

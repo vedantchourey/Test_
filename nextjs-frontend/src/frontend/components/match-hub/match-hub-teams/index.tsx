@@ -31,6 +31,9 @@ import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import { v4 } from "uuid";
 import moment from "moment";
 import { IMatchHubData } from "../../../../../pages/match-hub";
+import { userProfileSelector } from "../../../redux-store/authentication/authentication-selectors";
+import { useAppSelector } from "../../../redux-store/redux-store";
+import ChatBox from "../../chat/ChatBox";
 
 const style = {
   position: "absolute" as const,
@@ -65,10 +68,15 @@ const calculateDuration = (
 ): moment.Duration => moment.duration(eventTime.diff(now), "milliseconds");
 
 const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
+  const user = useAppSelector(userProfileSelector);
+
   const [uploadResults, setUploadResults] = React.useState(false);
   const [resultStatus, setResultStatus] = React.useState(false);
   const [data, setData] = React.useState<PlayerData | undefined>();
+  const [loading, setLoading] = React.useState(false);
   const [matchReportSubmited, setMatchReportSubmited] = React.useState(false)
+  const [team, setTeam] = React.useState<any[]>([]);
+  const [chatChannel, setChatChannel] = React.useState<any>(undefined)
 
   const opponent1Name = match.opponent1.user_id
     ? `${match.opponent1.firstName} ${match.opponent1.lastName}`
@@ -77,16 +85,49 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
     ? `${match.opponent2.firstName} ${match.opponent2.lastName}`
     : match.opponent2.name;
 
-  const validationSchema = yup.object({
-    match_id: yup.string().required("Match id is required"),
-    screenshot: yup.string().required("Screenshot is required"),
-    winner: yup.string().when("draw", {
-      is: "true",
-      then: yup.string().required("Winner is required"),
-      otherwise: yup.string(),
-    }),
-    draw: yup.boolean(),
-  });
+
+    const isMyTeam =
+      match.opponent1.team_id &&
+      team.find(
+        (t) =>
+          t.id === match.opponent1.team_id || t.id === match.opponent2.team_id
+      );
+
+    const myPlayer = !match.opponent1.team_id
+      ? match.opponent1.user_id === user?.id
+        ? match.opponent1
+        : match.opponent2
+      : match.opponent1?.team_id === isMyTeam?.id
+      ? match.opponent1
+      : match.opponent2;
+
+    const fetchTeam = async (): Promise<void> => {
+      const headers = await getAuthHeader();
+      setLoading(true);
+      axios
+        .get("/api/teams", { headers: headers })
+        .then((res) => {
+          if (res.data.result && res.data.result.length > 0) {
+            setTeam(res.data.result);
+          }
+          setLoading(false);
+        })
+        .catch((err) => {
+          setLoading(false);
+          console.error(err);
+        });
+    };
+
+    const validationSchema = yup.object({
+      match_id: yup.string().required("Match id is required"),
+      screenshot: yup.string().required("Screenshot is required"),
+      winner: yup.string().when("draw", {
+        is: "true",
+        then: yup.string().required("Winner is required"),
+        otherwise: yup.string(),
+      }),
+      draw: yup.boolean(),
+    });
 
   const formik = useFormik({
     initialValues: {
@@ -208,8 +249,25 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       });
   };
 
+  const findChatChannel = async () => {
+    const chatChannel = await frontendSupabase
+      .from("chat_users")
+      .select()
+      .eq("user_id", user?.id || "")
+      .eq("other_user", myPlayer.team_id);
+    setChatChannel(chatChannel.data?.[0]);
+  };
+
+  const fetchData = async () => {
+    if (match.opponent1?.team_id) {
+      await fetchTeam();
+      await findChatChannel();
+    }
+  };
+
   React.useEffect(() => {
     const timerRef = window.setInterval(timerCallback, 1000);
+    fetchData()
 
     return () => {
       clearInterval(timerRef);
@@ -286,7 +344,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
               opponent1Name={opponent1Name}
               opponent2Name={opponent2Name}
               child={
-                <Box color="white">
+                <Box color="white" style={{ textAlign: "center" }}>
                   <Typography variant="h3" component={"h1"}>
                     VS
                   </Typography>
@@ -306,7 +364,12 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
         ) : null}
 
         <Grid item xs={12}>
-          <Box display={"flex"} justifyContent={"center"} marginTop="60px" alignItems={"center"}>
+          <Box
+            display={"flex"}
+            justifyContent={"center"}
+            marginTop="60px"
+            alignItems={"center"}
+          >
             <Button
               style={{
                 color: "white",
@@ -323,16 +386,19 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
               Back
             </Button>
             <Button
+              disabled={match.is_checked_in}
               style={{
                 color: "white",
                 padding: "12px 38px",
-                backgroundColor: "#08001C",
-                border: "1px solid #6932F9",
+                backgroundColor: match.is_checked_in
+                  ? "rgba(255,255,255,0.2)"
+                  : "#08001C",
+                border: match.is_checked_in ? undefined : "1px solid #6932F9",
                 margin: "0px 0px 0px 16px",
               }}
               onClick={(): any => checkInTournament()}
             >
-              Check In
+              {match.is_checked_in ? "Checked in" : "Check In"}
             </Button>
             <Button
               style={{
@@ -407,6 +473,29 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
           </Box>
         </Grid>
       </Grid>
+      {chatChannel?.channel_id && (
+        <Box
+          display={"flex"}
+          height={"500px"}
+          style={{ background: "rgba(255,255,255,0.1)" }}
+          borderRadius={2}
+          mt={2}
+        >
+          <ChatBox
+            channelId={chatChannel?.channel_id as string}
+            addMember={() => {}}
+            channelName={myPlayer.name as string}
+            fetchChat={async () => {}}
+            onBack={() => {}}
+            smallChat={true}
+            userId={user?.id as string}
+            user={user}
+            data={chatChannel?.channel_id}
+            key={1}
+          />
+        </Box>
+      )}
+
       <Modal open={resultStatus} onClose={(): void => setResultStatus(false)}>
         <Box sx={style}>
           <Box
@@ -517,20 +606,20 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                 <Typography color="white" variant="body2" marginTop={1}>
                   {formik.errors.screenshot}
                 </Typography>
-              ):
+              ) : (
                 <Box display="flex" flexDirection={"column"}>
-                      {formik?.values?.screenshot !== "" && (
-                        <>
-                          <Typography
-                            style={{ textAlign: "left", margin: "10px 0px" }}
-                          >
-                            Preview
-                          </Typography>
-                          <img src={formik.values.screenshot} width="30%" />
-                        </>
-                      )}
-                    </Box>
-              }
+                  {formik?.values?.screenshot !== "" && (
+                    <>
+                      <Typography
+                        style={{ textAlign: "left", margin: "10px 0px" }}
+                      >
+                        Preview
+                      </Typography>
+                      <img src={formik.values.screenshot} width="30%" />
+                    </>
+                  )}
+                </Box>
+              )}
             </Grid>
             <Grid item xs={12} display="flex" justifyContent={"center"}>
               <Button
