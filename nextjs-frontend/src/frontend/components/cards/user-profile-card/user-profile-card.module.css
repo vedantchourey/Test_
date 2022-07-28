@@ -140,3 +140,71 @@
     color: "rgba(255, 255, 255, 0.1)";
   }
 }
+
+.appBar {
+  background-image: none !important;
+  box-shadow: none;
+  padding-right: 0 !important;
+  background-color: #08001c;
+}
+
+.customToolBar {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  border-bottom: 1px solid #211933;
+  margin: 0 16px;
+}
+
+.commentsContainer {
+  position: relative;
+  padding-bottom: 80px;
+}
+
+.renderPosts {
+  display: flex;
+  /* flex-direction: column-reverse; */
+  max-height: 430px;
+  overflow: auto;
+}
+.renderPosts::-webkit-scrollbar {
+  width: 8px;
+}
+.renderPosts::-webkit-scrollbar-thumb {
+  background: #211933;
+  border-radius: 10px;
+}
+
+.commentInputCotainer {
+  width: 100%;
+  padding: 20px;
+  bottom: 0px;
+  position: fixed;
+  background-color: #08001c;
+  padding-top: 0 !important;
+}
+
+.commentInput {
+  padding: 12px;
+  border-radius: 10px;
+  /* background-color: #100626; */
+  /* background-color: #6932f9; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media screen and (max-width: 600px) {
+.mainModalContainer {
+  width: -webkit-fill-available;
+  top: 60%;
+  padding: 1px;
+}
+.commentsContainer {
+  height: 692px;
+  padding-bottom: 112px;
+}
+.commentInputCotainer {
+  padding-bottom: 40px;
+}
+}
