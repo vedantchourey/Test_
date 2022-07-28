@@ -244,6 +244,10 @@ export default function UserProfileCard(): JSX.Element {
         <AvtarModal
           isModalOpen={openAvatarsModal}
           handleClose={handleCloseAvtar}
+          onUploadAvatar={(file) => {
+            handleCloseAvtar();
+            onUploadAvatar(file);
+          }}
           handleCustomUploadAvatarPicker={showUploadAvatarPicker}
         />
 
@@ -268,9 +272,16 @@ export default function UserProfileCard(): JSX.Element {
                     : "/static/images/avatar/3.jpg";
                   return (
                     <Box
-                      sx={{ display: "flex", alignItems: "center", mt: 1, cursor: "pointer" }}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        mt: 1,
+                        cursor: "pointer",
+                      }}
                       key={idx}
-                      onClick={(): any => router.push(`/team/view/${t.id}/members`)}
+                      onClick={(): any =>
+                        router.push(`/team/view/${t.id}/members`)
+                      }
                     >
                       <Avatar
                         sx={{ mr: 1, width: 35, height: 35 }}

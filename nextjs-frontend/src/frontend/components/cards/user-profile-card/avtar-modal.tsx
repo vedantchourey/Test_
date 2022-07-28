@@ -11,6 +11,8 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import styles from "./user-profile-card.module.css";
+import { avatarListWithUrl } from "../../../utils/config/default-avatars";
+import { v4 } from "uuid";
 
 const style = {
   position: "absolute",
@@ -28,6 +30,7 @@ const style = {
 interface IProps {
   isModalOpen: boolean;
   handleClose: () => void;
+  onUploadAvatar: (file: any) => void;
   handleCustomUploadAvatarPicker: () => void;
 }
 
@@ -49,25 +52,26 @@ const AvtarModal = (props: IProps): JSX.Element => {
   // }
 
   const _renderAvatars = (): JSX.Element[] | JSX.Element | void[] => {
-    const imglist = [
-      {
-        url: "https://png.pngtree.com/png-clipart/20210129/ourmid/pngtree-default-male-avatar-png-image_2811083.jpg",
-      },
-      {
-        url: "https://png.pngtree.com/png-clipart/20210129/ourmid/pngtree-blue-default-avatar-png-image_2813123.jpg",
-      },
-      {
-        url: "https://png.pngtree.com/png-vector/20210129/ourmid/pngtree-boys-default-avatar-png-image_2854357.jpg",
-      },
-    ];
+    const imglist = avatarListWithUrl;
     return (
       <Box sx={{ width: '100%' }}>
         <Stack direction="row" sx={{ flexWrap: "wrap", width: '100%' }}>
           {imglist.map((data) => {
             return (
               <Avatar
-                src={data.url}
-                // onClick={()=> handleimgupload(data.url)}
+                src={data.url as string}
+                style={{cursor: "pointer"}}
+                onClick={() => {
+                  fetch(data.url as string)
+                    .then((res) => res.blob()) // Gets the response and returns it as a blob
+                    .then((blob: Blob) => {
+                      var dt = new DataTransfer();
+                      dt.items.add(
+                        new File([blob], `${v4()}.png`, { type: "image/png" })
+                      );
+                      props.onUploadAvatar(dt.files);
+                    });
+                }}
                 sx={{ width: 130, height: 130, m: "auto", my: 1 }}
                 key={`1index-${data.url}`}
               />
