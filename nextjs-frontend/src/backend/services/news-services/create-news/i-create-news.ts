@@ -4,6 +4,7 @@ export interface ICreateNewsRequest {
     subtitle: string;
     author: string;
     image: string;
+    label?: string;
     description: string;
 }
 

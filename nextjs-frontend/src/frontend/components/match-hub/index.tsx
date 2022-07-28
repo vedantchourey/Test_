@@ -15,7 +15,7 @@ import axios from "axios";
 
 interface Props {
   data: IMatchHubData[];
-  onMatchHub?: (match: IMatchHubData) => void;
+  onMatchHub: (match: IMatchHubData) => void;
   userDashboard?: boolean;
 }
 
@@ -43,6 +43,7 @@ export interface Match {
   opponent2: Opponent;
   tournament_id: string;
   tournament_name: string;
+  is_checked_in: boolean;
   type: string;
 }
 
@@ -122,6 +123,7 @@ const MatchHub: React.FC<Props> = ({ data, onMatchHub, userDashboard }) => {
                     <ResultTile
                       data={item}
                       isWon={myPlayer.result === "win"}
+                      onMatchHub={onMatchHub}
                       opponent1Name={opponent1Name}
                       opponent2Name={opponent2Name}
                     />

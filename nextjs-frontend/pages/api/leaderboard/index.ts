@@ -8,7 +8,6 @@ import { ServiceResponse } from "../../../src/backend/services/common/contracts/
 import { PerRequestContext } from "../../../src/backend/utils/api-middle-ware/api-middleware-typings";
 import { Knex } from "knex";
 import { IError, ISuccess } from "../../../src/backend/utils/common/Interfaces";
-import { authenticatedUserMiddleware } from "../../../src/backend/utils/api-middle-ware/auth-middle-ware";
 import fetchLeaderBoard from "../../../src/backend/services/leaderboard-service";
 export default createNextJsRouteHandler({
     get: {
@@ -17,10 +16,11 @@ export default createNextJsRouteHandler({
             res: NextApiResponse<ServiceResponse<any, ISuccess | IError>>,
             context: PerRequestContext
         ) => {
-            const result: any = await fetchLeaderBoard(req.query, context.transaction as Knex.Transaction);
+            const isTeam = req.query.isTeam === "true";
+            const result: any = await fetchLeaderBoard(req.query, context.transaction as Knex.Transaction, isTeam);
             res.status(result?.errors?.length ? 500 : 200).json(result)
         },
-        preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],
+        preHooks: [beginTransactionMiddleWare],
         postHooks: [commitOrRollBackTransactionMiddleWare],
     },
 });

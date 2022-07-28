@@ -115,7 +115,7 @@ const Team: React.FC = () => {
     }
     switch (page) {
       case "match/history":
-        return <MatchHistory data={matchHistory} />;
+        return <MatchHistory data={matchHistory} teamId={query.id as string}/>;
       case "permissions":
         return <Permissions team={team} players={team?.players || []} />;
       case "members":

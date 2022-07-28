@@ -15,6 +15,8 @@ import {
   Modal,
   TextField,
   Typography,
+  InputBase,
+  Link,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import moment from "moment";
@@ -59,6 +61,7 @@ export default function Chat(props: {
   const [userList, setUserList] = useState<ISearchPeopleByUsernameResponse[]>(
     []
   );
+  const [userParam, setUserParam] = useState<any>();
   const [createGroup, setCreateGroup] = useState(false);
   const [userListForGroup, setUserListForGroup] = useState<
     ISearchPeopleByUsernameResponse[]
@@ -417,8 +420,36 @@ export default function Chat(props: {
       })
       .value();
 
+      const users: any = [];
+      for (let user = 0; user < chatByGroup?.length; user++) {
+        chatByGroup[user]?.values?.map((item) => users?.push(item?.channel_name))
+      }
+
     return (
       <>
+        <Box
+          style={{ border: "1px solid #6931F9", display: 'flex' }}
+          sx={{ borderRadius: "16px" }}
+        >
+          <InputBase
+            size="small"
+            placeholder="Search anything..."
+            sx={{ p: 1 }}
+            onChange={(e): any => {
+              const names = users.filter((item: any) => item.toLowerCase().includes(e.target.value))
+              names?.length > 0 ? setUserParam(names[0]) : null;
+            }}
+          />
+          <Link
+            href={userParam === undefined
+              ? "/chat"
+              : "/chat?user=" + userParam?.toLowerCase() + "&name=" + userParam
+            }
+            underline="none"
+          >
+            <img src="/icons/search-icon.png" style={{ height: 20, width: 20, marginRight: 10, marginTop: 10 }} />
+          </Link>
+        </Box>
         {chatByGroup.map((c) => (
           <>
             <Typography variant={"h6"} m={1}>
@@ -457,6 +488,7 @@ export default function Chat(props: {
                       setCurrentChat(i.channel_id);
                     }, 200);
                   }}
+                  isUnreadMessage={i.unread}
                 />
               );
             })}

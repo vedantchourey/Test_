@@ -38,7 +38,7 @@ const findCardType = (
 };
 
 const Member: React.FC<MemberProp> = ({
-  name,
+ // name,
   games,
   won,
   elo,
@@ -72,7 +72,7 @@ const Member: React.FC<MemberProp> = ({
           }}
         >
           <Typography noWrap fontSize={"0.9 em"} textAlign={"center"}>
-            {name}
+            {username}
           </Typography>
         </div>
         <div

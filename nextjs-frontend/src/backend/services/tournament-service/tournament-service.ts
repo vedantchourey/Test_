@@ -651,9 +651,10 @@ export const fetchUserMatchs = async (
 
     const tournaments = await participantRepo
       .knexObj()
+      // .join("b_tournament", "b_tournament.id", "b_participant.tournament_id")
       .where("user_id", user?.id)
       .orWhereIn("team_id", team_ids)
-      .select(["id", "tournament_id", "user_id", "team_id"]);
+      .select(["id", "tournament_id", "user_id", "team_id", "is_checked_in"]);
 
     if (!tournaments?.length) {
       return [];
@@ -680,6 +681,7 @@ export const fetchUserMatchs = async (
       )
       .select([
         "b_match.id as match_id",
+        "b_tournament.id as b_t_id",
         "tournamentsData.id as tournament_id",
         "tournamentsData.name as tournament_name",
         "b_match.opponent1",
@@ -742,11 +744,14 @@ export const fetchUserMatchs = async (
     const teams_grouped = _.groupBy(teams, "team_id");
     const opp_user_grouped = _.groupBy(opp_users, "user_id");
 
+
     // concatinating matchs and opponents/user details
 
     const result = Promise.all(
       matches.map(async (match: any) => {
         let { opponent1, opponent2 } = match;
+        const { b_t_id } = match;
+        const is_checked_in = tournaments.find((t: any) => t.tournament_id === b_t_id).is_checked_in || false;
         if (
           opponent1.id &&
           groupPartList[opponent1.id] &&
@@ -802,6 +807,7 @@ export const fetchUserMatchs = async (
         );
         return {
           ...match,
+          is_checked_in,
           tournament: tournament.data,
           opponent1,
           opponent2,
@@ -816,10 +822,12 @@ export const fetchUserMatchs = async (
 };
 
 export const fetchUserMatchsHistorySingle = async (
-  context: PerRequestContext
+  context: PerRequestContext,
+  params: any,
 ): Promise<any | IError> => {
   try {
     const { user } = context;
+    const userId= params.userId || user?.id;
     const participantRepo = new CrudRepository<IBParticipants>(
       context.knexConnection as Knex,
       TABLE_NAMES.B_PARTICIPANT
@@ -837,7 +845,7 @@ export const fetchUserMatchsHistorySingle = async (
         "tournamentsData.id",
         "b_tournament.tournament_uuid"
       )
-      .where("user_id", user?.id)
+      .where("user_id", userId)
       .select("*");
 
     return tournaments;

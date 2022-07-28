@@ -55,7 +55,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
       });
       await frontendSupabase
         .from("chat_users")
-        .update({ last_message: text, updatedAt: new Date().toISOString, last_message_by: props.user.username })
+        .update({ last_message: text, updatedAt: new Date().toISOString, last_message_by: props.user.username, unread: true })
         .eq("channel_id", props.channelId);
       setText("");
     }
@@ -96,6 +96,12 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         if (payload.new.channel_id === props.channelId) {
           const updateMessages = [...messageRef.current, payload.new];
           setMessages(updateMessages);
+          frontendSupabase
+            .from("chat_users")
+            .update({
+              unread: false,
+            })
+            .eq("channel_id", props.channelId);
         }
       })
       .subscribe();

@@ -1,4 +1,5 @@
 import { Avatar, Box, Typography } from "@mui/material";
+import Badge from '@mui/material/Badge';
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
@@ -10,6 +11,7 @@ interface IChatCard {
   otherUser: string;
   onClick: () => void;
   type: string;
+  isUnreadMessage: boolean;
 }
 
 export default function ChatCard(props: IChatCard): JSX.Element {
@@ -71,6 +73,7 @@ export default function ChatCard(props: IChatCard): JSX.Element {
       onClick={props.onClick}
     >
       <Box>
+        {props.isUnreadMessage && <Badge color="error" variant="dot" sx={{ zIndex: 98 }} />}
         <Avatar
           src={chatImage}
           style={{
@@ -78,12 +81,13 @@ export default function ChatCard(props: IChatCard): JSX.Element {
             width: 50,
             // borderRadius: 10,
             background: "rgba(0,0,0,0.4)",
+            marginTop: props.isUnreadMessage ? -25 : 0,
           }}
         />
         {lastSeenTime &&
         moment(lastSeenTime).add(1, "minute")
-.isAfter(currentMoment) ? (
-          <div
+.isAfter(currentMoment)
+        ? ( <div
             style={{
               zIndex: 99,
               background: "green",
@@ -100,7 +104,7 @@ export default function ChatCard(props: IChatCard): JSX.Element {
       </Box>
 
       <Box ml={2} textAlign={"left"}>
-        <Typography textAlign={"left"} fontSize={18} color="#FFFFFF">
+        <Typography textAlign={"left"} fontSize={18} color="#FFFFFF" sx={{ flex: 1 }}>
           {props.name}
         </Typography>
         <Typography
