@@ -488,6 +488,7 @@ export default function Chat(props: {
                       setCurrentChat(i.channel_id);
                     }, 200);
                   }}
+                  isUnreadMessage={i.unread}
                 />
               );
             })}
