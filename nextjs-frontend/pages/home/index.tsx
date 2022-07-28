@@ -606,7 +606,7 @@ const Home = (): JSX.Element => {
                                 color: "white",
                               }}
                             >
-                              Shooters
+                              {i.label}
                             </Typography>
                             <CardMedia
                               component="img"
