@@ -244,7 +244,7 @@ export default function UserProfileCard(): JSX.Element {
         <AvtarModal
           isModalOpen={openAvatarsModal}
           handleClose={handleCloseAvtar}
-          onUploadAvatar={(file) => {
+          onUploadAvatar={(file): any => {
             handleCloseAvtar();
             onUploadAvatar(file);
           }}

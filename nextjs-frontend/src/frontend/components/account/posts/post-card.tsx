@@ -75,9 +75,8 @@ const PostCard = (props: IProps): JSX.Element => {
     
     const likeLists: any = await frontendSupabase
       .from("post_likes")
-      .select("*")
-      .eq("postId", post_id)      
-
+      .select(`*, profiles!inner(*)`)
+      .eq("postId", post_id)
       setLikeList(likeLists.data)
   };
 
@@ -475,7 +474,7 @@ const PostCard = (props: IProps): JSX.Element => {
                             <ul>
                               {likeList?.map((item: any) => (
                                 <ListItem key={`user-${item?.likedBy}`}>
-                                  {item?.likedBy}
+                                  {item?.profiles?.username}
                                 </ListItem>
                               ))}
                             </ul>

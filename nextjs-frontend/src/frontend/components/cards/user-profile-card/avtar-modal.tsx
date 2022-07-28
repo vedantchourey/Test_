@@ -61,11 +61,11 @@ const AvtarModal = (props: IProps): JSX.Element => {
               <Avatar
                 src={data.url as string}
                 style={{cursor: "pointer"}}
-                onClick={() => {
+                onClick={(): any => {
                   fetch(data.url as string)
                     .then((res) => res.blob()) // Gets the response and returns it as a blob
                     .then((blob: Blob) => {
-                      var dt = new DataTransfer();
+                      const dt = new DataTransfer();
                       dt.items.add(
                         new File([blob], `${v4()}.png`, { type: "image/png" })
                       );
