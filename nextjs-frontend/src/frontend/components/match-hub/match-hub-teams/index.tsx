@@ -261,7 +261,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
     }
   };
 
-  React.useEffect((): void => {
+  React.useEffect(() => {
     const timerRef = window.setInterval(timerCallback, 1000);
     fetchData()
 
