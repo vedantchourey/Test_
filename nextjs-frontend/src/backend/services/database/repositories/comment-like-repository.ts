@@ -8,7 +8,6 @@ export class NewsLikesRepository extends BaseRepository<ICommentLike> {
   }
 
   async createLike(like: ICommentLike): Promise<string> {
-    console.log(like);
         
     const ids = await this.entities()
                           .insert(like)
@@ -33,7 +32,6 @@ export class NewsLikesRepository extends BaseRepository<ICommentLike> {
   }
 
   likeCount(like: ICommentLike): Promise<any> {    
-    console.log(like);
     
     return this.entities()
       .where({

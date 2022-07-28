@@ -7,7 +7,6 @@ import {
   Box,
   List,
   ListItem,
-  ListItemText,
   Button,
   Grid,
   Popover,
@@ -32,8 +31,8 @@ import Image from "../../../components/utils/supabase-image";
 import config from "../../../utils/config/front-end-config";
 import axios from "axios";
 import { getAuthHeader } from "../../../utils/headers";
-import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
-import { deviceTypes } from "../../../../../src/frontend/redux-store/layout/device-types";
+// import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+// import { deviceTypes } from "../../../../../src/frontend/redux-store/layout/device-types";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 
 interface IProps {
@@ -64,8 +63,8 @@ const PostCard = (props: IProps): JSX.Element => {
 
   const imgUrl = props.data.postImgUrl;
   const avatarUrl = props.data.postOwner.avatarUrl;
-  const isMobile = useAppSelector((x) =>
-    isDeviceTypeSelector(x, deviceTypes.desktop));
+  // const isMobile = useAppSelector((x) =>
+  //   isDeviceTypeSelector(x, deviceTypes.desktop));
 
   const handleOpenComments = (): void => setOpenCommentsModal((pre) => !pre);
   const handleCloseComments = (): void => setOpenCommentsModal(false);
@@ -76,11 +75,10 @@ const PostCard = (props: IProps): JSX.Element => {
     
     const likeLists: any = await frontendSupabase
       .from("post_likes")
-      .select("*")
-      .eq("postId", post_id)
+      .select("likedBy : profiles!fk_posts_profiles_id(id, username, avatarUrl)")
+      .eq("postId", post_id)      
 
       setLikeList(likeLists.data)
-    
   };
 
   useEffect(() => {
@@ -475,8 +473,8 @@ const PostCard = (props: IProps): JSX.Element => {
                         subheader={<li />}
                       >
                             <ul>
-                              {likeList.map((item: any) => (
-                                <ListItem>
+                              {likeList?.map((item: any) => (
+                                <ListItem key={`user-${item?.likedBy}`}>
                                   {item?.likedBy}
                                 </ListItem>
                               ))}

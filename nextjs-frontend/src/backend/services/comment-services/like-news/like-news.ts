@@ -9,9 +9,7 @@ import { ServiceResponse } from '../../common/contracts/service-response';
 export async function likeNews(req: ILikeNews, context: PerRequestContext): Promise<ServiceResponse<unknown, { message: string }>> {
     const errors = await validatePost(req);
     if (isThereAnyError(errors)) return {errors: errors}
-    const repository = new NewsLikesRepository(context.transaction as Knex.Transaction);
-    console.log(req);
-    
+    const repository = new NewsLikesRepository(context.transaction as Knex.Transaction);    
 
     await repository.createLike({commentId: req.commentId, likedBy: context.user?.id})
     

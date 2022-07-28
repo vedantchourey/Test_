@@ -1,38 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   AppBar,
   Avatar,
   Button,
   IconButton,
   Modal,
-  TextField,
   Toolbar,
   Typography,
   Stack,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { Skeleton } from "@mui/material";
 import styles from "./user-profile-card.module.css";
-import { IPostCommentResponse } from "../../../service-clients/messages/i-posts-response";
-import { useAppSelector } from "../../../redux-store/redux-store";
-import {
-  avatarImageBlobUrlSelector,
-  userProfileSelector,
-} from "../../../redux-store/authentication/authentication-selectors";
-import {
-  createComment,
-  getPostComments,
-  getCommentLikesCount,
-  deleteComment,
-  updateComment,
-} from "../../../service-clients/post-service-client";
-import Image from "../../../components/utils/supabase-image";
-import config from "../../../utils/config/front-end-config";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import SaveIcon from "@mui/icons-material/Save";
-import { getAuthHeader } from "../../../utils/headers";
-import axios from "axios";
 
 const style = {
   position: "absolute",
@@ -54,23 +32,21 @@ interface IProps {
 }
 
 const AvtarModal = (props: IProps): JSX.Element => {
-  const userAvatar = useAppSelector(avatarImageBlobUrlSelector);
-  const user = useAppSelector(userProfileSelector);
   const { isModalOpen, handleClose, handleCustomUploadAvatarPicker } = props;
 
-  const handleimgupload = (imgurl: any) => {
+  // const handleimgupload = (imgurl: any) => {
 
-    // const toDataURL = fetch(imgurl)
-    //   .then(response => response.blob())
-    //   .then(blob => new Promise((resolve, reject) => {
-    //   const reader = new FileReader()
-    //   reader.onloadend = () => resolve(reader.result)
-    //   reader.onerror = reject
-    //   reader.readAsDataURL(blob)
-    //  }))
+  //   const toDataURL = fetch(imgurl)
+  //     .then(response => response.blob())
+  //     .then(blob => new Promise((resolve, reject) => {
+  //     const reader = new FileReader()
+  //     reader.onloadend = () => resolve(reader.result)
+  //     reader.onerror = reject
+  //     reader.readAsDataURL(blob)
+  //    }))
 
-    console.log("formdata",imgurl)
-  }
+  //   console.log("formdata",imgurl)
+  // }
 
   const _renderAvatars = (): JSX.Element[] | JSX.Element | void[] => {
     const imglist = [
@@ -91,8 +67,9 @@ const AvtarModal = (props: IProps): JSX.Element => {
             return (
               <Avatar
                 src={data.url}
-                onClick={(e)=> handleimgupload(data.url)}
+                // onClick={()=> handleimgupload(data.url)}
                 sx={{ width: 130, height: 130, m: "auto", my: 1 }}
+                key={`1index-${data.url}`}
               />
             );
           })}

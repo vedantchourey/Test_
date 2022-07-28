@@ -30,7 +30,7 @@ export default function NewsView(): JSX.Element {
   const [liked, setLiked] = useState<any>(false);
   const [likersList, setLikersList] = useState<any>(null);
 
-  const [data, setData] = React.useState([]);
+  // const [data, setData] = React.useState([]);
 
   const fetchUsers = async (): Promise<void> => {
     const messages: any = await frontendSupabase
@@ -48,7 +48,7 @@ export default function NewsView(): JSX.Element {
         }
       });
     }
-    setData(Data as any);
+    // setData(Data as any);
   };
 
   const handleClickPopover = (event: any): void => {

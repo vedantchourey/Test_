@@ -32,7 +32,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import { getAuthHeader } from "../../../utils/headers";
-import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import axios from "axios";
 
 const style = {
@@ -233,21 +232,23 @@ const CommentsModal = (props: IProps): JSX.Element => {
                       <Typography variant="subtitle2" color="#575265" ml={1}>
                         {new Date(data.createdAt).toDateString()}
                       </Typography>
-                      <Typography
-                        variant="subtitle2"
-                        color={commentLiked ? "#002884" : "#575265"}
-                        ml={1}
-                        onClick={(): any => {
-                          if (commentLiked) {
-                            unLikeComment(data.id);
-                          } else {
-                            likeComment(data.id);
+                        <img
+                          src={
+                            commentLiked
+                              ? "/icons/heart-filled.svg"
+                              : "/icons/heart.svg"
                           }
-                        }}
-                      >
-                        Like
-                      </Typography>
-                      <Typography variant="subtitle2" color={commentLiked ? "#002884" : "#575265"} ml={1}>
+                          alt="icon"
+                          onClick={(): any => {
+                            if (commentLiked) {
+                              unLikeComment(data.id);
+                            } else {
+                              likeComment(data.id);
+                            }
+                          }}
+                          style={{paddingLeft: '12px'}}
+                        />
+                      <Typography variant="subtitle2" color= "#575265" ml={1}>
                         {commentLikes}
                       </Typography>
                     </Box>

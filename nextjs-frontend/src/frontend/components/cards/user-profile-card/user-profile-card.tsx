@@ -88,24 +88,10 @@ export default function UserProfileCard(): JSX.Element {
     }
   }, [userProfile]);
 
-  async function onUploadDefaultAvatar(files: FileList | null): Promise<void> {
-    setShowAvatarPicker(false);
-    if (files == null || files.length === 0) return;
-    try {
-      appDispatch(setIsLoading(true));
-      await updateAvatar(files[0]);
-      appDispatch(fetchUserProfileThunk());
-      appDispatch(forceFetchAvatarImageBlob());
-    } finally {
-      appDispatch(setIsLoading(false));
-    }
-  }
-
   async function onUploadAvatar(files: FileList | null): Promise<void> {
     setShowAvatarPicker(false);
     if (files == null || files.length === 0) return;
     try {
-      console.log("files[0]",files[0]);      
       appDispatch(setIsLoading(true));
       await updateAvatar(files[0]);
       appDispatch(fetchUserProfileThunk());
