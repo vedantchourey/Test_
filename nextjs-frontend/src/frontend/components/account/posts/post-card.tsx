@@ -75,7 +75,7 @@ const PostCard = (props: IProps): JSX.Element => {
     
     const likeLists: any = await frontendSupabase
       .from("post_likes")
-      .select("likedBy : profiles!fk_posts_profiles_id(id, username, avatarUrl)")
+      .select("*")
       .eq("postId", post_id)      
 
       setLikeList(likeLists.data)
