@@ -73,7 +73,6 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
   const [uploadResults, setUploadResults] = React.useState(false);
   const [resultStatus, setResultStatus] = React.useState(false);
   const [data, setData] = React.useState<PlayerData | undefined>();
-  const [loading, setLoading] = React.useState(false);
   const [matchReportSubmited, setMatchReportSubmited] = React.useState(false)
   const [team, setTeam] = React.useState<any[]>([]);
   const [chatChannel, setChatChannel] = React.useState<any>(undefined)
@@ -103,17 +102,14 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
 
     const fetchTeam = async (): Promise<void> => {
       const headers = await getAuthHeader();
-      setLoading(true);
       axios
         .get("/api/teams", { headers: headers })
         .then((res) => {
           if (res.data.result && res.data.result.length > 0) {
             setTeam(res.data.result);
           }
-          setLoading(false);
         })
         .catch((err) => {
-          setLoading(false);
           console.error(err);
         });
     };
@@ -249,7 +245,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       });
   };
 
-  const findChatChannel = async () => {
+  const findChatChannel = async (): Promise<void> => {
     const chatChannel = await frontendSupabase
       .from("chat_users")
       .select()
@@ -258,14 +254,14 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
     setChatChannel(chatChannel.data?.[0]);
   };
 
-  const fetchData = async () => {
+  const fetchData = async (): Promise<void> => {
     if (match.opponent1?.team_id) {
       await fetchTeam();
       await findChatChannel();
     }
   };
 
-  React.useEffect(() => {
+  React.useEffect((): void => {
     const timerRef = window.setInterval(timerCallback, 1000);
     fetchData()
 
@@ -483,10 +479,10 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
         >
           <ChatBox
             channelId={chatChannel?.channel_id as string}
-            addMember={() => {}}
+            addMember={(): void => {}}
             channelName={myPlayer.name as string}
-            fetchChat={async () => {}}
-            onBack={() => {}}
+            fetchChat={(): void => {}}
+            onBack={(): void => {}}
             smallChat={true}
             userId={user?.id as string}
             user={user}

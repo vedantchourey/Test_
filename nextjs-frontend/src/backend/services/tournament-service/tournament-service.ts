@@ -749,7 +749,7 @@ export const fetchUserMatchs = async (
 
     const result = Promise.all(
       matches.map(async (match: any) => {
-        let { opponent1, opponent2, b_t_id } = match;
+        const { opponent1, opponent2, b_t_id } = match;
         const is_checked_in = tournaments.find((t: any) => t.tournament_id === b_t_id).is_checked_in || false;
         if (
           opponent1.id &&

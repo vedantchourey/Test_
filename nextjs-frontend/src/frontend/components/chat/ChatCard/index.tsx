@@ -85,7 +85,8 @@ export default function ChatCard(props: IChatCard): JSX.Element {
           }}
         />
         {lastSeenTime &&
-        moment(lastSeenTime).add(1, "minute").isAfter(currentMoment)
+        moment(lastSeenTime).add(1, "minute")
+.isAfter(currentMoment)
         ? ( <div
             style={{
               zIndex: 99,

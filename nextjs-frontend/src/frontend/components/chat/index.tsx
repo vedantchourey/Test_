@@ -420,9 +420,9 @@ export default function Chat(props: {
       })
       .value();
 
-      let users: any = [];
+      const users: any = [];
       for (let user = 0; user < chatByGroup?.length; user++) {
-        chatByGroup[user]?.values?.map(item => users?.push(item?.channel_name))
+        chatByGroup[user]?.values?.map((item) => users?.push(item?.channel_name))
       }
 
     return (
@@ -436,7 +436,7 @@ export default function Chat(props: {
             placeholder="Search anything..."
             sx={{ p: 1 }}
             onChange={(e): any => {
-              let names = users.filter((item: any) => item.toLowerCase().includes(e.target.value))
+              const names = users.filter((item: any) => item.toLowerCase().includes(e.target.value))
               names?.length > 0 ? setUserParam(names[0]) : null;
             }}
           />

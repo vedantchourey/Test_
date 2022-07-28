@@ -602,7 +602,8 @@ export const fetchMatchResultsReq = async (
           .select();
 
         const player1Data = player1[0].user_id
-          ? await profileRepo.knexObj().where("id", player1[0].user_id).select()
+          ? await profileRepo.knexObj().where("id", player1[0].user_id)
+.select()
           : [{}]; 
 
         const player2 = await participantRepo
@@ -611,13 +612,9 @@ export const fetchMatchResultsReq = async (
           .select();
 
         const player2Data = player1[0].user_id
-        ? await profileRepo.knexObj().where("id", player2[0].user_id).select()
+        ? await profileRepo.knexObj().where("id", player2[0].user_id)
+.select()
           : [{}];
-
-        console.log('player1[0].user_id -> ', player1[0].user_id)
-        console.log('player2[0].user_id -> ', player2[0].user_id)
-        console.log("player1Data -> ", player1Data);
-        
 
         const opponent1 = {
           ...r.opponent1,
@@ -634,7 +631,6 @@ export const fetchMatchResultsReq = async (
 
     return resultFinal;
   } catch (ex) {
-    console.log('ex -> ', ex);
     return getErrorObject();
   }
 };
