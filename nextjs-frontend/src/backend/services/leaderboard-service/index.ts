@@ -92,6 +92,11 @@ async function fetchLeaderBoard(
         "private_profiles.id",
         "elo_ratings.user_id"
       )
+      .join(
+        "profiles",
+        "profiles.id",
+        "elo_ratings.user_id"
+      )
       .where("game_id", req.game_id)
       .orderBy("elo_ratings.elo_rating", "desc")
       .limit(100);

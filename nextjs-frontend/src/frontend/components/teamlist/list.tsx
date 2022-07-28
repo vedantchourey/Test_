@@ -87,7 +87,7 @@ const TeamListData: React.FC = () => {
                   }}
                 >
                   <NoobCell>
-                    <Typography variant="subtitle1" textAlign={"center"} color={"#6932F9"}>TEAM NAME</Typography>
+                    <Typography variant="subtitle1" textAlign={"center"} color={"#6932F9"}>Team name</Typography>
                   </NoobCell>
                   <NoobCell>
                     <Typography variant="subtitle1" textAlign={"center"} color={"#6932F9"}>Players</Typography>
@@ -96,10 +96,10 @@ const TeamListData: React.FC = () => {
                     <Typography variant="subtitle1" textAlign={"center"} color={"#6932F9"}>Game</Typography>
                   </NoobCell>
                   <NoobCell>
-                    <Typography variant="subtitle1" textAlign={"center"} color={"#6932F9"}>WON</Typography>
+                    <Typography variant="subtitle1" textAlign={"center"} color={"#6932F9"}>Won</Typography>
                   </NoobCell>
                   <NoobCell>
-                    <Typography variant="subtitle1" textAlign={"center"} color={"#6932F9"}>ELO</Typography>
+                    <Typography variant="subtitle1" textAlign={"center"} color={"#6932F9"}>Elo</Typography>
                   </NoobCell>
                 </NoobRow>
                 {teamdata.map((item) => {
