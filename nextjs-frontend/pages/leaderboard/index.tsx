@@ -88,9 +88,8 @@ const Leaderboard = (): JSX.Element => {
   const getleaderboardgamedata = async (gameId: string): Promise<void> => {
     try {
       const endpoint = "/api/leaderboard";
-      const headers = await getAuthHeader();
       axios
-        .get(endpoint, { params: { game_id: gameId }, headers: headers })
+        .get(endpoint, { params: { game_id: gameId } })
         .then((res) => {
           setData(res.data);
         })
