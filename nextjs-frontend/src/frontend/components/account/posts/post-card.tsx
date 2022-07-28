@@ -216,7 +216,7 @@ const PostCard = (props: IProps): JSX.Element => {
         minHeight={props.row ? 450 : undefined}
         minWidth={props.isDesktop ? 280 : 0}
         mr={props.row ? 2 : 0}
-        //onClick={():any=>{router.push(`social/${values.id}`)}}
+      //onClick={():any=>{router.push(`social/${values.id}`)}}
       >
         <Card
           className={styles.postCard}
@@ -345,20 +345,21 @@ const PostCard = (props: IProps): JSX.Element => {
                 part + " "
               ))}
           </Typography>
-          <Button
-            style={{
-              color: "#FFFFFF",
-              fontSize: 14,
-              marginBottom: !values.postImgUrl ? 50 : 0,
-              visibility:
+          {values.postContent.length > 250 ?
+            <Button
+              style={{
+                color: "#FFFFFF",
+                fontSize: 14,
+                marginBottom: !values.postImgUrl ? 50 : 0,
+                visibility:
                 values.postContent.length > 450 ? "visible" : "hidden",
-            }}
-            onClick={(): any => {
-              setReadMore(!readMore);
-            }}
-          >
-            {readMore ? `Read less...` : `Read More...`}
-          </Button>
+              }}
+              onClick={(): any => {
+                setReadMore(!readMore);
+              }}
+            >
+              {readMore ? `Read less...` : `Read More...`}
+            </Button> : null}
 
           <Box sx={{ position: "relative" }}>
             {imgUrl && (
@@ -413,7 +414,6 @@ const PostCard = (props: IProps): JSX.Element => {
                 className={styles.postImage}
                 image={imgUrl || ""}
                 alt="user avatar"
-                
               /> */}
               </>
             )}

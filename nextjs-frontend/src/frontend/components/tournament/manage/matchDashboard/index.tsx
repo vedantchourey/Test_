@@ -65,7 +65,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
 
   const tournamentList = async (): Promise<void> => {
     try {
-      const endpoint = "/api/match-dispute/list";
+    const endpoint = "/api/match-dispute/list";
       const headers = await getAuthHeader();
       axios.get(endpoint, { params: { tournamentId: id }, headers: headers }).then((res) => {
         setData(res.data);
@@ -308,10 +308,22 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                             <Typography>{item.match_id}</Typography>
                           </NoobCell>
                           <NoobCell>
-                            <Typography>{item?.opponent1?.score}</Typography>
+                            <Typography
+                              color={
+                                item?.opponent1?.score === 0 ? "red" : "green"
+                              }
+                            >
+                              {item?.opponent1?.player?.username}
+                            </Typography>
                           </NoobCell>
                           <NoobCell>
-                            <Typography>{item?.opponent2?.score}</Typography>
+                            <Typography
+                              color={
+                                item?.opponent2?.score === 0 ? "red" : "green"
+                              }
+                            >
+                              {item?.opponent2?.player?.username}
+                            </Typography>
                           </NoobCell>
                           <NoobCell>
                             <Typography>

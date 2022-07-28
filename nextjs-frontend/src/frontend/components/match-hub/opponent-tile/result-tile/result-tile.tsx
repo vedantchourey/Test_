@@ -14,6 +14,7 @@ interface ResultTileProps {
   data: IMatchHubData;
   opponent1Name?:string;
   opponent2Name?:string;
+  onMatchHub?: (match: IMatchHubData) => void;
 }
 
 const ResultTile: React.FC<ResultTileProps> = (props) => {
@@ -32,7 +33,12 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
     : undefined;
 
   return (
-    <Grid container width={"100%"} className={styles.resultTileContainer}>
+    <Grid
+      container
+      width={"100%"}
+      className={styles.resultTileContainer}
+      onClick={(): any => (props.onMatchHub ? props.onMatchHub(props.data) : null)}
+    >
       <Grid item xs={3}>
         <Button
           variant="outlined"
@@ -52,9 +58,7 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
       {/* Result status */}
       {!child ? (
         <Grid item xs={6}>
-          <p className={styles.resultTileValue}>
-            {props.data.tournament_name}
-          </p>
+          <p className={styles.resultTileValue}>{props.data.tournament_name}</p>
           <p
             className={styles.resultTileStatus}
             style={{ color: isWon ? "green" : "red", marginTop: 10 }}
@@ -69,7 +73,9 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
           </Container> */}
         </Grid>
       ) : (
-        <Grid item xs={6}>{child}</Grid>
+        <Grid item xs={6}>
+          {child}
+        </Grid>
       )}
 
       <Grid item xs={3} style={{ display: "flex", justifyContent: "end" }}>

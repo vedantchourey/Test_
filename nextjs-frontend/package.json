@@ -62,7 +62,7 @@
     "react-router-dom": "^6.3.0",
     "react-slick": "^0.29.0",
     "react-toastify": "^9.0.5",
-    "sharp": "^0.30.1",
+    "sharp": "^0.30.7",
     "slick-carousel": "^1.8.1",
     "swiper": "^8.0.3",
     "tournament": "^0.11.1",
@@ -103,5 +103,8 @@
     "typescript": "4.5.2",
     "url-loader": "^4.1.1"
   },
-"eslintIgnore": ["brackets-viewer.min.js", "stage-form-creator.min.js"]
+  "eslintIgnore": [
+    "brackets-viewer.min.js",
+    "stage-form-creator.min.js"
+  ]
 }

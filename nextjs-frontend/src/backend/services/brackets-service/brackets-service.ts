@@ -449,8 +449,8 @@ export const submitMatchResultRequest = async (
       message: `${user?.user_metadata?.username} added match scroe.`,
       is_action_required: true,
       data: {},
-    }
-    
+    };
+
     await addNotifications(notificationObj, knexConnection);
     return result;
   } catch (ex) {
@@ -580,8 +580,56 @@ export const fetchMatchResultsReq = async (
       knexConnection,
       TABLE_NAMES.MATCH_RESULT_REQUEST
     );
-    const result = repo.findBy("tournament_id", req.tournament_id);
-    return result;
+    const participantRepo = new CrudRepository<IBParticipants>(
+      knexConnection,
+      TABLE_NAMES.B_PARTICIPANT
+    );
+    const profileRepo = new CrudRepository<IPrivateProfile>(
+      knexConnection,
+      "profiles"
+    );
+
+    const result = await repo
+      .knexObj()
+      .join("b_match", "b_match.id", "match_result_request.match_id")
+      .where({ tournament_id: req.tournament_id });
+
+    const resultFinal = await Promise.all(
+      result.map(async (r: any) => {
+        const player1 = await participantRepo
+          .knexObj()
+          .where({ id: r.opponent1.id })
+          .select();
+
+        const player1Data = player1[0].user_id
+          ? await profileRepo.knexObj().where("id", player1[0].user_id)
+.select()
+          : [{}];
+
+        const player2 = await participantRepo
+          .knexObj()
+          .where({ id: r.opponent2.id })
+          .select();
+
+        const player2Data = player1[0].user_id
+          ? await profileRepo.knexObj().where("id", player2[0].user_id)
+.select()
+          : [{}];
+
+        const opponent1 = {
+          ...r.opponent1,
+          player: { ...player1[0], ...player1Data[0] },
+        };
+        const opponent2 = {
+          ...r.opponent2,
+          player: { ...player2[0], ...player2Data[0] },
+        };
+
+        return { ...r, opponent1, opponent2 };
+      })
+    );
+
+    return resultFinal;
   } catch (ex) {
     return getErrorObject();
   }

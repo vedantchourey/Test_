@@ -1,5 +1,6 @@
 import { Knex } from "knex";
 import _ from "lodash";
+import moment from "moment";
 import { TABLE_NAMES } from "../../../models/constants";
 import { getErrorObject } from "../common/helper/utils.service";
 import { IEloRating } from "../database/models/i-elo-rating";
@@ -91,6 +92,11 @@ async function fetchLeaderBoard(
         "private_profiles.id",
         "elo_ratings.user_id"
       )
+      .join(
+        "profiles",
+        "profiles.id",
+        "elo_ratings.user_id"
+      )
       .where("game_id", req.game_id)
       .orderBy("elo_ratings.elo_rating", "desc")
       .limit(100);
@@ -98,7 +104,14 @@ async function fetchLeaderBoard(
       findUserWithLeaderboard(i.user_id, i, knexConnection));
     const response = await Promise.all(dataBatch);
 
-    return Object.values(_.groupBy(response, "id")).map((i) => i[0]);
+    return Object.values(_.groupBy(response, "id")).map(
+      (i) =>
+        i.sort((a: any, b: any) => {
+          const aTime: any = moment(a.createdAt).format("x");
+          const bTime: any = moment(b.createdAt).format("x");
+          return bTime - aTime;
+        })[0]
+    );
   } catch (err) {
     return getErrorObject();
   }

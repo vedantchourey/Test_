@@ -169,6 +169,7 @@ const tournamentsWithPlayers = async (context: PerRequestContext, tournamentId: 
             "elo_ratings.elo_rating",
             "teams.elo_rating as team_elo_rating",
             "teams.id as team_id",
+            "teams.teamLogo as teamLogo",
             "teams.name as team_name",
           ])
           .join(
@@ -203,6 +204,7 @@ const tournamentsWithPlayers = async (context: PerRequestContext, tournamentId: 
           return {
             team_name: k,
             team_id: grp_team[k][0].team_id,
+            avatarUrl: grp_team[k][0].teamLogo,
             ...grp_team[k],
           };
         });
@@ -340,6 +342,7 @@ export async function tournamentDetails(
             "teams.elo_rating as team_elo_rating",
             "teams.id as team_id",
             "teams.name as team_name",
+            "teams.teamLogo as teamLogo",
           ])
           .join(
             TABLE_NAMES.B_TOURNAMENT,
@@ -374,6 +377,7 @@ export async function tournamentDetails(
         players = _.keys(grp_team).map((k) => {
           return {
             team_name: k,
+            avatarUrl: grp_team[k][0].teamLogo,
             team_id: grp_team[k][0].team_id,
             ...grp_team[k],
           };
@@ -651,9 +655,10 @@ export const fetchUserMatchs = async (
 
     const tournaments = await participantRepo
       .knexObj()
+      // .join("b_tournament", "b_tournament.id", "b_participant.tournament_id")
       .where("user_id", user?.id)
       .orWhereIn("team_id", team_ids)
-      .select(["id", "tournament_id", "user_id", "team_id"]);
+      .select(["id", "tournament_id", "user_id", "team_id", "is_checked_in"]);
 
     if (!tournaments?.length) {
       return [];
@@ -680,6 +685,7 @@ export const fetchUserMatchs = async (
       )
       .select([
         "b_match.id as match_id",
+        "b_tournament.id as b_t_id",
         "tournamentsData.id as tournament_id",
         "tournamentsData.name as tournament_name",
         "b_match.opponent1",
@@ -742,11 +748,14 @@ export const fetchUserMatchs = async (
     const teams_grouped = _.groupBy(teams, "team_id");
     const opp_user_grouped = _.groupBy(opp_users, "user_id");
 
+
     // concatinating matchs and opponents/user details
 
     const result = Promise.all(
       matches.map(async (match: any) => {
         let { opponent1, opponent2 } = match;
+        const { b_t_id } = match;
+        const is_checked_in = tournaments.find((t: any) => t.tournament_id === b_t_id).is_checked_in || false;
         if (
           opponent1.id &&
           groupPartList[opponent1.id] &&
@@ -802,6 +811,7 @@ export const fetchUserMatchs = async (
         );
         return {
           ...match,
+          is_checked_in,
           tournament: tournament.data,
           opponent1,
           opponent2,

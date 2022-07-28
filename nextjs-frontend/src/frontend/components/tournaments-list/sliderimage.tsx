@@ -18,7 +18,6 @@ import {
   fetchAllGamesThunk,
 } from "../../redux-store/games/game-slice";
 import { useAppDispatch, useAppSelector } from "../../redux-store/redux-store";
-import { getAuthHeader } from "../../utils/headers";
 import { TournamentData } from "../tournament";
 import Loader from "../ui-components/loader";
 import ButtonComp from "./buttons";
@@ -66,7 +65,6 @@ const SliderComp: React.FC = (): JSX.Element => {
     try {
       setLoading(true);
       const endpoint = "/api/tournaments/list";
-      const headers = await getAuthHeader();
       axios
         .get(endpoint, {
           params: {
@@ -75,8 +73,7 @@ const SliderComp: React.FC = (): JSX.Element => {
             format,
             status,
             amount: credits,
-          },
-          headers: headers,
+          }
         })
         .then((res) => {
           setData(res.data.data.tournaments.filter((i: any) => i !== null));
@@ -96,6 +93,10 @@ const SliderComp: React.FC = (): JSX.Element => {
   const appDispatch = useAppDispatch();
   const games = useAppSelector(allGamesSelector);
   const gamesFetchStatus = useAppSelector(gamesFetchStatusSelector);
+
+  const [selectedGame, setSelectedGame] = React.useState<string>(
+    games.length > 0 ? games[0].id : ""
+  );
 
   React.useEffect(() => {
     if (gamesFetchStatus !== "idle") return;
@@ -149,14 +150,22 @@ const SliderComp: React.FC = (): JSX.Element => {
         className="hide-scrollbar"
       >
         {games.map((data) => (
-          <img
-            key={1}
-            data-value="1"
-            src={imagedata[data.code]}
-            className={styles.image}
-            onClick={(): any => setTournamentsData(data.id)}
-            role="presentation"
-          />
+            <img
+              key={1}
+              data-value="1"
+              src={imagedata[data.code]}
+              className={styles.image}
+              onClick={(): any => {
+                setTournamentsData(data.id)
+                setSelectedGame(data.id);
+              }}
+              role="presentation"
+              style={{
+                borderWidth: data.id === selectedGame ? 3 : 0,
+                borderColor: "#6932F9",
+                borderStyle: "solid",
+              }}
+            />
         ))}
       </Box>
 
