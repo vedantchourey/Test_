@@ -286,7 +286,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
               opponent1Name={opponent1Name}
               opponent2Name={opponent2Name}
               child={
-                <Box color="white">
+                <Box color="white" style={{ textAlign: "center" }}>
                   <Typography variant="h3" component={"h1"}>
                     VS
                   </Typography>
@@ -306,7 +306,12 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
         ) : null}
 
         <Grid item xs={12}>
-          <Box display={"flex"} justifyContent={"center"} marginTop="60px" alignItems={"center"}>
+          <Box
+            display={"flex"}
+            justifyContent={"center"}
+            marginTop="60px"
+            alignItems={"center"}
+          >
             <Button
               style={{
                 color: "white",
@@ -323,16 +328,19 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
               Back
             </Button>
             <Button
+              disabled={match.is_checked_in}
               style={{
                 color: "white",
                 padding: "12px 38px",
-                backgroundColor: "#08001C",
-                border: "1px solid #6932F9",
+                backgroundColor: match.is_checked_in
+                  ? "rgba(255,255,255,0.2)"
+                  : "#08001C",
+                border: match.is_checked_in ? undefined : "1px solid #6932F9",
                 margin: "0px 0px 0px 16px",
               }}
               onClick={(): any => checkInTournament()}
             >
-              Check In
+              {match.is_checked_in ? "Checked in" : "Check In"}
             </Button>
             <Button
               style={{
@@ -517,20 +525,20 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                 <Typography color="white" variant="body2" marginTop={1}>
                   {formik.errors.screenshot}
                 </Typography>
-              ):
+              ) : (
                 <Box display="flex" flexDirection={"column"}>
-                      {formik?.values?.screenshot !== "" && (
-                        <>
-                          <Typography
-                            style={{ textAlign: "left", margin: "10px 0px" }}
-                          >
-                            Preview
-                          </Typography>
-                          <img src={formik.values.screenshot} width="30%" />
-                        </>
-                      )}
-                    </Box>
-              }
+                  {formik?.values?.screenshot !== "" && (
+                    <>
+                      <Typography
+                        style={{ textAlign: "left", margin: "10px 0px" }}
+                      >
+                        Preview
+                      </Typography>
+                      <img src={formik.values.screenshot} width="30%" />
+                    </>
+                  )}
+                </Box>
+              )}
             </Grid>
             <Grid item xs={12} display="flex" justifyContent={"center"}>
               <Button
