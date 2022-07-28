@@ -18,7 +18,6 @@ import {
   fetchAllGamesThunk,
 } from "../../redux-store/games/game-slice";
 import { useAppDispatch, useAppSelector } from "../../redux-store/redux-store";
-import { getAuthHeader } from "../../utils/headers";
 import { TournamentData } from "../tournament";
 import Loader from "../ui-components/loader";
 import ButtonComp from "./buttons";
