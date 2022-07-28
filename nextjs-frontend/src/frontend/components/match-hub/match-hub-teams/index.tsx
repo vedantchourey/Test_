@@ -245,7 +245,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       });
   };
 
-  const findChatChannel = async (): Promise<void> => {
+  const findChatChannel = async (): Promise<any> => {
     const chatChannel = await frontendSupabase
       .from("chat_users")
       .select()
@@ -254,7 +254,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
     setChatChannel(chatChannel.data?.[0]);
   };
 
-  const fetchData = async (): Promise<void> => {
+  const fetchData = async (): Promise<any> => {
     if (match.opponent1?.team_id) {
       await fetchTeam();
       await findChatChannel();
@@ -453,9 +453,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                   <MenuItem value="Problem setting up the match">
                     Problem setting up the match
                   </MenuItem>
-                  <MenuItem value="Ineligible roster">
-                    Ineligible roster
-                  </MenuItem>
+                  <MenuItem value="Ineligible roster"></MenuItem>
                   <MenuItem value="Harassment">Harassment</MenuItem>
                   <MenuItem value="A player disconnected.">
                     A player disconnected.
@@ -469,7 +467,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
           </Box>
         </Grid>
       </Grid>
-      {chatChannel?.channel_id && (
+      {chatChannel?.channel_id && !loading && (
         <Box
           display={"flex"}
           height={"500px"}
@@ -479,10 +477,10 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
         >
           <ChatBox
             channelId={chatChannel?.channel_id as string}
-            addMember={(): void => {}}
+            addMember={(): any => null}
             channelName={myPlayer.name as string}
-            fetchChat={(): void => {}}
-            onBack={(): void => {}}
+            fetchChat={async (): Promise<any> => null}
+            onBack={(): any => null}
             smallChat={true}
             userId={user?.id as string}
             user={user}

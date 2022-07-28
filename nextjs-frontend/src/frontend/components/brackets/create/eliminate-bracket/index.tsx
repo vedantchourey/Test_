@@ -65,7 +65,6 @@ const EliminateBracket = React.forwardRef<
         map: yup.array().of(yup.string())
 .nullable(),
         startTime: yup.date().when("round", (data) => {
-        
           return data !== "1"
             ? yup.date().required("Start time is required")
             : yup.date();
@@ -124,12 +123,11 @@ const EliminateBracket = React.forwardRef<
         formik.values.type === "SINGLE" ? 1 : 2
       );
       brackets.matches = brackets.matches.map((element: any) => {
-        if (!rounds.includes(element.id.r)) {
-          rounds.push(element.id.r);
-        }
+        rounds.push(element);
         return element;
       });
     }
+
     if (!rounds?.length) rounds.push(1);
     setRounds(rounds);
     formik.values.rounds = formik.values.rounds.slice(0, rounds.length);

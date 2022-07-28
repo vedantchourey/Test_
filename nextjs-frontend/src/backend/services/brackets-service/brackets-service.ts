@@ -449,8 +449,8 @@ export const submitMatchResultRequest = async (
       message: `${user?.user_metadata?.username} added match scroe.`,
       is_action_required: true,
       data: {},
-    }
-    
+    };
+
     await addNotifications(notificationObj, knexConnection);
     return result;
   } catch (ex) {
@@ -604,7 +604,7 @@ export const fetchMatchResultsReq = async (
         const player1Data = player1[0].user_id
           ? await profileRepo.knexObj().where("id", player1[0].user_id)
 .select()
-          : [{}]; 
+          : [{}];
 
         const player2 = await participantRepo
           .knexObj()
@@ -612,7 +612,7 @@ export const fetchMatchResultsReq = async (
           .select();
 
         const player2Data = player1[0].user_id
-        ? await profileRepo.knexObj().where("id", player2[0].user_id)
+          ? await profileRepo.knexObj().where("id", player2[0].user_id)
 .select()
           : [{}];
 
