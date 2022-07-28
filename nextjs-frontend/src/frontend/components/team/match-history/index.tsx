@@ -50,7 +50,7 @@ const MatchHistory: React.FC<{ data: IMatchHubData[] }> = (props) => {
                         display: "flex",
                         justifyContent: "space-between",
                       }}
-                      onClick={():void=>{router.push(`/team/view/${row.opponent1.user_id === user?.id ? row.opponent1.team_id:row.opponent2.team_id}/members`)}}
+                      //onClick={():void=>{router.push(`/team/view/${row.opponent1.user_id === user?.id ? row.opponent1.team_id:row.opponent2.team_id}/members`)}}
                     >
                       {/* <Typography>{opponent1Name}</Typography>
                       <Typography color={"#F09633"}>VS</Typography> */}

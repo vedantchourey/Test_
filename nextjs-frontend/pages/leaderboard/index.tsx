@@ -6,6 +6,7 @@ import {
   Typography,
   FormControlLabel,
   Checkbox,
+  Avatar,
 } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -34,6 +35,7 @@ import { getAuthHeader } from "../../src/frontend/utils/headers";
 import styles from "./leaderboard.module.css";
 import { useRouter } from "next/router";
 import { frontendSupabase } from "../../src/frontend/services/supabase-frontend-service";
+import frontendConfig from "../../src/frontend/utils/config/front-end-config";
 
 // const createData = (
 //   rank: HTMLParagraphElement,
@@ -69,6 +71,7 @@ export interface Gameinfo {
   won:any;
   name:any;
   teamLogo:any;
+  avatarUrl:any;
 }
 
 const imagedata: any = {
@@ -178,14 +181,15 @@ const Leaderboard = (): JSX.Element => {
               columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}
               className={styles.mainContainer}
             >
-              {leaderboardgamedata?.slice(0, 3)?.map((item, index) => {
+              {leaderboardgamedata?.sort(function(a, b){return parseInt(b.elo_rating) - parseInt(a.elo_rating)}).slice(0, 3)
+?.map((item, index) => {
                 const image=isTeam?(item.teamLogo
                 ? frontendSupabase.storage
                     .from("public-files")
                     .getPublicUrl(item.teamLogo).publicURL
-                : "/icons/Rectangle.svg"):("/icons/Male.png")
+                : "/icons/Rectangle.svg"):(item.avatarUrl?item.avatarUrl:"/icons/Male.png");
                 return(
-                <Grid item xs={12} lg={4} key={item.id} onClick={():any=>{isTeam?router.push(`/team/view/${item.id}/members`):router.push(`account/${item.userDetails.username}`)}}>
+                <Grid item xs={12} lg={4} key={item.id} onClick={():any=>{isTeam?null:router.push(`account/${item.userDetails.username}`)}}>
                   <Box className={styles.container}>
                     <Box
                       style={{
@@ -226,7 +230,7 @@ const Leaderboard = (): JSX.Element => {
                         }
                         className={styles.borderImage}
                       />
-                      <img
+                      {isTeam?<img
                         src={image || ""}
                         className={styles.img1}
                         style={{
@@ -240,7 +244,21 @@ const Leaderboard = (): JSX.Element => {
                           borderStyle: "groove",
                           borderWidth: 5,
                         }}
-                      />
+                      />:
+                      <Avatar
+                      src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${image}`}
+                        className={styles.img1}
+                        style={{
+                          position: "absolute",
+                          borderColor:
+                            index === 0
+                              ? "#FFAA2E"
+                              : index === 1
+                              ? "#C05C00"
+                              : "#979797",
+                          borderStyle: "groove",
+                          borderWidth: 5,
+                        }}/>}
                     </Box>
 
                     <Box style={{ marginLeft: "45px" }}>
@@ -295,11 +313,11 @@ const Leaderboard = (): JSX.Element => {
                     <TableCell style={{ width: "8%" }} align="center">
                       Rank
                     </TableCell>
-                    <TableCell style={{ width: "50%" }}>Username</TableCell>
+                    <TableCell style={{ width: "40%" }}>Username</TableCell>
                     <TableCell style={{ width: "10%" }}>Games Played</TableCell>
                     <TableCell style={{ width: "10%" }}>Wins</TableCell>
                     {isDesktop && (
-                      <TableCell style={{ width: "25%" }}>Elo Rating</TableCell>
+                      <TableCell style={{ width: "10%" }}>Elo Rating</TableCell>
                     )}
                   </TableRow>
                 </TableHead>
@@ -313,15 +331,15 @@ const Leaderboard = (): JSX.Element => {
                   }}
                 >
                   {leaderboardgamedata
-                    ?.slice(isDesktop ? 3 : 0, leaderboardgamedata.length)
+                    ?.sort(function(a, b){return parseInt(b.elo_rating) - parseInt(a.elo_rating)}).slice(isDesktop ? 3 : 0, leaderboardgamedata.length)
                     .map((item, idx) => {
                       const image=isTeam?(item.teamLogo
                         ? frontendSupabase.storage
                             .from("public-files")
                             .getPublicUrl(item.teamLogo).publicURL
-                        : "/icons/Rectangle.svg"):("/icons/Male.png")
+                        : "/icons/Rectangle.svg"):(item.avatarUrl?item.avatarUrl:"/icons/Male.png");
                       return(
-                      <TableRow key={item.id} onClick={():any=>{isTeam?router.push(`/team/view/${item.id}/members`):router.push(`account/${item.userDetails.username}`)}}>
+                      <TableRow key={item.id} onClick={():any=>{isTeam?null:router.push(`account/${item.userDetails.username}`)}}>
                         <TableCell align="center" component="th" scope="row">
                           {idx + (isDesktop ? 4 : 1)}
                           <sup>th</sup>
@@ -331,10 +349,13 @@ const Leaderboard = (): JSX.Element => {
                             style={{ display: "flex", alignItems: "center" }}
                           >
                             <span>
+                              {isTeam?
                               <img src={image || ""} 
-                              width={"45px"}
-                            height={"45px"}
-                            style={{ borderRadius: 65 }}/>
+                                width={"45px"}
+                                height={"45px"}
+                                style={{ borderRadius: 65 }}/>:
+                              <Avatar src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${image}`}
+                               style={{height:'45px',width:'45px',borderRadius:'65px'}}/>}
                             </span>
                             <span style={{ padding: "10px" }}>
                             {isTeam?item.name:item?.userDetails?.username}
