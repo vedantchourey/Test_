@@ -169,6 +169,7 @@ const tournamentsWithPlayers = async (context: PerRequestContext, tournamentId: 
             "elo_ratings.elo_rating",
             "teams.elo_rating as team_elo_rating",
             "teams.id as team_id",
+            "teams.teamLogo as teamLogo",
             "teams.name as team_name",
           ])
           .join(
@@ -203,6 +204,7 @@ const tournamentsWithPlayers = async (context: PerRequestContext, tournamentId: 
           return {
             team_name: k,
             team_id: grp_team[k][0].team_id,
+            avatarUrl: grp_team[k][0].teamLogo,
             ...grp_team[k],
           };
         });
@@ -340,6 +342,7 @@ export async function tournamentDetails(
             "teams.elo_rating as team_elo_rating",
             "teams.id as team_id",
             "teams.name as team_name",
+            "teams.teamLogo as teamLogo",
           ])
           .join(
             TABLE_NAMES.B_TOURNAMENT,
@@ -374,6 +377,7 @@ export async function tournamentDetails(
         players = _.keys(grp_team).map((k) => {
           return {
             team_name: k,
+            avatarUrl: grp_team[k][0].teamLogo,
             team_id: grp_team[k][0].team_id,
             ...grp_team[k],
           };
