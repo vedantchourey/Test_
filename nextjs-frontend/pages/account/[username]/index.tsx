@@ -43,14 +43,15 @@ function UserAccount(): JSX.Element {
   useEffect(() => {
     (async (): Promise<void> => {
       try {
-        fetchData();
         const result = await getUserProfileByUsername(username);
-        if (result) setUserData(result);
+        if ( result ) {
+          setUserData( result );
+          fetchData( result.id );}
       } catch (err) {
         setIsFetchingUserData(false);
       }
     })();
-  }, []);
+  }, [username]);
 
   useEffect(() => {
     if (!userData) return;
@@ -62,10 +63,10 @@ function UserAccount(): JSX.Element {
     })();
   }, [userData]);
 
-  const fetchData = async (): Promise<void> => {
+  const fetchData = async ( userId: string ): Promise<void> => {
     const headers = await getAuthHeader();
     axios
-      .get("/api/tournaments/user-matches-history-single", { headers: headers })
+      .get("/api/tournaments/user-matches-history-single", { headers: headers, params: { userId: userId }})
       .then((res) => {
         setData(res.data);
       })
@@ -146,6 +147,7 @@ function UserAccount(): JSX.Element {
                   </Box>
                   <TabPanel sx={{p:0}} value="posts">{_renderPosts()}</TabPanel>
                   <TabPanel sx={{p:0}} value="activity">
+                    { data.length ?
                     <TableContainer>
                     <Table>
                       <TableBody>
@@ -196,7 +198,10 @@ function UserAccount(): JSX.Element {
                         })}
                       </TableBody>
                     </Table>
-                  </TableContainer>
+                  </TableContainer> :
+                  <Box>
+                    <Typography variant="h3">No match history available</Typography>
+                  </Box>}
                   </TabPanel>
                 </TabContext>
               </Grid>

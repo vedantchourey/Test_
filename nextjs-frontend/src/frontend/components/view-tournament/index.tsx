@@ -106,7 +106,6 @@ const ViewTournament: React.FC = () => {
   const [teams, setTeams] = React.useState<Team[]>([]);
   const [regError, setRegError] = React.useState();
   const [selectedTeam, setSelectedTeam] = React.useState<Team | undefined>();
-  const [isSuccessJoined, setSuccessJoined] = React.useState(false);
   const [openSuccessModal, setOpenSuccessModal] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [page,setPage]=React.useState("Details")
@@ -443,7 +442,6 @@ const ViewTournament: React.FC = () => {
       .post("/api/tournaments/register", payload, { headers: { ...headers } })
       .then(() => {
         setOpenSuccessModal(true);
-        setSuccessJoined(true);
       })
       .catch((err) => {
         console.error(err);
@@ -494,7 +492,8 @@ const ViewTournament: React.FC = () => {
             team={selectedTeam}
             onJoin={onTeamJoin}
             error={regError}
-            entryFees={parseInt(data.settings?.entryFeeAmount || "0") || 0}
+            data={data}
+          entryFees={parseInt(data.settings?.entryFeeAmount || "0") || 0}
           />
         </ViewCard>
       )
@@ -553,10 +552,6 @@ const ViewTournament: React.FC = () => {
                   </span>
                 </Typography>
               </Box>
-
-              {!isSuccessJoined ? (
-                
-                
                 <ActionButton
                   data={data}
                   error={regError}
@@ -567,7 +562,6 @@ const ViewTournament: React.FC = () => {
                   userId={user?.id}
                   disabled={countDown === "00:00:00"}
                 />
-              ) : null}
             </Grid>
           </Grid>
         </ViewCard>

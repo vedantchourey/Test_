@@ -41,6 +41,7 @@ export interface BasicData {
   authorname: string;
   description: string;
   banner: string;
+  label?: string;
 }
 
 interface BasicPorps {
@@ -62,6 +63,7 @@ const NewsPage: React.FC<BasicPorps> = ({ onSave, data }) => {
       title: data?.title || "",
       subtitle: data?.subtitle || "",
       authorname: data?.authorname || "",
+      label: data?.label || "",
       description: data?.description || "",
       banner: data?.banner || "",
     },
@@ -77,6 +79,7 @@ const NewsPage: React.FC<BasicPorps> = ({ onSave, data }) => {
     if (data) {
       formik.setValues({
         ...data,
+        label: data?.banner,
         banner: data?.banner ? data?.banner : "",
       });
     }
@@ -168,6 +171,31 @@ const NewsPage: React.FC<BasicPorps> = ({ onSave, data }) => {
                     </FormControl>
                   </Grid>
 
+                  <Grid item xs={6}>
+                    <FormControl fullWidth variant="standard">
+                      <FormLabel label="Label"></FormLabel>
+                      <OutlinedInput
+                        id="label"
+                        name="label"
+                        placeholder="label"
+                        onChange={formik.handleChange}
+                        value={formik.values.label}
+                        className={style.inputBox}
+                        onBlur={formik.handleBlur}
+                        error={
+                          formik.touched.label &&
+                          Boolean(formik.errors.label)
+                        }
+                      />
+                      {formik.touched.label &&
+                      Boolean(formik.errors.label) ? (
+                        <FormHelperText>
+                          {" "}
+                          {formik.errors.label}{" "}
+                        </FormHelperText>
+                      ) : null}
+                    </FormControl>
+                  </Grid>
                   <Grid item xs={6}>
                     <FormControl fullWidth variant="standard">
                       <FormLabel label="Author Name"></FormLabel>

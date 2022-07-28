@@ -66,7 +66,6 @@ const SliderComp: React.FC = (): JSX.Element => {
     try {
       setLoading(true);
       const endpoint = "/api/tournaments/list";
-      const headers = await getAuthHeader();
       axios
         .get(endpoint, {
           params: {
@@ -75,8 +74,7 @@ const SliderComp: React.FC = (): JSX.Element => {
             format,
             status,
             amount: credits,
-          },
-          headers: headers,
+          }
         })
         .then((res) => {
           setData(res.data.data.tournaments.filter((i: any) => i !== null));
@@ -116,7 +114,9 @@ const SliderComp: React.FC = (): JSX.Element => {
   return (
     <>
       <Loader loading={loading} />
-      <Typography textAlign={"left"} className={styles.choose_Game}>Choose your Game</Typography>
+      <Typography textAlign={"left"} className={styles.choose_Game}>
+        Choose your Game
+      </Typography>
       {/* {isMobile ? (
         <Grid mt={5} sx={{ maxWidth: "sm" }}>
           <AliceCarousel
@@ -140,21 +140,21 @@ const SliderComp: React.FC = (): JSX.Element => {
       )} */}
       <Box
         mt={5}
-        sx={{ maxWidth:isDesktop?"1400px":"300px"}}
+        sx={{ maxWidth: isDesktop ? "1400px" : "300px" }}
         display={"flex"}
         flexWrap={"nowrap"}
         overflow={"scroll"}
         className="hide-scrollbar"
       >
         {games.map((data) => (
-            <img
-              key={1}
-              data-value="1"
-              src={imagedata[data.code]}
-              className={styles.image}
-              onClick={(): any => setTournamentsData(data.id)}
-              role="presentation"
-            />
+          <img
+            key={1}
+            data-value="1"
+            src={imagedata[data.code]}
+            className={styles.image}
+            onClick={(): any => setTournamentsData(data.id)}
+            role="presentation"
+          />
         ))}
       </Box>
 
@@ -170,30 +170,36 @@ const SliderComp: React.FC = (): JSX.Element => {
         setCredits={setCredits}
       />
       <Grid container columnSpacing={2} mt={5}>
-        {tournamentsData.map((data: any) => {
-          const startDateTime = moment(data.startDate).format(
-            "D MMM YYYY hh:mm A"
-          );
-          const totalSlots = data?.bracketsMetadata?.playersLimit || 0;
-          const currentSlot = (data?.playerList || []).length;
+        {tournamentsData
+          .sort((a: any, b: any) => {
+            const aTime: any = moment(a.startDate).format("x");
+            const bTime: any = moment(b.startDate).format("x");
+            return bTime - aTime;
+          })
+          .map((data: any) => {
+            const startDateTime =
+              moment(data.startDate).format("D MMM YYYY ") +
+              moment(data.startTime, "HH:mm:ss").format("LT");
+            const totalSlots = data?.bracketsMetadata?.playersLimit || 0;
+            const currentSlot = (data?.playerList || []).length;
 
-          return (
-            <>
-              <CardComp
-                id={data.id}
-                tournament_name={data.name}
-                banner={data.banner}
-                tournament_type={data.settings?.tournamentFormat}
-                platform={data.settings?.platform}
-                total_slots={totalSlots}
-                left_slots={currentSlot}
-                start_date={startDateTime}
-                credits={data.settings?.entryFeeAmount || 0}
-                participants={`${currentSlot} out of ${totalSlots}`}
-              />
-            </>
-          );
-        })}
+            return (
+              <>
+                <CardComp
+                  id={data.id}
+                  tournament_name={data.name}
+                  banner={data.banner}
+                  tournament_type={data.settings?.tournamentFormat}
+                  platform={data.settings?.platform}
+                  total_slots={totalSlots}
+                  left_slots={currentSlot}
+                  start_date={startDateTime}
+                  credits={data.settings?.entryFeeAmount || 0}
+                  participants={`${currentSlot} out of ${totalSlots}`}
+                />
+              </>
+            );
+          })}
       </Grid>
     </>
   );

@@ -26,6 +26,7 @@ const TeamList: React.FC = () => {
             route.push("/team/create");
           }}
           variant={"contained"}
+          size='large'
         >
           Create Team
         </Button>

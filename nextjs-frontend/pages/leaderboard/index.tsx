@@ -1,4 +1,12 @@
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  Typography,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -80,9 +88,8 @@ const Leaderboard = (): JSX.Element => {
   const getleaderboardgamedata = async (gameId: string): Promise<void> => {
     try {
       const endpoint = "/api/leaderboard";
-      const headers = await getAuthHeader();
       axios
-        .get(endpoint, { params: { game_id: gameId }, headers: headers })
+        .get(endpoint, { params: { game_id: gameId } })
         .then((res) => {
           setData(res.data);
         })
@@ -123,10 +130,9 @@ const Leaderboard = (): JSX.Element => {
       <Fragment>
         <Container maxWidth="xl">
           <Heading divider heading={"LEADERBOARD"} />
-          <Typography className={styles.text}>Choose Game</Typography>
           <Box
             mt={5}
-            sx={{ maxWidth: isDesktop?"1400px":"300px" }}
+            sx={{ maxWidth: isDesktop ? "1400px" : "300px" }}
             display={"flex"}
             flexWrap={"nowrap"}
             overflow={"scroll"}
@@ -151,6 +157,10 @@ const Leaderboard = (): JSX.Element => {
               />
             ))}
           </Box>
+          <FormControlLabel
+            control={<Checkbox />}
+            label={<Typography className={styles.button}>Team</Typography>}
+          />
           {isDesktop && (
             <Grid
               container
@@ -237,9 +247,6 @@ const Leaderboard = (): JSX.Element => {
                               className={styles.img2}
                             />
                           </Box>
-                          <Typography className={styles.text3}>
-                            Legend Club
-                          </Typography>
                         </Box>
                       </Box>
                     </Box>
@@ -250,7 +257,7 @@ const Leaderboard = (): JSX.Element => {
           )}
           <div style={{ padding: "10px" }}>
             <TableContainer component={Paper} className={styles.mainTable}>
-              <Table>
+              <Table stickyHeader>
                 <TableHead>
                   <TableRow
                     sx={{
@@ -264,7 +271,9 @@ const Leaderboard = (): JSX.Element => {
                     <TableCell style={{ width: "8%" }} align="center">
                       Rank
                     </TableCell>
-                    <TableCell style={{ width: "65%" }}>Username</TableCell>
+                    <TableCell style={{ width: "50%" }}>Username</TableCell>
+                    <TableCell style={{ width: "10%" }}>Games Played</TableCell>
+                    <TableCell style={{ width: "10%" }}>Wins</TableCell>
                     {isDesktop && (
                       <TableCell style={{ width: "25%" }}>Elo Rating</TableCell>
                     )}
@@ -276,14 +285,15 @@ const Leaderboard = (): JSX.Element => {
                       border: 1,
                       borderColor: "rgba(255, 255, 255, 0.1)",
                     },
+
                   }}
                 >
-                  {leaderboardgamedata 
-                    .slice(isDesktop?3:0, leaderboardgamedata.length)
+                  {leaderboardgamedata
+                    .slice(isDesktop ? 3 : 0, leaderboardgamedata.length)
                     .map((item, idx) => (
                       <TableRow key={item.id} onClick={():any=>{router.push(`account/${item.userDetails.username}`)}}>
                         <TableCell align="center" component="th" scope="row">
-                          {idx + (isDesktop?4:1)}
+                          {idx + (isDesktop ? 4 : 1)}
                           <sup>th</sup>
                         </TableCell>
                         <TableCell>
@@ -297,6 +307,12 @@ const Leaderboard = (): JSX.Element => {
                               {item.userDetails.username}
                             </span>
                           </div>
+                        </TableCell>
+                        <TableCell align="center" component="th" scope="row">
+                          {item.userDetails.GamePlayed}
+                        </TableCell>
+                        <TableCell align="center" component="th" scope="row">
+                          {item.userDetails.Wins}
                         </TableCell>
                         {isDesktop&&(<TableCell>{item.elo_rating}</TableCell>)}
                       </TableRow>

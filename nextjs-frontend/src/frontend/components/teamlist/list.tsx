@@ -1,5 +1,7 @@
 import styled from "@emotion/styled";
 import {
+  Avatar,
+  AvatarGroup,
   Box,
   Grid,
   Table,
@@ -88,6 +90,9 @@ const TeamListData: React.FC = () => {
                     <Typography variant="subtitle1" textAlign={"center"} color={"#6932F9"}>TEAM NAME</Typography>
                   </NoobCell>
                   <NoobCell>
+                    <Typography variant="subtitle1" textAlign={"center"} color={"#6932F9"}>Players</Typography>
+                  </NoobCell>
+                  <NoobCell>
                     <Typography variant="subtitle1" textAlign={"center"} color={"#6932F9"}>Game</Typography>
                   </NoobCell>
                   <NoobCell>
@@ -130,6 +135,29 @@ const TeamListData: React.FC = () => {
                             {/* <Typography marginLeft={2} marginRight={2}>{item.id}</Typography> */}
                           </Box>
                         </Box>
+                      </NoobCell>
+                      <NoobCell>
+                        <AvatarGroup>
+                          {item.players.slice(0, 3).map((p: any) => {
+                            const image = p.avatarUrl
+                              ? frontendSupabase.storage
+                                  .from("public-files")
+                                  .getPublicUrl(p.avatarUrl).publicURL
+                              : undefined;
+                            return (
+                              <Avatar
+                                alt={p.firstName}
+                                src={image || undefined}
+                                key={p.firstName}
+                              >
+                                {p.firstName[0]}
+                              </Avatar>
+                            );
+                          })}
+                          {item.players.length > 3 && (
+                            <Avatar>+{item.players.length - 3}</Avatar>
+                          )}
+                        </AvatarGroup>
                       </NoobCell>
                       <NoobCell>
                         {parseInt(item.won) + parseInt(item.loss)}

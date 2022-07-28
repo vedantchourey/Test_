@@ -513,11 +513,24 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                 Once you have identified a winner, we will send a request to the
                 other user to accept it.
               </Typography>
-              {formik.errors.screenshot && (
+              {formik.errors.screenshot ? (
                 <Typography color="white" variant="body2" marginTop={1}>
                   {formik.errors.screenshot}
                 </Typography>
-              )}
+              ):
+                <Box display="flex" flexDirection={"column"}>
+                      {formik?.values?.screenshot !== "" && (
+                        <>
+                          <Typography
+                            style={{ textAlign: "left", margin: "10px 0px" }}
+                          >
+                            Preview
+                          </Typography>
+                          <img src={formik.values.screenshot} width="30%" />
+                        </>
+                      )}
+                    </Box>
+              }
             </Grid>
             <Grid item xs={12} display="flex" justifyContent={"center"}>
               <Button
