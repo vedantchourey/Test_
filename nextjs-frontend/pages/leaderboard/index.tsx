@@ -31,7 +31,6 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../src/frontend/redux-store/redux-store";
-import { getAuthHeader } from "../../src/frontend/utils/headers";
 import styles from "./leaderboard.module.css";
 import { useRouter } from "next/router";
 import { frontendSupabase } from "../../src/frontend/services/supabase-frontend-service";
@@ -99,7 +98,6 @@ const Leaderboard = (): JSX.Element => {
   const getleaderboardgamedata = async (gameId: string): Promise<void> => {
     try {
       const endpoint = `/api/leaderboard?isTeam=${isTeam}`;
-      const headers = await getAuthHeader();
       axios
         .get(endpoint, { params: { game_id: gameId } })
         .then((res) => {

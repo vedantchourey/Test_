@@ -37,7 +37,7 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
       container
       width={"100%"}
       className={styles.resultTileContainer}
-      onClick={() => (props.onMatchHub ? props.onMatchHub(props.data) : null)}
+      onClick={(): any => (props.onMatchHub ? props.onMatchHub(props.data) : null)}
     >
       <Grid item xs={3}>
         <Button
