@@ -9,6 +9,21 @@ import { ICreateCommentRequest } from "../../backend/services/posts-services/cre
 import { sendFiles } from './fetch-api-wrapper';
 import _ from "lodash";
 
+export const getMentionsPost = async (
+  userid: string
+): Promise<IPostsResponse[]> => {
+  const result = await frontendSupabase
+    .from("posts_mentions")
+    .select(`post_id`)
+    .eq("user_id", userid);
+
+  const posts: IPostsResponse[] = await Promise.all(
+    (result.data || [])?.map((i) => getPostById(i.post_id))
+  );
+
+  return posts;
+};
+
 export const getPostsByUserId = async (userid: string): Promise<IPostsResponse[]> => {
   const result = await frontendSupabase.from("posts").select(`
         id,
@@ -24,7 +39,8 @@ export const getPostsByUserId = async (userid: string): Promise<IPostsResponse[]
     .order('createdAt', { ascending: false })
     .match({ postedBy: userid });
   if (result.error) throw result.error;
-  return result.data as IPostsResponse[];
+  const mentionsPosts = await getMentionsPost(userid);
+  return [...result.data, ...mentionsPosts] as IPostsResponse[];
 };
 
 const getPostById =async (postId:string): Promise<IPostsResponse> => {

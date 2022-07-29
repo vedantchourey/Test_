@@ -3,6 +3,9 @@ import dynamic from "next/dynamic";
 import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "@mui/styles";
 import "react-quill/dist/quill.snow.css";
+import "quill-mention";
+import "quill-mention/dist/quill.mention.css";
+
 const myTheme = createTheme({
   // Set up your custom MUI theme here
 });
@@ -27,6 +30,7 @@ interface INoobRichTextEditor {
   error?: boolean;
   name?: string;
   id?: string;
+  modules?: any;
 }
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const NoobReachTextEditor = ({
@@ -41,10 +45,11 @@ const NoobReachTextEditor = ({
     <ThemeProvider theme={myTheme}>
       <ReactQuill
         {...restProps}
+        // modules={modules}
         className={classes.root}
         value={value}
         onChange={onChange}
-        style={{ borderColor: error ? "red" : "" }}
+        style={{ borderColor: error ? "red" : "", color: "#fff" }}
       />
     </ThemeProvider>
   );

@@ -44,6 +44,11 @@ export interface BasicData {
   label?: string;
 }
 
+// const atValues = [
+//   { id: 1, value: "Fredrik Sundqvist" },
+//   { id: 2, value: "Patrik Sjölin" },
+// ];
+
 interface BasicPorps {
   data?: BasicData;
   onSave?: (data: BasicData) => void;
@@ -183,16 +188,11 @@ const NewsPage: React.FC<BasicPorps> = ({ onSave, data }) => {
                         className={style.inputBox}
                         onBlur={formik.handleBlur}
                         error={
-                          formik.touched.label &&
-                          Boolean(formik.errors.label)
+                          formik.touched.label && Boolean(formik.errors.label)
                         }
                       />
-                      {formik.touched.label &&
-                      Boolean(formik.errors.label) ? (
-                        <FormHelperText>
-                          {" "}
-                          {formik.errors.label}{" "}
-                        </FormHelperText>
+                      {formik.touched.label && Boolean(formik.errors.label) ? (
+                        <FormHelperText> {formik.errors.label} </FormHelperText>
                       ) : null}
                     </FormControl>
                   </Grid>
@@ -229,6 +229,49 @@ const NewsPage: React.FC<BasicPorps> = ({ onSave, data }) => {
                   <Grid item xs={12}>
                     <AccordionAlt title="Discription">
                       <NoobReachTextEditor
+                        // modules={{
+                        //   toolbar: [
+                        //     [{ header: [1, 2, false] }],
+                        //     [
+                        //       "bold",
+                        //       "italic",
+                        //       "underline",
+                        //       "strike",
+                        //       "blockquote",
+                        //     ],
+                        //     [{ list: "ordered" }, { list: "bullet" }],
+                        //     ["link", "image"],
+                        //   ],
+                        //   mention: {
+                        //     allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
+                        //     mentionDenotationChars: ["@", "#"],
+                        //     source: function (
+                        //       searchTerm: any,
+                        //       renderItem: any,
+                        //       mentionChar: any
+                        //     ) {
+                        //       let values: any;
+                        //       if (mentionChar === "@" || mentionChar === "#") {
+                        //         values = atValues;
+                        //       }
+                        //       if (searchTerm.length === 0) {
+                        //         renderItem(values, searchTerm);
+                        //       } else {
+                        //         const matches = [];
+                        //         for (let i = 0; i < values.length; i++)
+                        //           if (
+                        //             ~values[i].value
+                        //               .toLowerCase()
+                        //               .indexOf(searchTerm.toLowerCase())
+                        //           )
+                                  
+                        //             matches.push(values[i]);
+                        //             console.log('matches -> ', matches);
+                        //         renderItem(matches, searchTerm);
+                        //       }
+                        //     },
+                        //   },
+                        // }}
                         value={formik.values.description}
                         onChange={(value: any): void => {
                           changeHandler("description", value);

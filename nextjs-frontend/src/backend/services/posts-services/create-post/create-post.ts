@@ -6,6 +6,9 @@ import { PostsRepository } from '../../database/repositories/posts-repository';
 import { Knex } from 'knex';
 import { ServiceResponse } from '../../common/contracts/service-response';
 import { getLinkPreview } from '../../../../common/url-preview/url-preview';
+import { CrudRepository } from '../../database/repositories/crud-repository';
+import { IProfile } from '../../database/models/i-profile';
+import { IPostsMentions } from '../../database/models/i-post-mentions';
 // import { CrudRepository } from '../../database/repositories/crud-repository';
 // import { IReporedPost } from '../../database/models/i-reported-post';
 // import { TABLE_NAMES } from '../../../../models/constants';
@@ -23,9 +26,44 @@ interface PreviewResponse {
    error?: string; 
  }
 
+ const addPostInTagedUser = async (
+   connection: Knex,
+   post_id: string,
+   user_id: string,
+   mention_by: string
+ ): Promise<any> => {
+   const postsMentionsRepo = new CrudRepository<IPostsMentions>(
+     connection as Knex,
+     "posts_mentions"
+   );
+   return await postsMentionsRepo.create({
+     post_id,
+     user_id,
+     mention_by,
+   });
+ };
+
 
 export async function createPost(req: ICreatePostRequest, context: PerRequestContext): Promise<ServiceResponse<Partial<ICreatePostRequest>, ICreatePostResponse>> {
   const repository = new PostsRepository(context.transaction as Knex.Transaction);
+
+  const findMentions = req.postContent.split(" ").filter((s) => s[0] === "@");
+
+  const userRepo = new CrudRepository<IProfile>(
+    context.knexConnection as Knex,
+    "profiles"
+  );
+
+  const userIdBatchResponse = await Promise.all(
+    findMentions.map((u: string) =>
+      userRepo.find({ username: u.replace("@", "") })
+    )
+  );
+
+  const userIds = userIdBatchResponse
+    .filter((i) => i.length > 0)
+    .map((u) => u[0].id)
+    .filter((i) => i !== context.user?.id);
 
   const regex = /\bhttps?:\/\/\S+/gi;
   const urls = req.postContent.match(regex);
@@ -40,7 +78,19 @@ export async function createPost(req: ICreatePostRequest, context: PerRequestCon
       postedBy: context.user?.id as string
     });
     const createdPost = await repository.getPostById(postId as string);
+
     const {updatedAt, createdAt, username, avatarUrl, postType, postContent, postImgUrl, postUrl, urlPostTitle, id} = createdPost as IPostsResponse;
+
+    await Promise.all(
+      userIds.map((uId) =>
+        addPostInTagedUser(
+          context.knexConnection as Knex,
+          id,
+          uId,
+          context.user?.id as string
+        ))
+    );
+    
     return {
       data: {
         id,
@@ -64,6 +114,17 @@ export async function createPost(req: ICreatePostRequest, context: PerRequestCon
   const postId = await repository.createPost({postContent: req.postContent, postImgUrl:req.postImgUrl, postedBy: context.user?.id as string});
   const createdPost = await repository.getPostById(postId as string);
   const {updatedAt, createdAt, username, avatarUrl, postType, postContent, postImgUrl, id} = createdPost as IPostsResponse;
+  
+  await Promise.all(
+    userIds.map((uId) =>
+      addPostInTagedUser(
+        context.knexConnection as Knex,
+        id,
+        uId,
+        context.user?.id as string
+      ))
+  );
+
   return {
     data: {
       id,
