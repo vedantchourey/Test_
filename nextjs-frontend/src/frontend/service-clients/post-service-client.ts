@@ -94,6 +94,16 @@ export const checkIsPostLiked = async (payload: { userId: string | undefined; po
   return { isLiked: result.data.length > 0 };
 }
 
+export const checkIsCommentLiked = async (payload: { userId: string | undefined; commentId: string }): Promise<{ isLiked?: boolean | undefined, error?: unknown }> => {
+  const result = await frontendSupabase.from('comment_likes')
+  .select("id")
+  .eq("commentId", payload.commentId)
+  .eq("likedBy", payload.userId)
+  .limit(1)
+  if (result.error) throw result.error;
+  return { isLiked: result.data.length > 0 };
+}
+
 export const getPostLikesCount = async (postId: string): Promise<{ totalLikes: number | null }> => {
   const result = await frontendSupabase.from('post_likes').select('*', { count: 'exact' })
     .match({
@@ -105,11 +115,19 @@ export const getPostLikesCount = async (postId: string): Promise<{ totalLikes: n
 
 export const getPostCommentsCount = async (postId: string): Promise<{ totalComments: number | null }> => {
   const result = await frontendSupabase.from('post_comments').select('*', { count: 'exact' })
-    .match({
-      postId
-    })
-  if (result.error) throw result.error;
-  return { totalComments: result.count };
+    .match({postId})
+    
+    if (result.error) throw result.error;
+    return { totalComments: result.count };
+  }
+  
+  export const getCommentLikesCount = async (Id: string): Promise<{ totalLikes: number | null }> => {
+
+    const result: any = await frontendSupabase.from('comment_likes')
+    .select("id")
+    .eq("commentId", Id)
+
+  return { totalLikes: result.data.length };
 }
 
 export const likePost = async (postId: string): Promise<NoobPostResponse<unknown, ILikePostResponse>> => {
