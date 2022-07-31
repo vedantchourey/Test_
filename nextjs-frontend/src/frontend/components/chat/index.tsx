@@ -456,7 +456,7 @@ export default function Chat(props: {
               {c.type === "team" && "Team"}
               {c.type === "one-to-one" && "Friends"}
               {c.type === "group" && "Groups"}
-              {c.type === "Support" && "Support"}
+              {c.type === "support" && "Support"}
             </Typography>
             {c.values.map((i) => {
               const findTeam = teamData?.find((t) => t.id === i.other_user);
