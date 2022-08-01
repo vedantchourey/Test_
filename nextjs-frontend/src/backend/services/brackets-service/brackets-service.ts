@@ -592,7 +592,10 @@ export const fetchMatchResultsReq = async (
     const result = await repo
       .knexObj()
       .join("b_match", "b_match.id", "match_result_request.match_id")
-      .where({ tournament_id: req.tournament_id });
+      .where({ tournament_id: req.tournament_id })
+.select("*")
+.select("match_result_request.status as result_status");
+
 
     const resultFinal = await Promise.all(
       result.map(async (r: any) => {
