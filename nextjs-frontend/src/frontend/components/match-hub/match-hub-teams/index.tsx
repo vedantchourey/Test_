@@ -12,6 +12,8 @@ import {
   FormControlLabel,
   Checkbox,
   FormHelperText,
+  Avatar,
+  Divider,
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
@@ -34,6 +36,7 @@ import { IMatchHubData } from "../../../../../pages/match-hub";
 import { userProfileSelector } from "../../../redux-store/authentication/authentication-selectors";
 import { useAppSelector } from "../../../redux-store/redux-store";
 import ChatBox from "../../chat/ChatBox";
+import styles from "../../match-hub/match-hub.module.css";
 
 const style = {
   position: "absolute" as const,
@@ -356,6 +359,25 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
               }
             />
           </Box>
+        </Grid>
+        <Grid container display={'flex'} style={{justifyContent:'center',marginTop:"30px"}}>
+            <Grid item xs={5.5}>
+            <Typography className={styles.sub_heading}>My Teams</Typography>
+              <Box style={{display:'flex',alignItems:'center',padding:"10px"}}>
+                <Avatar/>
+                <Typography style={{marginLeft:'10px'}}>name</Typography> 
+              </Box>
+              <Divider light/>
+            </Grid>
+            <Divider orientation="vertical" light/>
+            <Grid item xs={5.5}>
+            <Typography className={styles.sub_heading}>Opponent Teams</Typography>
+              <Box style={{display:'flex',alignItems:'center',padding:"10px"}}>
+                <Avatar/>
+                <Typography style={{marginLeft:'10px'}}>name</Typography> 
+              </Box>
+              <Divider light/>
+            </Grid>
         </Grid>
         {!match.opponent1.user_id && data ? (
           <Grid item xs={12}>
