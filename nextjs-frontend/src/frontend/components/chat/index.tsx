@@ -469,12 +469,12 @@ export default function Chat(props: {
                           ? i.chat_image
                           : findTeam?.teamLogo
                       ).publicURL as string)
-                  : "/images/16276393842661.png";
+                  : null;
 
               return (
                 <ChatCard
                   key={i.id}
-                  image={chatIcon}
+                  image={chatIcon || ""}
                   name={i.channel_name}
                   otherUser={i.other_user}
                   message={i.last_message}
