@@ -133,19 +133,19 @@ const TeamListData: React.FC = () => {
                     </Box>
                     <Box ml={4}>
                       <Typography>GAME</Typography>
-                      <Typography textAlign={"center"}>
+                      <Typography color={"rgba(255,255,255,0.4)"} textAlign={"center"}>
                         {parseInt(item.won) + parseInt(item.loss)}
                       </Typography>
                     </Box>
                     <Box ml={4}>
                       <Typography>WON</Typography>
-                      <Typography textAlign={"center"}>
+                      <Typography color={"rgba(255,255,255,0.4)"} textAlign={"center"}>
                         {parseInt(item.won)}
                       </Typography>
                     </Box>
                     <Box ml={4} mr={2}>
                       <Typography>ELO</Typography>
-                      <Typography textAlign={"center"}>
+                      <Typography  color={"rgba(255,255,255,0.4)"} textAlign={"center"} >
                         {parseInt(item.team_elo_rating)}
                       </Typography>
                     </Box>
