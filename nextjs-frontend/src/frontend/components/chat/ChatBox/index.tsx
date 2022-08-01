@@ -18,6 +18,7 @@ import NoobFilePicker from "../../utils/noob-file-picker";
 import { uploadImage } from "../../../service-clients/image-service-client";
 import { v4 } from "uuid";
 import { allowedImageExtensions } from "../../../../models/constants";
+import GroupIcon from "@mui/icons-material/Group";
 
 interface IChatBox {
   channelId: string;
@@ -291,10 +292,12 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         </Box>
 
         <Box display={"flex"} justifyContent="center" mt={2}>
-          <Avatar
+        {props?.data?.chat_image?
+        <Avatar
             src={props?.data?.chat_image}
             style={{ height: 150, width: 150 }}
-          />
+          />:
+          <GroupIcon style={{ height: 150, width: 150,borderRadius: 75,background: "rgba(0,0,0,0.4)", }}/>}
         </Box>
         <Box display={"flex"} justifyContent="center" mt={2}>
           <Button onClick={(): any => setLogoPicker(true)}>

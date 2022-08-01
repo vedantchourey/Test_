@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { frontendSupabase } from "../../services/supabase-frontend-service";
 import { getAuthHeader } from "../../utils/headers";
+import GroupIcon from "@mui/icons-material/Group";
 
 export const HeadCell = styled(TableCell)(() => ({
   borderTop: "1px solid #ffffff1a",
@@ -82,21 +83,39 @@ const TeamListData: React.FC = () => {
                   .getPublicUrl(item.teamLogo).publicURL
               : "/icons/Rectangle.svg";
             return (
-              <Box mt={2} onClick={(): void => {
-                handleNavigation(item.id);
-              }}
-              style={{ cursor: "pointer" }}
-              key={key}
+              <Box
+                mt={2}
+                onClick={(): void => {
+                  handleNavigation(item.id);
+                }}
+                style={{ cursor: "pointer" }}
+                key={key}
               >
                 <Card style={{ width: "100%" }}>
-                  <Box p={1} display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
+                  <Box
+                    p={1}
+                    display={"flex"}
+                    alignItems={"center"}
+                    justifyContent={"space-between"}
+                  >
                     <Box display={"flex"} alignItems={"center"} flex={0.4}>
-                      <img
-                        src={teamLogo || ""}
-                        width={"45px"}
-                        height={"45px"}
-                        style={{ borderRadius: 65 }}
-                      />
+                      {teamLogo ? (
+                        <img
+                          src={teamLogo || ""}
+                          width={"45px"}
+                          height={"45px"}
+                          style={{ borderRadius: 65 }}
+                        />
+                      ) : (
+                        <GroupIcon
+                          style={{
+                            borderRadius: 65,
+                            background: "rgba(0,0,0,0.4)",
+                            height: 45,
+                            width: 45,
+                          }}
+                        />
+                      )}
                       <Typography marginLeft={2} marginRight={2}>
                         {item.name}
                       </Typography>
@@ -132,19 +151,28 @@ const TeamListData: React.FC = () => {
                     </Box>
                     <Box ml={4}>
                       <Typography>GAME</Typography>
-                      <Typography color={"rgba(255,255,255,0.4)"} textAlign={"center"}>
+                      <Typography
+                        color={"rgba(255,255,255,0.4)"}
+                        textAlign={"center"}
+                      >
                         {parseInt(item.won) + parseInt(item.loss)}
                       </Typography>
                     </Box>
                     <Box ml={4}>
                       <Typography>WON</Typography>
-                      <Typography color={"rgba(255,255,255,0.4)"} textAlign={"center"}>
+                      <Typography
+                        color={"rgba(255,255,255,0.4)"}
+                        textAlign={"center"}
+                      >
                         {parseInt(item.won)}
                       </Typography>
                     </Box>
                     <Box ml={4} mr={2}>
                       <Typography>ELO</Typography>
-                      <Typography color={"rgba(255,255,255,0.4)"} textAlign={"center"} >
+                      <Typography
+                        color={"rgba(255,255,255,0.4)"}
+                        textAlign={"center"}
+                      >
                         {parseInt(item.team_elo_rating)}
                       </Typography>
                     </Box>

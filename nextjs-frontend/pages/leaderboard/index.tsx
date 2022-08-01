@@ -35,6 +35,7 @@ import styles from "./leaderboard.module.css";
 import { useRouter } from "next/router";
 import { frontendSupabase } from "../../src/frontend/services/supabase-frontend-service";
 import frontendConfig from "../../src/frontend/utils/config/front-end-config";
+import GroupIcon from "@mui/icons-material/Group";
 
 // const createData = (
 //   rank: HTMLParagraphElement,
@@ -185,7 +186,7 @@ const Leaderboard = (): JSX.Element => {
                 ? frontendSupabase.storage
                     .from("public-files")
                     .getPublicUrl(item.teamLogo).publicURL
-                : "/icons/Rectangle.svg"):(item.avatarUrl?item.avatarUrl:"/icons/Male.png");
+                : null):(item.avatarUrl?item.avatarUrl:null);
                 return(
                 <Grid item xs={12} lg={4} key={item.id} onClick={():any=>{isTeam?null:router.push(`account/${item.userDetails.username}`)}}>
                   <Box className={styles.container}>
@@ -228,7 +229,9 @@ const Leaderboard = (): JSX.Element => {
                         }
                         className={styles.borderImage}
                       />
-                      {isTeam?<img
+                      {isTeam?
+                      (image?
+                      <img
                         src={image || ""}
                         className={styles.img1}
                         style={{
@@ -243,6 +246,19 @@ const Leaderboard = (): JSX.Element => {
                           borderWidth: 5,
                         }}
                       />:
+                      <GroupIcon
+                      className={styles.img1}
+                        style={{
+                          position: "absolute",
+                          borderColor:
+                            index === 0
+                              ? "#FFAA2E"
+                              : index === 1
+                              ? "#C05C00"
+                              : "#979797",
+                          borderStyle: "groove",
+                          borderWidth: 5,
+                        }}/>):
                       <Avatar
                       src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${image}`}
                         className={styles.img1}
@@ -335,7 +351,7 @@ const Leaderboard = (): JSX.Element => {
                         ? frontendSupabase.storage
                             .from("public-files")
                             .getPublicUrl(item.teamLogo).publicURL
-                        : "/icons/Rectangle.svg"):(item.avatarUrl?item.avatarUrl:"/icons/Male.png");
+                        : null):(item.avatarUrl?item.avatarUrl:null);
                       return(
                       <TableRow key={item.id} onClick={():any=>{isTeam?null:router.push(`account/${item.userDetails.username}`)}}>
                         <TableCell align="center" component="th" scope="row">
@@ -348,10 +364,14 @@ const Leaderboard = (): JSX.Element => {
                           >
                             <span>
                               {isTeam?
+                              (image?
                               <img src={image || ""} 
                                 width={"45px"}
                                 height={"45px"}
                                 style={{ borderRadius: 65 }}/>:
+                                <GroupIcon
+                                style={{ borderRadius: 65,width:45,height:45 }}/>
+                                ):
                               <Avatar src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${image}`}
                                style={{height:'45px',width:'45px',borderRadius:'65px'}}/>}
                             </span>

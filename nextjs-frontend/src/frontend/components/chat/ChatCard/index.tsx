@@ -3,6 +3,7 @@ import Badge from '@mui/material/Badge';
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
+import GroupIcon from "@mui/icons-material/Group";
 
 interface IChatCard {
   name: string;
@@ -74,6 +75,7 @@ export default function ChatCard(props: IChatCard): JSX.Element {
     >
       <Box>
         {props.isUnreadMessage && <Badge color="error" variant="dot" sx={{ zIndex: 98 }} />}
+        {props.image || props.type!=="group"?
         <Avatar
           src={chatImage}
           style={{
@@ -83,7 +85,15 @@ export default function ChatCard(props: IChatCard): JSX.Element {
             background: "rgba(0,0,0,0.4)",
             marginTop: props.isUnreadMessage ? -25 : 0,
           }}
-        />
+        />:
+        <GroupIcon 
+        style={{
+          height: 50,
+          width: 50,
+          borderRadius: 25,
+          background: "rgba(0,0,0,0.4)",
+          marginTop: props.isUnreadMessage ? -25 : 0,
+        }}/>}
         {lastSeenTime &&
         moment(lastSeenTime).add(1, "minute")
 .isAfter(currentMoment)

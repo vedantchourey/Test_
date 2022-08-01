@@ -146,7 +146,7 @@ const Home = (): JSX.Element => {
   const items = [
     <div className="item" data-value="1" key={"1"}>
       <Box className={styles.slider}>
-        <img src="/images/group.png" />
+        <img src="/images/Group.png" />
         <Typography className={styles.text3}>
           Always keep in touch with your friends and watch their activities,
           like and comment.
@@ -161,7 +161,7 @@ const Home = (): JSX.Element => {
     </div>,
     <div className="item" data-value="2" key={"2"}>
       <Box className={styles.slider}>
-        <img src="/images/group.png" />
+        <img src="/images/Group.png" />
         <Typography className={styles.text3}>
           Always keep in touch with your friends and watch their activities,
           like and comment.
@@ -176,7 +176,7 @@ const Home = (): JSX.Element => {
     </div>,
     <div className="item" data-value="3" key={"3"}>
       <Box className={styles.slider}>
-        <img src="/images/group.png" />
+        <img src="/images/Group.png" />
         <Typography className={styles.text3}>
           Always keep in touch with your friends and watch their activities,
           like and comment.
