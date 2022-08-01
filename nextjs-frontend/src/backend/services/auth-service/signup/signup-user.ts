@@ -18,6 +18,11 @@ import { IGame } from '../../database/models/i-game';
 import { IEloRating } from '../../database/models/i-elo-rating';
 import { IEmailTeamInvitation } from '../../database/models/i-email-team-invitation';
 import { sendInvites } from '../../team-service';
+import { avatarListWithUrl } from '../../../../frontend/utils/config/default-avatars';
+
+function getRandomInt(max: number) {
+  return Math.floor(Math.random() * max);
+}
 
 function mapToProfile(user: User, request: SignupRequest): IProfile {
   const nowAsString = nowAsISOString();
@@ -26,7 +31,8 @@ function mapToProfile(user: User, request: SignupRequest): IProfile {
     isPrivate: request.isPrivate,
     username: request.username,
     createdAt: nowAsString,
-    updatedAt: nowAsString
+    updatedAt: nowAsString,
+    avatarUrl: avatarListWithUrl[getRandomInt(17)].path
   };
 }
 
