@@ -63,13 +63,6 @@ const SupportList: React.FC = () => {
 
   const conf: NoobColumnConf<any>[] = [
     {
-      title: "",
-      renderCell: (row, index): JSX.Element => {
-        return <Typography color="white">{index + 1}</Typography>;
-      },
-      width: "10%",
-    },
-    {
       title: "Ticket ID",
       renderCell: (row): string => {
         return row.id;
