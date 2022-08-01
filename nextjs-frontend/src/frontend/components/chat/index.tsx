@@ -479,6 +479,7 @@ export default function Chat(props: {
                   otherUser={i.other_user}
                   message={i.last_message}
                   type={i.channel_type}
+                  lastMessageUser={i.last_message_by}
                   onClick={(): void => {
                     setCurrentChat(null);
                     setCurrentChatData(null);

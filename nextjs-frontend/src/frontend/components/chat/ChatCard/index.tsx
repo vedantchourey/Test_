@@ -1,5 +1,4 @@
 import { Avatar, Box, Typography } from "@mui/material";
-import Badge from '@mui/material/Badge';
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
@@ -13,6 +12,7 @@ interface IChatCard {
   onClick: () => void;
   type: string;
   isUnreadMessage: boolean;
+  lastMessageUser: string;
 }
 
 export default function ChatCard(props: IChatCard): JSX.Element {
@@ -74,30 +74,32 @@ export default function ChatCard(props: IChatCard): JSX.Element {
       onClick={props.onClick}
     >
       <Box>
-        {props.isUnreadMessage && <Badge color="error" variant="dot" sx={{ zIndex: 98 }} />}
-        {props.image || props.type!=="group"?
-        <Avatar
-          src={chatImage}
-          style={{
-            height: 50,
-            width: 50,
-            // borderRadius: 10,
-            background: "rgba(0,0,0,0.4)",
-            marginTop: props.isUnreadMessage ? -25 : 0,
-          }}
-        />:
-        <GroupIcon 
-        style={{
-          height: 50,
-          width: 50,
-          borderRadius: 25,
-          background: "rgba(0,0,0,0.4)",
-          marginTop: props.isUnreadMessage ? -25 : 0,
-        }}/>}
+        {props.image || props.type !== "group" ? (
+          <Avatar
+            src={chatImage}
+            style={{
+              height: 50,
+              width: 50,
+              // borderRadius: 10,
+              background: "rgba(0,0,0,0.4)",
+              marginTop: props.isUnreadMessage ? -25 : 0,
+            }}
+          />
+        ) : (
+          <GroupIcon
+            style={{
+              height: 50,
+              width: 50,
+              borderRadius: 25,
+              background: "rgba(0,0,0,0.4)",
+              marginTop: props.isUnreadMessage ? -25 : 0,
+            }}
+          />
+        )}
         {lastSeenTime &&
         moment(lastSeenTime).add(1, "minute")
-.isAfter(currentMoment)
-        ? ( <div
+.isAfter(currentMoment) ? (
+          <div
             style={{
               zIndex: 99,
               background: "green",
@@ -114,7 +116,12 @@ export default function ChatCard(props: IChatCard): JSX.Element {
       </Box>
 
       <Box ml={2} textAlign={"left"}>
-        <Typography textAlign={"left"} fontSize={18} color="#FFFFFF" sx={{ flex: 1 }}>
+        <Typography
+          textAlign={"left"}
+          fontSize={18}
+          color={props.isUnreadMessage ? "rgb(105, 50, 249)" : "#FFFFFF"}
+          sx={{ flex: 1 }}
+        >
           {props.name}
         </Typography>
         <Typography
@@ -122,7 +129,7 @@ export default function ChatCard(props: IChatCard): JSX.Element {
           variant="caption"
           color={"rgba(255,255,255,0.5)"}
         >
-          {props.message}
+          {props.lastMessageUser}: {props.message}
         </Typography>
       </Box>
     </Box>
