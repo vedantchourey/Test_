@@ -56,8 +56,7 @@ export async function createPost(req: ICreatePostRequest, context: PerRequestCon
 
   const userIdBatchResponse = await Promise.all(
     findMentions.map((u: string) =>
-      userRepo.find({ username: u.replace("@", "") })
-    )
+      userRepo.find({ username: u.replace("@", "") }))
   );
 
   const userIds = userIdBatchResponse

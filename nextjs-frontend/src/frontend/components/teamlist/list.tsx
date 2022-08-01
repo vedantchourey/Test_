@@ -5,10 +5,7 @@ import {
   Box,
   Card,
   Grid,
-  Table,
-  TableBody,
   TableCell,
-  TableContainer,
   TableRow,
   Typography,
 } from "@mui/material";
@@ -78,7 +75,7 @@ const TeamListData: React.FC = () => {
     <React.Fragment>
       <Grid container rowSpacing={2} mt={4}>
         <Grid item xs={12} sm={12} md={12} mb={12}>
-          {teamdata.map((item) => {
+          {teamdata.map((item, key) => {
             const teamLogo = item.teamLogo
               ? frontendSupabase.storage
                   .from("public-files")
@@ -88,7 +85,9 @@ const TeamListData: React.FC = () => {
               <Box mt={2} onClick={(): void => {
                 handleNavigation(item.id);
               }}
-              style={{ cursor: "pointer" }}>
+              style={{ cursor: "pointer" }}
+              key={key}
+              >
                 <Card style={{ width: "100%" }}>
                   <Box p={1} display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
                     <Box display={"flex"} alignItems={"center"} flex={0.4}>
@@ -145,7 +144,7 @@ const TeamListData: React.FC = () => {
                     </Box>
                     <Box ml={4} mr={2}>
                       <Typography>ELO</Typography>
-                      <Typography  color={"rgba(255,255,255,0.4)"} textAlign={"center"} >
+                      <Typography color={"rgba(255,255,255,0.4)"} textAlign={"center"} >
                         {parseInt(item.team_elo_rating)}
                       </Typography>
                     </Box>
