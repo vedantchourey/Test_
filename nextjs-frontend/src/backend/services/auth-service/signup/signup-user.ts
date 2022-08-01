@@ -20,7 +20,7 @@ import { IEmailTeamInvitation } from '../../database/models/i-email-team-invitat
 import { sendInvites } from '../../team-service';
 import { avatarListWithUrl } from '../../../../frontend/utils/config/default-avatars';
 
-function getRandomInt(max: number) {
+function getRandomInt(max: number): number {
   return Math.floor(Math.random() * max);
 }
 

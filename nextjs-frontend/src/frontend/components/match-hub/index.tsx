@@ -5,13 +5,13 @@ import { Card, CardContent, Container, Typography, Grid } from "@mui/material";
 import styles from "./match-hub.module.css";
 import OpponentTile from "./opponent-tile/opponent-tile";
 import ResultTile from "./opponent-tile/result-tile/result-tile";
-import { Player } from "./players";
 import React, { useEffect } from "react";
 import { IMatchHubData } from "../../../../pages/match-hub";
 import { userProfileSelector } from "../../redux-store/authentication/authentication-selectors";
 import { useAppSelector } from "../../redux-store/redux-store";
 import { getAuthHeader } from "../../utils/headers";
 import axios from "axios";
+import { IProfile } from "../../../backend/services/database/models/i-profile";
 
 interface Props {
   data: IMatchHubData[];
@@ -34,7 +34,7 @@ export interface Opponent {
   elo_rating?: string;
   name?: string;
   avatarUrl?: string,
-  players?: Player[];
+  players?: IProfile[];
 }
 
 export interface Match {
