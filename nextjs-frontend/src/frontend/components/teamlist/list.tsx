@@ -81,7 +81,7 @@ const TeamListData: React.FC = () => {
               ? frontendSupabase.storage
                   .from("public-files")
                   .getPublicUrl(item.teamLogo).publicURL
-              : "/icons/Rectangle.svg";
+              : null;
             return (
               <Box
                 mt={2}
