@@ -3,13 +3,14 @@ import {
   Avatar,
   AvatarGroup,
   Box,
+  Card,
   Grid,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableRow,
-  Typography
+  Typography,
 } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -77,99 +78,82 @@ const TeamListData: React.FC = () => {
     <React.Fragment>
       <Grid container rowSpacing={2} mt={4}>
         <Grid item xs={12} sm={12} md={12} mb={12}>
-          <TableContainer>
-            <Table>
-              <TableBody>
-                <NoobRow
-                  sx={{
-                    display: { sm: "flex", xs: "flex", md: "table-row" },
-                    flexDirection: { sm: "column", xs: "column" },
-                  }}
-                >
-                  <NoobCell>
-                    <Typography variant="subtitle1" textAlign={"center"} color={"#6932F9"}>Team name</Typography>
-                  </NoobCell>
-                  <NoobCell>
-                    <Typography variant="subtitle1" textAlign={"center"} color={"#6932F9"}>Players</Typography>
-                  </NoobCell>
-                  <NoobCell>
-                    <Typography variant="subtitle1" textAlign={"center"} color={"#6932F9"}>Game</Typography>
-                  </NoobCell>
-                  <NoobCell>
-                    <Typography variant="subtitle1" textAlign={"center"} color={"#6932F9"}>Won</Typography>
-                  </NoobCell>
-                  <NoobCell>
-                    <Typography variant="subtitle1" textAlign={"center"} color={"#6932F9"}>Elo</Typography>
-                  </NoobCell>
-                </NoobRow>
-                {teamdata.map((item) => {
-                  const teamLogo = item.teamLogo
-                    ? frontendSupabase.storage
-                        .from("public-files")
-                        .getPublicUrl(item.teamLogo).publicURL
-                    : "/icons/Rectangle.svg";
-                  return (
-                    <NoobRow
-                      sx={{
-                        display: { sm: "flex", xs: "flex", md: "table-row" },
-                        flexDirection: { sm: "column", xs: "column" },
-                      }}
-                      key={item.name}
-                      onClick={(): void => {
-                        handleNavigation(item.id);
-                      }}
-                      style={{ cursor: "pointer" }}
+          {teamdata.map((item) => {
+            const teamLogo = item.teamLogo
+              ? frontendSupabase.storage
+                  .from("public-files")
+                  .getPublicUrl(item.teamLogo).publicURL
+              : "/icons/Rectangle.svg";
+            return (
+              <Box mt={2} onClick={(): void => {
+                handleNavigation(item.id);
+              }}
+              style={{ cursor: "pointer" }}>
+                <Card style={{ width: "100%" }}>
+                  <Box p={1} display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
+                    <Box display={"flex"} alignItems={"center"} flex={0.4}>
+                      <img
+                        src={teamLogo || ""}
+                        width={"45px"}
+                        height={"45px"}
+                        style={{ borderRadius: 65 }}
+                      />
+                      <Typography marginLeft={2} marginRight={2}>
+                        {item.name}
+                      </Typography>
+                    </Box>
+                    <Box
+                      mr={2}
+                      textAlign={"left"}
+                      width={100}
+                      display={"flex"}
+                      justifyContent={"left"}
                     >
-                      <NoobCell>
-                        <Box alignItems="center" display="flex">
-                          <img
-                            src={teamLogo || ""}
-                            width={"45px"}
-                            height={"45px"}
-                            style={{ borderRadius: 65 }}
-                          />
-                          <Box>
-                            <Typography marginLeft={2} marginRight={2}>
-                              {item.name}
-                            </Typography>
-                            {/* <Typography marginLeft={2} marginRight={2}>{item.id}</Typography> */}
-                          </Box>
-                        </Box>
-                      </NoobCell>
-                      <NoobCell>
-                        <AvatarGroup>
-                          {item.players.slice(0, 3).map((p: any) => {
-                            const image = p.avatarUrl
-                              ? frontendSupabase.storage
-                                  .from("public-files")
-                                  .getPublicUrl(p.avatarUrl).publicURL
-                              : undefined;
-                            return (
-                              <Avatar
-                                alt={p.firstName}
-                                src={image || undefined}
-                                key={p.firstName}
-                              >
-                                {p.firstName[0]}
-                              </Avatar>
-                            );
-                          })}
-                          {item.players.length > 3 && (
-                            <Avatar>+{item.players.length - 3}</Avatar>
-                          )}
-                        </AvatarGroup>
-                      </NoobCell>
-                      <NoobCell>
+                      <AvatarGroup>
+                        {item.players.slice(0, 3).map((p: any) => {
+                          const image = p.avatarUrl
+                            ? frontendSupabase.storage
+                                .from("public-files")
+                                .getPublicUrl(p.avatarUrl).publicURL
+                            : undefined;
+                          return (
+                            <Avatar
+                              alt={p.firstName}
+                              src={image || undefined}
+                              key={p.firstName}
+                            >
+                              {p.firstName[0]}
+                            </Avatar>
+                          );
+                        })}
+                        {item.players.length > 3 && (
+                          <Avatar>+{item.players.length - 3}</Avatar>
+                        )}
+                      </AvatarGroup>
+                    </Box>
+                    <Box ml={4}>
+                      <Typography>GAME</Typography>
+                      <Typography textAlign={"center"}>
                         {parseInt(item.won) + parseInt(item.loss)}
-                      </NoobCell>
-                      <NoobCell>{parseInt(item.won)}</NoobCell>
-                      <NoobCell>{parseInt(item.team_elo_rating)}</NoobCell>
-                    </NoobRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                      </Typography>
+                    </Box>
+                    <Box ml={4}>
+                      <Typography>WON</Typography>
+                      <Typography textAlign={"center"}>
+                        {parseInt(item.won)}
+                      </Typography>
+                    </Box>
+                    <Box ml={4} mr={2}>
+                      <Typography>ELO</Typography>
+                      <Typography textAlign={"center"}>
+                        {parseInt(item.team_elo_rating)}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Card>
+              </Box>
+            );
+          })}
         </Grid>
       </Grid>
     </React.Fragment>
