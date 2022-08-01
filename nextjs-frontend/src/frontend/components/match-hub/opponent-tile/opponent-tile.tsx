@@ -3,7 +3,7 @@ import React from "react";
 // Third party packages
 import { Avatar, Button, Grid, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-
+import GroupIcon from "@mui/icons-material/Group";
 // styles
 import styles from "./opponent-tile.module.css";
 import { IMatchHubData } from "../../../../../pages/match-hub";
@@ -28,6 +28,7 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
   data,
   userDashboard,
 }) => {
+
   const router = useRouter();
   const user = useAppSelector(userProfileSelector);
 
@@ -107,7 +108,9 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
         </Typography>
         <div style={{ display: "flex", alignItems: "center" }}>
           {/* <Image src="/images/legand-club.png" width={32} height={32} /> */}
-          <Avatar src={opponentImage || "/images/legand-club.png"} alt={opponent_name} />
+          {!opponentImage && opponent_data.team_id?
+          <GroupIcon style={{height:45,width:45,borderRadius:25}}/>:
+          <Avatar src={opponentImage || ""} alt={opponent_name} />}
           <span
             style={{ marginLeft: "15px" }}
             className={styles.opponentTileValue}
