@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { frontendSupabase } from "../../services/supabase-frontend-service";
 import { getAuthHeader } from "../../utils/headers";
+import GroupIcon from "@mui/icons-material/Group";
 
 export const HeadCell = styled(TableCell)(() => ({
   borderTop: "1px solid #ffffff1a",
@@ -107,7 +108,7 @@ const TeamListData: React.FC = () => {
                     ? frontendSupabase.storage
                         .from("public-files")
                         .getPublicUrl(item.teamLogo).publicURL
-                    : "/icons/Rectangle.svg";
+                    : null;
                   return (
                     <NoobRow
                       sx={{
@@ -122,12 +123,15 @@ const TeamListData: React.FC = () => {
                     >
                       <NoobCell>
                         <Box alignItems="center" display="flex">
+                          {teamLogo?
                           <img
                             src={teamLogo || ""}
                             width={"45px"}
                             height={"45px"}
                             style={{ borderRadius: 65 }}
-                          />
+                          />:
+                          <GroupIcon 
+                            style={{ borderRadius: 65, background: "rgba(0,0,0,0.4)",height:45,width:45 }}/>}
                           <Box>
                             <Typography marginLeft={2} marginRight={2}>
                               {item.name}

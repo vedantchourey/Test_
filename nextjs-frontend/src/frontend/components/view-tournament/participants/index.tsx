@@ -5,9 +5,11 @@ import Avatar from "@mui/material/Avatar";
 import { TournamentData } from "../../tournament";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import { useRouter } from "next/router";
+import GroupIcon from "@mui/icons-material/Group";
 interface ParticipantsProps {
   data: TournamentData;
 }
+
 
 
 const Participants: React.FC<ParticipantsProps> = ({ data }) => {
@@ -34,10 +36,12 @@ const Participants: React.FC<ParticipantsProps> = ({ data }) => {
                 >
                   <Box display="flex" alignItems="center" padding={2} 
                   onClick={():void=>{item.firstName?router.push(`/account/${item.username}`):null}}>
+                    {item.team_name && !avatarUrl?
+                    <GroupIcon style={{height:45,width:45,borderRadius:25,background: "rgba(0,0,0,0.4)"}}/>:
                     <Avatar
                       src={avatarUrl || undefined }
                       alt={item.firstName || item.team_name}
-                    />
+                    />}
                     <Typography marginLeft={"16px"}>
                       {item.firstName
                         ? `${item.firstName} ${item.lastName}`
