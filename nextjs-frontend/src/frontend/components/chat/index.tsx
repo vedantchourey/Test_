@@ -469,12 +469,12 @@ export default function Chat(props: {
                           ? i.chat_image
                           : findTeam?.teamLogo
                       ).publicURL as string)
-                  : "/images/16276393842661.png";
+                  : null;
 
               return (
                 <ChatCard
                   key={i.id}
-                  image={chatIcon}
+                  image={chatIcon || ""}
                   name={i.channel_name}
                   otherUser={i.other_user}
                   message={i.last_message}
@@ -657,41 +657,21 @@ export default function Chat(props: {
           >
             <Card>
               <Box p={2}>
+                <Box style={{justifyContent:'space-between',marginBottom:'20px'}} display="flex">
                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                  Create Group
+                  {createGroup?"Create Group":"Search Someone" }
                 </Typography>
-                <Box display={"flex"}>
-                  <Box
-                    flex={createGroup ? 0.5 : 1}
-                    sx={{
-                      backgroundColor: "rgba(255,255,255,0.08)",
-                      alignItems: "center",
-                      alignSelf: "center",
-                      display: "flex",
-                      borderRadius: 3,
-                      paddingRight: 2,
-                      ml: 1,
-                    }}
+                <Button
+                  variant="outlined"
+                  onClick={(): any => setCreateGroup(!createGroup)}
                   >
-                    <TextField
-                      placeholder="Search by username"
-                      variant="standard"
-                      InputProps={{
-                        disableUnderline: true,
-                      }}
-                      value={searchText}
-                      margin="none"
-                      sx={{ marginBottom: 0, padding: 1, flex: 1 }}
-                      onChange={(e): void => {
-                        setSearchText(e.target.value);
-                        searchByUserName(e.target.value, createGroup);
-                      }}
-                    />
-                    <SearchIcon color="primary" />
-                  </Box>
-                  {createGroup && !addInGroup ? (
+                    {createGroup?"Search Someone":"Create Group" }
+                  </Button>
+                </Box>
+                <Box >
+                {createGroup && !addInGroup && (
                     <Box
-                      flex={0.5}
+                      flex={1}
                       sx={{
                         backgroundColor: "rgba(255,255,255,0.08)",
                         alignItems: "center",
@@ -700,6 +680,9 @@ export default function Chat(props: {
                         borderRadius: 3,
                         paddingRight: 2,
                         mr: 1,
+                        flex:1,
+                        marginLeft:'10px',
+                        marginBottom:"15px",
                       }}
                     >
                       <TextField
@@ -716,16 +699,35 @@ export default function Chat(props: {
                         }}
                       />
                     </Box>
-                  ) : (
-                    !addInGroup && (
-                      <Button
-                        variant="outlined"
-                        onClick={(): any => setCreateGroup(true)}
-                      >
-                        Create Group
-                      </Button>
-                    )
                   )}
+                  <Box
+                    flex={1}
+                    sx={{
+                      backgroundColor: "rgba(255,255,255,0.08)",
+                      alignItems: "center",
+                      alignSelf: "center",
+                      display: "flex",
+                      borderRadius: 3,
+                      paddingRight: 2,
+                      ml: 1,
+                    }}
+                  >
+                    <TextField
+                      placeholder={createGroup?"Add a Member":"Search by username"}
+                      variant="standard"
+                      InputProps={{
+                        disableUnderline: true,
+                      }}
+                      value={searchText}
+                      margin="none"
+                      sx={{ marginBottom: 0, padding: 1, flex: 1 }}
+                      onChange={(e): void => {
+                        setSearchText(e.target.value);
+                        searchByUserName(e.target.value, createGroup);
+                      }}
+                    />
+                    <SearchIcon color="primary" />
+                  </Box>
                 </Box>
                 {selectedUserListForGroup.map((data, i) => (
                   <ListItem key={Date.now() + i}>
@@ -775,7 +777,7 @@ export default function Chat(props: {
                   >
                     Cancel
                   </Button>
-                  <Button
+                  {createGroup&&<Button
                     variant="contained"
                     sx={{ ml: 1 }}
                     onClick={(): any => createNewGroupChat()}
@@ -784,7 +786,7 @@ export default function Chat(props: {
                     }
                   >
                     Create
-                  </Button>
+                  </Button>}
                 </Box>
               </Box>
             </Card>
