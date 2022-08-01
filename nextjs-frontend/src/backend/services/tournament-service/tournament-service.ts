@@ -321,6 +321,7 @@ export async function tournamentDetails(
             "private_profiles.lastName",
             "private_profiles.id",
             "profiles.avatarUrl",
+            "profiles.username",
             "elo_ratings.elo_rating",
           ])
           .whereNotNull("b_participant.user_id");

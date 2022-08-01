@@ -4,11 +4,15 @@ import ViewCard from "../../ui-components/view-card";
 import Avatar from "@mui/material/Avatar";
 import { TournamentData } from "../../tournament";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
+import { useRouter } from "next/router";
 interface ParticipantsProps {
   data: TournamentData;
 }
 
+
 const Participants: React.FC<ParticipantsProps> = ({ data }) => {
+  const router=useRouter();
+
   return (
     <React.Fragment>
       <ViewCard>
@@ -28,7 +32,8 @@ const Participants: React.FC<ParticipantsProps> = ({ data }) => {
                   xs={6}
                   border={"1px solid rgba(255, 255, 255, 0.1)"}
                 >
-                  <Box display="flex" alignItems="center" padding={2}>
+                  <Box display="flex" alignItems="center" padding={2} 
+                  onClick={():void=>{item.firstName?router.push(`/account/${item.username}`):null}}>
                     <Avatar
                       src={avatarUrl || undefined }
                       alt={item.firstName || item.team_name}
