@@ -28,5 +28,8 @@ module.exports = {
   },
   images: {
     domains: [process.env.NEXT_PUBLIC_NOOB_SUPABASE_URL?.replace('https://','') || 'localhost:54321'],
+  },
+  experimental: {
+    esmExternals: false
   }
 }
