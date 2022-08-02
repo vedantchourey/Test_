@@ -34,6 +34,7 @@ import { getAuthHeader } from "../../../utils/headers";
 // import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
 // import { deviceTypes } from "../../../../../src/frontend/redux-store/layout/device-types";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
+import frontendConfig from "../../../utils/config/front-end-config";
 
 interface IProps {
   data: IPostsResponse;
@@ -283,7 +284,7 @@ const PostCard = (props: IProps): JSX.Element => {
                       sx={{ color: "red", borderRadius: "0px" }}
                       onClick={(): any => {
                         navigator.clipboard.writeText(
-                          `http://localhost:3000/social/${values.id}`
+                          `${frontendConfig.baseAppUrl}/social/${values.id}`
                         );
                         setOpen({ ...open, copylink: true });
                       }}
@@ -372,7 +373,7 @@ const PostCard = (props: IProps): JSX.Element => {
                         src={values.postImgUrl}
                         style={{
                           width: "100%",
-                          height: 300,
+                          height: props.row ? 250 : 300,
                           objectFit: "cover",
                         }}
                         key={values.id}
@@ -395,6 +396,7 @@ const PostCard = (props: IProps): JSX.Element => {
                     </a>
                   </div>
                 ) : (
+                  <div>
                   <Image
                     className={styles.postImg}
                     bucket={config.storage.publicBucket}
@@ -406,6 +408,7 @@ const PostCard = (props: IProps): JSX.Element => {
                     objectFit="contain"
                     key={values.id}
                   />
+                  </div>
                 )}
 
                 {/*  <CardMedia

@@ -13,6 +13,7 @@ interface IChatCard {
   type: string;
   isUnreadMessage: boolean;
   lastMessageUser: string;
+  updatedAt: string;
 }
 
 export default function ChatCard(props: IChatCard): JSX.Element {
@@ -113,7 +114,7 @@ export default function ChatCard(props: IChatCard): JSX.Element {
         ) : null}
       </Box>
 
-      <Box ml={2} textAlign={"left"}>
+      <Box ml={2} textAlign={"left"} flex={1}>
         <Typography
           textAlign={"left"}
           fontSize={18}
@@ -128,6 +129,15 @@ export default function ChatCard(props: IChatCard): JSX.Element {
           color={"rgba(255,255,255,0.5)"}
         >
           {props.lastMessageUser}: {props.message}
+        </Typography>
+      </Box>
+      <Box ml={2} textAlign={"left"}>
+        <Typography
+          textAlign={"left"}
+          variant="caption"
+          color={"rgba(255,255,255,0.5)"}
+        >
+          {moment(props.updatedAt).fromNow()}
         </Typography>
       </Box>
     </Box>

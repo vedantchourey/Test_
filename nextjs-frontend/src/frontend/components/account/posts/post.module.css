@@ -1,7 +1,7 @@
 .postCard {
     background: none !important;
     border: 2px solid #201736;
-    padding: 18px 28px 44px 28px;
+    padding: 18px 28px 10px 28px;
 }
 
 .postCardOptionsContainer {
@@ -41,7 +41,7 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    position: absolute;
+    /* position: absolute; */
     bottom: -10px;
 }
 .blurContainer {
