@@ -37,7 +37,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
   const [chatUsers, setchatUsers] = useState<any[]>([]);
   const [text, setText] = useState<string>("");
   const [infoSection, setInfoSection] = useState(false);
-  const [logoPicker, setLogoPicker] = React.useState(false)
+  const [logoPicker, setLogoPicker] = React.useState(false);
 
   const messageRef = useRef<IMessages[]>(messages);
 
@@ -56,7 +56,12 @@ export default function ChatBox(props: IChatBox): JSX.Element {
       });
       await frontendSupabase
         .from("chat_users")
-        .update({ last_message: text, updatedAt: new Date().toISOString, last_message_by: props.user.username, unread: true })
+        .update({
+          last_message: text,
+          updatedAt: new Date().toISOString,
+          last_message_by: props.user.username,
+          unread: true,
+        })
         .eq("channel_id", props.channelId);
       setText("");
     }
@@ -78,7 +83,13 @@ export default function ChatBox(props: IChatBox): JSX.Element {
       .select("*")
       .eq("channel_id", props.channelId);
     setchatUsers(chatUsersRes.data || []);
-  }
+    const a = await frontendSupabase
+      .from("chat_users")
+      .update({
+        unread: false,
+      })
+      .eq("channel_id", props.channelId);
+  };
 
   const fetchMessages = async (): Promise<void> => {
     const messages = await frontendSupabase
@@ -91,13 +102,14 @@ export default function ChatBox(props: IChatBox): JSX.Element {
   useEffect(() => {
     fetchUsers();
     fetchMessages();
+
     const messageListener = frontendSupabase
       .from("messages")
-      .on("INSERT", (payload) => {
+      .on("INSERT", async (payload) => {
         if (payload.new.channel_id === props.channelId) {
           const updateMessages = [...messageRef.current, payload.new];
           setMessages(updateMessages);
-          frontendSupabase
+          await frontendSupabase
             .from("chat_users")
             .update({
               unread: false,
@@ -292,12 +304,21 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         </Box>
 
         <Box display={"flex"} justifyContent="center" mt={2}>
-        {props?.data?.chat_image?
-        <Avatar
-            src={props?.data?.chat_image}
-            style={{ height: 150, width: 150 }}
-          />:
-          <GroupIcon style={{ height: 150, width: 150,borderRadius: 75,background: "rgba(0,0,0,0.4)", }}/>}
+          {props?.data?.chat_image ? (
+            <Avatar
+              src={props?.data?.chat_image}
+              style={{ height: 150, width: 150 }}
+            />
+          ) : (
+            <GroupIcon
+              style={{
+                height: 150,
+                width: 150,
+                borderRadius: 75,
+                background: "rgba(0,0,0,0.4)",
+              }}
+            />
+          )}
         </Box>
         <Box display={"flex"} justifyContent="center" mt={2}>
           <Button onClick={(): any => setLogoPicker(true)}>

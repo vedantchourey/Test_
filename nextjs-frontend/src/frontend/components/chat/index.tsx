@@ -551,7 +551,7 @@ export default function Chat(props: {
       flex={1}
       overflow={"scroll"}
       className={"hide-scrollbar"}
-      height={props.smallChat ? (props.social ? "80vh" : "20%") : "80vh"}
+      height={"75vh"}
     >
       <Box
         flex={props.smallChat ? 1 : 0.25}

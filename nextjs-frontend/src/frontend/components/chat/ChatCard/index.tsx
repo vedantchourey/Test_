@@ -82,7 +82,6 @@ export default function ChatCard(props: IChatCard): JSX.Element {
               width: 50,
               // borderRadius: 10,
               background: "rgba(0,0,0,0.4)",
-              marginTop: props.isUnreadMessage ? -25 : 0,
             }}
           />
         ) : (
@@ -92,7 +91,6 @@ export default function ChatCard(props: IChatCard): JSX.Element {
               width: 50,
               borderRadius: 25,
               background: "rgba(0,0,0,0.4)",
-              marginTop: props.isUnreadMessage ? -25 : 0,
             }}
           />
         )}
