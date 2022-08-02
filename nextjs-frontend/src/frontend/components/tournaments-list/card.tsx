@@ -27,7 +27,8 @@ const CardDesktop: React.FC<any> = ({
   const router = useRouter();
   const isOnGoing = moment(start_date).isBetween(
     moment().hour(0),
-    moment().hour(23).minute(59)
+    moment().hour(23)
+.minute(59)
   );
   return (
     <Box width={window.innerWidth / 2.8} height={window.innerWidth / 2.8 / 2.9} m={2}>

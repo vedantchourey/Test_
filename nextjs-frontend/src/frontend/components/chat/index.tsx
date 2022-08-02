@@ -44,6 +44,7 @@ import CloseIcon from "@mui/icons-material/Close";
 export default function Chat(props: {
   smallChat: boolean;
   social?: boolean;
+  setChatCount?: (count: number) => void;
 }): JSX.Element {
   const router = useRouter();
   const query: ParsedUrlQuery = router.query;
@@ -507,6 +508,12 @@ export default function Chat(props: {
       userRef.current = user;
     }
   }, [user]);
+
+  useEffect(() => {
+    if(props.setChatCount){
+      props.setChatCount(Object.values(chats).filter((i) => i.unread === true).length)
+    }
+  }, [chats])
 
   useEffect(() => {
     teamList();
