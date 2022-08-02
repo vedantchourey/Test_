@@ -38,13 +38,24 @@ export default function Heading({
     return (
       <div
         className={styles.heroContainer}
-        style={{ background: `url(${backgroundImageUrl})` }}
+        style={{
+          background: `url(${backgroundImageUrl})`,
+        }}
       >
-        <div style={{background: "rgba(0,0,0,0.5)", padding: 70, flex: 1, height: "100%"}}>
-          {heading && <div className={styles.heading}>{simpleHeading()}</div>}
-          {children && <Box className={styles.childContainer}>{children}</Box>}  
+        <div
+          style={{
+            background: "rgba(0,0,0,0.55)",
+            padding: 70,
+            flex: 1,
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {heading && <div className={styles.heading} style={{paddingTop: 100}}>{simpleHeading()}</div>}
+          <div style={{ flex: 1 }} />
+          {children && <Box className={styles.childContainer}>{children}</Box>}
         </div>
-        
       </div>
     );
   }
