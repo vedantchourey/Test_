@@ -27,21 +27,45 @@ interface PrizesProps {
 }
 
 const Prizes: React.FC<PrizesProps> = ({ data }) => {
+  
   const pricePool = data?.pricingDetails?.pricePool;
-  const rows = [
-    CreateData(
-      "Place 1:",
-      `${pricePool ? pricePool * 0.6 * credit_config.price_per_credit : 0}`
-    ),
-    CreateData(
-      "Place 2:",
-      `${pricePool ? pricePool * 0.3 * credit_config.price_per_credit : 0}`
-    ),
-    CreateData(
-      "Place 3:",
-      `${pricePool ? pricePool * 0.1 * credit_config.price_per_credit : 0}`
-    ),
-  ];
+  const playersLimit = data?.bracketsMetadata?.playersLimit || 2;
+  const rows =
+    playersLimit > 2
+      ? [
+          CreateData(
+            "Place 1:",
+            `${
+              pricePool ? pricePool * 0.6 * credit_config.price_per_credit : 0
+            }`
+          ),
+          CreateData(
+            "Place 2:",
+            `${
+              pricePool ? pricePool * 0.3 * credit_config.price_per_credit : 0
+            }`
+          ),
+          CreateData(
+            "Place 3:",
+            `${
+              pricePool ? pricePool * 0.1 * credit_config.price_per_credit : 0
+            }`
+          ),
+        ]
+      : [
+          CreateData(
+            "Place 1:",
+            `${
+              pricePool ? pricePool * 0.65 * credit_config.price_per_credit : 0
+            }`
+          ),
+          CreateData(
+            "Place 2:",
+            `${
+              pricePool ? pricePool * 0.35 * credit_config.price_per_credit : 0
+            }`
+          ),
+        ];
   return (
     <ViewCard>
       <TableContainer>
