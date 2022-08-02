@@ -58,13 +58,25 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         .from("chat_users")
         .update({
           last_message: text,
-          updatedAt: new Date().toISOString,
+          updated_at: moment().add(5.5, "hour")
+.toISOString(),
           last_message_by: props.user.username,
           unread: true,
         })
         .eq("channel_id", props.channelId);
       setText("");
     }
+  };
+
+  const deleteChat = async (): Promise<void> => {
+    await frontendSupabase
+      .from("chat_users")
+      .delete()
+      .eq("channel_id", props.channelId)
+      .eq("user_id", props.userId);
+    
+      props.onBack();
+      props.fetchChat();
   };
 
   const removeUserFromGroup = async (userId: string): Promise<void> => {
@@ -83,7 +95,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
       .select("*")
       .eq("channel_id", props.channelId);
     setchatUsers(chatUsersRes.data || []);
-    const a = await frontendSupabase
+    await frontendSupabase
       .from("chat_users")
       .update({
         unread: false,
@@ -154,16 +166,16 @@ export default function ChatBox(props: IChatBox): JSX.Element {
             >
               {props.channelName}
             </Typography>
-            {props.data?.channel_type === "group" && (
-              <IconButton
-                aria-label="back"
-                size="small"
-                onClick={(): any => setInfoSection(!infoSection)}
-                style={{ color: "rgba(255,255,255,0.3)" }}
-              >
-                <InfoOutlinedIcon />
-              </IconButton>
-            )}
+            {/* {props.data?.channel_type === "group" && ( */}
+            <IconButton
+              aria-label="back"
+              size="small"
+              onClick={(): any => setInfoSection(!infoSection)}
+              style={{ color: "rgba(255,255,255,0.3)" }}
+            >
+              <InfoOutlinedIcon />
+            </IconButton>
+            {/* )} */}
           </Box>
 
           <Typography
@@ -320,19 +332,31 @@ export default function ChatBox(props: IChatBox): JSX.Element {
             />
           )}
         </Box>
+        {props.data?.channel_type === "group" && (
+          <Box display={"flex"} justifyContent="center" mt={2}>
+            <Button onClick={(): any => setLogoPicker(true)}>
+              Change Team Image
+            </Button>
+          </Box>
+        )}
+
+        {props.data?.channel_type === "group" && (
+          <Box mt={1} mb={1}>
+            <Button
+              fullWidth
+              onClick={(): any => props.addMember(props.channelId)}
+            >
+              Add new member
+            </Button>
+          </Box>
+        )}
+
         <Box display={"flex"} justifyContent="center" mt={2}>
-          <Button onClick={(): any => setLogoPicker(true)}>
-            Change Team Image
+          <Button onClick={(): any => deleteChat()} color="error" variant="outlined">
+            Delete Chat
           </Button>
         </Box>
-        <Box mt={1} mb={1}>
-          <Button
-            fullWidth
-            onClick={(): any => props.addMember(props.channelId)}
-          >
-            Add new member
-          </Button>
-        </Box>
+
         <Box display={"flex"} justifyContent="center" mt={2}>
           <Typography
             textAlign={"left"}
@@ -344,19 +368,22 @@ export default function ChatBox(props: IChatBox): JSX.Element {
             {props.channelName}
           </Typography>
         </Box>
-        <Box p={2}>
-          <Typography variant="caption">Participants</Typography>
-          <Box mt={1}>
-            {chatUsers.map((u, idx) => (
-              <Box display={"flex"} justifyContent="space-between" key={idx}>
-                <Typography>{u.user_name}</Typography>
-                <Button onClick={(): any => removeUserFromGroup(u.user_id)}>
-                  Remove
-                </Button>
-              </Box>
-            ))}
+
+        {props.data?.channel_type === "group" && (
+          <Box p={2}>
+            <Typography variant="caption">Participants</Typography>
+            <Box mt={1}>
+              {chatUsers.map((u, idx) => (
+                <Box display={"flex"} justifyContent="space-between" key={idx}>
+                  <Typography>{u.user_name}</Typography>
+                  <Button onClick={(): any => removeUserFromGroup(u.user_id)}>
+                    Remove
+                  </Button>
+                </Box>
+              ))}
+            </Box>
           </Box>
-        </Box>
+        )}
       </Box>
       <NoobFilePicker
         onFileSelected={async (file): Promise<any> => {
