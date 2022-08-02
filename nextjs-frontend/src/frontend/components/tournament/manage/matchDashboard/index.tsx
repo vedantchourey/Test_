@@ -237,7 +237,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                           </NoobCell>
                           <NoobCell>
                             <Typography>
-                              <Chip label={item.status} color="success" />
+                              <Chip label={item.status} color={item.status === "PENDING" ? "warning" : "success"} />
                             </Typography>
                           </NoobCell>
                           <NoobCell>
@@ -327,7 +327,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                           </NoobCell>
                           <NoobCell>
                             <Typography>
-                              <Chip label={item.status} color="success" />
+                              <Chip label={item.result_status} color={item.result_status === "ACCEPTED" ? "success" : "warning"} />
                             </Typography>
                           </NoobCell>
 

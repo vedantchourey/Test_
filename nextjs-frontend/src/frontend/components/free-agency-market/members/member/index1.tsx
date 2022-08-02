@@ -25,7 +25,7 @@ const MemberButton = ({ setParam }: any): JSX.Element => {
   const [level, setLevel] = useState<string>("all");
   useEffect(() => {
     // setParam
-    if (gameId || platformId) {
+    if (gameId || platformId || level) {
       setParam({
         gameId,
         platformId,
