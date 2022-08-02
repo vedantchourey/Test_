@@ -44,6 +44,7 @@ import CloseIcon from "@mui/icons-material/Close";
 export default function Chat(props: {
   smallChat: boolean;
   social?: boolean;
+  setChatCount?: (count: number) => void;
 }): JSX.Element {
   const router = useRouter();
   const query: ParsedUrlQuery = router.query;
@@ -511,6 +512,12 @@ export default function Chat(props: {
   }, [user]);
 
   useEffect(() => {
+    if(props.setChatCount){
+      props.setChatCount(Object.values(chats).filter((i) => i.unread === true).length)
+    }
+  }, [chats])
+
+  useEffect(() => {
     teamList();
     const chatListener = frontendSupabase
       .from("chat_users")
@@ -546,7 +553,7 @@ export default function Chat(props: {
       flex={1}
       overflow={"scroll"}
       className={"hide-scrollbar"}
-      height={props.smallChat ? (props.social ? "80vh" : "20%") : "80vh"}
+      height={"75vh"}
     >
       <Box
         flex={props.smallChat ? 1 : 0.25}

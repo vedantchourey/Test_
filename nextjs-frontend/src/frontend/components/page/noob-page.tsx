@@ -37,6 +37,7 @@ export default function NoobPage(props: Props): JSX.Element {
   } = props;
   const [enableChat, setEnableChat] = useState(false);
   const [toggleChat, setToggleChat] = useState(false);
+  const [chatCount, setChatCount] = useState(0);
 
   const metaKeys = Object.keys(metaData);
 
@@ -53,14 +54,16 @@ export default function NoobPage(props: Props): JSX.Element {
     <>
       {isMobile ? null : !props.hideHeaders && <SideHeader />}
       <div>
-        {!props.hideHeaders && <Head>
-          <title>{title}</title>
-          {metaKeys.map((key, index) => (
-            <meta key={index} name={key} content={metaData[key]} />
-          ))}
-          <link rel="icon" href={favIcon} />
-        </Head>}
-        
+        {!props.hideHeaders && (
+          <Head>
+            <title>{title}</title>
+            {metaKeys.map((key, index) => (
+              <meta key={index} name={key} content={metaData[key]} />
+            ))}
+            <link rel="icon" href={favIcon} />
+          </Head>
+        )}
+
         <Box
           sx={{ display: "flex", marginTop: isMobile ? 10 : 0 }}
           maxWidth={"100vw"}
@@ -87,21 +90,32 @@ export default function NoobPage(props: Props): JSX.Element {
               zIndex: 100,
               width: 450,
               height: toggleChat ? 500 : 50,
-              background: "linear-gradient(180deg, #0D17AD 0%, #09128C 48.77%, #000772 100%)"
+              background:
+                "linear-gradient(180deg, #0D17AD 0%, #09128C 48.77%, #000772 100%)",
             }}
           >
             <Button
               onClick={(): any =>
                 setToggleChat(pinChat ? !toggleChat : !toggleChat)
               }
-              style={{justifyContent:"space-between",	backgroundColor: "#6931F9"}}
+              style={{
+                justifyContent: "space-between",
+                backgroundColor: "#6931F9",
+              }}
             >
-              <Typography style={{color:"#FFFFFF"}}>Chat</Typography>
+              <Typography style={{ color: "#FFFFFF" }}>
+                Chat ({chatCount})
+              </Typography>
               <IconButton>
                 {toggleChat ? <CloseIcon /> : <KeyboardArrowUpIcon />}
               </IconButton>
             </Button>
-            {toggleChat && <Chat smallChat={true} />}
+            <div style={{ display: toggleChat ? "block" : "none" }}>
+              <Chat
+                smallChat={true}
+                setChatCount={(count): any => setChatCount(count)}
+              />
+            </div>
           </div>
         )}
       </div>
