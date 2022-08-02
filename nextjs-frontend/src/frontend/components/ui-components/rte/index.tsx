@@ -2,6 +2,7 @@ import { createStyles, makeStyles } from "@mui/styles";
 import "react-quill/dist/quill.snow.css";
 import "quill-mention";
 import "quill-mention/dist/quill.mention.css";
+import dynamic from 'next/dynamic'
 
 const useStyles = makeStyles(() =>
   createStyles({
