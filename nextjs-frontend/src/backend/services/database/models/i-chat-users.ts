@@ -11,4 +11,5 @@ export interface IChatUsers {
   chat_image?: string;
   type: string;
   unread: boolean;
+  last_message_by: string;
 }

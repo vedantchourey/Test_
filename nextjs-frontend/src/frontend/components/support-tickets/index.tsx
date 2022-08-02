@@ -1,4 +1,4 @@
-import { Box, Chip, Grid, Typography } from "@mui/material";
+import { Box, Button, Chip, Grid, Typography } from "@mui/material";
 import axios from "axios";
 import React from "react";
 import { ReactComponent as GameIcon } from "../../../../public/icons/GameIcon.svg";
@@ -63,13 +63,6 @@ const SupportList: React.FC = () => {
 
   const conf: NoobColumnConf<any>[] = [
     {
-      title: "",
-      renderCell: (row, index): JSX.Element => {
-        return <Typography color="white">{index + 1}</Typography>;
-      },
-      width: "10%",
-    },
-    {
       title: "Ticket ID",
       renderCell: (row): string => {
         return row.id;
@@ -107,16 +100,12 @@ const SupportList: React.FC = () => {
     {
       title: "Status",
       renderCell: (row): any => {
-        let color = "#28D89C";
-        if (row.status === "DRAFTED") {
-          color = "#D52D3E";
-        }
         return (
           <Chip
             label={row.status}
+            color={row.status === "resolve" ? "success" : "warning"}
             style={{
               textTransform: "capitalize",
-              background: color,
               padding: "0px 10px",
             }}
           />
@@ -128,18 +117,13 @@ const SupportList: React.FC = () => {
       title: "Action",
       renderCell: (row): JSX.Element => {
         return (
-          <Chip
-            label={"Resolve"}
+          <Button
             onClick={(): void => {
-              onClickResolveTicket(row.id, row.status);
+              onClickResolveTicket(row.id, "resolve");
             }}
-            style={{
-              textTransform: "capitalize",
-              background: "#FBAF40",
-              padding: "0px 10px",
-              cursor: "pointer",
-            }}
-          />
+          >
+            Resolve
+          </Button>
         );
       },
       width: "10%",

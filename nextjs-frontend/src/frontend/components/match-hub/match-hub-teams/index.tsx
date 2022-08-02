@@ -77,9 +77,9 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
   const [resultStatus, setResultStatus] = React.useState(false);
   const [data, setData] = React.useState<PlayerData | undefined>();
   const [loading, setLoading] = React.useState(false);
-  const [matchReportSubmited, setMatchReportSubmited] = React.useState(false)
+  const [matchReportSubmited, setMatchReportSubmited] = React.useState(false);
   const [team, setTeam] = React.useState<any[]>([]);
-  const [chatChannel, setChatChannel] = React.useState<any>(undefined)
+  const [chatChannel, setChatChannel] = React.useState<any>(undefined);
 
   const opponent1Name = match.opponent1.user_id
     ? `${match.opponent1.firstName} ${match.opponent1.lastName}`
@@ -88,49 +88,48 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
     ? `${match.opponent2.firstName} ${match.opponent2.lastName}`
     : match.opponent2.name;
 
+  const isMyTeam =
+    match.opponent1.team_id &&
+    team.find(
+      (t) =>
+        t.id === match.opponent1.team_id || t.id === match.opponent2.team_id
+    );
 
-    const isMyTeam =
-      match.opponent1.team_id &&
-      team.find(
-        (t) =>
-          t.id === match.opponent1.team_id || t.id === match.opponent2.team_id
-      );
-
-    const myPlayer = !match.opponent1.team_id
-      ? match.opponent1.user_id === user?.id
-        ? match.opponent1
-        : match.opponent2
-      : match.opponent1?.team_id === isMyTeam?.id
+  const myPlayer = !match.opponent1.team_id
+    ? match.opponent1.user_id === user?.id
       ? match.opponent1
-      : match.opponent2;
+      : match.opponent2
+    : match.opponent1?.team_id === isMyTeam?.id
+    ? match.opponent1
+    : match.opponent2;
 
-    const fetchTeam = async (): Promise<void> => {
-      const headers = await getAuthHeader();
-      setLoading(true);
-      axios
-        .get("/api/teams", { headers: headers })
-        .then((res) => {
-          if (res.data.result && res.data.result.length > 0) {
-            setTeam(res.data.result);
-          }
-          setLoading(false);
-        })
-        .catch((err) => {
-          setLoading(false);
-          console.error(err);
-        });
-    };
+  const fetchTeam = async (): Promise<void> => {
+    const headers = await getAuthHeader();
+    setLoading(true);
+    axios
+      .get("/api/teams", { headers: headers })
+      .then((res) => {
+        if (res.data.result && res.data.result.length > 0) {
+          setTeam(res.data.result);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.error(err);
+      });
+  };
 
-    const validationSchema = yup.object({
-      match_id: yup.string().required("Match id is required"),
-      screenshot: yup.string().required("Screenshot is required"),
-      winner: yup.string().when("draw", {
-        is: "true",
-        then: yup.string().required("Winner is required"),
-        otherwise: yup.string(),
-      }),
-      draw: yup.boolean(),
-    });
+  const validationSchema = yup.object({
+    match_id: yup.string().required("Match id is required"),
+    screenshot: yup.string().required("Screenshot is required"),
+    winner: yup.string().when("draw", {
+      is: "true",
+      then: yup.string().required("Winner is required"),
+      otherwise: yup.string(),
+    }),
+    draw: yup.boolean(),
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -220,20 +219,22 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
 
   const reportDispute = async (resons: string): Promise<void> => {
     const headers = await getAuthHeader();
-    axios.post(
-      `/api/match-dispute/add`,
-      {
-        tournamentId: match.tournament_id,
-        matchId: match.match_id,
-        status: "PENDING",
-        reason: resons
-      },
-      {
-        headers: headers,
-      }
-    ).then(() => {
-      setMatchReportSubmited(true)
-    });
+    axios
+      .post(
+        `/api/match-dispute/add`,
+        {
+          tournamentId: match.tournament_id,
+          matchId: match.match_id,
+          status: "PENDING",
+          reason: resons,
+        },
+        {
+          headers: headers,
+        }
+      )
+      .then(() => {
+        setMatchReportSubmited(true);
+      });
   };
 
   const checkInTournament = async (): Promise<void> => {
@@ -272,7 +273,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
 
   React.useEffect(() => {
     const timerRef = window.setInterval(timerCallback, 1000);
-    fetchData()
+    fetchData();
 
     return () => {
       clearInterval(timerRef);
@@ -362,25 +363,72 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
             />
           </Box>
         </Grid>
-        <Grid container display={'flex'} style={{justifyContent:'center',marginTop:"30px"}}>
+
+        {match.opponent1.team_id && (
+          <Grid
+            container
+            display={"flex"}
+            style={{ justifyContent: "center", marginTop: "30px" }}
+          >
             <Grid item xs={5.5}>
-            <Typography className={styles.sub_heading}>My Teams</Typography>
-              <Box style={{display:'flex',alignItems:'center',padding:"10px"}}>
-                <Avatar/>
-                <Typography style={{marginLeft:'10px'}}>name</Typography> 
-              </Box>
-              <Divider light/>
+              <Typography className={styles.sub_heading}>My Teams</Typography>
+              {match.opponent1.players?.map((u, idx) => {
+                const avatarUrl = u.avatarUrl
+                  ? (frontendSupabase.storage
+                      .from("public-files")
+                      .getPublicUrl(u.avatarUrl).publicURL as string)
+                  : undefined;
+                return (
+                  <Box
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      padding: "10px",
+                    }}
+                    key={idx}
+                  >
+                    <Avatar src={avatarUrl} />
+                    <Typography style={{ marginLeft: "10px" }}>
+                      {u.username}
+                    </Typography>
+                  </Box>
+                );
+              })}
+              <Divider light />
             </Grid>
-            <Divider orientation="vertical" light/>
+            <Divider orientation="vertical" light />
             <Grid item xs={5.5}>
-            <Typography className={styles.sub_heading}>Opponent Teams</Typography>
-              <Box style={{display:'flex',alignItems:'center',padding:"10px"}}>
-                <Avatar/>
-                <Typography style={{marginLeft:'10px'}}>name</Typography> 
-              </Box>
-              <Divider light/>
+              <Typography className={styles.sub_heading}>
+                Opponent Teams
+              </Typography>
+              {match.opponent2.players?.map((u, idx) => {
+                const avatarUrl = u.avatarUrl
+                  ? (frontendSupabase.storage
+                      .from("public-files")
+                      .getPublicUrl(u.avatarUrl).publicURL as string)
+                  : undefined;
+
+                return (
+                  <Box
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      padding: "10px",
+                    }}
+                    key={idx}
+                  >
+                    <Avatar src={avatarUrl} />
+                    <Typography style={{ marginLeft: "10px" }}>
+                      {u.username}
+                    </Typography>
+                  </Box>
+                );
+              })}
+              <Divider light />
             </Grid>
-        </Grid>
+          </Grid>
+        )}
+
         {!match.opponent1.user_id && data ? (
           <Grid item xs={12}>
             <Players data={data} />

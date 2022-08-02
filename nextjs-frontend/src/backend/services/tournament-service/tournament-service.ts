@@ -113,15 +113,19 @@ export const persistTournament: NoobApiService<
   return { id: id as string, ...others };
 };
 
-const tournamentsWithPlayers = async (context: PerRequestContext, tournamentId: string, tournament: ITournament): Promise<any> => {
-  try{
+const tournamentsWithPlayers = async (
+  context: PerRequestContext,
+  tournamentId: string,
+  tournament: ITournament
+): Promise<any> => {
+  try {
     const bracketTournamentRepo = new BTournament(
       context.transaction as Knex.Transaction
     );
     const bracketT = await bracketTournamentRepo.select({
       tournament_uuid: tournamentId,
     });
-  
+
     let players: any = [];
     let pricePool = 0;
     let currentPricePool = 0;
@@ -152,7 +156,7 @@ const tournamentsWithPlayers = async (context: PerRequestContext, tournamentId: 
             "elo_ratings.elo_rating",
           ])
           .whereNotNull("b_participant.user_id");
-  
+
         pricePool =
           Number(tournament?.bracketsMetadata?.playersLimit) *
           Number(tournament?.settings?.entryFeeAmount);
@@ -195,7 +199,7 @@ const tournamentsWithPlayers = async (context: PerRequestContext, tournamentId: 
           })
           .where("tournament_invites.tournament_id", tournamentId as string)
           .whereNotNull("b_participant.team_id");
-  
+
         const grp_team = _.groupBy(players, "team_name");
         currentPricePool = players.length
           ? players.length * Number(tournament?.settings?.entryFeeAmount)
@@ -217,7 +221,7 @@ const tournamentsWithPlayers = async (context: PerRequestContext, tournamentId: 
           playerCount *
           Number(tournament?.settings?.entryFeeAmount);
       }
-  
+
       const connect = context.knexConnection;
       const manager = new BracketsManager(
         new BracketsCrud(connect as any) as any
@@ -230,10 +234,10 @@ const tournamentsWithPlayers = async (context: PerRequestContext, tournamentId: 
         pricingDetails: { pricePool, currentPricePool },
       };
     }
-  } catch(er){
-    console.error('er -> ', er);
+  } catch (er) {
+    console.error("er -> ", er);
   }
-}
+};
 
 export async function listTournaments(
   params: ListTournamentType,
@@ -287,7 +291,7 @@ export async function tournamentDetails(
     const bracketT = await bracketTournamentRepo.select({
       tournament_uuid: tournamentId,
     });
-    
+
     let players: any = [];
     let pricePool = 0;
     let currentPricePool = 0;
@@ -304,11 +308,7 @@ export async function tournamentDetails(
             "private_profiles.id",
             "b_participant.user_id"
           )
-          .join(
-            "profiles",
-            "profiles.id",
-            "b_participant.user_id"
-          )
+          .join("profiles", "profiles.id", "b_participant.user_id")
           .leftJoin(TABLE_NAMES.ELO_RATING, {
             "elo_ratings.user_id": "private_profiles.id",
           })
@@ -369,8 +369,6 @@ export async function tournamentDetails(
           .where("tournament_invites.tournament_id", tournamentId as string)
           .whereNotNull("b_participant.team_id");
 
-          
-
         const grp_team = _.groupBy(players, "team_name");
         currentPricePool = players.length
           ? players.length * Number(tournament?.settings?.entryFeeAmount)
@@ -400,7 +398,7 @@ export async function tournamentDetails(
       const brackets = await manager.get.tournamentData(bracketT.id);
       tournament = { ...tournament, brackets };
     }
-    
+
     return {
       data: {
         ...tournament,
@@ -532,7 +530,7 @@ export const fetchMatchDetails = async (
         })
         .where({
           "elo_ratings.game_id": tournament.game,
-        })
+        });
       opponent2
         .join(
           "private_profiles",
@@ -544,9 +542,9 @@ export const fetchMatchDetails = async (
         })
         .where({
           "elo_ratings.game_id": tournament.game,
-        })
-        const o1 = await opponent1;
-        const o2 = await opponent2;
+        });
+      const o1 = await opponent1;
+      const o2 = await opponent2;
       return {
         opponent1: o1,
         opponent2: o2,
@@ -749,37 +747,51 @@ export const fetchUserMatchs = async (
     const teams_grouped = _.groupBy(teams, "team_id");
     const opp_user_grouped = _.groupBy(opp_users, "user_id");
 
-
     // concatinating matchs and opponents/user details
 
     const result = Promise.all(
       matches.map(async (match: any) => {
         let { opponent1, opponent2 } = match;
+        
         const { b_t_id } = match;
-        const is_checked_in = tournaments.find((t: any) => t.tournament_id === b_t_id).is_checked_in || false;
+        const is_checked_in =
+          tournaments.find((t: any) => t.tournament_id === b_t_id)
+            .is_checked_in || false;
         if (
           opponent1.id &&
           groupPartList[opponent1.id] &&
           groupPartList[opponent1.id].length
         ) {
           const participant = groupPartList?.[opponent1.id]?.[0];
-          if (participant.user_id){
-            const profileRepo = new CrudRepository<IProfile>(
-              context.knexConnection as Knex,
-              "profiles"
-            );
-            const data = await profileRepo.findById(participant.user_id)
+          const profileRepo = new CrudRepository<IProfile>(
+            context.knexConnection as Knex,
+            "profiles"
+          );
+          if (participant.user_id) {
+            const data = await profileRepo.findById(participant.user_id);
             opponent1 = {
               ...opponent1,
               ...data,
               ...opp_user_grouped[participant.user_id][0],
             };
           }
-          if (participant.team_id)
+          if (participant.team_id) {
+            const players = await inviteRepo.find({
+              team_id: participant.team_id,
+              tournament_id: match.tournament_id
+            });
+            const playersWithData = await Promise.all(
+              players.map(async (u: any) => {
+                const user = await profileRepo.findById(u.user_id);
+                return { ...user, status: u.status };
+              })
+            );
             opponent1 = {
               ...opponent1,
               ...teams_grouped?.[participant.team_id]?.[0],
+              players: playersWithData,
             };
+          }
         }
         if (
           opponent2.id &&
@@ -787,23 +799,36 @@ export const fetchUserMatchs = async (
           groupPartList[opponent2.id].length
         ) {
           const participant = groupPartList[opponent2.id][0];
+          const profileRepo = new CrudRepository<IProfile>(
+            context.knexConnection as Knex,
+            "profiles"
+          );
           if (participant.user_id) {
-            const profileRepo = new CrudRepository<IProfile>(
-              context.knexConnection as Knex,
-              "profiles"
-            );
-            const data = await profileRepo.findById(participant.user_id)
+            const data = await profileRepo.findById(participant.user_id);
             opponent2 = {
               ...opponent2,
               ...data,
               ...opp_user_grouped[participant.user_id][0],
             };
           }
-          if (participant.team_id)
+          if (participant.team_id) {
+            const players = await inviteRepo.find({
+              team_id: participant.team_id,
+              tournament_id: match.tournament_id
+            });
+            const playersWithData = await Promise.all(
+              players.map(async (u: any) => {
+                const user = await profileRepo.findById(u.user_id);
+                
+                return { ...user, status: u.status };
+              })
+            );
             opponent2 = {
               ...opponent2,
               ...teams_grouped?.[participant.team_id]?.[0],
+              players: playersWithData,
             };
+          }
         }
 
         const tournament = await tournamentDetails(
@@ -828,11 +853,11 @@ export const fetchUserMatchs = async (
 
 export const fetchUserMatchsHistorySingle = async (
   context: PerRequestContext,
-  params: any,
+  params: any
 ): Promise<any | IError> => {
   try {
     const { user } = context;
-    const userId= params.userId || user?.id;
+    const userId = params.userId || user?.id;
     const participantRepo = new CrudRepository<IBParticipants>(
       context.knexConnection as Knex,
       TABLE_NAMES.B_PARTICIPANT
