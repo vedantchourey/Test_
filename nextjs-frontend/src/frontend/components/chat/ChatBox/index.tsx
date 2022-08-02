@@ -83,7 +83,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
       .select("*")
       .eq("channel_id", props.channelId);
     setchatUsers(chatUsersRes.data || []);
-    const a = await frontendSupabase
+    await frontendSupabase
       .from("chat_users")
       .update({
         unread: false,
