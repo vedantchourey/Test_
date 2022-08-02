@@ -200,8 +200,6 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
         headers: headers,
       })
       .then((res) => {
-        console.log(res);
-        
         setData(res.data);
       })
       .catch((err) => {
@@ -379,6 +377,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                       .getPublicUrl(u.avatarUrl).publicURL as string)
                   : undefined;
                 return (
+                  <Box style={{marginRight:20}}>
                   <Box
                     style={{
                       display: "flex",
@@ -392,9 +391,11 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                       {u.username}
                     </Typography>
                   </Box>
+                  <Divider light />
+                  </Box>
                 );
               })}
-              <Divider light />
+              
             </Grid>
             <Divider orientation="vertical" light />
             <Grid item xs={5.5}>
@@ -409,6 +410,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                   : undefined;
 
                 return (
+                  <Box style={{marginLeft:20}}>
                   <Box
                     style={{
                       display: "flex",
@@ -422,9 +424,10 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                       {u.username}
                     </Typography>
                   </Box>
+                  <Divider light />
+              </Box>
                 );
               })}
-              <Divider light />
             </Grid>
           </Grid>
         )}
