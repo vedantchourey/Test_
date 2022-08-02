@@ -29,6 +29,7 @@ import { getTopPosts } from "../../src/frontend/service-clients/post-service-cli
 import { IPostsResponse } from "../../src/frontend/service-clients/messages/i-posts-response";
 import PostCard from "../../src/frontend/components/account/posts/post-card";
 import axios from "axios";
+import CardComp from "../../src/frontend/components/tournaments-list/card";
 
 const Home = (): JSX.Element => {
   const isDesktop = useAppSelector((x) =>
@@ -468,79 +469,32 @@ const Home = (): JSX.Element => {
                   </TabPanel>
                   <TabPanel value="3" className={styles.tournamentContainer}>
                     <Grid container columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}>
-                      {tournamentsData.map((data: any, i: number) => {
-                        const startDateTime = moment(data.startDate).format(
-                          "D MMM YYYY hh:mm A"
-                        );
+                      {tournamentsData
+                        .sort((a: any, b: any) => {
+                          const aTime: any = moment(a.startDate).format("x");
+                          const bTime: any = moment(b.startDate).format("x");
+                          return bTime - aTime;
+                        })
+                        .map((data: any) => {
+                          const startDateTime =
+                            moment(data.startDate).format("D MMM YYYY ") +
+                            moment(data.startTime, "HH:mm:ss").format("LT");
+                          const totalSlots = data?.bracketsMetadata?.playersLimit || 0;
+                          const currentSlot = (data?.playerList || []).length;
                         return (
-                          <Grid item xs={12} lg={4} key={i}>
-                            <img
-                              src={`${data.banner}`}
-                              className={styles.newsFeedImg}
-                            />
-                            <Box style={{ marginTop: "-355px" }}>
-                              <Box className={styles.tournamentTopContainer}>
-                                <Button
-                                  variant="text"
-                                  style={{
-                                    background: moment(startDateTime).isBefore(
-                                      moment()
-                                    )
-                                      ? "#F08743"
-                                      : "#EF5DA8",
-                                  }}
-                                  className={styles.tournamentButton}
-                                >
-                                  {moment(startDateTime).isBefore(moment())
-                                    ? "Completed"
-                                    : "On Going"}
-                                </Button>
-                              </Box>
-                              <Box className={styles.textMainContainer}>
-                                <Box className={styles.textContainer}>
-                                  <Typography
-                                    className={styles.tContainerText1}
-                                  >
-                                    TOURNAMENT TYPE
-                                  </Typography>
-                                  <Typography
-                                    className={styles.tContainerText2}
-                                  >
-                                    {data.settings?.tournamentFormat}
-                                  </Typography>
-                                </Box>
-                                <Box className={styles.textContainer}>
-                                  <Typography
-                                    className={styles.tContainerText1}
-                                  >
-                                    PLATFORM
-                                  </Typography>
-                                  <Typography
-                                    className={styles.tContainerText2}
-                                  >
-                                    PC
-                                  </Typography>
-                                </Box>
-                              </Box>
-                              <Box className={styles.tournamentBottomContainer}>
-                                <Typography className={styles.tournamentText1}>
-                                  {data.name}
-                                </Typography>
-                                <Typography className={styles.tournamentText2}>
-                                  {startDateTime}
-                                </Typography>
-                                <img
-                                  src="/images/arrow1.png"
-                                  className={styles.arrowImg}
-                                  onClick={(): void => {
-                                    router.push(
-                                      `/view-tournament/${data.id}/details`
-                                    );
-                                  }}
-                                />
-                              </Box>
-                            </Box>
-                          </Grid>
+                          <CardComp
+                            key={data.id}
+                            id={data.id}
+                            tournament_name={data.name}
+                            banner={data.banner}
+                            tournament_type={data.settings?.tournamentFormat}
+                            platform={data.settings?.platform}
+                            total_slots={totalSlots}
+                            left_slots={currentSlot}
+                            start_date={startDateTime}
+                            credits={data.settings?.entryFeeAmount || 0}
+                            participants={`${currentSlot} out of ${totalSlots}`}
+                          />
                         );
                       })}
                     </Grid>
