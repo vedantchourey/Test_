@@ -95,6 +95,76 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
         t.id === match.opponent1.team_id || t.id === match.opponent2.team_id
     );
 
+  const createNewChat = async (): Promise<any> => {
+    const channel_id = match.match_id;
+    const isTeamMatch = match.opponent1.team_id ? true : false;
+
+    const chatUsers = [];
+    if (
+      (match.opponent1.user_id && match.opponent2.user_id) ||
+      (match.opponent2.team_id && match.opponent2.team_id)
+    ) {
+      if (isTeamMatch) {
+        (match.opponent1?.players || []).map((u) =>
+          chatUsers.push({ id: u.id, name: u.username })
+        );
+        (match.opponent2?.players || []).map((u) =>
+          chatUsers.push({ id: u.id, name: u.username })
+        );
+      } else {
+        chatUsers.push({
+          id: match.opponent1.user_id,
+          name: `${match.opponent1.firstName} ${match.opponent1.lastName}`,
+        });
+        chatUsers.push({
+          id: match.opponent2.user_id,
+          name: `${match.opponent2.firstName} ${match.opponent2.lastName}`,
+        });
+      }
+      console.log("chatUsers -> ", chatUsers);
+    } else {
+      return;
+    }
+    await Promise.all(
+      chatUsers.map((u) =>
+        frontendSupabase.from("chat_users").insert({
+          channel_id,
+          user_id: u.id,
+          user_name: u.name,
+          other_user: channel_id,
+          channel_name: `MATCH-${channel_id}`,
+          channel_type: "match",
+        })
+      )
+    );
+    
+
+    const chatChannel = await frontendSupabase
+      .from("chat_users")
+      .select()
+      .eq("user_id", user?.id || "")
+      .eq("other_user", match.match_id);
+    console.log("chatChannel -> ", chatChannel);
+    if ((chatChannel.data || [])?.length > 0) {
+      setChatChannel(chatChannel.data?.[0]);
+    } 
+  };
+
+  const fetchChatChannel = async () => {
+    const chatChannel = await frontendSupabase
+      .from("chat_users")
+      .select()
+      .eq("user_id", user?.id || "")
+      .eq("other_user", match.match_id);
+    console.log("chatChannel -> ", chatChannel);
+
+    if (chatChannel.data?.length === 0) {
+      createNewChat();
+    } else{
+      setChatChannel(chatChannel.data?.[0]);
+    }
+  };
+
   const myPlayer = !match.opponent1.team_id
     ? match.opponent1.user_id === user?.id
       ? match.opponent1
@@ -253,19 +323,9 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       });
   };
 
-  const findChatChannel = async (): Promise<any> => {
-    const chatChannel = await frontendSupabase
-      .from("chat_users")
-      .select()
-      .eq("user_id", user?.id || "")
-      .eq("other_user", myPlayer.team_id);
-    setChatChannel(chatChannel.data?.[0]);
-  };
-
   const fetchData = async (): Promise<any> => {
     if (match.opponent1?.team_id) {
       await fetchTeam();
-      await findChatChannel();
     }
   };
 
@@ -309,6 +369,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
   }, [data]);
 
   React.useEffect(() => {
+    fetchChatChannel();
     if (!match.opponent1.user_id) {
       fetchPlayerData();
     }
@@ -552,7 +613,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
           <ChatBox
             channelId={chatChannel?.channel_id as string}
             addMember={(): any => null}
-            channelName={myPlayer.name as string}
+            channelName={`${opponent1Name} vs ${opponent2Name}` as string}
             fetchChat={async (): Promise<any> => null}
             onBack={(): any => null}
             smallChat={true}
@@ -560,6 +621,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
             user={user}
             data={chatChannel?.channel_id}
             key={1}
+            hideInfo={true}
           />
         </Box>
       )}

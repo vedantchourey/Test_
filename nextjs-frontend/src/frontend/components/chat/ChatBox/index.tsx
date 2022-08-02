@@ -30,6 +30,7 @@ interface IChatBox {
   onBack: () => void;
   fetchChat: () => Promise<void>;
   addMember: (channelId: string) => void;
+  hideInfo?: boolean;
 }
 
 export default function ChatBox(props: IChatBox): JSX.Element {
@@ -58,8 +59,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         .from("chat_users")
         .update({
           last_message: text,
-          updated_at: moment().add(5.5, "hour")
-.toISOString(),
+          updated_at: moment().add(5.5, "hour").toISOString(),
           last_message_by: props.user.username,
           unread: true,
         })
@@ -74,9 +74,9 @@ export default function ChatBox(props: IChatBox): JSX.Element {
       .delete()
       .eq("channel_id", props.channelId)
       .eq("user_id", props.userId);
-    
-      props.onBack();
-      props.fetchChat();
+
+    props.onBack();
+    props.fetchChat();
   };
 
   const removeUserFromGroup = async (userId: string): Promise<void> => {
@@ -166,7 +166,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
             >
               {props.channelName}
             </Typography>
-            {/* {props.data?.channel_type === "group" && ( */}
+            {!props.hideInfo && (
             <IconButton
               aria-label="back"
               size="small"
@@ -175,7 +175,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
             >
               <InfoOutlinedIcon />
             </IconButton>
-            {/* )} */}
+            )}
           </Box>
 
           <Typography
@@ -352,7 +352,11 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         )}
 
         <Box display={"flex"} justifyContent="center" mt={2}>
-          <Button onClick={(): any => deleteChat()} color="error" variant="outlined">
+          <Button
+            onClick={(): any => deleteChat()}
+            color="error"
+            variant="outlined"
+          >
             Delete Chat
           </Button>
         </Box>
