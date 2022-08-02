@@ -201,6 +201,8 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
         headers: headers,
       })
       .then((res) => {
+        console.log(res);
+        
         setData(res.data);
       })
       .catch((err) => {
