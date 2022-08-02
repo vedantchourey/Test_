@@ -203,7 +203,7 @@ export default function DrawerLeft(): JSX.Element {
                 <Button
                   variant="text"
                   style={{ color: "white" }}
-                  onClick={gotoTeamListPage}
+                  onClick={(): any => router.push("/account/setting")}
                 >
                   Account
                 </Button>

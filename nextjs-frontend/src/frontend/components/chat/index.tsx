@@ -148,7 +148,7 @@ export default function Chat(props: {
 
   const teamList = async (): Promise<void> => {
     try {
-      const endpoint = "api/teams";
+      const endpoint = "/api/teams";
       const headers = await getAuthHeader();
       axios.get(endpoint, { headers: headers }).then((res) => {
         setTeamData(res.data.result);

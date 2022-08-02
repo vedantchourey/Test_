@@ -1,15 +1,27 @@
 import { DesktopDatePicker } from "@mui/lab";
-import { Button, Divider, FormLabel, Grid, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  Divider,
+  FormLabel,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import { DateTime } from "luxon";
+import moment from "moment";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { toISOString } from "../../../../common/utils/date-time-utils";
-import { getErrorForProp, propsHasError } from "../../../../common/utils/validation/validator";
+import {
+  getErrorForProp,
+  propsHasError,
+} from "../../../../common/utils/validation/validator";
 import { userProfileSelector } from "../../../redux-store/authentication/authentication-selectors";
 import { useAppSelector } from "../../../redux-store/redux-store";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import StateDropDown from "../../drop-downs/state-drop-down";
-import styles from './style.module.css'
+import styles from "./style.module.css";
 
 // interface CountryType {
 //   code: string;
@@ -454,8 +466,9 @@ const PersonalSettings = (): JSX.Element => {
     stateId: "",
   });
 
+  const router = useRouter();
+
   const getUserData = async (): Promise<any> => {
-    
     const userInfo = await frontendSupabase
       .from("private_profiles")
       .select("*")
@@ -469,14 +482,37 @@ const PersonalSettings = (): JSX.Element => {
       country: userInfo.data?.[0].country,
       stateId: userInfo.data?.[0].stateId,
     });
-  }
+  };
+
+  const handleSubmit = async (): Promise<any> => {
+    try {
+      const response = await frontendSupabase
+        .from("private_profiles")
+        .update({
+          firstName: request.firstName,
+          lastName: request.lastName,
+          country: request.country,
+          stateId: request.stateId,
+          dateOfBirth: moment(request.dateOfBirth).toISOString(),
+        })
+        .eq("id", userData?.id);
+      if ((response.data || [])?.length > 0) {
+        alert("Profile is updated!");
+        router.push("/");
+      } else {
+        alert("Something want wrong!");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Something want wrong!");
+    }
+  };
 
   useEffect(() => {
-    if(userData?.id){
-      getUserData()
+    if (userData?.id) {
+      getUserData();
     }
-  }, [userData])
-  
+  }, [userData]);
 
   return (
     <>
@@ -643,7 +679,12 @@ const PersonalSettings = (): JSX.Element => {
       </Grid>
       <Divider sx={{ mt: 8 }} light />
       <Box sx={{ textAlign: "right", mt: 4 }}>
-        <Button className={styles.actionButton}>
+        <Button
+          className={styles.actionButton}
+          onClick={(): any => {
+            handleSubmit();
+          }}
+        >
           <Typography>Save Changes</Typography>
         </Button>
       </Box>

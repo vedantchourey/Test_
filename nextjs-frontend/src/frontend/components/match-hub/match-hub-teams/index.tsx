@@ -78,7 +78,6 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
   const [data, setData] = React.useState<PlayerData | undefined>();
   const [loading, setLoading] = React.useState(false);
   const [matchReportSubmited, setMatchReportSubmited] = React.useState(false);
-  const [team, setTeam] = React.useState<any[]>([]);
   const [chatChannel, setChatChannel] = React.useState<any>(undefined);
 
   const opponent1Name = match.opponent1.user_id
@@ -88,16 +87,16 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
     ? `${match.opponent2.firstName} ${match.opponent2.lastName}`
     : match.opponent2.name;
 
-  const isMyTeam =
-    match.opponent1.team_id &&
-    team.find(
-      (t) =>
-        t.id === match.opponent1.team_id || t.id === match.opponent2.team_id
-    );
+  // const isMyTeam =
+  //   match.opponent1.team_id &&
+  //   team.find(
+  //     (t) =>
+  //       t.id === match.opponent1.team_id || t.id === match.opponent2.team_id
+  //   );
 
   const createNewChat = async (): Promise<any> => {
     const channel_id = match.match_id;
-    const isTeamMatch = match.opponent1.team_id ? true : false;
+    const isTeamMatch = Boolean(match.opponent1.team_id);
 
     const chatUsers = [];
     if (
@@ -106,11 +105,9 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
     ) {
       if (isTeamMatch) {
         (match.opponent1?.players || []).map((u) =>
-          chatUsers.push({ id: u.id, name: u.username })
-        );
+          chatUsers.push({ id: u.id, name: u.username }));
         (match.opponent2?.players || []).map((u) =>
-          chatUsers.push({ id: u.id, name: u.username })
-        );
+          chatUsers.push({ id: u.id, name: u.username }));
       } else {
         chatUsers.push({
           id: match.opponent1.user_id,
@@ -121,7 +118,6 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
           name: `${match.opponent2.firstName} ${match.opponent2.lastName}`,
         });
       }
-      console.log("chatUsers -> ", chatUsers);
     } else {
       return;
     }
@@ -134,8 +130,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
           other_user: channel_id,
           channel_name: `MATCH-${channel_id}`,
           channel_type: "match",
-        })
-      )
+        }))
     );
     
 
@@ -144,19 +139,17 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       .select()
       .eq("user_id", user?.id || "")
       .eq("other_user", match.match_id);
-    console.log("chatChannel -> ", chatChannel);
     if ((chatChannel.data || [])?.length > 0) {
       setChatChannel(chatChannel.data?.[0]);
     } 
   };
 
-  const fetchChatChannel = async () => {
+  const fetchChatChannel = async (): Promise<any> => {
     const chatChannel = await frontendSupabase
       .from("chat_users")
       .select()
       .eq("user_id", user?.id || "")
       .eq("other_user", match.match_id);
-    console.log("chatChannel -> ", chatChannel);
 
     if (chatChannel.data?.length === 0) {
       createNewChat();
@@ -165,30 +158,13 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
     }
   };
 
-  const myPlayer = !match.opponent1.team_id
-    ? match.opponent1.user_id === user?.id
-      ? match.opponent1
-      : match.opponent2
-    : match.opponent1?.team_id === isMyTeam?.id
-    ? match.opponent1
-    : match.opponent2;
-
-  const fetchTeam = async (): Promise<void> => {
-    const headers = await getAuthHeader();
-    setLoading(true);
-    axios
-      .get("/api/teams", { headers: headers })
-      .then((res) => {
-        if (res.data.result && res.data.result.length > 0) {
-          setTeam(res.data.result);
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        setLoading(false);
-        console.error(err);
-      });
-  };
+  // const myPlayer = !match.opponent1.team_id
+  //   ? match.opponent1.user_id === user?.id
+  //     ? match.opponent1
+  //     : match.opponent2
+  //   : match.opponent1?.team_id === isMyTeam?.id
+  //   ? match.opponent1
+  //   : match.opponent2;
 
   const validationSchema = yup.object({
     match_id: yup.string().required("Match id is required"),
@@ -323,16 +299,10 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       });
   };
 
-  const fetchData = async (): Promise<any> => {
-    if (match.opponent1?.team_id) {
-      await fetchTeam();
-    }
-  };
 
   React.useEffect(() => {
+    setLoading(false);
     const timerRef = window.setInterval(timerCallback, 1000);
-    fetchData();
-
     return () => {
       clearInterval(timerRef);
     };
