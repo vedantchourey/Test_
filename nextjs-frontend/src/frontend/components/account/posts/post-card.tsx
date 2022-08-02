@@ -73,12 +73,11 @@ const PostCard = (props: IProps): JSX.Element => {
   const handleToggleMenu = (): void => setShowMenu((pre) => !pre);
 
   const fetchUsers = async (post_id: string): Promise<void> => {
-    
     const likeLists: any = await frontendSupabase
       .from("post_likes")
       .select(`*, profiles!inner(*)`)
-      .eq("postId", post_id)
-      setLikeList(likeLists.data)
+      .eq("postId", post_id);
+    setLikeList(likeLists.data);
   };
 
   useEffect(() => {
@@ -197,7 +196,7 @@ const PostCard = (props: IProps): JSX.Element => {
   const [anchorEl, setAnchorEl] = React.useState<any>(null);
 
   const handleClickPopover = (event: any): void => {
-    fetchUsers(values.id)
+    fetchUsers(values.id);
     setAnchorEl(event.currentTarget);
   };
 
@@ -207,6 +206,12 @@ const PostCard = (props: IProps): JSX.Element => {
 
   const openPopover = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
+
+  const postImageUrl = imgUrl
+    ? frontendSupabase.storage
+        .from(config.storage.publicBucket)
+        .getPublicUrl(imgUrl)
+    : undefined;
 
   return (
     <>
@@ -221,283 +226,299 @@ const PostCard = (props: IProps): JSX.Element => {
         <Card
           className={styles.postCard}
           sx={{ mb: 3 }}
-          // style={{ height: props.row ? "100%" : "auto" }}
+          style={{ height: props.row ? "100%" : "auto" }}
           elevation={0}
         >
-          <Box
-            sx={{
-              width: "100%",
-              display: "inline-flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <Box sx={{ display: "flex" }}>
-              <Image
-                bucket={config.storage.publicBucket}
-                filePath={avatarUrl || ""}
-                isPublicBucket={true}
-                width={50}
-                height={50}
-                className={styles.postAvatar}
-              />
+          <Box display={"flex"} flexDirection={"column"} height={"100%"}>
+            <Box flex={1}>
               <Box
                 sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "baseline",
-                  paddingLeft: "10px",
+                  width: "100%",
+                  display: "inline-flex",
+                  justifyContent: "space-between",
                 }}
               >
-                <Typography variant={"h3"} fontSize={15} fontWeight={400}>
-                  {values.postOwner.username}
-                </Typography>
-                <Typography variant="subtitle2" color="#575265">
-                  {new Date(values.createdAt).toDateString()}
-                </Typography>
-              </Box>
-            </Box>
+                <Box sx={{ display: "flex" }}>
+                  <Image
+                    bucket={config.storage.publicBucket}
+                    filePath={avatarUrl || ""}
+                    isPublicBucket={true}
+                    width={50}
+                    height={50}
+                    className={styles.postAvatar}
+                  />
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "baseline",
+                      paddingLeft: "10px",
+                    }}
+                  >
+                    <Typography variant={"h3"} fontSize={15} fontWeight={400}>
+                      {values.postOwner.username}
+                    </Typography>
+                    <Typography variant="subtitle2" color="#575265">
+                      {new Date(values.createdAt).toDateString()}
+                    </Typography>
+                  </Box>
+                </Box>
 
-            <div>
-              <IconButton sx={{ padding: "10px" }} onClick={handleToggleMenu}>
-                <MoreHorizIcon />
-              </IconButton>
-              {showMenu && (
-                <List className={styles.postCardOptionsContainer}>
-                  <ListItem disablePadding onClick={(): any => reportPost()}>
-                    <Button
-                      fullWidth
-                      className={styles.postCardOptionsBtn}
-                      sx={{
-                        color: "red",
-                        borderTopLeftRadius: "5px !important",
-                        borderTopRightRadius: "5px !important",
-                      }}
-                    >
-                      <img src="/icons/error.svg" alt="icon" />
-                      Report Post
-                    </Button>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <Button
-                      fullWidth
-                      className={styles.postCardOptionsBtn}
-                      sx={{ color: "red", borderRadius: "0px" }}
-                      onClick={(): any => {
-                        navigator.clipboard.writeText(
-                          `${frontendConfig.baseAppUrl}/social/${values.id}`
-                        );
-                        setOpen({ ...open, copylink: true });
-                      }}
-                    >
-                      <img src="/icons/copy.svg" alt="icon" />
-                      Copy Link
-                    </Button>
-                  </ListItem>
-                  {values.postOwner.id === user?.id && (
-                    <ListItem disablePadding>
-                      <Button
-                        fullWidth
-                        onClick={deletePost}
-                        className={styles.postCardOptionsBtn}
-                        sx={{ color: "black" }}
+                <div>
+                  <IconButton
+                    sx={{ padding: "10px" }}
+                    onClick={handleToggleMenu}
+                  >
+                    <MoreHorizIcon />
+                  </IconButton>
+                  {showMenu && (
+                    <List className={styles.postCardOptionsContainer}>
+                      <ListItem
+                        disablePadding
+                        onClick={(): any => reportPost()}
                       >
-                        Delete Post
-                      </Button>
-                    </ListItem>
+                        <Button
+                          fullWidth
+                          className={styles.postCardOptionsBtn}
+                          sx={{
+                            color: "red",
+                            borderTopLeftRadius: "5px !important",
+                            borderTopRightRadius: "5px !important",
+                          }}
+                        >
+                          <img src="/icons/error.svg" alt="icon" />
+                          Report Post
+                        </Button>
+                      </ListItem>
+                      <ListItem disablePadding>
+                        <Button
+                          fullWidth
+                          className={styles.postCardOptionsBtn}
+                          sx={{ color: "red", borderRadius: "0px" }}
+                          onClick={(): any => {
+                            navigator.clipboard.writeText(
+                              `${frontendConfig.baseAppUrl}/social/${values.id}`
+                            );
+                            setOpen({ ...open, copylink: true });
+                          }}
+                        >
+                          <img src="/icons/copy.svg" alt="icon" />
+                          Copy Link
+                        </Button>
+                      </ListItem>
+                      {values.postOwner.id === user?.id && (
+                        <ListItem disablePadding>
+                          <Button
+                            fullWidth
+                            onClick={deletePost}
+                            className={styles.postCardOptionsBtn}
+                            sx={{ color: "black" }}
+                          >
+                            Delete Post
+                          </Button>
+                        </ListItem>
+                      )}
+                      <ListItem disablePadding>
+                        <Button
+                          fullWidth
+                          onClick={handleCloseMenu}
+                          className={styles.postCardOptionsBtn}
+                          sx={{
+                            color: "black",
+                            borderBottomLeftRadius: "5px !important",
+                            borderBottomRightRadius: "5px !important",
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </ListItem>
+                    </List>
                   )}
-                  <ListItem disablePadding>
-                    <Button
-                      fullWidth
-                      onClick={handleCloseMenu}
-                      className={styles.postCardOptionsBtn}
-                      sx={{
-                        color: "black",
-                        borderBottomLeftRadius: "5px !important",
-                        borderBottomRightRadius: "5px !important",
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </ListItem>
-                </List>
-              )}
-            </div>
-          </Box>
-          <Typography
-            sx={{
-              display: "-webkit-box",
-              overflow: "hidden",
-              WebkitBoxOrient: "vertical",
-              WebkitLineClamp: readMore ? 0 : 5,
-            }}
-            my={2}
-            align="left"
-            fontSize={14}
-            fontWeight={300}
-            paragraph
-          >
-            {values.postContent.split(" ").map((part) =>
-              URL_REGEX.test(part) ? (
-                <a href={part} target="_blank" rel="noreferrer">
-                  {part}{" "}
-                </a>
-              ) : (
-                part + " "
-              ))}
-          </Typography>
-          {values.postContent.length > 250 ? (
-            <Button
-              style={{
-                color: "#FFFFFF",
-                fontSize: 14,
-                marginBottom: !values.postImgUrl ? 50 : 0,
-                visibility:
-                  values.postContent.length > 450 ? "visible" : "hidden",
-              }}
-              onClick={(): any => {
-                setReadMore(!readMore);
-              }}
-            >
-              {readMore ? `Read less...` : `Read More...`}
-            </Button>
-          ) : null}
-
-          <Box sx={{ position: "relative" }}>
-            {imgUrl && (
-              <>
-                {/* Action Button Blur Container */}
-                {values.postType === "url" ? (
-                  <div style={{ overflow: "hidden" }}>
-                    <a href={values.postUrl} target="_blank" rel="noreferrer">
-                      <img
-                        className={styles.postImg}
-                        src={values.postImgUrl}
-                        style={{
-                          width: "100%",
-                          height: props.row ? 250 : 300,
-                          objectFit: "cover",
-                        }}
-                        key={values.id}
-                      />
-                      <div
-                        style={{
-                          position: "absolute",
-                          width: "100%",
-                          background: "rgba(0,0,0,0.4)",
-                          bottom: 80,
-                          padding: "10px 0",
-                        }}
-                      >
-                        {values.urlPostTitle && (
-                          <Typography style={{ color: "white" }}>
-                            {values.urlPostTitle}
-                          </Typography>
-                        )}
-                      </div>
+                </div>
+              </Box>
+              <Typography
+                sx={{
+                  display: "-webkit-box",
+                  overflow: "hidden",
+                  WebkitBoxOrient: "vertical",
+                  WebkitLineClamp: readMore ? 0 : 12,
+                }}
+                my={2}
+                align="left"
+                fontSize={14}
+                fontWeight={300}
+                paragraph
+              >
+                {values.postContent.split(" ").map((part) =>
+                  URL_REGEX.test(part) ? (
+                    <a href={part} target="_blank" rel="noreferrer">
+                      {part}{" "}
                     </a>
-                  </div>
-                ) : (
-                  <div>
-                    <Image
-                      className={styles.postImg}
-                      bucket={config.storage.publicBucket}
-                      filePath={imgUrl || ""}
-                      isPublicBucket={true}
-                      height={600}
-                      width={1400}
-                      layout="responsive"
-                      objectFit="contain"
-                      key={values.id}
-                    />
-                  </div>
+                  ) : (
+                    part + " "
+                  )
                 )}
+              </Typography>
+              {values.postContent.length > 250 ? (
+                <Button
+                  style={{
+                    color: "#FFFFFF",
+                    fontSize: 14,
+                    marginBottom: !values.postImgUrl ? 50 : 0,
+                    visibility:
+                      values.postContent.length > 450 ? "visible" : "hidden",
+                  }}
+                  onClick={(): any => {
+                    setReadMore(!readMore);
+                  }}
+                >
+                  {readMore ? `Read less...` : `Read More...`}
+                </Button>
+              ) : null}
 
-                {/*  <CardMedia
+              <Box sx={{ position: "relative" }}>
+                {imgUrl && (
+                  <>
+                    {/* Action Button Blur Container */}
+                    {values.postType === "url" ? (
+                      <div style={{ overflow: "hidden" }}>
+                        <a
+                          href={values.postUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <img
+                            className={styles.postImg}
+                            src={values.postImgUrl}
+                            style={{
+                              width: "100%",
+                              height: props.row ? 250 : 300,
+                              objectFit: "cover",
+                            }}
+                            key={values.id}
+                          />
+                          <div
+                            style={{
+                              position: "absolute",
+                              width: "100%",
+                              background: "rgba(0,0,0,0.4)",
+                              bottom: 80,
+                              padding: "10px 0",
+                            }}
+                          >
+                            {values.urlPostTitle && (
+                              <Typography style={{ color: "white" }}>
+                                {values.urlPostTitle}
+                              </Typography>
+                            )}
+                          </div>
+                        </a>
+                      </div>
+                    ) : (
+                      <div>
+                        <img
+                          src={postImageUrl?.publicURL as string}
+                          style={{
+                            width: "100%",
+                            height: props.row ? 250 : 300,
+                            objectFit: "contain",
+                          }}
+                        />
+                      </div>
+                    )}
+
+                    {/*  <CardMedia
                 component="img"
                 className={styles.postImage}
                 image={imgUrl || ""}
                 alt="user avatar"
               /> */}
-              </>
-            )}
+                  </>
+                )}
 
-            {!isFetchingMeta && (
-              <Box className={styles.actionButtons}>
-                <Box className={styles.blurContainer}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Box>
-                      <IconButton
-                        onClick={toggleLike}
-                        className={styles.postBtn}
-                        sx={{ padding: "12px" }}
-                      >
-                        <img
-                          src={
-                            values.isLiked
-                              ? "/icons/heart-filled.svg"
-                              : "/icons/heart.svg"
-                          }
-                          alt="icon"
-                          key={values.totalLikes}
-                        />
-                      </IconButton>
-                      <Typography
-                        aria-describedby={id}
-                        onClick={handleClickPopover}
-                      >
-                        {values?.totalLikes || 0}
-                      </Typography>
-                    </Box>
-                    <Popover
-                      id={id}
-                      open={openPopover}
-                      anchorEl={anchorEl}
-                      onClose={handleClosePopover}
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "left",
+                {/* <Box mt={5} sx={{ textAlign: 'center' }}>
+            <img width={85} src='/images/noobstorm-logo-small.png' />
+          </Box> */}
+              </Box>
+            </Box>
+            <Box>
+              {!isFetchingMeta && (
+                <Box className={styles.actionButtons}>
+                  <Box className={styles.blurContainer}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
                       }}
                     >
-                      <List
-                        sx={{
-                          width: "100%",
-                          maxWidth: 360,
-                          bgcolor: "background.paper",
-                          position: "relative",
-                          overflow: "auto",
-                          maxHeight: 300,
-                          "& ul": { padding: 0 },
+                      <Box>
+                        <IconButton
+                          onClick={toggleLike}
+                          className={styles.postBtn}
+                          sx={{ padding: "12px" }}
+                        >
+                          <img
+                            src={
+                              values.isLiked
+                                ? "/icons/heart-filled.svg"
+                                : "/icons/heart.svg"
+                            }
+                            alt="icon"
+                            key={values.totalLikes}
+                          />
+                        </IconButton>
+                        <Typography
+                          aria-describedby={id}
+                          onClick={handleClickPopover}
+                        >
+                          {values?.totalLikes || 0}
+                        </Typography>
+                      </Box>
+                      <Popover
+                        id={id}
+                        open={openPopover}
+                        anchorEl={anchorEl}
+                        onClose={handleClosePopover}
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "left",
                         }}
-                        subheader={<li />}
                       >
-                        <ul>
-                          {likeList?.map((item: any) => (
-                            <ListItem key={`user-${item?.likedBy}`}>
-                              {item?.profiles?.username}
-                            </ListItem>
-                          ))}
-                        </ul>
-                      </List>
-                      {/* <Typography sx={{ p: 2 }}>
+                        <List
+                          sx={{
+                            width: "100%",
+                            maxWidth: 360,
+                            bgcolor: "background.paper",
+                            position: "relative",
+                            overflow: "auto",
+                            maxHeight: 300,
+                            "& ul": { padding: 0 },
+                          }}
+                          subheader={<li />}
+                        >
+                          <ul>
+                            {likeList?.map((item: any) => (
+                              <ListItem key={`user-${item?.likedBy}`}>
+                                {item?.profiles?.username}
+                              </ListItem>
+                            ))}
+                          </ul>
+                        </List>
+                        {/* <Typography sx={{ p: 2 }}>
                         The content of the Popover.
                       </Typography> */}
-                    </Popover>
-                    <Box mx={1}>
-                      <IconButton
-                        className={styles.postBtn}
-                        onClick={handleOpenComments}
-                        sx={{ padding: "15px" }}
-                      >
-                        <img src="/icons/message.svg" alt="icon" />
-                      </IconButton>
-                      <Typography>{values.totalComments || 0}</Typography>
-                    </Box>
-                    {/*  <Box>
+                      </Popover>
+                      <Box mx={1}>
+                        <IconButton
+                          className={styles.postBtn}
+                          onClick={handleOpenComments}
+                          sx={{ padding: "15px" }}
+                        >
+                          <img src="/icons/message.svg" alt="icon" />
+                        </IconButton>
+                        <Typography>{values.totalComments || 0}</Typography>
+                      </Box>
+                      {/*  <Box>
                       <IconButton
                         className={styles.postBtn}
                       >
@@ -505,13 +526,11 @@ const PostCard = (props: IProps): JSX.Element => {
                       </IconButton>
                       5
                     </Box> */}
+                    </Box>
                   </Box>
                 </Box>
-              </Box>
-            )}
-            {/* <Box mt={5} sx={{ textAlign: 'center' }}>
-            <img width={85} src='/images/noobstorm-logo-small.png' />
-          </Box> */}
+              )}
+            </Box>
           </Box>
         </Card>
         <CommentsModal
