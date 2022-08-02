@@ -8,6 +8,8 @@ export interface IProfile {
   profileBackgroundImageUrl?: string;
   isBlocked?: boolean;
   suspended?: Date;
+  firstName?:string;
+  lastName?:string;
 }
 
 export interface ISearchUser {
