@@ -27,26 +27,30 @@ const CardDesktop: React.FC<any> = ({
   const router = useRouter();
   const isOnGoing = moment(start_date).isBetween(
     moment().hour(0),
-    moment().hour(23)
-.minute(59)
+    moment().hour(23).minute(59)
   );
   return (
-    <Grid item lg={6} md={6} mb={2}>
-      <Box>
+    <Box width={window.innerWidth / 2.8} height={window.innerWidth / 2.8 / 2.9} m={2}>
+      <Box
+        style={{
+          backgroundImage: `url(${banner})`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "100% 100%",
+          paddingBottom: "0px",
+          
+        }}
+        height={"100%"}
+      >
         <Box
-          style={{
-            backgroundImage: `url(${banner})`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            paddingBottom: "0px",
+          sx={{
+            padding: { sm: "8px", xs: "8px", md: "8px", textAlign: "left" },
           }}
+          bgcolor={"rgba(0,0,0,0.4)"}
+          display={"flex"}
+          flexDirection={"column"}
+          height={"100%"}
         >
-          <Box
-            sx={{
-              padding: { sm: "8px", xs: "8px", md: "8px", textAlign: "left" },
-            }}
-            bgcolor={"rgba(0,0,0,0.4)"}
-          >
+          <Box flex={1}>
             <Grid container columnSpacing={2}>
               <Grid item md={4} lg={4} className={styles.heading_font_color}>
                 TOURNAMENT TYPE
@@ -96,7 +100,9 @@ const CardDesktop: React.FC<any> = ({
                 </Button>
               </Grid>
             </Grid>
-            <Grid container columnSpacing={2} mt={15}>
+          </Box>
+          <Box>
+            <Grid container columnSpacing={2}>
               <Grid item md={8} lg={8}>
                 {tournament_name}
               </Grid>
@@ -131,7 +137,7 @@ const CardDesktop: React.FC<any> = ({
           </Box>
         </Box>
       </Box>
-    </Grid>
+    </Box>
   );
 };
 

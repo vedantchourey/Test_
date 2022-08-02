@@ -26,11 +26,13 @@
     /* background: url('/images/partner-with-us.png'); */
     background-repeat: no-repeat !important;
     background-clip: border-box !important;
-    background-size: cover !important;
+    /* background-size: cover !important; */
     background-origin: border-box !important;
     background-position: center !important;
+    background-size:100% 100% !important;
     display: "flex";
-    width: "100%";
+    width: 80vw !important;
+    height: 27.58vw !important;
 }
 
 .name img{
@@ -38,7 +40,7 @@
 }
 
 .heading {
-    padding-top: 200px;
+    /* padding-top: 200px; */
     text-align: left;
     /* bottom: 30px;
     left: 70px; */
