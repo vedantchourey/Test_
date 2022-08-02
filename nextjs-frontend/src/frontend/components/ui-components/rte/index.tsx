@@ -2,8 +2,6 @@ import { createStyles, makeStyles } from "@mui/styles";
 import "react-quill/dist/quill.snow.css";
 import "quill-mention";
 import "quill-mention/dist/quill.mention.css";
-import ReactQuill from 'react-quill'
-
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -17,7 +15,7 @@ const useStyles = makeStyles(() =>
       paddingLeft: 40,
     },
   }));
-// const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const atValues = [
   { id: 1, value: "Fredrik Sundqvist" },
