@@ -106,6 +106,22 @@ const Permissions: React.FC = () => {
       .finally(() => setLoading(false));
   };
 
+  const declineInvitaion = async (invite_key: string):Promise<void> => {
+    setLoading(true);
+    const headers = await getAuthHeader();
+    axios
+      .get(`/api/teams/reject-invite?invite_key=${invite_key}`, {
+        headers: headers,
+      })
+      .then(() => {
+        fetchTeam()
+      })
+      .catch(() => {
+        alert("Invitation already declined");
+      })
+      .finally(() => setLoading(false));
+  }
+
   useEffect(() => {
     fetchTeam();
   }, []);
@@ -198,6 +214,7 @@ const Permissions: React.FC = () => {
                           </NoobCell>
                         </>
                       ) : (
+                        <>
                         <NoobCell>
                           <NoobButton
                             style={{ backgroundColor: "#F09633" }}
@@ -209,8 +226,21 @@ const Permissions: React.FC = () => {
                             Accpet
                           </NoobButton>
                         </NoobCell>
+                        <NoobCell>
+                        <NoobButton
+                          style={{ backgroundColor: "#6932F9" }}
+                          variant="contained"
+                          size={"small"}
+                          disabled={loading}
+                          onClick={(): void => {declineInvitaion(item.invite_key)}}
+                        >
+                          Decline
+                        </NoobButton>
+                      </NoobCell>
+                      </>
                       )}
                     </NoobRow>
+                    
                   );
                 })}
               </TableBody>

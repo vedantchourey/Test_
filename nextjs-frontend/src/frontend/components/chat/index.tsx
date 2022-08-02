@@ -75,6 +75,7 @@ export default function Chat(props: {
   const [searchText, setSearchText] = useState("");
   const [groupName, setGroupName] = useState("");
   const [open, setOpen] = useState(false);
+  const [search,setSearch]=useState("");
   const checkChannel = async (oUser?: string, oName?: string): Promise<any> => {
     const _otheruser = oUser || otheruser;
     const _name = oName || name;
@@ -437,6 +438,7 @@ export default function Chat(props: {
             placeholder="Search anything..."
             sx={{ p: 1 }}
             onChange={(e): any => {
+              setSearch(e.target.value);
               const names = users.filter((item: any) => item.toLowerCase().includes(e.target.value))
               names?.length > 0 ? setUserParam(names[0]) : null;
             }}
@@ -459,7 +461,7 @@ export default function Chat(props: {
               {c.type === "group" && "Groups"}
               {c.type === "support" && "Support"}
             </Typography>
-            {c.values.map((i) => {
+            {c.values.filter((i)=>i.channel_name.match(search)).map((i) => {
               const findTeam = teamData?.find((t) => t.id === i.other_user);
               const chatIcon =
                 i.chat_image || findTeam?.teamLogo

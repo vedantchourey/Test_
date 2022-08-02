@@ -296,14 +296,7 @@ const Leaderboard = (): JSX.Element => {
                             Wins: {isTeam?(item.won):(parseInt(item.won))}
                           </Typography>
                         </Box>
-                        <Box className={styles.box3}>
-                          <Box className={styles.box4}>
-                            <img
-                              src="/images/game8.png"
-                              className={styles.img2}
-                            />
-                          </Box>
-                        </Box>
+                        
                       </Box>
                     </Box>
                   </Box>
