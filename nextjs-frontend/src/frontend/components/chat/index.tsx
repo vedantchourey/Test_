@@ -430,7 +430,7 @@ export default function Chat(props: {
     return (
       <>
         <Box
-          style={{ border: "1px solid #6931F9", display: 'flex' }}
+          style={{ border: "1px solid #6931F9", display: 'flex', justifyContent:'space-between' }}
           sx={{ borderRadius: "16px" }}
         >
           <InputBase
