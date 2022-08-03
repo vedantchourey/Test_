@@ -15,6 +15,11 @@ import React from "react";
 import { frontendSupabase } from "../../services/supabase-frontend-service";
 import { getAuthHeader } from "../../utils/headers";
 import GroupIcon from "@mui/icons-material/Group";
+import { useAppDispatch,useAppSelector } from "../../redux-store/redux-store";
+import { allGamesSelector, gamesFetchStatusSelector } from "../../redux-store/games/game-selectors";
+import { fetchAllGamesThunk } from "../../redux-store/games/game-slice";
+
+
 
 export const HeadCell = styled(TableCell)(() => ({
   borderTop: "1px solid #ffffff1a",
@@ -47,11 +52,20 @@ export interface TeamData {
   loss: string;
   elo_rating: string;
   team_elo_rating: string;
+  gameId:string;
 }
 
 const TeamListData: React.FC = () => {
   const [teamdata, setData] = React.useState<TeamData[]>([]);
   const router = useRouter();
+  const appDispatch = useAppDispatch();
+  const games = useAppSelector(allGamesSelector);
+  const gamesFetchStatus = useAppSelector(gamesFetchStatusSelector);
+
+  React.useEffect(() => {
+    if (gamesFetchStatus !== "idle") return;
+    appDispatch(fetchAllGamesThunk());
+  }, [appDispatch, gamesFetchStatus]);
   const teamList = async (): Promise<void> => {
     try {
       const endpoint = "api/teams";
@@ -98,7 +112,7 @@ const TeamListData: React.FC = () => {
                     alignItems={"center"}
                     justifyContent={"space-between"}
                   >
-                    <Box display={"flex"} alignItems={"center"} flex={0.4}>
+                    <Box display={"flex"} alignItems={"center"} flex={0.3}>
                       {teamLogo ? (
                         <img
                           src={teamLogo || ""}
@@ -116,8 +130,13 @@ const TeamListData: React.FC = () => {
                           }}
                         />
                       )}
-                      <Typography marginLeft={2} marginRight={2}>
+                      <Typography marginLeft={2} marginRight={2} >
                         {item.name}
+                      </Typography>
+                    </Box>
+                    <Box display={"flex"} alignItems={"center"} flex={0.2}>
+                      <Typography marginLeft={2} marginRight={2} >
+                      {games.find((i)=>i.id===item.gameId)?.displayName}
                       </Typography>
                     </Box>
                     <Box
@@ -150,7 +169,7 @@ const TeamListData: React.FC = () => {
                       </AvatarGroup>
                     </Box>
                     <Box ml={4}>
-                      <Typography>GAME</Typography>
+                    <Typography>GAME PLAYED</Typography>
                       <Typography
                         color={"rgba(255,255,255,0.4)"}
                         textAlign={"center"}
