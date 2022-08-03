@@ -461,7 +461,7 @@ export default function Chat(props: {
               {c.type === "group" && "Groups"}
               {c.type === "support" && "Support"}
             </Typography>
-            {c.values.filter((i)=>i.channel_name.match(search)).map((i) => {
+            {c.values.filter((i)=>i.channel_name.toLowerCase().match(search.toLowerCase())).map((i) => {
               const findTeam = teamData?.find((t) => t.id === i.other_user);
               const chatIcon =
                 i.chat_image || findTeam?.teamLogo
