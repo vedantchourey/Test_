@@ -118,7 +118,8 @@ export default function News(): JSX.Element {
                   onClick={(): any => router.push(`/blog/${i.id}`)}
                   // onClick={(): any => setCurrentNews(i)}
                 >
-                  <Typography style={{position:'absolute',backgroundColor:'#6932F9',margin:"15px",padding:"5px 25px",color:"white"}}>{i.label}</Typography>
+                  {i.label&&
+                  <Typography style={{position:'absolute',backgroundColor:'#6932F9',margin:"15px",padding:"5px 25px",color:"white"}}>{i.label}</Typography>}
                   <CardMedia
                     component="img"
                     height="240"
