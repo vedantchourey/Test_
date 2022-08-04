@@ -8,6 +8,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Avatar
 } from "@mui/material";
 import axios from "axios";
 import React, { Fragment } from "react";
@@ -19,6 +20,8 @@ import { isLoggedInSelector } from "../../src/frontend/redux-store/authenticatio
 import "react-alice-carousel/lib/alice-carousel.css";
 import NoobPage from "../../src/frontend/components/page/noob-page";
 import Heading from "../../src/frontend/components/ui-components/typography/heading";
+import { INotifications } from "../../src/backend/services/database/models/i-notifications";
+import { getUserProfileImage } from "../../src/frontend/service-clients/image-service-client";
 
 const Notification = (): JSX.Element => {
   const isLoggedIn = useAppSelector(isLoggedInSelector);
@@ -30,22 +33,23 @@ const Notification = (): JSX.Element => {
       .get("/api/notifications", {
         headers: { ...headers },
       })
-      .then((res: any) => {
-        const notificatiosData = (res?.data?.data || [])?.map((i: any) => ({
-          id: i.id,
-          message:
-            i.type === "TOURNAMENT_INVITE"
-              ? {
-                  image: "/icons/notification-data-image.svg",
-                  text: "You have new tournament invitations",
-                }
-              : {
-                  image: "/icons/notification-data-image.svg",
-                  text: "New notifications",
-                },
-          data: i,
-          isActionRequired: i.is_action_required,
-        }));
+      .then(async(res: any) => {
+        const notificationWithImages = await Promise.all(
+          ((res?.data?.data as Array<INotifications>) || []).map((i) =>
+            getUserProfileImage(i.sent_by || "", i))
+        );
+        const notificatiosData =notificationWithImages.map((i: any) => {
+          return {
+            id: i.id,
+            publicURL: i.publicURL,
+            message:{
+                    image: i.publicURL,
+                    text: i.message,
+                  },
+            data: i,
+            isActionRequired: i.is_action_required,
+          };
+        }); 
         setNotifications(notificatiosData);
       })
       .catch((err: any) => {
@@ -104,7 +108,7 @@ const Notification = (): JSX.Element => {
                   {/* <Divider variant="middle" component="li" /> */}
                   <ListItem alignItems="flex-start">
                     <ListItemAvatar>
-                      <img alt="Travis Howard" src={i.message.image} />
+                      <Avatar alt="Travis Howard" src={i.message.image} style={{height: 55, width: 55}} />
                     </ListItemAvatar>
                     <ListItemText
                       secondary={
