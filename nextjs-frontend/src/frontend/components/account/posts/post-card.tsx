@@ -35,6 +35,7 @@ import { getAuthHeader } from "../../../utils/headers";
 // import { deviceTypes } from "../../../../../src/frontend/redux-store/layout/device-types";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import frontendConfig from "../../../utils/config/front-end-config";
+import { useRouter } from "next/router";
 
 interface IProps {
   data: IPostsResponse;
@@ -213,6 +214,8 @@ const PostCard = (props: IProps): JSX.Element => {
         .getPublicUrl(imgUrl)
     : undefined;
 
+    const router = useRouter()
+
   return (
     <>
       <Grid
@@ -238,7 +241,7 @@ const PostCard = (props: IProps): JSX.Element => {
                   justifyContent: "space-between",
                 }}
               >
-                <Box sx={{ display: "flex" }}>
+                <Box sx={{ display: "flex", cursor: "pointer" }} onClick={(): any => router.push(`/account/${values.postOwner.username}`)}>
                   <Image
                     bucket={config.storage.publicBucket}
                     filePath={avatarUrl || ""}
@@ -356,8 +359,7 @@ const PostCard = (props: IProps): JSX.Element => {
                     </a>
                   ) : (
                     part + " "
-                  )
-                )}
+                  ))}
               </Typography>
               {values.postContent.length > 250 ? (
                 <Button

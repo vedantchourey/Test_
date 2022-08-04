@@ -53,7 +53,8 @@ export default function ProductDetail(): JSX.Element {
       cart.total +
       (credit_config.credit_gst_percentage / 100) * cart.total +
       (credit_config.credit_service_percentage / 100) * cart.total +
-      (credit_config.shipping_service_percentage / 100) * cart.total
+      0
+      // (credit_config.shipping_service_percentage / 100) * cart.total
     );
   }
 
@@ -196,33 +197,33 @@ export default function ProductDetail(): JSX.Element {
           </Typography>
           <Box className={styles.box1}>
             <Typography className={styles.sideText7}>Subtotal</Typography>
-            <Typography className={styles.sideText7}>${cart.total}</Typography>
+            <Typography className={styles.sideText7}>₹{cart.total}</Typography>
           </Box>
-          <Box className={styles.box1}>
+          {/* <Box className={styles.box1}>
             <Typography className={styles.sideText7}>Shipping</Typography>
             <Typography className={styles.sideText7}>
-              ${cart.total * (credit_config.shipping_service_percentage / 100)}
+              ₹{cart.total * (credit_config.shipping_service_percentage / 100)}
             </Typography>
-          </Box>
+          </Box> */}
           <Typography className={styles.sideText4}>
             Shipping will be calculated at the next stage.
           </Typography>
           <Box className={styles.box1}>
             <Typography className={styles.sideText7}>Tax</Typography>
             <Typography className={styles.sideText7}>
-              ${cart.total * (credit_config.credit_service_percentage / 100)}
+              ₹{cart.total * (credit_config.credit_service_percentage / 100)}
             </Typography>
           </Box>
           <Box className={styles.box1}>
-            <Typography className={styles.sideText7}>GST (10%)</Typography>
+            <Typography className={styles.sideText7}>GST (18%)</Typography>
             <Typography className={styles.sideText7}>
-              ${cart.total * (credit_config.credit_gst_percentage / 100)}
+              ₹{cart.total * (credit_config.credit_gst_percentage / 100)}
             </Typography>
           </Box>
           <Box className={styles.box1}>
             <Typography className={styles.sideText7}>Order Total</Typography>
             <Typography className={styles.sideText7}>
-              ${getTotalAmount()}
+              ₹{getTotalAmount()}
             </Typography>
           </Box>
           <Box className={styles.box1}>

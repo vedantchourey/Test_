@@ -33,7 +33,8 @@ export function validateSendInvite(body: any): any {
     const model = Joi.object({
         team_id: Joi.string().guid()
             .required(),
-        email: Joi.string().email()
+        email: Joi.string().email(),
+        message: Joi.string().optional()
     });
     const errors = model.validate(body, {
         abortEarly: false,

@@ -54,7 +54,7 @@ const NoobSupportPage: NextPage = () => {
                 sub: `Lorem Ipsum has been the industry's standard dummy 0.32.`,
               },
               {
-                to: '/support/ticket/chat',
+                to: '/chat?user=support&name=Support',
                 icon: <Icon className={styles.iconContainer} color='action'>
                   <HistoryIcon />
                 </Icon>,

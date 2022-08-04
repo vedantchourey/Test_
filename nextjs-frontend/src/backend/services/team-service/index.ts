@@ -270,7 +270,11 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
           from: "dev@noobstorm.gg",
           to: req?.email,
           subject: "Noobstorm Team Invitation",
-          text: `You have new team invitation for ${team_info?.name} open website from here ${frontendConfig.baseAppUrl}`,
+          text: `You have new team invitation for ${
+            team_info?.name
+          } open website from here ${frontendConfig.baseAppUrl} \n Message: ${
+            req.message || "No message added by sender"
+          }`,
         };
 
         // validating all the users
@@ -290,6 +294,7 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
               invite_by: user.id,
               email_id: req?.email,
               secret,
+              message: req.message || "No message added by sender"
             };
             const result = await emailTeamInvitationRepo.create(data, [
               "team_id",
@@ -326,7 +331,8 @@ export const sendInvites = async (req: ITeamInviteRequest, connection: Knex.Tran
             invite_by: user.id,
             user_id: playerId || player_data?.id,
             type: "INVITE",
-            secret
+            secret,
+            message: req.message || "No message added by sender"
         }
         const notification: INotifications = {
             type: "TEAM_INVITATION",
