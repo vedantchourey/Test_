@@ -12,6 +12,7 @@ export interface ITeamInviteRequest {
     player_id?: string;
     team_id: string;
     email?: string;
+    message?: string;
 }
 
 export interface ITeamLeaveRequest{

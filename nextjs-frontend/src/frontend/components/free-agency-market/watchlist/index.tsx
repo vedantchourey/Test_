@@ -1,5 +1,16 @@
 import styled from "@emotion/styled";
-import { Box, Button, Card, CardContent, IconButton, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  IconButton,
+  MenuItem,
+  Modal,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
 import axios from "axios";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -9,6 +20,7 @@ import "slick-carousel/slick/slick.css";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import { getAuthHeader } from "../../../utils/headers";
 import Member, { MemberProp } from "../../team/members/member";
+import GroupIcon from "@mui/icons-material/Group";
 
 export const NoobButton = styled(Button)(() => ({
   color: "white",
@@ -39,13 +51,16 @@ const settings: Settings = {
   ],
 };
 
-const WatchTeamMembers: React.FC<{teamId: string | string[] | undefined}> = ({teamId}) => {
+const WatchTeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
+  teamId,
+}) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<MemberProp[] | []>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [team, setTeam] = React.useState<any[]>([]);
-  const [selectedTeam, setSelectedTeam] = useState<any>("")
-  const [selectedPlayer, setSelectedPlayer] = useState<any>(undefined)
+  const [selectedTeam, setSelectedTeam] = useState<any>("");
+  const [selectedPlayer, setSelectedPlayer] = useState<any>(undefined);
+  const [message, setMessage] = useState("");
 
   const fetchUsers = async (): Promise<void> => {
     const headers = await getAuthHeader();
@@ -55,19 +70,19 @@ const WatchTeamMembers: React.FC<{teamId: string | string[] | undefined}> = ({te
       .then((res) => {
         const players: MemberProp[] = res.data.map((item: any) => ({
           name: `${item.firstName} ${item.lastName}`,
-          username:`${item.username}`,
+          username: `${item.username}`,
           id: item.id,
           image: "/images/teams/player.png",
           type: "bronze",
           tags: ["Games", "Won", "Elo"],
           elo: item?.elo_rating,
           won: item?.won,
-          games: Number(item?.won)+Number(item?.lost),
+          games: Number(item?.won) + Number(item?.lost),
           profileImage: item.avatarUrl
-          ? frontendSupabase.storage
-              .from("public-files")
-              .getPublicUrl(item.avatarUrl).publicURL
-          : undefined,
+            ? frontendSupabase.storage
+                .from("public-files")
+                .getPublicUrl(item.avatarUrl).publicURL
+            : undefined,
         }));
         setData(players);
       })
@@ -98,6 +113,7 @@ const WatchTeamMembers: React.FC<{teamId: string | string[] | undefined}> = ({te
     const data = {
       player_id: playerId,
       team_id: teamId,
+      message: message,
     };
     const headers = await getAuthHeader();
     axios
@@ -131,7 +147,7 @@ const WatchTeamMembers: React.FC<{teamId: string | string[] | undefined}> = ({te
         setLoading(false);
         console.error(err);
       });
-  }
+  };
 
   useEffect(() => {
     fetchUsers();
@@ -141,8 +157,22 @@ const WatchTeamMembers: React.FC<{teamId: string | string[] | undefined}> = ({te
   const OfferModal = (): JSX.Element => {
     const filtedTeamList =
       isModalOpen && selectedPlayer
-        ? team.filter((i) => i.gameId === selectedPlayer.gameId && i.platformId === selectedPlayer.platformId)
+        ? team.filter(
+            (i) =>
+              i.gameId === selectedPlayer.gameId &&
+              i.platformId === selectedPlayer.platformId
+          )
         : team;
+
+    const selectedTeamData: any = team.filter((i) => i.id === selectedTeam);
+
+    const teamLogo = selectedTeamData
+      ? selectedTeamData.teamLogo
+        ? frontendSupabase.storage
+            .from("public-files")
+            .getPublicUrl(selectedTeamData.teamLogo).publicURL
+        : null
+      : null;
 
     return (
       <Modal
@@ -191,7 +221,22 @@ const WatchTeamMembers: React.FC<{teamId: string | string[] | undefined}> = ({te
                     justifyContent: "flex-start",
                   }}
                 >
-                  <Image src="/images/team1.png" height={50} width={50} />
+                  {teamLogo ? (
+                    <Image
+                      src={teamLogo || ""}
+                      width={"45px"}
+                      height={"45px"}
+                    />
+                  ) : (
+                    <GroupIcon
+                      style={{
+                        borderRadius: 65,
+                        background: "rgba(0,0,0,0.4)",
+                        height: 45,
+                        width: 45,
+                      }}
+                    />
+                  )}
                   <Box ml={2}>
                     <Select
                       displayEmpty
@@ -229,6 +274,8 @@ const WatchTeamMembers: React.FC<{teamId: string | string[] | undefined}> = ({te
                     fullWidth={true}
                     multiline={true}
                     rows={7}
+                    value={message}
+                    onChange={(e): any => setMessage(e.target.value)}
                   />
                 </Box>
               </CardContent>
@@ -279,12 +326,14 @@ const WatchTeamMembers: React.FC<{teamId: string | string[] | undefined}> = ({te
 
   return (
     <React.Fragment>
-       <OfferModal/>
+      <OfferModal />
       <Box>
         <Box marginY={2}>
           {!data.length && !loading && (
             <Box mt={5} mb={5}>
-              <Typography color={"white"}>No player added in watchlist</Typography>
+              <Typography color={"white"}>
+                No player added in watchlist
+              </Typography>
             </Box>
           )}
           <Box marginY={2} width={"70vw"}>
@@ -299,26 +348,28 @@ const WatchTeamMembers: React.FC<{teamId: string | string[] | undefined}> = ({te
                           disabled={loading}
                           style={{ backgroundColor: "#6932F9" }}
                           fullWidth={true}
-                          onClick={(): void => {removeToWatchList(player.id || "")}}
+                          onClick={(): void => {
+                            removeToWatchList(player.id || "");
+                          }}
                         >
                           - Remove
                         </NoobButton>
                       </Box>
-                        <Box textAlign="center" mt={2} mb={12}>
-                          <NoobButton
-                            variant="contained"
-                            disabled={loading}
-                            style={{ backgroundColor: "#F09633" }}
-                            fullWidth={true}
-                            onClick={(): void => {
-                              setIsModalOpen(true);
-                              setSelectedPlayer(player);
-                            }}
-                            // onClick={(): void => {sendInvitation(player.id || "")}}
-                          >
-                            Send Offer to Recurit
-                          </NoobButton>
-                        </Box>
+                      <Box textAlign="center" mt={2} mb={12}>
+                        <NoobButton
+                          variant="contained"
+                          disabled={loading}
+                          style={{ backgroundColor: "#F09633" }}
+                          fullWidth={true}
+                          onClick={(): void => {
+                            setIsModalOpen(true);
+                            setSelectedPlayer(player);
+                          }}
+                          // onClick={(): void => {sendInvitation(player.id || "")}}
+                        >
+                          Send Offer to Recurit
+                        </NoobButton>
+                      </Box>
                     </>
                   </Member>
                 );

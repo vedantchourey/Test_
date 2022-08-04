@@ -150,7 +150,7 @@ const TeamListData: React.FC = () => {
                       </AvatarGroup>
                     </Box>
                     <Box ml={4}>
-                      <Typography>GAME</Typography>
+                      <Typography>GAMES</Typography>
                       <Typography
                         color={"rgba(255,255,255,0.4)"}
                         textAlign={"center"}

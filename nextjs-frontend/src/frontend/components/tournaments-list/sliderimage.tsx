@@ -44,7 +44,7 @@ const imagedata: any = {
 };
 
 const allstatus = ["complete", "ongoing", "pending"];
-const allcredits = ["1-5", "6-10", "11-15", "16-20", "20+"];
+const allcredits = ["Free", "1-5", "6-10", "11-15", "16-20", "20+"];
 
 const SliderComp: React.FC = (): JSX.Element => {
   const formats = useAppSelector(allFormatsSelector);

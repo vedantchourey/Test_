@@ -21,7 +21,9 @@ import { allGamesSelector } from "../../../redux-store/games/game-selectors";
 import { useAppDispatch } from "../../../redux-store/redux-store";
 import { fetchAllGamesThunk } from "../../../redux-store/games/game-slice";
 import { gamesFetchStatusSelector } from "../../../redux-store/games/game-selectors";
-
+import { frontendSupabase } from "../../../services/supabase-frontend-service";
+import Image from "next/image";
+import GroupIcon from "@mui/icons-material/Group";
 
 export const NoobCell = styled(TableCell)(() => ({
   border: "0px",
@@ -36,11 +38,12 @@ export const NoobRow = styled(TableRow)(() => ({
 
 interface IData {
   username: string;
-  teamname: string[]; 
+  teamname: string[];
   date: string;
   invite_key: string;
   teamId: string;
-  gameId:string;
+  gameId: string;
+  message: string;
 }
 
 export const NoobButton = styled(Button)(() => ({
@@ -60,7 +63,6 @@ const Permissions: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<IData[] | []>([]);
-  
 
   const appDispatch = useAppDispatch();
   const games = useAppSelector(allGamesSelector);
@@ -77,20 +79,28 @@ const Permissions: React.FC = () => {
     axios
       .get("/api/teams/list-invitations", { headers: headers })
       .then((res) => {
-        const players: IData[] = res.data.result.map((item: any) => ({
-          username: item.invite_by.username,
-          teamname: ["/icons/Rectangle.svg", item.team.name],
-          date: moment(item.created_at).format("DD/MM/YYYY HH:MM"),
-          teamId: item.team.id,
-          gameId: item.team.game_id,
-          invite_key: item.secret
-        }));
+        const players: IData[] = res.data.result.map((item: any) => {
+          const teamLogo = item.team.teamLogo
+            ? frontendSupabase.storage
+                .from("public-files")
+                .getPublicUrl(item.team.teamLogo).publicURL
+            : null;
+          return {
+            username: item.invite_by.username,
+            teamname: [teamLogo, item.team.name],
+            date: moment(item.created_at).format("DD/MM/YYYY HH:MM"),
+            teamId: item.team.id,
+            gameId: item.team.game_id,
+            invite_key: item.secret,
+            message: item.message,
+          };
+        });
         setData(players);
       })
       .finally(() => setLoading(false));
   };
 
-  const acceptInvitaion = async (invite_key: string):Promise<void> => {
+  const acceptInvitaion = async (invite_key: string): Promise<void> => {
     setLoading(true);
     const headers = await getAuthHeader();
     axios
@@ -98,7 +108,7 @@ const Permissions: React.FC = () => {
         headers: headers,
       })
       .then(() => {
-        fetchTeam()
+        fetchTeam();
       })
       .catch(() => {
         alert("Player already added in Watch list");
@@ -106,7 +116,7 @@ const Permissions: React.FC = () => {
       .finally(() => setLoading(false));
   };
 
-  const declineInvitaion = async (invite_key: string):Promise<void> => {
+  const declineInvitaion = async (invite_key: string): Promise<void> => {
     setLoading(true);
     const headers = await getAuthHeader();
     axios
@@ -114,13 +124,13 @@ const Permissions: React.FC = () => {
         headers: headers,
       })
       .then(() => {
-        fetchTeam()
+        fetchTeam();
       })
       .catch(() => {
         alert("Invitation already declined");
       })
       .finally(() => setLoading(false));
-  }
+  };
 
   useEffect(() => {
     fetchTeam();
@@ -137,9 +147,12 @@ const Permissions: React.FC = () => {
                   <NoobRow>
                     <NoobCell>
                       <Box display="flex" alignItems={"center"}>
-                        <Typography marginRight={12}>Received By</Typography>
+                        <Typography marginRight={12}>Sent By</Typography>
                         <Typography>Team Name</Typography>
                       </Box>
+                    </NoobCell>
+                    <NoobCell>
+                      <Typography>Message</Typography>
                     </NoobCell>
                     <NoobCell>
                       <Box display="flex" alignItems={"center"}>
@@ -170,19 +183,36 @@ const Permissions: React.FC = () => {
                           <Typography marginRight={12}>
                             {item.username}
                           </Typography>
-                          <img
-                            src={item.teamname[0]}
-                            width={"65px"}
-                            height={"65px"}
-                          />
+                          {item.teamname[0] ? (
+                            <Image
+                              src={item.teamname[0] || ""}
+                              width={"45px"}
+                              height={"45px"}
+                            />
+                          ) : (
+                            <GroupIcon
+                              style={{
+                                borderRadius: 65,
+                                background: "rgba(0,0,0,0.4)",
+                                height: 45,
+                                width: 45,
+                              }}
+                            />
+                          )}
                           <Typography marginLeft={2}>
                             {item.teamname[1]}
                           </Typography>
                         </Box>
                       </NoobCell>
+                      <NoobCell>{item.message}</NoobCell>
                       <NoobCell>
                         <Box display="flex" alignItems={"center"}>
-                          <Typography>{games.find((i:any)=>i.id===item.gameId)?.displayName}</Typography>
+                          <Typography>
+                            {
+                              games.find((i: any) => i.id === item.gameId)
+                                ?.displayName
+                            }
+                          </Typography>
                         </Box>
                       </NoobCell>
                       <NoobCell>
@@ -215,32 +245,35 @@ const Permissions: React.FC = () => {
                         </>
                       ) : (
                         <>
-                        <NoobCell>
-                          <NoobButton
-                            style={{ backgroundColor: "#F09633" }}
-                            variant="contained"
-                            size={"small"}
-                            disabled={loading}
-                            onClick={(): void => {acceptInvitaion(item.invite_key)}}
-                          >
-                            Accpet
-                          </NoobButton>
-                        </NoobCell>
-                        <NoobCell>
-                        <NoobButton
-                          style={{ backgroundColor: "#6932F9" }}
-                          variant="contained"
-                          size={"small"}
-                          disabled={loading}
-                          onClick={(): void => {declineInvitaion(item.invite_key)}}
-                        >
-                          Decline
-                        </NoobButton>
-                      </NoobCell>
-                      </>
+                          <NoobCell>
+                            <NoobButton
+                              style={{ backgroundColor: "#F09633" }}
+                              variant="contained"
+                              size={"small"}
+                              disabled={loading}
+                              onClick={(): void => {
+                                acceptInvitaion(item.invite_key);
+                              }}
+                            >
+                              Accept
+                            </NoobButton>
+                          </NoobCell>
+                          <NoobCell>
+                            <NoobButton
+                              style={{ backgroundColor: "#6932F9" }}
+                              variant="contained"
+                              size={"small"}
+                              disabled={loading}
+                              onClick={(): void => {
+                                declineInvitaion(item.invite_key);
+                              }}
+                            >
+                              Decline
+                            </NoobButton>
+                          </NoobCell>
+                        </>
                       )}
                     </NoobRow>
-                    
                   );
                 })}
               </TableBody>

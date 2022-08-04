@@ -9,6 +9,7 @@ import "slick-carousel/slick/slick.css";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import { getAuthHeader } from "../../../utils/headers";
 import Member, { MemberProp } from "../../team/members/member";
+import GroupIcon from "@mui/icons-material/Group";
 
 export const NoobButton = styled(Button)(() => ({
   color: "white",
@@ -42,10 +43,11 @@ const settings: Settings = {
 const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any }> = ({ params }) => {
   const [data, setData] = useState<MemberProp[] | []>([]);
   const [loading, setLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [team, setTeam] = React.useState<any[]>([]);
-  const [selectedTeam, setSelectedTeam] = useState<any>("")
-  const [selectedPlayer, setSelectedPlayer] = useState<any>(undefined)
+  const [selectedTeam, setSelectedTeam] = useState<any>("");
+  const [selectedPlayer, setSelectedPlayer] = useState<any>(undefined);
+  const [message, setMessage] = useState("");
 
   const fetchUsers = async (): Promise<void> => {
     const headers = await getAuthHeader();
@@ -75,8 +77,22 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
   const OfferModal = (): JSX.Element => {
     const filtedTeamList =
       isModalOpen && selectedPlayer
-        ? team.filter((i) => i.gameId === selectedPlayer.gameId && i.platformId === selectedPlayer.platformId)
+        ? team.filter(
+            (i) =>
+              i.gameId === selectedPlayer.gameId &&
+              i.platformId === selectedPlayer.platformId
+          )
         : team;
+
+    const selectedTeamData: any = team.filter((i) => i.id === selectedTeam);
+
+    const teamLogo = selectedTeamData
+      ? selectedTeamData.teamLogo
+        ? frontendSupabase.storage
+            .from("public-files")
+            .getPublicUrl(selectedTeamData.teamLogo).publicURL
+        : null
+      : null;    
 
     return (
       <Modal
@@ -125,7 +141,24 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
                     justifyContent: "flex-start",
                   }}
                 >
-                  <Image src="/images/team1.png" height={50} width={50} />
+                  {teamLogo ? (
+                        <Image
+                          src={teamLogo || ""}
+                          width={"45px"}
+                          height={"45px"}
+                          
+                        />
+                      ) : (
+                        <GroupIcon
+                          style={{
+                            borderRadius: 65,
+                            background: "rgba(0,0,0,0.4)",
+                            height: 45,
+                            width: 45,
+                          }}
+                        />
+                      )}
+                  {/* <Image src="/images/team1.png" height={50} width={50} /> */}
                   <Box ml={2}>
                     <Select
                       displayEmpty
@@ -163,6 +196,8 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
                     fullWidth={true}
                     multiline={true}
                     rows={7}
+                    value={message}
+                    onChange={(e): any => setMessage(e.target.value)}
                   />
                 </Box>
               </CardContent>
@@ -233,6 +268,7 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
     const data = {
       player_id: playerId,
       team_id: selectedTeam,
+      message
     };
     const headers = await getAuthHeader();
     axios

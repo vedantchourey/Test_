@@ -2,22 +2,22 @@ import { Fragment, useEffect, useState } from "react";
 import {
   Container,
   Grid,
-  Box,
-  Typography,
-  Button,
-  TextField,
-  Checkbox,
-  FormControlLabel,
+  // Box,
+  // Typography,
+  // Button,
+  // TextField,
+  // Checkbox,
+  // FormControlLabel,
 } from "@mui/material";
 import Heading from "../../src/frontend/components/ui-components/typography/heading";
 import NoobPage from "../../src/frontend/components/page/noob-page";
 import Product from "../../src/frontend/components/product/product";
 import styles from "./store-sidebar.module.css";
-import SearchIcon from "@mui/icons-material/Search";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+// import SearchIcon from "@mui/icons-material/Search";
+// import Accordion from "@mui/material/Accordion";
+// import AccordionSummary from "@mui/material/AccordionSummary";
+// import AccordionDetails from "@mui/material/AccordionDetails";
+// import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   useAppSelector,
 } from "../../src/frontend/redux-store/redux-store";
@@ -60,7 +60,7 @@ const StoreIndex = (): JSX.Element => {
         <Container maxWidth="xl">
           <Heading divider heading={"STORE"} />
           <Grid container spacing={2}>
-            <Grid item xs={12} lg={3}>
+            {/* <Grid item xs={12} lg={3}>
               {isDesktop && (
                 <div className={styles.sidebarContainer}>
                   <Typography className={styles.text}>Categories</Typography>
@@ -246,12 +246,12 @@ const StoreIndex = (): JSX.Element => {
                   </AccordionDetails>
                 </Accordion>
               )}
-            </Grid>
+            </Grid> */}
 
             <Grid
               item
               xs={12}
-              lg={9}
+              lg={12}
               className={
                 !isDesktop ? styles.containerMobile : styles.containerDesktop
               }

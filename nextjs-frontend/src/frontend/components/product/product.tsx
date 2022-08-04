@@ -73,7 +73,7 @@ export default function Product(props: any): JSX.Element {
         {props.description}
       </Typography>
       <Typography className={styles.text} style={{ color: "#6932F9" }}>
-        ${props.price}
+        ₹{props.price}
       </Typography>
       <Box className={styles.box}>
         <Button

@@ -97,7 +97,11 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
 
       if(params?.amount){
         result = result.filter((_doc: any) => {
-          if(params.amount === "1-5"){
+          if(params.amount === "Free"){
+            if(_doc?.settings?.entryFeeAmount < 1){
+              return _doc
+            }
+          } else if(params.amount === "1-5"){
             if(_doc?.settings?.entryFeeAmount >= 1 && _doc?.settings?.entryFeeAmount <= 5){
               return _doc
             }
