@@ -22,20 +22,18 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../../redux-store/redux-store";
-import { avatarImageBlobUrlSelector } from '../../../redux-store/authentication/authentication-selectors';
+import { avatarImageBlobUrlSelector } from "../../../redux-store/authentication/authentication-selectors";
 import { ICreatePostRequest } from "../../../../backend/services/posts-services/create-post/i-create-post";
 import CloseIcon from "@mui/icons-material/Close";
 import styles from "./post.module.css";
-import { createPost, uploadPostImage } from "../../../service-clients/post-service-client";
-import FilePicker from '../../utils/noob-file-picker';
-import { IPostImageUploadResponse } from '../../../service-clients/messages/i-posts-response';
-import dynamic from 'next/dynamic'
-// @ts-ignore: Unreachable code error
-import "react-quill/dist/quill.snow.css";
-import "quill-mention";
-import "quill-mention/dist/quill.mention.css";
+import {
+  createPost,
+  uploadPostImage,
+} from "../../../service-clients/post-service-client";
+import FilePicker from "../../utils/noob-file-picker";
+import { IPostImageUploadResponse } from "../../../service-clients/messages/i-posts-response";
 import { searchPeopleByText } from "../../../service-clients/search-service-client";
-
+import { MentionsInput, Mention } from "react-mentions";
 
 interface mediaInterface {
   contentUrl: string;
@@ -46,29 +44,8 @@ interface IProps {
   setPosts: React.SetStateAction<any>;
 }
 
-interface ICreatePostRequestFrontend extends ICreatePostRequest{
+interface ICreatePostRequestFrontend extends ICreatePostRequest {
   postContentText: string;
-}
-
-
-
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
- async function sourceFun (
-  searchTerm: any,
-  renderItem: any,
-  mentionChar: any
-): Promise<any> {
-  renderItem([], searchTerm);
-  let values: any;
-  if (mentionChar === "@" || mentionChar === "#") {
-    values = [];
-  }
-  if (searchTerm.length === 0) {
-    renderItem(values, searchTerm);
-  } else {
-    const response = await searchPeopleByText({ search: searchTerm.toLowerCase() });
-    renderItem(response.map((i) => ({id: i.id, value: i.username})).slice(0,2), searchTerm);
-  }
 }
 
 export default function CreatePostInput(props: IProps): JSX.Element {
@@ -81,8 +58,6 @@ export default function CreatePostInput(props: IProps): JSX.Element {
 
   const [media, setMedia] = useState<Array<mediaInterface>>([]);
 
-
-
   const [request, setRequest] = useState<ICreatePostRequestFrontend>({
     postContentText: "",
     postContent: "",
@@ -94,11 +69,16 @@ export default function CreatePostInput(props: IProps): JSX.Element {
 
   console.error(errors);
 
-  async function UploadMedia(
-    file: File
-  ): Promise<IPostImageUploadResponse> {
+  async function UploadMedia(file: File): Promise<IPostImageUploadResponse> {
     return await uploadPostImage(file);
   }
+
+  const fetchUsers = async (query: any, callback: any): Promise<any> => {
+    const response = await searchPeopleByText({ search: query.toLowerCase() });
+    callback(
+      response.map((i) => ({ id: i.username, display: i.username })).slice(0, 2)
+    );
+  };
 
   async function onClickCreatePost(): Promise<void> {
     const newErrors = validatePostContent(request);
@@ -108,8 +88,8 @@ export default function CreatePostInput(props: IProps): JSX.Element {
       appDispatch(setIsLoading(true));
 
       const updateRequest: ICreatePostRequest = {
-        postContent: request.postContentText,
-        postImgUrl: request.postImgUrl
+        postContent: request.postContentText.replace(/~/g, ""),
+        postImgUrl: request.postImgUrl,
       };
 
       const response = await createPost(updateRequest as ICreatePostRequest);
@@ -117,7 +97,7 @@ export default function CreatePostInput(props: IProps): JSX.Element {
       if (!response.isError) {
         setPosts((prevState: []) => {
           return [response, ...prevState];
-        })
+        });
         setMedia([]);
         setRequest({
           postContent: "",
@@ -132,7 +112,6 @@ export default function CreatePostInput(props: IProps): JSX.Element {
       appDispatch(setIsLoading(false));
     }
   }
-
 
   const createImageThumb = async (file: MediaSource | Blob): Promise<void> => {
     setMedia(() => {
@@ -165,60 +144,55 @@ export default function CreatePostInput(props: IProps): JSX.Element {
         }}
       >
         <Avatar alt={"user avatar"} src={userAvatar} />
-        <ReactQuill
-          placeholder={`What's happening?`}
-          modules={{
-            toolbar: null,
-            mention: {
-              allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
-              mentionDenotationChars: ["@"],
-              source: sourceFun,
-
-            },
-          }}
-          style={{ flex: 1, color: "#fff" }}
+        <MentionsInput
           value={request.postContent}
-          onChange={(content, delta, source, editor): void =>{
-            const createText: string[] = editor
-              .getContents()
-              .map((i) =>
-                typeof i.insert === "string"
-                  ? i.insert
-                  : "@" + i.insert.mention.value)
-              let text = "";
-              createText.map((i) => {
-                text = text + i;
-              });
-            
+          onChange={(e) => {
             setRequest({
               ...request,
-              postContent: content,
-              postContentText: text,
-            })}
-          }
-        />
-        {/* <TextField
-          placeholder={`What's happening?`}
-          sx={{
-            "& .MuiInput-root": {
-              fontWeight: 300,
+              postContent: e.target.value,
+              postContentText: e.target.value,
+            });
+          }}
+          // style={style}
+          style={{
+            input: {
+              color: "#fff",
+              border: 0,
+              letterSpacing: 0,
+              lineHeight: 1.5,
             },
+            suggestions: {
+              list: {
+                backgroundColor: "#0f0526",
+                border: "1px solid rgba(0,0,0,0.15)",
+                // borderRadius: 5,
+                fontSize: 14,
+              },
+              item: {
+                padding: "5px 15px",
+                borderBottom: "1px solid rgba(0,0,0,0.15)",
+                borderRadius: 5,
+                "&focused": {
+                  backgroundColor: "rgba(255,255,255, 0.1)",
+                },
+              },
+            },
+            flex: 1,
+            border: 0,
           }}
-          fullWidth
-          multiline
-          autoFocus
-          minRows={1}
-          value={request.postContent}
-          error={propsHasError(errors, "postContent")}
-          helperText={getErrorForProp(errors, "postContent")}
-          onChange={(event): void =>
-            setRequest({ ...request, postContent: event.target.value })
-          }
-          variant="standard"
-          InputProps={{
-            disableUnderline: true,
-          }}
-        /> */}
+          placeholder={"What's happening?"}
+        >
+          <Mention
+            markup="@~__display__~"
+            displayTransform={(username) => `@${username}`}
+            trigger="@"
+            data={fetchUsers}
+            renderSuggestion={(suggestion, search, highlightedDisplay) => (
+              <div className="user">{highlightedDisplay}</div>
+            )}
+            style={{ backgroundColor: "#6931F9" }}
+          />
+        </MentionsInput>
 
         <FilePicker
           onFileSelected={async (files): Promise<void> => {
