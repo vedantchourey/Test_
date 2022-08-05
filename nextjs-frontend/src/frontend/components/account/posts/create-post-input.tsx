@@ -146,7 +146,7 @@ export default function CreatePostInput(props: IProps): JSX.Element {
         <Avatar alt={"user avatar"} src={userAvatar} />
         <MentionsInput
           value={request.postContent}
-          onChange={(e) => {
+          onChange={(e): any => {
             setRequest({
               ...request,
               postContent: e.target.value,
@@ -184,10 +184,10 @@ export default function CreatePostInput(props: IProps): JSX.Element {
         >
           <Mention
             markup="@~__display__~"
-            displayTransform={(username) => `@${username}`}
+            displayTransform={(username): any => `@${username}`}
             trigger="@"
             data={fetchUsers}
-            renderSuggestion={(suggestion, search, highlightedDisplay) => (
+            renderSuggestion={(suggestion, search, highlightedDisplay): any => (
               <div className="user">{highlightedDisplay}</div>
             )}
             style={{ backgroundColor: "#6931F9" }}
