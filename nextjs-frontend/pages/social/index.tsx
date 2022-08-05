@@ -64,12 +64,12 @@ export default function SocialMedia(props: {hideChat: boolean}): JSX.Element {
         renderOnCheckFailure={(): JSX.Element => <NotFound />}
       >
         <Grid container>
-          <Grid xs={props.hideChat ? 12 : 8}>
+          <Grid item xs={props.hideChat ? 12 : 8}>
             {/* <CreatePostInput setPosts={setPosts} /> */}
             {_renderPosts()}
           </Grid>
           {!props.hideChat && (
-            <Grid xs={4} p={2}>
+            <Grid item xs={4} p={2}>
               <Chat smallChat={true} social={true} />
             </Grid>
           )}

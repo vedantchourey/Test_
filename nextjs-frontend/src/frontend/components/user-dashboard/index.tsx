@@ -76,9 +76,9 @@ export default function index(): JSX.Element {
   return (
     <Box textAlign={"left"}>
       <Grid container>
-        <Grid xs={10}>
+        <Grid item xs={10}>
           <Grid mb={2} container>
-            <Grid xs={6}>
+            <Grid item xs={6}>
               <Box display={"flex"}>
                 <img
                   src={userAvatar || "/images/16276393842661.png"}
@@ -99,7 +99,7 @@ export default function index(): JSX.Element {
                 </Box>
               </Box>
             </Grid>
-            <Grid xs={6}>
+            <Grid item xs={6}>
               <Typography textAlign={"left"}>Joined Teams</Typography>
               <Box display={"flex"} mr={1}>
                 {teamNames.join(", ")}
@@ -126,7 +126,7 @@ export default function index(): JSX.Element {
             />
           </Box>
         </Grid>
-        <Grid xs={2}>
+        <Grid item xs={2}>
           <Box p={2} bgcolor={"rgba(255, 255, 255, 0.06)"}>
             <Typography textAlign={"left"}>My Team</Typography>
             {data.map((i: any) => (
