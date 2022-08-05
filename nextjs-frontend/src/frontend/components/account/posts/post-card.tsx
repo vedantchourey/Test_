@@ -126,7 +126,15 @@ const PostCard = (props: IProps): JSX.Element => {
         totalLikes: values.totalLikes + 1,
       };
     });
-    likePost(postId);
+    likePost(postId).then(async()=>{
+      if(values.postOwner.id!==user?.id){
+      await frontendSupabase.from("notifications").insert({
+          type: "LIKED",
+          user_id: values.postOwner.id,
+          sent_by: user?.id,
+          message: `${user?.username} liked your post.`,
+      })}
+    });
   };
 
   const removeLike = async (): Promise<void> => {
@@ -539,6 +547,7 @@ const PostCard = (props: IProps): JSX.Element => {
           isModalOpen={openCommentsModal}
           handleClose={handleCloseComments}
           postId={values.id}
+          postOwnerId={values.postOwner.id}
         />
       </Grid>
       <Snackbar

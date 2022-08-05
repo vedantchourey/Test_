@@ -423,7 +423,7 @@ const Home = (): JSX.Element => {
                               key={key}
                               onClick={(): any => router.push(`/blog/${i.id}`)}
                             >
-                              <Typography
+                              {i.label &&<Typography
                                 style={{
                                   position: "absolute",
                                   backgroundColor: "#6932F9",
@@ -433,7 +433,7 @@ const Home = (): JSX.Element => {
                                 }}
                               >
                                 {i.label}
-                              </Typography>
+                              </Typography>}
                               <CardMedia
                                 component="img"
                                 height="240"
@@ -551,7 +551,7 @@ const Home = (): JSX.Element => {
                             key={key}
                             onClick={(): any => router.push(`/blog/${i.id}`)}
                           >
-                            <Typography
+                            {i.label&&<Typography
                               style={{
                                 position: "absolute",
                                 backgroundColor: "#6932F9",
@@ -561,7 +561,7 @@ const Home = (): JSX.Element => {
                               }}
                             >
                               {i.label}
-                            </Typography>
+                            </Typography>}
                             <CardMedia
                               component="img"
                               height="240"

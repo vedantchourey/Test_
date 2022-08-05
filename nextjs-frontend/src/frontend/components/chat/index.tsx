@@ -288,7 +288,7 @@ export default function Chat(props: {
       .select("*")
       .eq("channel_id", channel_id)
       .eq("user_id", player?.id);
-    if (check.data?.length) {
+    if (check.data?.length===0) {
       const addUserData = {
         ...group,
         channel_id,
@@ -405,7 +405,7 @@ export default function Chat(props: {
     }
     const response = await searchPeopleByText({ search: username });
     if (response.length) {
-      if (group) setUserListForGroup(response);
+      if (group) setUserListForGroup(response.filter((i)=>i.username!==user?.username));
       else setUserList(response);
     }
     setIsFetching(false);
@@ -430,7 +430,7 @@ export default function Chat(props: {
     return (
       <>
         <Box
-          style={{ border: "1px solid #6931F9", display: 'flex' }}
+          style={{ border: "1px solid #6931F9", display: 'flex', justifyContent:'space-between' }}
           sx={{ borderRadius: "16px" }}
         >
           <InputBase
@@ -461,7 +461,7 @@ export default function Chat(props: {
               {c.type === "group" && "Groups"}
               {c.type === "support" && "Support"}
             </Typography>
-            {c.values.filter((i)=>i.channel_name.match(search)).map((i) => {
+            {c.values.filter((i)=>i.channel_name.toLowerCase().match(search.toLowerCase())).map((i) => {
               const findTeam = teamData?.find((t) => t.id === i.other_user);
               const chatIcon =
                 i.chat_image || findTeam?.teamLogo
@@ -602,7 +602,7 @@ export default function Chat(props: {
           user={user}
           data={currentChatData}
           smallChat={props.smallChat}
-          addMember={(cid): any => setAddInGroup(cid)}
+          addMember={(cid): any => {setAddInGroup(cid),setCreateGroup(true)}}
           fetchChat={fetchChannels}
         />
       ) : (
@@ -670,14 +670,15 @@ export default function Chat(props: {
               <Box p={2}>
                 <Box style={{justifyContent:'space-between',marginBottom:'20px'}} display="flex">
                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                  {createGroup?"Create Group":"Search Someone" }
+                  {createGroup? addInGroup?"Add a member":"Create Group":"Search Someone" }
                 </Typography>
+                {!addInGroup&&
                 <Button
                   variant="outlined"
                   onClick={(): any => setCreateGroup(!createGroup)}
                   >
                     {createGroup?"Search Someone":"Create Group" }
-                  </Button>
+                  </Button>}
                 </Box>
                 <Box >
                 {createGroup && !addInGroup && (
@@ -788,7 +789,8 @@ export default function Chat(props: {
                   >
                     Cancel
                   </Button>
-                  {createGroup&&<Button
+                  {createGroup && !addInGroup &&
+                  <Button
                     variant="contained"
                     sx={{ ml: 1 }}
                     onClick={(): any => createNewGroupChat()}

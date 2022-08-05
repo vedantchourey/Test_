@@ -37,6 +37,7 @@ import { userProfileSelector } from "../../../redux-store/authentication/authent
 import { useAppSelector } from "../../../redux-store/redux-store";
 import ChatBox from "../../chat/ChatBox";
 import styles from "../../match-hub/match-hub.module.css";
+import { useRouter } from "next/router";
 
 const style = {
   position: "absolute" as const,
@@ -72,7 +73,7 @@ const calculateDuration = (
 
 const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
   const user = useAppSelector(userProfileSelector);
-
+  const router=useRouter();
   const [uploadResults, setUploadResults] = React.useState(false);
   const [resultStatus, setResultStatus] = React.useState(false);
   const [data, setData] = React.useState<PlayerData | undefined>();
@@ -416,6 +417,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                       padding: "10px",
                     }}
                     key={idx}
+                    onClick={():void=>{router.push(`/account/${u.username}`)}}
                   >
                     <Avatar src={avatarUrl} />
                     <Typography style={{ marginLeft: "10px" }}>
@@ -449,6 +451,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                       padding: "10px",
                     }}
                     key={idx}
+                    onClick={():void=>{router.push(`/account/${u.username}`)}}
                   >
                     <Avatar src={avatarUrl} />
                     <Typography style={{ marginLeft: "10px" }}>

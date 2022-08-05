@@ -335,7 +335,11 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         </Box>
         {props.data?.channel_type === "group" && (
           <Box display={"flex"} justifyContent="center" mt={2}>
-            <Button onClick={(): any => setLogoPicker(true)}>
+            <Button onClick={(): any => {setLogoPicker(true)
+              setTimeout(() => {
+                setLogoPicker(false);
+              }, 500);}}
+            >
               Change Team Image
             </Button>
           </Box>
@@ -410,6 +414,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
                 .eq("channel_id", props.channelId);
             }
             await props.fetchChat();
+            props.onBack();
           }
           setLogoPicker(false);
         }}

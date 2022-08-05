@@ -9,6 +9,9 @@ import { getLinkPreview } from '../../../../common/url-preview/url-preview';
 import { CrudRepository } from '../../database/repositories/crud-repository';
 import { IProfile } from '../../database/models/i-profile';
 import { IPostsMentions } from '../../database/models/i-post-mentions';
+import { STATUS } from '../../../../models/constants';
+import { INotifications } from '../../database/models/i-notifications';
+import { addNotifications } from '../../notifications-service';
 // import { CrudRepository } from '../../database/repositories/crud-repository';
 // import { IReporedPost } from '../../database/models/i-reported-post';
 // import { TABLE_NAMES } from '../../../../models/constants';
@@ -76,7 +79,10 @@ export async function createPost(req: ICreatePostRequest, context: PerRequestCon
       postImgUrl:data.images.length ? data.images[0] : data.favicons[0], 
       postedBy: context.user?.id as string
     });
+
     const createdPost = await repository.getPostById(postId as string);
+
+   
 
     const {updatedAt, createdAt, username, avatarUrl, postType, postContent, postImgUrl, postUrl, urlPostTitle, id} = createdPost as IPostsResponse;
 
@@ -89,6 +95,17 @@ export async function createPost(req: ICreatePostRequest, context: PerRequestCon
           context.user?.id as string
         ))
     );
+    
+    
+    const notification: INotifications[] = userIds.map((uId) => ({
+      type: "MENTION_NOTIFICATION",
+      user_id: uId,
+      is_action_required: false,
+      sent_by: context.user?.id,
+      message: `${username} mention you in post`,
+    }));
+    
+    await addNotifications(notification, context.transaction as Knex)
     
     return {
       data: {
@@ -123,6 +140,16 @@ export async function createPost(req: ICreatePostRequest, context: PerRequestCon
         context.user?.id as string
       ))
   );
+
+  const notification: INotifications[] = userIds.map((uId) => ({
+    type: "MENTION_NOTIFICATION",
+    user_id: uId,
+    is_action_required: false,
+    sent_by: context.user?.id,
+    message: `${username} mention you in post`,
+  }));
+  
+  await addNotifications(notification, context.transaction as Knex)
 
   return {
     data: {

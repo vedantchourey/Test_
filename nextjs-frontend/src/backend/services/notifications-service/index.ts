@@ -37,9 +37,9 @@ export const submitNotifications = async (req: INotificationRequest, knexConnect
         if (!notification) return getErrorObject("Invalid notification id or notification response already submitted")
 
         const resp = await handleNotifiction(notification, req, user, knexConnection);
-        if (resp.errors) return resp;
-
         await notifications.update({ status: req.response }, { id: req.id, user_id: user.id })
+        
+        if (resp.errors) return resp;
 
         return { message: "Notification response updated" }
     } catch (ex) {

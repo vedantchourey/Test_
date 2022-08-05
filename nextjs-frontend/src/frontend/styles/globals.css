@@ -146,3 +146,35 @@ a:hover {
 .slick-track{ margin-left: 0!important; }
 }
 
+.quill > .ql-container > .ql-editor.ql-blank::before{
+  font-size: 16px;
+  color: rgba(255,255,255,0.5);
+}
+
+.ql-mention-list-container {
+  width: 270px;
+  border: 1px solid #f0f0f0;
+  border-radius: 4px;
+  background-color: #0f0526 !important;
+  box-shadow: 0 2px 12px 0 rgb(30 30 30 / 8%);
+  z-index: 9001;
+  overflow: auto;
+}
+
+.ql-mention-list-item.selected {
+  background-color: rgba(255,255,255,0.3) !important;
+  text-decoration: none;
+}
+
+.mention {
+  height: 24px;
+  width: 65px;
+  border-radius: 6px;
+  background-color: rgba(255,255,255,0.1) !important;
+  padding: 3px 0;
+  margin-right: 2px;
+  -webkit-user-select: all;
+  -moz-user-select: all;
+  -ms-user-select: all;
+  user-select: all;
+}

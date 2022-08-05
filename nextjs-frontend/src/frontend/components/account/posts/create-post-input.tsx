@@ -32,6 +32,13 @@ import styles from "./post.module.css";
 import { createPost, uploadPostImage } from "../../../service-clients/post-service-client";
 import FilePicker from '../../utils/noob-file-picker';
 import { IPostImageUploadResponse } from '../../../service-clients/messages/i-posts-response';
+import dynamic from 'next/dynamic'
+// @ts-ignore: Unreachable code error
+import "react-quill/dist/quill.snow.css";
+import "quill-mention";
+import "quill-mention/dist/quill.mention.css";
+import { searchPeopleByText } from "../../../service-clients/search-service-client";
+
 
 interface mediaInterface {
   contentUrl: string;
@@ -40,6 +47,31 @@ interface mediaInterface {
 interface IProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setPosts: React.SetStateAction<any>;
+}
+
+interface ICreatePostRequestFrontend extends ICreatePostRequest{
+  postContentText: string;
+}
+
+
+
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+ async function sourceFun (
+  searchTerm: any,
+  renderItem: any,
+  mentionChar: any
+): Promise<any> {
+  renderItem([], searchTerm);
+  let values: any;
+  if (mentionChar === "@" || mentionChar === "#") {
+    values = [];
+  }
+  if (searchTerm.length === 0) {
+    renderItem(values, searchTerm);
+  } else {
+    const response = await searchPeopleByText({ search: searchTerm.toLowerCase() });
+    renderItem(response.map(i => ({id: i.id, value: i.username})).slice(0,2), searchTerm);
+  }
 }
 
 export default function CreatePostInput(props: IProps): JSX.Element {
@@ -52,7 +84,10 @@ export default function CreatePostInput(props: IProps): JSX.Element {
 
   const [media, setMedia] = useState<Array<mediaInterface>>([]);
 
-  const [request, setRequest] = useState<ICreatePostRequest>({
+
+
+  const [request, setRequest] = useState<ICreatePostRequestFrontend>({
+    postContentText: "",
     postContent: "",
     postImgUrl: "",
   });
@@ -73,7 +108,12 @@ export default function CreatePostInput(props: IProps): JSX.Element {
     try {
       appDispatch(setIsLoading(true));
 
-      const response = await createPost(request as ICreatePostRequest);
+      const updateRequest: ICreatePostRequest = {
+        postContent: request.postContentText,
+        postImgUrl: request.postImgUrl
+      };
+
+      const response = await createPost(updateRequest as ICreatePostRequest);
 
       if (!response.isError) {
         setPosts((prevState: []) => {
@@ -83,6 +123,7 @@ export default function CreatePostInput(props: IProps): JSX.Element {
         setRequest({
           postContent: "",
           postImgUrl: "",
+          postContentText: "",
         });
         setErrors({});
       } else {
@@ -125,7 +166,40 @@ export default function CreatePostInput(props: IProps): JSX.Element {
         }}
       >
         <Avatar alt={"user avatar"} src={userAvatar} />
-        <TextField
+        <ReactQuill
+          placeholder={`What's happening?`}
+          modules={{
+            toolbar: null,
+            mention: {
+              allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
+              mentionDenotationChars: ["@"],
+              source: sourceFun,
+
+            },
+          }}
+          style={{ flex: 1, color: "#fff" }}
+          value={request.postContent}
+          onChange={(content, delta, source, editor): void =>{
+            const createText: string[] = editor
+              .getContents()
+              .map((i) =>
+                typeof i.insert === "string"
+                  ? i.insert
+                  : "@" + i.insert.mention.value
+              )
+              let text = "";
+              createText.map((i) => {
+                text = text + i;
+              });
+            
+            setRequest({
+              ...request,
+              postContent: content,
+              postContentText: text,
+            })}
+          }
+        />
+        {/* <TextField
           placeholder={`What's happening?`}
           sx={{
             "& .MuiInput-root": {
@@ -146,7 +220,7 @@ export default function CreatePostInput(props: IProps): JSX.Element {
           InputProps={{
             disableUnderline: true,
           }}
-        />
+        /> */}
 
         <FilePicker
           onFileSelected={async (files): Promise<void> => {
@@ -181,7 +255,7 @@ export default function CreatePostInput(props: IProps): JSX.Element {
           maxFileSizeInBytes={1024 * 1204}
         />
       </CardContent>
-      
+
       {isUploading && (
         <CardContent>
           <Box sx={{ textAlign: "center" }}>
@@ -230,7 +304,7 @@ export default function CreatePostInput(props: IProps): JSX.Element {
             onClick={(): void => {
               setShowPicker(true);
               setTimeout(() => {
-                setShowPicker(false)
+                setShowPicker(false);
               }, 500);
             }}
           >

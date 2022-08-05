@@ -99,7 +99,7 @@ const WatchTeamMembers: React.FC = () => {
         <Box marginY={2}>
           {!data.length && !loading && (
             <Box mt={5} mb={5}>
-              <Typography color={"white"}>No player added in watchlist</Typography>
+              <Typography color={"white"}>No player in offer sent</Typography>
             </Box>
           )}
           <Box marginY={2} width={"70vw"}>
