@@ -97,7 +97,7 @@ const Notification = (): JSX.Element => {
 
           {notifications.map(
             (i: any, idx: number) =>
-              idx < 10 && (
+              (
                 <List
                   sx={{
                     width: "100%",

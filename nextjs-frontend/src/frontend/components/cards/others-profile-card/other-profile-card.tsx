@@ -11,6 +11,9 @@ import { blockUser, unBlockUser } from '../../../service-clients/block-service';
 import frontendConfig from '../../../utils/config/front-end-config';
 import FollowersModal from '../../followers-list-modal/followers-list-modal';
 import { useRouter } from 'next/router';
+import { frontendSupabase } from '../../../services/supabase-frontend-service';
+import { useAppSelector } from '../../../redux-store/redux-store';
+import { userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
 
 const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Element => {
   const router = useRouter();
@@ -18,6 +21,7 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
   const [showMenu, setShowMenu] = useState(false);
   const [openFollowersModal, setOpenFollowersModal] = useState(false);
   const [openFollowingModal, setOpenFollowingModal] = useState(false);
+  const user=useAppSelector(userProfileSelector);
 
   const {
     totalFollowers,
@@ -28,7 +32,14 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
 
   const followAction = (): void => {
     if (!isFollowing) {
-      followUser(userData.id);
+      followUser(userData.id).then(async()=>{
+        await frontendSupabase.from("notifications").insert({
+          type: "FOLLOWING",
+          user_id: userData.id,
+          sent_by: user?.id,
+          message: `${user?.username} started following you.`,
+        })
+      })
       setUserData((prev) => {
         return {
           ...prev,

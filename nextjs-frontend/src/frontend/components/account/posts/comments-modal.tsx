@@ -33,6 +33,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import { getAuthHeader } from "../../../utils/headers";
 import axios from "axios";
+import { frontendSupabase } from "../../../services/supabase-frontend-service";
 
 const style = {
   position: "absolute",
@@ -51,6 +52,7 @@ interface IProps {
   isModalOpen: boolean;
   handleClose: () => void;
   postId: string;
+  postOwnerId:any;
 }
 
 const CommentsModal = (props: IProps): JSX.Element => {
@@ -96,15 +98,23 @@ const CommentsModal = (props: IProps): JSX.Element => {
       postId: props.postId,
       comment: comment,
     });
-    if (!result.isError)
+    if (!result.isError){
+      if(props.postOwnerId!==user?.id){
+      await frontendSupabase.from("notifications").insert({
+        type: "COMMENT",
+        user_id: props.postOwnerId,
+        sent_by: user?.id,
+        message: `${user?.username} commented on your post.`,
+      })}
       setComments((prevState: IPostCommentResponse[]) => [
         result,
         ...prevState,
       ]);
+    }
     setComment("");
   }
 
-  const likeComment = async (id: any): Promise<void> => {
+  const likeComment = async (id: any, user_id:any): Promise<void> => {
     try {
       const endpoint = "/api/comment-like/likenews";
       const headers = await getAuthHeader();
@@ -118,8 +128,15 @@ const CommentsModal = (props: IProps): JSX.Element => {
             headers: headers,
           }
         )
-        .then((res) => {
+        .then(async(res) => {
           if (res.status === 200) {
+            if(user_id !== user?.id){
+            await frontendSupabase.from("notifications").insert({
+              type: "LIKED_COMMENT",
+              user_id: user_id,
+              sent_by: user?.id,
+              message: `${user?.username} liked your comment.`,
+          })}
             getComments();
           }
         })
@@ -243,7 +260,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
                             if (commentLiked) {
                               unLikeComment(data.id);
                             } else {
-                              likeComment(data.id);
+                              likeComment(data.id, data.commentOwner.id);
                             }
                           }}
                           style={{paddingLeft: '12px'}}
