@@ -364,7 +364,7 @@ export const acceptInvite = async (secret: string, connection: Knex.Transaction)
             secret
         })
         if (invite.status === "ACCEPTED") {
-            return getErrorObject("Invitation already accepted")
+            return getErrorObject("Invitation already accepted NMew")
         }
         if (invite.status === "REJECTED") {
             return getErrorObject("Invitation rejected. Ask team owner to send new invitation")
