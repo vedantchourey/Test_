@@ -32,6 +32,8 @@ import styles from "./post.module.css";
 import { createPost, uploadPostImage } from "../../../service-clients/post-service-client";
 import FilePicker from '../../utils/noob-file-picker';
 import { IPostImageUploadResponse } from '../../../service-clients/messages/i-posts-response';
+import "react-quill/dist/quill.snow.css";
+import dynamic from 'next/dynamic'
 
 interface mediaInterface {
   contentUrl: string;
@@ -43,6 +45,7 @@ interface IProps {
 }
 
 export default function CreatePostInput(props: IProps): JSX.Element {
+  const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
   const { setPosts } = props;
   const appDispatch = useAppDispatch();
   const userAvatar = useAppSelector(avatarImageBlobUrlSelector);
@@ -125,7 +128,10 @@ export default function CreatePostInput(props: IProps): JSX.Element {
         }}
       >
         <Avatar alt={"user avatar"} src={userAvatar} />
-        <TextField
+        <ReactQuill
+        placeholder={`What's happening?`}
+        modules={{toolbar:null}}/>
+        {/* <TextField
           placeholder={`What's happening?`}
           sx={{
             "& .MuiInput-root": {
@@ -146,7 +152,7 @@ export default function CreatePostInput(props: IProps): JSX.Element {
           InputProps={{
             disableUnderline: true,
           }}
-        />
+        /> */}
 
         <FilePicker
           onFileSelected={async (files): Promise<void> => {
