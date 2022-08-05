@@ -9,7 +9,6 @@ import { getLinkPreview } from '../../../../common/url-preview/url-preview';
 import { CrudRepository } from '../../database/repositories/crud-repository';
 import { IProfile } from '../../database/models/i-profile';
 import { IPostsMentions } from '../../database/models/i-post-mentions';
-import { STATUS } from '../../../../models/constants';
 import { INotifications } from '../../database/models/i-notifications';
 import { addNotifications } from '../../notifications-service';
 // import { CrudRepository } from '../../database/repositories/crud-repository';

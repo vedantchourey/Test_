@@ -104,6 +104,7 @@ const Notification = (): JSX.Element => {
                     minWidth: 500,
                     bgcolor: "background.paper",
                   }}
+                  key={idx}
                 >
                   {/* <Divider variant="middle" component="li" /> */}
                   <ListItem alignItems="flex-start">

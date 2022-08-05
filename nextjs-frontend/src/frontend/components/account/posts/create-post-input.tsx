@@ -4,7 +4,6 @@ import {
   Card,
   CardActions,
   CardContent,
-  TextField,
   IconButton,
   Avatar,
   Grid,
@@ -15,9 +14,7 @@ import {
 import ImageIcon from "@mui/icons-material/Image";
 import { validatePostContent } from "./validator";
 import {
-  getErrorForProp,
   isThereAnyError,
-  propsHasError,
   ValidationResult,
 } from "../../../../common/utils/validation/validator";
 import { setIsLoading } from "../../../redux-store/screen-animations/screen-animation-slice";
@@ -70,7 +67,7 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
     renderItem(values, searchTerm);
   } else {
     const response = await searchPeopleByText({ search: searchTerm.toLowerCase() });
-    renderItem(response.map(i => ({id: i.id, value: i.username})).slice(0,2), searchTerm);
+    renderItem(response.map((i) => ({id: i.id, value: i.username})).slice(0,2), searchTerm);
   }
 }
 
@@ -94,6 +91,8 @@ export default function CreatePostInput(props: IProps): JSX.Element {
   const [errors, setErrors] = useState<ValidationResult<ICreatePostRequest>>(
     {}
   );
+
+  console.error(errors);
 
   async function UploadMedia(
     file: File
@@ -185,8 +184,7 @@ export default function CreatePostInput(props: IProps): JSX.Element {
               .map((i) =>
                 typeof i.insert === "string"
                   ? i.insert
-                  : "@" + i.insert.mention.value
-              )
+                  : "@" + i.insert.mention.value)
               let text = "";
               createText.map((i) => {
                 text = text + i;
