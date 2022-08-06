@@ -256,7 +256,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         <Box display={"flex"} justifyContent="center" m={1}>
           <TextField
             margin="none"
-            style={{ marginBottom: 0 }}
+            style={{ marginBottom: 0, marginRight:"10px" }}
             fullWidth={true}
             value={text}
             onKeyPress={(e): void => {
@@ -270,7 +270,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
           />
           <Button
             size="small"
-            variant="text"
+            variant="contained"
             sx={{ padding: 0 }}
             onClick={(): void => {
               sendMessage();

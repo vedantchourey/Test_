@@ -10,7 +10,7 @@ import {
   TableRow,
   Typography,
   useMediaQuery,
-  useTheme,
+  useTheme
 } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
@@ -184,10 +184,13 @@ const Permissions: React.FC = () => {
                             {item.username}
                           </Typography>
                           {item.teamname[0] ? (
-                            <Image
+                            <img
                               src={item.teamname[0] || ""}
                               width={"45px"}
                               height={"45px"}
+                              style={{
+                                borderRadius: 25,
+                              }}
                             />
                           ) : (
                             <GroupIcon
