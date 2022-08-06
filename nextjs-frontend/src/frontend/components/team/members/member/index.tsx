@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography,Avatar } from "@mui/material";
 import { useState } from "react";
 import bronze from "./images/bronze_Card.png";
 import diamond from "./images/diamond_Card.png";
@@ -126,14 +126,15 @@ const Member: React.FC<MemberProp> = ({
             {elo}
           </Typography>
         </div>
-        <img
-          src={profileImage || Player.src}
+        <Avatar
+          src={profileImage || ""}
           style={{
             position: "absolute",
             width: "100%",
             zIndex: -1,
             cursor: "pointer",
             height: "64%",
+            borderRadius:0,
           }}
         />
         <img
