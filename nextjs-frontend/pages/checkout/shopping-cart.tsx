@@ -1,6 +1,6 @@
 import { Grid, Box, Typography, Button, TextField } from "@mui/material";
 import styles from "./shopping-cart.module.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { cartSelector } from "../../src/frontend/redux-store/cart/cart-selector";
 import {
   useAppSelector,
@@ -25,17 +25,21 @@ import axios from "axios";
 import { getAuthHeader } from "../../src/frontend/utils/headers";
 
 export default function ProductDetail(): JSX.Element {
+  const [razorPay, setRazorPay] = useState(false);
   const cart = useAppSelector(cartSelector);
   const router = useRouter();
+  
   const appDispatch = useAppDispatch();
 
   useEffect((): void => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
-    // script.onload = (): void => {
-    // };
-    // script.onerror = (): void => {
-    // };
+    script.onload = (): void => {
+      setRazorPay(true);
+    };
+    script.onerror = (): void => {
+      setRazorPay(false);
+    };
     document.body.appendChild(script);
   }, []);
 
@@ -60,6 +64,7 @@ export default function ProductDetail(): JSX.Element {
 
   const insertData = async (): Promise<void> => {
 
+    if (!razorPay) return alert("Something went wrong. Try again later");
     const headers = await getAuthHeader();
     axios
       .post(
@@ -68,7 +73,7 @@ export default function ProductDetail(): JSX.Element {
           // eslint-disable-next-line newline-per-chained-call
           order_id: Math.random().toString(36).substring(2, 7),
           products: cart.products,
-          amount: getTotalAmount(),
+          amount: cart.total,
           payment_status: "pending",
           status: "Incomplete",
           paymentInfo: {},
@@ -80,8 +85,8 @@ export default function ProductDetail(): JSX.Element {
       .then((res) => {
         const options = {
           ...res.data.createRazorPayOrder,
-          name: "Learning To Code Online",
-          description: "Test Order Transaction",
+          name: "Noobstom credit",
+          description: "Noobstom credit",
           handler: async function (response: any): Promise<void> {
             axios.post(
               `/api/order/update-order-payment-status`,

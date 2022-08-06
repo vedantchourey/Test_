@@ -5,6 +5,7 @@ import { cartSelector } from "../../redux-store/cart/cart-selector";
 import { addProduct, updateQuantity } from "../../redux-store/cart/cart-slice";
 import React, { useEffect } from "react";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 export default function ProductDetail(props: any): JSX.Element {
   const cart = useAppSelector(cartSelector);
@@ -51,7 +52,13 @@ export default function ProductDetail(props: any): JSX.Element {
     <>
       <Grid item xs={12} lg={8}>
         <Box className={styles.container}>
-          <img src={props.mainImage} style={{ width: "100%" }} />
+          <Image
+            src={
+              "/images/card.gif"
+            }
+            width={350}
+            height={450}
+          />
           {/* <Box className={styles.imgContainer}>
             <img src={props.img}/>
             <img src={props.img}/>
@@ -70,7 +77,7 @@ export default function ProductDetail(props: any): JSX.Element {
           <Typography className={styles.sideText2}>
             {props.companyName}
           </Typography>
-          <Typography className={styles.sideText3}>${props.price}</Typography>
+          <Typography className={styles.sideText3}>₹{props.price}</Typography>
           <Box className={styles.box1}>
             <Button
               variant="text"

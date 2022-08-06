@@ -6,6 +6,7 @@ import { useAppSelector, useAppDispatch } from "../../redux-store/redux-store";
 import { cartSelector } from "../../redux-store/cart/cart-selector";
 import { addProduct, updateQuantity } from "../../redux-store/cart/cart-slice";
 import React, { useEffect } from "react";
+import Image from "next/image";
 export default function Product(props: any): JSX.Element {
   const router = useRouter();
   async function goToProductDetailsPage(): Promise<void> {
@@ -54,10 +55,11 @@ export default function Product(props: any): JSX.Element {
 
   return (
     <Box className={styles.container}>
-      <img
-        src={props.img}
+      <Image
+        src={props.img === "CREDIT" ? "/images/card.gif" : props.img}
         className={commonStyles.fillImage}
-        style={{ height: "230px" }}
+        height={"350px"}
+        width={"350px"}
       />
       <Typography
         className={styles.text}

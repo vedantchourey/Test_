@@ -9,6 +9,7 @@ import { validateUpdateOrder } from "../payment-service/i-payment-validator";
 import { IConfig, IError, } from "../payment-service/i-payment-interface";
 import Razorpay from 'razorpay'
 import { getRazorPayKeys } from "../payment-service/payment-service"
+import { creditBalance } from "../wallet-service/wallet-service";
 export const getAllOrders = async (
   context: PerRequestContext,
 ): Promise<IOrderResponse | undefined> => {
@@ -38,7 +39,7 @@ export const createOrder = async (
   if (result) {
 
     const res = await createRazorPayOrder({
-      amount: req.amount,
+      amount: req.amount / 100,
     }, context.knexConnection as Knex);
 
     return {
@@ -64,6 +65,11 @@ export const updateOrderPaymentStatus = async (req: IOrderRequest, context: PerR
     const orderRepo = new orderRepository(transaction);
     const orderObj = await orderRepo.findById(req.id);
     if (orderObj !== undefined) {
+      await creditBalance({
+        userId: context.user?.id || "",
+        amount: 250,
+        type: "BALANCE_ADD"
+      }, transaction , payment_response as any)
       const result = await orderRepo.update({
         id: orderObj.id,
         order_id: orderObj.order_id,

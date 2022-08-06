@@ -53,10 +53,10 @@ const ProductDetail = (): JSX.Element => {
             {!loading && (
               <ProductDetails
                 name={product?.name}
-                companyName="Microsoft"
+                companyName="Noobstorm"
                 price={product?.amount}
                 mainImage={product?.image}
-                shortDescription="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy."
+                shortDescription={product?.description}
                 description={product?.description}
                 productCode={product?.product_code}
                 id={product?.id}
