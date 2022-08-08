@@ -366,7 +366,9 @@ const PostCard = (props: IProps): JSX.Element => {
                       {part}{" "}
                     </a>
                   ) : (
-                    part + " "
+                    part.match('@')?
+                    (<span onClick={():void=>{router.push(`account/${part.substring(1)}`)}} style={{color:'#6932F9', marginLeft:'2px', marginRight:'2px'}}>{part}</span>):
+                    (part + " ")
                   ))}
               </Typography>
               {values.postContent.length > 250 ? (

@@ -316,7 +316,8 @@ export default function NewsView(): JSX.Element {
                     const dateB = new Date(b.created_at).getTime();
                     return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
                   })
-                  .filter((i)=>i.id!==newsID).map((i: any, key) => {
+                  .filter((i)=>i.id!==newsID)
+.map((i: any, key) => {
                     if (key < 4) {
                       return (
                         <Card

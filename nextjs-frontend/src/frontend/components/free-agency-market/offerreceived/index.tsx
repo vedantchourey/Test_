@@ -22,7 +22,6 @@ import { useAppDispatch } from "../../../redux-store/redux-store";
 import { fetchAllGamesThunk } from "../../../redux-store/games/game-slice";
 import { gamesFetchStatusSelector } from "../../../redux-store/games/game-selectors";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
-import Image from "next/image";
 import GroupIcon from "@mui/icons-material/Group";
 
 export const NoobCell = styled(TableCell)(() => ({
