@@ -566,7 +566,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                   <MenuItem value="Problem setting up the match">
                     Problem setting up the match
                   </MenuItem>
-                  <MenuItem value="Ineligible roster"></MenuItem>
+                  <MenuItem value="Ineligible roster">Ineligible roster</MenuItem>
                   <MenuItem value="Harassment">Harassment</MenuItem>
                   <MenuItem value="A player disconnected.">
                     A player disconnected.
