@@ -427,7 +427,7 @@ const Home = (): JSX.Element => {
                                 style={{
                                   position: "absolute",
                                   backgroundColor: "#6932F9",
-                                  margin: "15px",
+                                  marginTop: "15px",
                                   padding: "5px 25px",
                                   color: "white",
                                 }}
@@ -555,7 +555,7 @@ const Home = (): JSX.Element => {
                               style={{
                                 position: "absolute",
                                 backgroundColor: "#6932F9",
-                                margin: "15px",
+                                marginTop: "15px",
                                 padding: "5px 25px",
                                 color: "white",
                               }}

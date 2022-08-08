@@ -119,7 +119,7 @@ export default function News(): JSX.Element {
                   // onClick={(): any => setCurrentNews(i)}
                 >
                   {i.label&&
-                  <Typography style={{position:'absolute',backgroundColor:'#6932F9',margin:"15px",padding:"5px 25px",color:"white"}}>{i.label}</Typography>}
+                  <Typography style={{position:'absolute',backgroundColor:'#6932F9',marginTop:"15px",padding:"5px 25px",color:"white"}}>{i.label}</Typography>}
                   <CardMedia
                     component="img"
                     height="240"
