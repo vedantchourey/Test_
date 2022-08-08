@@ -1,7 +1,8 @@
 import { Box, Card, CardActions, CardContent, CardHeader, Container, Divider, Grid, Typography } from "@mui/material";
 import TicketIcon from "../../../icons/ticket-icon";
 import MessageIcon from "../../../icons/message-icon";
-import styles from './ticket-history.module.css'
+import styles from './ticket-history.module.css';
+import {useRouter} from "next/router";
 
 interface Props {
   _id: number,
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export default function TicketHisoryCard({ answer, created_at, ticketNumber, query, status, commentCount }: Props): JSX.Element {
+  const router=useRouter();
   return (
     <Card className={styles.cardBackground} sx={{ my: 5 }}>
       <Container>
@@ -41,12 +43,12 @@ export default function TicketHisoryCard({ answer, created_at, ticketNumber, que
 
         <CardActions>
           <Grid container spacing={2}>
-            <Grid item xs={12} md={5} className={styles.flexRow}>
+            <Grid item xs={12} className={styles.flexRow}>
               <Typography align='left' variant="body1">
                 {created_at}
               </Typography>
               <Box className={styles.flexRow}>
-                <MessageIcon />
+                <MessageIcon onClick={():void=>{router.push(`/chat?user=support&name=Support&message=${encodeURI(`I have doubt about this ticket ${ticketNumber}`)}`)}}/>
                 <Typography align='left' ml={2} variant="body1">
                   {commentCount}
                 </Typography>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {SyntheticEvent} from "react";
 // Third party packages
 import {
   Grid,
@@ -17,6 +17,10 @@ import {
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
 import { SelectChangeEvent } from "@mui/material/Select";
 import ResultTile from "../opponent-tile/result-tile/result-tile";
 import Players, { PlayerData } from "../players";
@@ -80,6 +84,8 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
   const [loading, setLoading] = React.useState(false);
   const [matchReportSubmited, setMatchReportSubmited] = React.useState(false);
   const [chatChannel, setChatChannel] = React.useState<any>(undefined);
+  const [supportChatChannel, setSupportChatChannel] = React.useState<any>(undefined);
+  const [tabValue, setTabValue]=React.useState<any>("1");
 
   const opponent1Name = match.opponent1.user_id
     ? `${match.opponent1.firstName} ${match.opponent1.lastName}`
@@ -95,11 +101,17 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
   //       t.id === match.opponent1.team_id || t.id === match.opponent2.team_id
   //   );
 
-  const createNewChat = async (): Promise<any> => {
-    const channel_id = match.match_id;
+  const handleChange = (event: SyntheticEvent, newValue: string): void => {
+    setTabValue(newValue);
+  };
+
+  const createNewChat = async (isSupportChat?: boolean): Promise<any> => {
+
+    const channel_id = isSupportChat ? `${match.match_id}_support` : match.match_id;
     const isTeamMatch = Boolean(match.opponent1.team_id);
 
     const chatUsers = [];
+    if (isSupportChat) chatUsers.push({ id: "support", name: "Support" });
     if (
       (match.opponent1.user_id && match.opponent2.user_id) ||
       (match.opponent2.team_id && match.opponent2.team_id)
@@ -141,7 +153,8 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       .eq("user_id", user?.id || "")
       .eq("other_user", match.match_id);
     if ((chatChannel.data || [])?.length > 0) {
-      setChatChannel(chatChannel.data?.[0]);
+      if (isSupportChat) setSupportChatChannel(chatChannel.data?.[0]);
+      else setChatChannel(chatChannel.data?.[0]);
     } 
   };
 
@@ -152,7 +165,19 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       .eq("user_id", user?.id || "")
       .eq("other_user", match.match_id);
 
-    if (chatChannel.data?.length === 0) {
+      const chatChannelWithSupport = await frontendSupabase
+      .from("chat_users")
+      .select()
+      .eq("user_id", user?.id || "")
+      .eq("other_user", `${match.match_id}_support`);
+
+      if (chatChannelWithSupport.data?.length === 0 ) {
+        createNewChat(true);
+      } else{
+        setSupportChatChannel(chatChannelWithSupport.data?.[0]);
+      }
+
+    if (chatChannel.data?.length === 0 ) {
       createNewChat();
     } else{
       setChatChannel(chatChannel.data?.[0]);
@@ -409,26 +434,27 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                       .getPublicUrl(u.avatarUrl).publicURL as string)
                   : undefined;
                 return (
-                  <Box style={{marginRight:20}} key={idx}>
-                  <Box
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      padding: "10px",
-                    }}
-                    key={idx}
-                    onClick={():void=>{router.push(`/account/${u.username}`)}}
-                  >
-                    <Avatar src={avatarUrl} />
-                    <Typography style={{ marginLeft: "10px" }}>
-                      {u.username}
-                    </Typography>
-                  </Box>
-                  <Divider light />
+                  <Box style={{ marginRight: 20 }} key={idx}>
+                    <Box
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        padding: "10px",
+                      }}
+                      key={idx}
+                      onClick={(): void => {
+                        router.push(`/account/${u.username}`);
+                      }}
+                    >
+                      <Avatar src={avatarUrl} />
+                      <Typography style={{ marginLeft: "10px" }}>
+                        {u.username}
+                      </Typography>
+                    </Box>
+                    <Divider light />
                   </Box>
                 );
               })}
-              
             </Grid>
             <Divider orientation="vertical" light />
             <Grid item xs={5.5}>
@@ -443,23 +469,25 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                   : undefined;
 
                 return (
-                  <Box style={{marginLeft:20}} key={idx}>
-                  <Box
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      padding: "10px",
-                    }}
-                    key={idx}
-                    onClick={():void=>{router.push(`/account/${u.username}`)}}
-                  >
-                    <Avatar src={avatarUrl} />
-                    <Typography style={{ marginLeft: "10px" }}>
-                      {u.username}
-                    </Typography>
+                  <Box style={{ marginLeft: 20 }} key={idx}>
+                    <Box
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        padding: "10px",
+                      }}
+                      key={idx}
+                      onClick={(): void => {
+                        router.push(`/account/${u.username}`);
+                      }}
+                    >
+                      <Avatar src={avatarUrl} />
+                      <Typography style={{ marginLeft: "10px" }}>
+                        {u.username}
+                      </Typography>
+                    </Box>
+                    <Divider light />
                   </Box>
-                  <Divider light />
-              </Box>
                 );
               })}
             </Grid>
@@ -566,7 +594,9 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                   <MenuItem value="Problem setting up the match">
                     Problem setting up the match
                   </MenuItem>
-                  <MenuItem value="Ineligible roster">Ineligible roster</MenuItem>
+                  <MenuItem value="Ineligible roster">
+                    Ineligible roster
+                  </MenuItem>
                   <MenuItem value="Harassment">Harassment</MenuItem>
                   <MenuItem value="A player disconnected.">
                     A player disconnected.
@@ -580,28 +610,68 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
           </Box>
         </Grid>
       </Grid>
-      {chatChannel?.channel_id && !loading && (
-        <Box
-          display={"flex"}
-          height={"500px"}
-          style={{ background: "rgba(255,255,255,0.1)" }}
-          borderRadius={2}
-          mt={2}
-        >
-          <ChatBox
-            channelId={chatChannel?.channel_id as string}
-            addMember={(): any => null}
-            channelName={`${opponent1Name} vs ${opponent2Name}` as string}
-            fetchChat={async (): Promise<any> => null}
-            onBack={(): any => null}
-            smallChat={true}
-            userId={user?.id as string}
-            user={user}
-            data={chatChannel?.channel_id}
-            key={1}
-            hideInfo={true}
-          />
-        </Box>
+      {((chatChannel?.channel_id && !loading) ||
+        (supportChatChannel?.channel_id && !loading)) && (
+        <Grid style={{ marginTop: "20px" }}>
+          <TabContext value={tabValue}>
+            <TabList onChange={handleChange}>
+              <Tab value="1" label={`${opponent1Name} vs ${opponent2Name}`} />
+              <Tab value="2" label="Chat with Support" />
+            </TabList>
+            <TabPanel value="1">
+              {chatChannel?.channel_id && !loading && (
+                <Box
+                  display={"flex"}
+                  height={"500px"}
+                  style={{ background: "rgba(255,255,255,0.1)" }}
+                  borderRadius={2}
+                  mt={2}
+                >
+                  <ChatBox
+                    channelId={chatChannel?.channel_id as string}
+                    addMember={(): any => null}
+                    channelName={
+                      `${opponent1Name} vs ${opponent2Name}` as string
+                    }
+                    fetchChat={async (): Promise<any> => null}
+                    onBack={(): any => null}
+                    smallChat={true}
+                    userId={user?.id as string}
+                    user={user}
+                    data={chatChannel?.channel_id}
+                    key={1}
+                    hideInfo={true}
+                  />
+                </Box>
+              )}
+            </TabPanel>
+            <TabPanel value="2">
+              {supportChatChannel?.channel_id && !loading && (
+                <Box
+                  display={"flex"}
+                  height={"500px"}
+                  style={{ background: "rgba(255,255,255,0.1)" }}
+                  borderRadius={2}
+                  mt={2}
+                >
+                  <ChatBox
+                    channelId={supportChatChannel?.channel_id as string}
+                    addMember={(): any => null}
+                    channelName={"Chat with Support"}
+                    fetchChat={async (): Promise<any> => null}
+                    onBack={(): any => null}
+                    smallChat={true}
+                    userId={user?.id as string}
+                    user={user}
+                    data={supportChatChannel?.channel_id}
+                    key={1}
+                    hideInfo={true}
+                  />
+                </Box>
+              )}
+            </TabPanel>
+          </TabContext>
+        </Grid>
       )}
 
       <Modal open={resultStatus} onClose={(): void => setResultStatus(false)}>
