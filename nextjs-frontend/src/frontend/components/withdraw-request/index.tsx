@@ -26,13 +26,13 @@ const WithdrawRequest: React.FC = () => {
     fetchData();
   }, []);
 
-const deletnews = async (newsId: string): Promise<void> => {
+const resolve = async (id: string): Promise<void> => {
   try {
-    const endpoint = "/api/news/deleteNews";
+    const endpoint = "/api/withdraw";
     const headers = await getAuthHeader();
     axios
-      .get(endpoint, {
-        params: { newsId: newsId },
+      .patch(endpoint, {
+        params: { id: id },
         headers: headers,
       })
       .then((res) => {
@@ -72,14 +72,14 @@ const deletnews = async (newsId: string): Promise<void> => {
     {
       title: "Date",
       renderCell: (row): any => {
-        return moment(row.created_at).fromNow();
+        return moment(row.created_at).format("DD / MM / YYYY");
       },
       width: "20%",
     },
     {
       title: "Action",
       renderCell: (row): any => {
-        return <Button onClick={(): any => deletnews(row.id)}>Resolve</Button>;
+        return <Button onClick={(): any => resolve(row.id)}>Resolve</Button>;
       },
       width: "10%",
     },
