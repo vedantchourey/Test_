@@ -1,5 +1,14 @@
 import { useRouter } from "next/router";
-import { Button, Typography, Popover } from "@mui/material";
+import {
+  Button,
+  Typography,
+  Popover,
+  Grid,
+  Card,
+  CardMedia,
+  CardContent,
+  Divider,
+} from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import { Box } from "@mui/system";
@@ -29,16 +38,14 @@ export default function NewsView(): JSX.Element {
   const [currentURL, setCurrentUrl] = useState<any>(null);
   const [liked, setLiked] = useState<any>(false);
   const [likersList, setLikersList] = useState<any>(null);
+  const [topNews, setTopNews] = useState<any[]>([]);
 
   // const [data, setData] = React.useState([]);
 
   const fetchUsers = async (): Promise<void> => {
-    const messages: any = await frontendSupabase
-    .from("post_likes")
-    .select("*")
+    const messages: any = await frontendSupabase.from("post_likes").select("*");
     // .eq("postId", props.postId)
     // .leftJoin('profiles', 'post_comments.commentBy', 'profiles.id')
-    
 
     const Data: any = [];
     if (messages.data?.length) {
@@ -52,7 +59,7 @@ export default function NewsView(): JSX.Element {
   };
 
   const handleClickPopover = (event: any): void => {
-    event.stopPropagation()
+    event.stopPropagation();
     setLikersList(event.currentTarget);
   };
 
@@ -61,7 +68,7 @@ export default function NewsView(): JSX.Element {
   };
 
   const openPopover = Boolean(likersList);
-  const id = openPopover ? 'simple-popover' : undefined;
+  const id = openPopover ? "simple-popover" : undefined;
 
   const getnewsdata = async (): Promise<void> => {
     try {
@@ -81,6 +88,24 @@ export default function NewsView(): JSX.Element {
         });
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const getnewslist = async (gameId: string): Promise<void> => {
+    try {
+      const endpoint = "/api/news/newslist";
+      const headers = await getAuthHeader();
+      axios
+        .get(endpoint, { params: { game_id: gameId }, headers: headers })
+        .then((res) => {
+          setTopNews(res.data);
+        })
+        .catch(function (error) {
+          console.error(error);
+          setTopNews([]);
+        });
+    } catch (err) {
+      alert(err);
     }
   };
 
@@ -137,6 +162,7 @@ export default function NewsView(): JSX.Element {
     if (newsID) {
       fetchUsers();
       getnewsdata();
+      getnewslist("ce718f19-ad37-4e56-a958-216da59e9257");
       setCurrentUrl(window.location.href);
     }
   }, [newsID]);
@@ -164,7 +190,7 @@ export default function NewsView(): JSX.Element {
       <>
         {currentNews && (
           <Box textAlign={"left"}>
-            <Button onClick={(): any => setCurrentNews(null)}>Back</Button>
+            <Button onClick={(): any =>router.back()}>Back</Button>
             <Box mt={4} ml={2} style={{ float: "right" }}>
               <img src={currentNews.image} style={{ width: "60vh" }} />
             </Box>
@@ -214,7 +240,11 @@ export default function NewsView(): JSX.Element {
                     }
                   }}
                 >
-                  <Box mr={1} aria-describedby={id} onClick={handleClickPopover}>
+                  <Box
+                    mr={1}
+                    aria-describedby={id}
+                    onClick={handleClickPopover}
+                  >
                     {liked
                       ? parseInt(currentNews.likeCount) + 1
                       : currentNews.likeCount}{" "}
@@ -258,6 +288,90 @@ export default function NewsView(): JSX.Element {
             >
               {ReactHtmlParser(currentNews.description)}
             </div>
+            <Grid
+              container
+              columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}
+              display="flex"
+            >
+              <Box>
+                <Box style={{ marginTop: "15px", display: "flex", alignItems:"center", justifyContent:"space-between" }}>
+                  <Typography
+                    style={{
+                      color: "#FFF",
+                      fontSize: "30px",
+                      fontWeight: 700,
+                      textTransform: "uppercase",
+                      fontFamily: "Chakra Petch",
+                    }}
+                  >
+                    related post’s
+                  </Typography>
+                  <Button variant="contained" onClick={(): any => router.push(`/blog`)}>View All</Button>
+                </Box>
+                <Divider style={{marginTop:"10px"}}/>
+                <Box display={"flex"}>
+                  {topNews
+                  .sort(function (a, b) {
+                    const dateA = new Date(a.created_at).getTime();
+                    const dateB = new Date(b.created_at).getTime();
+                    return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
+                  })
+                  .filter((i)=>i.id!==newsID)
+.map((i: any, key) => {
+                    if (key < 4) {
+                      return (
+                        <Card
+                          sx={{ maxWidth: 260, m: 2 }}
+                          key={key}
+                          onClick={(): any => router.push(`/blog/${i.id}`)}
+                        >
+                          {i.label && (
+                            <Typography
+                              style={{
+                                position: "absolute",
+                                backgroundColor: "#6932F9",
+                                marginTop: "15px",
+                                padding: "5px 25px",
+                                color: "white",
+                              }}
+                            >
+                              {i.label}
+                            </Typography>
+                          )}
+                          <CardMedia
+                            component="img"
+                            height="240"
+                            image={i.image}
+                            alt="green iguana"
+                          />
+                          <CardContent>
+                            <Typography
+                              gutterBottom
+                              variant="h5"
+                              fontSize={16}
+                              textAlign={"left"}
+                              component="div"
+                            >
+                              {i.title}
+                            </Typography>
+                            <Typography
+                              textAlign={"left"}
+                              variant="h1"
+                              fontSize={14}
+                              mt={1}
+                              color={"#6931F9"}
+                            >
+                              Author: {i.author} / Publishing Date:{" "}
+                              {moment(i.created_at).format("DD MMM YYYY")}
+                            </Typography>
+                          </CardContent>
+                        </Card>
+                      );
+                    }
+                  })}
+                </Box>
+              </Box>
+            </Grid>
           </Box>
         )}
         <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>

@@ -214,7 +214,7 @@ export default function ProductDetail(): JSX.Element {
             Shipping will be calculated at the next stage.
           </Typography>
           <Box className={styles.box1}>
-            <Typography className={styles.sideText7}>Tax</Typography>
+            <Typography className={styles.sideText7}>Service charge</Typography>
             <Typography className={styles.sideText7}>
               ₹{cart.total * (credit_config.credit_service_percentage / 100)}
             </Typography>

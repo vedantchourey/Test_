@@ -22,10 +22,12 @@ import NoobPage from "../../src/frontend/components/page/noob-page";
 import Heading from "../../src/frontend/components/ui-components/typography/heading";
 import { INotifications } from "../../src/backend/services/database/models/i-notifications";
 import { getUserProfileImage } from "../../src/frontend/service-clients/image-service-client";
+import {useRouter} from "next/router";
 
 const Notification = (): JSX.Element => {
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const [notifications, setNotifications] = React.useState<any>([]);
+  const router = useRouter();
 
   const fetchNotifications = async (): Promise<void> => {
     const headers = await getAuthHeader();
@@ -42,12 +44,14 @@ const Notification = (): JSX.Element => {
           return {
             id: i.id,
             publicURL: i.publicURL,
-            message:{
-                    image: i.publicURL,
-                    text: i.message,
-                  },
+            message: {
+              image: i.publicURL,
+              text: i.message,
+            },
             data: i,
             isActionRequired: i.is_action_required,
+            redirect: i?.data?.redirect,
+            username: i?.username,
           };
         }); 
         setNotifications(notificatiosData);
@@ -96,7 +100,7 @@ const Notification = (): JSX.Element => {
           <Heading divider heading={"Notification"} />
 
           {notifications.map(
-            (i: any, idx: number) =>
+            (i: any, idx: number) => (
               (
                 <List
                   sx={{
@@ -109,7 +113,11 @@ const Notification = (): JSX.Element => {
                   {/* <Divider variant="middle" component="li" /> */}
                   <ListItem alignItems="flex-start">
                     <ListItemAvatar>
-                      <Avatar alt="Travis Howard" src={i.message.image} style={{height: 55, width: 55}} />
+                      <Avatar
+                        alt="Travis Howard"
+                        src={i.message.image}
+                        style={{ height: 55, width: 55 }}
+                      />
                     </ListItemAvatar>
                     <ListItemText
                       secondary={
@@ -122,7 +130,7 @@ const Notification = (): JSX.Element => {
                           >
                             {i.message.text}
                           </Typography>
-                          {i.isActionRequired && (
+                          {i.isActionRequired ? (
                             <Box display={"flex"} flexDirection={"row"} mt={2}>
                               <Button
                                 variant="contained"
@@ -143,6 +151,21 @@ const Notification = (): JSX.Element => {
                                 Decline
                               </Button>
                             </Box>
+                          ) : (
+                            <Box display={"flex"} flexDirection={"row"} mt={2}>
+                              <Button
+                                style={{ marginLeft: "30px" }}
+                                variant="contained"
+                                onClick={(): void => {
+                                  i.redirect
+                                    ? router.push(i.redirect)
+                                    : router.push(`account/${i.username}`);
+                                }}
+                                sx={{ mr: 1 }}
+                              >
+                                View
+                              </Button>
+                            </Box>
                           )}
                         </Box>
                       }
@@ -151,6 +174,7 @@ const Notification = (): JSX.Element => {
                   <Divider variant="middle" component="li" />
                 </List>
               )
+            )
           )}
         </Container>
       </Fragment>

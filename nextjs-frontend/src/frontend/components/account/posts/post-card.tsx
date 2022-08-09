@@ -129,10 +129,11 @@ const PostCard = (props: IProps): JSX.Element => {
     likePost(postId).then(async()=>{
       if(values.postOwner.id!==user?.id){
       await frontendSupabase.from("notifications").insert({
-          type: "LIKED",
-          user_id: values.postOwner.id,
-          sent_by: user?.id,
-          message: `${user?.username} liked your post.`,
+        type: "LIKED",
+        user_id: values.postOwner.id,
+        sent_by: user?.id,
+        data:{redirect:`/social/${postId}`},
+        message: `${user?.username} liked your post.`,
       })}
     });
   };
@@ -366,7 +367,9 @@ const PostCard = (props: IProps): JSX.Element => {
                       {part}{" "}
                     </a>
                   ) : (
-                    part + " "
+                    part.match('@')?
+                    (<span onClick={():void=>{router.push(`account/${part.substring(1)}`)}} style={{color:'#6932F9', marginLeft:'2px', marginRight:'2px'}}>{part}</span>):
+                    (part + " ")
                   ))}
               </Typography>
               {values.postContent.length > 250 ? (

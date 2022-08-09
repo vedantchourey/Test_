@@ -27,19 +27,20 @@ export async function getUserProfileImage(
 ): Promise<object> {
   const user = await frontendSupabase
     .from("profiles")
-    .select("avatarUrl")
+    .select("avatarUrl, username")
     .eq("id", id);
   if (user.error) {
     return data;
+  }
+  if (user.data.length && (user.data[0].avatarUrl || user.data[0].username)) {
+    return {
+      ...data,
+      username: user.data[0].username,
+      publicURL: frontendSupabase.storage
+        .from("public-files")
+        .getPublicUrl(user.data[0].avatarUrl).publicURL,
+    };
   } 
-    if (user.data.length && user.data[0].avatarUrl) {
-      return {
-        ...data,
-        publicURL: frontendSupabase.storage
-          .from("public-files")
-          .getPublicUrl(user.data[0].avatarUrl).publicURL,
-      };
-    } 
       return data;
     
   

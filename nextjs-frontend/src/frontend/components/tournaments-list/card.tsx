@@ -31,7 +31,7 @@ const CardDesktop: React.FC<any> = ({
 .minute(59)
   );
   return (
-    <Box width={window.innerWidth / 2.8} height={window.innerWidth / 2.8 / 2.9} m={2}>
+    <Box width={window.innerWidth / 2.8} height={window.innerWidth / 2.8 / 2.9} minWidth={window.innerWidth / 2.8} m={2}>
       <Box
         style={{
           backgroundImage: `url(${banner})`,

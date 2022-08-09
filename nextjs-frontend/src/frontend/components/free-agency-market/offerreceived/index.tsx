@@ -10,7 +10,7 @@ import {
   TableRow,
   Typography,
   useMediaQuery,
-  useTheme,
+  useTheme
 } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
@@ -22,7 +22,6 @@ import { useAppDispatch } from "../../../redux-store/redux-store";
 import { fetchAllGamesThunk } from "../../../redux-store/games/game-slice";
 import { gamesFetchStatusSelector } from "../../../redux-store/games/game-selectors";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
-import Image from "next/image";
 import GroupIcon from "@mui/icons-material/Group";
 
 export const NoobCell = styled(TableCell)(() => ({
@@ -184,10 +183,13 @@ const Permissions: React.FC = () => {
                             {item.username}
                           </Typography>
                           {item.teamname[0] ? (
-                            <Image
+                            <img
                               src={item.teamname[0] || ""}
                               width={"45px"}
                               height={"45px"}
+                              style={{
+                                borderRadius: 25,
+                              }}
                             />
                           ) : (
                             <GroupIcon

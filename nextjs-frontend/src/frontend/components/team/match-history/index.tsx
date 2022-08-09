@@ -30,6 +30,7 @@ const MatchHistory: React.FC<{ data: IMatchHubData[], teamId: string }> = (props
             </NoobTableHead>
             <TableBody>
               {props.data.map((row, idx) => {
+                const status=row.opponent1.team_id === props.teamId? (row.opponent2.result?row.opponent2.result:"-") : (row.opponent1.result?row.opponent1.result:"-");
                 return (
                   <NoobTableRow key={idx}>
                     <NoobTableCell
@@ -42,7 +43,7 @@ const MatchHistory: React.FC<{ data: IMatchHubData[], teamId: string }> = (props
                       <Typography>{row.opponent1.team_id === props.teamId ? row.opponent2.name:row.opponent1.name}</Typography>
                     </NoobTableCell>
                     <NoobTableCell>
-                        {row.opponent1.team_id === props.teamId? (row.opponent2.result?row.opponent2.result:"-") : (row.opponent1.result?row.opponent1.result:"-")}
+                        <Typography style={{color:status==="win"?"#19D873":status==="loss"?"#FF0000":"#FFFFFF"}}>{status?status.toUpperCase():"-"}</Typography>
                     </NoobTableCell>
                     <NoobTableCell onClick={():void=>{router.push(`/view-tournament/${row.tournament_id}/details`)}}>
                       <Typography>{row.tournament_name}</Typography>

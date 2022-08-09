@@ -21,16 +21,32 @@ export default function CreateTicketForm(): JSX.Element {
 
   const TICKET_TYPES = [
     {
-      value: "a",
-      label: "A",
+      value: "The score in incorrect.",
+      label: "The score in incorrect.",
     },
     {
-      value: "b",
-      label: "B",
+      value: "My opponent cheated.",
+      label: "My opponent cheated.",
     },
     {
-      value: "c",
-      label: "C",
+      value: "Problem setting up the match.",
+      label: "Problem setting up the match.",
+    },
+    {
+      value: "Ineligible roster.",
+      label: "Ineligible roster.",
+    },
+    {
+      value: "Harassment.",
+      label: "Harassment.",
+    },
+    {
+      value: "A player disconnected.",
+      label: "A player disconnected.",
+    },
+    {
+      value: "Technical issue with Noobstorm.",
+      label: "Technical issue with Noobstorm.",
     },
   ];
 

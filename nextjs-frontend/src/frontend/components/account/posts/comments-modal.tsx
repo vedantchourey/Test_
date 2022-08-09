@@ -104,8 +104,9 @@ const CommentsModal = (props: IProps): JSX.Element => {
         type: "COMMENT",
         user_id: props.postOwnerId,
         sent_by: user?.id,
+        data:{redirect:`/social/${props.postId}`},
         message: `${user?.username} commented on your post.`,
-      })}
+      });}
       setComments((prevState: IPostCommentResponse[]) => [
         result,
         ...prevState,
@@ -135,6 +136,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
               type: "LIKED_COMMENT",
               user_id: user_id,
               sent_by: user?.id,
+              data:{redirect:`/social/${props.postId}`},
               message: `${user?.username} liked your comment.`,
           })}
             getComments();

@@ -19,6 +19,8 @@ import { uploadImage } from "../../../service-clients/image-service-client";
 import { v4 } from "uuid";
 import { allowedImageExtensions } from "../../../../models/constants";
 import GroupIcon from "@mui/icons-material/Group";
+import { useRouter } from "next/router";
+import { ParsedUrlQuery } from "querystring";
 
 interface IChatBox {
   channelId: string;
@@ -34,9 +36,13 @@ interface IChatBox {
 }
 
 export default function ChatBox(props: IChatBox): JSX.Element {
+  const router = useRouter();
+  const query: ParsedUrlQuery = router.query;
+  const defaultMessage: string | string[] | undefined = query.message;
+
   const [messages, _setMessages] = useState<IMessages[]>([]);
   const [chatUsers, setchatUsers] = useState<any[]>([]);
-  const [text, setText] = useState<string>("");
+  const [text, setText] = useState<string>(defaultMessage as string || "");
   const [infoSection, setInfoSection] = useState(false);
   const [logoPicker, setLogoPicker] = React.useState(false);
 
@@ -256,7 +262,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         <Box display={"flex"} justifyContent="center" m={1}>
           <TextField
             margin="none"
-            style={{ marginBottom: 0 }}
+            style={{ marginBottom: 0, marginRight:"10px" }}
             fullWidth={true}
             value={text}
             onKeyPress={(e): void => {
@@ -270,7 +276,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
           />
           <Button
             size="small"
-            variant="text"
+            variant="contained"
             sx={{ padding: 0 }}
             onClick={(): void => {
               sendMessage();

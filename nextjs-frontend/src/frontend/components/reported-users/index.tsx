@@ -31,12 +31,12 @@ const ReportedUsers: React.FC = () => {
   }, []);
 
 
-const blockreport = async (Id: string): Promise<void> => {
+const blockreport = async (Id: string, isBlocked: boolean ): Promise<void> => {
   try {
     const endpoint = "/api/user/block";
     const headers = await getAuthHeader();
     axios
-      .patch(`${endpoint}?user_id=${Id}&value=false`, {
+      .patch(`${endpoint}?user_id=${Id}&value=${isBlocked ? "false" : "true" }`, {
         headers: headers,
       })
       .then((res) => {
@@ -52,12 +52,12 @@ const blockreport = async (Id: string): Promise<void> => {
   }
 };
 
-const suspendreport = async (Id: string): Promise<void> => {
+const suspendreport = async (Id: string, isSuspended: boolean): Promise<void> => {
   try {
     const endpoint = "/api/user/suspended";
     const headers = await getAuthHeader();
     axios
-      .patch(`${endpoint}?user_id=${Id}`, {
+      .patch(`${endpoint}?user_id=${Id}${isSuspended ? "&unsuspend=true" : ""}`, {
         headers: headers,
       })
       .then((res) => {
@@ -94,11 +94,11 @@ const suspendreport = async (Id: string): Promise<void> => {
       renderCell: (row): any => {
         return (
           <>
-            <Button onClick={(): any => blockreport(row.id)}>
-              Block
+            <Button onClick={(): any => blockreport(row.id,row.isBlocked)}>
+              {row.isBlocked? "UnBlock" : "Block"}
             </Button>
-            <Button onClick={(): any => suspendreport(row.id)}>
-              suspend
+            <Button onClick={(): any => suspendreport(row.id, new Date(row.suspended) > new Date())}>
+              {new Date(row.suspended) > new Date() ? "Unsuspend" : "Suspend"}
             </Button>
           </>
         );
