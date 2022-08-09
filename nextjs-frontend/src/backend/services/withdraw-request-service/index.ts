@@ -18,6 +18,7 @@ export const fetchWithdrawRequest = async (connection: Knex.Transaction): Promis
           )
           .select("withdraw_request.id")
           .select("withdraw_request.status")
+          .select("withdraw_request.created_at")
           .select("private_profiles.id as user_id")
           .select("private_profiles.withdrawAmount")
           .select("private_profiles.firstName")
