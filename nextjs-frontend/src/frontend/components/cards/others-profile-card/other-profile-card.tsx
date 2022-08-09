@@ -37,6 +37,7 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
           type: "FOLLOWING",
           user_id: userData.id,
           sent_by: user?.id,
+          username:user?.id,
           message: `${user?.username} started following you.`,
         })
       })

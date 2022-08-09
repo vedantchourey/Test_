@@ -22,10 +22,12 @@ import NoobPage from "../../src/frontend/components/page/noob-page";
 import Heading from "../../src/frontend/components/ui-components/typography/heading";
 import { INotifications } from "../../src/backend/services/database/models/i-notifications";
 import { getUserProfileImage } from "../../src/frontend/service-clients/image-service-client";
+import {useRouter} from "next/router";
 
 const Notification = (): JSX.Element => {
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const [notifications, setNotifications] = React.useState<any>([]);
+  const router = useRouter();
 
   const fetchNotifications = async (): Promise<void> => {
     const headers = await getAuthHeader();
@@ -42,12 +44,14 @@ const Notification = (): JSX.Element => {
           return {
             id: i.id,
             publicURL: i.publicURL,
-            message:{
-                    image: i.publicURL,
-                    text: i.message,
-                  },
+            message: {
+              image: i.publicURL,
+              text: i.message,
+            },
             data: i,
             isActionRequired: i.is_action_required,
+            post_id: i.post_is,
+            username: i.username,
           };
         }); 
         setNotifications(notificatiosData);
@@ -95,63 +99,71 @@ const Notification = (): JSX.Element => {
         <Container maxWidth="xl">
           <Heading divider heading={"Notification"} />
 
-          {notifications.map(
-            (i: any, idx: number) =>
-              (
-                <List
-                  sx={{
-                    width: "100%",
-                    minWidth: 500,
-                    bgcolor: "background.paper",
-                  }}
-                  key={idx}
-                >
-                  {/* <Divider variant="middle" component="li" /> */}
-                  <ListItem alignItems="flex-start">
-                    <ListItemAvatar>
-                      <Avatar alt="Travis Howard" src={i.message.image} style={{height: 55, width: 55}} />
-                    </ListItemAvatar>
-                    <ListItemText
-                      secondary={
-                        <Box ml={1} display={"flex"} flexDirection={"column"}>
-                          <Typography
-                            sx={{ display: "inline" }}
-                            component="span"
-                            variant="body2"
-                            color="text.primary"
+          {notifications.map((i: any, idx: number) => (
+            <List
+              sx={{
+                width: "100%",
+                minWidth: 500,
+                bgcolor: "background.paper",
+              }}
+              key={idx}
+            >
+              {/* <Divider variant="middle" component="li" /> */}
+              <ListItem alignItems="flex-start">
+                <ListItemAvatar>
+                  <Avatar
+                    alt="Travis Howard"
+                    src={i.message.image}
+                    style={{ height: 55, width: 55 }}
+                  />
+                </ListItemAvatar>
+                <ListItemText
+                  secondary={
+                    <Box ml={1} display={"flex"} flexDirection={"column"}>
+                      <Typography
+                        sx={{ display: "inline" }}
+                        component="span"
+                        variant="body2"
+                        color="text.primary"
+                        onClick={(): void => {
+                          i.post_id
+                            ? router.push(`/social/${i.post_id}`)
+                            : i.username
+                            ? router.push(`/account/${i.username}`)
+                            : null;
+                        }}
+                      >
+                        {i.message.text}
+                      </Typography>
+                      {i.isActionRequired && (
+                        <Box display={"flex"} flexDirection={"row"} mt={2}>
+                          <Button
+                            variant="contained"
+                            onClick={(): void => {
+                              submitNotification(i.id, "ACCEPTED");
+                            }}
+                            sx={{ mr: 1 }}
                           >
-                            {i.message.text}
-                          </Typography>
-                          {i.isActionRequired && (
-                            <Box display={"flex"} flexDirection={"row"} mt={2}>
-                              <Button
-                                variant="contained"
-                                onClick={(): void => {
-                                  submitNotification(i.id, "ACCEPTED");
-                                }}
-                                sx={{ mr: 1 }}
-                              >
-                                Accept
-                              </Button>
-                              <Button
-                                variant="outlined"
-                                onClick={(): void => {
-                                  submitNotification(i.id, "REJECT");
-                                }}
-                                sx={{ mr: 1 }}
-                              >
-                                Decline
-                              </Button>
-                            </Box>
-                          )}
+                            Accept
+                          </Button>
+                          <Button
+                            variant="outlined"
+                            onClick={(): void => {
+                              submitNotification(i.id, "REJECT");
+                            }}
+                            sx={{ mr: 1 }}
+                          >
+                            Decline
+                          </Button>
                         </Box>
-                      }
-                    />
-                  </ListItem>
-                  <Divider variant="middle" component="li" />
-                </List>
-              )
-          )}
+                      )}
+                    </Box>
+                  }
+                />
+              </ListItem>
+              <Divider variant="middle" component="li" />
+            </List>
+          ))}
         </Container>
       </Fragment>
     </NoobPage>

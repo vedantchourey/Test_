@@ -129,11 +129,12 @@ const PostCard = (props: IProps): JSX.Element => {
     likePost(postId).then(async()=>{
       if(values.postOwner.id!==user?.id){
       await frontendSupabase.from("notifications").insert({
-          type: "LIKED",
-          user_id: values.postOwner.id,
-          sent_by: user?.id,
-          message: `${user?.username} liked your post.`,
-      })}
+        type: "LIKED",
+        user_id: values.postOwner.id,
+        sent_by: user?.id,
+        post_id: postId,
+        message: `${user?.username} liked your post.`,
+      });}
     });
   };
 
