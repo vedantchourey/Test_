@@ -132,9 +132,9 @@ const PostCard = (props: IProps): JSX.Element => {
         type: "LIKED",
         user_id: values.postOwner.id,
         sent_by: user?.id,
-        post_id: postId,
+        data:{redirect:`/social/${postId}`},
         message: `${user?.username} liked your post.`,
-      });}
+      })}
     });
   };
 

@@ -50,8 +50,8 @@ const Notification = (): JSX.Element => {
             },
             data: i,
             isActionRequired: i.is_action_required,
-            post_id: i.post_is,
-            username: i.username,
+            redirect: i?.data?.redirect,
+            username: i?.username,
           };
         }); 
         setNotifications(notificatiosData);
@@ -99,71 +99,83 @@ const Notification = (): JSX.Element => {
         <Container maxWidth="xl">
           <Heading divider heading={"Notification"} />
 
-          {notifications.map((i: any, idx: number) => (
-            <List
-              sx={{
-                width: "100%",
-                minWidth: 500,
-                bgcolor: "background.paper",
-              }}
-              key={idx}
-            >
-              {/* <Divider variant="middle" component="li" /> */}
-              <ListItem alignItems="flex-start">
-                <ListItemAvatar>
-                  <Avatar
-                    alt="Travis Howard"
-                    src={i.message.image}
-                    style={{ height: 55, width: 55 }}
-                  />
-                </ListItemAvatar>
-                <ListItemText
-                  secondary={
-                    <Box ml={1} display={"flex"} flexDirection={"column"}>
-                      <Typography
-                        sx={{ display: "inline" }}
-                        component="span"
-                        variant="body2"
-                        color="text.primary"
-                        onClick={(): void => {
-                          i.post_id
-                            ? router.push(`/social/${i.post_id}`)
-                            : i.username
-                            ? router.push(`/account/${i.username}`)
-                            : null;
-                        }}
-                      >
-                        {i.message.text}
-                      </Typography>
-                      {i.isActionRequired && (
-                        <Box display={"flex"} flexDirection={"row"} mt={2}>
-                          <Button
-                            variant="contained"
-                            onClick={(): void => {
-                              submitNotification(i.id, "ACCEPTED");
-                            }}
-                            sx={{ mr: 1 }}
+          {notifications.map(
+            (i: any, idx: number) => (
+              (
+                <List
+                  sx={{
+                    width: "100%",
+                    minWidth: 500,
+                    bgcolor: "background.paper",
+                  }}
+                  key={idx}
+                >
+                  {/* <Divider variant="middle" component="li" /> */}
+                  <ListItem alignItems="flex-start">
+                    <ListItemAvatar>
+                      <Avatar
+                        alt="Travis Howard"
+                        src={i.message.image}
+                        style={{ height: 55, width: 55 }}
+                      />
+                    </ListItemAvatar>
+                    <ListItemText
+                      secondary={
+                        <Box ml={1} display={"flex"} flexDirection={"column"}>
+                          <Typography
+                            sx={{ display: "inline" }}
+                            component="span"
+                            variant="body2"
+                            color="text.primary"
                           >
-                            Accept
-                          </Button>
-                          <Button
-                            variant="outlined"
-                            onClick={(): void => {
-                              submitNotification(i.id, "REJECT");
-                            }}
-                            sx={{ mr: 1 }}
-                          >
-                            Decline
-                          </Button>
+                            {i.message.text}
+                          </Typography>
+                          {i.isActionRequired ? (
+                            <Box display={"flex"} flexDirection={"row"} mt={2}>
+                              <Button
+                                variant="contained"
+                                onClick={(): void => {
+                                  submitNotification(i.id, "ACCEPTED");
+                                }}
+                                sx={{ mr: 1 }}
+                              >
+                                Accept
+                              </Button>
+                              <Button
+                                variant="outlined"
+                                onClick={(): void => {
+                                  submitNotification(i.id, "REJECT");
+                                }}
+                                sx={{ mr: 1 }}
+                              >
+                                Decline
+                              </Button>
+                            </Box>
+                          ) : (
+                            <Box display={"flex"} flexDirection={"row"} mt={2}>
+                              <Button
+                                style={{ marginLeft: "30px" }}
+                                variant="contained"
+                                onClick={(): void => {
+                                  i.redirect
+                                    ? router.push(i.redirect)
+                                    : router.push(`account/${i.username}`);
+                                }}
+                                sx={{ mr: 1 }}
+                              >
+                                View
+                              </Button>
+                            </Box>
+                          )}
                         </Box>
-                      )}
-                    </Box>
-                  }
-                />
-              </ListItem>
-              <Divider variant="middle" component="li" />
-            </List>
-          ))}
+                      }
+                    />
+                  </ListItem>
+                  <Divider variant="middle" component="li" />
+                </List>
+              )
+            )
+          )}
         </Container>
       </Fragment>
     </NoobPage>

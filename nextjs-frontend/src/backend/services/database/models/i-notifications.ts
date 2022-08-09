@@ -6,8 +6,6 @@ export interface INotifications {
   status?: string;
   sent_by?: string | null;
   message?: string | null;
-  username?: string | null;
-  post_id?: string | null;
   data?: {
     tournament_id?: string;
     request_by?: string;

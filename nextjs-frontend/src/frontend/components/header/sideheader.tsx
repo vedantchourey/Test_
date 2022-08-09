@@ -75,6 +75,9 @@ export default function SideHeader(): JSX.Element {
                   },
             data: i,
             isActionRequired: i.is_action_required,
+            redirect: i?.data?.redirect,
+            username: i?.username,
+            createdAt:i?.created_at,
           };
         });
         setNotificationLength(notificatiosData.filter((i)=>i.isActionRequired)?.length);
@@ -233,8 +236,12 @@ export default function SideHeader(): JSX.Element {
                 </IconButton>
                 {renderResults()}
               </Box>
-              <IconButton onClick={handleClick} sx={{ mr: 1, ml: 1 }} >
-              {notificationLength>0&&<Typography className={style.notification}>{notificationLength}</Typography>}
+              <IconButton onClick={handleClick} sx={{ mr: 1, ml: 1 }}>
+                {notificationLength > 0 && (
+                  <Typography className={style.notification}>
+                    {notificationLength}
+                  </Typography>
+                )}
                 <img src="/icons/notification-icon.svg" />
               </IconButton>
               <Button
@@ -292,22 +299,33 @@ export default function SideHeader(): JSX.Element {
         >
           Notifications
         </ListSubheader>
-        {notifications.map(
-          (i: any, idx: number) =>
-            idx < 10 && (
-              <BasicPopover
-                message={i.message}
-                onAccept={(): void => {
-                  submitNotification(i.id, "ACCEPTED");
-                }}
-                onDecline={(): void => {
-                  submitNotification(i.id, "REJECT");
-                }}
-                isActionRequired={i.isActionRequired}
-                key={idx}
-              />
-            )
-        )}
+        {notifications
+          ?.sort(function (a :any, b :any) {
+            const dateA = new Date(a.createdAt).getTime();
+            const dateB = new Date(b.createdAt).getTime();
+            return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
+          })
+          .map(
+            (i: any, idx: number) =>
+              idx < 10 && (
+                <BasicPopover
+                  message={i.message}
+                  onAccept={(): void => {
+                    submitNotification(i.id, "ACCEPTED");
+                  }}
+                  onDecline={(): void => {
+                    submitNotification(i.id, "REJECT");
+                  }}
+                  onNevigation={(): void => {
+                    i.redirect
+                      ? router.push(i.redirect)
+                      : router.push(`account/${i.username}`);
+                  }}
+                  isActionRequired={i.isActionRequired}
+                  key={idx}
+                />
+              )
+          )}
         <Button
           variant="text"
           onClick={(): any => router.push(`/notification`)}
