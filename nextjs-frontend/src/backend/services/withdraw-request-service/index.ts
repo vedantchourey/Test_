@@ -4,6 +4,7 @@ import { IError, ISuccess } from "../../utils/common/Interfaces";
 import { getErrorObject } from "../common/helper/utils.service";
 import { CrudRepository } from "../database/repositories/crud-repository";
 import { IWithdrawRequest } from "../database/models/i-withdraw-request";
+import { IPrivateProfile } from "../database/models/i-private-profile";
 
 
 export const fetchWithdrawRequest = async (connection: Knex.Transaction): Promise<ISuccess | IError> => {
@@ -22,7 +23,8 @@ export const fetchWithdrawRequest = async (connection: Knex.Transaction): Promis
           .select("private_profiles.id as user_id")
           .select("private_profiles.withdrawAmount")
           .select("private_profiles.firstName")
-          .select("private_profiles.lastName");
+          .select("private_profiles.lastName")
+          .where("withdraw_request.status",STATUS.PENDING);
         return { result };
     } catch (ex: any) {
         return getErrorObject("Something went wrong" + ex.message)
@@ -32,6 +34,13 @@ export const fetchWithdrawRequest = async (connection: Knex.Transaction): Promis
 export const addWithdrawRequest = async (req: any, connection: Knex.Transaction): Promise<ISuccess | IError> => {
     try {
         const withdrawRequest = new CrudRepository<IWithdrawRequest>(connection, TABLE_NAMES.WITHDRAWREQUEST);
+        const findExistingRequest: any[] = await withdrawRequest.find({
+          userId: req.userId,
+          status: "PENDING",
+        });
+        if (findExistingRequest.length) {
+          return getErrorObject("Withdraw Request is already submitted.");
+        }
         const result = withdrawRequest.create(req);
 
         return { result };
@@ -42,9 +51,19 @@ export const addWithdrawRequest = async (req: any, connection: Knex.Transaction)
 
 export const resolveWithdrawRequest = async (req: any, connection: Knex.Transaction): Promise<ISuccess | IError> => {
     try {
-        const withdrawRequest = new CrudRepository<IWithdrawRequest>(connection, TABLE_NAMES.WITHDRAWREQUEST);
-        const result = withdrawRequest.update({status: STATUS.ACCEPTED}, {id: req});
-
+        const withdrawRequest = new CrudRepository<IWithdrawRequest>(
+          connection,
+          TABLE_NAMES.WITHDRAWREQUEST
+        );
+        const result = await withdrawRequest.update(
+          { status: STATUS.ACCEPTED },
+          { id: req.id }
+        );
+        const users = new CrudRepository<IPrivateProfile>(
+          connection,
+          TABLE_NAMES.PRIVATE_PROFILE
+        );
+        await users.update({ withdrawAmount: 0 }, { id: result.userId });
         return { result };
     } catch (ex: any) {
         return getErrorObject("Something went wrong" + ex.message)

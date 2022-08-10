@@ -42,9 +42,10 @@ const Balance = (): any => {
         }
       )
       .then(() => {
-        alert("Your withdraw reuqst is submitted");
+        alert("Your withdraw request is submitted");
       })
       .catch((err) => {
+        alert("Withdraw Request is already submitted.");
         console.error(err);
       });
   };
