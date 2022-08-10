@@ -32,6 +32,13 @@ export const fetchWithdrawRequest = async (connection: Knex.Transaction): Promis
 export const addWithdrawRequest = async (req: any, connection: Knex.Transaction): Promise<ISuccess | IError> => {
     try {
         const withdrawRequest = new CrudRepository<IWithdrawRequest>(connection, TABLE_NAMES.WITHDRAWREQUEST);
+        const findExistingRequest: any[] = await withdrawRequest.find({
+          userId: req.userId,
+          status: "PENDING",
+        });
+        if (findExistingRequest.length) {
+          return getErrorObject("Withdraw Request is already submitted.");
+        }
         const result = withdrawRequest.create(req);
 
         return { result };
@@ -43,7 +50,7 @@ export const addWithdrawRequest = async (req: any, connection: Knex.Transaction)
 export const resolveWithdrawRequest = async (req: any, connection: Knex.Transaction): Promise<ISuccess | IError> => {
     try {
         const withdrawRequest = new CrudRepository<IWithdrawRequest>(connection, TABLE_NAMES.WITHDRAWREQUEST);
-        const result = withdrawRequest.update({status: STATUS.ACCEPTED}, {id: req});
+        const result = withdrawRequest.update({status: STATUS.ACCEPTED}, {id: req.id});
 
         return { result };
     } catch (ex: any) {
