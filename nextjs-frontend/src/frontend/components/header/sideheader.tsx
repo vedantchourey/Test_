@@ -319,7 +319,7 @@ export default function SideHeader(): JSX.Element {
                   onNevigation={(): void => {
                     i.redirect
                       ? router.push(i.redirect)
-                      : router.push(`account/${i.username}`);
+                      : router.push(`/account/${i.username}`);
                   }}
                   isActionRequired={i.isActionRequired}
                   key={idx}

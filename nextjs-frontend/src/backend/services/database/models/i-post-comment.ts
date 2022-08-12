@@ -4,7 +4,8 @@ export interface IPostComment {
   commentBy: string,
   postId: string,
   createdAt?: Date,
-  updatedAt?: Date
+  updatedAt?: Date,
+  subComment?: string,
 }
 
 export interface IPostCommentResponse {
