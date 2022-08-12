@@ -31,10 +31,7 @@ const resolve = async (id: string): Promise<void> => {
     const endpoint = "/api/withdraw";
     const headers = await getAuthHeader();
     axios
-      .patch(endpoint, {
-        params: { id: id },
-        headers: headers,
-      })
+      .patch(endpoint, { id: id }, { headers: headers })
       .then((res) => {
         if (res.status === 200) {
           fetchData();

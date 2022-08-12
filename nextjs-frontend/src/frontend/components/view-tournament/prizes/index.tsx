@@ -29,6 +29,7 @@ interface PrizesProps {
 const Prizes: React.FC<PrizesProps> = ({ data }) => {
   
   const pricePool = data?.pricingDetails?.pricePool;
+  
   const playersLimit = data?.bracketsMetadata?.playersLimit || 2;
   const rows =
     playersLimit > 2
@@ -36,19 +37,19 @@ const Prizes: React.FC<PrizesProps> = ({ data }) => {
           CreateData(
             "Place 1:",
             `${
-              pricePool ? pricePool * 0.6 * credit_config.price_per_credit : 0
+              pricePool ? pricePool * 0.6 * credit_config.price_per_credit : 600
             }`
           ),
           CreateData(
             "Place 2:",
             `${
-              pricePool ? pricePool * 0.3 * credit_config.price_per_credit : 0
+              pricePool ? pricePool * 0.3 * credit_config.price_per_credit : 300
             }`
           ),
           CreateData(
             "Place 3:",
             `${
-              pricePool ? pricePool * 0.1 * credit_config.price_per_credit : 0
+              pricePool ? pricePool * 0.1 * credit_config.price_per_credit : 100
             }`
           ),
         ]
@@ -56,13 +57,13 @@ const Prizes: React.FC<PrizesProps> = ({ data }) => {
           CreateData(
             "Place 1:",
             `${
-              pricePool ? pricePool * 0.65 * credit_config.price_per_credit : 0
+              pricePool ? pricePool * 0.65 * credit_config.price_per_credit : 700
             }`
           ),
           CreateData(
             "Place 2:",
             `${
-              pricePool ? pricePool * 0.35 * credit_config.price_per_credit : 0
+              pricePool ? pricePool * 0.35 * credit_config.price_per_credit : 300
             }`
           ),
         ];
