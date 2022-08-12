@@ -193,7 +193,7 @@ const TeamCard: React.FC<TeamCardProp> = ({
           padding: 20,
           marginBottom: 20,
           backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 0.8)), url(${
-            teamCover || "/images/team-background.svg"
+            teamCover || null
           } )`,
           backgroundRepeat: "no-repeat",
           backgroundClip: "border-box",
