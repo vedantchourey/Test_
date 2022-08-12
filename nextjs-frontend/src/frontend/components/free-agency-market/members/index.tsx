@@ -74,7 +74,7 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
     });
   };
 
-  const OfferModal = (): JSX.Element => {
+  
     const filtedTeamList =
       isModalOpen && selectedPlayer
         ? team.filter(
@@ -93,9 +93,91 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
             .getPublicUrl(selectedTeamData.teamLogo).publicURL
         : null
       : null;    
+     
+    
+  
 
-    return (
-      <Modal
+  const addToWatchList = async (playerId: string, gameId: string): Promise<void> => {
+    setLoading(true);
+    const data = {
+      playerId,
+      gameId
+    };
+    const headers = await getAuthHeader();
+    axios
+      .post("/api/free-agency-market/add-to-watchlist", data, {
+        headers: headers,
+      })
+      .catch(() => {
+        alert("Player already added in Watch list");
+      })
+      .finally(() => setLoading(false));
+  };
+
+  const sendInvitation = async (playerId: string): Promise<void> => {
+    setLoading(true);
+    const data = {
+      player_id: playerId,
+      team_id: selectedTeam,
+      message
+    };
+    const headers = await getAuthHeader();
+    axios
+      .post("/api/teams/send-invite", data, {
+        headers: headers,
+      })
+      .then(() => {
+        alert("Player invited");
+        setIsModalOpen(false);
+        setSelectedTeam("");
+        setSelectedPlayer(undefined);
+      })
+      .catch(() => {
+        alert("Player already invited or already in the team");
+      })
+      .finally(() => setLoading(false));
+  };
+
+  const fetchTeam = async (): Promise<void> => {
+      const headers = await getAuthHeader();
+      setLoading(true);
+      axios
+        .get("/api/teams", { headers: headers })
+        .then((res) => {
+          if (res.data.result && res.data.result.length > 0) {
+            setTeam(res.data.result);
+          }
+          setLoading(false);
+        })
+        .catch((err) => {
+          setLoading(false);
+          console.error(err);
+        });
+    }
+
+  console.warn(sendInvitation);
+
+  useEffect(() => {
+    fetchUsers();
+    fetchTeam();
+  }, [params]);
+
+  const filterData = data.filter((p) => {
+    if (params.level === "all") return p.elo;
+    if (params.level === "bronze") return parseInt(p.elo || "0") < 1000;
+    if (params.level === "silver")
+      return parseInt(p.elo || "0") >= 1000 && parseInt(p.elo || "0") < 1250;
+    if (params.level === "gold")
+      return parseInt(p.elo || "0") >= 1250 && parseInt(p.elo || "0") < 1500;
+    if (params.level === "diamond")
+      return parseInt(p.elo || "0") >= 1500 && parseInt(p.elo || "0") < 2000;
+    if (params.level === "ruby") return parseInt(p.elo || "0") >= 2000;
+    return p.elo;
+  });
+
+  return (
+    <React.Fragment>
+       <Modal
         open={isModalOpen}
         onClose={(): void => {
           setIsModalOpen(false);
@@ -243,90 +325,6 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
           )}
         </Card>
       </Modal>
-    );
-  };
-
-  const addToWatchList = async (playerId: string, gameId: string): Promise<void> => {
-    setLoading(true);
-    const data = {
-      playerId,
-      gameId
-    };
-    const headers = await getAuthHeader();
-    axios
-      .post("/api/free-agency-market/add-to-watchlist", data, {
-        headers: headers,
-      })
-      .catch(() => {
-        alert("Player already added in Watch list");
-      })
-      .finally(() => setLoading(false));
-  };
-
-  const sendInvitation = async (playerId: string): Promise<void> => {
-    setLoading(true);
-    const data = {
-      player_id: playerId,
-      team_id: selectedTeam,
-      message
-    };
-    const headers = await getAuthHeader();
-    axios
-      .post("/api/teams/send-invite", data, {
-        headers: headers,
-      })
-      .then(() => {
-        alert("Player invited");
-        setIsModalOpen(false);
-        setSelectedTeam("");
-        setSelectedPlayer(undefined);
-      })
-      .catch(() => {
-        alert("Player already invited or already in the team");
-      })
-      .finally(() => setLoading(false));
-  };
-
-  const fetchTeam = async (): Promise<void> => {
-      const headers = await getAuthHeader();
-      setLoading(true);
-      axios
-        .get("/api/teams", { headers: headers })
-        .then((res) => {
-          if (res.data.result && res.data.result.length > 0) {
-            setTeam(res.data.result);
-          }
-          setLoading(false);
-        })
-        .catch((err) => {
-          setLoading(false);
-          console.error(err);
-        });
-    }
-
-  console.warn(sendInvitation);
-
-  useEffect(() => {
-    fetchUsers();
-    fetchTeam();
-  }, [params]);
-
-  const filterData = data.filter((p) => {
-    if (params.level === "all") return p.elo;
-    if (params.level === "bronze") return parseInt(p.elo || "0") < 1000;
-    if (params.level === "silver")
-      return parseInt(p.elo || "0") >= 1000 && parseInt(p.elo || "0") < 1250;
-    if (params.level === "gold")
-      return parseInt(p.elo || "0") >= 1250 && parseInt(p.elo || "0") < 1500;
-    if (params.level === "diamond")
-      return parseInt(p.elo || "0") >= 1500 && parseInt(p.elo || "0") < 2000;
-    if (params.level === "ruby") return parseInt(p.elo || "0") >= 2000;
-    return p.elo;
-  });
-
-  return (
-    <React.Fragment>
-      <OfferModal/>
       <Box>
         <Box marginY={2} width={"70vw"}>
           <Slider {...settings}>

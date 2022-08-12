@@ -154,27 +154,27 @@ const WatchTeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
     fetchTeam();
   }, []);
 
-  const OfferModal = (): JSX.Element => {
-    const filtedTeamList =
-      isModalOpen && selectedPlayer
-        ? team.filter(
-            (i) =>
-              i.gameId === selectedPlayer.gameId &&
-              i.platformId === selectedPlayer.platformId
-          )
-        : team;
+  const filtedTeamList =
+    isModalOpen && selectedPlayer
+      ? team.filter(
+          (i) =>
+            i.gameId === selectedPlayer.gameId &&
+            i.platformId === selectedPlayer.platformId
+        )
+      : team;
 
-    const selectedTeamData: any = team.filter((i) => i.id === selectedTeam);
+  const selectedTeamData: any = team.filter((i) => i.id === selectedTeam);
 
-    const teamLogo = selectedTeamData
-      ? selectedTeamData.teamLogo
-        ? frontendSupabase.storage
-            .from("public-files")
-            .getPublicUrl(selectedTeamData.teamLogo).publicURL
-        : null
-      : null;
+  const teamLogo = selectedTeamData
+    ? selectedTeamData.teamLogo
+      ? frontendSupabase.storage
+          .from("public-files")
+          .getPublicUrl(selectedTeamData.teamLogo).publicURL
+      : null
+    : null;
 
-    return (
+  return (
+    <React.Fragment>
       <Modal
         open={isModalOpen}
         onClose={(): void => {
@@ -321,12 +321,6 @@ const WatchTeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
           )}
         </Card>
       </Modal>
-    );
-  };
-
-  return (
-    <React.Fragment>
-      <OfferModal />
       <Box>
         <Box marginY={2}>
           {!data.length && !loading && (

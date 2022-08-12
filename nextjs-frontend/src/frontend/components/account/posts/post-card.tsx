@@ -250,7 +250,12 @@ const PostCard = (props: IProps): JSX.Element => {
                   justifyContent: "space-between",
                 }}
               >
-                <Box sx={{ display: "flex", cursor: "pointer" }} onClick={(): any => router.push(`/account/${values.postOwner.username}`)}>
+                <Box
+                  sx={{ display: "flex", cursor: "pointer" }}
+                  onClick={(): any =>
+                    router.push(`/account/${values.postOwner.username}`)
+                  }
+                >
                   <Image
                     bucket={config.storage.publicBucket}
                     filePath={avatarUrl || ""}
@@ -366,11 +371,24 @@ const PostCard = (props: IProps): JSX.Element => {
                     <a href={part} target="_blank" rel="noreferrer">
                       {part}{" "}
                     </a>
+                  ) : part.match("@") ? (
+                    <span
+                      onClick={(): void => {
+                        router.push(`/account/${part.substring(1)}`);
+                      }}
+                      style={{
+                        color: "#6932F9",
+                        marginLeft: "2px",
+                        marginRight: "2px",
+                        cursor: "pointer"
+                      }}
+                    >
+                      {part}{' '}
+                    </span>
                   ) : (
-                    part.match('@')?
-                    (<span onClick={():void=>{router.push(`account/${part.substring(1)}`)}} style={{color:'#6932F9', marginLeft:'2px', marginRight:'2px'}}>{part}</span>):
-                    (part + " ")
-                  ))}
+                    part + " "
+                  )
+                )}
               </Typography>
               {values.postContent.length > 250 ? (
                 <Button

@@ -338,7 +338,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
     // eslint-disable-next-line no-else-return
     else {
       return (
-        <Box mt={5}>
+        <Box mt={3} pb={4}>
           <Typography variant={"subtitle1"} color={"white"} textAlign="center">
             No comments
           </Typography>
