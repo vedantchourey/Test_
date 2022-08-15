@@ -387,8 +387,7 @@ const PostCard = (props: IProps): JSX.Element => {
                     </span>
                   ) : (
                     part + " "
-                  )
-                )}
+                  ))}
               </Typography>
               {values.postContent.length > 250 ? (
                 <Button

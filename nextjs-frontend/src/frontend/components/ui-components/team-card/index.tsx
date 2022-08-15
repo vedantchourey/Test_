@@ -1,14 +1,26 @@
 import React, { useEffect } from "react";
-import { Avatar, Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Grid,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import NoobFilePicker from "../../utils/noob-file-picker";
 import { allowedImageExtensions } from "../../../../models/constants";
 import { v4 } from "uuid";
 import { uploadImage } from "../../../service-clients/image-service-client";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
-import IconButton from '@mui/material/IconButton';
-import EditIcon from '@mui/icons-material/Edit';
+import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
+import GroupIcon from "@mui/icons-material/Group";
 
-const CardDesktop: React.FC<TeamCardProp> = ({name ="-", onChangeTeamLogo, team}) => {
+const CardDesktop: React.FC<TeamCardProp> = ({
+  name = "-",
+  onChangeTeamLogo,
+  team,
+}) => {
   const teamLogo = team?.teamLogo
     ? frontendSupabase.storage.from("public-files").getPublicUrl(team.teamLogo)
         .publicURL
@@ -16,19 +28,49 @@ const CardDesktop: React.FC<TeamCardProp> = ({name ="-", onChangeTeamLogo, team}
   return (
     <Grid container columnSpacing={2}>
       <Grid item md={3} lg={2}>
-        <Avatar
-          src={teamLogo || "/icons/Rectangle.svg"}
-          sx={{ width: 150, height: 150, marginBottom: 2 }}
-        />
-        <IconButton
-          sx={{ position: "absolute", backgroundColor: "#6932F9", mt: -7, ml: 2 }}
-          onClick={(): any => onChangeTeamLogo()}
-        >
-          <EditIcon />
-        </IconButton>
+        {teamLogo ? (
+          <Avatar
+            src={teamLogo || "/icons/Rectangle.svg"}
+            sx={{ width: 150, height: 150, marginBottom: 2 }}
+          />
+        ) : (
+          <GroupIcon
+            sx={{ width: 150, height: 150, marginBottom: 2, borderRadius: 75 }}
+          />
+        )}
+        {teamLogo ? (
+          <IconButton
+            sx={{
+              position: "absolute",
+              backgroundColor: "#6932F9",
+              mt: -7,
+              ml: 2,
+            }}
+            onClick={(): any => onChangeTeamLogo()}
+          >
+            <EditIcon />
+          </IconButton>
+        ) : (
+          <IconButton
+            sx={{
+              position: "absolute",
+              backgroundColor: "#6932F9",
+              mt: 13,
+              ml: -17,
+            }}
+            onClick={(): any => onChangeTeamLogo()}
+          >
+            <EditIcon />
+          </IconButton>
+        )}
       </Grid>
       <Grid item md={6} lg={10} display={"flex"} flexDirection={"column"}>
-        <Typography color={"white"} textAlign="left" component="h4" style={{fontSize:'25px',fontWeight:'bold'}}>
+        <Typography
+          color={"white"}
+          textAlign="left"
+          component="h4"
+          style={{ fontSize: "25px", fontWeight: "bold" }}
+        >
           {name}
         </Typography>
       </Grid>
@@ -36,7 +78,11 @@ const CardDesktop: React.FC<TeamCardProp> = ({name ="-", onChangeTeamLogo, team}
   );
 };
 
-const CardMobile: React.FC<TeamCardProp> = ({name ="-", onChangeTeamLogo, team}) => {
+const CardMobile: React.FC<TeamCardProp> = ({
+  name = "-",
+  onChangeTeamLogo,
+  team,
+}) => {
   const teamLogo = team?.teamLogo
     ? frontendSupabase.storage.from("public-files").getPublicUrl(team.teamLogo)
         .publicURL
@@ -45,10 +91,23 @@ const CardMobile: React.FC<TeamCardProp> = ({name ="-", onChangeTeamLogo, team})
     <Grid container>
       <Grid item xs={12} display={"flex"}>
         <Box width={"65px"} height={"65px"} position="relative">
-          <Avatar
-            src={teamLogo || "/icons/Rectangle.svg"}
-            sx={{ width: 85, height: 85, marginBottom: 2 }}
-          />
+          {teamLogo ? (
+            <Avatar
+              src={teamLogo || "/icons/Rectangle.svg"}
+              sx={{ width: 85, height: 85, marginBottom: 2 }}
+            />
+          ) : (
+            <GroupIcon
+              sx={{
+                width: 85,
+                height: 85,
+                marginBottom: 2,
+                borderRadius: 75,
+                color: "#FFF",
+                background: "rgba(0,0,0,0.5)",
+              }}
+            />
+          )}
           <Box position={"absolute"} mt={-7} ml={1}>
             <IconButton onClick={(): any => onChangeTeamLogo()} color="primary">
               <EditIcon />
@@ -56,7 +115,12 @@ const CardMobile: React.FC<TeamCardProp> = ({name ="-", onChangeTeamLogo, team})
           </Box>
         </Box>
         <Box marginLeft={2}>
-          <Typography color={"white"} textAlign="left" component="h4" style={{fontSize:'20px',fontWeight:'bold'}}>
+          <Typography
+            color={"white"}
+            textAlign="left"
+            component="h4"
+            style={{ fontSize: "20px", fontWeight: "bold" }}
+          >
             {" "}
             {name}{" "}
           </Typography>
@@ -86,37 +150,41 @@ const CardMobile: React.FC<TeamCardProp> = ({name ="-", onChangeTeamLogo, team})
   );
 };
 
-interface TeamCardProp{
-  name?:string
-  onChangeTeamLogo?: any
-  onChangeCover?: any
+interface TeamCardProp {
+  name?: string;
+  onChangeTeamLogo?: any;
+  onChangeCover?: any;
   team?: any;
   refresh?: any;
 }
 
-const TeamCard: React.FC<TeamCardProp> = ({ children, name, team, refresh }) => {
+const TeamCard: React.FC<TeamCardProp> = ({
+  children,
+  name,
+  team,
+  refresh,
+}) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const [teamLogoPicker, setTeamLogoPicker] = React.useState(false)
-  const [coverLogoPicker, setCoverLogoPicker] = React.useState(false)
+  const [teamLogoPicker, setTeamLogoPicker] = React.useState(false);
+  const [coverLogoPicker, setCoverLogoPicker] = React.useState(false);
 
   const teamCover = team?.teamCover
     ? frontendSupabase.storage.from("public-files").getPublicUrl(team.teamCover)
         .publicURL
     : undefined;
 
-    useEffect(() => {
-      if (teamLogoPicker) {
-        setTimeout(() => setTeamLogoPicker(false), 500);
-      }
-    }, [teamLogoPicker]);
+  useEffect(() => {
+    if (teamLogoPicker) {
+      setTimeout(() => setTeamLogoPicker(false), 500);
+    }
+  }, [teamLogoPicker]);
 
-    useEffect(() => {
-      if (coverLogoPicker) {
-        setTimeout(() => setCoverLogoPicker(false), 500);
-      }
-    }, [coverLogoPicker]);
-    
+  useEffect(() => {
+    if (coverLogoPicker) {
+      setTimeout(() => setCoverLogoPicker(false), 500);
+    }
+  }, [coverLogoPicker]);
 
   return (
     <Box sx={{ marginX: { md: "70px", sm: "10px", xs: "10px" } }}>
@@ -124,13 +192,15 @@ const TeamCard: React.FC<TeamCardProp> = ({ children, name, team, refresh }) => 
         style={{
           padding: 20,
           marginBottom: 20,
-          backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 0.8)), url(${teamCover || "/images/team-background.svg"} )`,
+          backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 0.8)), url(${
+            teamCover || null
+          } )`,
           backgroundRepeat: "no-repeat",
           backgroundClip: "border-box",
           backgroundOrigin: "border-box",
           borderRadius: 10,
           backgroundSize: "cover",
-          display: "flex"
+          display: "flex",
         }}
         // onClick={(): any => setCoverLogoPicker(true)}
       >
@@ -149,11 +219,14 @@ const TeamCard: React.FC<TeamCardProp> = ({ children, name, team, refresh }) => 
             team={team}
           />
         )}
-        <Box >
-            <IconButton onClick={(): any => setCoverLogoPicker(true)} color="primary">
-              <EditIcon />
-            </IconButton>
-          </Box>
+        <Box>
+          <IconButton
+            onClick={(): any => setCoverLogoPicker(true)}
+            color="primary"
+          >
+            <EditIcon />
+          </IconButton>
+        </Box>
       </div>
       <NoobFilePicker
         onFileSelected={async (file): Promise<any> => {
