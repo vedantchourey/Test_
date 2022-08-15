@@ -16,7 +16,8 @@ export async function createComment(req: ICreateCommentRequest, context: PerRequ
   const commentId = await repository.createComment({
     comment: req.comment,
     commentBy: context.user?.id as string,
-    postId: postUUID
+    postId: postUUID,
+    subComment: req.subComment,
   });
   const createdComment = await repository.getCommentByPostIdCommentId(commentId);
   const {createdAt, updatedAt, commentBy, comment, id, postId, username, firstName, lastName, avatarUrl } = createdComment as IPostCommentResponse;

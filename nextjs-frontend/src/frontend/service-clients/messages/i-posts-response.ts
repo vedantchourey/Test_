@@ -33,6 +33,7 @@ export interface IPostCommentResponse {
   }
   postId: string;
   createdAt: string;
+  subComment: string;
 }
 
 export interface IPostImageUploadResponse {

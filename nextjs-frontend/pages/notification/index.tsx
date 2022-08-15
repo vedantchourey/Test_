@@ -159,7 +159,7 @@ const Notification = (): JSX.Element => {
                                 onClick={(): void => {
                                   i.redirect
                                     ? router.push(i.redirect)
-                                    : router.push(`account/${i.username}`);
+                                    : router.push(`/account/${i.username}`);
                                 }}
                                 sx={{ mr: 1 }}
                               >

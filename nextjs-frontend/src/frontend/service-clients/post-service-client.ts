@@ -130,12 +130,15 @@ export const getPostLikesCount = async (postId: string): Promise<{ totalLikes: n
 }
 
 export const getPostCommentsCount = async (postId: string): Promise<{ totalComments: number | null }> => {
-  const result = await frontendSupabase.from('post_comments').select('*', { count: 'exact' })
-    .match({postId})
-    
-    if (result.error) throw result.error;
-    return { totalComments: result.count };
-  }
+  const result = await frontendSupabase
+    .from("post_comments")
+    .select("postId,subComment")
+    .eq("postId", postId);
+  if (result.error) throw result.error;
+  return {
+    totalComments: result.data.filter((i) => i.subComment === null).length,
+  };
+}
   
   export const getCommentLikesCount = async (Id: string): Promise<{ totalLikes: number | null }> => {
 
@@ -169,11 +172,11 @@ export const unlikePost = async (postId: string): Promise<NoobPostResponse<unkno
 }
 
 export const createComment = async (
-  payload: { postId: string; comment: string }
+  payload: { postId: string; comment: string; subComment?: string }
 ): Promise<NoobPostResponse<ICreateCommentRequest, IPostCommentResponse>> => {
   const endpoint = frontendConfig.noobStormServices.post.createCommentUrl(payload.postId);
   const header = await getAuthHeader();
-  const result = await post(endpoint, { comment: payload.comment }, header);
+  const result = await post(endpoint, { comment:  payload.comment, subComment: payload.subComment }, header);
   const body = await result.json();
   if (result.status === 200) return body.data;
   if (result.status === 400 && body.errors.apiError == null)
@@ -186,7 +189,8 @@ export const getPostComments = async (postId: string): Promise<IPostCommentRespo
     id,
     comment,
     commentOwner : profiles!fk_post_comments_profile_id(id, username, avatarUrl),
-    createdAt
+    createdAt,
+    subComment
   `)
     .match({ postId })
     .order('createdAt', { ascending: false });
