@@ -35,7 +35,6 @@ import { getAuthHeader } from "../../../utils/headers";
 import axios from "axios";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import ReplyIcon from "@mui/icons-material/Reply";
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 const style = {
   position: "absolute",
@@ -141,7 +140,10 @@ const CommentsModal = (props: IProps): JSX.Element => {
           message: `${user?.username} Replied to your comment.`,
         });
       }
-      getComments();
+      setComments((prevState: IPostCommentResponse[]) => [
+        result,
+        ...prevState,
+      ]);
     }
   }
 
@@ -390,9 +392,12 @@ const CommentsModal = (props: IProps): JSX.Element => {
             const [isEditing, setIsEditing] = useState<boolean>(false);
             const [commentLiked, setcommentLiked] = useState<boolean>(false);
             const [commentLikes, setcommentLikes] = useState<boolean>(false);
-            const [isReply, setIsReply] = useState<boolean>(false);
+            const [isReply, setIsReply] = useState<boolean>(true);
             const [reply, setReply] = useState<string>("");
-            const replyCount=comments.filter((i)=>i.subComment === data.id).length;
+            const [addReply, setAddReply] = useState<boolean>(false);
+            const replyCount = comments.filter(
+              (i) => i.subComment === data.id
+            ).length;
 
             const isCommentLiked = checkIsCommentLiked(payload);
             const commentLikesCount = getCommentLikesCount(data.id);
@@ -500,16 +505,12 @@ const CommentsModal = (props: IProps): JSX.Element => {
                               setIsReply(!isReply);
                             }}
                           >
-                            {!isReply ? (
-                              <Box display={"flex"}>
-                                <ReplyIcon style={{ color: "#575265" }} />
-                                <Typography style={{ color: "#575265" }}>
-                                  {"Reply " + replyCount}
-                                </Typography>
-                              </Box>
-                            ) : (
-                              <CloseRoundedIcon style={{ color: "#575265" }} />
-                            )}
+                            <Box display={"flex"}>
+                              <ReplyIcon style={{ color: "#575265" }} />
+                              <Typography style={{ color: "#575265" }}>
+                                {"Reply " + replyCount}
+                              </Typography>
+                            </Box>
                           </Box>
                         </Box>
                       ) : (
@@ -541,54 +542,65 @@ const CommentsModal = (props: IProps): JSX.Element => {
                     {isReply && (
                       <Box style={{ marginTop: "10px" }}>
                         {_renderReplys(data.id)}
-                        <Box className={styles.commentInput}>
-                          <Box
-                            sx={{
-                              display: "inline-flex",
-                              alignItems: "center",
+                        {!addReply ? (
+                          <Button
+                            onClick={(): void => {
+                              setAddReply(true);
                             }}
+                            variant="contained"
                           >
-                            <Avatar
-                              sx={{ mr: 2, width: 35, height: 35 }}
-                              alt="avatar"
-                              src={userAvatar}
-                            />
-                            <TextField
-                              placeholder={`Your reply`}
-                              fullWidth
-                              autoFocus
-                              variant="standard"
-                              value={reply}
+                            Add Reply
+                          </Button>
+                        ) : (
+                          <Box className={styles.commentInput}>
+                            <Box
                               sx={{
-                                "& .MuiInput-root": {
-                                  fontWeight: 300,
-                                },
-                              }}
-                              InputProps={{
-                                disableUnderline: true,
-                              }}
-                              onChange={(event): void => {
-                                setReply(event.target.value);
-                              }}
-                            />
-                          </Box>
-                          <Box>
-                            <Button
-                              size="small"
-                              variant={"contained"}
-                              style={{
-                                borderRadius: 99999,
-                                textTransform: "capitalize",
-                              }}
-                              onClick={(): void => {
-                                onClickReplyComment(reply, data.id);
-                                setReply("");
+                                display: "inline-flex",
+                                alignItems: "center",
                               }}
                             >
-                              Reply
-                            </Button>
+                              <Avatar
+                                sx={{ mr: 2, width: 35, height: 35 }}
+                                alt="avatar"
+                                src={userAvatar}
+                              />
+                              <TextField
+                                placeholder={`Your reply`}
+                                fullWidth
+                                autoFocus
+                                variant="standard"
+                                value={reply}
+                                sx={{
+                                  "& .MuiInput-root": {
+                                    fontWeight: 300,
+                                  },
+                                }}
+                                InputProps={{
+                                  disableUnderline: true,
+                                }}
+                                onChange={(event): void => {
+                                  setReply(event.target.value);
+                                }}
+                              />
+                            </Box>
+                            <Box>
+                              <Button
+                                size="small"
+                                variant={"contained"}
+                                style={{
+                                  borderRadius: 99999,
+                                  textTransform: "capitalize",
+                                }}
+                                onClick={(): void => {
+                                  onClickReplyComment(reply, data.id);
+                                  setReply("");
+                                }}
+                              >
+                                Reply
+                              </Button>
+                            </Box>
                           </Box>
-                        </Box>
+                        )}
                       </Box>
                     )}
                   </Box>
