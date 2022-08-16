@@ -18,5 +18,6 @@ export interface IPostCommentResponse {
   lastName: string,
   avatarUrl: string,
   createdAt: Date,
-  updatedAt: Date
+  updatedAt: Date,
+  subComment?: string
 }
