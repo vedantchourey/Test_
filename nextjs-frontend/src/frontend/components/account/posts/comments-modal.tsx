@@ -147,7 +147,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
     }
   }
 
-  const likeComment = async (id: any, user_id: any): Promise<void> => {
+  const likeComment = async (commentId: any, user_id: any): Promise<void> => {
     try {
       const endpoint = "/api/comment-like/likenews";
       const headers = await getAuthHeader();
@@ -155,7 +155,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
         .post(
           endpoint,
           {
-            commentId: id,
+            commentId,
           },
           {
             headers: headers,
