@@ -26,6 +26,7 @@ export interface RoundStatusData {
   type: string;
   round: number;
   brackets?: any;
+  name?: string;
   isFinished: boolean;
   startDate?: string;
   startTime?: string;

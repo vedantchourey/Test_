@@ -22,11 +22,13 @@ import NoobToggleButtonGroup, {
 import CardLayout from "../../../ui-components/card-layout";
 import NoobReachTextEditor from "../../../ui-components/rte";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const Duel = require("tournament/duel");
+import { helpers } from "brackets-manager";
+
 interface RoundData {
   round: string;
   description: string;
   map: string[];
+  name?: string;
   isMap?: boolean;
   startTime?: string;
 }
@@ -117,23 +119,52 @@ const EliminateBracket = React.forwardRef<
 
   React.useEffect(() => {
     const rounds: any[] = [];
+
     if (formik.values.playersLimit && formik.values.playersLimit > 0) {
-      const brackets = new Duel(
-        Number(formik.values.playersLimit),
-        formik.values.type === "SINGLE" ? 1 : 2
+      const lcount = helpers.getLowerBracketRoundCount(
+        formik.values.playersLimit
       );
-      brackets.matches = brackets.matches.map((element: any) => {
-        rounds.push(element);
-        return element;
-      });
+      const ucount = helpers.getUpperBracketRoundCount(
+        formik.values.playersLimit
+      );
+
+      for (let i = 0; i < ucount; i++) {
+        const isFinal = i === ucount - 1;
+        rounds.push({
+          name:
+            formik.values.type === "SINGLE"
+              ? isFinal
+                ? "Final Round"
+                : `Round ${i + 1}`
+              : isFinal
+              ? "UB Final Round"
+              : `UB Round ${i + 1}`,
+        });
+      }
+
+      if (formik.values.type !== "SINGLE") {
+        for (let i = 0; i < lcount; i++) {
+          const isFinal = i === lcount - 1;
+          rounds.push({
+            name: isFinal ? "LB Final Round" : `LB Round ${i + 1}`,
+          });
+        }
+
+        rounds.push({
+          name: `GF Round`,
+        });
+      }
     }
 
-    if (!rounds?.length) rounds.push(1);
-    setRounds(rounds);
+    if (!rounds?.length) rounds.push({ name: "Round 1" });
+
     formik.values.rounds = formik.values.rounds.slice(0, rounds.length);
+
+    setRounds(rounds);
     rounds.forEach((x, i) => {
       formik.values.rounds[i] = {
         round: `${i + 1}`,
+        name: x.name,
         description: formik.values.rounds[i]?.description || "",
         isMap: formik.values.rounds[i]?.isMap || false,
         map: formik.values.rounds[i]?.map || "",
@@ -325,7 +356,9 @@ const EliminateBracket = React.forwardRef<
                   return (
                     <React.Fragment key={index}>
                       <Grid item sm={12}>
-                        <FormHelperText> Round {index + 1} </FormHelperText>
+                        <FormHelperText>
+                          {formik.values?.rounds[index]?.name}
+                        </FormHelperText>
                       </Grid>
                       <Grid item sm={12}>
                         <NoobReachTextEditor
@@ -366,7 +399,7 @@ const EliminateBracket = React.forwardRef<
                         ) : null}
                       </Grid>
                       {index !== 0 && (
-                        <Grid item sm={4}>
+                        <Grid item sm={4} mt={1}>
                           <FormControl variant="standard">
                             <TimePicker
                               label="Start Time"

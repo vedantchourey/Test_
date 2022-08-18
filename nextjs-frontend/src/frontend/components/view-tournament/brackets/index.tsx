@@ -12,6 +12,7 @@ const RoundStatus: React.FC<RoundStatusData> = ({
   type,
   startDate,
   startTime,
+  name
 }) => {
   const styles = useRoundStatusStyles();
   const getRoundStatus = (): string => {
@@ -23,7 +24,7 @@ const RoundStatus: React.FC<RoundStatusData> = ({
   return (
     <Box minWidth={325}>
       <Box className={styles.statusContainer}>
-        <Typography color={"white"}>Round {round}</Typography>
+        <Typography color={"white"}> {name || `Round ${round}`}</Typography>
         <Box className={styles.status}>
           <Typography
             color={"white"}
@@ -54,6 +55,7 @@ const Bracket: React.FC<BracketProps> = ({
   brackets,
   players,
 }) => {
+  
   const [bData, setBData] = useState<any>(null);
   const renderStatus = (): JSX.Element[] => {
     return rounds.map((round) => {

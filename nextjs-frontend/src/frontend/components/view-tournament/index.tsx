@@ -391,6 +391,7 @@ const ViewTournament: React.FC = () => {
           : "No Map provieded",
         isFinished: timing.date.isBefore(now),
         round: index + 1,
+        name: round.name,
         startDate: timing.startDate,
         startTime: timing.startTime,
       } as RoundStatusData;
