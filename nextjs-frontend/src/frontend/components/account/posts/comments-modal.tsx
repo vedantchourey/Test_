@@ -21,8 +21,6 @@ import {
 import {
   createComment,
   getPostComments,
-  getCommentLikesCount,
-  checkIsCommentLiked,
   deleteComment,
   updateComment,
 } from "../../../service-clients/post-service-client";
@@ -85,7 +83,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
   }, [props.isModalOpen]);
 
   const getComments = async (): Promise<void> => {
-    const data = await getPostComments(props.postId);
+    const data = await getPostComments(props.postId, user?.id || "");
     setComments(data);
     setIsFetchingComments(false);
   };
@@ -212,25 +210,10 @@ const CommentsModal = (props: IProps): JSX.Element => {
       .filter((i) => i.subComment === commentId)
       .map((data, i) => {
         const Comment = (): JSX.Element => {
-          const payload = {
-            userId: user?.id,
-            commentId: data.id,
-          };
+          
           const [isDeleted, setIsDeleted] = useState<boolean>(false);
           const [commentValues, setCommentValues] = useState(data);
           const [isEditing, setIsEditing] = useState<boolean>(false);
-          const [commentLiked, setcommentLiked] = useState<boolean>(false);
-          const [commentLikes, setcommentLikes] = useState<boolean>(false);
-
-          const isCommentLiked = checkIsCommentLiked(payload);
-          const commentLikesCount = getCommentLikesCount(data.id);
-
-          Promise.resolve(commentLikesCount).then((data: any) => {
-            setcommentLikes(data.totalLikes);
-          });
-          Promise.resolve(isCommentLiked).then((data: any) => {
-            setcommentLiked(data.isLiked);
-          });
 
           const removeComment = (): void => {
             setIsDeleted(true);
@@ -277,13 +260,13 @@ const CommentsModal = (props: IProps): JSX.Element => {
                       </Typography>
                       <img
                         src={
-                          commentLiked
+                          data.isLiked
                             ? "/icons/heart-filled.svg"
                             : "/icons/heart.svg"
                         }
                         alt="icon"
                         onClick={(): any => {
-                          if (commentLiked) {
+                          if (data.isLiked) {
                             unLikeComment(data.id);
                           } else {
                             likeComment(data.id, data.commentOwner.id);
@@ -292,7 +275,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
                         style={{ paddingLeft: "12px" }}
                       />
                       <Typography variant="subtitle2" color="#575265" ml={1}>
-                        {commentLikes}
+                        {data.totalLikes}
                       </Typography>
                     </Box>
                     {user?.id === data.commentOwner.id && (
@@ -383,15 +366,10 @@ const CommentsModal = (props: IProps): JSX.Element => {
         .filter((i) => i.subComment === null)
         .map((data, i) => {
           const Comment = (): JSX.Element => {
-            const payload = {
-              userId: user?.id,
-              commentId: data.id,
-            };
+            
             const [isDeleted, setIsDeleted] = useState<boolean>(false);
             const [commentValues, setCommentValues] = useState(data);
             const [isEditing, setIsEditing] = useState<boolean>(false);
-            const [commentLiked, setcommentLiked] = useState<boolean>(false);
-            const [commentLikes, setcommentLikes] = useState<boolean>(false);
             const [isReply, setIsReply] = useState<boolean>(true);
             const [reply, setReply] = useState<string>("");
             const [addReply, setAddReply] = useState<boolean>(false);
@@ -399,15 +377,6 @@ const CommentsModal = (props: IProps): JSX.Element => {
               (i) => i.subComment === data.id
             ).length;
 
-            const isCommentLiked = checkIsCommentLiked(payload);
-            const commentLikesCount = getCommentLikesCount(data.id);
-
-            Promise.resolve(commentLikesCount).then((data: any) => {
-              setcommentLikes(data.totalLikes);
-            });
-            Promise.resolve(isCommentLiked).then((data: any) => {
-              setcommentLiked(data.isLiked);
-            });
 
             const removeComment = (): void => {
               setIsDeleted(true);
@@ -450,13 +419,13 @@ const CommentsModal = (props: IProps): JSX.Element => {
                         </Typography>
                         <img
                           src={
-                            commentLiked
+                            data.isLiked
                               ? "/icons/heart-filled.svg"
                               : "/icons/heart.svg"
                           }
                           alt="icon"
                           onClick={(): any => {
-                            if (commentLiked) {
+                            if (data.isLiked) {
                               unLikeComment(data.id);
                             } else {
                               likeComment(data.id, data.commentOwner.id);
@@ -465,7 +434,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
                           style={{ paddingLeft: "12px" }}
                         />
                         <Typography variant="subtitle2" color="#575265" ml={1}>
-                          {commentLikes}
+                          {data.totalLikes}
                         </Typography>
                       </Box>
                       {user?.id === data.commentOwner.id && (

@@ -73,11 +73,8 @@ export default function NewsView(): JSX.Element {
   const getnewsdata = async (): Promise<void> => {
     try {
       const endpoint = `/api/news/newsDetail?newsId=${newsID}`;
-      const headers = await getAuthHeader();
       axios
-        .get(endpoint, {
-          headers: headers,
-        })
+        .get(endpoint)
         .then((res) => {
           if (res.status === 200) {
             setCurrentNews(res.data.data);
@@ -91,12 +88,11 @@ export default function NewsView(): JSX.Element {
     }
   };
 
-  const getnewslist = async (gameId: string): Promise<void> => {
+  const getnewslist = async (): Promise<void> => {
     try {
       const endpoint = "/api/news/newslist";
-      const headers = await getAuthHeader();
       axios
-        .get(endpoint, { params: { game_id: gameId }, headers: headers })
+        .get(endpoint)
         .then((res) => {
           setTopNews(res.data);
         })

@@ -184,7 +184,7 @@ export const createComment = async (
   throw body;
 }
 
-export const getPostComments = async (postId: string): Promise<IPostCommentResponse[]> => {
+export const getPostComments = async (postId: string, userId: string): Promise<IPostCommentResponse[]> => {
   const result = await frontendSupabase.from('post_comments').select(`
     id,
     comment,
@@ -194,8 +194,15 @@ export const getPostComments = async (postId: string): Promise<IPostCommentRespo
   `)
     .match({ postId })
     .order('createdAt', { ascending: false });
+
+
   if (result.error) throw result.error;
-  return result.data;
+  const data: IPostCommentResponse[] = await Promise.all(result.data.map(async (c) => {
+     const isCommentLiked = await checkIsCommentLiked({commentId:c.id, userId: userId });
+     const commentLikesCount = await getCommentLikesCount(c.id);
+     return {...c, isLiked: isCommentLiked.isLiked, totalLikes: commentLikesCount.totalLikes}
+  }));
+  return data;
 }
 
 export const deleteComment = async (postId: string, commentId: string): Promise<NoobPostResponse<unknown, IDeleteCommentResponse>> => {

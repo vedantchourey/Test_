@@ -34,6 +34,8 @@ export interface IPostCommentResponse {
   postId: string;
   createdAt: string;
   subComment: string;
+  isLiked: boolean;
+  totalLikes: number;
 }
 
 export interface IPostImageUploadResponse {
