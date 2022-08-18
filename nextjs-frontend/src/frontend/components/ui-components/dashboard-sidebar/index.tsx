@@ -179,6 +179,9 @@ const DashboardSideBar: React.FC = () => {
             fullWidth
             classes={{ root: classes.button }}
             startIcon={<LogIcon />}
+            onClick={(): Promise<boolean> =>
+              router.push("/withdraw-requests", undefined, { shallow: true })
+            }
           >
             Refunds log
           </Button>
