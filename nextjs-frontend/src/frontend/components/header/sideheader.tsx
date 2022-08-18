@@ -35,13 +35,14 @@ import styles from "./logged-in-user-menu.module.css";
 import frontendConfig from "../../utils/config/front-end-config";
 import { getUserProfileImage } from "../../service-clients/image-service-client";
 import { INotifications } from "../../../backend/services/database/models/i-notifications";
+import { frontendSupabase } from "../../services/supabase-frontend-service";
 
 export default function SideHeader(): JSX.Element {
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const username = useAppSelector(userNameSelector);
   const wallet = useAppSelector(walletDetaislSelector);
   const router = useRouter();
-  const [notifications, setNotifications] = React.useState<any>([]);
+  const [notifications, setNotifications] = React.useState<any[]>([]);
   const [notificationLength,setNotificationLength]=React.useState<number>(0);
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
@@ -122,6 +123,12 @@ export default function SideHeader(): JSX.Element {
   React.useEffect(() => {
     if (isLoggedIn) {
       fetchNotifications();
+      frontendSupabase
+        .from("notifications")
+        .on("*", () => async () => {
+          fetchNotifications();
+        })
+        .subscribe();
     } else {
       setNotifications([]);
     }

@@ -19,7 +19,8 @@ export const getAllRepost = async (
     .join("profiles", "profiles.id", "reported_post.reported_by")
     // .join("posts", "posts.id", "reported_post.post_id")
     // .join("profiles", "profiles.id", "reported_post.postedBy")
-    .select("*");
+    .select("*")
+.select("reported_post.id as id");
 
   return result;
 };

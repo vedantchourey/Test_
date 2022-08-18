@@ -158,7 +158,7 @@ export default function NewsView(): JSX.Element {
     if (newsID) {
       fetchUsers();
       getnewsdata();
-      getnewslist("ce718f19-ad37-4e56-a958-216da59e9257");
+      getnewslist();
       setCurrentUrl(window.location.href);
     }
   }, [newsID]);
