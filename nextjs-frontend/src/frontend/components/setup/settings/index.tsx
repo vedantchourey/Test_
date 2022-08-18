@@ -173,7 +173,7 @@ const Settings: React.FC<SettingProps> = ({
           <Grid item xs={6}></Grid>
           <Grid item xs={6}>
             <FormControl fullWidth>
-              <FormLabel label="Check-in"></FormLabel>
+              <FormLabel label="Credit / Free"></FormLabel>
               <NoobToggleButtonGroup
                 exclusive
                 value={formik.values.entryType}

@@ -102,7 +102,8 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
   //   );
 
   const handleChange = (event: SyntheticEvent, newValue: string): void => {
-    setTabValue(newValue);
+    setTabValue(null);
+    setTimeout(() => setTabValue(newValue), 500);
   };
 
   const createNewChat = async (isSupportChat?: boolean): Promise<any> => {
