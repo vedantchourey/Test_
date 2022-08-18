@@ -26,8 +26,9 @@ import { IEloRatingHistory } from "../database/models/i-elo-rating-history";
 import { sendEmail } from "../email-service";
 import { SendMailOptions } from "nodemailer";
 import frontendConfig from "../../../frontend/utils/config/front-end-config";
+import { IEloRating } from "../database/models/i-elo-rating";
 
-const fetchEloRating = async (
+const fetchEloRatingOfTeam = async (
   connection: Knex.Transaction,
   data: any
 ): Promise<any> => {
@@ -175,7 +176,7 @@ export const fetchTeams = async (
       .value();
 
     const resultWithElo: any[] = await Promise.all(
-      result.map((i) => fetchEloRating(connection, i))
+      result.map((i) => fetchEloRatingOfTeam(connection, i))
     );
 
     return { result: resultWithElo };
@@ -487,6 +488,51 @@ const findUserWithInvitationDeatils = async (
     };
 };
 
+const findGameIdWithInvitationDeatils = async (
+    teamId: string,
+    details: any,
+    connection: Knex.Transaction
+): Promise<any> => {
+    const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
+    const teamDetails = await teams.findById(teamId);
+    
+    return {
+        team: teamDetails,
+        ...details,
+    };
+};
+
+const fetchEloRatingOfUser = async (
+  connection: Knex.Transaction,
+  data: any,
+  user_id: string,
+  game_id: string,
+): Promise<any> => {
+  const eloRatingRepo = new CrudRepository<IEloRating>(
+    connection,
+    TABLE_NAMES.ELO_RATING
+  );
+  const eloRatingHistoryRepo = new CrudRepository<IEloRating>(
+    connection,
+    TABLE_NAMES.ELO_RATING_HISTORY
+  );
+  const history = await eloRatingHistoryRepo
+    .knexObj()
+    .where("user_id", user_id)
+    .where("game_id", game_id);
+
+  const result: any = await eloRatingRepo
+    .knexObj()
+    .where("user_id", user_id)
+    .where("game_id", game_id);
+  return {
+    ...data,
+    lost: (history || []).filter((i: any) => parseInt(i.elo_rating) < 0).length,
+    won: (history || []).filter((i: any) => parseInt(i.elo_rating) > 0).length,
+    elo_rating: result[0].elo_rating,
+  };
+};
+
 export const getListOfSendInvitations = async (
     connection: Knex.Transaction,
     user: any
@@ -495,15 +541,22 @@ export const getListOfSendInvitations = async (
         const user_id = user.id;
         const team_invitation = new CrudRepository<ITeamInvitation>(connection, TABLE_NAMES.TEAM_INVITATION);
 
-        const sent_invitations: any[] = await team_invitation.knexObj()
-            .join("profiles", "profiles.id", "teams_invitation.user_id")
-            .where("invite_by", user_id)
-            .where("status", "PENDING");
+        const sent_invitations: any[] = await team_invitation
+          .knexObj()
+          .join("profiles", "profiles.id", "teams_invitation.user_id")
+          .where("invite_by", user_id)
+          .where("status", "PENDING")
+          .select("*")
+          .select("teams_invitation.id as id");
 
-        const batch = sent_invitations.map((item: any) => findUserWithInvitationDeatils(item.user_id, item, connection));
+        const batch = await Promise.all(sent_invitations.map((item: any) => findUserWithInvitationDeatils(item.user_id, item, connection)));
+        const gameIdBatch = await Promise.all(batch.map((item: any) =>
+          findGameIdWithInvitationDeatils(item.team_id, item, connection)));
+        const withElo = await Promise.all(gameIdBatch.map((item: any) =>
+        fetchEloRatingOfUser(connection, item ,item.user_id, item.team.game_id)));
 
-        const result = await Promise.all(batch);
-        return { result };
+        // const result = await Promise.all(gameIdBatch);
+        return { result: withElo };
     } catch (ex) {
         return getErrorObject("Something went wrong");
     }
