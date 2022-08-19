@@ -23,12 +23,11 @@ export default function News(): JSX.Element {
   const [liked, setLiked] = useState<any>(false);
   const router = useRouter();
 
-  const getleaderboardgamedata = async (gameId: string): Promise<void> => {
+  const getNewsData = async (): Promise<void> => {
     try {
       const endpoint = "/api/news/newslist";
-      const headers = await getAuthHeader();
       axios
-        .get(endpoint, { params: { game_id: gameId }, headers: headers })
+        .get(endpoint)
         .then((res) => {
           setData(res.data);
         })
@@ -91,7 +90,7 @@ export default function News(): JSX.Element {
   };
 
   React.useEffect(() => {
-    getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257");
+    getNewsData();
   }, []);
 
   return (
