@@ -568,6 +568,7 @@ const PostCard = (props: IProps): JSX.Element => {
           handleClose={handleCloseComments}
           postId={values.id}
           postOwnerId={values.postOwner.id}
+          onAddNewComment={(): any => fetchPostData()}
         />
       </Grid>
       <Snackbar

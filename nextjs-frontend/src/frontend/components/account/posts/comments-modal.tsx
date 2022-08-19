@@ -56,6 +56,7 @@ interface IProps {
   handleClose: () => void;
   postId: string;
   postOwnerId: any;
+  onAddNewComment: () => void;
 }
 
 const CommentsModal = (props: IProps): JSX.Element => {
@@ -112,6 +113,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
         });
       }
       getComments();
+      props.onAddNewComment();
     }
     setComment("");
   }
