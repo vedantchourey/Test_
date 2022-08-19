@@ -20,6 +20,7 @@ const CardDesktop: React.FC<TeamCardProp> = ({
   name = "-",
   onChangeTeamLogo,
   team,
+  hasAccess,
 }) => {
   const teamLogo = team?.teamLogo
     ? frontendSupabase.storage.from("public-files").getPublicUrl(team.teamLogo)
@@ -38,25 +39,14 @@ const CardDesktop: React.FC<TeamCardProp> = ({
             sx={{ width: 150, height: 150, marginBottom: 2, borderRadius: 75 }}
           />
         )}
-        {teamLogo ? (
+
+        {hasAccess && (
           <IconButton
             sx={{
               position: "absolute",
               backgroundColor: "#6932F9",
               mt: -7,
               ml: 2,
-            }}
-            onClick={(): any => onChangeTeamLogo()}
-          >
-            <EditIcon />
-          </IconButton>
-        ) : (
-          <IconButton
-            sx={{
-              position: "absolute",
-              backgroundColor: "#6932F9",
-              mt: 13,
-              ml: -17,
             }}
             onClick={(): any => onChangeTeamLogo()}
           >
@@ -156,6 +146,7 @@ interface TeamCardProp {
   onChangeCover?: any;
   team?: any;
   refresh?: any;
+  hasAccess: boolean;
 }
 
 const TeamCard: React.FC<TeamCardProp> = ({
@@ -163,6 +154,7 @@ const TeamCard: React.FC<TeamCardProp> = ({
   name,
   team,
   refresh,
+  hasAccess,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -210,6 +202,7 @@ const TeamCard: React.FC<TeamCardProp> = ({
             onChangeTeamLogo={(): any => setTeamLogoPicker(true)}
             onChangeCover={(): any => setCoverLogoPicker(true)}
             team={team}
+            hasAccess={hasAccess}
           />
         ) : (
           <CardMobile
@@ -217,16 +210,19 @@ const TeamCard: React.FC<TeamCardProp> = ({
             onChangeTeamLogo={(): any => setTeamLogoPicker(true)}
             onChangeCover={(): any => setCoverLogoPicker(true)}
             team={team}
+            hasAccess={hasAccess}
           />
         )}
-        <Box>
-          <IconButton
-            onClick={(): any => setCoverLogoPicker(true)}
-            color="primary"
-          >
-            <EditIcon />
-          </IconButton>
-        </Box>
+        {hasAccess && (
+          <Box>
+            <IconButton
+              onClick={(): any => setCoverLogoPicker(true)}
+              color="primary"
+            >
+              <EditIcon />
+            </IconButton>
+          </Box>
+        )}
       </div>
       <NoobFilePicker
         onFileSelected={async (file): Promise<any> => {

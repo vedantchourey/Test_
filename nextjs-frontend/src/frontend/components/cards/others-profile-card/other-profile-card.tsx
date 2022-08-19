@@ -233,7 +233,9 @@ const OtherProfileCard = (props: {
                     }}
                     key={idx}
                     onClick={(): any =>
-                      router.push(`/team/view/${t.id}/members`)
+                      router.push(
+                        `/team/view/${t.id}/members?user_id=${props.userData.id}`
+                      )
                     }
                   >
                     <Avatar

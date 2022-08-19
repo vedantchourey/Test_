@@ -125,9 +125,10 @@ interface TeamMembersProps {
   teamId: string;
   players: Player[];
   team: any;
+  hasAccess: boolean;
 }
 
-const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team }) => {
+const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team, hasAccess }) => {
   const theme = useTheme();
   const router = useRouter();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -321,40 +322,42 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team }) => {
                 />
               );
             })}
-            <Box>
-              <Box
-                onClick={handleOpen}
-                border={"4px solid #6931F9"}
-                borderRadius={"10px"}
-                style={{
-                  backgroundColor: "rgba(255, 255, 255, 0.09)",
-                  cursor: "pointer",
-                }}
-                height={"18.5vw"}
-                display="flex"
-                alignContent={"center"}
-                flexDirection="column"
-                component={"div"}
-                justifyContent="center"
-              >
-                <Image
-                  src={"/icons/PlayerAdd.svg"}
-                  height={"45px"}
-                  width={"45px"}
-                />
-                <Typography
-                  marginY={2}
-                  color="white"
-                  textTransform={"uppercase"}
-                  fontWeight="700"
-                  fontSize={"17px"}
-                  lineHeight={"18px"}
-                  textAlign="center"
+            {hasAccess ? (
+              <Box>
+                <Box
+                  onClick={handleOpen}
+                  border={"4px solid #6931F9"}
+                  borderRadius={"10px"}
+                  style={{
+                    backgroundColor: "rgba(255, 255, 255, 0.09)",
+                    cursor: "pointer",
+                  }}
+                  height={"18.5vw"}
+                  display="flex"
+                  alignContent={"center"}
+                  flexDirection="column"
+                  component={"div"}
+                  justifyContent="center"
                 >
-                  Add Player
-                </Typography>
+                  <Image
+                    src={"/icons/PlayerAdd.svg"}
+                    height={"45px"}
+                    width={"45px"}
+                  />
+                  <Typography
+                    marginY={2}
+                    color="white"
+                    textTransform={"uppercase"}
+                    fontWeight="700"
+                    fontSize={"17px"}
+                    lineHeight={"18px"}
+                    textAlign="center"
+                  >
+                    Add Player
+                  </Typography>
+                </Box>
               </Box>
-            </Box>
+            ) : null}
           </Slider>
         </Box>
       </Box>

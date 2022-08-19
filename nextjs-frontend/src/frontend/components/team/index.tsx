@@ -24,6 +24,8 @@ import { getAuthHeader } from "../../utils/headers";
 import Loader from "../ui-components/loader";
 import MatchHistory from "./match-history";
 import { IMatchHubData } from "../../../../pages/match-hub";
+import { userProfileSelector } from "../../redux-store/authentication/authentication-selectors";
+import { useAppSelector } from "../../redux-store/redux-store";
 
 export const NoobTab = styled(Tab)(() => ({
   textTransform: "capitalize",
@@ -41,6 +43,11 @@ const tabs: { title: string; url: string }[] = [
   { title: "Permissions", url: "permissions" },
 ];
 
+const readOnlyTabs: { title: string; url: string }[] = [
+  { title: "Members", url: "members" },
+  { title: "Match History", url: "match/history" },
+];
+
 const getActive = (url: string): number => {
   return tabs.findIndex((tab) => tab.url === url);
 };
@@ -56,12 +63,14 @@ interface TeamType {
 const Team: React.FC = () => {
   const router = useRouter();
   const query: ParsedUrlQuery = router.query;
+  const user = useAppSelector(userProfileSelector);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [team, setTeam] = React.useState<TeamType | undefined>(undefined);
   const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState<IMatchHubData[]>([]);
+  const [hasAccess, setHasAccess] = React.useState<boolean>(false);
 
   const matchHistory = data.filter(
     (i) => i.opponent1.team_id === query.id || i.opponent2.team_id === query.id
@@ -73,10 +82,18 @@ const Team: React.FC = () => {
       setLoading(true);
 
       axios
-        .get("/api/teams", { params: { id: query.id }, headers: headers })
+        .get("/api/teams", {
+          params: { id: query.id, user_id: query.user_id },
+          headers: headers,
+        })
         .then((res) => {
           if (res.data.result && res.data.result.length > 0) {
             setTeam(res.data.result[0]);
+            const checkAccess = res.data.result[0].players.find(
+              (i: any) => i.user_id === user?.id
+            );
+            if (checkAccess) setHasAccess(true);
+            else setHasAccess(false);
           }
           setLoading(false);
         })
@@ -115,7 +132,7 @@ const Team: React.FC = () => {
     }
     switch (page) {
       case "match/history":
-        return <MatchHistory data={matchHistory} teamId={query.id as string}/>;
+        return <MatchHistory data={matchHistory} teamId={query.id as string} />;
       case "permissions":
         return <Permissions team={team} players={team?.players || []} />;
       case "members":
@@ -124,6 +141,7 @@ const Team: React.FC = () => {
             players={team?.players || []}
             teamId={query.id as string}
             team={team}
+            hasAccess={hasAccess}
           />
         );
 
@@ -163,7 +181,6 @@ const Team: React.FC = () => {
     router.push("/team/view/[...slug]", `/team/view/${tab}`, { shallow: true });
   };
 
-  
   const renderTabs = (): JSX.Element | JSX.Element[] => {
     if (isMobile) {
       let page;
@@ -181,7 +198,7 @@ const Team: React.FC = () => {
             input={<OutlinedInput />}
             onChange={(e): void => changeTabByValue(e.target.value)}
           >
-            {tabs.map((tab) => {
+            {(hasAccess ? tabs : readOnlyTabs).map((tab) => {
               return (
                 <MenuItem key={tab.url} value={tab.url}>
                   {tab.title}
@@ -198,7 +215,7 @@ const Team: React.FC = () => {
         value={getActiveTab()}
         onChange={(e, value): void => changeTab(value)}
       >
-        {tabs.map(({ title }) => {
+        {(hasAccess ? tabs : readOnlyTabs).map(({ title }) => {
           return <NoobTab label={title} key={title} />;
         })}
       </Tabs>
@@ -215,7 +232,7 @@ const Team: React.FC = () => {
           description: "Noob Storm team page",
         }}
       >
-        <TeamCard name={team?.name} team={team} refresh={fetchTeam}>
+        <TeamCard name={team?.name} team={team} refresh={fetchTeam} hasAccess={hasAccess}>
           <Box display={"flex"} justifyContent="space-between">
             {renderTabs()}
             {!isMobile ? (
