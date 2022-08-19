@@ -83,6 +83,20 @@ export const createTournament: NoobApiService<
   return { data: { id: id as string, ...others } };
 };
 
+export const deleteTournament = async (
+  tid: string,
+  context: any
+): Promise<any> => {
+  const repository = new CrudRepository<ITournament>(
+    context,
+    TABLE_NAMES.TOURNAMENTS
+  );
+
+  const result = await repository.update({ isDeleted: true }, { id: tid });
+
+  return { data: result };
+};
+
 export const persistTournament: NoobApiService<
   ITournamentType,
   ITournamentType
@@ -246,7 +260,7 @@ export async function listTournaments(
   const repository = new TournamentsRepository(
     context.transaction as Knex.Transaction
   );
-  const tournaments = await repository.getTournaments(params);
+  const tournaments = await repository.getTournaments({...params, isDeleted: false});
   const result = await Promise.all(
     tournaments.tournaments.map((t) =>
       tournamentsWithPlayers(context, t.id as string, t))

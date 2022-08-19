@@ -27,5 +27,4 @@ export class TournamentRepository extends BaseRepository<ITournament> {
       ]);
     return createdItems[0];
   }
-
 }

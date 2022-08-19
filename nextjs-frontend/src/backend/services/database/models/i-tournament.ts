@@ -14,4 +14,5 @@ export interface ITournament {
   numberOfParticipants: number;
   tournamentType: TournamentType;
   isOpenToPublic: boolean;
+  isDeleted?: boolean;
 }

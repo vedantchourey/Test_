@@ -63,6 +63,7 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
     const limit = params.limit || 5;
     const query = this.entities()
       .select(...keys)
+      .where({isDeleted: false})
       .where(options ? options : {});
 
     if (params?.format) {

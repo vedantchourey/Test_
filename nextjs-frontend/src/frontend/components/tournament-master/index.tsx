@@ -21,6 +21,7 @@ import {
 } from "../../redux-store/games/game-slice";
 import { useAppDispatch, useAppSelector } from "../../redux-store/redux-store";
 import { IGameResponse } from "../../service-clients/messages/i-game-response";
+import { getAuthHeader } from "../../utils/headers";
 import NoobPage from "../page/noob-page";
 import { BasicData } from "../setup/basic";
 import { TournamentData } from "../tournament";
@@ -97,6 +98,23 @@ const TournamentMaster: React.FC = () => {
       .catch((err) => {
         console.error(err);
         setData([]);
+      });
+  };
+
+  const deleteTournaments = async (id: string): Promise<void> => {
+    const headers = await getAuthHeader();
+    axios
+      .delete(`/api/tournaments`, {
+        headers: headers,
+        params: {
+          id,
+        },
+      })
+      .then(() => {
+        fetchTournaments();
+      })
+      .catch((err) => {
+        console.error(err);
       });
   };
 
@@ -195,6 +213,7 @@ const TournamentMaster: React.FC = () => {
       title: "Action",
       renderCell: (row): JSX.Element => {
         return (
+          <Box display={"flex"}>
           <Chip
             label={"View"}
             onClick={(): void => {
@@ -211,6 +230,20 @@ const TournamentMaster: React.FC = () => {
               cursor: "pointer",
             }}
           />
+          <Chip
+            label={"Delete"}
+            onClick={(): void => {
+              deleteTournaments(row.id || "");
+            }}
+            style={{
+              textTransform: "capitalize",
+              background: "red",
+              color: "#fff",
+              padding: "0px 10px",
+              cursor: "pointer",
+            }}
+          />
+          </Box>
         );
       },
       width: "10%",
@@ -256,7 +289,7 @@ const TournamentMaster: React.FC = () => {
                     color={"#E5E5E5"}
                   >
                     Tournament Master
-                  </Typography>{" "}
+                  </Typography>
                 </Box>
               </CardLayout>
             </Grid>
@@ -344,7 +377,11 @@ const TournamentMaster: React.FC = () => {
             <Grid item md={12}>
               <NoobTable
                 colConf={conf}
-                data={data}
+                data={data.sort((a: any, b: any) => {
+                  const aTime: any = moment(a.startDate).format("x");
+                  const bTime: any = moment(b.startDate).format("x");
+                  return bTime - aTime;
+                })}
                 totalRecords={totalRecords}
                 paginate={{
                   currentPage: page,
