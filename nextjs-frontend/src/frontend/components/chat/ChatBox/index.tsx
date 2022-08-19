@@ -42,7 +42,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
 
   const [messages, _setMessages] = useState<IMessages[]>([]);
   const [chatUsers, setchatUsers] = useState<any[]>([]);
-  const [text, setText] = useState<string>(defaultMessage as string || "");
+  const [text, setText] = useState<string>((defaultMessage as string) || "");
   const [infoSection, setInfoSection] = useState(false);
   const [logoPicker, setLogoPicker] = React.useState(false);
 
@@ -57,7 +57,12 @@ export default function ChatBox(props: IChatBox): JSX.Element {
     if (text.length) {
       await frontendSupabase.from("messages").insert({
         channel_id: props.channelId,
-        send_by: props.user.id,
+        send_by:
+          (props.data?.channel_type === "support" ||
+            props.data?.channel_type === "match") &&
+          props.user?.userRoles[0] === "noob-admin"
+            ? "Support"
+            : props.user.id,
         message: text.trim(),
         metadata: null,
       });
@@ -65,9 +70,13 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         .from("chat_users")
         .update({
           last_message: text,
-          updated_at: moment().add(5.5, "hour")
-.toISOString(),
-          last_message_by: props.user.username,
+          updated_at: moment().add(5.5, "hour").toISOString(),
+          last_message_by:
+            (props.data?.channel_type === "support" ||
+              props.data?.channel_type === "match") &&
+            props.user?.userRoles[0] === "noob-admin"
+              ? "Support"
+              : props.user.username,
           unread: true,
         })
         .eq("channel_id", props.channelId);
@@ -174,14 +183,14 @@ export default function ChatBox(props: IChatBox): JSX.Element {
               {props.channelName}
             </Typography>
             {!props.hideInfo && (
-            <IconButton
-              aria-label="back"
-              size="small"
-              onClick={(): any => setInfoSection(!infoSection)}
-              style={{ color: "rgba(255,255,255,0.3)" }}
-            >
-              <InfoOutlinedIcon />
-            </IconButton>
+              <IconButton
+                aria-label="back"
+                size="small"
+                onClick={(): any => setInfoSection(!infoSection)}
+                style={{ color: "rgba(255,255,255,0.3)" }}
+              >
+                <InfoOutlinedIcon />
+              </IconButton>
             )}
           </Box>
 
@@ -208,18 +217,25 @@ export default function ChatBox(props: IChatBox): JSX.Element {
                 i.send_by === props.userId
                   ? { user_name: props.user.username }
                   : chatUsers.find((j) => j.user_id === i.send_by);
+
+              const isCurrentUserMessage =
+                props.user?.userRoles[0] === "noob-admin" &&
+                i.send_by === "Support"
+                  ? true
+                  : i.send_by === props.userId;
+
               return (
                 <Box
                   display={"flex"}
                   justifyContent={
-                    i.send_by === props.userId ? "flex-end" : "flex-start"
+                    isCurrentUserMessage ? "flex-end" : "flex-start"
                   }
                   p={1}
                   key={i.id}
                 >
                   <Box
                     bgcolor={
-                      i.send_by === props.userId
+                      isCurrentUserMessage
                         ? "rgb(105, 49, 249)"
                         : "rgba(255,255,255,0.05)"
                     }
@@ -232,15 +248,15 @@ export default function ChatBox(props: IChatBox): JSX.Element {
                   >
                     <Typography
                       fontSize={9}
-                      textAlign={i.send_by === props.userId ? "right" : "left"}
+                      textAlign={isCurrentUserMessage ? "right" : "left"}
                       lineHeight={"5px"}
                       style={{ color: "rgba(255,255,255,0.5)" }}
                     >
-                      {user?.user_name}
+                      {user?.user_name || i.send_by}
                     </Typography>
                     <Typography
                       fontSize={14}
-                      textAlign={i.send_by === props.userId ? "right" : "left"}
+                      textAlign={isCurrentUserMessage ? "right" : "left"}
                       color={"#FFFFFF"}
                     >
                       {i.message}
@@ -248,7 +264,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
                     <Typography
                       fontSize={9}
                       lineHeight={"5px"}
-                      textAlign={i.send_by === props.userId ? "right" : "left"}
+                      textAlign={isCurrentUserMessage ? "right" : "left"}
                       style={{ color: "rgba(255,255,255,0.5)" }}
                     >
                       {moment(new Date(i.created_at)).fromNow()}
@@ -262,7 +278,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         <Box display={"flex"} justifyContent="center" m={1}>
           <TextField
             margin="none"
-            style={{ marginBottom: 0, marginRight:"10px" }}
+            style={{ marginBottom: 0, marginRight: "10px" }}
             fullWidth={true}
             value={text}
             onKeyPress={(e): void => {
@@ -341,10 +357,13 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         </Box>
         {props.data?.channel_type === "group" && (
           <Box display={"flex"} justifyContent="center" mt={2}>
-            <Button onClick={(): any => {setLogoPicker(true)
-              setTimeout(() => {
-                setLogoPicker(false);
-              }, 500);}}
+            <Button
+              onClick={(): any => {
+                setLogoPicker(true);
+                setTimeout(() => {
+                  setLogoPicker(false);
+                }, 500);
+              }}
             >
               Change Team Image
             </Button>
