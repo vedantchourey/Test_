@@ -1,7 +1,10 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../src/frontend/redux-store/redux-store";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../src/frontend/redux-store/redux-store";
 import {
   authCheckStatusSelector,
   isLoggedInSelector,
@@ -33,7 +36,10 @@ import axios from "axios";
 import styled from "@emotion/styled";
 import { ITournament } from "../../src/backend/services/database/models/i-tournaments";
 import moment from "moment";
-import { allGamesSelector, gamesFetchStatusSelector } from "../../src/frontend/redux-store/games/game-selectors";
+import {
+  allGamesSelector,
+  gamesFetchStatusSelector,
+} from "../../src/frontend/redux-store/games/game-selectors";
 import { fetchAllGamesThunk } from "../../src/frontend/redux-store/games/game-slice";
 import SocialMedia from "../social";
 import { ParsedUrlQuery } from "querystring";
@@ -57,10 +63,12 @@ function Account(): JSX.Element {
   const user = useAppSelector(userProfileSelector);
   const [data, setData] = React.useState<ITournament[]>([]);
 
-  const [activeTab, setActiveTab] = useState<TabsProps>(query.default ? "social" : "posts");
+  const [activeTab, setActiveTab] = useState<TabsProps>(
+    query.default ? "social" : "posts"
+  );
   const [isFetchingPosts, setIsFetchingPosts] = useState<boolean>(true);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
-  
+
   const appDispatch = useAppDispatch();
   const games = useAppSelector(allGamesSelector);
   const gamesFetchStatus = useAppSelector(gamesFetchStatusSelector);
@@ -78,7 +86,10 @@ function Account(): JSX.Element {
   const fetchData = async (): Promise<void> => {
     const headers = await getAuthHeader();
     axios
-      .get("/api/tournaments/user-matches-history-single", { headers: headers,params:{userId:user?.id} })
+      .get("/api/tournaments/user-matches-history-single", {
+        headers: headers,
+        params: { userId: user?.id },
+      })
       .then((res) => {
         setData(res.data);
       })
@@ -105,12 +116,17 @@ function Account(): JSX.Element {
 
   const _renderPosts = (): JSX.Element | React.ReactNode => {
     if (isFetchingPosts) {
-      return new Array(5).fill("")
-.map((data, i) => <h1 key={i}>Skeleton</h1>);
+      return new Array(5).fill("").map((data, i) => <h1 key={i}>Skeleton</h1>);
     }
-    const jsx = posts.map((postData) => {
-      return <PostCard key={postData.id} data={postData} />;
-    });
+    const jsx = posts
+      .sort((a: any, b: any) => {
+        const aTime: any = moment(a.createdAt).format("x");
+        const bTime: any = moment(b.createdAt).format("x");
+        return bTime - aTime;
+      })
+      .map((postData) => {
+        return <PostCard key={postData.id} data={postData} />;
+      });
     return jsx;
   };
 
@@ -158,7 +174,7 @@ function Account(): JSX.Element {
                           <NoobCell>Status</NoobCell>
                         </NoobRow>
                         {data.map((i, idx) => {
-                          const game = games.find((g) => g.id === i.game)
+                          const game = games.find((g) => g.id === i.game);
                           return (
                             <NoobRow
                               key={idx}

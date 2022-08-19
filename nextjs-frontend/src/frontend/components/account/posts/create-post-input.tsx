@@ -87,7 +87,8 @@ export default function CreatePostInput(props: IProps): JSX.Element {
                 .getPublicUrl(i.avatarUrl).publicURL as string)
             : undefined,
         }))
-        .slice(0, 2)
+        .filter((i) => i.display.toLowerCase().startsWith(query.toLowerCase()))
+        .slice(0, 3)
     );
   };
 

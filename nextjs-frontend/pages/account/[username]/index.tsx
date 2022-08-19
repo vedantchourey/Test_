@@ -1,10 +1,17 @@
-import React,{ useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import NoobPage from "../../../src/frontend/components/page/noob-page";
-import { Box, Grid, Typography, Tab, Divider,Table,
+import {
+  Box,
+  Grid,
+  Typography,
+  Tab,
+  Divider,
+  Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableRow, } from "@mui/material";
+  TableRow,
+} from "@mui/material";
 import commonStyles from "../../../src/frontend/styles/common.module.css";
 import PostCard from "../../../src/frontend/components/account/posts/post-card";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
@@ -22,7 +29,7 @@ type TabsProps = "posts" | "activity";
 import moment from "moment";
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
-import {ITournament} from "../../../src/backend/services/database/models/i-tournaments";
+import { ITournament } from "../../../src/backend/services/database/models/i-tournaments";
 import { allGamesSelector } from "../../../src/frontend/redux-store/games/game-selectors";
 import { getAuthHeader } from "../../../src/frontend/utils/headers";
 import axios from "axios";
@@ -35,7 +42,7 @@ function UserAccount(): JSX.Element {
   const [isFetchingPosts, setIsFetchingPosts] = useState<boolean>(true);
   const username = Router.query.username as string;
   const [activeTab, setActiveTab] = useState<TabsProps>("posts");
-  const router=useRouter();
+  const router = useRouter();
   const [data, setData] = React.useState<ITournament[]>([]);
 
   const games = useAppSelector(allGamesSelector);
@@ -44,9 +51,10 @@ function UserAccount(): JSX.Element {
     (async (): Promise<void> => {
       try {
         const result = await getUserProfileByUsername(username);
-        if ( result ) {
-          setUserData( result );
-          fetchData( result.id );}
+        if (result) {
+          setUserData(result);
+          fetchData(result.id);
+        }
       } catch (err) {
         setIsFetchingUserData(false);
       }
@@ -63,10 +71,13 @@ function UserAccount(): JSX.Element {
     })();
   }, [userData]);
 
-  const fetchData = async ( userId: string ): Promise<void> => {
+  const fetchData = async (userId: string): Promise<void> => {
     const headers = await getAuthHeader();
     axios
-      .get("/api/tournaments/user-matches-history-single", { headers: headers, params: { userId: userId }})
+      .get("/api/tournaments/user-matches-history-single", {
+        headers: headers,
+        params: { userId: userId },
+      })
       .then((res) => {
         setData(res.data);
       })
@@ -75,11 +86,10 @@ function UserAccount(): JSX.Element {
       });
   };
 
-
   const NoobRow = styled(TableRow)(() => ({
     align: "center",
   }));
-  
+
   const NoobCell = styled(TableCell)(() => ({
     border: "1px solid #ffffff1a",
     alignItems: "center",
@@ -93,9 +103,15 @@ function UserAccount(): JSX.Element {
     if (isFetchingPosts) {
       return null;
     } else if (!isFetchingPosts && posts.length) {
-      return posts.map((postData, i) => {
-        return <PostCard key={Date.now() + i} data={postData} />;
-      });
+      return posts
+        .sort((a: any, b: any) => {
+          const aTime: any = moment(a.createdAt).format("x");
+          const bTime: any = moment(b.createdAt).format("x");
+          return bTime - aTime;
+        })
+        .map((postData, i) => {
+          return <PostCard key={Date.now() + i} data={postData} />;
+        });
     }
     // eslint-disable-next-line no-else-return
     else {
@@ -143,65 +159,72 @@ function UserAccount(): JSX.Element {
                     </TabList>
                   </Box>
                   <Box my={2}>
-                    <Divider light/>
+                    <Divider light />
                   </Box>
-                  <TabPanel sx={{p:0}} value="posts">{_renderPosts()}</TabPanel>
-                  <TabPanel sx={{p:0}} value="activity">
-                    { data.length ?
-                    <TableContainer>
-                    <Table>
-                      <TableBody>
-                        <NoobRow>
-                          <NoobCell>Tournament Name</NoobCell>
-                          <NoobCell>Game</NoobCell>
-                          <NoobCell>Type</NoobCell>
-                          <NoobCell>Date</NoobCell>
-                          <NoobCell>Participants</NoobCell>
-                          <NoobCell>Status</NoobCell>
-                        </NoobRow>
-                        {data.map((i, idx) => {
-                          const game = games.find((g) => g.id === i.game)
-                          return (
-                            <NoobRow
-                              key={idx}
-                              onClick={(): void => {
-                                router.push(
-                                  `/view-tournament/${i.tournament_uuid}/details`
-                                );
-                              }}
-                              style={{ cursor: "pointer" }}
-                            >
-                              <NoobCell>{i?.name}</NoobCell>
-                              <NoobCell>{game?.displayName}</NoobCell>
-                              <NoobCell>
-                                {i.settings?.tournamentFormat}
-                              </NoobCell>
-                              <NoobCell>
-                                {moment(i.startDate).format("DD MMM YYYY")}
-                              </NoobCell>
-                              <NoobCell>
-                                {i.bracketsMetadata?.playersLimit} Participants
-                              </NoobCell>
-                              <NoobCell>
-                                {moment(i.startDate).isAfter(moment()) ? (
-                                  <Typography color={"#6931F9"}>
-                                    Open
-                                  </Typography>
-                                ) : (
-                                  <Typography color={"green"}>
-                                    Completed
-                                  </Typography>
-                                )}
-                              </NoobCell>
+                  <TabPanel sx={{ p: 0 }} value="posts">
+                    {_renderPosts()}
+                  </TabPanel>
+                  <TabPanel sx={{ p: 0 }} value="activity">
+                    {data.length ? (
+                      <TableContainer>
+                        <Table>
+                          <TableBody>
+                            <NoobRow>
+                              <NoobCell>Tournament Name</NoobCell>
+                              <NoobCell>Game</NoobCell>
+                              <NoobCell>Type</NoobCell>
+                              <NoobCell>Date</NoobCell>
+                              <NoobCell>Participants</NoobCell>
+                              <NoobCell>Status</NoobCell>
                             </NoobRow>
-                          );
-                        })}
-                      </TableBody>
-                    </Table>
-                  </TableContainer> :
-                  <Box>
-                    <Typography variant="h3">No match history available</Typography>
-                  </Box>}
+                            {data.map((i, idx) => {
+                              const game = games.find((g) => g.id === i.game);
+                              return (
+                                <NoobRow
+                                  key={idx}
+                                  onClick={(): void => {
+                                    router.push(
+                                      `/view-tournament/${i.tournament_uuid}/details`
+                                    );
+                                  }}
+                                  style={{ cursor: "pointer" }}
+                                >
+                                  <NoobCell>{i?.name}</NoobCell>
+                                  <NoobCell>{game?.displayName}</NoobCell>
+                                  <NoobCell>
+                                    {i.settings?.tournamentFormat}
+                                  </NoobCell>
+                                  <NoobCell>
+                                    {moment(i.startDate).format("DD MMM YYYY")}
+                                  </NoobCell>
+                                  <NoobCell>
+                                    {i.bracketsMetadata?.playersLimit}{" "}
+                                    Participants
+                                  </NoobCell>
+                                  <NoobCell>
+                                    {moment(i.startDate).isAfter(moment()) ? (
+                                      <Typography color={"#6931F9"}>
+                                        Open
+                                      </Typography>
+                                    ) : (
+                                      <Typography color={"green"}>
+                                        Completed
+                                      </Typography>
+                                    )}
+                                  </NoobCell>
+                                </NoobRow>
+                              );
+                            })}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    ) : (
+                      <Box>
+                        <Typography variant="h3">
+                          No match history available
+                        </Typography>
+                      </Box>
+                    )}
                   </TabPanel>
                 </TabContext>
               </Grid>

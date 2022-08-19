@@ -12,10 +12,11 @@ import PostCard from "../../src/frontend/components/account/posts/post-card";
 import { Grid, Skeleton } from "@mui/material";
 // import CreatePostInput from "../../src/frontend/components/account/posts/create-post-input";
 import Chat from "../../src/frontend/components/chat";
+import moment from "moment";
 
 const requiredRoles: NoobUserRole[] = ["noob-admin"];
 
-export default function SocialMedia(props: {hideChat: boolean}): JSX.Element {
+export default function SocialMedia(props: { hideChat: boolean }): JSX.Element {
   const [isFetchingPosts, setIsFetchingPosts] = useState(true);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
 
@@ -25,12 +26,14 @@ export default function SocialMedia(props: {hideChat: boolean}): JSX.Element {
     try {
       setIsFetchingPosts(true);
       const followers = await fetchUserFollowingList(user?.id || "");
-      const fetchPostsBatch = followers.map((i) => getPostsByUserId(i.follower.id));
+      const fetchPostsBatch = followers.map((i) =>
+        getPostsByUserId(i.follower.id)
+      );
       const posts: IPostsResponse[] = [];
       const followerPosts = await Promise.all(fetchPostsBatch);
       followerPosts.map((p: any) => {
         p.map((fp: IPostsResponse) => posts.push(fp));
-      });      
+      });
       setPosts(posts);
     } finally {
       setIsFetchingPosts(false);
@@ -38,15 +41,18 @@ export default function SocialMedia(props: {hideChat: boolean}): JSX.Element {
   };
 
   useEffect(() => {
-    fetchPosts();       
+    fetchPosts();
   }, [user?.id]);
 
   const _renderPosts = (): JSX.Element | React.ReactNode => {
     if (isFetchingPosts) {
-      return new Array(5).fill("")
-.map((data, i) => <Skeleton key={i} />);
+      return new Array(5).fill("").map((data, i) => <Skeleton key={i} />);
     }
-    const jsx = posts.map((postData) => {      
+    const jsx = posts.sort((a: any, b: any) => {
+      const aTime: any = moment(a.createdAt).format("x");
+      const bTime: any = moment(b.createdAt).format("x");
+      return bTime - aTime;
+    }).map((postData) => {
       return <PostCard key={postData.id} data={postData} />;
     });
     return jsx;

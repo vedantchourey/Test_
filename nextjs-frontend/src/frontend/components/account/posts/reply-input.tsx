@@ -20,6 +20,7 @@ export default function ReplyInput({ onSubmit }: any): JSX.Element {
                 .getPublicUrl(i.avatarUrl).publicURL as string)
             : undefined,
         }))
+        .filter((i) => i.display.toLowerCase().startsWith(query.toLowerCase()))
         .slice(0, 2)
     );
   };

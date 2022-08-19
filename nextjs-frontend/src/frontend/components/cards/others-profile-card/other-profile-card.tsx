@@ -133,7 +133,7 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
           backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 1)), url(${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${userData.avatarUrl})`,
         }}
       >
-        <Box sx={{ textAlign: "right", position: "relative" }}>
+        <Box sx={{ textAlign: "right", position: "relative", display: "none" }}>
           <IconButton sx={{ padding: "10px" }} onClick={handleToggleMenu}>
             <MoreVertIcon />
           </IconButton>

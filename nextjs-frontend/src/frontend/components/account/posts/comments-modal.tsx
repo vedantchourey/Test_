@@ -216,6 +216,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
                 .getPublicUrl(i.avatarUrl).publicURL as string)
             : undefined,
         }))
+        .filter((i) => i.display.toLowerCase().startsWith(query.toLowerCase()))
         .slice(0, 2)
     );
   };
