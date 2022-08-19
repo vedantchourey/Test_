@@ -35,9 +35,9 @@ export interface Props {
   items: ActionItem[][];
   buttonOnly?: boolean;
   error?: string;
-  disabled?:boolean;
-  data?:TournamentData;
-  userId?:string;
+  disabled?: boolean;
+  data?: TournamentData;
+  userId?: string;
 }
 
 const ActionButton: React.FC<Props> = ({
@@ -53,19 +53,24 @@ const ActionButton: React.FC<Props> = ({
   const styles = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const [backColor,setBackcolor]=React.useState<string>("linear-gradient(180deg, #EF507E 0%, #F09633 100%)");
+  const [backColor, setBackcolor] = React.useState<string>(
+    "linear-gradient(180deg, #EF507E 0%, #F09633 100%)"
+  );
   const handleClick = (event: React.MouseEvent<HTMLElement>): void => {
     setAnchorEl(event.currentTarget);
   };
-  const [joinText,setJoinText]=React.useState<string>("Join Now");
+  const [joinText, setJoinText] = React.useState<string>("Join Now");
 
-  React.useEffect(()=>{
-    data?.playerList?.filter((i:any)=>i.id===userId).length&& (setBackcolor("#006A3E"),setJoinText("Joined"));
-  },[data]);
+  React.useEffect(() => {
+    data?.playerList?.filter((i: any) => i.id === userId).length &&
+      (setBackcolor("#006A3E"), setJoinText("Joined"));
+  }, [data]);
 
-  const handleButtonClick = ():void => {
-    if (onClick) {
-      onClick();
+  const handleButtonClick = (): void => {
+    if(!data?.playerList?.filter((i: any) => i.id === userId).length){
+      if (onClick) {
+        onClick();
+      }
     }
   };
 
@@ -81,7 +86,12 @@ const ActionButton: React.FC<Props> = ({
       <Box>
         <Button
           style={{
-            background: backColor==="#006A3E"?backColor:disabled?"grey":"linear-gradient(180deg, #EF507E 0%, #F09633 100%)",
+            background:
+              backColor === "#006A3E"
+                ? backColor
+                : disabled
+                ? "grey"
+                : "linear-gradient(180deg, #EF507E 0%, #F09633 100%)",
             color: "white",
             padding: "16px 43px",
             width: "189px",
@@ -125,7 +135,9 @@ const ActionButton: React.FC<Props> = ({
     <Box display="flex" flexDirection={"column"}>
       <Button
         style={{
-          background: disabled?"grey":"linear-gradient(180deg, #EF507E 0%, #F09633 100%)",
+          background: disabled
+            ? "grey"
+            : "linear-gradient(180deg, #EF507E 0%, #F09633 100%)",
           color: "white",
           padding: "16px 43px",
           width: "189px",
@@ -141,10 +153,10 @@ const ActionButton: React.FC<Props> = ({
         {joinText}
       </Button>
       {error && (
-          <Typography color={"red"} textAlign={"left"} marginTop={1}>
-            {error}
-          </Typography>
-        )}
+        <Typography color={"red"} textAlign={"left"} marginTop={1}>
+          {error}
+        </Typography>
+      )}
       <Menu
         anchorEl={anchorEl}
         open={open}

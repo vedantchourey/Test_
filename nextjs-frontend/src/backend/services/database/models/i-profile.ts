@@ -17,4 +17,5 @@ export interface ISearchUser {
   id: string;
   avatarUrl: string;
   isPrivate: string;
+  createdAt: string;
 }

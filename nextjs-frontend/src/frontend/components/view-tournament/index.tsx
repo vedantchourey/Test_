@@ -108,9 +108,9 @@ const ViewTournament: React.FC = () => {
   const [selectedTeam, setSelectedTeam] = React.useState<Team | undefined>();
   const [openSuccessModal, setOpenSuccessModal] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const [page,setPage]=React.useState("Details")
+  const [page, setPage] = React.useState("Details");
   const isDesktop = useAppSelector((x) =>
-  isDeviceTypeSelector(x, deviceTypes.desktop));
+    isDeviceTypeSelector(x, deviceTypes.desktop));
 
   const fetchTeams = async (): Promise<void> => {
     const headers = await getAuthHeader();
@@ -202,51 +202,50 @@ const ViewTournament: React.FC = () => {
     }
   }, [data]);
 
+  const fetchAllDetails = (): void => {
+    axios
+      .get(`/api/tournaments/${router.query.id}/details`)
+      .then((res) => {
+        if (res.data.data) {
+          const tournamentData = res.data.data;
+          Object.keys(tournamentData).forEach((key) => {
+            if (tournamentData[key] === null) {
+              delete tournamentData[key];
+            }
+          });
+
+          setData({
+            ...tournamentData,
+            basic: {
+              name: tournamentData.name,
+              about: tournamentData.about,
+              game: tournamentData.game,
+              startDate: tournamentData.startDate,
+              startTime: moment(tournamentData.startTime, "hh:mm:ss").toDate(),
+              banner: tournamentData.banner,
+              sponsor: tournamentData.sponsor,
+              createTemplateCode: tournamentData.createTemplateCode,
+              cloneTournament: tournamentData.createTemplateCode !== undefined,
+            },
+            publishData: {
+              society: tournamentData.joinStatus,
+              registration: tournamentData.status,
+            },
+          } as TournamentData);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.error(err);
+      });
+  };
+
   React.useEffect(() => {
     if (router.query.id && router.query.id) {
       setLoading(true);
 
-      axios
-        .get(`/api/tournaments/${router.query.id}/details`)
-        .then((res) => {
-          if (res.data.data) {
-            const tournamentData = res.data.data;
-            Object.keys(tournamentData).forEach((key) => {
-              if (tournamentData[key] === null) {
-                delete tournamentData[key];
-              }
-            });
-
-            setData({
-              ...tournamentData,
-              basic: {
-                name: tournamentData.name,
-                about: tournamentData.about,
-                game: tournamentData.game,
-                startDate: tournamentData.startDate,
-                startTime: moment(
-                  tournamentData.startTime,
-                  "hh:mm:ss"
-                ).toDate(),
-                banner: tournamentData.banner,
-                sponsor: tournamentData.sponsor,
-                createTemplateCode: tournamentData.createTemplateCode,
-                cloneTournament:
-                  tournamentData.createTemplateCode !== undefined,
-              },
-              publishData: {
-                society: tournamentData.joinStatus,
-                registration: tournamentData.status,
-              },
-            } as TournamentData);
-          }
-          setLoading(false);
-        })
-        .catch((err) => {
-          setLoading(false);
-          console.error(err);
-        });
-        
+      fetchAllDetails();
     }
   }, [router.query.id]);
 
@@ -442,6 +441,7 @@ const ViewTournament: React.FC = () => {
     axios
       .post("/api/tournaments/register", payload, { headers: { ...headers } })
       .then(() => {
+        fetchAllDetails();
         setOpenSuccessModal(true);
       })
       .catch((err) => {
@@ -494,7 +494,7 @@ const ViewTournament: React.FC = () => {
             onJoin={onTeamJoin}
             error={regError}
             data={data}
-          entryFees={parseInt(data.settings?.entryFeeAmount || "0") || 0}
+            entryFees={parseInt(data.settings?.entryFeeAmount || "0") || 0}
           />
         </ViewCard>
       )
@@ -521,7 +521,7 @@ const ViewTournament: React.FC = () => {
             </Grid>
             <Grid
               item
-              display={isDesktop?"flex":"grid"}
+              display={isDesktop ? "flex" : "grid"}
               alignItems="center"
               justifyContent={"flex-end"}
             >
@@ -553,42 +553,46 @@ const ViewTournament: React.FC = () => {
                   </span>
                 </Typography>
               </Box>
-                <ActionButton
-                  data={data}
-                  error={regError}
-                  onClick={onSinglePlayerJoin}
-                  buttonOnly={playerLimit === 1}
-                  items={getActionItems()}
-                  id={"action-item"}
-                  userId={user?.id}
-                  disabled={countDown === "00:00:00"}
-                />
+              <ActionButton
+                data={data}
+                error={regError}
+                onClick={onSinglePlayerJoin}
+                buttonOnly={playerLimit === 1}
+                items={getActionItems()}
+                id={"action-item"}
+                userId={user?.id}
+                disabled={countDown === "00:00:00"}
+              />
             </Grid>
           </Grid>
         </ViewCard>
         <Box marginX={"70px"}>
-          {isDesktop&&(<NavTabs
-            items={items.map((item) => item.title)}
-            current={getCurrent()}
-            onClick={onTabClick}
-            altNav
-          />)}
-          {!isDesktop&&(
+          {isDesktop && (
+            <NavTabs
+              items={items.map((item) => item.title)}
+              current={getCurrent()}
+              onClick={onTabClick}
+              altNav
+            />
+          )}
+          {!isDesktop && (
             <Select
-            value={page}
-            input={<OutlinedInput />}
-            onChange={(e: any): void =>{onTabClick(e.target.value),setPage(e.target.value)}}
-            fullWidth
-            sx={{ m: 1 }}
-          >
-            {tabs.map((tab) => {
-              return (
-                <MenuItem key={tab.url} value={tab.url}>
-                  {tab.title}
-                </MenuItem>
-              );
-            })}
-          </Select>
+              value={page}
+              input={<OutlinedInput />}
+              onChange={(e: any): void => {
+                onTabClick(e.target.value), setPage(e.target.value);
+              }}
+              fullWidth
+              sx={{ m: 1 }}
+            >
+              {tabs.map((tab) => {
+                return (
+                  <MenuItem key={tab.url} value={tab.url}>
+                    {tab.title}
+                  </MenuItem>
+                );
+              })}
+            </Select>
           )}
         </Box>
         {renderComponent()}
@@ -610,7 +614,11 @@ const ViewTournament: React.FC = () => {
           backgroundImageUrl={data?.basic?.banner || ""}
         >
           <HeadSubSection
-            time={moment(data.basic?.startDate).format("DD/MM/YYYY") + " " + moment(data.basic?.startTime).format("hh:mm A")}
+            time={
+              moment(data.basic?.startDate).format("DD/MM/YYYY") +
+              " " +
+              moment(data.basic?.startTime).format("hh:mm A")
+            }
           />
         </Heading>
         {renderTournament()}

@@ -119,11 +119,33 @@ const TeamSelection: React.FC<TeamProps> = ({
               </Typography>
             )}
             {!isSmallScreen ? (
-              <Button disabled={Boolean(!hasEnoughPlayerSelected() || data?.playerList?.filter((i:any)=>i.team_id===team.id).length)} variant="contained" onClick={registerTeam} sx={{borderRadius:0}}>
-               {data?.playerList?.filter((i:any)=>i.team_id===team.id).length?"Joined":"Join now"}
+              <Button
+                disabled={Boolean(
+                  !hasEnoughPlayerSelected() ||
+                    data?.playerList?.filter((i: any) => i.team_id === team.id)
+                      .length
+                )}
+                variant="contained"
+                onClick={(): any => {
+                  if (
+                    data?.playerList?.filter((i: any) => i.team_id === team.id)
+                      .length
+                  ) {
+                    registerTeam();
+                  }
+                }}
+                sx={{ borderRadius: 0 }}
+              >
+                {data?.playerList?.filter((i: any) => i.team_id === team.id)
+                  .length
+                  ? "Joined"
+                  : "Join now"}
               </Button>
             ) : null}
-            <Button sx={{ marginLeft: 1,borderRadius:0 }} onClick={backHandler} >
+            <Button
+              sx={{ marginLeft: 1, borderRadius: 0 }}
+              onClick={backHandler}
+            >
               Back
             </Button>
           </Box>
@@ -141,8 +163,10 @@ const TeamSelection: React.FC<TeamProps> = ({
             <Box
               sx={{
                 background: selectedPlayer[player.user_id]
-                  ? (hasEnoughCredit(player.balance)?"#F08743":"#FF0000")
-                  : "#100626"
+                  ? hasEnoughCredit(player.balance)
+                    ? "#F08743"
+                    : "#FF0000"
+                  : "#100626",
               }}
               display="flex"
               alignItems={"center"}
@@ -156,7 +180,11 @@ const TeamSelection: React.FC<TeamProps> = ({
                 </Typography>
               </Box>
               <Box display="Flex" alignItems={"center"} justifyContent="center">
-                <IconButton /*disabled={!hasEnoughCredit(player.balance)}*/ onClick={():void => onPlayerSelect(player.user_id)}>
+                <IconButton
+                  /*disabled={!hasEnoughCredit(player.balance)}*/ onClick={(): void =>
+                    onPlayerSelect(player.user_id)
+                  }
+                >
                   {selectedPlayer[player.user_id] ? (
                     <RemoveIcon height={"14px"} width="14px" />
                   ) : (
@@ -165,16 +193,45 @@ const TeamSelection: React.FC<TeamProps> = ({
                 </IconButton>
               </Box>
             </Box>
-            {selectedPlayer[player.user_id] && !hasEnoughCredit(player.balance)?
-            <Typography style={{color:"#FF0000",padding:10,margin:10,backgroundColor:"rgba(255, 0, 0, 0.1)",borderRadius:10}}>This user does not have enough funds to participate in the tournament.</Typography>:
-            null}
+            {selectedPlayer[player.user_id] &&
+            !hasEnoughCredit(player.balance) ? (
+              <Typography
+                style={{
+                  color: "#FF0000",
+                  padding: 10,
+                  margin: 10,
+                  backgroundColor: "rgba(255, 0, 0, 0.1)",
+                  borderRadius: 10,
+                }}
+              >
+                This user does not have enough funds to participate in the
+                tournament.
+              </Typography>
+            ) : null}
           </Grid>
         );
       })}
-      <Grid item xs={12} display="flex" flexDirection={"column"} alignItems="center">
+      <Grid
+        item
+        xs={12}
+        display="flex"
+        flexDirection={"column"}
+        alignItems="center"
+      >
         {isSmallScreen ? (
-          <Button disabled={Boolean(!hasEnoughPlayerSelected()||data?.playerList?.filter((i:any)=>i.team_id===team.id).length)} variant="contained" onClick={registerTeam} sx={{marginY:1,borderRadius:0,width:"200px"}}>
-            {data?.playerList?.filter((i:any)=>i.team_id===team.id).length?"Joined":"Join now"}
+          <Button
+            disabled={Boolean(
+              !hasEnoughPlayerSelected() ||
+                data?.playerList?.filter((i: any) => i.team_id === team.id)
+                  .length
+            )}
+            variant="contained"
+            onClick={registerTeam}
+            sx={{ marginY: 1, borderRadius: 0, width: "200px" }}
+          >
+            {data?.playerList?.filter((i: any) => i.team_id === team.id).length
+              ? "Joined"
+              : "Join now"}
           </Button>
         ) : null}
         {isSmallScreen && error && (

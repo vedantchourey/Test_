@@ -155,9 +155,10 @@ export default function UserProfileCard(): JSX.Element {
       <Box
         className={styles.background}
         style={{
-          backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 1)), url(${
+          backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.5), rgba(8, 0, 28, 1)), url(${
             !removeBgImage && avatarBackgroundImageBlobUrl
           } )`,
+          backgroundPosition: "center",
         }}
       >
         <Box
@@ -239,7 +240,7 @@ export default function UserProfileCard(): JSX.Element {
           <Typography
             variant="h3"
             fontSize={18}
-            color="#695B6E"
+            color="#fff"
             style={{ marginBottom: 20 }}
           >
             @{userProfile?.username}
@@ -259,6 +260,83 @@ export default function UserProfileCard(): JSX.Element {
         <Divider sx={{ mb: 2 }} light className={styles.divider} />
         <Box className={styles.bottom}>
           <Box className={styles.detailsContainer} sx={{ width: "100%" }}>
+            <Grid container>
+              <Grid item md={3} sx={{ textAlign: "center" }}>
+                <Typography
+                  variant="caption"
+                  fontSize={14}
+                  color="rgba(255, 255, 255, 0.31)"
+                  fontWeight={"700"}
+                >
+                  Followers
+                </Typography>
+                <Typography
+                  sx={{ cursor: "pointer" }}
+                  onClick={handleOpenFollowersModal}
+                  variant="h3"
+                  color="#fff"
+                  fontSize={16}
+                  fontWeight={"700"}
+                >
+                  {userProfile?.totalFollowers || 0}
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                md={1}
+                sx={{ display: "flex", justifyContent: "center" }}
+              >
+                <div className={styles.verticalDivider} />
+              </Grid>
+              <Grid item md={4} sx={{ textAlign: "center" }}>
+                <Typography
+                  variant="caption"
+                  fontSize={14}
+                  color="rgba(255, 255, 255, 0.31)"
+                  fontWeight={"700"}
+                >
+                  Following
+                </Typography>
+                <Typography
+                  onClick={handleOpenFollowingModal}
+                  sx={{ cursor: "pointer" }}
+                  variant="h3"
+                  color="#fff"
+                  fontSize={16}
+                  fontWeight={"700"}
+                >
+                  {userProfile?.totalFollowing || 0}
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                md={1}
+                sx={{ display: "flex", justifyContent: "center" }}
+              >
+                <div className={styles.verticalDivider} />
+              </Grid>
+              <Grid item md={3} sx={{ textAlign: "center" }}>
+                <Typography
+                  variant="caption"
+                  fontSize={14}
+                  color="rgba(255, 255, 255, 0.31)"
+                  fontWeight={"700"}
+                >
+                  Posts
+                </Typography>
+                <Typography
+                  variant="h3"
+                  color="#fff"
+                  fontSize={16}
+                  fontWeight={"700"}
+                >
+                  {userProfile?.totalPosts || 0}
+                </Typography>
+              </Grid>
+            </Grid>
+
+            <Divider sx={{ mb: 3 }} light className={styles.divider} />
+
             <Grid container p={2}>
               <Grid item md={5} sx={{ textAlign: "left" }}>
                 <Typography
@@ -330,82 +408,6 @@ export default function UserProfileCard(): JSX.Element {
                   fontSize={14}
                 >
                   {moment(userProfile?.createdAt).format("DD MMM YYYY")}
-                </Typography>
-              </Grid>
-            </Grid>
-
-            <Divider sx={{ mb: 3 }} light className={styles.divider} />
-            <Grid container>
-              <Grid item md={3} sx={{ textAlign: "center" }}>
-                <Typography
-                  variant="caption"
-                  fontSize={14}
-                  color="rgba(255, 255, 255, 0.31)"
-                  fontWeight={"700"}
-                >
-                  Followers
-                </Typography>
-                <Typography
-                  sx={{ cursor: "pointer" }}
-                  onClick={handleOpenFollowersModal}
-                  variant="h3"
-                  color="#6931F9"
-                  fontSize={16}
-                  fontWeight={"700"}
-                >
-                  {userProfile?.totalFollowers || 0}
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                md={1}
-                sx={{ display: "flex", justifyContent: "center" }}
-              >
-                <div className={styles.verticalDivider} />
-              </Grid>
-              <Grid item md={4} sx={{ textAlign: "center" }}>
-                <Typography
-                  variant="caption"
-                  fontSize={14}
-                  color="rgba(255, 255, 255, 0.31)"
-                  fontWeight={"700"}
-                >
-                  Following
-                </Typography>
-                <Typography
-                  onClick={handleOpenFollowingModal}
-                  sx={{ cursor: "pointer" }}
-                  variant="h3"
-                  color="#6931F9"
-                  fontSize={16}
-                  fontWeight={"700"}
-                >
-                  {userProfile?.totalFollowing || 0}
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                md={1}
-                sx={{ display: "flex", justifyContent: "center" }}
-              >
-                <div className={styles.verticalDivider} />
-              </Grid>
-              <Grid item md={3} sx={{ textAlign: "center" }}>
-                <Typography
-                  variant="caption"
-                  fontSize={14}
-                  color="rgba(255, 255, 255, 0.31)"
-                  fontWeight={"700"}
-                >
-                  Posts
-                </Typography>
-                <Typography
-                  variant="h3"
-                  color="#6931F9"
-                  fontSize={16}
-                  fontWeight={"700"}
-                >
-                  {userProfile?.totalPosts || 0}
                 </Typography>
               </Grid>
             </Grid>

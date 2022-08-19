@@ -24,4 +24,5 @@ export interface IOthersProfileResponse {
   isFollowing: boolean;
   isBlocked: boolean;
   isPrivate : boolean;
+  createdAt : string;
 }

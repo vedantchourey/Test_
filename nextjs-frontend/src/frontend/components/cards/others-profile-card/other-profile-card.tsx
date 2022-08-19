@@ -1,37 +1,48 @@
-import React, { useEffect, useState } from 'react';
-import { Avatar, Box, Button, Divider, Grid, IconButton, List, ListItem, Typography } from '@mui/material';
-import { CheckOutlined } from '@mui/icons-material'
-import styles from './other-profile-card.module.css'
-import CollectionsIcon from '@mui/icons-material/Collections';
-import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import React, { useEffect, useState } from "react";
+import {
+  Avatar,
+  Box,
+  Button,
+  Divider,
+  Grid,
+  IconButton,
+  List,
+  ListItem,
+  Typography,
+} from "@mui/material";
+import { CheckOutlined } from "@mui/icons-material";
+import styles from "./other-profile-card.module.css";
+import CollectionsIcon from "@mui/icons-material/Collections";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import { IOthersProfileResponse } from "../../../service-clients/messages/i-profile";
-import { followUser, unFollowUser } from '../../../service-clients/follow-service';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { blockUser, unBlockUser } from '../../../service-clients/block-service';
-import frontendConfig from '../../../utils/config/front-end-config';
-import FollowersModal from '../../followers-list-modal/followers-list-modal';
-import { useRouter } from 'next/router';
-import { frontendSupabase } from '../../../services/supabase-frontend-service';
-import { useAppSelector } from '../../../redux-store/redux-store';
-import { userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
-import { getAuthHeader } from '../../../utils/headers';
-import axios from 'axios';
+import {
+  followUser,
+  unFollowUser,
+} from "../../../service-clients/follow-service";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { blockUser, unBlockUser } from "../../../service-clients/block-service";
+import frontendConfig from "../../../utils/config/front-end-config";
+import FollowersModal from "../../followers-list-modal/followers-list-modal";
+import { useRouter } from "next/router";
+import { frontendSupabase } from "../../../services/supabase-frontend-service";
+import { useAppSelector } from "../../../redux-store/redux-store";
+import { userProfileSelector } from "../../../redux-store/authentication/authentication-selectors";
+import { getAuthHeader } from "../../../utils/headers";
+import axios from "axios";
+import moment from "moment";
 
-const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Element => {
+const OtherProfileCard = (props: {
+  userData: IOthersProfileResponse;
+}): JSX.Element => {
   const router = useRouter();
-  const [userData, setUserData] = useState(props.userData)
+  const [userData, setUserData] = useState(props.userData);
   const [showMenu, setShowMenu] = useState(false);
   const [teamData, setTeamData] = useState<any[]>([]);
   const [openFollowersModal, setOpenFollowersModal] = useState(false);
   const [openFollowingModal, setOpenFollowingModal] = useState(false);
-  const user=useAppSelector(userProfileSelector);
+  const user = useAppSelector(userProfileSelector);
 
-  const {
-    totalFollowers,
-    totalPosts,
-    totalFollowing,
-    isFollowing
-  } = userData;
+  const { totalFollowers, totalPosts, totalFollowing, isFollowing } = userData;
 
   const teamList = async (): Promise<void> => {
     try {
@@ -50,21 +61,21 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
 
   const followAction = (): void => {
     if (!isFollowing) {
-      followUser(userData.id).then(async()=>{
+      followUser(userData.id).then(async () => {
         await frontendSupabase.from("notifications").insert({
           type: "FOLLOWING",
           user_id: userData.id,
           sent_by: user?.id,
           message: `${user?.username} started following you.`,
-        })
-      })
+        });
+      });
       setUserData((prev) => {
         return {
           ...prev,
           isFollowing: true,
-          totalFollowers: totalFollowers + 1
-        }
-      })
+          totalFollowers: totalFollowers + 1,
+        };
+      });
       // eslint-disable-next-line no-useless-return
       return;
     }
@@ -73,53 +84,51 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
       return {
         ...prev,
         isFollowing: false,
-        totalFollowers: totalFollowers - 1
-      }
-    })
-
-  }
+        totalFollowers: totalFollowers - 1,
+      };
+    });
+  };
   const handleCloseMenu = (): void => setShowMenu(false);
-  const handleToggleMenu = (): void => setShowMenu((pre) => !pre)
+  const handleToggleMenu = (): void => setShowMenu((pre) => !pre);
 
   const handleOpenFollowersModal = (): void => {
-    setOpenFollowersModal(true)
-  }
+    setOpenFollowersModal(true);
+  };
   const handleCloseFollowersModal = (): void => {
-    setOpenFollowersModal(false)
-  }
+    setOpenFollowersModal(false);
+  };
 
   const handleOpenFollowingModal = (): void => {
-    setOpenFollowingModal(true)
-  }
+    setOpenFollowingModal(true);
+  };
   const handleCloseFollowingModal = (): void => {
-    setOpenFollowingModal(false)
-  }
+    setOpenFollowingModal(false);
+  };
 
   async function block(): Promise<void> {
     setUserData((pre) => {
       return {
         ...pre,
-        isBlocked: true
-      }
-    })
+        isBlocked: true,
+      };
+    });
     await blockUser(userData.id);
-    handleCloseMenu()
+    handleCloseMenu();
   }
   async function unBlock(): Promise<void> {
     setUserData((pre) => {
       return {
         ...pre,
-        isBlocked: false
-      }
-    })
+        isBlocked: false,
+      };
+    });
     await unBlockUser(userData.id);
-    handleCloseMenu()
+    handleCloseMenu();
   }
 
-  
-    const fetchChannel = async (): Promise<any> => {
-      router.push(`/chat?user=${userData.id}&name=${userData.username}`);
-    };
+  const fetchChannel = async (): Promise<any> => {
+    router.push(`/chat?user=${userData.id}&name=${userData.username}`);
+  };
 
   useEffect(() => {
     teamList();
@@ -177,38 +186,96 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
               <CollectionsIcon />
             </IconButton>
           </Box>
-          <Typography variant="h3" fontSize={18} color="#695B6E">
+          <Typography variant="h3" fontSize={18} color="#fff">
             @{userData.username}
           </Typography>
         </Box>
-      </Box>
+        {/* </Box>
 
-      <Box className={styles.bottom}>
+      <Box className={styles.bottom}> */}
+        <Box className={styles.btnSection}>
+          <Button
+            className={styles.bottomBtn}
+            startIcon={isFollowing ? <CheckOutlined /> : <PersonAddAltIcon />}
+            variant="contained"
+            onClick={followAction}
+          >
+            {isFollowing ? "Following" : "Follow"}
+          </Button>
+          <Button
+            className={styles.bottomBtn}
+            sx={{ borderColor: "#fff", color: "#fff" }}
+            variant="outlined"
+            onClick={(): any => fetchChannel()}
+          >
+            Message
+          </Button>
+        </Box>
         <Box className={styles.detailsContainer} sx={{ width: "100%" }}>
-          {/* <Grid container p={2}>
-            <Grid item md={5} sx={{ textAlign: 'left' }}>
-              <Typography variant='caption' fontSize={12}>
+          <Grid container p={2}>
+            <Grid item md={5} sx={{ textAlign: "left" }}>
+              <Typography variant="caption" fontSize={12}>
                 Team
               </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                <Avatar sx={{ mr: 1, width: 35, height: 35 }} alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-                <Typography variant='h3' fontSize={14}>
-                  Legend Club
-                </Typography>
-              </Box>
+              {teamData.map((t, idx) => {
+                const teamLogo = t?.teamLogo
+                  ? (frontendSupabase.storage
+                      .from("public-files")
+                      .getPublicUrl(t.teamLogo).publicURL as string)
+                  : "/static/images/avatar/3.jpg";
+                return (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      mt: 1,
+                      cursor: "pointer",
+                    }}
+                    key={idx}
+                    onClick={(): any =>
+                      router.push(`/team/view/${t.id}/members`)
+                    }
+                  >
+                    <Avatar
+                      sx={{ mr: 1, width: 35, height: 35 }}
+                      alt={t.name.toUpperCase()}
+                      src={teamLogo}
+                    />
+                    <Typography
+                      variant="h3"
+                      fontSize={14}
+                      textOverflow="ellipsis"
+                    >
+                      {t.name}
+                    </Typography>
+                  </Box>
+                );
+              })}
             </Grid>
-            <Grid item md={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Grid
+              item
+              md={2}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <div className={styles.verticalDivider} />
             </Grid>
-            <Grid item md={5} >
-              <Typography variant='caption' fontSize={12}>
+            <Grid item md={5}>
+              <Typography variant="caption" fontSize={12}>
                 Member since
               </Typography>
-              <Typography sx={{ textAlign: 'left', mt: 1 }} variant='h3' fontSize={14}>
-                Nov 1, 2021
+              <Typography
+                sx={{ textAlign: "left", mt: 1 }}
+                variant="h3"
+                fontSize={14}
+              >
+                {moment(userData?.createdAt).format("DD MMM YYYY")}
               </Typography>
             </Grid>
-          </Grid> */}
+          </Grid>
 
           <Divider sx={{ mb: 3 }} light className={styles.divider} />
           <Grid container>
@@ -263,70 +330,6 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
               </Typography>
             </Grid>
           </Grid>
-          <Grid container>
-            <Grid item md={5} sx={{ textAlign: "left" }}>
-              <Typography
-                variant="caption"
-                fontSize={12}
-                color="rgba(255, 255, 255, 0.31)"
-                fontWeight={"700"}
-              >
-                Team
-              </Typography>
-              {teamData.map((t, idx) => {
-                const teamLogo = t?.teamLogo
-                  ? (frontendSupabase.storage
-                      .from("public-files")
-                      .getPublicUrl(t.teamLogo).publicURL as string)
-                  : "/static/images/avatar/3.jpg";
-                return (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      mt: 1,
-                      cursor: "pointer",
-                    }}
-                    key={idx}
-                    onClick={(): any =>
-                      router.push(`/team/view/${t.id}/members`)
-                    }
-                  >
-                    <Avatar
-                      sx={{ mr: 1, width: 35, height: 35 }}
-                      alt={t.name.toUpperCase()}
-                      src={teamLogo}
-                    />
-                    <Typography
-                      variant="h3"
-                      fontSize={14}
-                      textOverflow="ellipsis"
-                    >
-                      {t.name}
-                    </Typography>
-                  </Box>
-                );
-              })}
-            </Grid>
-          </Grid>
-        </Box>
-
-        <Box className={styles.btnSection}>
-          <Button
-            className={styles.bottomBtn}
-            startIcon={isFollowing ? <CheckOutlined /> : <PersonAddAltIcon />}
-            variant="contained"
-            onClick={followAction}
-          >
-            {isFollowing ? "Following" : "Follow"}
-          </Button>
-          <Button
-            className={styles.bottomBtn}
-            variant="outlined"
-            onClick={(): any => fetchChannel()}
-          >
-            Message
-          </Button>
         </Box>
       </Box>
 
@@ -347,5 +350,5 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
       </>
     </Box>
   );
-}
+};
 export default OtherProfileCard;

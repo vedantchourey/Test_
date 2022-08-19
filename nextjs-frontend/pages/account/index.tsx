@@ -116,7 +116,8 @@ function Account(): JSX.Element {
 
   const _renderPosts = (): JSX.Element | React.ReactNode => {
     if (isFetchingPosts) {
-      return new Array(5).fill("").map((data, i) => <h1 key={i}>Skeleton</h1>);
+      return new Array(5).fill("")
+.map((data, i) => <h1 key={i}>Skeleton</h1>);
     }
     const jsx = posts
       .sort((a: any, b: any) => {

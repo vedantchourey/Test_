@@ -9,17 +9,7 @@ const Component = ({ brackets }: { brackets: any }): any => {
     (async function (): Promise<any> {
       const data = brackets;
       // @ts-expect-error: ignore
-      window.bracketsViewer.addLocale("ru", {
-        common: {
-          "round-name": "раунд {{roundNumber}}",
-        },
-      });
-
-      // @ts-expect-error: ignore
       window.bracketsViewer.addLocale("en", {
-        common: {
-          "round-name": "раунд {{roundNumber}}",
-        },
         "match-label": {
           "consolation-final": "3rd Place Playoff",
         },
