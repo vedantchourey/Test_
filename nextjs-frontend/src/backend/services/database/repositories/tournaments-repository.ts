@@ -82,7 +82,8 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
             moment(_doc.startTime, "HH:mm:ss").format("LT");
           const isOnGoing = moment(startDateTime).isBetween(
             moment().hour(0),
-            moment().hour(23).minute(59)
+            moment().hour(23)
+.minute(59)
           );
           if (params?.status === "complete") {
             if (!isOnGoing) return _doc;
@@ -93,7 +94,8 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
         } else if (moment(_doc.startDate).isSame(moment(), "day")) {
           if (
             moment(
-              moment(_doc.startDate).format("YYYY-MM-DD").toString() +
+              moment(_doc.startDate).format("YYYY-MM-DD")
+.toString() +
                 " " +
                 _doc.startTime
             ).isBefore(moment())

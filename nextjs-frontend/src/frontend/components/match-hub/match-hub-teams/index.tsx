@@ -86,6 +86,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
   const [chatChannel, setChatChannel] = React.useState<any>(undefined);
   const [supportChatChannel, setSupportChatChannel] = React.useState<any>(undefined);
   const [tabValue, setTabValue]=React.useState<any>("1");
+  const [isCheckedIn, setIsCheckedIn] = React.useState<boolean>(false);
 
   const opponent1Name = match.opponent1.user_id
     ? `${match.opponent1.firstName} ${match.opponent1.lastName}`
@@ -320,6 +321,9 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
           headers: headers,
         }
       )
+      .then(() => {
+        setIsCheckedIn(true);
+      })
       .catch((err: any) => {
         console.error(err);
         alert("User already checked in");
@@ -536,7 +540,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
               }}
               onClick={(): any => checkInTournament()}
             >
-              {match.is_checked_in ? "Checked in" : "Check In"}
+              {match.is_checked_in && isCheckedIn ? "Checked in" : "Check In"}
             </Button>
             <Button
               style={{

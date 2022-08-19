@@ -151,11 +151,16 @@ export default function Chat(props: {
     try {
       const endpoint = "/api/teams";
       const headers = await getAuthHeader();
-      axios.get(endpoint, { headers: headers }).then((res) => {
-        setTeamData(res.data.result);
-      });
+      axios
+        .get(endpoint, { headers: headers })
+        .then((res) => {
+          setTeamData(res.data.result);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     } catch (err) {
-      alert(err);
+      console.error(err);
     }
   };
 
