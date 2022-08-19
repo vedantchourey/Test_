@@ -49,12 +49,12 @@ interface PreviewResponse {
 export async function createPost(req: ICreatePostRequest, context: PerRequestContext): Promise<ServiceResponse<Partial<ICreatePostRequest>, ICreatePostResponse>> {
   const repository = new PostsRepository(context.transaction as Knex.Transaction);
 
-  const findMentions = req.postContent.split(" ").filter((s) => s[0] === "@");
-
   const userRepo = new CrudRepository<IProfile>(
     context.knexConnection as Knex,
     "profiles"
   );
+
+  const findMentions = req.postContent.split(" ").filter((s) => s[0] === "@");
 
   const userIdBatchResponse = await Promise.all(
     findMentions.map((u: string) =>

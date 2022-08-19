@@ -33,6 +33,10 @@ import { getAuthHeader } from "../../../utils/headers";
 import axios from "axios";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import ReplyIcon from "@mui/icons-material/Reply";
+import { Mention, MentionsInput } from "react-mentions";
+import { searchPeopleByText } from "../../../service-clients/search-service-client";
+import ReplyInput from "./reply-input";
+import { useRouter } from "next/router";
 
 const style = {
   position: "absolute",
@@ -95,7 +99,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
     }
     const result = await createComment({
       postId: props.postId,
-      comment: comment,
+      comment: comment.replace(/~/g, ""),
     });
     if (!result.isError) {
       if (props.postOwnerId !== user?.id) {
@@ -125,7 +129,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
     }
     const result = await createComment({
       postId: props.postId,
-      comment: reply,
+      comment: reply.replace(/~/g, ""),
       subComment: subComment,
     });
     if (!result.isError) {
@@ -203,6 +207,15 @@ const CommentsModal = (props: IProps): JSX.Element => {
     }
   };
 
+  const router = useRouter();
+
+  const fetchUsers = async (query: any, callback: any): Promise<any> => {
+    const response = await searchPeopleByText({ search: query.toLowerCase() });
+    callback(
+      response.map((i) => ({ id: i.username, display: i.username })).slice(0, 2)
+    );
+  };
+
   const _renderReplys = (
     commentId: string
   ): JSX.Element[] | JSX.Element | void => {
@@ -210,7 +223,6 @@ const CommentsModal = (props: IProps): JSX.Element => {
       .filter((i) => i.subComment === commentId)
       .map((data, i) => {
         const Comment = (): JSX.Element => {
-          
           const [isDeleted, setIsDeleted] = useState<boolean>(false);
           const [commentValues, setCommentValues] = useState(data);
           const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -306,7 +318,24 @@ const CommentsModal = (props: IProps): JSX.Element => {
                           color="white"
                           sx={{ textTransform: "capitalize" }}
                         >
-                          {commentValues.comment}
+                          {commentValues.comment.split(" ").map((part) =>
+                            part.match("@") ? (
+                              <span
+                                onClick={(): void => {
+                                  router.push(`/account/${part.substring(1)}`);
+                                }}
+                                style={{
+                                  color: "#6932F9",
+                                  marginLeft: "2px",
+                                  marginRight: "2px",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                {part}{" "}
+                              </span>
+                            ) : (
+                              part + " "
+                            ))}
                         </Typography>
                       </Box>
                     ) : (
@@ -366,17 +395,14 @@ const CommentsModal = (props: IProps): JSX.Element => {
         .filter((i) => i.subComment === null)
         .map((data, i) => {
           const Comment = (): JSX.Element => {
-            
             const [isDeleted, setIsDeleted] = useState<boolean>(false);
             const [commentValues, setCommentValues] = useState(data);
             const [isEditing, setIsEditing] = useState<boolean>(false);
             const [isReply, setIsReply] = useState<boolean>(true);
-            const [reply, setReply] = useState<string>("");
             const [addReply, setAddReply] = useState<boolean>(false);
             const replyCount = comments.filter(
               (i) => i.subComment === data.id
             ).length;
-
 
             const removeComment = (): void => {
               setIsDeleted(true);
@@ -465,7 +491,26 @@ const CommentsModal = (props: IProps): JSX.Element => {
                             color="white"
                             sx={{ textTransform: "capitalize" }}
                           >
-                            {commentValues.comment}
+                            {commentValues.comment.split(" ").map((part) =>
+                              part.match("@") ? (
+                                <span
+                                  onClick={(): void => {
+                                    router.push(
+                                      `/account/${part.substring(1)}`
+                                    );
+                                  }}
+                                  style={{
+                                    color: "#6932F9",
+                                    marginLeft: "2px",
+                                    marginRight: "2px",
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  {part}{" "}
+                                </span>
+                              ) : (
+                                part + " "
+                              ))}
                           </Typography>
                           <Box
                             display={"flex"}
@@ -524,8 +569,9 @@ const CommentsModal = (props: IProps): JSX.Element => {
                           <Box className={styles.commentInput}>
                             <Box
                               sx={{
-                                display: "inline-flex",
+                                display: "flex",
                                 alignItems: "center",
+                                flex: 1,
                               }}
                             >
                               <Avatar
@@ -533,40 +579,11 @@ const CommentsModal = (props: IProps): JSX.Element => {
                                 alt="avatar"
                                 src={userAvatar}
                               />
-                              <TextField
-                                placeholder={`Your reply`}
-                                fullWidth
-                                autoFocus
-                                variant="standard"
-                                value={reply}
-                                sx={{
-                                  "& .MuiInput-root": {
-                                    fontWeight: 300,
-                                  },
-                                }}
-                                InputProps={{
-                                  disableUnderline: true,
-                                }}
-                                onChange={(event): void => {
-                                  setReply(event.target.value);
+                              <ReplyInput
+                                onSubmit={(message: string): void => {
+                                  onClickReplyComment(message, data.id);
                                 }}
                               />
-                            </Box>
-                            <Box>
-                              <Button
-                                size="small"
-                                variant={"contained"}
-                                style={{
-                                  borderRadius: 99999,
-                                  textTransform: "capitalize",
-                                }}
-                                onClick={(): void => {
-                                  onClickReplyComment(reply, data.id);
-                                  setReply("");
-                                }}
-                              >
-                                Reply
-                              </Button>
                             </Box>
                           </Box>
                         )}
@@ -611,13 +628,60 @@ const CommentsModal = (props: IProps): JSX.Element => {
           </Box>
           <Box className={styles.commentInputCotainer}>
             <Box className={styles.commentInput}>
-              <Box sx={{ display: "inline-flex", alignItems: "center" }}>
+              <Box sx={{ display: "flex", alignItems: "center", flex: 1 }}>
                 <Avatar
                   sx={{ mr: 2, width: 35, height: 35 }}
                   alt="avatar"
                   src={userAvatar}
                 />
-                <TextField
+                <MentionsInput
+                  value={comment}
+                  onChange={(e): any => {
+                    setComment(e.target.value);
+                  }}
+                  // style={style}
+                  style={{
+                    input: {
+                      color: "#fff",
+                      border: 0,
+                      letterSpacing: 0,
+                      lineHeight: 1.5,
+                    },
+                    suggestions: {
+                      list: {
+                        backgroundColor: "#0f0526",
+                        border: "1px solid rgba(0,0,0,0.15)",
+                        // borderRadius: 5,
+                        fontSize: 14,
+                      },
+                      item: {
+                        padding: "5px 15px",
+                        borderBottom: "1px solid rgba(0,0,0,0.15)",
+                        borderRadius: 5,
+                        "&focused": {
+                          backgroundColor: "rgba(255,255,255, 0.1)",
+                        },
+                      },
+                    },
+                    flex: 1,
+                    border: 0,
+                  }}
+                  placeholder={"What's happening?"}
+                >
+                  <Mention
+                    markup="@~__display__~"
+                    displayTransform={(username): any => `@${username}`}
+                    trigger="@"
+                    data={fetchUsers}
+                    renderSuggestion={(
+                      suggestion,
+                      search,
+                      highlightedDisplay
+                    ): any => <div className="user">{highlightedDisplay}</div>}
+                    style={{ backgroundColor: "#6931F9" }}
+                  />
+                </MentionsInput>
+                {/* <TextField
                   placeholder={`Your comment`}
                   fullWidth
                   autoFocus
@@ -634,7 +698,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
                   onChange={(event): void => {
                     setComment(event.target.value);
                   }}
-                />
+                /> */}
               </Box>
               <Box>
                 <Button

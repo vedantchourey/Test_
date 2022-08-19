@@ -22,6 +22,7 @@ import {
   avatarImageBlobUrlSelector,
   isLoggedInSelector,
   userNameSelector,
+  userProfileSelector,
 } from "../../redux-store/authentication/authentication-selectors";
 import { useAppDispatch, useAppSelector } from "../../redux-store/redux-store";
 import { walletDetaislSelector } from "../../redux-store/wallet/wallet-selector";
@@ -40,6 +41,7 @@ import { frontendSupabase } from "../../services/supabase-frontend-service";
 export default function SideHeader(): JSX.Element {
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const username = useAppSelector(userNameSelector);
+  const user = useAppSelector(userProfileSelector);
   const wallet = useAppSelector(walletDetaislSelector);
   const router = useRouter();
   const [notifications, setNotifications] = React.useState<any[]>([]);
@@ -125,8 +127,10 @@ export default function SideHeader(): JSX.Element {
       fetchNotifications();
       frontendSupabase
         .from("notifications")
-        .on("*", () => async () => {
-          fetchNotifications();
+        .on("*", (payload: any) => async () => {
+          if (payload.new.user_id === user?.id) {
+            fetchNotifications();
+          }
         })
         .subscribe();
     } else {
