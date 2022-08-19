@@ -212,7 +212,17 @@ const CommentsModal = (props: IProps): JSX.Element => {
   const fetchUsers = async (query: any, callback: any): Promise<any> => {
     const response = await searchPeopleByText({ search: query.toLowerCase() });
     callback(
-      response.map((i) => ({ id: i.username, display: i.username })).slice(0, 2)
+      response
+        .map((i) => ({
+          id: i.username,
+          display: i.username,
+          avatarUrl: i.avatarUrl
+            ? (frontendSupabase.storage
+                .from("public-files")
+                .getPublicUrl(i.avatarUrl).publicURL as string)
+            : undefined,
+        }))
+        .slice(0, 2)
     );
   };
 
@@ -674,10 +684,18 @@ const CommentsModal = (props: IProps): JSX.Element => {
                     trigger="@"
                     data={fetchUsers}
                     renderSuggestion={(
-                      suggestion,
+                      suggestion: any,
                       search,
                       highlightedDisplay
-                    ): any => <div className="user">{highlightedDisplay}</div>}
+                    ): any => (
+                      <Box display={"flex"} alignItems={"center"}>
+                        <Avatar
+                          src={suggestion.avatarUrl}
+                          style={{ height: 20, width: 20, marginRight: 5 }}
+                        />
+                        <div className="user">{highlightedDisplay}</div>
+                      </Box>
+                    )}
                     style={{ backgroundColor: "#6931F9" }}
                   />
                 </MentionsInput>

@@ -34,6 +34,7 @@ import FilePicker from "../../utils/noob-file-picker";
 import { IPostImageUploadResponse } from "../../../service-clients/messages/i-posts-response";
 import { searchPeopleByText } from "../../../service-clients/search-service-client";
 import { MentionsInput, Mention } from "react-mentions";
+import { frontendSupabase } from "../../../services/supabase-frontend-service";
 
 interface mediaInterface {
   contentUrl: string;
@@ -76,7 +77,17 @@ export default function CreatePostInput(props: IProps): JSX.Element {
   const fetchUsers = async (query: any, callback: any): Promise<any> => {
     const response = await searchPeopleByText({ search: query.toLowerCase() });
     callback(
-      response.map((i) => ({ id: i.username, display: i.username })).slice(0, 2)
+      response
+        .map((i) => ({
+          id: i.username,
+          display: i.username,
+          avatarUrl: i.avatarUrl
+            ? (frontendSupabase.storage
+                .from("public-files")
+                .getPublicUrl(i.avatarUrl).publicURL as string)
+            : undefined,
+        }))
+        .slice(0, 2)
     );
   };
 
@@ -187,8 +198,18 @@ export default function CreatePostInput(props: IProps): JSX.Element {
             displayTransform={(username): any => `@${username}`}
             trigger="@"
             data={fetchUsers}
-            renderSuggestion={(suggestion, search, highlightedDisplay): any => (
-              <div className="user">{highlightedDisplay}</div>
+            renderSuggestion={(
+              suggestion: any,
+              search,
+              highlightedDisplay
+            ): any => (
+              <Box display={"flex"} alignItems={"center"}>
+                <Avatar
+                  src={suggestion.avatarUrl}
+                  style={{ height: 20, width: 20, marginRight: 5 }}
+                />
+                <div className="user">{highlightedDisplay}</div>
+              </Box>
             )}
             style={{ backgroundColor: "#6931F9" }}
           />

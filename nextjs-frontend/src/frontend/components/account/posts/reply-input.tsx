@@ -1,15 +1,26 @@
-import { Button } from "@mui/material";
+import { Avatar, Button } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { Mention, MentionsInput } from "react-mentions";
 import { searchPeopleByText } from "../../../service-clients/search-service-client";
+import { frontendSupabase } from "../../../services/supabase-frontend-service";
 
-export default function ReplyInput({onSubmit}: any): JSX.Element {
+export default function ReplyInput({ onSubmit }: any): JSX.Element {
   const [reply, setReply] = useState<string>("");
   const fetchUsersInReply = async (query: any, callback: any): Promise<any> => {
     const response = await searchPeopleByText({ search: query.toLowerCase() });
     callback(
-      response.map((i) => ({ id: i.username, display: i.username })).slice(0, 2)
+      response
+        .map((i) => ({
+          id: i.username,
+          display: i.username,
+          avatarUrl: i.avatarUrl
+            ? (frontendSupabase.storage
+                .from("public-files")
+                .getPublicUrl(i.avatarUrl).publicURL as string)
+            : undefined,
+        }))
+        .slice(0, 2)
     );
   };
   return (
@@ -53,8 +64,18 @@ export default function ReplyInput({onSubmit}: any): JSX.Element {
           displayTransform={(username): any => `@${username}`}
           trigger="@"
           data={fetchUsersInReply}
-          renderSuggestion={(suggestion, search, highlightedDisplay): any => (
-            <div className="user">{highlightedDisplay}</div>
+          renderSuggestion={(
+            suggestion: any,
+            search,
+            highlightedDisplay
+          ): any => (
+            <Box display={"flex"} alignItems={"center"}>
+              <Avatar
+                src={suggestion.avatarUrl}
+                style={{ height: 20, width: 20, marginRight: 5 }}
+              />
+              <div className="user">{highlightedDisplay}</div>
+            </Box>
           )}
           style={{ backgroundColor: "#6931F9" }}
         />
