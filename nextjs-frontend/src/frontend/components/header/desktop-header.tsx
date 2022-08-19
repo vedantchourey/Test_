@@ -373,7 +373,7 @@ export default function DrawerLeft(): JSX.Element {
                     onClick={gotoRegisterPage}
                   >
                     <img
-                      src="/images/menu/My-Team.png"
+                      src="/images/menu/Blog.png"
                       className={classes.imgStyle}
                     />
                     Register
