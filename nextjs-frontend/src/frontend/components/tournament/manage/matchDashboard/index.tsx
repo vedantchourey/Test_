@@ -331,7 +331,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                             </Typography>
                           </NoobCell>
 
-                          {item.status === "PENDING" ? (
+                          {item.result_status === "PENDING" ? (
                             <NoobCell>
                               <Typography>
                                 <Button onClick={(): any => acceptResult(item)}>

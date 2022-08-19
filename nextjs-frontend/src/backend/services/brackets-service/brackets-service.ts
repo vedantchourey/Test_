@@ -593,15 +593,20 @@ export const fetchMatchResultsReq = async (
       .knexObj()
       .join("b_match", "b_match.id", "match_result_request.match_id")
       .where({ tournament_id: req.tournament_id })
-.select("*")
-.select("match_result_request.status as result_status");
-
+      .select("*")
+      .select("match_result_request.status as result_status")
+      .select("match_result_request.id as id")
+      .select("match_result_request.opponent1 as opponent1")
+      .select("match_result_request.opponent2 as opponent2")
+      .select("b_match.opponent1 as m_opponent1")
+      .select("b_match.opponent2 as m_opponent2")
+      .select("match_result_request.screenshot as screenshot");
 
     const resultFinal = await Promise.all(
       result.map(async (r: any) => {
         const player1 = await participantRepo
           .knexObj()
-          .where({ id: r.opponent1.id })
+          .where({ id: r.m_opponent1.id })
           .select();
 
         const player1Data = player1[0].user_id
@@ -611,7 +616,7 @@ export const fetchMatchResultsReq = async (
 
         const player2 = await participantRepo
           .knexObj()
-          .where({ id: r.opponent2.id })
+          .where({ id: r.m_opponent2.id })
           .select();
 
         const player2Data = player1[0].user_id
