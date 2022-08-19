@@ -37,9 +37,8 @@ const useRoundStatusStyles = makeStyles(() =>
     },
     buttonStyles: {
       margin: "10px",
-      marginLeft: "30px",
+      marginLeft: "20px",
       color: "#ffffff",
-      opacity: "0.31",
       justifyContent: "flex-start",
       width: "180px",
       " & .hover": {
@@ -55,10 +54,9 @@ const useRoundStatusStyles = makeStyles(() =>
       borderRadius: "5px",
     },
     imgStyle: {
-      marginRight: "20px",
-      width: "15px",
-      height: "16px",
-      marginTop: "-5px",
+      marginRight: "15px",
+      width: "30px",
+      height: "30px",
     },
   }));
 
@@ -218,7 +216,7 @@ export default function DrawerLeft(): JSX.Element {
                 className={classes.buttonStyles}
               >
                 <img
-                  src="/icons/Vector-home.png"
+                  src="/images/menu/Home.png"
                   className={classes.imgStyle}
                 />
                 Home
@@ -229,7 +227,7 @@ export default function DrawerLeft(): JSX.Element {
                 onClick={(): any => router.push("/tournaments-list")}
               >
                 <img
-                  src="/icons/Vector-Tournaments.png"
+                  src="/images/menu/Tournaments.png"
                   className={classes.imgStyle}
                 />
                 Tournaments
@@ -241,7 +239,7 @@ export default function DrawerLeft(): JSX.Element {
                   onClick={gotoFreeAgencyMarketPage}
                 >
                   <img
-                    src="/icons/Vector-Tournaments.png"
+                    src="/images/menu/Free-Agency.png"
                     className={classes.imgStyle}
                   />
                   Free Agency
@@ -254,7 +252,7 @@ export default function DrawerLeft(): JSX.Element {
                   onClick={(): any => router.push("/account?default=social")}
                 >
                   <img
-                    src="/icons/Vector-FAQ.png"
+                    src="/images/menu/Social.png"
                     className={classes.imgStyle}
                   />
                   Social
@@ -274,7 +272,7 @@ export default function DrawerLeft(): JSX.Element {
                 className={classes.buttonStyles}
                 onClick={(): any => router.push("/blog")}
               >
-                <img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />
+                <img src="/images/menu/Blog.png" className={classes.imgStyle} />
                 Blog
               </Button>
               {isLoggedIn && (
@@ -284,7 +282,7 @@ export default function DrawerLeft(): JSX.Element {
                   onClick={(): any => router.push("/chat")}
                 >
                   <img
-                    src="/icons/Vector-FAQ.png"
+                    src="/images/menu/Chat.png"
                     className={classes.imgStyle}
                   />
                   Chat
@@ -298,7 +296,7 @@ export default function DrawerLeft(): JSX.Element {
                   onClick={(): any => router.push("/match-hub")}
                 >
                   <img
-                    src="/icons/Vector-FAQ.png"
+                    src="/images/menu/Match-Hub.png"
                     className={classes.imgStyle}
                   />
                   Match Hub
@@ -311,7 +309,7 @@ export default function DrawerLeft(): JSX.Element {
                   onClick={(): any => router.push("/store")}
                 >
                   <img
-                    src="/icons/Vector-FAQ.png"
+                    src="/images/menu/Store.png"
                     className={classes.imgStyle}
                   />
                   Store
@@ -324,7 +322,7 @@ export default function DrawerLeft(): JSX.Element {
                   onClick={gotoTeamListPage}
                 >
                   <img
-                    src="/icons/Vector-FAQ.png"
+                    src="/images/menu/My-Team.png"
                     className={classes.imgStyle}
                   />
                   My Teams
@@ -337,7 +335,7 @@ export default function DrawerLeft(): JSX.Element {
                 onClick={gotoLeaderboardsPage}
               >
                 <img
-                  src="/icons/Vector-Leaderboards.png"
+                  src="/images/menu/Leader-Board.png"
                   className={classes.imgStyle}
                 />
                 Leaderboards
@@ -348,7 +346,7 @@ export default function DrawerLeft(): JSX.Element {
                 onClick={(): any => router.push("/support")}
               >
                 <img
-                  src="/icons/Vector-Support.png"
+                  src="/images/menu/Support.png"
                   className={classes.imgStyle}
                 />
                 Support
@@ -360,7 +358,7 @@ export default function DrawerLeft(): JSX.Element {
                   onClick={(): any => handleSignOut()}
                 >
                   <img
-                    src="/icons/Vector-FAQ.png"
+                    src="/images/menu/Sign-Out.png"
                     className={classes.imgStyle}
                   />
                   Sign out
@@ -375,7 +373,7 @@ export default function DrawerLeft(): JSX.Element {
                     onClick={gotoRegisterPage}
                   >
                     <img
-                      src="/icons/Vector-Register.png"
+                      src="/images/menu/My-Team.png"
                       className={classes.imgStyle}
                     />
                     Register
@@ -388,7 +386,7 @@ export default function DrawerLeft(): JSX.Element {
                     onClick={onShowLoginModal}
                   >
                     <img
-                      src="/icons/Vector-SignIn.png"
+                      src="/images/menu/Sign-Out.png"
                       className={classes.imgStyle}
                     />
                     Sign In
