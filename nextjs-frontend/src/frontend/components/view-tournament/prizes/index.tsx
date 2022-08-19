@@ -28,7 +28,7 @@ interface PrizesProps {
 
 const Prizes: React.FC<PrizesProps> = ({ data }) => {
   
-  const pricePool = data?.pricingDetails?.pricePool;
+  const pricePool = data?.pricingDetails?.currentPricePool;
   
   const playersLimit = data?.bracketsMetadata?.playersLimit || 2;
   const rows =
