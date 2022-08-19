@@ -111,10 +111,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
           message: `${user?.username} commented on your post.`,
         });
       }
-      setComments((prevState: IPostCommentResponse[]) => [
-        result,
-        ...prevState,
-      ]);
+      getComments();
     }
     setComment("");
   }
@@ -142,10 +139,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
           message: `${user?.username} Replied to your comment.`,
         });
       }
-      setComments((prevState: IPostCommentResponse[]) => [
-        result,
-        ...prevState,
-      ]);
+      getComments();
     }
   }
 
