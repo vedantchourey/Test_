@@ -27,8 +27,7 @@ interface PrizesProps {
 }
 
 const Prizes: React.FC<PrizesProps> = ({ data }) => {
-  
-  const pricePool = data?.pricingDetails?.currentPricePool;
+  const pricePool = data?.pricingDetails?.currentPricePool || 0;
   
   const playersLimit = data?.bracketsMetadata?.playersLimit || 2;
   const rows =
@@ -37,19 +36,19 @@ const Prizes: React.FC<PrizesProps> = ({ data }) => {
           CreateData(
             "Place 1:",
             `${
-              pricePool ? pricePool * 0.6 * credit_config.price_per_credit : 600
+              data?.settings?.entryType === "credit" ? pricePool * 0.6 * credit_config.price_per_credit : 600
             }`
           ),
           CreateData(
             "Place 2:",
             `${
-              pricePool ? pricePool * 0.3 * credit_config.price_per_credit : 300
+              data?.settings?.entryType === "credit" ? pricePool * 0.3 * credit_config.price_per_credit : 300
             }`
           ),
           CreateData(
             "Place 3:",
             `${
-              pricePool ? pricePool * 0.1 * credit_config.price_per_credit : 100
+              data?.settings?.entryType === "credit" ? pricePool * 0.1 * credit_config.price_per_credit : 100
             }`
           ),
         ]
@@ -57,13 +56,13 @@ const Prizes: React.FC<PrizesProps> = ({ data }) => {
           CreateData(
             "Place 1:",
             `${
-              pricePool ? pricePool * 0.65 * credit_config.price_per_credit : 700
+              data?.settings?.entryType === "credit" ? pricePool * 0.65 * credit_config.price_per_credit : 700
             }`
           ),
           CreateData(
             "Place 2:",
             `${
-              pricePool ? pricePool * 0.35 * credit_config.price_per_credit : 300
+              data?.settings?.entryType === "credit" ? pricePool * 0.35 * credit_config.price_per_credit : 300
             }`
           ),
         ];

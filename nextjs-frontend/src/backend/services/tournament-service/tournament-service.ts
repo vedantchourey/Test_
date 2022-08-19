@@ -384,9 +384,7 @@ export async function tournamentDetails(
           .whereNotNull("b_participant.team_id");
 
         const grp_team = _.groupBy(players, "team_name");
-        currentPricePool = players.length
-          ? players.length * Number(tournament?.settings?.entryFeeAmount)
-          : 0;
+        
         players = _.keys(grp_team).map((k) => {
           return {
             team_name: k,
@@ -395,6 +393,9 @@ export async function tournamentDetails(
             ...grp_team[k],
           };
         });
+        currentPricePool = players.length
+          ? players.length * Number(tournament?.settings?.entryFeeAmount)
+          : 0;
         const playerCount =
           TOURNAMENT_TYPE_NUMBER[
             tournament?.settings?.tournamentFormat || "1v1"
@@ -413,13 +414,16 @@ export async function tournamentDetails(
       tournament = { ...tournament, brackets };
     }
 
+    const playerListData: any[] = tournament?.settings?.tournamentFormat === "1v1"
+    ? Object.values(_.groupBy(players, "id")).map((i) => i[0])
+    : players;
+
+    currentPricePool = playerListData.length * Number(tournament?.settings?.entryFeeAmount);
+
     return {
       data: {
         ...tournament,
-        playerList:
-          tournament?.settings?.tournamentFormat === "1v1"
-            ? Object.values(_.groupBy(players, "id")).map((i) => i[0])
-            : players,
+        playerList:playerListData,
         pricingDetails: { pricePool, currentPricePool },
       },
     } as any;
