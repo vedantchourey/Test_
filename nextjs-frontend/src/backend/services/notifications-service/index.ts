@@ -32,7 +32,7 @@ export const submitNotifications = async (req: INotificationRequest, knexConnect
         if (errors) return { errors };
         const notifications = getNotificationObj(knexConnection);
         const [notification]: INotifications[] = await notifications.find({
-            id: req.id, user_id: user.id, status: STATUS.PENDING, is_action_required: true
+            id: req.id, user_id: user.id, status: STATUS.PENDING
         })
         if (!notification) return getErrorObject("Invalid notification id or notification response already submitted")
 

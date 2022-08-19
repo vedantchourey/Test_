@@ -83,7 +83,7 @@ export default function SideHeader(): JSX.Element {
             createdAt:i?.created_at,
           };
         });
-        setNotificationLength(notificatiosData.filter((i)=>i.isActionRequired)?.length);
+        setNotificationLength(notificatiosData?.length);
         setNotifications(notificatiosData);
       })
       .catch((err) => {

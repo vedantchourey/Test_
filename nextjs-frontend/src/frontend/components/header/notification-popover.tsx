@@ -32,7 +32,7 @@ export default function BasicPopover(props: Props): JSX.Element {
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
           <Avatar
-           // alt="Travis Howard"
+            // alt="Travis Howard"
             src={message.image}
             style={{ height: 55, width: 55 }}
           />
@@ -61,7 +61,10 @@ export default function BasicPopover(props: Props): JSX.Element {
                 <Box display={"flex"} flexDirection={"row"} mt={2}>
                   <Button
                     variant="contained"
-                    onClick={onNevigation}
+                    onClick={(): any => {
+                      onNevigation();
+                      onAccept();
+                    }}
                     sx={{ mr: 1 }}
                   >
                     View

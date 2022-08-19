@@ -157,6 +157,7 @@ const Notification = (): JSX.Element => {
                                 style={{ marginLeft: "30px" }}
                                 variant="contained"
                                 onClick={(): void => {
+                                  submitNotification(i.id, "ACCEPTED");
                                   i.redirect
                                     ? router.push(i.redirect)
                                     : router.push(`/account/${i.username}`);
