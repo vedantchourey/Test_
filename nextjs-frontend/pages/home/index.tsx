@@ -124,8 +124,8 @@ const Home = (): JSX.Element => {
       axios
         .get(endpoint, {
           params: {
-            game: "",
-            limit: 3,
+            status: "home",
+            limit: 100,
           },
         })
         .then((res) => {
@@ -474,7 +474,7 @@ const Home = (): JSX.Element => {
                           const aTime: any = moment(a.startDate).format("x");
                           const bTime: any = moment(b.startDate).format("x");
                           return bTime - aTime;
-                        })
+                        }).slice(0,3)
                         .map((data: any) => {
                           const startDateTime =
                             moment(data.startDate).format("D MMM YYYY ") +

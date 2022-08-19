@@ -63,7 +63,7 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
     const limit = params.limit || 5;
     const query = this.entities()
       .select(...keys)
-      .where({isDeleted: false})
+      .where({ isDeleted: false })
       .where(options ? options : {});
 
     if (params?.format) {
@@ -77,10 +77,17 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
 
     if (params?.status) {
       result = result.filter((_doc: any) => {
+        const startDateTime =
+          moment(_doc.startDate).format("D MMM YYYY ") +
+          moment(_doc.startTime, "HH:mm:ss").format("LT");
+
+        if (params?.status === "home") {
+          if (moment(startDateTime).isAfter(moment())) {
+            return _doc;
+          }
+        }
+
         if (moment(_doc.startDate).isBefore(moment())) {
-          const startDateTime =
-            moment(_doc.startDate).format("D MMM YYYY ") +
-            moment(_doc.startTime, "HH:mm:ss").format("LT");
           const isOnGoing = moment(startDateTime).isBetween(
             moment().hour(0),
             moment().hour(23)
