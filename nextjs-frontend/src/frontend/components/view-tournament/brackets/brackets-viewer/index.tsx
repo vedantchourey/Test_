@@ -14,6 +14,17 @@ const Component = ({ brackets }: { brackets: any }): any => {
           "round-name": "раунд {{roundNumber}}",
         },
       });
+
+      // @ts-expect-error: ignore
+      window.bracketsViewer.addLocale("en", {
+        common: {
+          "round-name": "раунд {{roundNumber}}",
+        },
+        "match-label": {
+          "consolation-final": "3rd Place Playoff",
+        },
+      });
+      
       // @ts-expect-error: ignore
       // This is optional. You must do it before render().
       window.bracketsViewer.setParticipantImages(

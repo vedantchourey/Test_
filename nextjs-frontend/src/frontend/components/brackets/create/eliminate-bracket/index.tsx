@@ -144,7 +144,7 @@ const EliminateBracket = React.forwardRef<
 
       if (formik.values.type === "SINGLE" && formik.values.thirdPlace) {
         rounds.push({
-          name: "Consolation Final",
+          name: "3rd Place Playoff",
         });
       }
 
