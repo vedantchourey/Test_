@@ -142,6 +142,12 @@ const EliminateBracket = React.forwardRef<
         });
       }
 
+      if (formik.values.type === "SINGLE" && formik.values.thirdPlace) {
+        rounds.push({
+          name: "Consolation Final",
+        });
+      }
+
       if (formik.values.type !== "SINGLE") {
         for (let i = 0; i < lcount; i++) {
           const isFinal = i === lcount - 1;

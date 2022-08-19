@@ -22,7 +22,7 @@ const RoundStatus: React.FC<RoundStatusData> = ({
     return `${startDate} ${startTime}`;
   };
   return (
-    <Box minWidth={325}>
+    <Box minWidth={350}>
       <Box className={styles.statusContainer}>
         <Typography color={"white"}> {name || `Round ${round}`}</Typography>
         <Box className={styles.status}>
