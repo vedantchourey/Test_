@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, Box, Button, Divider, Grid, IconButton, List, ListItem, Typography } from '@mui/material';
 import { CheckOutlined } from '@mui/icons-material'
 import styles from './other-profile-card.module.css'
@@ -14,11 +14,14 @@ import { useRouter } from 'next/router';
 import { frontendSupabase } from '../../../services/supabase-frontend-service';
 import { useAppSelector } from '../../../redux-store/redux-store';
 import { userProfileSelector } from '../../../redux-store/authentication/authentication-selectors';
+import { getAuthHeader } from '../../../utils/headers';
+import axios from 'axios';
 
 const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Element => {
   const router = useRouter();
   const [userData, setUserData] = useState(props.userData)
   const [showMenu, setShowMenu] = useState(false);
+  const [teamData, setTeamData] = useState<any[]>([]);
   const [openFollowersModal, setOpenFollowersModal] = useState(false);
   const [openFollowingModal, setOpenFollowingModal] = useState(false);
   const user=useAppSelector(userProfileSelector);
@@ -29,6 +32,21 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
     totalFollowing,
     isFollowing
   } = userData;
+
+  const teamList = async (): Promise<void> => {
+    try {
+      const endpoint = `/api/teams?user_id=${props.userData.id}`;
+      const headers = await getAuthHeader();
+      axios
+        .get(endpoint, { headers: headers })
+        .then((res) => {
+          setTeamData(res.data.result);
+        })
+        .catch((err) => console.error(err));
+    } catch (err) {
+      alert(err);
+    }
+  };
 
   const followAction = (): void => {
     if (!isFollowing) {
@@ -103,54 +121,63 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
       router.push(`/chat?user=${userData.id}&name=${userData.username}`);
     };
 
+  useEffect(() => {
+    teamList();
+  }, [props.userData]);
+
   return (
     <Box className={styles.otherProfileCard}>
-      <Box className={styles.background} style={{
-        backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 1)), url(${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${userData.avatarUrl})`
-      }}>
-        <Box sx={{ textAlign: 'right', position: 'relative' }}>
-          <IconButton sx={{ padding: '10px' }} onClick={handleToggleMenu} >
+      <Box
+        className={styles.background}
+        style={{
+          backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 1)), url(${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${userData.avatarUrl})`,
+        }}
+      >
+        <Box sx={{ textAlign: "right", position: "relative" }}>
+          <IconButton sx={{ padding: "10px" }} onClick={handleToggleMenu}>
             <MoreVertIcon />
           </IconButton>
           {showMenu && (
             <List className={styles.optionsContainer}>
-              {userData.isBlocked ?
+              {userData.isBlocked ? (
                 <ListItem disablePadding>
                   <Button
                     fullWidth
                     onClick={(): unknown => unBlock()}
                     className={styles.optionsBtn}
-                    sx={{ color: 'red' }}
+                    sx={{ color: "red" }}
                   >
                     Unblock
                   </Button>
                 </ListItem>
-                :
+              ) : (
                 <ListItem disablePadding>
                   <Button
                     fullWidth
                     className={styles.optionsBtn}
-                    sx={{ color: 'red' }}
+                    sx={{ color: "red" }}
                     onClick={(): unknown => block()}
                   >
-                    <img src='/icons/error.svg' alt='icon' />
+                    <img src="/icons/error.svg" alt="icon" />
                     Block
                   </Button>
                 </ListItem>
-              }
+              )}
             </List>
           )}
         </Box>
         <Box className={styles.profileSection}>
-          <Box sx={{ position: 'relative' }}>
-            <Avatar sx={{ width: 85, height: 85, marginBottom: 2 }} src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${userData.avatarUrl}`}>
-            </Avatar>
-            <IconButton className={styles.selectImg} >
+          <Box sx={{ position: "relative" }}>
+            <Avatar
+              sx={{ width: 85, height: 85, marginBottom: 2 }}
+              src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${userData.avatarUrl}`}
+            ></Avatar>
+            <IconButton className={styles.selectImg}>
               {/* <img src='icons/gallery.svg' alt='icon' /> */}
               <CollectionsIcon />
             </IconButton>
           </Box>
-          <Typography variant='h3' fontSize={18} color='#695B6E' >
+          <Typography variant="h3" fontSize={18} color="#695B6E">
             @{userData.username}
           </Typography>
         </Box>
@@ -185,57 +212,140 @@ const OtherProfileCard = (props: { userData: IOthersProfileResponse }): JSX.Elem
 
           <Divider sx={{ mb: 3 }} light className={styles.divider} />
           <Grid container>
-            <Grid item md={3} sx={{ textAlign: 'center' }}>
-              <Typography variant='caption' fontSize={14}>
+            <Grid item md={3} sx={{ textAlign: "center" }}>
+              <Typography variant="caption" fontSize={14}>
                 Followers
               </Typography>
-              <Typography onClick={handleOpenFollowersModal} sx={{ cursor: 'pointer' }} variant='h3' color='#6931F9' fontSize={16}>
+              <Typography
+                onClick={handleOpenFollowersModal}
+                sx={{ cursor: "pointer" }}
+                variant="h3"
+                color="#6931F9"
+                fontSize={16}
+              >
                 {totalFollowers || 0}
               </Typography>
             </Grid>
-            <Grid item md={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Grid
+              item
+              md={1}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
               <div className={styles.verticalDivider} />
             </Grid>
-            <Grid item md={4} sx={{ textAlign: 'center' }}>
-              <Typography variant='caption' fontSize={14}>
+            <Grid item md={4} sx={{ textAlign: "center" }}>
+              <Typography variant="caption" fontSize={14}>
                 Following
               </Typography>
-              <Typography onClick={handleOpenFollowingModal} sx={{ cursor: 'pointer' }} variant='h3' color='#6931F9' fontSize={16}>
+              <Typography
+                onClick={handleOpenFollowingModal}
+                sx={{ cursor: "pointer" }}
+                variant="h3"
+                color="#6931F9"
+                fontSize={16}
+              >
                 {totalFollowing || 0}
               </Typography>
             </Grid>
-            <Grid item md={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Grid
+              item
+              md={1}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
               <div className={styles.verticalDivider} />
             </Grid>
-            <Grid item md={3} sx={{ textAlign: 'center' }}>
-              <Typography variant='caption' fontSize={14}>
+            <Grid item md={3} sx={{ textAlign: "center" }}>
+              <Typography variant="caption" fontSize={14}>
                 Posts
               </Typography>
-              <Typography variant='h3' color='#6931F9' fontSize={16}>
+              <Typography variant="h3" color="#6931F9" fontSize={16}>
                 {totalPosts || 0}
               </Typography>
+            </Grid>
+          </Grid>
+          <Grid container>
+            <Grid item md={5} sx={{ textAlign: "left" }}>
+              <Typography
+                variant="caption"
+                fontSize={12}
+                color="rgba(255, 255, 255, 0.31)"
+                fontWeight={"700"}
+              >
+                Team
+              </Typography>
+              {teamData.map((t, idx) => {
+                const teamLogo = t?.teamLogo
+                  ? (frontendSupabase.storage
+                      .from("public-files")
+                      .getPublicUrl(t.teamLogo).publicURL as string)
+                  : "/static/images/avatar/3.jpg";
+                return (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      mt: 1,
+                      cursor: "pointer",
+                    }}
+                    key={idx}
+                    onClick={(): any =>
+                      router.push(`/team/view/${t.id}/members`)
+                    }
+                  >
+                    <Avatar
+                      sx={{ mr: 1, width: 35, height: 35 }}
+                      alt={t.name.toUpperCase()}
+                      src={teamLogo}
+                    />
+                    <Typography
+                      variant="h3"
+                      fontSize={14}
+                      textOverflow="ellipsis"
+                    >
+                      {t.name}
+                    </Typography>
+                  </Box>
+                );
+              })}
             </Grid>
           </Grid>
         </Box>
 
         <Box className={styles.btnSection}>
-          <Button className={styles.bottomBtn} startIcon={isFollowing ? <CheckOutlined /> : <PersonAddAltIcon />} variant='contained' onClick={followAction}>
-            {
-              isFollowing ? 'Following' : 'Follow'
-            }
+          <Button
+            className={styles.bottomBtn}
+            startIcon={isFollowing ? <CheckOutlined /> : <PersonAddAltIcon />}
+            variant="contained"
+            onClick={followAction}
+          >
+            {isFollowing ? "Following" : "Follow"}
           </Button>
-          <Button className={styles.bottomBtn} variant='outlined' onClick={():any => fetchChannel()}>
+          <Button
+            className={styles.bottomBtn}
+            variant="outlined"
+            onClick={(): any => fetchChannel()}
+          >
             Message
           </Button>
         </Box>
       </Box>
 
       <>
-        <FollowersModal handleClose={handleCloseFollowersModal} userData={userData} showModal={openFollowersModal} listType="followers" />
+        <FollowersModal
+          handleClose={handleCloseFollowersModal}
+          userData={userData}
+          showModal={openFollowersModal}
+          listType="followers"
+        />
 
-        <FollowersModal handleClose={handleCloseFollowingModal} userData={userData} showModal={openFollowingModal} listType="following" />
+        <FollowersModal
+          handleClose={handleCloseFollowingModal}
+          userData={userData}
+          showModal={openFollowingModal}
+          listType="following"
+        />
       </>
-    </Box >
-  )
+    </Box>
+  );
 }
 export default OtherProfileCard;

@@ -20,7 +20,7 @@ const keys = [
   "status",
   "joinStatus",
   "createTemplateCode",
-  "sponsor"
+  "sponsor",
 ];
 export class TournamentsRepository extends BaseRepository<ITournament> {
   constructor(transaction: Knex.Transaction | Knex) {
@@ -63,75 +63,103 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
     const limit = params.limit || 5;
     const query = this.entities()
       .select(...keys)
-      .where(options ? options : {})
+      .where(options ? options : {});
 
-      if (params?.format) {
-        query.whereRaw("cast(settings->>? as varchar) = ?", [
-          "tournamentFormat",
-          params?.format ? params?.format : "$tournamentFormat",
-        ]);
-      }
-      
-      result = await query
+    if (params?.format) {
+      query.whereRaw("cast(settings->>? as varchar) = ?", [
+        "tournamentFormat",
+        params?.format ? params?.format : "$tournamentFormat",
+      ]);
+    }
 
-      if(params?.status){
-        result = result.filter((_doc: any) => {        
-           if(moment(_doc.startDate).isBefore(moment())) {
-            if(params?.status === "complete"){
-              return _doc
-            }
-           } else if(moment(_doc.startDate).isSame(moment(), "day")){
-              if(moment(moment(moment(_doc.startDate).format('YYYY-MM-DD')
-.toString()+' '+_doc.startTime)).isBefore(moment())){
-                if(params?.status === "complete"){
-                  return _doc
-                }
-              } else if(params?.status === "ongoing"){
-                  return _doc
-                }
-            } else if(params?.status === "pending"){
-                return _doc
-              } 
-        })
-      }
+    result = await query;
 
-      if(params?.amount){
-        result = result.filter((_doc: any) => {
-          if(params.amount === "Free"){
-            if(_doc?.settings?.entryFeeAmount < 1){
-              return _doc
-            }
-          } else if(params.amount === "1-5"){
-            if(_doc?.settings?.entryFeeAmount >= 1 && _doc?.settings?.entryFeeAmount <= 5){
-              return _doc
-            }
-          } else if(params.amount === "6-10"){
-            if(_doc?.settings?.entryFeeAmount >= 6 && _doc?.settings?.entryFeeAmount <= 10){
-              return _doc
-            }
-          } else if(params.amount === "11-15"){
-            if(_doc?.settings?.entryFeeAmount >= 11 && _doc?.settings?.entryFeeAmount <= 15){
-              return _doc
-            }
-          } else if(params.amount === "16-20"){
-            if(_doc?.settings?.entryFeeAmount >= 16 && _doc?.settings?.entryFeeAmount <= 20){
-              return _doc
-            }
-          } else if(params.amount === "20+"){
-            if(_doc?.settings?.entryFeeAmount > 20){
-              return _doc
-            }
+    if (params?.status) {
+      result = result.filter((_doc: any) => {
+        if (moment(_doc.startDate).isBefore(moment())) {
+          const startDateTime =
+            moment(_doc.startDate).format("D MMM YYYY ") +
+            moment(_doc.startTime, "HH:mm:ss").format("LT");
+          const isOnGoing = moment(startDateTime).isBetween(
+            moment().hour(0),
+            moment().hour(23).minute(59)
+          );
+          if (params?.status === "complete") {
+            if (!isOnGoing) return _doc;
           }
-        })
-      }
+          if (params?.status === "ongoing") {
+            if (isOnGoing) return _doc;
+          }
+        } else if (moment(_doc.startDate).isSame(moment(), "day")) {
+          if (
+            moment(
+              moment(_doc.startDate).format("YYYY-MM-DD").toString() +
+                " " +
+                _doc.startTime
+            ).isBefore(moment())
+          ) {
+            if (params?.status === "complete") {
+              return _doc;
+            }
+          } else if (params?.status === "ongoing") {
+            if (moment(_doc).isBetween(moment().hour(0), moment().hour(23)))
+              return _doc;
+          }
+        } else if (params?.status === "pending") {
+          return _doc;
+        }
+      });
+    }
 
-      const counts = [...result]
+    if (params?.amount) {
+      result = result.filter((_doc: any) => {
+        if (params.amount === "Free") {
+          if (_doc?.settings?.entryFeeAmount < 1) {
+            return _doc;
+          }
+        } else if (params.amount === "1-5") {
+          if (
+            _doc?.settings?.entryFeeAmount >= 1 &&
+            _doc?.settings?.entryFeeAmount <= 5
+          ) {
+            return _doc;
+          }
+        } else if (params.amount === "6-10") {
+          if (
+            _doc?.settings?.entryFeeAmount >= 6 &&
+            _doc?.settings?.entryFeeAmount <= 10
+          ) {
+            return _doc;
+          }
+        } else if (params.amount === "11-15") {
+          if (
+            _doc?.settings?.entryFeeAmount >= 11 &&
+            _doc?.settings?.entryFeeAmount <= 15
+          ) {
+            return _doc;
+          }
+        } else if (params.amount === "16-20") {
+          if (
+            _doc?.settings?.entryFeeAmount >= 16 &&
+            _doc?.settings?.entryFeeAmount <= 20
+          ) {
+            return _doc;
+          }
+        } else if (params.amount === "20+") {
+          if (_doc?.settings?.entryFeeAmount > 20) {
+            return _doc;
+          }
+        }
+      });
+    }
 
-      if (params?.page) {
-        result = result.slice((params.page - 1) * limit, params.page * limit);
-      } else {
-        result = result.slice((1 - 1) * limit, Number(limit));
-      }
+    const counts = [...result];
+
+    if (params?.page) {
+      result = result.slice((params.page - 1) * limit, params.page * limit);
+    } else {
+      result = result.slice((1 - 1) * limit, Number(limit));
+    }
 
     return {
       total: counts.length,

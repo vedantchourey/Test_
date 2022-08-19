@@ -104,8 +104,8 @@ export async function createPost(req: ICreatePostRequest, context: PerRequestCon
       data:{redirect:`/social/${postId}`},
       message: `${username} mention you in post`,
     }));
-    
-    await addNotifications(notification, context.transaction as Knex)
+
+    if(notification.length) await addNotifications(notification, context.transaction as Knex)
     
     return {
       data: {
@@ -148,8 +148,8 @@ export async function createPost(req: ICreatePostRequest, context: PerRequestCon
     sent_by: context.user?.id,
     message: `${username} mention you in post`,
   }));
-  
-  await addNotifications(notification, context.transaction as Knex)
+
+  if(notification.length) await addNotifications(notification, context.transaction as Knex)
 
   return {
     data: {

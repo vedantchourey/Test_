@@ -307,7 +307,7 @@ const Settings: React.FC<SettingProps> = ({
         </Grid>
       </CardLayout>
 
-      <CardLayout title="Advanced Fields">
+      {/* <CardLayout title="Advanced Fields">
         <Grid container rowSpacing={1} columnSpacing={5}>
           <Grid item xs={6}>
             <FormControl fullWidth>
@@ -339,7 +339,7 @@ const Settings: React.FC<SettingProps> = ({
           
         </Grid>
         
-      </CardLayout>
+      </CardLayout> */}
       <Box display="flex" justifyContent={"space-between"}>
         <Button
           variant="contained"

@@ -155,7 +155,7 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
       .then((res) => {
         if (res.status === 200) setOpen(false);
       })
-      .catch((err) => alert(err))
+      .catch(() => alert("You are already have team with same game and platform"))
       .finally(() => setLoader(false));
   };
 

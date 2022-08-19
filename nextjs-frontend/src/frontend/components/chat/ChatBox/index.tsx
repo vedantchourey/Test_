@@ -70,7 +70,8 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         .from("chat_users")
         .update({
           last_message: text,
-          updated_at: moment().add(5.5, "hour").toISOString(),
+          updated_at: moment().add(5.5, "hour")
+.toISOString(),
           last_message_by:
             (props.data?.channel_type === "support" ||
               props.data?.channel_type === "match") &&

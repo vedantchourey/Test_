@@ -19,13 +19,16 @@ const TournamentDashboardTable: React.FC = () => {
   React.useEffect(() => {
     setLoading(true)
     axios
-      .get("/api/tournaments/list")
+      .get("/api/tournaments/list", {
+        params: {
+          limit: 100,
+        },
+      })
       .then((res) => {
-        if(res.data.data && res.data.data.tournaments){
+        if (res.data.data && res.data.data.tournaments) {
           setData(res.data.data.tournaments.filter((i: any) => i !== null));
         }
-        setLoading(false)
-        
+        setLoading(false);
       })
       .catch((err) => {
         console.error(err);
@@ -136,17 +139,26 @@ const TournamentDashboardTable: React.FC = () => {
   const viewAllHandler = ():void =>{
     router.push("/tournament-master",undefined,{shallow:true})
   }
+  
   return (
     <React.Fragment>
       <NoobTable
         title={"Tournament Master"}
         colConf={conf}
-        data={data}
+        data={data
+          .sort((a: any, b: any) => {
+            const aTime: any = moment(a.startDate).format("x");
+            const bTime: any = moment(b.startDate).format("x");
+            return bTime - aTime;
+          })
+          .slice(0, 5)}
         loading={loading}
       />
       <CardLayout styles={{ padding: 0, paddingBottom: "0!important" }}>
         <Box justifyContent={"center"} width="100%">
-          <Button fullWidth onClick={viewAllHandler}>View all Tournament Masters</Button>
+          <Button fullWidth onClick={viewAllHandler}>
+            View all Tournament Masters
+          </Button>
         </Box>
       </CardLayout>
     </React.Fragment>

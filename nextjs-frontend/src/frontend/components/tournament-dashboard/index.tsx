@@ -1,10 +1,10 @@
-import { Avatar, Box, Button, Grid, Typography } from "@mui/material";
+import { Grid} from "@mui/material";
 import React from "react";
-import Image from "next/image";
+// import Image from "next/image";
 import DashboardSideBar from "../ui-components/dashboard-sidebar";
 import NoobPage from "../page/noob-page";
-import DashboardCard from "../ui-components/dashboard-card";
-import CelebrationIcon from "@mui/icons-material/Celebration";
+// import DashboardCard from "../ui-components/dashboard-card";
+// import CelebrationIcon from "@mui/icons-material/Celebration";
 import TournamentDashboardTable from "./tournament-table";
 
 const TournamentDashboard: React.FC = () => {
@@ -20,7 +20,7 @@ const TournamentDashboard: React.FC = () => {
           <DashboardSideBar />
         </Grid>
         <Grid item md={6} lg={9}>
-          <Grid container columnSpacing={2} rowSpacing={2}>
+          {/* <Grid container columnSpacing={2} rowSpacing={2}>
             <Grid item md={8}>
               <DashboardCard
                 leftChild={
@@ -116,11 +116,11 @@ const TournamentDashboard: React.FC = () => {
                 }
               />
             </Grid>
-          </Grid>
+          </Grid> */}
           <Grid item md={12} lg={12}>
             <TournamentDashboardTable />
           </Grid>
-          <Grid item md={12}>
+          {/* <Grid item md={12}>
             <Grid container columnSpacing={2}>
               <Grid item md={4}>
                 <DashboardCard
@@ -264,7 +264,7 @@ const TournamentDashboard: React.FC = () => {
                 />
               </Grid>
             </Grid>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Grid>
     </NoobPage>
