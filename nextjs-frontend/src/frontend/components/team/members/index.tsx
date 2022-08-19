@@ -127,7 +127,7 @@ interface TeamMembersProps {
   team: any;
 }
 
-const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
+const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team }) => {
   const theme = useTheme();
   const router = useRouter();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -162,17 +162,42 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
     });
   }
 
-  const dublicateData: any = []
-  const mydate = selectedTime === "Weekly" ? 7 : selectedTime === "Monthly" ? 30 : 365
+  const diffDay = moment().diff(moment(team?.created_at), "days");
+
+  const dublicateData: any = [];
+  const mydate =
+    selectedTime === "Weekly"
+      ? 7
+      : selectedTime === "Monthly"
+      ? 30
+      : diffDay > 364
+      ? 365
+      : diffDay + 2;
   for (let i = mydate; i > 0; i--) {
-      const fixTime: any = new Date()
-      const removeHours: any = new Date(parseInt(fixTime.setHours(fixTime.getUTCHours() - fixTime.getUTCHours())))
-      const removeMinuts: any = new Date(parseInt(removeHours.setMinutes(removeHours.getUTCMinutes() - removeHours.getUTCMinutes())))
-      const myTime: any = new Date(parseInt(removeMinuts.setSeconds(removeMinuts.getUTCSeconds() - removeMinuts.getUTCSeconds())))
-      dublicateData.push({
-          x: moment(new Date(parseInt(myTime.setUTCDate(myTime.getUTCDate() - i )))).format("DD/MM/YYYY"),
-          y: 0,
-      })
+    const fixTime: any = new Date();
+    const removeHours: any = new Date(
+      parseInt(fixTime.setHours(fixTime.getUTCHours() - fixTime.getUTCHours()))
+    );
+    const removeMinuts: any = new Date(
+      parseInt(
+        removeHours.setMinutes(
+          removeHours.getUTCMinutes() - removeHours.getUTCMinutes()
+        )
+      )
+    );
+    const myTime: any = new Date(
+      parseInt(
+        removeMinuts.setSeconds(
+          removeMinuts.getUTCSeconds() - removeMinuts.getUTCSeconds()
+        )
+      )
+    );
+    dublicateData.push({
+      x: moment(
+        new Date(parseInt(myTime.setUTCDate(myTime.getUTCDate() - i)))
+      ).format("DD/MM/YYYY"),
+      y: 0,
+    });
   }
 
   const fetchDataForGraph = async (): Promise<any> => {
@@ -181,19 +206,47 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
       .select("*")
       .eq("team_id", teamId);
     if (res.data?.length) {
-      const graphdata: any = res.data?.map((i: any) => ({
-        x: moment(i.created_at).format("DD/MM/YYYY"),
-        y: parseInt(i.elo_rating),
-      }));
+      const graphdata: any[] = res.data
+        ?.map((i: any) => ({
+          x: moment(i.created_at).format("DD/MM/YYYY"),
+          y: parseInt(i.elo_rating),
+        }))
+        .sort((a: any, b: any) => {
+          const aTime: any = moment(a.x, "DD/MM/YYYY").format("x");
+          const bTime: any = moment(b.x, "DD/MM/YYYY").format("x");
+          return aTime - bTime;
+        });
 
-        for (let i = 0; i < dublicateData.length; i++) {
-            for (let j = 0; j < graphdata.length; j++) {              
-                if(dublicateData[i].x === graphdata[j].x){
-                    dublicateData[i].y = graphdata[j].y
-                }
-            }
-        }       
-      
+      const diffDay = moment().diff(
+        moment(graphdata[0].x, "DD/MM/YYYY"),
+        "days"
+      );
+
+      const date = moment(graphdata[0].x, "DD/MM/YYYY");
+
+      const gData: any[] = [];
+      let lastGData = 0;
+
+      for (let i = 0; i < diffDay; i++) {
+        const findData = graphdata.find(
+          (i) => i.x === date.format("DD/MM/YYYY")
+        );
+        if (findData) lastGData = findData?.y;
+        gData.push({
+          x: date.format("DD/MM/YYYY"),
+          y: findData?.y || lastGData,
+        });
+        date.add(1, "day");
+      }
+
+      for (let i = 0; i < dublicateData.length; i++) {
+        for (let j = 0; j < gData.length; j++) {
+          if (dublicateData[i].x === gData[j].x) {
+            dublicateData[i].y = gData[j].y;
+          }
+        }
+      }
+
       const data = {
         datasets: [
           {
@@ -228,7 +281,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players }) => {
       };
     });
     setPlayerList(newList);
-  }, [players,selectedTime]);
+  }, [players, selectedTime]);
   const invitePlayer = async (): Promise<void> => {
     const payLoad = { email: email, team_id: teamId };
     const headers = await getAuthHeader();

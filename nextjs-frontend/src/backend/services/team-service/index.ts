@@ -105,6 +105,7 @@ export const fetchTeams = async (
         "teams.platform_id",
         "teams.id",
         "teams.created_by",
+        "teams.created_at",
         "teams.elo_rating as team_elo_rating",
         "private_profiles.firstName",
         "private_profiles.lastName",
@@ -150,6 +151,7 @@ export const fetchTeams = async (
         const owner = players.find((p) => p.is_owner === true);
         return {
           id: items[0].id,
+          created_at: items[0].created_at,
           name,
           teamLogo: items[0].teamLogo,
           created_by: owner.user_id,
