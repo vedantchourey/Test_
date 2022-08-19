@@ -183,21 +183,28 @@ export default function DrawerLeft(): JSX.Element {
             </div>
 
             {isLoggedIn && (
-              <div className={style.container1}>
-                <Button
-                  variant="text"
-                  style={{ color: "white" }}
-                  onClick={(): any => {
-                    if (user?.userRoles[0] === "noob-admin") {
-                      router.push("/tournament-dashboard");
-                    } else {
-                      router.push("/user-dashboard");
-                    }
-                  }}
-                >
-                  Dashboard
-                </Button>
-                <span className={style.border}></span>
+              <div
+                className={style.container1}
+                style={{ display: "flex", justifyContent: "center" }}
+              >
+                {user?.userRoles[0] === "noob-admin" ? (
+                  <>
+                    <Button
+                      variant="text"
+                      style={{ color: "white" }}
+                      onClick={(): any => {
+                        if (user?.userRoles[0] === "noob-admin") {
+                          router.push("/tournament-dashboard");
+                        } else {
+                          router.push("/user-dashboard");
+                        }
+                      }}
+                    >
+                      Dashboard
+                    </Button>
+                    <span className={style.border}></span>
+                  </>
+                ) : null}
                 <Button
                   variant="text"
                   style={{ color: "white" }}
@@ -215,10 +222,7 @@ export default function DrawerLeft(): JSX.Element {
                 onClick={gotoHomePage}
                 className={classes.buttonStyles}
               >
-                <img
-                  src="/images/menu/Home.png"
-                  className={classes.imgStyle}
-                />
+                <img src="/images/menu/Home.png" className={classes.imgStyle} />
                 Home
               </Button>
               <Button
