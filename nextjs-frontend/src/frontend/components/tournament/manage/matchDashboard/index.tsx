@@ -82,11 +82,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
     React.useState<TournamentData | null>(null);
 
   const autoSeedBrackets = async (): Promise<void> => {
-    const findFirstRound = tournamentDetails?.brackets.round.find(
-      (i: any) => i.number === 1
-    );
     const findFirstRoundMatch: any[] = tournamentDetails?.brackets.match
-      .filter((i: any) => i.round_id === findFirstRound.id)
       .map((m: any) => {
         const opponent1Player = tournamentDetails?.brackets.participant.find(
           (p: any) => m.opponent1.id === p.user_id || m.opponent1.id === p.id
