@@ -105,7 +105,6 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
               <Divider style={{ marginBottom: "30px", marginTop: "30px" }} />
               <Grid container rowSpacing={1} columnSpacing={5}>
                 <Grid item md={3}>
-                  
                   <Box marginTop={1}>
                     <LinearProgress
                       variant="determinate"
@@ -174,8 +173,10 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                 <Grid item md={2}>
                   <Typography className={classes.title}>Prize Pool</Typography>
                   <Typography className={classes.subTitle}>
-                    {(data?.pricingDetails?.currentPricePool || 0) *
-                      credit_config.price_per_credit}{" "}
+                    {data?.settings?.entryType === "credit"
+                      ? (data?.pricingDetails?.currentPricePool || 0) *
+                        credit_config.price_per_credit
+                      : "1000"}{" "}
                     INR
                   </Typography>
                 </Grid>
@@ -187,17 +188,17 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                   </Typography>
                 </Grid>
                 <Grid
-                    item
-                    md={3}
-                    display="flex"
-                    justifyContent={"flex-start"}
-                    mb={2}
-                  >
-                    <Typography marginRight={1}>
-                      Tournament Entry Status:
-                    </Typography>
-                    <Typography color="secondary"> Open </Typography>
-                  </Grid>
+                  item
+                  md={3}
+                  display="flex"
+                  justifyContent={"flex-start"}
+                  mb={2}
+                >
+                  <Typography marginRight={1}>
+                    Tournament Entry Status:
+                  </Typography>
+                  <Typography color="secondary"> Open </Typography>
+                </Grid>
               </Grid>
             </FormControl>
           </Grid>

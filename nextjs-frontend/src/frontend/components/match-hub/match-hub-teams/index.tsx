@@ -528,19 +528,19 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
               Back
             </Button>
             <Button
-              disabled={match.is_checked_in}
+              disabled={match.is_checked_in || isCheckedIn}
               style={{
                 color: "white",
                 padding: "12px 38px",
-                backgroundColor: match.is_checked_in
+                backgroundColor: match.is_checked_in || isCheckedIn
                   ? "rgba(255,255,255,0.2)"
                   : "#08001C",
-                border: match.is_checked_in ? undefined : "1px solid #6932F9",
+                border: match.is_checked_in || isCheckedIn ? undefined : "1px solid #6932F9",
                 margin: "0px 0px 0px 16px",
               }}
               onClick={(): any => checkInTournament()}
             >
-              {match.is_checked_in && isCheckedIn ? "Checked in" : "Check In"}
+              {match.is_checked_in || isCheckedIn ? "Checked in" : "Check In"}
             </Button>
             <Button
               style={{
@@ -740,7 +740,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                 </FormHelperText>
               ) : null}
             </Grid>
-            <Grid item xs={12} sm={4} md={4}>
+            <Grid item xs={12} sm={4} md={4} display={"none"}>
               <Select
                 displayEmpty
                 defaultValue={""}
@@ -749,7 +749,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                 <MenuItem value="">Select Round</MenuItem>
               </Select>
             </Grid>
-            <Grid item xs={12} sm={4} md={4}>
+            <Grid item xs={12} sm={4} md={4} display={"none"}>
               <FormControlLabel
                 value="true"
                 control={

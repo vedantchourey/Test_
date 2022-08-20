@@ -549,7 +549,7 @@ const ViewTournament: React.FC = () => {
                   <span
                     style={{ color: "rgba(105,50,249,1)", paddingLeft: "5px" }}
                   >
-                    {data.settings?.entryFeeAmount || 0}
+                    {data?.settings?.entryType === "credit" ? data.settings?.entryFeeAmount : "Free"}
                   </span>
                 </Typography>
               </Box>

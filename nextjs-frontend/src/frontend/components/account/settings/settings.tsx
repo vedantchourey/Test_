@@ -1,27 +1,42 @@
 import React, { useState } from "react";
-import { Box, Container, Divider, Grid, SxProps, Tab, Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  Divider,
+  Grid,
+  // SxProps,
+  // Tab,
+  Typography,
+} from "@mui/material";
 import styles from './style.module.css'
-import { TabContext, TabList, TabPanel } from "@mui/lab";
+import {
+  TabContext,
+  // TabList,
+  TabPanel,
+} from "@mui/lab";
 import PersonalSettings from './personal-settings';
 import Security from './security';
 type TabsProps = "personal" | "payment" | "preferences" | "security";
 
-const tabStyles: SxProps = {
-  textTransform: "capitalize",
-  minHeight: 42,
-  background: "rgba(255,255,255,0.1)",
-  border: '1px solid #31274A',
-  padding: '16px 52px',
-  fontWeight: 600,
-  mb: 5
-};
+// const tabStyles: SxProps = {
+//   textTransform: "capitalize",
+//   minHeight: 42,
+//   background: "rgba(255,255,255,0.1)",
+//   border: '1px solid #31274A',
+//   padding: '16px 52px',
+//   fontWeight: 600,
+//   mb: 5
+// };
 
 
 const ProfileSettings = (): JSX.Element => {
-  const [activeTab, setActiveTab] = useState<TabsProps>("personal");
-  const handleChange = (e: unknown, newValue: TabsProps): void => {
-    setActiveTab(newValue);
-  };
+  const [
+    activeTab, 
+    // setActiveTab
+  ] = useState<TabsProps>("personal");
+  // const handleChange = (e: unknown, newValue: TabsProps): void => {
+  //   setActiveTab(newValue);
+  // };
 
 
 
@@ -44,7 +59,7 @@ const ProfileSettings = (): JSX.Element => {
       <Container maxWidth='md'>
         <Box className={styles.formContainer}>
           <TabContext value={activeTab}>
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            {/* <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <TabList
                 onChange={handleChange}
                 TabIndicatorProps={{
@@ -64,7 +79,7 @@ const ProfileSettings = (): JSX.Element => {
                 <Tab label="Preferences" value="preferences" sx={tabStyles} />
                 <Tab label="Security" value="security" sx={tabStyles} />
               </TabList>
-            </Box>
+            </Box> */}
             <TabPanel sx={{ p: 0 }} value="personal">
               <PersonalSettings />
             </TabPanel>

@@ -263,7 +263,7 @@ const EliminateBracket = React.forwardRef<
                       <Checkbox
                         checked={formik.values.thirdPlace}
                         disabled={formik.values.playersLimit === 2}
-                        onChange={(e): void => {
+                        onChange={(): void => {
                           changeHandler(
                             "thirdPlace",
                             !formik.values.thirdPlace
