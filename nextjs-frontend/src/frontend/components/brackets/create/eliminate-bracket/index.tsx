@@ -182,7 +182,7 @@ const EliminateBracket = React.forwardRef<
             : new Date().toISOString(),
       };
     });
-  }, [formik.values.playersLimit, formik.values.type]);
+  }, [formik.values.playersLimit, formik.values.type, formik.values.thirdPlace]);
 
   return (
     <React.Fragment>
@@ -262,7 +262,8 @@ const EliminateBracket = React.forwardRef<
                     control={
                       <Checkbox
                         checked={formik.values.thirdPlace}
-                        onChange={(): void => {
+                        disabled={formik.values.playersLimit === 2}
+                        onChange={(e): void => {
                           changeHandler(
                             "thirdPlace",
                             !formik.values.thirdPlace
@@ -287,9 +288,11 @@ const EliminateBracket = React.forwardRef<
               <FormLabel label="Bracket Size(# of Players)"></FormLabel>
               <Select
                 value={formik.values.playersLimit}
-                onChange={(event: any): void =>
-                  changeHandler("playersLimit", event.target.value)
-                }
+                onChange={(event: any): void => {
+                  if (event.target.value === 2)
+                    changeHandler("thirdPlace", false);
+                  changeHandler("playersLimit", event.target.value);
+                }}
                 fullWidth
                 sx={{ m: 1 }}
               >
@@ -467,8 +470,7 @@ const EliminateBracket = React.forwardRef<
                       </Grid>
                       <Grid item sm={12}>
                         {formik.values?.rounds[index]?.isMap &&
-                          new Array(5).fill(5)
-.map((x, i) => (
+                          new Array(5).fill(5).map((x, i) => (
                             <OutlinedInput
                               id="map"
                               key={x}
