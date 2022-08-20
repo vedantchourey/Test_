@@ -520,7 +520,7 @@ export const submitMatchResult = async (
     let winningPrice: any;
     const winnerPlayer =
       data.opponent1.result === "lose"
-        ? data.opponent1.user_id
+        ? data.opponent2.user_id
         : data.opponent1.user_id;
 
     if (finalMatch?.id === data?.match_id) winningPrice = finalWinerPrice;

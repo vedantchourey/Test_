@@ -1,10 +1,26 @@
 import styled from "@emotion/styled";
-import { Button, Chip, Dialog, FormControl, Grid, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
+import {
+  Button,
+  Chip,
+  Dialog,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
 import moment from "moment";
 import { useRouter } from "next/router";
 import React from "react";
+import { TournamentData } from "../..";
 import { ReactComponent as CircleCloseIcon } from "../../../../../../public/icons/close.svg";
 import { getAuthHeader } from "../../../../utils/headers";
 import AccordionAlt from "../../../ui-components/accordion";
@@ -59,17 +75,130 @@ const MatchDashboard: React.FC = (): JSX.Element => {
   const [resultReq, setResultReq] = React.useState<any[]>([]);
   const [popVisible, setPopupVisible] = React.useState<boolean>(false);
   const [matchData, setMatchData] = React.useState<any>(undefined);
-  const [matchIssueModal, setMatchIssueModal] = React.useState<any>(null)
+  const [matchIssueModal, setMatchIssueModal] = React.useState<any>(null);
   const [image, setImage] = React.useState<string>("");
-  const [winnerId, setWinnerId] = React.useState<any>(null)
+  const [winnerId, setWinnerId] = React.useState<any>(null);
+  const [tournamentDetails, setTournamentDetails] =
+    React.useState<TournamentData | null>(null);
+
+  const autoSeedBrackets = async (): Promise<void> => {
+    const findFirstRound = tournamentDetails?.brackets.round.find(
+      (i: any) => i.number === 1
+    );
+    const findFirstRoundMatch: any[] = tournamentDetails?.brackets.match
+      .filter((i: any) => i.round_id === findFirstRound.id)
+      .map((m: any) => {
+        const opponent1Player = tournamentDetails?.brackets.participant.find(
+          (p: any) => m.opponent1.id === p.user_id || m.opponent1.id === p.id
+        );
+        const opponent2Player = tournamentDetails?.brackets.participant.find(
+          (p: any) => m.opponent2.id === p.user_id || m.opponent2.id === p.id
+        );
+        return {
+          ...m,
+          opponent1: {
+            ...m.opponent1,
+            player: opponent1Player.user_id || opponent1Player.team_id,
+          },
+          opponent2: {
+            ...m.opponent2,
+            player: opponent2Player.user_id || opponent2Player.team_id,
+          },
+        };
+      })
+      .filter(
+        (m: any) => m.opponent1.player !== null && m.opponent2.player === null
+      );
+
+    const setResult: any[] = findFirstRoundMatch.map((m) => {
+      return {
+        ...m,
+        match_id: m.id,
+        tournament_id: tournamentDetails?.id,
+        status: "RESOLVED",
+        forceUpdate: true,
+        opponent1: {
+          id: m.opponent1.id,
+          position: m.opponent1.position,
+          score: 1,
+          result: "win",
+          user_id: m.opponent1.player,
+        },
+        opponent2: {
+          id: m.opponent2.id,
+          position: m.opponent2.position,
+          score: 0,
+          result: "loss",
+          user_id: m.opponent2.player,
+        },
+      };
+    });
+
+    const endpoint = "/api/tournaments/match-result";
+    const headers = await getAuthHeader();
+
+    await Promise.any(
+      setResult.map((match) =>
+        axios
+          .patch(
+            endpoint,
+            {
+              ...match,
+            },
+            { headers: headers }
+          )
+          .catch((err) => console.warn(err)))
+    );
+
+    alert("Auto seeding completed");
+  };
+
+  const fetchAllDetails = (): void => {
+    axios
+      .get(`/api/tournaments/${router.query.id}/details`)
+      .then((res) => {
+        if (res.data.data) {
+          const tournamentData = res.data.data;
+          Object.keys(tournamentData).forEach((key) => {
+            if (tournamentData[key] === null) {
+              delete tournamentData[key];
+            }
+          });
+
+          setTournamentDetails({
+            ...tournamentData,
+            basic: {
+              name: tournamentData.name,
+              about: tournamentData.about,
+              game: tournamentData.game,
+              startDate: tournamentData.startDate,
+              startTime: moment(tournamentData.startTime, "hh:mm:ss").toDate(),
+              banner: tournamentData.banner,
+              sponsor: tournamentData.sponsor,
+              createTemplateCode: tournamentData.createTemplateCode,
+              cloneTournament: tournamentData.createTemplateCode !== undefined,
+            },
+            publishData: {
+              society: tournamentData.joinStatus,
+              registration: tournamentData.status,
+            },
+          } as TournamentData);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   const tournamentList = async (): Promise<void> => {
     try {
-    const endpoint = "/api/match-dispute/list";
+      const endpoint = "/api/match-dispute/list";
       const headers = await getAuthHeader();
-      axios.get(endpoint, { params: { tournamentId: id }, headers: headers }).then((res) => {
-        setData(res.data);
-      });
+      axios
+        .get(endpoint, { params: { tournamentId: id }, headers: headers })
+        .then((res) => {
+          setData(res.data);
+        });
     } catch (err) {
       alert(err);
     }
@@ -78,9 +207,11 @@ const MatchDashboard: React.FC = (): JSX.Element => {
     try {
       const endpoint = "/api/tournaments/match-result";
       const headers = await getAuthHeader();
-      axios.get(endpoint, { params: { tournament_id: id }, headers: headers }).then((res) => {
-        setResultReq(res.data);
-      });
+      axios
+        .get(endpoint, { params: { tournament_id: id }, headers: headers })
+        .then((res) => {
+          setResultReq(res.data);
+        });
     } catch (err) {
       alert(err);
     }
@@ -88,25 +219,30 @@ const MatchDashboard: React.FC = (): JSX.Element => {
   React.useEffect(() => {
     tournamentList();
     fetchMatchResultReq();
+    fetchAllDetails();
   }, []);
 
   const resolveDispute = async (id: any): Promise<void> => {
     const endpoint = "/api/match-dispute/update";
     const headers = await getAuthHeader();
-    axios.patch(endpoint, { id, status: "RESOLVED" }, { headers: headers }).then(() => {
-      tournamentList();
-    });
+    axios
+      .patch(endpoint, { id, status: "RESOLVED" }, { headers: headers })
+      .then(() => {
+        tournamentList();
+      });
   };
 
   const fetchMatch = async (item: any): Promise<void> => {
     try {
       const endpoint = `/api/tournaments/${item.tournamentId}/${item.matchId}`;
       const headers = await getAuthHeader();
-      axios.get(endpoint, { params: { tournament_id: id }, headers: headers }).then((res) => {
-        setMatchData(res.data);
-        setMatchIssueModal(item);
-        // setResultReq(res.data);
-      });
+      axios
+        .get(endpoint, { params: { tournament_id: id }, headers: headers })
+        .then((res) => {
+          setMatchData(res.data);
+          setMatchIssueModal(item);
+          // setResultReq(res.data);
+        });
     } catch (err) {
       alert(err);
     }
@@ -116,7 +252,13 @@ const MatchDashboard: React.FC = (): JSX.Element => {
     fetchMatchResultReq();
   }, []);
 
-  const updateResult = async ({ id, tournament_id, draw, opponent1_id, winnerId }: any): Promise<void> => {
+  const updateResult = async ({
+    id,
+    tournament_id,
+    draw,
+    opponent1_id,
+    winnerId,
+  }: any): Promise<void> => {
     let op1Result,
       op2Result,
       op1Score = 0,
@@ -133,7 +275,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
       op2Result = "win";
       op2Score = 1;
     }
-    
+
     const endpoint = "/api/tournaments/match-result";
     const headers = await getAuthHeader();
     axios
@@ -176,9 +318,15 @@ const MatchDashboard: React.FC = (): JSX.Element => {
   const acceptResult = async ({ id, tournament_id }: any): Promise<void> => {
     const endpoint = "/api/tournaments/match-result";
     const headers = await getAuthHeader();
-    axios.patch(endpoint, { id, status: "RESOLVED", tournament_id }, { headers: headers }).then(() => {
-      fetchMatchResultReq();
-    });
+    axios
+      .patch(
+        endpoint,
+        { id, status: "RESOLVED", tournament_id },
+        { headers: headers }
+      )
+      .then(() => {
+        fetchMatchResultReq();
+      });
   };
 
   const toggle = (data: string): void => {
@@ -187,6 +335,9 @@ const MatchDashboard: React.FC = (): JSX.Element => {
   };
   return (
     <React.Fragment>
+      <Button onClick={(): any => autoSeedBrackets()} variant="outlined">
+        Auto Seed
+      </Button>
       <AccordionAlt
         title="MATCH DISTIPUTES"
         icon={{ expanded: <CircleCloseIcon /> }}
@@ -237,7 +388,14 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                           </NoobCell>
                           <NoobCell>
                             <Typography>
-                              <Chip label={item.status} color={item.status === "PENDING" ? "warning" : "success"} />
+                              <Chip
+                                label={item.status}
+                                color={
+                                  item.status === "PENDING"
+                                    ? "warning"
+                                    : "success"
+                                }
+                              />
                             </Typography>
                           </NoobCell>
                           <NoobCell>
@@ -327,7 +485,14 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                           </NoobCell>
                           <NoobCell>
                             <Typography>
-                              <Chip label={item.result_status} color={item.result_status === "ACCEPTED" ? "success" : "warning"} />
+                              <Chip
+                                label={item.result_status}
+                                color={
+                                  item.result_status === "ACCEPTED"
+                                    ? "success"
+                                    : "warning"
+                                }
+                              />
                             </Typography>
                           </NoobCell>
 
