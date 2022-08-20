@@ -13,9 +13,11 @@ import {
 import { IMatchHubData } from "../../../../../pages/match-hub";
 import { useRouter } from "next/router";
 
-const MatchHistory: React.FC<{ data: IMatchHubData[], teamId: string }> = (props) => {
-  const router=useRouter();
-  
+const MatchHistory: React.FC<{ data: IMatchHubData[]; teamId: string }> = (
+  props
+) => {
+  const router = useRouter();
+
   return (
     <Grid container>
       <Grid item xs={12} sm={12} md={8}>
@@ -30,7 +32,14 @@ const MatchHistory: React.FC<{ data: IMatchHubData[], teamId: string }> = (props
             </NoobTableHead>
             <TableBody>
               {props.data.map((row, idx) => {
-                const status=row.opponent1.team_id === props.teamId? (row.opponent2.result?row.opponent2.result:"-") : (row.opponent1.result?row.opponent1.result:"-");
+                const status =
+                  row.opponent1.team_id === props.teamId
+                    ? row.opponent2.result
+                      ? row.opponent2.result
+                      : "Pending"
+                    : row.opponent1.result
+                    ? row.opponent1.result
+                    : "Pending";
                 return (
                   <NoobTableRow key={idx}>
                     <NoobTableCell
@@ -40,16 +49,38 @@ const MatchHistory: React.FC<{ data: IMatchHubData[], teamId: string }> = (props
                       }}
                       //onClick={():void=>{router.push(`/team/view/${row.opponent1.user_id === user?.id ? row.opponent1.team_id:row.opponent2.team_id}/members`)}}
                     >
-                      <Typography>{row.opponent1.team_id === props.teamId ? row.opponent2.name:row.opponent1.name}</Typography>
+                      <Typography>
+                        {row.opponent1.team_id === props.teamId
+                          ? row.opponent2.name
+                          : row.opponent1.name}
+                      </Typography>
                     </NoobTableCell>
                     <NoobTableCell>
-                        <Typography style={{color:status==="win"?"#19D873":status==="loss"?"#FF0000":"#FFFFFF"}}>{status?status.toUpperCase():"-"}</Typography>
+                      <Typography
+                        style={{
+                          color:
+                            status === "win"
+                              ? "#19D873"
+                              : status === "loss"
+                              ? "#FF0000"
+                              : "orange",
+                        }}
+                      >
+                        {status ? status.toUpperCase() : "-"}
+                      </Typography>
                     </NoobTableCell>
-                    <NoobTableCell onClick={():void=>{router.push(`/view-tournament/${row.tournament_id}/details`)}}>
+                    <NoobTableCell
+                      onClick={(): void => {
+                        router.push(
+                          `/view-tournament/${row.tournament_id}/details`
+                        );
+                      }}
+                    >
                       <Typography>{row.tournament_name}</Typography>
                     </NoobTableCell>
                   </NoobTableRow>
-                );})}
+                );
+              })}
             </TableBody>
           </Table>
         </TableContainer>

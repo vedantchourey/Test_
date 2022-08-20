@@ -182,7 +182,7 @@ export default function DrawerLeft(): JSX.Element {
               </Button>
             </div>
 
-            {isLoggedIn && (
+            {isLoggedIn && user?.userRoles[0] === "noob-admin" && (
               <div
                 className={style.container1}
                 style={{ display: "flex", justifyContent: "center" }}
@@ -330,6 +330,20 @@ export default function DrawerLeft(): JSX.Element {
                     className={classes.imgStyle}
                   />
                   My Teams
+                </Button>
+              )}
+
+              {isLoggedIn && (
+                <Button
+                  variant="text"
+                  className={classes.buttonStyles}
+                  onClick={(): any => router.push("/account/setting")}
+                >
+                  <img
+                    src="/images/menu/My-Team.png"
+                    className={classes.imgStyle}
+                  />
+                  Account
                 </Button>
               )}
 
