@@ -470,7 +470,8 @@ const EliminateBracket = React.forwardRef<
                       </Grid>
                       <Grid item sm={12}>
                         {formik.values?.rounds[index]?.isMap &&
-                          new Array(5).fill(5).map((x, i) => (
+                          new Array(5).fill(5)
+.map((x, i) => (
                             <OutlinedInput
                               id="map"
                               key={x}

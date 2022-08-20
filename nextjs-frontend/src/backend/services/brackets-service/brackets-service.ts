@@ -488,19 +488,37 @@ export const submitMatchResult = async (
     const semiMatch = selectMatchGroup[selectMatchGroup.length - 2];
     const qMatch = selectMatchGroup[selectMatchGroup.length - 3];
 
-    const pricePool = tournamentData?.data?.pricingDetails?.pricePool;
+    const pricePool = tournamentData?.data?.pricingDetails?.currentPricePool;
     const price_per_credit = backendConfig.credit_config.price_per_credit;
+    const playersLimit = tournamentData?.data?.bracketsMetadata?.playersLimit || 2;
 
-    const finalWinerPrice = pricePool ? pricePool * 0.6 * price_per_credit : 0;
-    const semiFinalWinerPrice = pricePool
-      ? pricePool * 0.3 * price_per_credit
-      : 0;
-    const qFinalWinerPrice = pricePool ? pricePool * 0.1 * price_per_credit : 0;
+    const finalWinerPrice = (
+      tournamentData?.data?.settings?.entryType === "credit"
+        ? pricePool * (playersLimit > 2 ? 0.6 : 0.65) * price_per_credit
+        : (playersLimit > 2 ? 600 : 700)
+    ).toFixed();
+    const semiFinalWinerPrice = (
+      tournamentData?.data?.settings?.entryType === "credit"
+        ? pricePool * (playersLimit > 2 ? 0.3 : 0.35) * price_per_credit
+        : 300
+    ).toFixed();
+    const qFinalWinerPrice = (
+      tournamentData?.data?.settings?.entryType === "credit"
+        ? pricePool * 0.1 * price_per_credit
+        : 100
+    ).toFixed();
+
+
 
     let data: any;
     if (!req.forceUpdate) {
       data = await repos.findById(req.id);
       if (!data) return getErrorObject("Invalid match Id");
+      data = {
+        ...data,
+        opponent1: {...data.opponent1, user_id: req.opponent1Id},
+        opponent2: {...data.opponent2, user_id: req.opponent2Id}
+      }
     } else {
       data = {
         match_id: req.id,
@@ -518,14 +536,15 @@ export const submitMatchResult = async (
     const match: IBMatch = await repo.findById(data?.match_id);
 
     let winningPrice: any;
+    
     const winnerPlayer =
       data.opponent1.result === "lose"
         ? data.opponent2.user_id
         : data.opponent1.user_id;
 
-    if (finalMatch?.id === data?.match_id) winningPrice = finalWinerPrice;
-    if (semiMatch?.id === data?.match_id) winningPrice = semiFinalWinerPrice;
-    if (qMatch?.id === data?.match_id) winningPrice = qFinalWinerPrice;
+    if (parseInt(finalMatch?.id) === parseInt(data?.match_id)) winningPrice = finalWinerPrice;
+    if (parseInt(semiMatch?.id) === parseInt(data?.match_id)) winningPrice = semiFinalWinerPrice;
+    if (parseInt(qMatch?.id) === parseInt(data?.match_id)) winningPrice = qFinalWinerPrice;
 
     if (winningPrice > 0) {
       const users = new CrudRepository<IPrivateProfile>(
@@ -534,7 +553,10 @@ export const submitMatchResult = async (
       );
       const data = await users.knexObj().where("id", winnerPlayer);
       await users.update(
-        { withdrawAmount: (data[0].withdrawAmount || 0) + winningPrice },
+        {
+          withdrawAmount:
+            parseInt(data[0].withdrawAmount || 0) + parseInt(winningPrice),
+        },
         { id: winnerPlayer }
       );
     }

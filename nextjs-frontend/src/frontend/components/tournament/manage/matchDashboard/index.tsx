@@ -315,13 +315,19 @@ const MatchDashboard: React.FC = (): JSX.Element => {
       });
   };
 
-  const acceptResult = async ({ id, tournament_id }: any): Promise<void> => {
+  const acceptResult = async ({ id, tournament_id, opponent1, opponent2 }: any): Promise<void> => {
     const endpoint = "/api/tournaments/match-result";
     const headers = await getAuthHeader();
     axios
       .patch(
         endpoint,
-        { id, status: "RESOLVED", tournament_id },
+        {
+          id,
+          status: "RESOLVED",
+          tournament_id,
+          opponent1Id: opponent1.player.id,
+          opponent2Id: opponent2.player.id,
+        },
         { headers: headers }
       )
       .then(() => {
