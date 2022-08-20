@@ -340,7 +340,7 @@ export default function DrawerLeft(): JSX.Element {
                   onClick={(): any => router.push("/account/setting")}
                 >
                   <img
-                    src="/images/menu/My-Team.png"
+                    src="/images/menu/Profile-Setting.png"
                     className={classes.imgStyle}
                   />
                   Account
