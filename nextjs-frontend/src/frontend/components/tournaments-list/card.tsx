@@ -23,6 +23,7 @@ const CardDesktop: React.FC<any> = ({
   start_date,
   credits,
   banner,
+  isCompleted
 }: any) => {
   const router = useRouter();
   const isOnGoing = moment(start_date).isBetween(
@@ -31,14 +32,18 @@ const CardDesktop: React.FC<any> = ({
 .minute(59)
   );
   return (
-    <Box width={window.innerWidth / 2.8} height={window.innerWidth / 2.8 / 2.9} minWidth={window.innerWidth / 2.8} m={2}>
+    <Box
+      width={window.innerWidth / 2.8}
+      height={window.innerWidth / 2.8 / 2.9}
+      minWidth={window.innerWidth / 2.8}
+      m={2}
+    >
       <Box
         style={{
           backgroundImage: `url(${banner})`,
           backgroundRepeat: "no-repeat",
           backgroundSize: "100% 100%",
           paddingBottom: "0px",
-          
         }}
         height={"100%"}
       >
@@ -86,14 +91,18 @@ const CardDesktop: React.FC<any> = ({
                 <Button
                   variant="contained"
                   sx={{
-                    background: isOnGoing
+                    background: isCompleted
+                      ? "rgba(249, 85, 49, 1)"
+                      : isOnGoing
                       ? "rgba(249, 49, 193, 1)"
                       : moment(start_date).isBefore(moment().add(1, "day"))
                       ? "rgba(249, 85, 49, 1)"
                       : "rgba(105, 49, 249, 1)",
                   }}
                 >
-                  {isOnGoing
+                  {isCompleted
+                    ? "Completed"
+                    : isOnGoing
                     ? "On Going"
                     : moment(start_date).isBefore(moment())
                     ? "Completed"
@@ -227,6 +236,7 @@ const CardComp = ({
   credits,
   participants,
   banner,
+  isCompleted
 }: any): JSX.Element => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -256,6 +266,7 @@ const CardComp = ({
           tournament_name={tournament_name}
           tournament_type={tournament_type}
           platform={selectedPlatform?.displayName}
+          isCompleted={isCompleted}
           banner={banner}
           total_slots={total_slots}
           left_slots={left_slots}

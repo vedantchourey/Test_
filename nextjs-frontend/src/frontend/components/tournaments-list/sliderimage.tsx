@@ -193,11 +193,16 @@ const SliderComp: React.FC = (): JSX.Element => {
               moment(data.startTime, "HH:mm:ss").format("LT");
             const totalSlots = data?.bracketsMetadata?.playersLimit || 0;
             const currentSlot = (data?.playerList || []).length;
+            const isCompleted: boolean =
+              data?.brackets?.match?.filter(
+                (i: any) => !i.opponent1.result && !i.opponent2.result
+              ).length === 0;
 
             return (
               <>
                 <CardComp
                   id={data.id}
+                  isCompleted={isCompleted}
                   tournament_name={data.name}
                   banner={data.banner}
                   tournament_type={data.settings?.tournamentFormat}
