@@ -486,23 +486,22 @@ export const submitMatchResult = async (
 
     const finalMatch = selectMatchGroup[selectMatchGroup.length - 1];
     const semiMatch = selectMatchGroup[selectMatchGroup.length - 2];
-    const qMatch = selectMatchGroup[selectMatchGroup.length - 3];
 
     const pricePool = tournamentData?.data?.pricingDetails?.currentPricePool;
     const price_per_credit = backendConfig.credit_config.price_per_credit;
     const playersLimit = tournamentData?.data?.bracketsMetadata?.playersLimit || 2;
 
-    const finalWinerPrice = (
+    const firstWinerPrice = (
       tournamentData?.data?.settings?.entryType === "credit"
         ? pricePool * (playersLimit > 2 ? 0.6 : 0.65) * price_per_credit
         : (playersLimit > 2 ? 600 : 700)
     ).toFixed();
-    const semiFinalWinerPrice = (
+    const secondWinerPrice = (
       tournamentData?.data?.settings?.entryType === "credit"
         ? pricePool * (playersLimit > 2 ? 0.3 : 0.35) * price_per_credit
         : 300
     ).toFixed();
-    const qFinalWinerPrice = (
+    const thirdWinerPrice = (
       tournamentData?.data?.settings?.entryType === "credit"
         ? pricePool * 0.1 * price_per_credit
         : 100
@@ -536,15 +535,27 @@ export const submitMatchResult = async (
     const match: IBMatch = await repo.findById(data?.match_id);
 
     let winningPrice: any;
+    let losserPrice: any;
     
     const winnerPlayer =
       data.opponent1.result === "lose"
         ? data.opponent2.user_id
         : data.opponent1.user_id;
 
-    if (parseInt(finalMatch?.id) === parseInt(data?.match_id)) winningPrice = finalWinerPrice;
-    if (parseInt(semiMatch?.id) === parseInt(data?.match_id)) winningPrice = semiFinalWinerPrice;
-    if (parseInt(qMatch?.id) === parseInt(data?.match_id)) winningPrice = qFinalWinerPrice;
+    const losserPlayer =
+      data.opponent1.result !== "lose"
+        ? data.opponent2.user_id
+        : data.opponent1.user_id;
+
+    if (parseInt(finalMatch?.id) === parseInt(data?.match_id)) {
+      winningPrice = firstWinerPrice;
+      losserPrice = secondWinerPrice;
+    }
+    if (parseInt(semiMatch?.id) === parseInt(data?.match_id)) {
+      losserPrice = thirdWinerPrice;
+    }
+
+    
 
     if (winningPrice > 0) {
       const users = new CrudRepository<IPrivateProfile>(
@@ -559,6 +570,24 @@ export const submitMatchResult = async (
         },
         { id: winnerPlayer }
       );
+    }
+
+    
+    
+    if (losserPrice > 0) {
+      const users = new CrudRepository<IPrivateProfile>(
+        knexConnection,
+        TABLE_NAMES.PRIVATE_PROFILE
+      );
+      const data = await users.knexObj().where("id", losserPlayer);
+      await users
+        .update(
+          {
+            withdrawAmount:
+              parseInt(data[0].withdrawAmount || 0) + parseInt(losserPrice),
+          },
+          { id: losserPlayer }
+        )
     }
 
     const manager = new BracketsManager(
