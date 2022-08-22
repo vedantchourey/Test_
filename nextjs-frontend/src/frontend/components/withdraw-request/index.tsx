@@ -10,6 +10,8 @@ import moment from "moment";
 const WithdrawRequest: React.FC = () => {
   const [data, setData] = React.useState([]);
 
+  console.log('data -> ', data);
+
   const fetchData = async (): Promise<void> => {
     const headers = await getAuthHeader();
     axios
@@ -70,7 +72,14 @@ const WithdrawRequest: React.FC = () => {
           </div>
         );
       },
-      width: "40%",
+      width: "30%",
+    },
+    {
+      title: "Amount",
+      renderCell: (row): any => {
+        return `${row.withdrawAmount} INR`;
+      },
+      width: "10%",
     },
     {
       title: "Status",
