@@ -26,24 +26,24 @@ const WithdrawRequest: React.FC = () => {
     fetchData();
   }, []);
 
-const resolve = async (id: string): Promise<void> => {
-  try {
-    const endpoint = "/api/withdraw";
-    const headers = await getAuthHeader();
-    axios
-      .patch(endpoint, { id: id }, { headers: headers })
-      .then((res) => {
-        if (res.status === 200) {
-          fetchData();
-        }
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
-  } catch (err) {
-    console.error(err);
-  }
-};
+  const resolve = async (id: string): Promise<void> => {
+    try {
+      const endpoint = "/api/withdraw";
+      const headers = await getAuthHeader();
+      axios
+        .patch(endpoint, { id: id }, { headers: headers })
+        .then((res) => {
+          if (res.status === 200) {
+            fetchData();
+          }
+        })
+        .catch(function (error) {
+          console.error(error);
+        });
+    } catch (err) {
+      console.error(err);
+    }
+  };
   const conf: NoobColumnConf<any>[] = [
     {
       title: "",
@@ -55,7 +55,20 @@ const resolve = async (id: string): Promise<void> => {
     {
       title: "Name",
       renderCell: (row): any => {
-        return `${row.firstName} ${row.lastName}`;
+        return (
+          <div>
+            <Typography>{`${row.firstName} ${row.lastName}`}</Typography>
+            <Typography fontSize={12} color={"rgba(255,255,255,0.5)"}>
+              Account Number: {row.kycDetails.account_no}
+            </Typography>
+            <Typography fontSize={12} color={"rgba(255,255,255,0.5)"}>
+              IFSC: {row.kycDetails.ifsc}
+            </Typography>
+            <Typography fontSize={12} color={"rgba(255,255,255,0.5)"}>
+              Account Name: {row.kycDetails.name}
+            </Typography>
+          </div>
+        );
       },
       width: "40%",
     },

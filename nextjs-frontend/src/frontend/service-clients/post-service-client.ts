@@ -114,9 +114,9 @@ export const checkIsPostLiked = async (payload: {
       .limit(1);
     if (result.error) throw result.error;
     return { isLiked: result.data.length > 0 };
-  } else {
+  } 
     return { isLiked: false };
-  }
+  
 };
 
 export const checkIsCommentLiked = async (payload: {
@@ -132,9 +132,9 @@ export const checkIsCommentLiked = async (payload: {
       .limit(1);
     if (result.error) throw result.error;
     return { isLiked: result.data.length > 0 };
-  } else {
+  } 
     return { isLiked: false };
-  }
+  
 };
 
 export const getPostLikesCount = async (postId: string): Promise<{ totalLikes: number | null }> => {

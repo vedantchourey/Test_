@@ -6,6 +6,22 @@ import { CrudRepository } from "../database/repositories/crud-repository";
 import { IWithdrawRequest } from "../database/models/i-withdraw-request";
 import { IPrivateProfile } from "../database/models/i-private-profile";
 
+const fetchKycDetails = async (
+  connection: Knex.Transaction,
+  data: any,
+  user_id: string
+): Promise<any> => {
+  const kycRepo = new CrudRepository<IWithdrawRequest>(
+    connection,
+    TABLE_NAMES.KYC_DETAILS
+  );
+  const details = await kycRepo.find({ user_id });
+  return {
+    ...data,
+    kycDetails: details[0],
+  };
+};
+
 
 export const fetchWithdrawRequest = async (connection: Knex.Transaction): Promise<ISuccess | IError> => {
     try {
@@ -25,7 +41,12 @@ export const fetchWithdrawRequest = async (connection: Knex.Transaction): Promis
           .select("private_profiles.firstName")
           .select("private_profiles.lastName")
           .where("withdraw_request.status",STATUS.PENDING);
-        return { result };
+
+        const data = await Promise.all(
+          result.map((i: any) => fetchKycDetails(connection, i, i.user_id))
+        );
+
+        return { result: data };
     } catch (ex: any) {
         return getErrorObject("Something went wrong" + ex.message)
     }
