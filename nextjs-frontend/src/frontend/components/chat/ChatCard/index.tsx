@@ -3,6 +3,7 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import GroupIcon from "@mui/icons-material/Group";
+import {validate} from 'uuid'
 
 interface IChatCard {
   name: string;
@@ -22,7 +23,11 @@ export default function ChatCard(props: IChatCard): JSX.Element {
   const [chatImage, setChatImage] = useState(props.image);
 
   const fetchLastSeen = async (): Promise<void> => {
-    if (props.type === "one-to-one" && props.otherUser !== "support") {
+    if (
+      props.type === "one-to-one" &&
+      props.otherUser &&
+      validate(props.otherUser)
+    ) {
       const userDataReq = await frontendSupabase
         .from("profiles")
         .select()

@@ -138,12 +138,22 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         if (payload.new.channel_id === props.channelId) {
           const updateMessages = [...messageRef.current, payload.new];
           setMessages(updateMessages);
-          await frontendSupabase
-            .from("chat_users")
-            .update({
-              unread: false,
-            })
-            .eq("channel_id", props.channelId);
+
+          const isCurrentUserMessage =
+            props.user?.userRoles[0] === "noob-admin" &&
+            payload.new.send_by === "Support"
+              ? true
+              : payload.new.send_by === props.userId;
+
+          if (!isCurrentUserMessage) {
+            await frontendSupabase
+              .from("chat_users")
+              .update({
+                unread: false,
+              })
+              .eq("channel_id", props.channelId);
+          }
+          
         }
       })
       .subscribe();
