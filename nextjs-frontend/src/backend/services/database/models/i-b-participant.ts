@@ -5,4 +5,5 @@ export interface IBParticipants {
   user_id?: string;
   is_check_in?: boolean,
   team_id?: string;
+  gameUniqueId?: string;
 }

@@ -503,6 +503,7 @@ export const handleInviteSubmit = async (
     tournament_id,
     status: STATUS.ACCEPTED,
   });
+  const gameUniqueId = acceptedInvites[0].gameUniqueId;
   const numberOfPlayer: string =
     tournament?.settings?.tournamentFormat || "1v1";
   if (TOURNAMENT_TYPE_NUMBER[numberOfPlayer] === acceptedInvites.length) {
@@ -510,6 +511,7 @@ export const handleInviteSubmit = async (
       {
         tournamentId: tournament_id,
         team_id,
+        gameUniqueId
       } as any,
       knexConnection
     );
@@ -675,7 +677,7 @@ export const fetchUserMatchs = async (
       // .join("b_tournament", "b_tournament.id", "b_participant.tournament_id")
       .where("user_id", user?.id)
       .orWhereIn("team_id", team_ids)
-      .select(["id", "tournament_id", "user_id", "team_id", "is_checked_in"]);
+      .select(["id", "tournament_id", "user_id", "team_id", "is_checked_in", "gameUniqueId"]);
 
     if (!tournaments?.length) {
       return [];
@@ -725,9 +727,12 @@ export const fetchUserMatchs = async (
 
     const groupPartList = _.groupBy(part_list, "id");
     const opponents: any[] = [];
+    const opponentsWithGameUniqueId: any = {};
     const opp_teams: any[] = [];
 
     part_list.forEach((part: any) => {
+      if (part.gameUniqueId)
+        opponentsWithGameUniqueId[`${part.user_id}-${part.id}`] = part.gameUniqueId;
       if (part.user_id) opponents.push(part.user_id);
       if (part.team_id) opp_teams.push(part.team_id);
     });
@@ -788,6 +793,7 @@ export const fetchUserMatchs = async (
           if (participant.user_id) {
             const data = await profileRepo.findById(participant.user_id);
             opponent1 = {
+              gameUniqueId: opponentsWithGameUniqueId[`${participant.user_id}-${opponent1.id}`],
               ...opponent1,
               ...data,
               ...opp_user_grouped[participant.user_id][0],
@@ -824,6 +830,7 @@ export const fetchUserMatchs = async (
           if (participant.user_id) {
             const data = await profileRepo.findById(participant.user_id);
             opponent2 = {
+              gameUniqueId: opponentsWithGameUniqueId[`${participant.user_id}-${opponent2.id}`],
               ...opponent2,
               ...data,
               ...opp_user_grouped[participant.user_id][0],

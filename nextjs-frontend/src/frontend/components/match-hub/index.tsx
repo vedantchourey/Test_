@@ -12,6 +12,7 @@ import { useAppSelector } from "../../redux-store/redux-store";
 import { getAuthHeader } from "../../utils/headers";
 import axios from "axios";
 import { IProfile } from "../../../backend/services/database/models/i-profile";
+import moment from "moment";
 
 interface Props {
   data: IMatchHubData[];
@@ -35,6 +36,7 @@ export interface Opponent {
   name?: string;
   avatarUrl?: string,
   players?: IProfile[];
+  gameUniqueId?: string;
 }
 
 export interface Match {
@@ -72,6 +74,7 @@ const MatchHub: React.FC<Props> = ({ data, onMatchHub, userDashboard }) => {
   useEffect(() => {
     fetchTeam()
   }, [])
+
   
 
   return (
@@ -93,44 +96,65 @@ const MatchHub: React.FC<Props> = ({ data, onMatchHub, userDashboard }) => {
           </p>
 
           <Grid container style={{ marginTop: "48px" }} spacing={2}>
-            {data.map((item) => {
-              const opponent1Name = item.opponent1.user_id
-                ? `${item.opponent1.firstName} ${item.opponent1.lastName}`
-                : item.opponent1.name;
-              const opponent2Name = item.opponent2.user_id
-                ? `${item.opponent2.firstName} ${item.opponent2.lastName}`
-                : item.opponent2.name;
+            {data
+              .sort((a: any, b: any) => {
+                const aStartDateTime =
+                  moment(a.tournament.startDate).format("D MMM YYYY ") +
+                  moment(a.tournament.startTime, "HH:mm:ss").format("LT");
+                const bStartDateTime =
+                  moment(b.tournament.startDate).format("D MMM YYYY ") +
+                  moment(b.tournament.startTime, "HH:mm:ss").format("LT");
 
-              const isMyTeam = item.opponent1.team_id && team.find((t) => t.id === item.opponent1.team_id || t.id === item.opponent2.team_id);
-              
-              const myPlayer = !item.opponent1.team_id
-                ? item.opponent1.user_id === user?.id
+                const dateA = moment(aStartDateTime).format("X");
+                const dateB = moment(bStartDateTime).format("X");
+                return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
+              })
+              .map((item) => {
+                const opponent1Name = item.opponent1.user_id
+                  ? `${item.opponent1.firstName} ${item.opponent1.lastName}`
+                  : item.opponent1.name;
+                const opponent2Name = item.opponent2.user_id
+                  ? `${item.opponent2.firstName} ${item.opponent2.lastName}`
+                  : item.opponent2.name;
+
+                const isMyTeam =
+                  item.opponent1.team_id &&
+                  team.find(
+                    (t) =>
+                      t.id === item.opponent1.team_id ||
+                      t.id === item.opponent2.team_id
+                  );
+
+                const myPlayer = !item.opponent1.team_id
+                  ? item.opponent1.user_id === user?.id
+                    ? item.opponent1
+                    : item.opponent2
+                  : item.opponent1?.team_id === isMyTeam?.id
                   ? item.opponent1
-                  : item.opponent2
-                : item.opponent1?.team_id === isMyTeam?.id
-                ? item.opponent1
-                : item.opponent2;
+                  : item.opponent2;
 
-              return !loading && (
-                <Grid key={item.opponent1.user_id} item xs={12}>
-                  {!item.opponent1.result ? (
-                    <OpponentTile
-                      data={item}
-                      onMatchHub={onMatchHub}
-                      userDashboard={userDashboard}
-                    />
-                  ) : (
-                    <ResultTile
-                      data={item}
-                      isWon={myPlayer.result === "win"}
-                      onMatchHub={onMatchHub}
-                      opponent1Name={opponent1Name}
-                      opponent2Name={opponent2Name}
-                    />
-                  )}
-                </Grid>
-              );
-            })}
+                return (
+                  !loading && (
+                    <Grid key={item.opponent1.user_id} item xs={12}>
+                      {!item.opponent1.result ? (
+                        <OpponentTile
+                          data={item}
+                          onMatchHub={onMatchHub}
+                          userDashboard={userDashboard}
+                        />
+                      ) : (
+                        <ResultTile
+                          data={item}
+                          isWon={myPlayer.result === "win"}
+                          onMatchHub={onMatchHub}
+                          opponent1Name={opponent1Name}
+                          opponent2Name={opponent2Name}
+                        />
+                      )}
+                    </Grid>
+                  )
+                );
+              })}
           </Grid>
         </CardContent>
       </Card>

@@ -9,11 +9,12 @@ import {
   Select,
   OutlinedInput,
   MenuItem,
+  TextField,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
-import React from "react";
+import React, { useState } from "react";
 import NoobPage from "../page/noob-page";
 import NavTabs from "../ui-components/navtabs";
 import Heading from "../ui-components/typography/heading";
@@ -44,6 +45,7 @@ interface JoinTeamType {
   is_team_registration?: boolean;
   team_id?: string;
   user_list?: string[];
+  gameUniqueId?: string[];
 }
 
 interface HeadSubSectionProps {
@@ -109,6 +111,10 @@ const ViewTournament: React.FC = () => {
   const [openSuccessModal, setOpenSuccessModal] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [page, setPage] = React.useState("Details");
+  const [gameId, setGameId] = useState("")
+  const [gameIdModal, setGameIdModal] = useState(false)
+  const [payload, setPayload] = useState<any>(undefined)
+
   const isDesktop = useAppSelector((x) =>
     isDeviceTypeSelector(x, deviceTypes.desktop));
 
@@ -437,9 +443,23 @@ const ViewTournament: React.FC = () => {
     if (!payload) {
       return;
     }
+    setPayload(payload)
+    setGameIdModal(true);
+  };
+
+  const onJoinTeamApi = async (payload: JoinTeamType): Promise<void> => {
+    if (!payload) {
+      return;
+    }
+    setGameIdModal(false);
+    setGameId("");
     const headers = await getAuthHeader();
     axios
-      .post("/api/tournaments/register", payload, { headers: { ...headers } })
+      .post(
+        "/api/tournaments/register",
+        { ...payload, gameUniqueId: gameId },
+        { headers: { ...headers } }
+      )
       .then(() => {
         fetchAllDetails();
         setOpenSuccessModal(true);
@@ -602,7 +622,7 @@ const ViewTournament: React.FC = () => {
 
   return (
     <NoobPage
-      title="ViewTournament"
+      title="View Tournament"
       metaData={{
         description: "Noob Storm tournament page",
       }}
@@ -622,6 +642,28 @@ const ViewTournament: React.FC = () => {
           />
         </Heading>
         {renderTournament()}
+        <Dialog open={gameIdModal} onClose={(): void => setGameIdModal(false)}>
+          <DialogTitle>Enter your unique game id</DialogTitle>
+          <Box p={1} pr={2} pl={2}>
+            <TextField
+              variant="outlined"
+              value={gameId}
+              onChange={(e): any => setGameId(e.target.value)}
+              autoFocus
+              margin="none"
+              fullWidth
+            />
+          </Box>
+          <DialogActions>
+            <Button
+              onClick={(): Promise<void> => onJoinTeamApi(payload)}
+              variant="contained"
+            >
+              Join
+            </Button>
+          </DialogActions>
+        </Dialog>
+
         <Dialog
           open={openSuccessModal}
           onClose={(): void => setOpenSuccessModal(false)}

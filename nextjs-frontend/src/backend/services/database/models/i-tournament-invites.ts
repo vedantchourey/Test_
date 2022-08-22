@@ -4,4 +4,5 @@ export interface ITournamentInvites {
     status?: string;
     team_id?: string;
     tournament_id?: string;
+    gameUniqueId?: string;
 }

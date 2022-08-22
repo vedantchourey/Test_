@@ -174,7 +174,7 @@ export const sendTeamTournamentInvites = async (
   );
   const data = await invites
     .knexObj()
-    .where({ tournament_id: req.tournamentId, team_id: req.team_id })
+    .where({ tournament_id: req.tournamentId, team_id: req.team_id, gameUniqueId: req.gameUniqueId })
     .whereIn("status", ["PENDING", "ACCEPTED"])
     .whereIn("user_id", req.user_list);
 
@@ -285,7 +285,7 @@ export const registerIndividualTournament = async (
       }
     }
 
-    await participant.update({ user_id: user.id }, { id: data.id });
+    await participant.update({ user_id: user.id, gameUniqueId: req.gameUniqueId }, { id: data.id });
 
     return { message: "User register in successfull" };
   } catch (ex) {
@@ -322,7 +322,7 @@ export const registerTeamTournament = async (
 
     if (!data) getErrorObject("Tournament is full");
 
-    await participant.update({ team_id: req.team_id }, { id: data.id });
+    await participant.update({ team_id: req.team_id, gameUniqueId: req.gameUniqueId }, { id: data.id });
 
     return { message: "Team register in successfull" };
   } catch (ex) {

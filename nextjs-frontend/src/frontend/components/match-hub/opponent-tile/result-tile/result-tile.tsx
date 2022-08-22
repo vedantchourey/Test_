@@ -1,26 +1,26 @@
 // import Image from "next/image";
 
 // Third party packages
-import { Avatar, Button, Grid } from "@mui/material";
+import { Avatar, Box, Button, Grid, Typography } from "@mui/material";
 
 // styles
 import styles from "./result-tile.module.css";
 import { IMatchHubData } from "../../../../../../pages/match-hub";
 import { frontendSupabase } from "../../../../services/supabase-frontend-service";
 import GroupIcon from "@mui/icons-material/Group";
+
 interface ResultTileProps {
   isWon?: boolean;
   child?: JSX.Element;
   data: IMatchHubData;
-  opponent1Name?:string;
-  opponent2Name?:string;
+  opponent1Name?: string;
+  opponent2Name?: string;
   onMatchHub?: (match: IMatchHubData) => void;
 }
 
 const ResultTile: React.FC<ResultTileProps> = (props) => {
-  const { isWon, child, opponent1Name="-", opponent2Name="-" } = props;
+  const { isWon, child, opponent1Name = "-", opponent2Name = "-" } = props;
 
-  
   const opponent1Image = props.data.opponent1.avatarUrl
     ? frontendSupabase.storage
         .from("public-files")
@@ -38,16 +38,28 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
       container
       width={"100%"}
       className={styles.resultTileContainer}
-      onClick={(): any => (props.onMatchHub ? props.onMatchHub(props.data) : null)}
+      onClick={(): any =>
+        props.onMatchHub ? props.onMatchHub(props.data) : null
+      }
     >
       <Grid item xs={3}>
         <Button
           variant="outlined"
           className={styles.resultTileButton}
           style={{ marginRight: "16px" }}
-        >{!opponent1Image && props.data.opponent1.team_id?
-          <GroupIcon style={{height:45,width:45,borderRadius:25,color:"white"}}/>:
-          <Avatar src={opponent1Image || undefined} alt={opponent1Name} />}
+        >
+          {!opponent1Image && props.data.opponent1.team_id ? (
+            <GroupIcon
+              style={{
+                height: 45,
+                width: 45,
+                borderRadius: 25,
+                color: "white",
+              }}
+            />
+          ) : (
+            <Avatar src={opponent1Image || undefined} alt={opponent1Name} />
+          )}
           <span
             style={{ marginLeft: "16px" }}
             className={styles.resultTileValue}
@@ -55,6 +67,11 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
             {opponent1Name}
           </span>
         </Button>
+        {props.data.opponent1.gameUniqueId && (
+          <Typography mt={1} color={"rgba(255,255,255,0.5)"}>
+            Game Id: {props.data.opponent1.gameUniqueId}
+          </Typography>
+        )}
       </Grid>
 
       {/* Result status */}
@@ -81,21 +98,42 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
       )}
 
       <Grid item xs={3} style={{ display: "flex", justifyContent: "end" }}>
-        <Button
-          variant="outlined"
-          className={styles.resultTileButton}
-          style={{ marginRight: "16px" }}
-        >
-          <span
+        <Box textAlign={"right"}>
+          <Button
+            variant="outlined"
+            className={styles.resultTileButton}
             style={{ marginRight: "16px" }}
-            className={styles.resultTileValue}
           >
-            {opponent2Name}
-          </span>
-          {!opponent2Image && props.data.opponent2.team_id?
-          <GroupIcon style={{height:45,width:45,borderRadius:25,color:"white"}}/>:
-          <Avatar src={opponent2Image || undefined} alt={opponent2Name} />}
-        </Button>
+            <span
+              style={{ marginRight: "16px" }}
+              className={styles.resultTileValue}
+            >
+              {opponent2Name}
+            </span>
+            {!opponent2Image && props.data.opponent2.team_id ? (
+              <GroupIcon
+                style={{
+                  height: 45,
+                  width: 45,
+                  borderRadius: 25,
+                  color: "white",
+                }}
+              />
+            ) : (
+              <Avatar src={opponent2Image || undefined} alt={opponent2Name} />
+            )}
+          </Button>
+          {props.data.opponent2.gameUniqueId && (
+            <Typography
+              textAlign={"right"}
+              pr={2}
+              mt={1}
+              color={"rgba(255,255,255,0.5)"}
+            >
+              Game Id: {props.data.opponent2.gameUniqueId}
+            </Typography>
+          )}
+        </Box>
       </Grid>
     </Grid>
   );
