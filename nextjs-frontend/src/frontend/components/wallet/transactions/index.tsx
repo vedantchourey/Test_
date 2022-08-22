@@ -8,9 +8,13 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { walletDetaislSelector } from "../../../redux-store/wallet/wallet-selector";
 import { useAppSelector } from "../../../redux-store/redux-store";
+import moment from "moment";
+import _ from "lodash";
 
 const Transactions = (): any => {
   const { transaction } = useAppSelector(walletDetaislSelector);
+  const [currentState, setCurrentState] = React.useState(0);
+
   return (
     <React.Fragment>
       <Card>
@@ -19,13 +23,17 @@ const Transactions = (): any => {
             Transactions
           </Typography>
           <Box display={"flex"} justifyContent="flex-end">
-            <Button fullWidth style={{ color: "rgba(255, 255, 255, 1)" }}>
-              {" "}
-              Older{" "}
+            <Button
+              disabled={_.chunk(transaction, 15).length - 1 === currentState}
+              onClick={(): any => setCurrentState(currentState + 1)}
+            >
+              Older
             </Button>
-            <Button style={{ color: "rgba(255, 255, 255, 0.2)" }} fullWidth>
-              {" "}
-              Previous{" "}
+            <Button
+              disabled={currentState === 0}
+              onClick={(): any => setCurrentState(currentState - 1)}
+            >
+              Previous
             </Button>
           </Box>
         </Box>
@@ -40,13 +48,31 @@ const Transactions = (): any => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {(transaction.slice(0,15) || []).map((row: any): any => (
+                {(
+                  _.chunk(
+                    transaction
+                      .filter(
+                        (i: any) =>
+                          i.created_at && (i.debit > 0 || i.credit > 0)
+                      )
+                      .sort(function (a: any, b: any) {
+                        const dateA = new Date(a.created_at).getTime();
+                        const dateB = new Date(b.created_at).getTime();
+                        return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
+                      }),
+                    15
+                  )[currentState] || []
+                ).map((row: any): any => (
                   <TableRow key={row.action}>
                     <TableCell width={"33%"}>{row.type}</TableCell>
                     <TableCell width={"33%"}>
-                      {Number(row.credit) !== 0 ? `+${row.credit}` : `-${row.debit}`}
+                      {Number(row.credit) !== 0
+                        ? `+${row.credit}`
+                        : `-${row.debit}`}
                     </TableCell>
-                    <TableCell width={"33%"}>{row.created_at}</TableCell>
+                    <TableCell width={"33%"}>
+                      {moment(row.created_at).format("DD/MM/YYYY hh:mm A")}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
