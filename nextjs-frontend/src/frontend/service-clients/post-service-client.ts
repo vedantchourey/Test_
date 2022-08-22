@@ -99,26 +99,43 @@ export const uploadPostImage = async(file : File): Promise<IPostImageUploadRespo
   throw body;
 }
 
-export const checkIsPostLiked = async (payload: { userId: string | undefined; postId: string }): Promise<{ isLiked?: boolean | undefined, error?: unknown }> => {
-  const result = await frontendSupabase.from('post_likes').select('id', { count: 'exact' })
-    .match({
-      postId: payload.postId,
-      likedBy: payload.userId
-    })
-    .limit(1)
-  if (result.error) throw result.error;
-  return { isLiked: result.data.length > 0 };
-}
+export const checkIsPostLiked = async (payload: {
+  userId: string | undefined;
+  postId: string;
+}): Promise<{ isLiked?: boolean | undefined; error?: unknown }> => {
+  if (payload.postId && payload.userId) {
+    const result = await frontendSupabase
+      .from("post_likes")
+      .select("id", { count: "exact" })
+      .match({
+        postId: payload.postId,
+        likedBy: payload.userId,
+      })
+      .limit(1);
+    if (result.error) throw result.error;
+    return { isLiked: result.data.length > 0 };
+  } else {
+    return { isLiked: false };
+  }
+};
 
-export const checkIsCommentLiked = async (payload: { userId: string | undefined; commentId: string }): Promise<{ isLiked?: boolean | undefined, error?: unknown }> => {
-  const result = await frontendSupabase.from('comment_likes')
-  .select("id")
-  .eq("commentId", payload.commentId)
-  .eq("likedBy", payload.userId)
-  .limit(1)
-  if (result.error) throw result.error;
-  return { isLiked: result.data.length > 0 };
-}
+export const checkIsCommentLiked = async (payload: {
+  userId: string | undefined;
+  commentId: string;
+}): Promise<{ isLiked?: boolean | undefined; error?: unknown }> => {
+  if (payload.commentId && payload.userId) {
+    const result = await frontendSupabase
+      .from("comment_likes")
+      .select("id")
+      .eq("commentId", payload.commentId)
+      .eq("likedBy", payload.userId)
+      .limit(1);
+    if (result.error) throw result.error;
+    return { isLiked: result.data.length > 0 };
+  } else {
+    return { isLiked: false };
+  }
+};
 
 export const getPostLikesCount = async (postId: string): Promise<{ totalLikes: number | null }> => {
   const result = await frontendSupabase.from('post_likes').select('*', { count: 'exact' })
