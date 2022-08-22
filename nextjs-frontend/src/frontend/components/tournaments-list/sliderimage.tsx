@@ -210,7 +210,11 @@ const SliderComp: React.FC = (): JSX.Element => {
                   total_slots={totalSlots}
                   left_slots={currentSlot}
                   start_date={startDateTime}
-                  credits={data.settings?.entryFeeAmount || 0}
+                  credits={
+                    data?.settings?.entryType === "credit"
+                      ? data.settings?.entryFeeAmount || 0
+                      : 0
+                  }
                   participants={`${currentSlot} out of ${totalSlots}`}
                 />
               </>

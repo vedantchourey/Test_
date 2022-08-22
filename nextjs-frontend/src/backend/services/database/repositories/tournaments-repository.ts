@@ -90,20 +90,23 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
         if (moment(_doc.startDate).isBefore(moment())) {
           const isOnGoing = moment(startDateTime).isBetween(
             moment().hour(0),
-            moment().hour(23)
-.minute(59)
+            moment().hour(23).minute(59)
           );
           if (params?.status === "complete") {
             if (!isOnGoing) return _doc;
           }
           if (params?.status === "ongoing") {
-            if (isOnGoing) return _doc;
+            const isCompleted: boolean =
+              _doc?.brackets?.match?.filter(
+                (i: any) => !i.opponent1.result && !i.opponent2.result
+              ).length === 0;
+
+            if (isOnGoing && !isCompleted) return _doc;
           }
         } else if (moment(_doc.startDate).isSame(moment(), "day")) {
           if (
             moment(
-              moment(_doc.startDate).format("YYYY-MM-DD")
-.toString() +
+              moment(_doc.startDate).format("YYYY-MM-DD").toString() +
                 " " +
                 _doc.startTime
             ).isBefore(moment())
