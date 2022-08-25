@@ -1,5 +1,6 @@
 import { Box, Button, Chip, Grid, Typography } from "@mui/material";
 import axios from "axios";
+import { useRouter } from "next/router";
 import React from "react";
 import { ReactComponent as GameIcon } from "../../../../public/icons/GameIcon.svg";
 import NoobPage from "../page/noob-page";
@@ -12,6 +13,7 @@ const SupportList: React.FC = () => {
   const recordsPerPage = 10;
   const [page, setPage] = React.useState<number>(1);
   const [totalRecords, setTotalRecords] = React.useState<number>(0);
+  const router = useRouter();
 
   const fetchTournaments = (): void => {
     axios
@@ -24,7 +26,7 @@ const SupportList: React.FC = () => {
       .then((res) => {
         if (res.data.list) {
           setData(res.data.list);
-          setTotalRecords(parseInt(res.data.count));
+          setTotalRecords(parseInt(res.data.count || res.data.list.length));
         }
       })
       .catch((err) => {
@@ -50,7 +52,7 @@ const SupportList: React.FC = () => {
         })
         .then((res) => {
           if (res.status === 200) {
-            fetchTournaments()
+            fetchTournaments();
           }
         })
         .catch(function (error) {
@@ -92,8 +94,16 @@ const SupportList: React.FC = () => {
     },
     {
       title: "User Name",
-      renderCell: (): string => {
-        return "Admin";
+      renderCell: (row): any => {
+        return (
+          <Button
+            onClick={(): any => {
+              router.replace(`/account/${row.username}`);
+            }}
+          >
+            {row.username}
+          </Button>
+        );
       },
       width: "10%",
     },
@@ -138,10 +148,10 @@ const SupportList: React.FC = () => {
       }}
     >
       <Grid container columnSpacing={2} rowSpacing={2}>
-        <Grid item md={3} lg={2}>
+        <Grid item md={3}>
           <DashboardSideBar />
         </Grid>
-        <Grid item md={9} lg={10} paddingRight={2}>
+        <Grid item md={9} paddingRight={2}>
           <Grid container columnSpacing={2}>
             <Grid item md={12}>
               <CardLayout>

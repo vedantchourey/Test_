@@ -270,10 +270,10 @@ const TournamentMaster: React.FC = () => {
       }}
     >
       <Grid container columnSpacing={2} rowSpacing={2}>
-        <Grid item md={3} lg={2}>
+        <Grid item md={3}>
           <DashboardSideBar />
         </Grid>
-        <Grid item md={9} lg={10} paddingRight={2}>
+        <Grid item md={9} paddingRight={2}>
           <Grid container columnSpacing={2}>
             <Grid item md={12}>
               <CardLayout>

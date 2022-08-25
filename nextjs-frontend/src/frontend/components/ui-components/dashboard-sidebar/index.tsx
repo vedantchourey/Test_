@@ -48,6 +48,25 @@ const DashboardSideBar: React.FC = () => {
     <React.Fragment>
       <Grid container rowSpacing={2} direction={"column"}>
         <Grid item marginX={2}>
+          <Card className={classes.card}>
+            <CardContent>
+              <Button
+                component={"a"}
+                fullWidth
+                classes={{ root: classes.altButton }}
+                startIcon={<DashHomeIcon />}
+                onClick={(): Promise<boolean> =>
+                  router.push("/tournament/new/create/setup/basic", undefined, {
+                    shallow: true,
+                  })
+                }
+              >
+                Create New
+              </Button>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item marginX={2}>
           <Button
             variant="contained"
             component={"a"}
@@ -70,7 +89,7 @@ const DashboardSideBar: React.FC = () => {
               router.push("/tournament-master", undefined, { shallow: true })
             }
             classes={{ root: classes.button }}
-            startIcon={<GameIcon />}
+            startIcon={<GameIcon fontSize={12} />}
           >
             Tournaments
           </Button>
@@ -89,25 +108,7 @@ const DashboardSideBar: React.FC = () => {
             News
           </Button>
         </Grid>
-        <Grid item marginX={2}>
-          <Card className={classes.card}>
-            <CardContent>
-              <Button
-                component={"a"}
-                fullWidth
-                classes={{ root: classes.altButton }}
-                startIcon={<DashHomeIcon />}
-                onClick={(): Promise<boolean> =>
-                  router.push("/tournament/new/create/setup/basic", undefined, {
-                    shallow: true,
-                  })
-                }
-              >
-                Create New
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
+
         {/* <Grid item marginX={2}>
           <Card className={classes.card}>
             <CardContent>
@@ -183,7 +184,7 @@ const DashboardSideBar: React.FC = () => {
               router.push("/withdraw-requests", undefined, { shallow: true })
             }
           >
-            Refunds log
+            Withdraw Requests
           </Button>
         </Grid>
       </Grid>
