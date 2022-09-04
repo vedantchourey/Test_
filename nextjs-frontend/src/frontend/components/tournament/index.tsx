@@ -242,7 +242,7 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
     const requestData = Object.assign({}, submitData);
     const req = {
       ...requestData,
-      status: "PUBLISHED",
+      status: "draft",
       joinStatus: "PUBLIC",
       ...(requestData.basic || {}),
     };

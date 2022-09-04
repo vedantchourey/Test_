@@ -41,6 +41,8 @@ export interface Opponent {
 
 export interface Match {
   match_id: string;
+  stage_id: string;
+  group_id: string;
   opponent1: Opponent;
   opponent2: Opponent;
   tournament_id: string;
@@ -53,6 +55,7 @@ const MatchHub: React.FC<Props> = ({ data, onMatchHub, userDashboard }) => {
   const user = useAppSelector(userProfileSelector);
   const [loading, setLoading] = React.useState(false);
   const [team, setTeam] = React.useState<any[]>([]);
+
 
   const fetchTeam = async (): Promise<void> => {
     const headers = await getAuthHeader();
@@ -74,8 +77,6 @@ const MatchHub: React.FC<Props> = ({ data, onMatchHub, userDashboard }) => {
   useEffect(() => {
     fetchTeam()
   }, [])
-
-  
 
   return (
     <Container>

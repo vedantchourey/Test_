@@ -704,6 +704,8 @@ export const fetchUserMatchs = async (
       )
       .select([
         "b_match.id as match_id",
+        "b_match.stage_id as stage_id",
+        "b_match.group_id as group_id",
         "b_tournament.id as b_t_id",
         "tournamentsData.id as tournament_id",
         "tournamentsData.name as tournament_name",

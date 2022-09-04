@@ -42,6 +42,7 @@ import { useAppSelector } from "../../../redux-store/redux-store";
 import ChatBox from "../../chat/ChatBox";
 import styles from "../../match-hub/match-hub.module.css";
 import { useRouter } from "next/router";
+import { getRoundName } from "../../../services/get-round-name";
 
 const style = {
   position: "absolute" as const,
@@ -88,6 +89,18 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
   const [tabValue, setTabValue]=React.useState<any>("1");
   const [isCheckedIn, setIsCheckedIn] = React.useState<boolean>(false);
 
+  
+
+  const name = getRoundName(
+    match.tournament.brackets.group as any[],
+    match.tournament.brackets.match as any[],
+    match.tournament.brackets.round as any[],
+    parseInt(match.match_id),
+    match.tournament.brackets.stage[0].type
+  );
+
+  const matchData = match.tournament.bracketsMetadata.rounds.find((r: any) => r.name === name)
+
   const opponent1Name = match.opponent1.user_id
     ? `${match.opponent1.firstName} ${match.opponent1.lastName}`
     : match.opponent1.name;
@@ -95,12 +108,6 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
     ? `${match.opponent2.firstName} ${match.opponent2.lastName}`
     : match.opponent2.name;
 
-  // const isMyTeam =
-  //   match.opponent1.team_id &&
-  //   team.find(
-  //     (t) =>
-  //       t.id === match.opponent1.team_id || t.id === match.opponent2.team_id
-  //   );
 
   const handleChange = (event: SyntheticEvent, newValue: string): void => {
     setTabValue(null);
@@ -185,14 +192,6 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       setChatChannel(chatChannel.data?.[0]);
     }
   };
-
-  // const myPlayer = !match.opponent1.team_id
-  //   ? match.opponent1.user_id === user?.id
-  //     ? match.opponent1
-  //     : match.opponent2
-  //   : match.opponent1?.team_id === isMyTeam?.id
-  //   ? match.opponent1
-  //   : match.opponent2;
 
   const validationSchema = yup.object({
     match_id: yup.string().required("Match id is required"),
@@ -344,7 +343,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
   const timerCallback = React.useCallback(() => {
     if (match?.tournament) {
       const mDate = moment(match.tournament.startDate);
-      const mTime = moment(match.tournament.startTime, "hh:mm:SS");
+      const mTime = moment(matchData.startTime || match.tournament.startTime, "hh:mm:SS");
       mDate.set({
         hours: mTime.get("hours"),
         minutes: mTime.get("minutes"),
