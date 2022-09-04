@@ -298,7 +298,7 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
     <NoobPage
       title="Tournament"
       metaData={{
-        description: "Noob Storm tournament page",
+        description: `Tournament-${data?.templateCode}`,
       }}
     >
       <React.Fragment>
@@ -309,6 +309,10 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
               <SideBar key={"sidebar"} nav={sideBarNav} />
             </Grid>
             <Grid item md={9}>
+              <Box textAlign={"right"}>
+                {data?.templateCode && <h5> Template Code : {data?.templateCode}</h5>}
+              </Box>
+              
               <TournamentContext.Provider
                 value={{
                   id: router.query.id ? router.query.id : "",
