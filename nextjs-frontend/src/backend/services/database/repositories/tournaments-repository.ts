@@ -50,6 +50,7 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
       game?: string;
       status?: string;
       amount?: string;
+      sortType?: string;
       settings?: {
         tournamentFormat: string;
       };
@@ -59,7 +60,6 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
           game: params.game,
         })
       : (options = null);
-
     const limit = params.limit || 5;
     const query = this.entities()
       .select(...keys)
@@ -73,15 +73,19 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
       ]);
     }
 
+    if(params?.status){
+      query.where({status: params.status.toLowerCase() as "DRAFT" | "PUBLISHED" })
+    }
+
     result = await query;
 
-    if (params?.status) {
+    if (params?.sortType) {
       result = result.filter((_doc: any) => {
         const startDateTime =
           moment(_doc.startDate).format("D MMM YYYY ") +
           moment(_doc.startTime, "HH:mm:ss").format("LT");
 
-        if (params?.status === "home") {
+        if (params?.sortType === "home") {
           if (moment(startDateTime).isAfter(moment())) {
             return _doc;
           }
@@ -93,10 +97,10 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
             moment().hour(23)
 .minute(59)
           );
-          if (params?.status === "complete") {
+          if (params?.sortType === "complete") {
             if (!isOnGoing) return _doc;
           }
-          if (params?.status === "ongoing") {
+          if (params?.sortType === "ongoing") {
             const isCompleted: boolean =
               _doc?.brackets?.match?.filter(
                 (i: any) => !i.opponent1.result && !i.opponent2.result
@@ -113,14 +117,14 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
                 _doc.startTime
             ).isBefore(moment())
           ) {
-            if (params?.status === "complete") {
+            if (params?.sortType === "complete") {
               return _doc;
             }
-          } else if (params?.status === "ongoing") {
+          } else if (params?.sortType === "ongoing") {
             if (moment(_doc).isBetween(moment().hour(0), moment().hour(23)))
               return _doc;
           }
-        } else if (params?.status === "pending") {
+        } else if (params?.sortType === "pending") {
           return _doc;
         }
       });

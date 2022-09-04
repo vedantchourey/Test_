@@ -124,7 +124,7 @@ const Home = (): JSX.Element => {
       axios
         .get(endpoint, {
           params: {
-            status: "home",
+            sortType: "home",
             limit: 100,
           },
         })

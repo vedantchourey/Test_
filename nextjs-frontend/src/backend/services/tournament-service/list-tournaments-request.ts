@@ -3,5 +3,6 @@ export interface ListTournamentType {
   limit?: number;
   game?: string;
   status?: string;
+  sortType?: string;
   [key: string]: any;
 }

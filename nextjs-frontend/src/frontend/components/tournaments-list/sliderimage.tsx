@@ -64,6 +64,7 @@ const SliderComp: React.FC = (): JSX.Element => {
   ): Promise<void> => {
     try {
       setLoading(true);
+  
       const endpoint = "/api/tournaments/list";
       axios
         .get(endpoint, {
@@ -71,7 +72,8 @@ const SliderComp: React.FC = (): JSX.Element => {
             game: first ? "" : game_id,
             limit: 50,
             format,
-            status,
+            status: "PUBLISHED",
+            sortType: status,
             amount: credits,
           }
         })
