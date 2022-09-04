@@ -27,20 +27,17 @@ import { isDeviceTypeSelector } from "../../redux-store/layout/layout-selectors"
 import { deviceTypes } from "../../redux-store/layout/device-types";
 
 const imagedata: any = {
-  FIFA_22: "/images/game1.svg",
-  CSG_O2: "/images/game2.svg",
-  CALL_OF_DUTY: "/images/game3.svg",
-  PUBG: "/images/game4.svg",
-  F1_2021: "/images/game5.svg",
-  VALORANT: "/images/game6.svg",
-  OVERWATCH: "/images/game7.svg",
-  DOTA_2: "/images/game8.svg",
-  MORTAL_KOMBAT_X: "/images/game9.svg",
-  FORTNITE: "/images/game10.svg",
-  APEX_LEGENDS: "/images/game11.svg",
-  ROCKET_LEAGUE: "/images/game12.svg",
-  lolp: "/images/game1.svg",
-  corp: "/images/game2.svg",
+  FIFA_22: "/images/games/Fifa.png",
+  CSG_O2: "/images/games/COUNTER STRIKE.png",
+  CALL_OF_DUTY: "/images/games/CALL OF DUTY.png",
+  F1_2021: "/images/games/F1 22.png",
+  VALORANT: "/images/games/VALORANT.png",
+  OVERWATCH: "/images/games/OVERWATCH.png",
+  DOTA_2: "/images/games/DOTA.png",
+  MORTAL_KOMBAT_X: "/images/games/MORTAL KOMBAT.png",
+  FORTNITE: "/images/games/FORTNITE.png",
+  APEX_LEGENDS: "/images/games/APEX LEGENDS.png",
+  ROCKET_LEAGUE: "/images/games/ROCKET LEAGUE.png",
 };
 
 const allstatus = ["complete", "ongoing", "pending"];

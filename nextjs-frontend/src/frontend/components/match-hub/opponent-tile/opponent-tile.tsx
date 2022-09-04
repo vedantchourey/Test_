@@ -11,6 +11,7 @@ import moment from "moment";
 import { userProfileSelector } from "../../../redux-store/authentication/authentication-selectors";
 import { useAppSelector } from "../../../redux-store/redux-store";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
+import { getRoundName } from "../../../services/get-round-name";
 
 interface OpponentTileProps {
   onMatchHub?: (opponentData: IMatchHubData) => void;
@@ -40,12 +41,22 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
     };
   }, [data]);
 
+  const name = getRoundName(
+    data.tournament.brackets.group as any[],
+    data.tournament.brackets.match as any[],
+    data.tournament.brackets.round as any[],
+    parseInt(data.match_id),
+    data.tournament.brackets.stage[0].type
+  );
+
+  const matchData = data.tournament.bracketsMetadata.rounds.find((r: any) => r.name === name)
+
   const [countDown, setCountDown] = React.useState("00:00:00");
 
   const timerCallback = React.useCallback(() => {
     if (data.tournament) {
       const mDate = moment(data.tournament.startDate);
-      const mTime = moment(data.tournament.startTime, "hh:mm:SS");
+      const mTime = moment(matchData.startTime || data.tournament.startTime, "hh:mm:SS");
       mDate.set({
         hours: mTime.get("hours"),
         minutes: mTime.get("minutes"),

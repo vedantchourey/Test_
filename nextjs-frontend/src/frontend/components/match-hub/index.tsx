@@ -1,5 +1,5 @@
 // Third party packages
-import { Card, CardContent, Container, Typography, Grid } from "@mui/material";
+import { Card, CardContent, Container, Typography, Grid, Box } from "@mui/material";
 
 // styles
 import styles from "./match-hub.module.css";
@@ -91,10 +91,13 @@ const MatchHub: React.FC<Props> = ({ data, onMatchHub, userDashboard }) => {
       </div>
       <Card variant="outlined" className={styles.matchHubContainer}>
         <CardContent>
-          <p className={styles.matchHubDescription}>
-            Here you can see the tournaments you have participated in and
-            determine the results.
-          </p>
+          <Box textAlign={"center"}>
+            <p className={styles.matchHubDescription}>
+              Here you can see the tournaments you have participated in and
+              determine the results.
+            </p>
+          </Box>
+          
 
           <Grid container style={{ marginTop: "48px" }} spacing={2}>
             {data
