@@ -56,12 +56,13 @@ export interface BasicData {
 }
 
 interface BasicPorps {
+  id?: string;
   data?: BasicData;
   onSave?: (data: BasicData) => void;
   setPlatformIds?: any;
 }
 
-const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
+const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds, id }) => {
   const style = useStyles();
 
   const validationSchema = yup.object({
@@ -326,62 +327,64 @@ const Basic: React.FC<BasicPorps> = ({ onSave, data, setPlatformIds }) => {
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-            <AccordionAlt title="About">
-              <NoobReachTextEditor
-                value={formik.values.about}
-                onChange={(value: any): void => {
-                  changeHandler("about", value);
-                }}
-              />
-            </AccordionAlt>
-          </Grid>
-      </CardLayout>
-
-      <CardLayout title="Optional Fields">
-        <Grid container rowSpacing={1} columnSpacing={5}>
-          <Grid item xs={6} textAlign={"left"}>
-            <FormControl variant="standard">
-              <Box display={"flex"} alignItems={"center"} textAlign={"left"}>
-                <Checkbox
-                  id="cloneTournament"
-                  name="cloneTournament"
-                  onChange={formik.handleChange}
-                  checked={formik.values.cloneTournament}
-                />
-                <Box marginTop={"2px"}>
-                  <FormLabel label="Select A Tournament To Clone From"></FormLabel>
-                </Box>
-              </Box>
-            </FormControl>
-          </Grid>
-          <Grid item xs={6}>
-            {formik.values.cloneTournament ? (
-              <FormControl fullWidth variant="standard">
-                <OutlinedInput
-                  id="createTemplateCode"
-                  name="createTemplateCode"
-                  placeholder="Template code"
-                  margin="none"
-                  onChange={formik.handleChange}
-                  value={formik.values.createTemplateCode}
-                  onBlur={formik.handleBlur}
-                  error={
-                    formik.touched.createTemplateCode &&
-                    Boolean(formik.errors.createTemplateCode)
-                  }
-                />
-                {formik.touched.createTemplateCode &&
-                Boolean(formik.errors.createTemplateCode) ? (
-                  <FormHelperText>
-                    {" "}
-                    {formik.errors.createTemplateCode}{" "}
-                  </FormHelperText>
-                ) : null}
-              </FormControl>
-            ) : null}
-          </Grid>
+          <AccordionAlt title="About">
+            <NoobReachTextEditor
+              value={formik.values.about}
+              onChange={(value: any): void => {
+                changeHandler("about", value);
+              }}
+            />
+          </AccordionAlt>
         </Grid>
       </CardLayout>
+
+      {!id && (
+        <CardLayout title="Optional Fields">
+          <Grid container rowSpacing={1} columnSpacing={5}>
+            <Grid item xs={6} textAlign={"left"}>
+              <FormControl variant="standard">
+                <Box display={"flex"} alignItems={"center"} textAlign={"left"}>
+                  <Checkbox
+                    id="cloneTournament"
+                    name="cloneTournament"
+                    onChange={formik.handleChange}
+                    checked={formik.values.cloneTournament}
+                  />
+                  <Box marginTop={"2px"}>
+                    <FormLabel label="Select A Tournament To Clone From"></FormLabel>
+                  </Box>
+                </Box>
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              {formik.values.cloneTournament ? (
+                <FormControl fullWidth variant="standard">
+                  <OutlinedInput
+                    id="createTemplateCode"
+                    name="createTemplateCode"
+                    placeholder="Template code"
+                    margin="none"
+                    onChange={formik.handleChange}
+                    value={formik.values.createTemplateCode}
+                    onBlur={formik.handleBlur}
+                    error={
+                      formik.touched.createTemplateCode &&
+                      Boolean(formik.errors.createTemplateCode)
+                    }
+                  />
+                  {formik.touched.createTemplateCode &&
+                  Boolean(formik.errors.createTemplateCode) ? (
+                    <FormHelperText>
+                      {" "}
+                      {formik.errors.createTemplateCode}{" "}
+                    </FormHelperText>
+                  ) : null}
+                </FormControl>
+              ) : null}
+            </Grid>
+          </Grid>
+        </CardLayout>
+      )}
       <Box display="flex" justifyContent={"flex-end"}>
         <Button
           variant="contained"

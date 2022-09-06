@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 
 const Setup: React.FC = (): JSX.Element => {
-  const { data, setData,type,id } = React.useContext(TournamentContext);
+  const { data, setData, type, id } = React.useContext(TournamentContext);
   const [allowedPlatforms, setAllowedPlatforms] = useState([]);
   const router = useRouter();
   const query: ParsedUrlQuery = router.query;
@@ -27,21 +27,36 @@ const Setup: React.FC = (): JSX.Element => {
     });
   };
 
-  const onTabClick = (tab:string):void=>{
-    if(type==='new'){
-      router.push(`/tournament/new/[...slug]`,`/tournament/new/create/setup/${tab.toLowerCase()}`, {shallow:true})
-    }else{
-      router.push(`/tournament/update/[id]/[...slug]`,`/tournament/update/${id}/create/setup/${tab.toLowerCase()}`, {shallow:true})
+  const onTabClick = (tab: string): void => {
+    if (type === "new") {
+      router.push(
+        `/tournament/new/[...slug]`,
+        `/tournament/new/create/setup/${tab.toLowerCase()}`,
+        { shallow: true }
+      );
+    } else {
+      router.push(
+        `/tournament/update/[id]/[...slug]`,
+        `/tournament/update/${id}/create/setup/${tab.toLowerCase()}`,
+        { shallow: true }
+      );
     }
-    
-  }
+  };
 
   const handleSettingSave = (settings: SettingData): void => {
-    setData({ ...data, settings },()=>{
-      if(type==='new'){
-        router.push(`/tournament/new/[...slug]`,`/tournament/new/create/brackets/create`, {shallow:true})
-      }else{
-        router.push(`/tournament/update/[id]/[...slug]`,`/tournament/update/${id}/create/brackets/create`, {shallow:true})
+    setData({ ...data, settings }, () => {
+      if (type === "new") {
+        router.push(
+          `/tournament/new/[...slug]`,
+          `/tournament/new/create/brackets/create`,
+          { shallow: true }
+        );
+      } else {
+        router.push(
+          `/tournament/update/[id]/[...slug]`,
+          `/tournament/update/${id}/create/brackets/create`,
+          { shallow: true }
+        );
       }
     });
   };
@@ -66,6 +81,7 @@ const Setup: React.FC = (): JSX.Element => {
             onSave={handleBasicSave}
             setPlatformIds={setAllowedPlatforms}
             data={data.basic}
+            id={data?.id}
           />
         );
       case "info":
