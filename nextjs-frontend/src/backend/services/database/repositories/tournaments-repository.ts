@@ -75,7 +75,7 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
     }
 
     if(params?.status){
-      query.where({status: params.status.toLowerCase() as "DRAFT" | "PUBLISHED" })
+      query.where({status: params.status.toLowerCase() as "draft" | "published" })
     }
 
     result = await query;

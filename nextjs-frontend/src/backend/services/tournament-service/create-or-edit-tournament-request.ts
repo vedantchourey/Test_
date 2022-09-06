@@ -50,7 +50,7 @@ export interface CreateOrEditTournamentType {
     provider: string;
     url: string;
   }>;
-  status: "DRAFT" | "PUBLISHED";
+  status: "draft" | "published";
   joinStatus: "PRIVATE" | "PUBLIC";
   createTemplateCode: string;
 }

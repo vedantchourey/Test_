@@ -243,7 +243,7 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
     const req = {
       ...requestData,
       status: "draft",
-      joinStatus: "PUBLIC",
+      joinStatus: "public",
       ...(requestData.basic || {}),
     };
     // eslint-disable-next-line
@@ -252,11 +252,12 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
     req.startDate = moment(req.startDate).format("YYYY-MM-DD");
     // eslint-disable-next-line
     req.startTime = moment(req.startTime).format("HH:mm:ss");
-    req.status = req.publishData?.registration || "PUBLISHED";
-    req.joinStatus = req.publishData?.society || "PRIVATE";
+    req.status = req.publishData?.registration || "draft";
+    req.joinStatus = req.publishData?.society || "public";
     req.templateCode = req.publishData?.templateCode || "";
     delete req.publishData;
     delete req.basic;
+    delete req.playerList;
     if (!requestData.settings) delete req.settings;
     if (!requestData.bracketsMetadata) delete req.bracketsMetadata;
     if (!requestData.streams) delete req.streams;

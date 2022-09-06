@@ -327,8 +327,8 @@ const TournamentMaster: React.FC = () => {
                         }
                       >
                         <MenuItem value="">Select Status</MenuItem>
-                        <MenuItem value="PUBLISHED">Published</MenuItem>
-                        <MenuItem value="DRAFT">Draft</MenuItem>
+                        <MenuItem value="published">Published</MenuItem>
+                        <MenuItem value="draft">Draft</MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>

@@ -66,7 +66,7 @@ export interface ITournamentType {
     provider: string;
     url: string;
   }>;
-  status: "DRAFT" | "PUBLISHED";
+  status: "draft" | "published";
   joinStatus: "PRIVATE" | "PUBLIC";
   createTemplateCode: string;
   templateCode?: string;

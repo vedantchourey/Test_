@@ -28,6 +28,7 @@ import { deviceTypes } from "../../redux-store/layout/device-types";
 
 const imagedata: any = {
   FIFA_22: "/images/games/Fifa.png",
+  BGMI: "/images/games/BGMI.png",
   CSG_O2: "/images/games/COUNTER STRIKE.png",
   CALL_OF_DUTY: "/images/games/CALL OF DUTY.png",
   F1_2021: "/images/games/F1 22.png",
@@ -69,7 +70,7 @@ const SliderComp: React.FC = (): JSX.Element => {
             game: first ? "" : game_id,
             limit: 50,
             format,
-            status: "PUBLISHED",
+            status: "published",
             sortType: status,
             amount: credits,
           }
@@ -113,6 +114,8 @@ const SliderComp: React.FC = (): JSX.Element => {
     }
   }, [games, format, status, credits]);
 
+  console.log('games -> ', games)
+
   return (
     <>
       <Loader loading={loading} />
@@ -150,7 +153,7 @@ const SliderComp: React.FC = (): JSX.Element => {
       >
         {games.map((data) => (
             <img
-              key={1}
+              key={data.code}
               data-value="1"
               src={imagedata[data.code]}
               className={styles.image}

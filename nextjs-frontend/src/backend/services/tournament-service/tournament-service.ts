@@ -115,14 +115,14 @@ export const persistTournament: NoobApiService<
       req = {
         ...tournament,
         ...req,
-        status: "DRAFT",
+        status: "public",
       };
     }
     tournament = await repository.create({ ...req, id: undefined } as any);
   }
   if (req.bracketsMetadata?.playersLimit && tournament?.id) {
     const players_data = await tournamentsWithPlayers(context, req.id || "", tournament)
-    if(!players_data.playerList.length){
+    if(!players_data?.playerList?.length){
       persistBrackets(tournament);
     }
   }
