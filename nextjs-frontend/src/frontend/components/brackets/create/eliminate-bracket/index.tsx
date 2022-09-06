@@ -66,7 +66,8 @@ const EliminateBracket = React.forwardRef<
       yup.object().shape({
         round: yup.string().required("Please select round"),
         description: yup.string().required("Please add description"),
-        map: yup.array().of(yup.string()).nullable(),
+        map: yup.array().of(yup.string())
+.nullable(),
         startTime: yup.date().when("round", (data) => {
           return data !== "1"
             ? yup.date().required("Start time is required")
@@ -484,7 +485,8 @@ const EliminateBracket = React.forwardRef<
                       </Grid>
                       <Grid item sm={12}>
                         {formik.values?.rounds[index]?.isMap &&
-                          new Array(5).fill(5).map((x, i) => (
+                          new Array(5).fill(5)
+.map((x, i) => (
                             <OutlinedInput
                               id="map"
                               key={x}

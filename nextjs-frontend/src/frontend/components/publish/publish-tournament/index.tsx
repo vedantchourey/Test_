@@ -69,7 +69,7 @@ const PublishPage: React.FC<PublishTournamentProps> = ({
   const router = useRouter();
   const [isCopied, setCopied] = React.useState(false);
 
-  console.log('data 1 -> ', data)
+  
 
   const formik = useFormik({
     initialValues: {
@@ -84,8 +84,6 @@ const PublishPage: React.FC<PublishTournamentProps> = ({
       }
     },
   });
-
-  console.log('formik -> ', formik)
 
   React.useEffect(() => {
     if (data) {

@@ -114,8 +114,6 @@ const SliderComp: React.FC = (): JSX.Element => {
     }
   }, [games, format, status, credits]);
 
-  console.log('games -> ', games)
-
   return (
     <>
       <Loader loading={loading} />
