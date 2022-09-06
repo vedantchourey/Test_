@@ -100,10 +100,10 @@ export const deleteTournament = async (
 export const persistTournament: NoobApiService<
   ITournamentType,
   ITournamentType
-> = async (req, { knexConnection }) => {
+> = async (req, context) => {
   const errors = await validatePersistTournament(req);
   if (errors) return { errors };
-  const repository = new TournamentsRepository(knexConnection as Knex);
+  const repository = new TournamentsRepository(context.knexConnection as Knex);
   let tournament;
   if (req.id) {
     tournament = await repository.update({ ...req } as any);
@@ -121,7 +121,10 @@ export const persistTournament: NoobApiService<
     tournament = await repository.create({ ...req, id: undefined } as any);
   }
   if (req.bracketsMetadata?.playersLimit && tournament?.id) {
-    persistBrackets(tournament);
+    const players_data = await tournamentsWithPlayers(context, req.id || "", tournament)
+    if(!players_data.playerList.length){
+      persistBrackets(tournament);
+    }
   }
   const { id, ...others } = tournament;
   return { id: id as string, ...others };
@@ -282,8 +285,9 @@ export async function listTournament(
   );
   const tournamentId = context.getParamValue("tournamentId");
   const tournament = await repository.getTournament(tournamentId as string);
+  const tournamentData = await tournamentsWithPlayers(context, tournamentId as string, tournament)
   return {
-    data: tournament,
+    data: {...tournament, playerList: tournamentData.playerList},
   } as any;
 }
 

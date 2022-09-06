@@ -12,6 +12,7 @@ import {
   Radio,
   RadioGroup,
   Select,
+  Typography,
 } from "@mui/material";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormLabel from "../../../ui-components/formlabel";
@@ -49,12 +50,13 @@ export interface EliminateBracketData {
 interface EliminateBracketProps {
   data?: EliminateBracketData;
   onSave?: (data: EliminateBracketData) => void;
+  players_data?: any[];
 }
 
 const EliminateBracket = React.forwardRef<
   EliminateBracketRef,
   EliminateBracketProps
->(({ onSave, data }, ref) => {
+>(({ onSave, data, players_data }, ref) => {
   const validationSchema = yup.object({
     checkInType: yup.string().required(),
     type: yup.string().required("type is required"),
@@ -64,8 +66,7 @@ const EliminateBracket = React.forwardRef<
       yup.object().shape({
         round: yup.string().required("Please select round"),
         description: yup.string().required("Please add description"),
-        map: yup.array().of(yup.string())
-.nullable(),
+        map: yup.array().of(yup.string()).nullable(),
         startTime: yup.date().when("round", (data) => {
           return data !== "1"
             ? yup.date().required("Start time is required")
@@ -74,6 +75,8 @@ const EliminateBracket = React.forwardRef<
       })
     ),
   });
+
+  const disbaleField = Boolean(players_data?.length);
 
   const formik = useFormik({
     initialValues: {
@@ -182,10 +185,20 @@ const EliminateBracket = React.forwardRef<
             : new Date().toISOString(),
       };
     });
-  }, [formik.values.playersLimit, formik.values.type, formik.values.thirdPlace]);
+  }, [
+    formik.values.playersLimit,
+    formik.values.type,
+    formik.values.thirdPlace,
+  ]);
 
   return (
     <React.Fragment>
+      {disbaleField && (
+        <Typography ml={2} variant="body2" color={"red"}>
+          You can not change bracket setting because some player is already
+          registered with this tournament.
+        </Typography>
+      )}
       <CardLayout title="Eliminate Bracket">
         <Grid container rowSpacing={1} columnSpacing={5}>
           <Grid item xs={6}>
@@ -243,7 +256,7 @@ const EliminateBracket = React.forwardRef<
             ) : null}
           </Grid>
           <Grid item xs={6}>
-            <FormControl fullWidth>
+            <FormControl fullWidth disabled={disbaleField}>
               <FormLabel label="Bracket Style" />
               <RadioGroup
                 value={formik.values.type}
@@ -284,7 +297,7 @@ const EliminateBracket = React.forwardRef<
           </Grid>
           <Grid item xs={6}></Grid>
           <Grid item xs={6}>
-            <FormControl fullWidth>
+            <FormControl fullWidth disabled={disbaleField}>
               <FormLabel label="Bracket Size(# of Players)"></FormLabel>
               <Select
                 value={formik.values.playersLimit}
@@ -343,10 +356,11 @@ const EliminateBracket = React.forwardRef<
           </Grid>
           <Grid item xs={6}></Grid>
           <Grid item xs={6}>
-            <FormControl fullWidth>
+            <FormControl fullWidth disabled={disbaleField}>
               <FormLabel label="Best of For All Round" />
               <TextField
                 type="number"
+                disabled={disbaleField}
                 value={formik.values.bestOf}
                 onChange={(event): void =>
                   changeHandler("bestOf", event.target.value)
@@ -470,8 +484,7 @@ const EliminateBracket = React.forwardRef<
                       </Grid>
                       <Grid item sm={12}>
                         {formik.values?.rounds[index]?.isMap &&
-                          new Array(5).fill(5)
-.map((x, i) => (
+                          new Array(5).fill(5).map((x, i) => (
                             <OutlinedInput
                               id="map"
                               key={x}

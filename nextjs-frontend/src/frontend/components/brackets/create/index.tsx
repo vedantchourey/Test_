@@ -46,6 +46,7 @@ const Create: React.FC = (): JSX.Element => {
         <EliminateBracket
           onSave={handleBracketSave}
           data={data.bracketsMetadata}
+          players_data={data.playerList}
           ref={ref}
         />
       </AccordionAlt>
