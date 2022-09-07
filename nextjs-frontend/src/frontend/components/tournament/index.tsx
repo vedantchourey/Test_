@@ -39,6 +39,7 @@ export interface TournamentData {
     currentPricePool: number;
   };
   brackets?: any;
+  joinCode?: string;
 }
 
 interface TournamentContextType {
@@ -118,6 +119,7 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
               publishData: {
                 society: tournamentData.joinStatus,
                 registration: tournamentData.status,
+                joinCode: tournamentData.joinCode,
               },
             } as TournamentData);
           }
@@ -255,6 +257,7 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
     req.status = req.publishData?.registration || "draft";
     req.joinStatus = req.publishData?.society || "public";
     req.templateCode = req.publishData?.templateCode || "";
+    req.joinCode = req.publishData?.joinCode || "";
     delete req.publishData;
     delete req.basic;
     delete req.playerList;

@@ -67,7 +67,7 @@ const ActionButton: React.FC<Props> = ({
   }, [data]);
 
   const handleButtonClick = (): void => {
-    if(!data?.playerList?.filter((i: any) => i.id === userId).length){
+    if (!data?.playerList?.filter((i: any) => i.id === userId).length) {
       if (onClick) {
         onClick();
       }

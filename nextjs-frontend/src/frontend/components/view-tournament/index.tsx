@@ -14,7 +14,7 @@ import {
 import { Box } from "@mui/system";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NoobPage from "../page/noob-page";
 import NavTabs from "../ui-components/navtabs";
 import Heading from "../ui-components/typography/heading";
@@ -111,9 +111,11 @@ const ViewTournament: React.FC = () => {
   const [openSuccessModal, setOpenSuccessModal] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [page, setPage] = React.useState("Details");
-  const [gameId, setGameId] = useState("")
-  const [gameIdModal, setGameIdModal] = useState(false)
-  const [payload, setPayload] = useState<any>(undefined)
+  const [gameId, setGameId] = useState("");
+  const [gameIdModal, setGameIdModal] = useState(false);
+  const [priviteGame, setPriviteGame] = useState(false);
+  const [payload, setPayload] = useState<any>(undefined);
+  const [joinCodeText, setJoinCodeText] = useState("");
 
   const isDesktop = useAppSelector((x) =>
     isDeviceTypeSelector(x, deviceTypes.desktop));
@@ -443,7 +445,7 @@ const ViewTournament: React.FC = () => {
     if (!payload) {
       return;
     }
-    setPayload(payload)
+    setPayload(payload);
     setGameIdModal(true);
   };
 
@@ -497,6 +499,23 @@ const ViewTournament: React.FC = () => {
     };
     onJoinTeam(payload);
   };
+
+  useEffect(() => {
+    const isSingleJoined = (
+      data?.playerList?.filter((i: any) => i.id === user?.id) || []
+    ).length;
+    const isTeamJoined = (
+      data?.playerList?.filter((i: any) => i.team_id === selectedTeam?.id) || []
+    ).length;
+    if (
+      data.joinStatus === "private" &&
+      !(isSingleJoined > 0 || isTeamJoined > 0)
+    ) {
+      setPriviteGame(true);
+    } else {
+      setPriviteGame(false);
+    }
+  }, [data]);
 
   const renderTeamSelection = (): JSX.Element | undefined => {
     return (
@@ -569,7 +588,9 @@ const ViewTournament: React.FC = () => {
                   <span
                     style={{ color: "rgba(105,50,249,1)", paddingLeft: "5px" }}
                   >
-                    {data?.settings?.entryType === "credit" ? data.settings?.entryFeeAmount : "Free"}
+                    {data?.settings?.entryType === "credit"
+                      ? data.settings?.entryFeeAmount
+                      : "Free"}
                   </span>
                 </Typography>
               </Box>
@@ -642,6 +663,31 @@ const ViewTournament: React.FC = () => {
           />
         </Heading>
         {renderTournament()}
+        <Dialog open={priviteGame}>
+          <DialogTitle>Enter Join Code</DialogTitle>
+          <DialogContent>
+            <TextField
+              variant="outlined"
+              value={joinCodeText}
+              onChange={(e): any => setJoinCodeText(e.target.value)}
+              autoFocus
+              margin="none"
+              fullWidth
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={(): void => {
+                if (data.joinCode === joinCodeText) {
+                  setPriviteGame(false);
+                }
+              }}
+              autoFocus
+            >
+              Ok
+            </Button>
+          </DialogActions>
+        </Dialog>
         <Dialog open={gameIdModal} onClose={(): void => setGameIdModal(false)}>
           <DialogTitle>Enter your unique game id</DialogTitle>
           <Box p={1} pr={2} pl={2}>
