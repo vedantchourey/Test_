@@ -591,7 +591,7 @@ export const fetchMatchDetails = async (
         "elo_ratings.user_id": "private_profiles.id",
         "elo_ratings.game_id": "teams.game_id",
       })
-      .where({ "tournament_invites.is_checked_in": true })
+      // .where({ "tournament_invites.is_checked_in": true })
       .select([
         "teams.id as team_id",
         "teams.name as team_name",
@@ -614,7 +614,7 @@ export const fetchMatchDetails = async (
         "private_profiles.id",
         "tournament_invites.user_id"
       )
-      .where({ "tournament_invites.is_checked_in": true })
+      // .where({ "tournament_invites.is_checked_in": true })
       .select([
         "teams.id as team_id",
         "teams.name as team_name",

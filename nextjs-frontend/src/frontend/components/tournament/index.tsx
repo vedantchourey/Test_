@@ -262,6 +262,10 @@ const Tournament: React.FC<TournamentType> = ({ type }) => {
     delete req.basic;
     delete req.playerList;
     if (!requestData.settings) delete req.settings;
+    if(req.settings){
+      if(req.settings.checkInStartTime)
+      req.settings = {...req.settings, checkInStartTime: moment(req.settings.checkInStartTime).format("HH:mm:ss")} 
+    }
     if (!requestData.bracketsMetadata) delete req.bracketsMetadata;
     if (!requestData.streams) delete req.streams;
     if (!requestData.info) delete req.info;

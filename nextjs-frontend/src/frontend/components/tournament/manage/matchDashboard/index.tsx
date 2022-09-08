@@ -473,7 +473,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                                 item?.opponent1?.score === 0 ? "red" : "green"
                               }
                             >
-                              {item?.opponent1?.player?.username}
+                              {item?.opponent1?.player?.username || item?.opponent1?.player?.name}
                             </Typography>
                           </NoobCell>
                           <NoobCell>
@@ -482,7 +482,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                                 item?.opponent2?.score === 0 ? "red" : "green"
                               }
                             >
-                              {item?.opponent2?.player?.username}
+                              {item?.opponent2?.player?.username || item?.opponent2?.player?.name}
                             </Typography>
                           </NoobCell>
                           <NoobCell>

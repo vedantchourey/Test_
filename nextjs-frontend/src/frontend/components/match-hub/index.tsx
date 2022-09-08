@@ -145,6 +145,7 @@ const MatchHub: React.FC<Props> = ({ data, onMatchHub, userDashboard }) => {
                           data={item}
                           onMatchHub={onMatchHub}
                           userDashboard={userDashboard}
+                          team={team}
                         />
                       ) : (
                         <ResultTile

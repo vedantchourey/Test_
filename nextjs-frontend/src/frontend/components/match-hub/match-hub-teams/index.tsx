@@ -1,4 +1,4 @@
-import React, {SyntheticEvent} from "react";
+import React, { SyntheticEvent, useEffect } from "react";
 // Third party packages
 import {
   Grid,
@@ -43,6 +43,7 @@ import ChatBox from "../../chat/ChatBox";
 import styles from "../../match-hub/match-hub.module.css";
 import { useRouter } from "next/router";
 import { getRoundName } from "../../../services/get-round-name";
+import _ from "lodash";
 
 const style = {
   position: "absolute" as const,
@@ -78,18 +79,39 @@ const calculateDuration = (
 
 const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
   const user = useAppSelector(userProfileSelector);
-  const router=useRouter();
+  const router = useRouter();
   const [uploadResults, setUploadResults] = React.useState(false);
   const [resultStatus, setResultStatus] = React.useState(false);
   const [data, setData] = React.useState<PlayerData | undefined>();
   const [loading, setLoading] = React.useState(false);
   const [matchReportSubmited, setMatchReportSubmited] = React.useState(false);
   const [chatChannel, setChatChannel] = React.useState<any>(undefined);
-  const [supportChatChannel, setSupportChatChannel] = React.useState<any>(undefined);
-  const [tabValue, setTabValue]=React.useState<any>("1");
+  const [supportChatChannel, setSupportChatChannel] =
+    React.useState<any>(undefined);
+  const [tabValue, setTabValue] = React.useState<any>("1");
   const [isCheckedIn, setIsCheckedIn] = React.useState<boolean>(false);
+  const [team, setTeam] = React.useState<any[]>([]);
 
-  
+  const fetchTeam = async (): Promise<void> => {
+    const headers = await getAuthHeader();
+    setLoading(true);
+    axios
+      .get("/api/teams", { headers: headers })
+      .then((res) => {
+        if (res.data.result && res.data.result.length > 0) {
+          setTeam(res.data.result);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.error(err);
+      });
+  };
+
+  useEffect(() => {
+    fetchTeam();
+  }, []);
 
   const name = getRoundName(
     match.tournament.brackets.group as any[],
@@ -99,7 +121,32 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
     match.tournament.brackets.stage[0].type
   );
 
-  const matchData = match.tournament.bracketsMetadata.rounds.find((r: any) => r.name === name)
+  const matchData = match.tournament.bracketsMetadata.rounds.find(
+    (r: any) => r.name === name
+  );
+
+  const isMyTeam =
+    match.opponent1.team_id &&
+    team.find(
+      (t) =>
+        t.id === match.opponent1.team_id || t.id === match.opponent2.team_id
+    );
+
+  const myPlayer = !match.opponent1.team_id
+    ? match.opponent1.user_id === user?.id
+      ? match.opponent1
+      : match.opponent2
+    : match.opponent1?.team_id === isMyTeam?.id
+    ? match.opponent1
+    : match.opponent2;
+
+  const opponent_data: any = !match.opponent1.team_id
+    ? match.opponent1.user_id !== user?.id
+      ? match.opponent1
+      : match.opponent2
+    : match.opponent1?.team_id !== isMyTeam?.id
+    ? match.opponent1
+    : match.opponent2;
 
   const opponent1Name = match.opponent1.user_id
     ? `${match.opponent1.firstName} ${match.opponent1.lastName}`
@@ -108,15 +155,15 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
     ? `${match.opponent2.firstName} ${match.opponent2.lastName}`
     : match.opponent2.name;
 
-
   const handleChange = (event: SyntheticEvent, newValue: string): void => {
     setTabValue(null);
     setTimeout(() => setTabValue(newValue), 500);
   };
 
   const createNewChat = async (isSupportChat?: boolean): Promise<any> => {
-
-    const channel_id = isSupportChat ? `${match.match_id}_support` : match.match_id;
+    const channel_id = isSupportChat
+      ? `${match.match_id}_support`
+      : match.match_id;
     const isTeamMatch = Boolean(match.opponent1.team_id);
 
     const chatUsers = [];
@@ -154,7 +201,6 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
           channel_type: "match",
         }))
     );
-    
 
     const chatChannel = await frontendSupabase
       .from("chat_users")
@@ -164,7 +210,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
     if ((chatChannel.data || [])?.length > 0) {
       if (isSupportChat) setSupportChatChannel(chatChannel.data?.[0]);
       else setChatChannel(chatChannel.data?.[0]);
-    } 
+    }
   };
 
   const fetchChatChannel = async (): Promise<any> => {
@@ -174,21 +220,21 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       .eq("user_id", user?.id || "")
       .eq("other_user", match.match_id);
 
-      const chatChannelWithSupport = await frontendSupabase
+    const chatChannelWithSupport = await frontendSupabase
       .from("chat_users")
       .select()
       .eq("user_id", user?.id || "")
       .eq("other_user", `${match.match_id}_support`);
 
-      if (chatChannelWithSupport.data?.length === 0 ) {
-        createNewChat(true);
-      } else{
-        setSupportChatChannel(chatChannelWithSupport.data?.[0]);
-      }
+    if (chatChannelWithSupport.data?.length === 0) {
+      createNewChat(true);
+    } else {
+      setSupportChatChannel(chatChannelWithSupport.data?.[0]);
+    }
 
-    if (chatChannel.data?.length === 0 ) {
+    if (chatChannel.data?.length === 0) {
       createNewChat();
-    } else{
+    } else {
       setChatChannel(chatChannel.data?.[0]);
     }
   };
@@ -329,7 +375,6 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       });
   };
 
-
   React.useEffect(() => {
     setLoading(false);
     const timerRef = window.setInterval(timerCallback, 1000);
@@ -339,11 +384,15 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
   }, [data]);
 
   const [countDown, setCountDown] = React.useState("00:00:00");
-
   const timerCallback = React.useCallback(() => {
     if (match?.tournament) {
       const mDate = moment(match.tournament.startDate);
-      const mTime = moment(matchData.startTime || match.tournament.startTime, "hh:mm:SS");
+      const mTime = moment(
+        matchData.startTime ||
+          match.tournament.settings.checkInStartTime ||
+          match.tournament.startTime,
+        "hh:mm:SS"
+      );
       mDate.set({
         hours: mTime.get("hours"),
         minutes: mTime.get("minutes"),
@@ -352,7 +401,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       const now = moment();
       let diff = mDate.diff(now);
       if (diff <= 0) {
-        setCountDown("00:00:00");
+        setCountDown("Started");
       } else {
         diff = mDate.diff(now, "hours");
         if (diff > 24) {
@@ -431,11 +480,11 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
           >
             <Grid item xs={5.5}>
               <Typography className={styles.sub_heading}>My Teams</Typography>
-              {match.opponent1.players?.map((u, idx) => {
-                const avatarUrl = u.avatarUrl
+              {Object.values(_.groupBy(myPlayer.players, "id"))?.map((u: any, idx: any) => {
+                const avatarUrl = u[0].avatarUrl
                   ? (frontendSupabase.storage
                       .from("public-files")
-                      .getPublicUrl(u.avatarUrl).publicURL as string)
+                      .getPublicUrl(u[0].avatarUrl).publicURL as string)
                   : undefined;
                 return (
                   <Box style={{ marginRight: 20 }} key={idx}>
@@ -447,12 +496,12 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                       }}
                       key={idx}
                       onClick={(): void => {
-                        router.push(`/account/${u.username}`);
+                        router.push(`/account/${u[0].username}`);
                       }}
                     >
                       <Avatar src={avatarUrl} />
                       <Typography style={{ marginLeft: "10px" }}>
-                        {u.username}
+                        {u[0].username}
                       </Typography>
                     </Box>
                     <Divider light />
@@ -465,11 +514,11 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
               <Typography className={styles.sub_heading}>
                 Opponent Teams
               </Typography>
-              {match.opponent2.players?.map((u, idx) => {
-                const avatarUrl = u.avatarUrl
+              {Object.values(_.groupBy(opponent_data.players, "id"))?.map((u: any, idx: any) => {
+                const avatarUrl = u[0].avatarUrl
                   ? (frontendSupabase.storage
                       .from("public-files")
-                      .getPublicUrl(u.avatarUrl).publicURL as string)
+                      .getPublicUrl(u[0].avatarUrl).publicURL as string)
                   : undefined;
 
                 return (
@@ -482,12 +531,12 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                       }}
                       key={idx}
                       onClick={(): void => {
-                        router.push(`/account/${u.username}`);
+                        router.push(`/account/${u[0].username}`);
                       }}
                     >
                       <Avatar src={avatarUrl} />
                       <Typography style={{ marginLeft: "10px" }}>
-                        {u.username}
+                        {u[0].username}
                       </Typography>
                     </Box>
                     <Divider light />
@@ -531,10 +580,14 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
               style={{
                 color: "white",
                 padding: "12px 38px",
-                backgroundColor: match.is_checked_in || isCheckedIn
-                  ? "rgba(255,255,255,0.2)"
-                  : "#08001C",
-                border: match.is_checked_in || isCheckedIn ? undefined : "1px solid #6932F9",
+                backgroundColor:
+                  match.is_checked_in || isCheckedIn
+                    ? "rgba(255,255,255,0.2)"
+                    : "#08001C",
+                border:
+                  match.is_checked_in || isCheckedIn
+                    ? undefined
+                    : "1px solid #6932F9",
                 margin: "0px 0px 0px 16px",
               }}
               onClick={(): any => checkInTournament()}

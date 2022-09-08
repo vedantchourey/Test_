@@ -127,12 +127,10 @@ const TeamSelection: React.FC<TeamProps> = ({
                 )}
                 variant="contained"
                 onClick={(): any => {
-                  if (
-                    data?.playerList?.filter((i: any) => i.team_id === team.id)
-                      .length
-                  ) {
+                  
+                    
                     registerTeam();
-                  }
+                  
                 }}
                 sx={{ borderRadius: 0 }}
               >

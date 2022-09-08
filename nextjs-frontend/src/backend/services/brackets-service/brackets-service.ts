@@ -566,7 +566,7 @@ export const submitMatchResult = async (
       await users.update(
         {
           withdrawAmount:
-            parseInt(data[0].withdrawAmount || 0) + parseInt(winningPrice),
+            parseInt(data[0]?.withdrawAmount || 0) + parseInt(winningPrice),
         },
         { id: winnerPlayer }
       );
@@ -584,7 +584,7 @@ export const submitMatchResult = async (
         .update(
           {
             withdrawAmount:
-              parseInt(data[0].withdrawAmount || 0) + parseInt(losserPrice),
+              parseInt(data[0]?.withdrawAmount || 0) + parseInt(losserPrice),
           },
           { id: losserPlayer }
         )
@@ -639,6 +639,10 @@ export const fetchMatchResultsReq = async (
       knexConnection,
       "profiles"
     );
+    const teamRepo = new CrudRepository<IPrivateProfile>(
+      knexConnection,
+      "teams"
+    );
 
     const result = await repo
       .knexObj()
@@ -660,20 +664,34 @@ export const fetchMatchResultsReq = async (
           .where({ id: r.m_opponent1.id })
           .select();
 
-        const player1Data = player1[0].user_id
-          ? await profileRepo.knexObj().where("id", player1[0].user_id)
-.select()
-          : [{}];
+        let player1Data = [{}];
+        let player2Data = [{}];
+        
 
         const player2 = await participantRepo
           .knexObj()
           .where({ id: r.m_opponent2.id })
           .select();
 
-        const player2Data = player1[0].user_id
+        if(player1?.[0]?.team_id || player2?.[0]?.team_id){
+          player1Data = player1[0].team_id
+          ? await teamRepo.knexObj().where("id", player1[0].team_id)
+.select("name")
+          : [{}];
+          player2Data = player2[0].team_id
+          ? await teamRepo.knexObj().where("id", player1[0].team_id)
+.select("name")
+          : [{}];
+        } else{
+          player1Data = player1[0].user_id
+          ? await profileRepo.knexObj().where("id", player1[0].user_id)
+.select()
+          : [{}];
+          player2Data = player1[0].user_id
           ? await profileRepo.knexObj().where("id", player2[0].user_id)
 .select()
           : [{}];
+        }
 
         const opponent1 = {
           ...r.opponent1,

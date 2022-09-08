@@ -17,6 +17,7 @@ interface OpponentTileProps {
   onMatchHub?: (opponentData: IMatchHubData) => void;
   data: IMatchHubData;
   userDashboard?: boolean;
+  team: any[];
 }
 
 const calculateDuration = (
@@ -28,8 +29,8 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
   onMatchHub,
   data,
   userDashboard,
+  team,
 }) => {
-
   const router = useRouter();
   const user = useAppSelector(userProfileSelector);
 
@@ -49,14 +50,21 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
     data.tournament.brackets.stage[0].type
   );
 
-  const matchData = data.tournament.bracketsMetadata.rounds.find((r: any) => r.name === name)
+  const matchData = data.tournament.bracketsMetadata.rounds.find(
+    (r: any) => r.name === name
+  );
 
   const [countDown, setCountDown] = React.useState("00:00:00");
 
   const timerCallback = React.useCallback(() => {
     if (data.tournament) {
       const mDate = moment(data.tournament.startDate);
-      const mTime = moment(matchData.startTime || data.tournament.startTime, "hh:mm:SS");
+      const mTime = moment(
+        matchData.startTime ||
+          data.tournament.settings.checkInStartTime ||
+          data.tournament.startTime,
+        "hh:mm:SS"
+      );
       mDate.set({
         hours: mTime.get("hours"),
         minutes: mTime.get("minutes"),
@@ -65,7 +73,7 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
       const now = moment();
       let diff = mDate.diff(now);
       if (diff <= 0) {
-        setCountDown("00:00:00");
+        setCountDown("Started");
       } else {
         diff = mDate.diff(now, "hours");
         if (diff > 24) {
@@ -91,19 +99,33 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
     }
   };
 
+  const isMyTeam =
+    data.opponent1.team_id &&
+    team.find(
+      (t) => t.id === data.opponent1.team_id || t.id === data.opponent2.team_id
+    );
+
   let opponent_name = "";
   let opponent_data: any = {};
-  if (data.opponent1.user_id === user?.id) {
-    opponent_name = data.opponent2.user_id
-      ? data.opponent2.firstName + " " + data.opponent2.lastName
-      : "N/A";
-    opponent_data = data.opponent2;
-  } else {
-    opponent_name = data.opponent1.user_id
-      ? data.opponent1.firstName + " " + data.opponent1.lastName
-      : "N/A";
-    opponent_data = data.opponent1;
-  }
+
+  if (isMyTeam) {
+    const opponentPlayer =
+      data.opponent1?.team_id !== isMyTeam?.id
+        ? data.opponent1
+        : data.opponent2;
+    opponent_name = opponentPlayer.name || "";
+    opponent_data = opponentPlayer;
+  } else if (data.opponent1.user_id === user?.id) {
+      opponent_name = data.opponent2.user_id
+        ? data.opponent2.firstName + " " + data.opponent2.lastName
+        : "N/A";
+      opponent_data = data.opponent2;
+    } else {
+      opponent_name = data.opponent1.user_id
+        ? data.opponent1.firstName + " " + data.opponent1.lastName
+        : "N/A";
+      opponent_data = data.opponent1;
+    }
 
   const opponentImage = opponent_data.avatarUrl
     ? frontendSupabase.storage
@@ -119,9 +141,11 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
         </Typography>
         <div style={{ display: "flex", alignItems: "center" }}>
           {/* <Image src="/images/legand-club.png" width={32} height={32} /> */}
-          {!opponentImage && opponent_data.team_id?
-          <GroupIcon style={{height:45,width:45,borderRadius:25}}/>:
-          <Avatar src={opponentImage || ""} alt={opponent_name} />}
+          {!opponentImage && opponent_data.team_id ? (
+            <GroupIcon style={{ height: 45, width: 45, borderRadius: 25 }} />
+          ) : (
+            <Avatar src={opponentImage || ""} alt={opponent_name} />
+          )}
           <span
             style={{ marginLeft: "15px" }}
             className={styles.opponentTileValue}
