@@ -289,7 +289,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
             result: op1Result,
           },
           opponent2: {
-            user_id: matchData?.opponent1?.[0]?.user_id,
+            user_id: matchData?.opponent2?.[0]?.user_id,
             score: op2Score,
             result: op2Result,
           },
@@ -311,7 +311,12 @@ const MatchDashboard: React.FC = (): JSX.Element => {
       });
   };
 
-  const acceptResult = async ({ id, tournament_id, opponent1, opponent2 }: any): Promise<void> => {
+  const acceptResult = async ({
+    id,
+    tournament_id,
+    opponent1,
+    opponent2,
+  }: any): Promise<void> => {
     const endpoint = "/api/tournaments/match-result";
     const headers = await getAuthHeader();
     axios
@@ -403,19 +408,19 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                           <NoobCell>
                             <Typography>co-admin</Typography>
                           </NoobCell>
-                          {item.status === "PENDING" ? (
-                            <NoobCell>
-                              <Typography>
-                                <Button onClick={(): any => fetchMatch(item)}>
-                                  Resolve
-                                </Button>
-                              </Typography>
-                            </NoobCell>
-                          ) : (
+                          {/* {item.status === "PENDING" ? ( */}
+                          <NoobCell>
+                            <Typography>
+                              <Button onClick={(): any => fetchMatch(item)}>
+                                Resolve
+                              </Button>
+                            </Typography>
+                          </NoobCell>
+                          {/* ) : (
                             <>
                               <Typography></Typography>
                             </>
-                          )}
+                          )} */}
                           <NoobCell>
                             <Typography>
                               {moment(item.createdAt).fromNow()}
@@ -473,7 +478,8 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                                 item?.opponent1?.score === 0 ? "red" : "green"
                               }
                             >
-                              {item?.opponent1?.player?.username || item?.opponent1?.player?.name}
+                              {item?.opponent1?.player?.username ||
+                                item?.opponent1?.player?.name}
                             </Typography>
                           </NoobCell>
                           <NoobCell>
@@ -482,7 +488,8 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                                 item?.opponent2?.score === 0 ? "red" : "green"
                               }
                             >
-                              {item?.opponent2?.player?.username || item?.opponent2?.player?.name}
+                              {item?.opponent2?.player?.username ||
+                                item?.opponent2?.player?.name}
                             </Typography>
                           </NoobCell>
                           <NoobCell>
@@ -542,14 +549,14 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                   label="Select Winner"
                   onChange={(e): any => setWinnerId(e.target.value)}
                 >
-                  <MenuItem value={matchData?.opponent1?.[0]?.user_id}>
+                  <MenuItem value={matchData?.opponent1?.[0]?.id}>
                     {matchData?.opponent1?.[0]
                       ? matchData?.opponent1?.[0]?.firstName +
                         " " +
                         matchData?.opponent1?.[0]?.lastName
                       : "NA"}
                   </MenuItem>
-                  <MenuItem value={matchData?.opponent2?.[0]?.user_id}>
+                  <MenuItem value={matchData?.opponent2?.[0]?.id}>
                     {matchData?.opponent2?.[0]
                       ? matchData?.opponent2?.[0]?.firstName +
                         " " +
@@ -561,15 +568,15 @@ const MatchDashboard: React.FC = (): JSX.Element => {
             </Box>
             <Button onClick={(): any => setMatchIssueModal(null)}>Close</Button>
             <Button
-              onClick={(): any =>
+              onClick={(): any => {
                 updateResult({
                   id: matchIssueModal.matchId,
                   tournament_id: matchIssueModal.tournamentId,
                   draw: false,
                   opponent1_id: matchData?.opponent1?.[0]?.id,
-                  winnerId: "",
-                })
-              }
+                  winnerId: winnerId,
+                });
+              }}
             >
               Submit
             </Button>

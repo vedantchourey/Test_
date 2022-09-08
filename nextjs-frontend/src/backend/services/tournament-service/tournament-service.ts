@@ -570,8 +570,8 @@ export const fetchMatchDetails = async (
       const o1 = await opponent1;
       const o2 = await opponent2;
       return {
-        opponent1: o1,
-        opponent2: o2,
+        opponent1: o1.map((i: any) => ({...i, id: match?.opponent1.id})),
+        opponent2: o2.map((i: any) => ({...i, id: match?.opponent2.id})),
       };
     }
     opponent1
