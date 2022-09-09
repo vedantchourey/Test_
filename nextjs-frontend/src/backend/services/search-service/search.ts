@@ -10,6 +10,6 @@ export async function searchUser(req: ISearchRequest, context: PerRequestContext
   const errors = await validateRequest(req);
   if (isThereAnyError(errors)) return {errors};
   const repository = new ProfilesRepository(context.transaction as Knex.Transaction);
-  const result = await repository.searchUser(req.search) as ISearchResponse;
+  const result = await repository.searchUser(req.search, req.range) as ISearchResponse;
   return { data: result }
 }

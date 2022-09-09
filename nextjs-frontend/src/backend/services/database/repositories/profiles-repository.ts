@@ -66,14 +66,14 @@ export class ProfilesRepository extends BaseRepository<IProfile> {
       .returning('isPrivate');
   }
 
-  async searchUser(text: string): Promise<ISearchUser>{
+  async searchUser(text: string, range?: number): Promise<ISearchUser>{
     return this.entities()
     .distinctOn('username')
     .select('id')
     .select('username')
     .select('avatarUrl')
     .where('username', 'like', `%${text}%`)
-    .limit(5)
+    .limit(range || 5)
   }
 
   async getProfileByUsername(username: string): Promise<ISearchUser>{

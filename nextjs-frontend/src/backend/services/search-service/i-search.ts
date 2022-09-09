@@ -1,5 +1,6 @@
 export interface ISearchRequest{
   search: string;
+  range?: number;
 }
 
 export interface ISearchResponse {

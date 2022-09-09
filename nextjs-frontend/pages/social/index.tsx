@@ -9,16 +9,21 @@ import { IPostsResponse } from "../../src/frontend/service-clients/messages/i-po
 import { userProfileSelector } from "../../src/frontend/redux-store/authentication/authentication-selectors";
 import { useAppSelector } from "../../src/frontend/redux-store/redux-store";
 import PostCard from "../../src/frontend/components/account/posts/post-card";
-import { Grid, Skeleton } from "@mui/material";
+import { Avatar, Box, CircularProgress, Grid, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Skeleton, Typography } from "@mui/material";
 // import CreatePostInput from "../../src/frontend/components/account/posts/create-post-input";
-import Chat from "../../src/frontend/components/chat";
 import moment from "moment";
+import { searchPeopleByText } from "../../src/frontend/service-clients/search-service-client";
+import { ISearchPeopleByUsernameResponse } from "../../src/frontend/service-clients/messages/i-search";
+import { useRouter } from "next/router";
+import frontendConfig from "../../src/frontend/utils/config/front-end-config";
 
 const requiredRoles: NoobUserRole[] = ["noob-admin"];
 
 export default function SocialMedia(props: { hideChat: boolean }): JSX.Element {
   const [isFetchingPosts, setIsFetchingPosts] = useState(true);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
+  const [isFetching, setIsFetching] = useState(false)
+  const [userList, setUserList] = useState<ISearchPeopleByUsernameResponse[]>([]);
 
   const user = useAppSelector(userProfileSelector);
 
@@ -58,6 +63,70 @@ export default function SocialMedia(props: { hideChat: boolean }): JSX.Element {
     return jsx;
   };
 
+  async function searchByUserName(username: string): Promise<void> {
+    setIsFetching(true);
+    setUserList([]);
+    if (!username) {
+      setIsFetching(false);
+      return;
+    }
+    const response = await searchPeopleByText({ search: username, range: 20 });
+    if (response.length) setUserList(response);
+    setIsFetching(false)
+  }
+
+  const router = useRouter();
+
+  useEffect(() => {
+    searchByUserName("a");
+  }, [])
+
+  const renderResults = (): JSX.Element => {
+    if (isFetching) {
+      return (
+        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+          <CircularProgress />
+        </List>
+      )
+    }
+    else if (!isFetching && userList.length) {
+      return (
+        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+          {userList.filter((data) => data.id !== user?.id).map((data, i) => (
+            <ListItem key={Date.now() + i}>
+              <ListItemButton onClick={(): unknown => router.replace(`/account/${data.username}`)} sx={{ padding: '2px 18px', my: 1 }}>
+                <ListItemAvatar>
+                  <Avatar sx={{ width: 35, height: 35 }} alt="profile image" src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${data.avatarUrl}`}>
+                    {data.username.split('')[0].toUpperCase()}
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText >
+                  <Typography>
+                    @{data.username}
+                  </Typography>
+                  {/* <Typography variant="caption" color='#F08743'>
+                    {data.firstName} {data.lastName}
+                  </Typography> */}
+                </ListItemText>
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      )
+    }
+
+    // eslint-disable-next-line no-else-return
+    else {
+      return (
+        <></>
+        /*  <List className={styles.searchListLoder} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+           <h1>No data found</h1>
+         </List> */
+      )
+    }
+
+  }
+
   return (
     <NoobPage
       title="Social"
@@ -76,7 +145,23 @@ export default function SocialMedia(props: { hideChat: boolean }): JSX.Element {
           </Grid>
           {!props.hideChat && (
             <Grid item xs={4} p={2}>
-              <Chat smallChat={true} social={true} />
+              <Box
+                // style={{ border: "1px solid #6931F9" }}
+                // sx={{ borderRadius: "16px" }}
+              >
+                {/* <InputBase
+                  size="small"
+                  placeholder="Search anything..."
+                  sx={{ p: 1 }}
+                  onChange={(e): any => {
+                    searchByUserName(e.target.value);
+                  }}
+                />
+                <IconButton sx={{ mr: 1 }}>
+                  <img src="/icons/search-icon.png" />
+                </IconButton> */}
+                {renderResults()}
+              </Box>
             </Grid>
           )}
         </Grid>
