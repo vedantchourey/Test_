@@ -174,7 +174,11 @@ export const sendTeamTournamentInvites = async (
   );
   const data = await invites
     .knexObj()
-    .where({ tournament_id: req.tournamentId, team_id: req.team_id, gameUniqueId: req.gameUniqueId })
+    .where({
+      tournament_id: req.tournamentId,
+      team_id: req.team_id,
+      gameUniqueId: req.gameUniqueId,
+    })
     .whereIn("status", ["PENDING", "ACCEPTED"])
     .whereIn("user_id", req.user_list);
 
@@ -285,7 +289,10 @@ export const registerIndividualTournament = async (
       }
     }
 
-    await participant.update({ user_id: user.id, gameUniqueId: req.gameUniqueId }, { id: data.id });
+    await participant.update(
+      { user_id: user.id, gameUniqueId: req.gameUniqueId },
+      { id: data.id }
+    );
 
     return { message: "User register in successfull" };
   } catch (ex) {
@@ -322,7 +329,10 @@ export const registerTeamTournament = async (
 
     if (!data) getErrorObject("Tournament is full");
 
-    await participant.update({ team_id: req.team_id, gameUniqueId: req.gameUniqueId }, { id: data.id });
+    await participant.update(
+      { team_id: req.team_id, gameUniqueId: req.gameUniqueId },
+      { id: data.id }
+    );
 
     return { message: "Team register in successfull" };
   } catch (ex) {
@@ -489,12 +499,15 @@ export const submitMatchResult = async (
 
     const pricePool = tournamentData?.data?.pricingDetails?.currentPricePool;
     const price_per_credit = backendConfig.credit_config.price_per_credit;
-    const playersLimit = tournamentData?.data?.bracketsMetadata?.playersLimit || 2;
+    const playersLimit =
+      tournamentData?.data?.bracketsMetadata?.playersLimit || 2;
 
     const firstWinerPrice = (
       tournamentData?.data?.settings?.entryType === "credit"
         ? pricePool * (playersLimit > 2 ? 0.6 : 0.65) * price_per_credit
-        : (playersLimit > 2 ? 600 : 700)
+        : playersLimit > 2
+        ? 600
+        : 700
     ).toFixed();
     const secondWinerPrice = (
       tournamentData?.data?.settings?.entryType === "credit"
@@ -507,17 +520,15 @@ export const submitMatchResult = async (
         : 100
     ).toFixed();
 
-
-
     let data: any;
     if (!req.forceUpdate) {
       data = await repos.findById(req.id);
       if (!data) return getErrorObject("Invalid match Id");
       data = {
         ...data,
-        opponent1: {...data.opponent1, user_id: req.opponent1Id},
-        opponent2: {...data.opponent2, user_id: req.opponent2Id}
-      }
+        opponent1: { ...data.opponent1, user_id: req.opponent1Id },
+        opponent2: { ...data.opponent2, user_id: req.opponent2Id },
+      };
     } else {
       data = {
         match_id: req.id,
@@ -533,10 +544,11 @@ export const submitMatchResult = async (
       TABLE_NAMES.B_MATCH
     );
     const match: IBMatch = await repo.findById(data?.match_id);
+    
 
     let winningPrice: any;
     let losserPrice: any;
-    
+
     const winnerPlayer =
       data.opponent1.result === "lose"
         ? data.opponent2.user_id
@@ -555,8 +567,6 @@ export const submitMatchResult = async (
       losserPrice = thirdWinerPrice;
     }
 
-    
-
     if (winningPrice > 0) {
       const users = new CrudRepository<IPrivateProfile>(
         knexConnection,
@@ -572,22 +582,19 @@ export const submitMatchResult = async (
       );
     }
 
-    
-    
     if (losserPrice > 0) {
       const users = new CrudRepository<IPrivateProfile>(
         knexConnection,
         TABLE_NAMES.PRIVATE_PROFILE
       );
       const data = await users.knexObj().where("id", losserPlayer);
-      await users
-        .update(
-          {
-            withdrawAmount:
-              parseInt(data[0]?.withdrawAmount || 0) + parseInt(losserPrice),
-          },
-          { id: losserPlayer }
-        )
+      await users.update(
+        {
+          withdrawAmount:
+            parseInt(data[0]?.withdrawAmount || 0) + parseInt(losserPrice),
+        },
+        { id: losserPlayer }
+      );
     }
 
     const manager = new BracketsManager(
@@ -596,16 +603,26 @@ export const submitMatchResult = async (
 
     await manager.update.match({
       id: Number(match.id),
-      opponent1: {
-        id: Number(match.opponent1.id),
-        score: data.opponent1.score,
-        result: data.opponent1.result as any,
-      },
-      opponent2: {
-        id: Number(match.opponent2.id),
-        score: data.opponent2.score,
-        result: data.opponent2.result as any,
-      },
+      opponent1: match.opponent1.id
+        ? {
+            id: Number(match.opponent1.id),
+            score: data.opponent1.score,
+            result: data.opponent1.result as any,
+          }
+        : {
+            id: match.opponent1.id ? Number(match.opponent1.id) : null,
+            forfeit: true,
+          },
+      opponent2: match.opponent2.id
+        ? {
+            id: Number(match.opponent2.id),
+            score: data.opponent2.score,
+            result: data.opponent2.result as any,
+          }
+        : {
+            id: match.opponent2.id ? Number(match.opponent2.id) : null,
+            forfeit: true,
+          },
     });
 
     await Promise.all([
@@ -666,31 +683,38 @@ export const fetchMatchResultsReq = async (
 
         let player1Data = [{}];
         let player2Data = [{}];
-        
 
         const player2 = await participantRepo
           .knexObj()
           .where({ id: r.m_opponent2.id })
           .select();
 
-        if(player1?.[0]?.team_id || player2?.[0]?.team_id){
+        if (player1?.[0]?.team_id || player2?.[0]?.team_id) {
           player1Data = player1[0].team_id
-          ? await teamRepo.knexObj().where("id", player1[0].team_id)
-.select("name")
-          : [{}];
+            ? await teamRepo
+                .knexObj()
+                .where("id", player1[0].team_id)
+                .select("name")
+            : [{}];
           player2Data = player2[0].team_id
-          ? await teamRepo.knexObj().where("id", player1[0].team_id)
-.select("name")
-          : [{}];
-        } else{
+            ? await teamRepo
+                .knexObj()
+                .where("id", player1[0].team_id)
+                .select("name")
+            : [{}];
+        } else {
           player1Data = player1[0].user_id
-          ? await profileRepo.knexObj().where("id", player1[0].user_id)
-.select()
-          : [{}];
+            ? await profileRepo
+                .knexObj()
+                .where("id", player1[0].user_id)
+                .select()
+            : [{}];
           player2Data = player1[0].user_id
-          ? await profileRepo.knexObj().where("id", player2[0].user_id)
-.select()
-          : [{}];
+            ? await profileRepo
+                .knexObj()
+                .where("id", player2[0].user_id)
+                .select()
+            : [{}];
         }
 
         const opponent1 = {

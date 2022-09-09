@@ -17,11 +17,13 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
+import _ from "lodash";
 import moment from "moment";
 import { useRouter } from "next/router";
 import React from "react";
 import { TournamentData } from "../..";
 import { ReactComponent as CircleCloseIcon } from "../../../../../../public/icons/close.svg";
+import { getRoundName } from "../../../../services/get-round-name";
 import { getAuthHeader } from "../../../../utils/headers";
 import AccordionAlt from "../../../ui-components/accordion";
 import CardLayout from "../../../ui-components/card-layout";
@@ -78,8 +80,26 @@ const MatchDashboard: React.FC = (): JSX.Element => {
   const [matchIssueModal, setMatchIssueModal] = React.useState<any>(null);
   const [image, setImage] = React.useState<string>("");
   const [winnerId, setWinnerId] = React.useState<any>(null);
+  const [selectedRound, setSelectedRound] = React.useState<number | undefined>(
+    undefined
+  );
   const [tournamentDetails, setTournamentDetails] =
     React.useState<TournamentData | null>(null);
+
+  const match: any[] = tournamentDetails?.brackets?.match || [];
+  const round = tournamentDetails?.brackets?.round || [];
+  const group = tournamentDetails?.brackets?.group || [];
+  const type = tournamentDetails?.brackets.stage[0].type;
+
+  const roundList = _.unionBy(
+    match.map((i: any) => {
+      return {
+        name: getRoundName(group, match, round, i.id, type),
+        id: i.round_id,
+      };
+    }),
+    "id"
+  );
 
   const autoSeedBrackets = async (): Promise<void> => {
     const findFirstRoundMatch: any[] = tournamentDetails?.brackets.match
@@ -102,9 +122,8 @@ const MatchDashboard: React.FC = (): JSX.Element => {
           },
         };
       })
-      .filter(
-        (m: any) => m.opponent1.player !== null && m.opponent2.player === null
-      );
+      .filter((m: any) => m.round_id === selectedRound)
+      .filter((m: any) => !m.opponent2.id || !m.opponent2.player);
 
     const setResult: any[] = findFirstRoundMatch.map((m) => {
       return {
@@ -145,7 +164,78 @@ const MatchDashboard: React.FC = (): JSX.Element => {
           )
           .catch((err) => console.warn(err)))
     );
+    alert("Auto seeding completed");
+  };
 
+  const autoEliminateBrackets = async (): Promise<void> => {
+    const findFirstRoundMatch: any[] = tournamentDetails?.brackets.match
+      .map((m: any) => {
+        const opponent1Player = tournamentDetails?.brackets.participant.find(
+          (p: any) => m.opponent1.id === p.user_id || m.opponent1.id === p.id
+        );
+        const opponent2Player = tournamentDetails?.brackets.participant.find(
+          (p: any) => m.opponent2.id === p.user_id || m.opponent2.id === p.id
+        );
+        return {
+          ...m,
+          opponent1: {
+            ...m.opponent1,
+            player: opponent1Player.user_id || opponent1Player.team_id,
+          },
+          opponent2: {
+            ...m.opponent2,
+            player: opponent2Player.user_id || opponent2Player.team_id,
+          },
+        };
+      })
+      .filter((m: any) => m.round_id !== selectedRound)
+      .filter(
+        (m: any) =>
+          m.opponent1.player &&
+          m.opponent2.player &&
+          !m.opponent1.result &&
+          !m.opponent2.result
+      );
+
+    const setResult: any[] = findFirstRoundMatch.map((m) => {
+      return {
+        ...m,
+        match_id: m.id,
+        tournament_id: tournamentDetails?.id,
+        status: "RESOLVED",
+        forceUpdate: true,
+        opponent1: {
+          id: m.opponent1.id,
+          position: m.opponent1.position,
+          score: 1,
+          result: "draw",
+          user_id: m.opponent1.player,
+        },
+        opponent2: {
+          id: m.opponent2.id,
+          position: m.opponent2.position,
+          score: 0,
+          result: "draw",
+          user_id: m.opponent2.player,
+        },
+      };
+    });
+
+    const endpoint = "/api/tournaments/match-result";
+    const headers = await getAuthHeader();
+
+    await Promise.any(
+      setResult.map((match) =>
+        axios
+          .patch(
+            endpoint,
+            {
+              ...match,
+            },
+            { headers: headers }
+          )
+          .catch((err) => console.warn(err)))
+    );
     alert("Auto seeding completed");
   };
 
@@ -342,9 +432,45 @@ const MatchDashboard: React.FC = (): JSX.Element => {
   };
   return (
     <React.Fragment>
-      <Button onClick={(): any => autoSeedBrackets()} variant="outlined">
-        Auto Seed
-      </Button>
+      <Box display={"flex"}>
+        <FormControl
+          size="small"
+          margin="none"
+          style={{ margin: 0, minWidth: 200, marginRight: 10 }}
+        >
+          <InputLabel id="round-select-label">Select Round</InputLabel>
+          <Select
+            margin="none"
+            labelId="round-select-label"
+            id="round-select"
+            value={selectedRound}
+            label="Select Round"
+            onChange={(e): any =>
+              setSelectedRound(parseInt(e.target.value as string))
+            }
+          >
+            {roundList.map((m) => (
+              <MenuItem value={m.id} key={m.id}>{m.name}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <Button
+          onClick={(): any => autoSeedBrackets()}
+          variant="outlined"
+          size="small"
+        >
+          Auto Seed
+        </Button>
+        <Button
+          onClick={(): any => autoEliminateBrackets()}
+          variant="outlined"
+          size="small"
+          sx={{ ml: 1 }}
+        >
+          Eliminate player who not enter result
+        </Button>
+      </Box>
+
       <AccordionAlt
         title="MATCH DISTIPUTES"
         icon={{ expanded: <CircleCloseIcon /> }}
