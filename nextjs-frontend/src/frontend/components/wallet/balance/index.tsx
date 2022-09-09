@@ -27,6 +27,7 @@ const Balance = (): any => {
     ifsc: yup.string().required("IFSC code is required"),
     name: yup.string().required("Name code is required"),
     aadhar_no: yup.string().required("aadhar is required"),
+    acc_type: yup.string().required("Type is required"),
   });
 
   const addWithdrawRequest = async (): Promise<void> => {
@@ -65,6 +66,7 @@ const Balance = (): any => {
             aadhar_no: kycData.aadhar_no,
             ifsc: kycData.ifsc,
             name: kycData.name,
+            acc_type: kycData.acc_type,
           });
           setIsVerified(true);
         }
@@ -97,6 +99,7 @@ const Balance = (): any => {
       ifsc: "",
       name: "",
       aadhar_no: "",
+      acc_type: ""
     },
     validationSchema: validationSchema,
     onSubmit: async (data, { setSubmitting }) => {
@@ -227,13 +230,13 @@ const Balance = (): any => {
           <Grid item xs={12} md={6} display={"flex"}>
             <Button
               fullWidth
-              disabled={!isVerified}
+              disabled={user?.userRoles[0] === "noob-admin" || !isVerified }
               style={{
                 height: 56,
                 color: "#ffffff",
-                backgroundColor: isVerified
-                  ? "#F09633"
-                  : "rgba(255,255,255,0.2)",
+                backgroundColor: user?.userRoles[0] === "noob-admin" || !isVerified
+                  ? "rgba(255,255,255,0.2)"
+                  : "#F09633",
               }}
               onClick={(): any => addWithdrawRequest()}
             >
@@ -261,7 +264,7 @@ const Balance = (): any => {
           <Grid item xs={12}>
             <Box mt={3}>
               <Grid container spacing={1} marginTop={3}>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <TextField
                     disabled={isVerified}
                     margin="none"
@@ -280,7 +283,7 @@ const Balance = (): any => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <TextField
                     disabled={isVerified}
                     margin="none"
@@ -293,6 +296,21 @@ const Balance = (): any => {
                     value={formik.values.name}
                     helperText={formik.touched.name && formik.errors.name}
                     error={Boolean(formik.touched.name && formik.errors.name)}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    disabled={isVerified}
+                    margin="none"
+                    label="Account Type"
+                    size="small"
+                    name="type"
+                    fullWidth
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.acc_type}
+                    helperText={formik.touched.acc_type && formik.errors.acc_type}
+                    error={Boolean(formik.touched.acc_type && formik.errors.acc_type)}
                   />
                 </Grid>
                 <Grid item xs={4}>

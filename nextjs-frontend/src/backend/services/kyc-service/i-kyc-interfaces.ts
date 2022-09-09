@@ -4,4 +4,5 @@ export interface IVerifyKYC {
     ifsc: string;
     name: string;
     aadhar_no: string;
+    acc_type: string;
 }

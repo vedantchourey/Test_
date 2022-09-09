@@ -21,6 +21,7 @@ export const verifyKYC = async (connection: Knex, user: any, req: IVerifyKYC): P
       ifsc: req.ifsc,
       name: req.name,
       aadhar_no: req.aadhar_no,
+      acc_type: req.acc_type,
       aadhar_transaction_id: addhar_resp?.transaction_id,
       bank_transaction_id: bank_resp?.transaction_id,
       bank_verification_data: bank_resp?.data,
