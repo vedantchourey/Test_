@@ -8,6 +8,8 @@ import {
   Menu,
   MenuItem,
   Button,
+  Dialog,
+  DialogContent,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import {
@@ -67,6 +69,8 @@ export default function UserProfileCard(): JSX.Element {
   const handleClose = (): void => {
     setAnchorEl(null);
   };
+
+  const [teamModal, setTeamModal] = useState(false)
 
   const handleCloseAvtar = (): void => setOpenAvatarModal(false);
 
@@ -347,7 +351,7 @@ export default function UserProfileCard(): JSX.Element {
                 >
                   Team
                 </Typography>
-                {teamData.map((t, idx) => {
+                {teamData.slice(0, 3).map((t, idx) => {
                   const teamLogo = t?.teamLogo
                     ? (frontendSupabase.storage
                         .from("public-files")
@@ -381,6 +385,11 @@ export default function UserProfileCard(): JSX.Element {
                     </Box>
                   );
                 })}
+                {teamData.length > 3 && (
+                  <Button variant="outlined" sx={{ mt: 2 }} fullWidth onClick={(): any => setTeamModal(true)}>
+                    View All
+                  </Button>
+                )}
               </Grid>
               <Grid
                 item
@@ -414,6 +423,38 @@ export default function UserProfileCard(): JSX.Element {
           </Box>
         </Box>
       </Box>
+      <Dialog open={teamModal} fullWidth onClose={(): any => setTeamModal(false)}>
+        <DialogContent style={{ maxHeight: 500 }}>
+          {teamData.map((t, idx) => {
+            const teamLogo = t?.teamLogo
+              ? (frontendSupabase.storage
+                  .from("public-files")
+                  .getPublicUrl(t.teamLogo).publicURL as string)
+              : "/static/images/avatar/3.jpg";
+            return (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  mt: 1,
+                  cursor: "pointer",
+                }}
+                key={idx}
+                onClick={(): any => router.push(`/team/view/${t.id}/members`)}
+              >
+                <Avatar
+                  sx={{ mr: 1, width: 35, height: 35 }}
+                  alt={t.name.toUpperCase()}
+                  src={teamLogo}
+                />
+                <Typography variant="h3" fontSize={14} textOverflow="ellipsis">
+                  {t.name}
+                </Typography>
+              </Box>
+            );
+          })}
+        </DialogContent>
+      </Dialog>
       <NoobFilePicker
         onFileSelected={onUploadAvatar}
         onError={(error): void => console.error(error)}

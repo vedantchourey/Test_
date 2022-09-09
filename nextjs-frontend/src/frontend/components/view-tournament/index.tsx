@@ -594,16 +594,18 @@ const ViewTournament: React.FC = () => {
                   </span>
                 </Typography>
               </Box>
-              <ActionButton
-                data={data}
-                error={regError}
-                onClick={onSinglePlayerJoin}
-                buttonOnly={playerLimit === 1}
-                items={getActionItems()}
-                id={"action-item"}
-                userId={user?.id}
-                disabled={countDown === "00:00:00"}
-              />
+              {countDown === "00:00:00" ? (
+                <ActionButton
+                  data={data}
+                  error={regError}
+                  onClick={onSinglePlayerJoin}
+                  buttonOnly={playerLimit === 1}
+                  items={getActionItems()}
+                  id={"action-item"}
+                  userId={user?.id}
+                  disabled={countDown === "00:00:00"}
+                />
+              ) : null}
             </Grid>
           </Grid>
         </ViewCard>

@@ -3,6 +3,8 @@ import {
   Avatar,
   Box,
   Button,
+  Dialog,
+  DialogContent,
   Divider,
   Grid,
   IconButton,
@@ -41,6 +43,7 @@ const OtherProfileCard = (props: {
   const [openFollowersModal, setOpenFollowersModal] = useState(false);
   const [openFollowingModal, setOpenFollowingModal] = useState(false);
   const user = useAppSelector(userProfileSelector);
+  const [teamModal, setTeamModal] = useState(false)
 
   const { totalFollowers, totalPosts, totalFollowing, isFollowing } = userData;
 
@@ -217,7 +220,7 @@ const OtherProfileCard = (props: {
               <Typography variant="caption" fontSize={12}>
                 Team
               </Typography>
-              {teamData.map((t, idx) => {
+              {teamData.slice(0, 3).map((t, idx) => {
                 const teamLogo = t?.teamLogo
                   ? (frontendSupabase.storage
                       .from("public-files")
@@ -253,6 +256,16 @@ const OtherProfileCard = (props: {
                   </Box>
                 );
               })}
+              {teamData.length > 3 && (
+                <Button
+                  variant="outlined"
+                  sx={{ mt: 2 }}
+                  fullWidth
+                  onClick={(): any => setTeamModal(true)}
+                >
+                  View All
+                </Button>
+              )}
             </Grid>
             <Grid
               item
@@ -334,6 +347,39 @@ const OtherProfileCard = (props: {
           </Grid>
         </Box>
       </Box>
+
+      <Dialog open={teamModal} fullWidth onClose={(): any => setTeamModal(false)}>
+        <DialogContent style={{ maxHeight: 500 }}>
+          {teamData.map((t, idx) => {
+            const teamLogo = t?.teamLogo
+              ? (frontendSupabase.storage
+                  .from("public-files")
+                  .getPublicUrl(t.teamLogo).publicURL as string)
+              : "/static/images/avatar/3.jpg";
+            return (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  mt: 1,
+                  cursor: "pointer",
+                }}
+                key={idx}
+                onClick={(): any => router.push(`/team/view/${t.id}/members`)}
+              >
+                <Avatar
+                  sx={{ mr: 1, width: 35, height: 35 }}
+                  alt={t.name.toUpperCase()}
+                  src={teamLogo}
+                />
+                <Typography variant="h3" fontSize={14} textOverflow="ellipsis">
+                  {t.name}
+                </Typography>
+              </Box>
+            );
+          })}
+        </DialogContent>
+      </Dialog>
 
       <>
         <FollowersModal
