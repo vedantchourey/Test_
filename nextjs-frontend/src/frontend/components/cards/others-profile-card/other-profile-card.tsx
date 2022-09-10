@@ -181,7 +181,7 @@ const OtherProfileCard = (props: {
         <Box className={styles.profileSection}>
           <Box sx={{ position: "relative" }}>
             <Avatar
-              sx={{ width: 85, height: 85, marginBottom: 2 }}
+              sx={{ width: 120, height: 120, marginBottom: 2 }}
               src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${userData.avatarUrl}`}
             ></Avatar>
             <IconButton className={styles.selectImg}>
@@ -196,24 +196,7 @@ const OtherProfileCard = (props: {
         {/* </Box>
 
       <Box className={styles.bottom}> */}
-        <Box className={styles.btnSection}>
-          <Button
-            className={styles.bottomBtn}
-            startIcon={isFollowing ? <CheckOutlined /> : <PersonAddAltIcon />}
-            variant="contained"
-            onClick={followAction}
-          >
-            {isFollowing ? "Following" : "Follow"}
-          </Button>
-          <Button
-            className={styles.bottomBtn}
-            sx={{ borderColor: "#fff", color: "#fff" }}
-            variant="outlined"
-            onClick={(): any => fetchChannel()}
-          >
-            Message
-          </Button>
-        </Box>
+        
         <Box className={styles.detailsContainer} sx={{ width: "100%" }}>
           <Grid container p={2}>
             <Grid item md={5} sx={{ textAlign: "left" }}>
@@ -345,6 +328,25 @@ const OtherProfileCard = (props: {
               </Typography>
             </Grid>
           </Grid>
+        </Box>
+
+        <Box className={styles.btnSection}>
+          <Button
+            className={styles.bottomBtn}
+            startIcon={isFollowing ? <CheckOutlined /> : <PersonAddAltIcon />}
+            variant="contained"
+            onClick={followAction}
+          >
+            {isFollowing ? "Following" : "Follow"}
+          </Button>
+          <Button
+            className={styles.bottomBtn}
+            sx={{ borderColor: "#fff", color: "#fff" }}
+            variant="outlined"
+            onClick={(): any => fetchChannel()}
+          >
+            Message
+          </Button>
         </Box>
       </Box>
 

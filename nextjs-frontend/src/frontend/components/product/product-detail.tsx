@@ -114,24 +114,24 @@ export default function ProductDetail(props: any): JSX.Element {
             )}
           </Box>
           <Box className={styles.box2}>
-            <Box className={styles.box3}>
+            {/* <Box className={styles.box3}>
               <img src="/icons/Product_delivery.png" />
               <Typography className={styles.sideText5}>
                 FREE shipping
               </Typography>
-            </Box>
-            <Box className={styles.box3}>
+            </Box> */}
+            {/* <Box className={styles.box3}>
               <img src="/icons/Clock_icon.png" />
               <Typography className={styles.sideText5}>
                 Deliver Today
               </Typography>
-            </Box>
-            <Box className={styles.box3}>
+            </Box> */}
+            {/* <Box className={styles.box3}>
               <img src="/icons/Store_icon.png" />
               <Typography className={styles.sideText5}>
                 Pick up TODAY
               </Typography>
-            </Box>
+            </Box> */}
             <Box className={styles.box4}>
               <img src="/icons/Card_credit_logo.png" />
               <img src="/icons/Payment_social_visa_icon.png" />

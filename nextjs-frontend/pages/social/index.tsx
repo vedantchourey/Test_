@@ -9,7 +9,7 @@ import { IPostsResponse } from "../../src/frontend/service-clients/messages/i-po
 import { userProfileSelector } from "../../src/frontend/redux-store/authentication/authentication-selectors";
 import { useAppSelector } from "../../src/frontend/redux-store/redux-store";
 import PostCard from "../../src/frontend/components/account/posts/post-card";
-import { Avatar, Box, CircularProgress, Grid, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Skeleton, Typography } from "@mui/material";
+import { Avatar, Box, Button, CircularProgress, Grid, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Skeleton, Typography } from "@mui/material";
 // import CreatePostInput from "../../src/frontend/components/account/posts/create-post-input";
 import moment from "moment";
 import { searchPeopleByText } from "../../src/frontend/service-clients/search-service-client";
@@ -70,7 +70,7 @@ export default function SocialMedia(props: { hideChat: boolean }): JSX.Element {
       setIsFetching(false);
       return;
     }
-    const response = await searchPeopleByText({ search: username, range: 20 });
+    const response = await searchPeopleByText({ search: username, range: 10 });
     if (response.length) setUserList(response);
     setIsFetching(false)
   }
@@ -84,17 +84,17 @@ export default function SocialMedia(props: { hideChat: boolean }): JSX.Element {
   const renderResults = (): JSX.Element => {
     if (isFetching) {
       return (
-        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+        <List sx={{ width: '100%', maxWidth: 360 }}>
           <CircularProgress />
         </List>
       )
     }
     else if (!isFetching && userList.length) {
       return (
-        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+        <List sx={{ width: '100%', maxWidth: 360 }}>
           {userList.filter((data) => data.id !== user?.id).map((data, i) => (
             <ListItem key={Date.now() + i}>
-              <ListItemButton onClick={(): unknown => router.replace(`/account/${data.username}`)} sx={{ padding: '2px 18px', my: 1 }}>
+              <ListItemButton onClick={(): unknown => router.replace(`/account/${data.username}`)} sx={{ padding: '2px 18px', my: 1, display: "flex" }}>
                 <ListItemAvatar>
                   <Avatar sx={{ width: 35, height: 35 }} alt="profile image" src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${data.avatarUrl}`}>
                     {data.username.split('')[0].toUpperCase()}
@@ -104,10 +104,12 @@ export default function SocialMedia(props: { hideChat: boolean }): JSX.Element {
                   <Typography>
                     @{data.username}
                   </Typography>
-                  {/* <Typography variant="caption" color='#F08743'>
-                    {data.firstName} {data.lastName}
-                  </Typography> */}
                 </ListItemText>
+                <Box> 
+                  <Button>
+                    Open
+                  </Button>
+                </Box>
               </ListItemButton>
             </ListItem>
           ))}
@@ -145,21 +147,10 @@ export default function SocialMedia(props: { hideChat: boolean }): JSX.Element {
           </Grid>
           {!props.hideChat && (
             <Grid item xs={4} p={2}>
-              <Box
-                // style={{ border: "1px solid #6931F9" }}
-                // sx={{ borderRadius: "16px" }}
-              >
-                {/* <InputBase
-                  size="small"
-                  placeholder="Search anything..."
-                  sx={{ p: 1 }}
-                  onChange={(e): any => {
-                    searchByUserName(e.target.value);
-                  }}
-                />
-                <IconButton sx={{ mr: 1 }}>
-                  <img src="/icons/search-icon.png" />
-                </IconButton> */}
+              <Box>
+                <Box textAlign={"center"}>
+                  <h4>Suggested Users</h4>
+                </Box>
                 {renderResults()}
               </Box>
             </Grid>

@@ -39,8 +39,8 @@ export const getPostsByUserId = async (userid: string): Promise<IPostsResponse[]
     .order('createdAt', { ascending: false })
     .match({ postedBy: userid });
   if (result.error) throw result.error;
-  const mentionsPosts = await getMentionsPost(userid);
-  return [...result.data, ...mentionsPosts] as IPostsResponse[];
+  // const mentionsPosts = await getMentionsPost(userid);
+  return [...result.data] as IPostsResponse[];
 };
 
 const getPostById =async (postId:string): Promise<IPostsResponse> => {

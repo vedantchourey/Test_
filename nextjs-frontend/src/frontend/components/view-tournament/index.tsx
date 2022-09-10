@@ -539,7 +539,7 @@ const ViewTournament: React.FC = () => {
       )
     );
   };
-
+  
   const renderTournament = (): JSX.Element | undefined => {
     if (selectedTeam) {
       return renderTeamSelection();
@@ -594,7 +594,7 @@ const ViewTournament: React.FC = () => {
                   </span>
                 </Typography>
               </Box>
-              {countDown === "00:00:00" ? (
+              {countDown !== "00:00:00" ? (
                 <ActionButton
                   data={data}
                   error={regError}
