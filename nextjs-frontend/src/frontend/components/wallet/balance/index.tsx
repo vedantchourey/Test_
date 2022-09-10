@@ -171,7 +171,7 @@ const Balance = (): any => {
                 fontSize: 18
               }}
               onClick={(): void => {
-                Router.push("credit/add");
+                Router.push("/store/product-detail/1");
               }}
             >
               Add Credits
