@@ -122,8 +122,7 @@ const Balance = (): any => {
               Your Balance
             </Typography>
             <Typography textAlign={"start"}>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-              Corrupti, inventore.
+              View your available Noobstorm Credits. Add Credits and start competing in Noobstorm Tournaments.
             </Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={6}>
@@ -169,6 +168,7 @@ const Balance = (): any => {
                 height: 56,
                 backgroundColor: "#6932F9",
                 color: "#ffffff",
+                fontSize: 18
               }}
               onClick={(): void => {
                 Router.push("credit/add");
@@ -184,11 +184,10 @@ const Balance = (): any => {
         <Grid container padding={2} columnSpacing={1} rowSpacing={1}>
           <Grid item xs={12} sm={12} md={6}>
             <Typography variant="h6" marginBottom={"16px"} marginTop={2}>
-              Available for Withdraw
+              Tournament Winnings
             </Typography>
             <Typography textAlign={"start"}>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-              Corrupti, inventore.
+              View your Winnings from Noobstorm Tournaments
             </Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={6}>
@@ -234,6 +233,7 @@ const Balance = (): any => {
               style={{
                 height: 56,
                 color: "#ffffff",
+                fontSize: 18,
                 backgroundColor: user?.userRoles[0] === "noob-admin" || !isVerified
                   ? "rgba(255,255,255,0.2)"
                   : "#F09633",

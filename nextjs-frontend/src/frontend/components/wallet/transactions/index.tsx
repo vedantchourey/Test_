@@ -27,7 +27,7 @@ const Transactions = (): any => {
               disabled={_.chunk(transaction, 15).length - 1 === currentState}
               onClick={(): any => setCurrentState(currentState + 1)}
             >
-              Older
+              History
             </Button>
             <Button
               disabled={currentState === 0}

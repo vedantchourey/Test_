@@ -69,7 +69,7 @@ export async function createComment(
     user_id: uId,
     is_action_required: false,
     sent_by: context.user?.id,
-    message: `${username} mention you in comment`,
+    message: `${username} mentioned you in comment`,
   })});
 
   if(notification.length) await addNotifications(notification, context.transaction as Knex);

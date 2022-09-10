@@ -41,7 +41,7 @@ const imagedata: any = {
   ROCKET_LEAGUE: "/images/games/ROCKET LEAGUE.png",
 };
 
-const allstatus = ["complete", "ongoing", "pending"];
+const allstatus = ["complete", "ongoing", "upcomming"];
 const allcredits = ["Free", "1-5", "6-10", "11-15", "16-20", "20+"];
 
 const SliderComp: React.FC = (): JSX.Element => {

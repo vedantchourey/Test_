@@ -26,7 +26,7 @@ const Component = ({ brackets }: { brackets: any }): any => {
               ? frontendSupabase.storage
                   .from("public-files")
                   .getPublicUrl(participant.avatarUrl).publicURL
-              : "/images/teams/Player.png",
+              : "/images/user_icon.png",
           };
         })
       );

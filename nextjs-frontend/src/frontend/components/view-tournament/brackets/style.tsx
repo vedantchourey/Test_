@@ -15,8 +15,7 @@ export default {
   },
   typeContainer: {
     height: 130,
-    background:
-      "linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)),url('/images/status-background.png')",
+    background:"url('/images/Map_Background.png')",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
     display: "flex",

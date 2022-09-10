@@ -22,7 +22,7 @@ const keys = [
   "createTemplateCode",
   "sponsor",
   "templateCode",
-  "joinCode"
+  "joinCode",
 ];
 export class TournamentsRepository extends BaseRepository<ITournament> {
   constructor(transaction: Knex.Transaction | Knex) {
@@ -75,8 +75,10 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
       ]);
     }
 
-    if(params?.status){
-      query.where({status: params.status.toLowerCase() as "draft" | "published" })
+    if (params?.status) {
+      query.where({
+        status: params.status.toLowerCase() as "draft" | "published",
+      });
     }
 
     result = await query;
@@ -96,8 +98,7 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
         if (moment(_doc.startDate).isBefore(moment())) {
           const isOnGoing = moment(startDateTime).isBetween(
             moment().hour(0),
-            moment().hour(23)
-.minute(59)
+            moment().hour(23).minute(59)
           );
           if (params?.sortType === "complete") {
             if (!isOnGoing) return _doc;
@@ -113,8 +114,7 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
         } else if (moment(_doc.startDate).isSame(moment(), "day")) {
           if (
             moment(
-              moment(_doc.startDate).format("YYYY-MM-DD")
-.toString() +
+              moment(_doc.startDate).format("YYYY-MM-DD").toString() +
                 " " +
                 _doc.startTime
             ).isBefore(moment())
@@ -126,7 +126,7 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
             if (moment(_doc).isBetween(moment().hour(0), moment().hour(23)))
               return _doc;
           }
-        } else if (params?.sortType === "pending") {
+        } else if (params?.sortType === "upcomming") {
           return _doc;
         }
       });

@@ -132,7 +132,7 @@ const SupportList: React.FC = () => {
               onClickResolveTicket(row.id, "resolve");
             }}
           >
-            Resolve
+            Resolved
           </Button>
         );
       },

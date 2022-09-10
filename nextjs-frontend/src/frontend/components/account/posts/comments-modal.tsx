@@ -138,7 +138,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
           user_id: props.postOwnerId,
           sent_by: user?.id,
           data: { redirect: `/social/${props.postId}` },
-          message: `${user?.username} Replied to your comment.`,
+          message: `${user?.username} replied to your comment.`,
         });
       }
       getComments();

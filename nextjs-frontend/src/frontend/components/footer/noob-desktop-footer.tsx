@@ -7,25 +7,21 @@ export default function NoobDesktopFooter(): JSX.Element {
 
   const items = [
     {
-      title: 'About',
+      title: 'About us',
       path: '/'
     },
     {
-      title: 'Services',
+      title: 'How it Works',
       path: '/'
     },
     {
-      title: 'The Team',
+      title: 'Terms of Service',
       path: '/'
     },
     {
-      title: 'Advisors & Investors',
+      title: 'Privacy Policy',
       path: '/'
-    },
-    {
-      title: 'Jobs',
-      path: '/'
-    },
+    }
   ]
   const items2 = [
     {
@@ -33,17 +29,9 @@ export default function NoobDesktopFooter(): JSX.Element {
       path: '/'
     },
     {
-      title: 'Organizer and Player Support',
-      path: '/'
-    },
-    {
       title: 'Help Center',
-      path: '/'
-    },
-    {
-      title: 'Media Kit',
-      path: '/'
-    },
+      path: '/support'
+    }
   ]
 
   return (
@@ -68,7 +56,7 @@ export default function NoobDesktopFooter(): JSX.Element {
                 </ListItem>
               ))}
             </List>
-            <Box>
+            {/* <Box>
               <Box sx={{ mt: 4, display: 'inline-flex', mb: 2 }}>
                 <Typography color={"white"} variant="body2">
                   Terms of Service
@@ -81,7 +69,7 @@ export default function NoobDesktopFooter(): JSX.Element {
               <Typography color={"white"} variant="body2">
                 Do Not Sell My Personal Information
               </Typography>
-            </Box>
+            </Box> */}
           </Grid>
           <Grid item md={5}>
             <Box className={styles.heading}>

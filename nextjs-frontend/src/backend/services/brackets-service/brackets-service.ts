@@ -451,12 +451,18 @@ export const submitMatchResultRequest = async (
       TABLE_NAMES.MATCH_RESULT_REQUEST
     );
     const result = repo.create(req);
+    const tournamentRepo = new CrudRepository<IMatchResultRequest>(
+      knexConnection,
+      TABLE_NAMES.TOURNAMENTS
+    );
+
+    const tournament = await tournamentRepo.findById(req.tournament_id)
 
     const notificationObj: INotifications = {
       type: "MATCH_RESULT",
       user_id: user.id,
       sent_by: user.id,
-      message: `${user?.user_metadata?.username} added match scroe.`,
+      message: `${user?.user_metadata?.username} reported the match score for ${tournament.name}.`,
       is_action_required: true,
       data: {},
     };

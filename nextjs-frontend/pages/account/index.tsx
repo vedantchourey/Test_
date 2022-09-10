@@ -169,7 +169,7 @@ function Account(): JSX.Element {
                         <NoobRow>
                           <NoobCell>Tournament Name</NoobCell>
                           <NoobCell>Game</NoobCell>
-                          <NoobCell>Type</NoobCell>
+                          <NoobCell>Format</NoobCell>
                           <NoobCell>Date</NoobCell>
                           <NoobCell>Participants</NoobCell>
                           <NoobCell>Status</NoobCell>

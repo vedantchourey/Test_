@@ -43,7 +43,7 @@ const NoobSupportPage: NextPage = () => {
                   <HistoryIcon />
                 </Icon>,
                 head: 'Create Ticket',
-                sub: `Lorem Ipsum has been the industry's standard dummy 0.32.`,
+                sub: `Need Assistance, Create a Ticket and we shall get back to you shortly`,
               },
               {
                 to: '/support/ticket/history',
@@ -51,7 +51,7 @@ const NoobSupportPage: NextPage = () => {
                   <HistoryIcon />
                 </Icon>,
                 head: 'Ticket History',
-                sub: `Lorem Ipsum has been the industry's standard dummy 0.32.`,
+                sub: `View your Ticket History`,
               },
               {
                 to: '/chat?user=support&name=Support',
@@ -59,7 +59,7 @@ const NoobSupportPage: NextPage = () => {
                   <HistoryIcon />
                 </Icon>,
                 head: 'Live Chat',
-                sub: `Lorem Ipsum has been the industry's standard dummy 0.32.`,
+                sub: `Start a Chat with the Support Team`,
               },
             ].map((_, i) => (
               <Grid item key={i} className={styles.gridContainer} xs={12} lg={4}>

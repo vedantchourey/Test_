@@ -6,7 +6,7 @@ import {useRouter} from "next/router";
 
 interface Props {
   _id: number,
-  status: 'active' | 'solved';
+  status: 'active' | 'resolve';
   ticketNumber: string;
   query: string;
   answer: string;
@@ -24,8 +24,8 @@ export default function TicketHisoryCard({ answer, created_at, ticketNumber, que
             <TicketIcon style={{ width: 32, height: 32 }} />
           }
           action={
-            <Typography variant='body1' color={status === 'active' ? 'success.main' : 'secondary'}>
-              {status}
+            <Typography variant='body1' color={status === 'active' ? 'secondary' : 'success.main'}>
+              {status.toLowerCase() === "resolve" ? "Resolved" : status}
             </Typography>
           }
           title={`Ticket #${ticketNumber}`}
@@ -48,7 +48,7 @@ export default function TicketHisoryCard({ answer, created_at, ticketNumber, que
                 {created_at}
               </Typography>
               <Box className={styles.flexRow}>
-                <MessageIcon onClick={():void=>{router.push(`/chat?user=support&name=Support&message=${encodeURI(`I have doubt about this ticket ${ticketNumber}`)}`)}}/>
+                <MessageIcon onClick={():void=>{router.push(`/chat?user=support&name=Support&message=${encodeURI(`Hey, I need help with ticket ${ticketNumber}`)}`)}}/>
                 <Typography align='left' ml={2} variant="body1">
                   {commentCount}
                 </Typography>

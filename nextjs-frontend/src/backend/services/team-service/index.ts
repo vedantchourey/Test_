@@ -393,7 +393,7 @@ export const acceptInvite = async (secret: string, connection: Knex.Transaction)
             await messagesRepo.create({
                 channel_id: invite.team_id,
                 send_by: invite.user_id,
-                message: "Hey, I just join team!",
+                message: "Hey, i just joined the Team!",
                 metadata: null,
             })
 

@@ -11,7 +11,7 @@ interface RulesProps {
 const Rules: React.FC<RulesProps> = ({ data }) => {
   return (
     <React.Fragment>
-      <ViewCard title="Rules the tournament">
+      <ViewCard title="Tournament Rules">
         <Grid container rowSpacing={1} columnSpacing={5}>
           <Grid item xs={6}>
             <FormControl fullWidth>

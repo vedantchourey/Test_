@@ -189,8 +189,8 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
         <Card sx={{ width: "641px", height: "auto", marginHorizontal: 30 }}>
           {filtedTeamList.length === 0 ? (
             <CardContent>
-              <Typography textAlign={"center"}>
-                You don&apost have team to invite this player
+              <Typography textAlign={"center"} color={"red"}>
+                You cannot invite this user as a team with the same Platform or Game does not exist. Please create a Team with the same Platform and Game to continue
               </Typography>
             </CardContent>
           ) : (

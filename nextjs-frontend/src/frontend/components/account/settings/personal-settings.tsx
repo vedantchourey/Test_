@@ -575,7 +575,7 @@ const PersonalSettings = (): JSX.Element => {
           />
         </Grid>
         <Grid item md={6}>
-          <FormLabel>Date of Birth a</FormLabel>
+          <FormLabel>Date of Birth</FormLabel>
           <DesktopDatePicker
             label="Date of birth"
             className={styles.inputRowItem}

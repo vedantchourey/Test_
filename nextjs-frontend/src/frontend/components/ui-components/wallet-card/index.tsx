@@ -22,6 +22,7 @@ const WalletCard: React.FC = ({ children }) => {
           color: "white",
           fontWeight: 700,
           marginTop: 64,
+          fontSize: 32
         }}
       >
         Wallet

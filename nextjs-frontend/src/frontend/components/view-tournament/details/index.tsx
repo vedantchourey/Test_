@@ -78,7 +78,7 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
 
   return (
     <React.Fragment>
-      <ViewCard title="About the tournament">
+      <ViewCard title="Tournament Description">
         <Grid container rowSpacing={1} columnSpacing={5}>
           <Grid item xs={12}>
             <FormControl fullWidth>
@@ -157,9 +157,8 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                     className={classes.subTitle}
                     textTransform={"capitalize"}
                   >
-                    {" "}
                     {data?.bracketsMetadata?.type
-                      ? `${data?.bracketsMetadata?.type} Elimination`
+                      ? `${data?.bracketsMetadata?.type?.toLowerCase()} Elimination`
                       : "-"}{" "}
                   </Typography>
                 </Grid>
