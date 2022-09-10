@@ -20,9 +20,10 @@ import {
 } from "../../src/frontend/redux-store/cart/cart-slice";
 import { useRouter } from "next/router";
 import backendConfig from "../../src/backend/utils/config/backend-config";
-const { credit_config } = backendConfig;
 import axios from "axios";
 import { getAuthHeader } from "../../src/frontend/utils/headers";
+
+const { credit_config } = backendConfig;
 
 export default function ProductDetail(): JSX.Element {
   const [razorPay, setRazorPay] = useState(false);

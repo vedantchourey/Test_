@@ -1,64 +1,67 @@
-import { Typography, Box, Button, TextField } from "@mui/material";
+import { Typography, Box, Button } from "@mui/material";
 import { useRouter } from "next/router";
 import commonStyles from "../../styles/common.module.css";
 import styles from "./product.module.css";
-import { useAppSelector, useAppDispatch } from "../../redux-store/redux-store";
-import { cartSelector } from "../../redux-store/cart/cart-selector";
-import { addProduct, updateQuantity } from "../../redux-store/cart/cart-slice";
-import React, { useEffect } from "react";
+// import { useAppSelector, useAppDispatch } from "../../redux-store/redux-store";
+// import { cartSelector } from "../../redux-store/cart/cart-selector";
+// import { addProduct, updateQuantity } from "../../redux-store/cart/cart-slice";
+import React from "react";
 import Image from "next/image";
+
 export default function Product(props: any): JSX.Element {
   const router = useRouter();
   async function goToProductDetailsPage(): Promise<void> {
     await router.push("/store/product-detail/" + props.id);
   }
 
-  const cart = useAppSelector(cartSelector);
-  const [qty, setQty] = React.useState(0);
+  // const cart = useAppSelector(cartSelector);
+  // const [qty, setQty] = React.useState(0);
 
-  const appDispatch = useAppDispatch();
+  // const appDispatch = useAppDispatch();
 
-  useEffect(() => {
-    const i = cart.products.findIndex((x: any) => x.id === props.id);
-    if (i !== -1) {
-      const item = cart.products[i];
-      const q = item.quantity;
-      setQty(q);
-    } else {
-      setQty(0);
-    }
-  }, [cart]);
+  // useEffect(() => {
+  //   const i = cart.products.findIndex((x: any) => x.id === props.id);
+  //   if (i !== -1) {
+  //     const item = cart.products[i];
+  //     const q = item.quantity;
+  //     setQty(q);
+  //   } else {
+  //     setQty(0);
+  //   }
+  // }, [cart]);
 
-  function addToCart(): void {
-    appDispatch(
-      addProduct({
-        name: props.name,
-        image: props.img,
-        description: props.description,
-        amount: props.price,
-        id: props.id,
-        product_code: props.product_code,
-        quantity: 1,
-        createdAt: props.created_at,
-      })
-    );
-  }
+  // function addToCart(): void {
+  //   appDispatch(
+  //     addProduct({
+  //       name: props.name,
+  //       image: props.img,
+  //       description: props.description,
+  //       amount: props.price,
+  //       id: props.id,
+  //       product_code: props.product_code,
+  //       quantity: 1,
+  //       createdAt: props.created_at,
+  //     })
+  //   );
+  // }
 
-  function updateQty(e: any): void {
-    appDispatch(
-      updateQuantity({
-        id: props.id,
-        quantity: e,
-      })
-    );
-  }
+  // function updateQty(e: any): void {
+  //   appDispatch(
+  //     updateQuantity({
+  //       id: props.id,
+  //       quantity: e,
+  //     })
+  //   );
+  // }
+
+  
 
   return (
     <Box className={styles.container}>
       <Image
-        src={props.img === "CREDIT" ? "/images/card.gif" : props.img}
+        src={props.img === "CREDIT" ? "/images/coin.jpg" : props.img}
         className={commonStyles.fillImage}
-        height={"350px"}
+        height={"220px"}
         width={"350px"}
       />
       <Typography
@@ -74,23 +77,21 @@ export default function Product(props: any): JSX.Element {
       >
         {props.description}
       </Typography>
-      <Typography className={styles.text} style={{ color: "#6932F9" }}>
-        ₹{props.price}
-      </Typography>
       <Box className={styles.box}>
         <Button
           variant="text"
           className={styles.button1}
-          onClick={(): any => {
-            if (qty <= 0) {
-              addToCart();
-            }
-            router.push("/checkout");
-          }}
+          // onClick={(): any => {
+          //   if (qty <= 0) {
+          //     addToCart();
+          //   }
+          //   router.push("/checkout");
+          // }}
+          onClick={goToProductDetailsPage}
         >
           Buy Now
         </Button>
-        {qty > 0 ? (
+        {/* {qty > 0 ? (
           <TextField
             id="qty"
             label="qty"
@@ -106,7 +107,7 @@ export default function Product(props: any): JSX.Element {
           <Button variant="text" className={styles.button2} onClick={addToCart}>
             <img src="/icons/Vector-Cart.png" style={{ width: "22px" }} />
           </Button>
-        )}
+        )} */}
       </Box>
     </Box>
   );

@@ -480,69 +480,73 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
           >
             <Grid item xs={5.5}>
               <Typography className={styles.sub_heading}>My Teams</Typography>
-              {Object.values(_.groupBy(myPlayer.players, "id"))?.map((u: any, idx: any) => {
-                const avatarUrl = u[0].avatarUrl
-                  ? (frontendSupabase.storage
-                      .from("public-files")
-                      .getPublicUrl(u[0].avatarUrl).publicURL as string)
-                  : undefined;
-                return (
-                  <Box style={{ marginRight: 20 }} key={idx}>
-                    <Box
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        padding: "10px",
-                      }}
-                      key={idx}
-                      onClick={(): void => {
-                        router.push(`/account/${u[0].username}`);
-                      }}
-                    >
-                      <Avatar src={avatarUrl} />
-                      <Typography style={{ marginLeft: "10px" }}>
-                        {u[0].username}
-                      </Typography>
+              {Object.values(_.groupBy(myPlayer.players, "id"))?.map(
+                (u: any, idx: any) => {
+                  const avatarUrl = u[0].avatarUrl
+                    ? (frontendSupabase.storage
+                        .from("public-files")
+                        .getPublicUrl(u[0].avatarUrl).publicURL as string)
+                    : undefined;
+                  return (
+                    <Box style={{ marginRight: 20 }} key={idx}>
+                      <Box
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          padding: "10px",
+                        }}
+                        key={idx}
+                        onClick={(): void => {
+                          router.push(`/account/${u[0].username}`);
+                        }}
+                      >
+                        <Avatar src={avatarUrl} />
+                        <Typography style={{ marginLeft: "10px" }}>
+                          {u[0].username}
+                        </Typography>
+                      </Box>
+                      <Divider light />
                     </Box>
-                    <Divider light />
-                  </Box>
-                );
-              })}
+                  );
+                }
+              )}
             </Grid>
             <Divider orientation="vertical" light />
             <Grid item xs={5.5}>
               <Typography className={styles.sub_heading}>
                 Opponent Teams
               </Typography>
-              {Object.values(_.groupBy(opponent_data.players, "id"))?.map((u: any, idx: any) => {
-                const avatarUrl = u[0].avatarUrl
-                  ? (frontendSupabase.storage
-                      .from("public-files")
-                      .getPublicUrl(u[0].avatarUrl).publicURL as string)
-                  : undefined;
+              {Object.values(_.groupBy(opponent_data.players, "id"))?.map(
+                (u: any, idx: any) => {
+                  const avatarUrl = u[0].avatarUrl
+                    ? (frontendSupabase.storage
+                        .from("public-files")
+                        .getPublicUrl(u[0].avatarUrl).publicURL as string)
+                    : undefined;
 
-                return (
-                  <Box style={{ marginLeft: 20 }} key={idx}>
-                    <Box
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        padding: "10px",
-                      }}
-                      key={idx}
-                      onClick={(): void => {
-                        router.push(`/account/${u[0].username}`);
-                      }}
-                    >
-                      <Avatar src={avatarUrl} />
-                      <Typography style={{ marginLeft: "10px" }}>
-                        {u[0].username}
-                      </Typography>
+                  return (
+                    <Box style={{ marginLeft: 20 }} key={idx}>
+                      <Box
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          padding: "10px",
+                        }}
+                        key={idx}
+                        onClick={(): void => {
+                          router.push(`/account/${u[0].username}`);
+                        }}
+                      >
+                        <Avatar src={avatarUrl} />
+                        <Typography style={{ marginLeft: "10px" }}>
+                          {u[0].username}
+                        </Typography>
+                      </Box>
+                      <Divider light />
                     </Box>
-                    <Divider light />
-                  </Box>
-                );
-              })}
+                  );
+                }
+              )}
             </Grid>
           </Grid>
         )}
@@ -581,11 +585,11 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                 color: "white",
                 padding: "12px 38px",
                 backgroundColor:
-                  match.is_checked_in || isCheckedIn
+                  match.is_checked_in || isCheckedIn || countDown === "Started"
                     ? "rgba(255,255,255,0.2)"
                     : "#08001C",
                 border:
-                  match.is_checked_in || isCheckedIn
+                  match.is_checked_in || isCheckedIn || countDown === "Started"
                     ? undefined
                     : "1px solid #6932F9",
                 margin: "0px 0px 0px 16px",
@@ -604,7 +608,12 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                 color: "white",
                 margin: "0px 16px 0px 16px",
               }}
-              disabled={!opponent1Name || !opponent2Name}
+              disabled={
+                !opponent1Name ||
+                !opponent2Name ||
+                (countDown === "Started" &&
+                  !(match.is_checked_in || isCheckedIn))
+              }
               onClick={(): void => setUploadResults(true)}
             >
               Report Score

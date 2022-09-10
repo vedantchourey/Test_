@@ -1,7 +1,6 @@
 .container {
 	display: flex;
 	flex-direction: column;
-	height: 100%;
 	justify-content: space-between;
 	margin: 0px 0px 20px 0px;
 }
@@ -14,11 +13,10 @@
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;	
-	justify-content: space-evenly;
 	margin: 0px 0px 20px 0px;
 	padding: 30px 30px 30px 30px;
 	box-sizing: border-box;
-	height: 100%;
+	/* height: 100%; */
 	background: #100626;
 	border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -86,7 +84,7 @@
 	width: 100%;
 	align-items: center;
 	align-content: center;
-	height: 70px;
+	height: 50px;
 }
 .button1 {
 	width: 70%;

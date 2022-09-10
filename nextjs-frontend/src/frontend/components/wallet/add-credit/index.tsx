@@ -69,6 +69,7 @@ const AddCredit: React.FC = () => {
         setErrorMsg("Something went wrong. Try again later");
       });
   };
+  
   return (
     <React.Fragment>
       <WalletCard>
