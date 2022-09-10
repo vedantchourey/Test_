@@ -123,9 +123,17 @@ const MatchDashboard: React.FC = (): JSX.Element => {
         };
       })
       .filter((m: any) => m.round_id === selectedRound)
-      .filter((m: any) => !m.opponent2.id || !m.opponent2.player);
+      .filter(
+        (m: any) =>
+          !m.opponent2.id ||
+          !m.opponent2.player ||
+          !m.opponent1.id ||
+          !m.opponent1.player
+      );
 
     const setResult: any[] = findFirstRoundMatch.map((m) => {
+      const noHavePlayers = !m.opponent2?.player && !m.opponent1?.player
+      
       return {
         ...m,
         match_id: m.id,
@@ -135,15 +143,15 @@ const MatchDashboard: React.FC = (): JSX.Element => {
         opponent1: {
           id: m.opponent1.id,
           position: m.opponent1.position,
-          score: 1,
-          result: "win",
+          score: noHavePlayers ? 1 : !m.opponent1?.player ? 0 : 1,
+          result: noHavePlayers ? "win" : !m.opponent1?.player ? "loss" : "win",
           user_id: m.opponent1.player,
         },
         opponent2: {
           id: m.opponent2.id,
           position: m.opponent2.position,
-          score: 0,
-          result: "loss",
+          score: noHavePlayers ? 0 : !m.opponent2?.player ? 0 : 1,
+          result: noHavePlayers ? "loss" : !m.opponent2?.player ? "loss" : "win",
           user_id: m.opponent2.player,
         },
       };

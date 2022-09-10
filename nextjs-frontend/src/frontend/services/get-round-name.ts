@@ -33,7 +33,7 @@ export const getRoundName = (
   else{
     roundListSize = roundByGroup[matchObj.group_id].length;
     if (groupObj.number === 1) {
-      if (roundListSize - 1 === roundObj.number) {
+      if (roundListSize === roundObj.number) {
         name = `UB Final Round`;
         type = `semi-final`
       }
@@ -56,7 +56,7 @@ export const getRoundName = (
       }
     }
     if (groupObj.number === 3) {
-      name = `GF Round`;
+      name = `GF Round ${roundObj.number}`;
       type = `final`
     }
   }

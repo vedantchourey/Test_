@@ -394,6 +394,7 @@ export async function tournamentDetails(
             team_name: k,
             avatarUrl: grp_team[k][0].teamLogo,
             team_id: grp_team[k][0].team_id,
+            players: grp_team[k],
             ...grp_team[k],
           };
         });

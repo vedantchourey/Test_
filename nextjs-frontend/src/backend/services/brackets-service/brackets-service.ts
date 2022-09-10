@@ -491,16 +491,6 @@ export const submitMatchResult = async (
       req.tournament_id
     );
 
-    const matchData: any = tournamentData?.data?.brackets?.match?.sort(
-      (a: any, b: any) => a.id - b.id
-    );
-
-    const matchByGroup = _.groupBy(matchData, "group_id");
-    const selectMatchGroup =
-      matchByGroup[
-        Object.keys(matchByGroup).sort((a: any, b: any) => b.id - a.id)[0]
-      ];
-
     const pricePool = tournamentData?.data?.pricingDetails?.currentPricePool;
     const price_per_credit = backendConfig.credit_config.price_per_credit;
     const playersLimit =
@@ -580,6 +570,8 @@ export const submitMatchResult = async (
     let winningPrice: any;
     let losserPrice: any;
 
+    
+
     const winnerPlayer =
       data.opponent1.result === "lose"
         ? data.opponent2.user_id
@@ -608,33 +600,96 @@ export const submitMatchResult = async (
     }
 
     if (winningPrice > 0) {
-      const users = new CrudRepository<IPrivateProfile>(
-        knexConnection,
-        TABLE_NAMES.PRIVATE_PROFILE
-      );
-      const data = await users.knexObj().where("id", winnerPlayer);
-      await users.update(
-        {
-          withdrawAmount:
-            parseInt(data[0]?.withdrawAmount || 0) + parseInt(winningPrice),
-        },
-        { id: winnerPlayer }
-      );
+      if (tournamentData?.data?.settings?.tournamentFormat === "1v1") {
+        const users = new CrudRepository<IPrivateProfile>(
+          knexConnection,
+          TABLE_NAMES.PRIVATE_PROFILE
+        );
+        const data = await users.knexObj().where("id", winnerPlayer);
+        await users.update(
+          {
+            withdrawAmount:
+              parseInt(data[0]?.withdrawAmount || 0) + parseInt(winningPrice),
+          },
+          { id: winnerPlayer }
+        );
+      } else {
+        const participantRepo = new CrudRepository<IBParticipants>(
+          knexConnection,
+          TABLE_NAMES.B_PARTICIPANT
+        );
+        const data = await participantRepo.findById(winnerPlayer);
+        const playersByTeam = _.groupBy(
+          tournamentData?.data?.playerList,
+          "team_id"
+        );
+        const players = Object.keys(
+          _.groupBy(playersByTeam[data.team_id][0].players, "id")
+        );
+        const teamWinningAmount = winningPrice / players.length;
+
+        Promise.all(players.map(async (u_id) => {
+          const users = new CrudRepository<IPrivateProfile>(
+            knexConnection,
+            TABLE_NAMES.PRIVATE_PROFILE
+          );
+          const data = await users.knexObj().where("id", u_id);
+          await users.update(
+            {
+              withdrawAmount:
+                parseInt(data[0]?.withdrawAmount || 0) + teamWinningAmount,
+            },
+            { id: u_id }
+          );
+        }))
+      }
     }
 
     if (losserPrice > 0) {
-      const users = new CrudRepository<IPrivateProfile>(
-        knexConnection,
-        TABLE_NAMES.PRIVATE_PROFILE
-      );
-      const data = await users.knexObj().where("id", losserPlayer);
-      await users.update(
-        {
-          withdrawAmount:
-            parseInt(data[0]?.withdrawAmount || 0) + parseInt(losserPrice),
-        },
-        { id: losserPlayer }
-      );
+      if (tournamentData?.data?.settings?.tournamentFormat === "1v1") {
+        const users = new CrudRepository<IPrivateProfile>(
+          knexConnection,
+          TABLE_NAMES.PRIVATE_PROFILE
+        );
+        const data = await users.knexObj().where("id", losserPlayer);
+        await users.update(
+          {
+            withdrawAmount:
+              parseInt(data[0]?.withdrawAmount || 0) + parseInt(losserPrice),
+          },
+          { id: losserPlayer }
+        );
+      } else{
+        const participantRepo = new CrudRepository<IBParticipants>(
+          knexConnection,
+          TABLE_NAMES.B_PARTICIPANT
+        );
+        const data = await participantRepo.findById(losserPlayer);
+        const playersByTeam = _.groupBy(
+          tournamentData?.data?.playerList,
+          "team_id"
+        );
+        const players = Object.keys(
+          _.groupBy(playersByTeam[data.team_id][0].players, "id")
+        );
+        const teamWinningAmount = losserPrice / players.length;
+
+        Promise.all(players.map(async (u_id) => {
+          const users = new CrudRepository<IPrivateProfile>(
+            knexConnection,
+            TABLE_NAMES.PRIVATE_PROFILE
+          );
+          const data = await users.knexObj().where("id", u_id);
+          await users.update(
+            {
+              withdrawAmount:
+                parseInt(data[0]?.withdrawAmount || 0) + teamWinningAmount,
+            },
+            { id: u_id }
+          );
+        }));
+      }
+      
     }
 
     await Promise.all([
