@@ -60,7 +60,7 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
     if (data.tournament) {
       const mDate = moment(data.tournament.startDate);
       const mTime = moment(
-        matchData.startTime ||
+        matchData?.startTime ||
           data.tournament.settings.checkInStartTime ||
           data.tournament.startTime,
         "hh:mm:SS"
@@ -156,7 +156,7 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
       </Grid>
       <Grid item xs={3}>
         <p className={styles.opponentTileTitle}>Tournament name</p>
-        <p className={styles.opponentTileValue}>{data.tournament_name}</p>
+        <p className={styles.opponentTileValue}>{data.tournament_name} ({name})</p>
       </Grid>
       <Grid
         item

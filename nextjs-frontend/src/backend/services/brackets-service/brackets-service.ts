@@ -40,6 +40,7 @@ import { IEloRating } from "../database/models/i-elo-rating";
 import { PerRequestContext } from "../../utils/api-middle-ware/api-middleware-typings";
 import backendConfig from "../../utils/config/backend-config";
 import { INotifications } from "../database/models/i-notifications";
+import { getRoundName } from "../../../frontend/services/get-round-name";
 
 export const persistBrackets = async (req: ITournament): Promise<any> => {
   const connection = createKnexConnection();
@@ -500,9 +501,6 @@ export const submitMatchResult = async (
         Object.keys(matchByGroup).sort((a: any, b: any) => b.id - a.id)[0]
       ];
 
-    const finalMatch = selectMatchGroup[selectMatchGroup.length - 1];
-    const semiMatch = selectMatchGroup[selectMatchGroup.length - 2];
-
     const pricePool = tournamentData?.data?.pricingDetails?.currentPricePool;
     const price_per_credit = backendConfig.credit_config.price_per_credit;
     const playersLimit =
@@ -550,7 +548,34 @@ export const submitMatchResult = async (
       TABLE_NAMES.B_MATCH
     );
     const match: IBMatch = await repo.findById(data?.match_id);
-    
+
+    const manager = new BracketsManager(
+      new BracketsCrud(knexConnection as any) as any
+    );
+
+    await manager.update.match({
+      id: Number(match.id),
+      opponent1: match.opponent1.id
+        ? {
+            id: Number(match.opponent1.id),
+            score: data.opponent1.score,
+            result: data.opponent1.result as any,
+          }
+        : {
+            id: match.opponent1.id ? Number(match.opponent1.id) : null,
+            forfeit: true,
+          },
+      opponent2: match.opponent2.id
+        ? {
+            id: Number(match.opponent2.id),
+            score: data.opponent2.score,
+            result: data.opponent2.result as any,
+          }
+        : {
+            id: match.opponent2.id ? Number(match.opponent2.id) : null,
+            forfeit: true,
+          },
+    });
 
     let winningPrice: any;
     let losserPrice: any;
@@ -565,11 +590,20 @@ export const submitMatchResult = async (
         ? data.opponent2.user_id
         : data.opponent1.user_id;
 
-    if (parseInt(finalMatch?.id) === parseInt(data?.match_id)) {
+    const matchDetials: any = getRoundName(
+      tournamentData?.data?.brackets?.group,
+      tournamentData?.data?.brackets?.match,
+      tournamentData?.data?.brackets?.round,
+      match.id,
+      tournamentData?.data?.brackets.stage[0].type,
+      true
+    );
+
+    if (matchDetials.type === "final") {
       winningPrice = firstWinerPrice;
       losserPrice = secondWinerPrice;
     }
-    if (parseInt(semiMatch?.id) === parseInt(data?.match_id)) {
+    if (matchDetials.type === "semi-final") {
       losserPrice = thirdWinerPrice;
     }
 
@@ -602,34 +636,6 @@ export const submitMatchResult = async (
         { id: losserPlayer }
       );
     }
-
-    const manager = new BracketsManager(
-      new BracketsCrud(knexConnection as any) as any
-    );
-
-    await manager.update.match({
-      id: Number(match.id),
-      opponent1: match.opponent1.id
-        ? {
-            id: Number(match.opponent1.id),
-            score: data.opponent1.score,
-            result: data.opponent1.result as any,
-          }
-        : {
-            id: match.opponent1.id ? Number(match.opponent1.id) : null,
-            forfeit: true,
-          },
-      opponent2: match.opponent2.id
-        ? {
-            id: Number(match.opponent2.id),
-            score: data.opponent2.score,
-            result: data.opponent2.result as any,
-          }
-        : {
-            id: match.opponent2.id ? Number(match.opponent2.id) : null,
-            forfeit: true,
-          },
-    });
 
     await Promise.all([
       updateELORating(match, data, knexConnection),

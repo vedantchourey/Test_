@@ -388,7 +388,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
     if (match?.tournament) {
       const mDate = moment(match.tournament.startDate);
       const mTime = moment(
-        matchData.startTime ||
+        matchData?.startTime ||
           match.tournament.settings.checkInStartTime ||
           match.tournament.startTime,
         "hh:mm:SS"

@@ -8,6 +8,7 @@ import styles from "./result-tile.module.css";
 import { IMatchHubData } from "../../../../../../pages/match-hub";
 import { frontendSupabase } from "../../../../services/supabase-frontend-service";
 import GroupIcon from "@mui/icons-material/Group";
+import { getRoundName } from "../../../../services/get-round-name";
 
 interface ResultTileProps {
   isWon?: boolean;
@@ -19,7 +20,15 @@ interface ResultTileProps {
 }
 
 const ResultTile: React.FC<ResultTileProps> = (props) => {
-  const { isWon, child, opponent1Name = "-", opponent2Name = "-" } = props;
+  const {data, isWon, child, opponent1Name = "-", opponent2Name = "-" } = props;
+
+  const name = getRoundName(
+    data.tournament.brackets.group as any[],
+    data.tournament.brackets.match as any[],
+    data.tournament.brackets.round as any[],
+    parseInt(data.match_id),
+    data.tournament.brackets.stage[0].type
+  );
 
   const opponent1Image = props.data.opponent1.avatarUrl
     ? frontendSupabase.storage
@@ -77,7 +86,7 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
       {/* Result status */}
       {!child ? (
         <Grid item xs={6}>
-          <p className={styles.resultTileValue}>{props.data.tournament_name}</p>
+          <p className={styles.resultTileValue}>{props.data.tournament_name} ({name})</p>
           <p
             className={styles.resultTileStatus}
             style={{ color: isWon ? "green" : "red", marginTop: 10 }}
