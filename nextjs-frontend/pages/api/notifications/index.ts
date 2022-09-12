@@ -31,7 +31,7 @@ export default createNextJsRouteHandler({
             res: NextApiResponse<ServiceResponse<INotificationRequest, ISuccess | IError>>,
             context: PerRequestContext
         ) => {
-            const result: any = await submitNotifications(req.body, context.transaction as Knex.Transaction, context.user as any);
+            const result: any = await submitNotifications(req.body, context.transaction as Knex.Transaction, context.user as any, context);
             res.status(result?.errors?.length ? 500 : 200).json(result)
         },
         preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],

@@ -451,8 +451,8 @@ export const submitMatchResultRequest = async (
       knexConnection,
       TABLE_NAMES.MATCH_RESULT_REQUEST
     );
-    const result = repo.create(req);
-    const tournamentRepo = new CrudRepository<IMatchResultRequest>(
+    const result = await repo.create(req);
+    const tournamentRepo = new CrudRepository<ITournament>(
       knexConnection,
       TABLE_NAMES.TOURNAMENTS
     );
@@ -465,7 +465,13 @@ export const submitMatchResultRequest = async (
       sent_by: user.id,
       message: `${user?.user_metadata?.username} reported the match score for ${tournament.name}.`,
       is_action_required: true,
-      data: {},
+      data: {
+        id: result.id,
+        status: "RESOLVED",
+        tournament_id: result.tournament_id,
+        opponent1Id: result.opponent1.id,
+        opponent2Id: result.opponent2.id,
+      },
     };
 
     await addNotifications(notificationObj, knexConnection);

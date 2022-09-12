@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import {
+  AppBar,
   Avatar,
   Box,
   Button,
   Dialog,
-  DialogContent,
   Divider,
   Grid,
   IconButton,
@@ -12,6 +12,7 @@ import {
   ListItem,
   Typography,
 } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 import { CheckOutlined } from "@mui/icons-material";
 import styles from "./other-profile-card.module.css";
 import CollectionsIcon from "@mui/icons-material/Collections";
@@ -351,8 +352,22 @@ const OtherProfileCard = (props: {
       </Box>
 
       <Dialog open={teamModal} fullWidth onClose={(): any => setTeamModal(false)}>
-        <DialogContent style={{ maxHeight: 500 }}>
-          {teamData.map((t, idx) => {
+        <Box style={{ maxHeight: 500, background: '#08001c', }}>
+        <AppBar position="static" className={styles.appBar}>
+          <Box sx={{ textAlign: 'center', position: 'relative' }}>
+            <Typography variant="h3" color='white' fontSize={20}>
+              Teams
+            </Typography>
+            <Box sx={{ position: 'absolute', right: 0, top: '-6px' }}>
+              <IconButton onClick={(): any => setTeamModal(false)}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+          </Box>
+        </AppBar>
+        <Divider />
+        <Box mt={1} pl={2} pr={2} maxHeight={500} overflow={"scroll"}>
+        {teamData.map((t, idx) => {
             const teamLogo = t?.teamLogo
               ? (frontendSupabase.storage
                   .from("public-files")
@@ -363,7 +378,7 @@ const OtherProfileCard = (props: {
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  mt: 1,
+                  mt: 2,
                   cursor: "pointer",
                 }}
                 key={idx}
@@ -380,7 +395,9 @@ const OtherProfileCard = (props: {
               </Box>
             );
           })}
-        </DialogContent>
+        </Box>
+          
+        </Box>
       </Dialog>
 
       <>

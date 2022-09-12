@@ -285,10 +285,12 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
     const request = {
       ...formik.values,
       opponent1: {
+        id: match.opponent1.id,
         score: op1Score,
         result: op1Result,
       },
       opponent2: {
+        id: match.opponent2.id,
         score: op2Score,
         result: op2Result,
       },

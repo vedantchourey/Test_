@@ -1,3 +1,10 @@
+.appBar {
+    background-color: #08001c !important;
+    box-shadow: none;
+    padding: 16px;
+    background-image: none;
+  }
+
 .background {
     padding: 40px 26px;
     border-top-left-radius: 12px;

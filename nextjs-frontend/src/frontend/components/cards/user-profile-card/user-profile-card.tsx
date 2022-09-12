@@ -9,9 +9,10 @@ import {
   MenuItem,
   Button,
   Dialog,
-  DialogContent,
+  AppBar,
 } from "@mui/material";
 import { useState, useEffect } from "react";
+import CloseIcon from '@mui/icons-material/Close';
 import {
   updateAvatar,
   updateProfileBackground,
@@ -424,8 +425,22 @@ export default function UserProfileCard(): JSX.Element {
         </Box>
       </Box>
       <Dialog open={teamModal} fullWidth onClose={(): any => setTeamModal(false)}>
-        <DialogContent style={{ maxHeight: 500 }}>
-          {teamData.map((t, idx) => {
+        <Box style={{ maxHeight: 500, background: '#08001c', }}>
+        <AppBar position="static" className={styles.appBar}>
+          <Box sx={{ textAlign: 'center', position: 'relative' }}>
+            <Typography variant="h3" color='white' fontSize={20}>
+              Teams
+            </Typography>
+            <Box sx={{ position: 'absolute', right: 0, top: '-6px' }}>
+              <IconButton onClick={(): any => setTeamModal(false)}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+          </Box>
+        </AppBar>
+        <Divider />
+        <Box mt={1} pl={2} pr={2} maxHeight={500} overflow={"scroll"}>
+        {teamData.map((t, idx) => {
             const teamLogo = t?.teamLogo
               ? (frontendSupabase.storage
                   .from("public-files")
@@ -436,7 +451,7 @@ export default function UserProfileCard(): JSX.Element {
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  mt: 1,
+                  mt: 2,
                   cursor: "pointer",
                 }}
                 key={idx}
@@ -453,7 +468,9 @@ export default function UserProfileCard(): JSX.Element {
               </Box>
             );
           })}
-        </DialogContent>
+        </Box>
+          
+        </Box>
       </Dialog>
       <NoobFilePicker
         onFileSelected={onUploadAvatar}

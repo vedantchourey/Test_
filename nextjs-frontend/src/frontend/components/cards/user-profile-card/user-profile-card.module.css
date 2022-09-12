@@ -7,6 +7,13 @@
   display: flex;
 }
 
+.appBar {
+  background-color: #08001c !important;
+  box-shadow: none;
+  padding: 16px;
+  background-image: none;
+}
+
 .editBackgroundButton {
   position: absolute;
   top: 10px;
