@@ -197,7 +197,7 @@ const OtherProfileCard = (props: {
         {/* </Box>
 
       <Box className={styles.bottom}> */}
-        
+
         <Box className={styles.detailsContainer} sx={{ width: "100%" }}>
           <Grid container p={2}>
             <Grid item md={5} sx={{ textAlign: "left" }}>
@@ -242,11 +242,25 @@ const OtherProfileCard = (props: {
               })}
               {teamData.length > 3 && (
                 <Button
-                  variant="outlined"
-                  sx={{ mt: 2 }}
+                  variant="text"
+                  sx={{
+                    mt: 2,
+                    p: 0,
+                    justifyContent: "flex-start",
+                    pl: "2px",
+                  }}
                   fullWidth
                   onClick={(): any => setTeamModal(true)}
                 >
+                  <Avatar sx={{ mr: 1, width: 35, height: 35 }}>
+                    <Typography
+                      variant="h3"
+                      fontSize={12}
+                      textOverflow="ellipsis"
+                    >
+                      {`+ ${teamData.length - 3}`}
+                    </Typography>
+                  </Avatar>
                   View All
                 </Button>
               )}
@@ -351,52 +365,59 @@ const OtherProfileCard = (props: {
         </Box>
       </Box>
 
-      <Dialog open={teamModal} fullWidth onClose={(): any => setTeamModal(false)}>
-        <Box style={{ maxHeight: 500, background: '#08001c', }}>
-        <AppBar position="static" className={styles.appBar}>
-          <Box sx={{ textAlign: 'center', position: 'relative' }}>
-            <Typography variant="h3" color='white' fontSize={20}>
-              Teams
-            </Typography>
-            <Box sx={{ position: 'absolute', right: 0, top: '-6px' }}>
-              <IconButton onClick={(): any => setTeamModal(false)}>
-                <CloseIcon />
-              </IconButton>
-            </Box>
-          </Box>
-        </AppBar>
-        <Divider />
-        <Box mt={1} pl={2} pr={2} maxHeight={500} overflow={"scroll"}>
-        {teamData.map((t, idx) => {
-            const teamLogo = t?.teamLogo
-              ? (frontendSupabase.storage
-                  .from("public-files")
-                  .getPublicUrl(t.teamLogo).publicURL as string)
-              : "/static/images/avatar/3.jpg";
-            return (
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  mt: 2,
-                  cursor: "pointer",
-                }}
-                key={idx}
-                onClick={(): any => router.push(`/team/view/${t.id}/members`)}
-              >
-                <Avatar
-                  sx={{ mr: 1, width: 35, height: 35 }}
-                  alt={t.name.toUpperCase()}
-                  src={teamLogo}
-                />
-                <Typography variant="h3" fontSize={14} textOverflow="ellipsis">
-                  {t.name}
-                </Typography>
+      <Dialog
+        open={teamModal}
+        fullWidth
+        onClose={(): any => setTeamModal(false)}
+      >
+        <Box style={{ maxHeight: 500, background: "#08001c" }}>
+          <AppBar position="static" className={styles.appBar}>
+            <Box sx={{ textAlign: "center", position: "relative" }}>
+              <Typography variant="h3" color="white" fontSize={20}>
+                Teams
+              </Typography>
+              <Box sx={{ position: "absolute", right: 0, top: "-6px" }}>
+                <IconButton onClick={(): any => setTeamModal(false)}>
+                  <CloseIcon />
+                </IconButton>
               </Box>
-            );
-          })}
-        </Box>
-          
+            </Box>
+          </AppBar>
+          <Divider />
+          <Box mt={1} pl={2} pr={2} maxHeight={500} overflow={"scroll"}>
+            {teamData.map((t, idx) => {
+              const teamLogo = t?.teamLogo
+                ? (frontendSupabase.storage
+                    .from("public-files")
+                    .getPublicUrl(t.teamLogo).publicURL as string)
+                : "/static/images/avatar/3.jpg";
+              return (
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    mt: 2,
+                    cursor: "pointer",
+                  }}
+                  key={idx}
+                  onClick={(): any => router.push(`/team/view/${t.id}/members`)}
+                >
+                  <Avatar
+                    sx={{ mr: 1, width: 35, height: 35 }}
+                    alt={t.name.toUpperCase()}
+                    src={teamLogo}
+                  />
+                  <Typography
+                    variant="h3"
+                    fontSize={14}
+                    textOverflow="ellipsis"
+                  >
+                    {t.name}
+                  </Typography>
+                </Box>
+              );
+            })}
+          </Box>
         </Box>
       </Dialog>
 

@@ -10,6 +10,7 @@ import {
   OutlinedInput,
   MenuItem,
   TextField,
+  Tooltip,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useRouter } from "next/router";
@@ -38,6 +39,9 @@ import TeamSelection, { Team } from "./team-selection";
 import Loader from "../ui-components/loader";
 import { isDeviceTypeSelector } from "../../../../src/frontend/redux-store/layout/layout-selectors";
 import { deviceTypes } from "../../../../src/frontend/redux-store/layout/device-types";
+import { google, outlook, office365, yahoo, ics } from "calendar-link";
+
+
 
 interface JoinTeamType {
   tournamentId: string;
@@ -50,9 +54,22 @@ interface JoinTeamType {
 
 interface HeadSubSectionProps {
   time: string;
+  name?: string;
 }
 
-const HeadSubSection = ({ time }: HeadSubSectionProps): any => {
+
+
+const HeadSubSection = ({ time, name }: HeadSubSectionProps): any => {
+  const [isCopied, setCopied] = React.useState(false);
+  
+  const copyLink = (): void => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 1000);
+  };
+
   return (
     <Grid container>
       <Grid item md={4} display="flex">
@@ -65,18 +82,38 @@ const HeadSubSection = ({ time }: HeadSubSectionProps): any => {
         justifyContent={"flex-end"}
         alignItems={"center"}
       >
-        <Box style={{ cursor: "pointer" }} display="flex" marginRight={2}>
+        <Box
+          style={{ cursor: "pointer" }}
+          display="flex"
+          marginRight={2}
+          onClick={(): any => {
+            const event: any = {
+              title: `Noobstorm Game - ${name}`,
+              description: "",
+              start: time,
+              duration: [1, "hour"],
+            };
+            window.open(google(event), "_blank");
+          }}
+        >
           <Image src="/icons/CalenderIcon.svg" height="18px" width="18px" />
           <Typography color={"white"} marginLeft={1}>
             Add to calendar
           </Typography>
         </Box>
-        <Box style={{ cursor: "pointer" }} display="flex" marginRight={2}>
-          <Image src="/icons/ShareIcon.svg" height="18px" width="18px" />
-          <Typography color={"white"} marginLeft={1}>
-            Share Tournament
-          </Typography>
-        </Box>
+        <Tooltip title={"Copied!"} open={isCopied}>
+          <Box
+            style={{ cursor: "pointer" }}
+            display="flex"
+            marginRight={2}
+            onClick={copyLink}
+          >
+            <Image src="/icons/ShareIcon.svg" height="18px" width="18px" />
+            <Typography color={"white"} marginLeft={1}>
+              Share Tournamenta
+            </Typography>
+          </Box>
+        </Tooltip>
       </Grid>
     </Grid>
   );
@@ -662,6 +699,7 @@ const ViewTournament: React.FC = () => {
               " " +
               moment(data.basic?.startTime).format("hh:mm A")
             }
+            name={data.basic?.name}
           />
         </Heading>
         {renderTournament()}

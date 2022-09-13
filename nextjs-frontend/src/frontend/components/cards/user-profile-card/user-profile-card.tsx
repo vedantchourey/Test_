@@ -12,7 +12,7 @@ import {
   AppBar,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 import {
   updateAvatar,
   updateProfileBackground,
@@ -47,7 +47,7 @@ import { useRouter } from "next/router";
 import AvtarModal from "./avtar-modal";
 
 export default function UserProfileCard(): JSX.Element {
-  const router = useRouter()
+  const router = useRouter();
   const userProfile = useAppSelector(userProfileSelector);
   const [openAvatarsModal, setOpenAvatarModal] = useState<boolean>(false);
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
@@ -71,7 +71,7 @@ export default function UserProfileCard(): JSX.Element {
     setAnchorEl(null);
   };
 
-  const [teamModal, setTeamModal] = useState(false)
+  const [teamModal, setTeamModal] = useState(false);
 
   const handleCloseAvtar = (): void => setOpenAvatarModal(false);
 
@@ -126,11 +126,11 @@ export default function UserProfileCard(): JSX.Element {
   }
 
   const showUploadDefaultAvatarPicker = (): void => {
-    setOpenAvatarModal(true)
+    setOpenAvatarModal(true);
   };
   const showUploadAvatarPicker = (): void => {
     setShowAvatarPicker(true);
-    handleCloseAvtar()
+    handleCloseAvtar();
     setTimeout((): any => setShowAvatarPicker(false), 500);
   };
   const showUploadBackgroundPicker = (): void => {
@@ -265,6 +265,107 @@ export default function UserProfileCard(): JSX.Element {
         <Divider sx={{ mb: 2 }} light className={styles.divider} />
         <Box className={styles.bottom}>
           <Box className={styles.detailsContainer} sx={{ width: "100%" }}>
+            <Divider sx={{ mb: 3 }} light className={styles.divider} />
+
+            <Grid container p={2}>
+              <Grid item md={5} sx={{ textAlign: "left" }}>
+                <Typography
+                  variant="caption"
+                  fontSize={12}
+                  color="rgba(255, 255, 255, 0.31)"
+                  fontWeight={"700"}
+                >
+                  Team
+                </Typography>
+                {teamData.slice(0, 3).map((t, idx) => {
+                  const teamLogo = t?.teamLogo
+                    ? (frontendSupabase.storage
+                        .from("public-files")
+                        .getPublicUrl(t.teamLogo).publicURL as string)
+                    : "/static/images/avatar/3.jpg";
+                  return (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        mt: 1,
+                        cursor: "pointer",
+                      }}
+                      key={idx}
+                      onClick={(): any =>
+                        router.push(`/team/view/${t.id}/members`)
+                      }
+                    >
+                      <Avatar
+                        sx={{ mr: 1, width: 35, height: 35 }}
+                        alt={t.name.toUpperCase()}
+                        src={teamLogo}
+                      />
+                      <Typography
+                        variant="h3"
+                        fontSize={14}
+                        textOverflow="ellipsis"
+                      >
+                        {t.name}
+                      </Typography>
+                    </Box>
+                  );
+                })}
+
+                {teamData.length > 3 && (
+                  <Button
+                    variant="text"
+                    sx={{
+                      mt: 2,
+                      p: 0,
+                      justifyContent: "flex-start",
+                      pl: "2px",
+                    }}
+                    fullWidth
+                    onClick={(): any => setTeamModal(true)}
+                  >
+                    <Avatar sx={{ mr: 1, width: 35, height: 35 }}>
+                      <Typography
+                        variant="h3"
+                        fontSize={12}
+                        textOverflow="ellipsis"
+                      >
+                        {`+ ${teamData.length - 3}`}
+                      </Typography>
+                    </Avatar>
+                    View All
+                  </Button>
+                )}
+              </Grid>
+              <Grid
+                item
+                md={2}
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <div className={styles.verticalDivider} />
+              </Grid>
+              <Grid item md={5}>
+                <Typography
+                  variant="caption"
+                  fontSize={12}
+                  color="rgba(255, 255, 255, 0.31)"
+                  fontWeight={"700"}
+                >
+                  Member since
+                </Typography>
+                <Typography
+                  sx={{ textAlign: "center", mt: 1 }}
+                  variant="h3"
+                  fontSize={14}
+                >
+                  {moment(userProfile?.createdAt).format("DD MMM YYYY")}
+                </Typography>
+              </Grid>
+            </Grid>
             <Grid container>
               <Grid item md={3} sx={{ textAlign: "center" }}>
                 <Typography
@@ -339,137 +440,62 @@ export default function UserProfileCard(): JSX.Element {
                 </Typography>
               </Grid>
             </Grid>
-
-            <Divider sx={{ mb: 3 }} light className={styles.divider} />
-
-            <Grid container p={2}>
-              <Grid item md={5} sx={{ textAlign: "left" }}>
-                <Typography
-                  variant="caption"
-                  fontSize={12}
-                  color="rgba(255, 255, 255, 0.31)"
-                  fontWeight={"700"}
-                >
-                  Team
-                </Typography>
-                {teamData.slice(0, 3).map((t, idx) => {
-                  const teamLogo = t?.teamLogo
-                    ? (frontendSupabase.storage
-                        .from("public-files")
-                        .getPublicUrl(t.teamLogo).publicURL as string)
-                    : "/static/images/avatar/3.jpg";
-                  return (
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        mt: 1,
-                        cursor: "pointer",
-                      }}
-                      key={idx}
-                      onClick={(): any =>
-                        router.push(`/team/view/${t.id}/members`)
-                      }
-                    >
-                      <Avatar
-                        sx={{ mr: 1, width: 35, height: 35 }}
-                        alt={t.name.toUpperCase()}
-                        src={teamLogo}
-                      />
-                      <Typography
-                        variant="h3"
-                        fontSize={14}
-                        textOverflow="ellipsis"
-                      >
-                        {t.name}
-                      </Typography>
-                    </Box>
-                  );
-                })}
-                {teamData.length > 3 && (
-                  <Button variant="outlined" sx={{ mt: 2 }} fullWidth onClick={(): any => setTeamModal(true)}>
-                    View All
-                  </Button>
-                )}
-              </Grid>
-              <Grid
-                item
-                md={2}
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <div className={styles.verticalDivider} />
-              </Grid>
-              <Grid item md={5}>
-                <Typography
-                  variant="caption"
-                  fontSize={12}
-                  color="rgba(255, 255, 255, 0.31)"
-                  fontWeight={"700"}
-                >
-                  Member since
-                </Typography>
-                <Typography
-                  sx={{ textAlign: "center", mt: 1 }}
-                  variant="h3"
-                  fontSize={14}
-                >
-                  {moment(userProfile?.createdAt).format("DD MMM YYYY")}
-                </Typography>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
       </Box>
-      <Dialog open={teamModal} fullWidth onClose={(): any => setTeamModal(false)}>
-        <Box style={{ maxHeight: 500, background: '#08001c', }}>
-        <AppBar position="static" className={styles.appBar}>
-          <Box sx={{ textAlign: 'center', position: 'relative' }}>
-            <Typography variant="h3" color='white' fontSize={20}>
-              Teams
-            </Typography>
-            <Box sx={{ position: 'absolute', right: 0, top: '-6px' }}>
-              <IconButton onClick={(): any => setTeamModal(false)}>
-                <CloseIcon />
-              </IconButton>
-            </Box>
-          </Box>
-        </AppBar>
-        <Divider />
-        <Box mt={1} pl={2} pr={2} maxHeight={500} overflow={"scroll"}>
-        {teamData.map((t, idx) => {
-            const teamLogo = t?.teamLogo
-              ? (frontendSupabase.storage
-                  .from("public-files")
-                  .getPublicUrl(t.teamLogo).publicURL as string)
-              : "/static/images/avatar/3.jpg";
-            return (
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  mt: 2,
-                  cursor: "pointer",
-                }}
-                key={idx}
-                onClick={(): any => router.push(`/team/view/${t.id}/members`)}
-              >
-                <Avatar
-                  sx={{ mr: 1, width: 35, height: 35 }}
-                  alt={t.name.toUpperCase()}
-                  src={teamLogo}
-                />
-                <Typography variant="h3" fontSize={14} textOverflow="ellipsis">
-                  {t.name}
-                </Typography>
+      <Dialog
+        open={teamModal}
+        fullWidth
+        onClose={(): any => setTeamModal(false)}
+      >
+        <Box style={{ maxHeight: 500, background: "#08001c" }}>
+          <AppBar position="static" className={styles.appBar}>
+            <Box sx={{ textAlign: "center", position: "relative" }}>
+              <Typography variant="h3" color="white" fontSize={20}>
+                Teams
+              </Typography>
+              <Box sx={{ position: "absolute", right: 0, top: "-6px" }}>
+                <IconButton onClick={(): any => setTeamModal(false)}>
+                  <CloseIcon />
+                </IconButton>
               </Box>
-            );
-          })}
-        </Box>
-          
+            </Box>
+          </AppBar>
+          <Divider />
+          <Box mt={1} pl={2} pr={2} maxHeight={500} overflow={"scroll"}>
+            {teamData.map((t, idx) => {
+              const teamLogo = t?.teamLogo
+                ? (frontendSupabase.storage
+                    .from("public-files")
+                    .getPublicUrl(t.teamLogo).publicURL as string)
+                : "/static/images/avatar/3.jpg";
+              return (
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    mt: 2,
+                    cursor: "pointer",
+                  }}
+                  key={idx}
+                  onClick={(): any => router.push(`/team/view/${t.id}/members`)}
+                >
+                  <Avatar
+                    sx={{ mr: 1, width: 35, height: 35 }}
+                    alt={t.name.toUpperCase()}
+                    src={teamLogo}
+                  />
+                  <Typography
+                    variant="h3"
+                    fontSize={14}
+                    textOverflow="ellipsis"
+                  >
+                    {t.name}
+                  </Typography>
+                </Box>
+              );
+            })}
+          </Box>
         </Box>
       </Dialog>
       <NoobFilePicker
