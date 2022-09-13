@@ -14,6 +14,9 @@ import {
   Popover,
   Typography,
   List,
+  Dialog,
+  DialogContent,
+  TextField,
 } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -50,6 +53,10 @@ export default function SideHeader(): JSX.Element {
     null
   );
   const avatarImageBlobUrl = useAppSelector(avatarImageBlobUrlSelector);
+  const [notificationPayload, setNotificationPayload] = React.useState<any>()
+  const [gameIdModal, setGameIdModal] = React.useState(false);
+  const [gameId, setGameId] = React.useState("")
+
 
   const [userList, setUserList] = React.useState<
     ISearchPeopleByUsernameResponse[]
@@ -108,7 +115,7 @@ export default function SideHeader(): JSX.Element {
     axios
       .post(
         "/api/notifications",
-        { id, response },
+        { id, response, gameUniqueId: gameId },
         {
           headers: { ...headers },
         }
@@ -117,7 +124,9 @@ export default function SideHeader(): JSX.Element {
         console.error(err);
       })
       .finally(() => {
+        setNotificationPayload(undefined);
         setAnchorEl(null);
+        setGameIdModal(false);
         fetchNotifications();
       });
   };
@@ -311,7 +320,7 @@ export default function SideHeader(): JSX.Element {
           Notifications
         </ListSubheader>
         {notifications
-          ?.sort(function (a :any, b :any) {
+          ?.sort(function (a: any, b: any) {
             const dateA = new Date(a.createdAt).getTime();
             const dateB = new Date(b.createdAt).getTime();
             return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
@@ -322,7 +331,13 @@ export default function SideHeader(): JSX.Element {
                 <BasicPopover
                   message={i.message}
                   onAccept={(): void => {
-                    submitNotification(i.id, "ACCEPTED");
+                    if (i.data.type === "TOURNAMENT_INVITE") {
+                      setGameId("");
+                      setGameIdModal(true);
+                      setNotificationPayload(i.id);
+                    } else {
+                      submitNotification(i.id, "ACCEPTED");
+                    }
                   }}
                   onDecline={(): void => {
                     submitNotification(i.id, "REJECT");
@@ -344,6 +359,28 @@ export default function SideHeader(): JSX.Element {
           View All
         </Button>
       </Popover>
+      <Dialog open={gameIdModal}>
+        <DialogContent>
+          <Box display={"flex"} flexDirection={"column"}>
+            <TextField
+              label={"Enter your game id"}
+              size={"small"}
+              value={gameId}
+              onChange={(e): any => setGameId(e.target.value)}
+            />
+            <Box display={"flex"} justifyContent="flex-end">
+              <Button
+                variant="contained"
+                onClick={(): any =>
+                  submitNotification(notificationPayload, "ACCEPTED")
+                }
+              >
+                Join
+              </Button>
+            </Box>
+          </Box>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

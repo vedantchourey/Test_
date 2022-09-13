@@ -483,7 +483,7 @@ const ViewTournament: React.FC = () => {
       return;
     }
     setPayload(payload);
-    setGameIdModal(true);
+    onJoinTeamApi(payload);
   };
 
   const onJoinTeamApi = async (payload: JoinTeamType): Promise<void> => {

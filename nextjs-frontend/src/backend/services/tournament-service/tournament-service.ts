@@ -524,7 +524,7 @@ export const handleInviteSubmit = async (
     tournament_id,
     status: STATUS.ACCEPTED,
   });
-  const gameUniqueId = acceptedInvites[0].gameUniqueId;
+  const gameUniqueId = acceptedInvites?.[0]?.gameUniqueId || "";
   const numberOfPlayer: string =
     tournament?.settings?.tournamentFormat || "1v1";
   if (TOURNAMENT_TYPE_NUMBER[numberOfPlayer] === acceptedInvites.length) {
