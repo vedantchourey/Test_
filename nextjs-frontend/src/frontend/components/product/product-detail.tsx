@@ -184,7 +184,10 @@ export default function ProductDetail(props: any): JSX.Element {
             </Typography>
           </Box>
           <Box className={styles.box1}>
-            <Typography className={styles.sideText7}>Service charge</Typography>
+            <div>
+              <Typography className={styles.sideText7}>Service charge</Typography>
+              <Typography variant={"caption"} color={"rgba(255,255,255,0.5)"}>(This helps us operate our platform and offer customer service)</Typography>
+            </div>
             <Typography className={styles.sideText7}>
               ₹{serviceCharge}
             </Typography>
