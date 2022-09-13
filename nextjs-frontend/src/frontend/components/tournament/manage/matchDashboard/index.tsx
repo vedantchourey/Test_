@@ -101,6 +101,82 @@ const MatchDashboard: React.FC = (): JSX.Element => {
     "id"
   );
 
+  const handleRemoveNotCheckedInPlayers = async (): Promise<void> => {
+    const findFirstRoundMatch: any[] = tournamentDetails?.brackets.match
+      .map((m: any) => {
+        const opponent1Player = tournamentDetails?.brackets.participant.find(
+          (p: any) => m.opponent1.id === p.user_id || m.opponent1.id === p.id
+        );
+        const opponent2Player = tournamentDetails?.brackets.participant.find(
+          (p: any) => m.opponent2.id === p.user_id || m.opponent2.id === p.id
+        );
+        return {
+          ...m,
+          opponent1: {
+            ...m.opponent1,
+            player: opponent1Player.user_id || opponent1Player.team_id,
+            is_checked_in: opponent1Player.is_checked_in,
+          },
+          opponent2: {
+            ...m.opponent2,
+            player: opponent2Player.user_id || opponent2Player.team_id,
+            is_checked_in: opponent2Player.is_checked_in,
+          },
+        };
+      })
+      .filter((m: any) => m.round_id === selectedRound)
+      .filter(
+        (m: any) =>
+          (!m.opponent1.is_checked_in || !m.opponent2.is_checked_in)
+          // &&
+          // !m.opponent1.result &&
+          // !m.opponent2.result
+      );
+
+    const setResult: any[] = findFirstRoundMatch.map((m) => {
+      return {
+        ...m,
+        match_id: m.id,
+        tournament_id: tournamentDetails?.id,
+        status: "RESOLVED",
+        forceUpdate: true,
+        opponent1: {
+          id: m.opponent1.id,
+          position: m.opponent1.position,
+          score: !m.opponent1.is_checked_in ? 0 : 1,
+          result: !m.opponent1.is_checked_in ? "loss" : "win",
+          user_id: m.opponent1.player,
+          forfeit: !m.opponent1.is_checked_in,
+        },
+        opponent2: {
+          id: m.opponent2.id,
+          position: m.opponent2.position,
+          score: !m.opponent2.is_checked_in ? 0 : 1,
+          result: !m.opponent2.is_checked_in ? "loss" : "win",
+          user_id: m.opponent2.player,
+          forfeit: !m.opponent2.is_checked_in,
+        },
+      };
+    });
+
+    const endpoint = "/api/tournaments/match-result";
+    const headers = await getAuthHeader();
+
+    await Promise.any(
+      setResult.map((match) =>
+        axios
+          .patch(
+            endpoint,
+            {
+              ...match,
+            },
+            { headers: headers }
+          )
+          .catch((err) => console.warn(err)))
+    );
+    alert("Auto seeding completed");
+  };
+
   const autoSeedBrackets = async (): Promise<void> => {
     const findFirstRoundMatch: any[] = tournamentDetails?.brackets.match
       .map((m: any) => {
@@ -146,6 +222,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
           score: noHavePlayers ? 1 : !m.opponent1?.player ? 0 : 1,
           result: noHavePlayers ? "win" : !m.opponent1?.player ? "loss" : "win",
           user_id: m.opponent1.player,
+          
         },
         opponent2: {
           id: m.opponent2.id,
@@ -476,6 +553,14 @@ const MatchDashboard: React.FC = (): JSX.Element => {
           sx={{ ml: 1 }}
         >
           Eliminate player who not enter result
+        </Button>
+        <Button
+          onClick={(): any => handleRemoveNotCheckedInPlayers()}
+          variant="outlined"
+          size="small"
+          sx={{ ml: 1 }}
+        >
+          Eliminate not checked in player
         </Button>
       </Box>
 

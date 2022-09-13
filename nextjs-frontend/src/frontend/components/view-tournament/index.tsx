@@ -39,7 +39,7 @@ import TeamSelection, { Team } from "./team-selection";
 import Loader from "../ui-components/loader";
 import { isDeviceTypeSelector } from "../../../../src/frontend/redux-store/layout/layout-selectors";
 import { deviceTypes } from "../../../../src/frontend/redux-store/layout/device-types";
-import { google, outlook, office365, yahoo, ics } from "calendar-link";
+import { google } from "calendar-link";
 
 
 

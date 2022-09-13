@@ -558,6 +558,7 @@ export const submitMatchResult = async (
             id: Number(match.opponent1.id),
             score: data.opponent1.score,
             result: data.opponent1.result as any,
+            forfeit: req.opponent1.forfeit
           }
         : {
             id: match.opponent1.id ? Number(match.opponent1.id) : null,
@@ -568,6 +569,7 @@ export const submitMatchResult = async (
             id: Number(match.opponent2.id),
             score: data.opponent2.score,
             result: data.opponent2.result as any,
+            forfeit: req.opponent2.forfeit
           }
         : {
             id: match.opponent2.id ? Number(match.opponent2.id) : null,
