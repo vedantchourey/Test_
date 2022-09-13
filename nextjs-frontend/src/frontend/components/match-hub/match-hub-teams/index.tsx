@@ -509,7 +509,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                         .getPublicUrl(u[0].avatarUrl).publicURL as string)
                     : undefined;
                     
-                   const gameUniqueId = opponent1TeamPlayers[u[0].id][0].gameUniqueId
+                   const gameUniqueId = opponent1TeamPlayers?.[u[0].id]?.[0]?.gameUniqueId;
 
                   return (
                     <Box style={{ marginRight: 20 }} key={idx}>
@@ -551,7 +551,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                         .getPublicUrl(u[0].avatarUrl).publicURL as string)
                     : undefined;
 
-                    const gameUniqueId = opponent2TeamPlayers[u[0].id][0].gameUniqueId
+                    const gameUniqueId = opponent2TeamPlayers?.[u[0].id]?.[0]?.gameUniqueId
 
                   return (
                     <Box style={{ marginLeft: 20 }} key={idx}>
