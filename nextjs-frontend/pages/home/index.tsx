@@ -102,7 +102,7 @@ const Home = (): JSX.Element => {
         .map((i, key) => <Skeleton key={`${i}${key}`} />);
     }
     const jsx = posts.map((postData, index) => {
-      if (index < 3) {
+      if (index < 4) {
         return (
           <PostCard
             key={postData.id}
@@ -206,10 +206,10 @@ const Home = (): JSX.Element => {
 
   const topImageCarousel = [
     <div data-value="1" key={"1"}>
-      <Box style={{ height: 400, width: 1000 }}>
+      <Box style={{ width: "100%" }}>
         <img
           src="/images/home1.png"
-          style={{ height: 400, width: 1000, position: "absolute" }}
+          style={{ width: "100%", position: "absolute" }}
         />
         <Box className={styles.backgroundImg} style={{ position: "absolute" }}>
           <div className={styles.bgImgContainer}>
@@ -290,20 +290,20 @@ const Home = (): JSX.Element => {
       <Grid container>
         {isDesktop && (
           <>
-            <Grid item xs={12} lg={9}>
+            <Grid item xs={12} lg={12}>
               <div className={styles.backgroundImg}>
                 <AliceCarousel
                   items={topImageCarousel}
                   responsive={responsive}
                   autoPlay={true}
                   disableButtonsControls={true}
-                  disableDotsControls={true}
+                  // disableDotsControls={true}
                   autoPlayInterval={10000}
                   infinite={true}
                 />
               </div>
             </Grid>
-            <Grid item xs={12} lg={3}>
+            {/* <Grid item xs={12} lg={3}>
               <div className={styles.imgContainer}>
                 <AliceCarousel
                   items={sideImageCarousel}
@@ -315,7 +315,7 @@ const Home = (): JSX.Element => {
                   infinite={true}
                 />
               </div>
-            </Grid>
+            </Grid> */}
           </>
         )}
         {!isDesktop && (
@@ -402,7 +402,7 @@ const Home = (): JSX.Element => {
                   >
                     <Box
                       overflow={"scroll"}
-                      maxWidth={"57vw"}
+                      // maxWidth={"57vw"}
                       display={"flex"}
                       className={"hide-scrollbar"}
                     >
@@ -416,7 +416,7 @@ const Home = (): JSX.Element => {
                       display="flex"
                     >
                       {newsData.map((i: any, key) => {
-                        if (key < 3) {
+                        if (key < 4) {
                           return (
                             <Card
                               sx={{ maxWidth: 280, m: 2 }}
@@ -501,7 +501,7 @@ const Home = (): JSX.Element => {
                   </TabPanel>
                 </TabContext>
               </Grid>
-              {isDesktop && (
+              {/* {isDesktop && (
                 <>
                   <Grid
                     item
@@ -521,7 +521,7 @@ const Home = (): JSX.Element => {
                     </Box>
                   </Grid>
                 </>
-              )}
+              )} */}
             </Container>
           </>
         ) : (

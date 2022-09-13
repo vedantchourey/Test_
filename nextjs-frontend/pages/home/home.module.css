@@ -1,6 +1,6 @@
 .backgroundImg {
 	height: 468px;
-	width: 1000px;
+	width: 75vw;
 	background: radial-gradient(50% 50% at 50% 50%, rgba(8, 0, 29, 0.7) 0%, rgba(8, 0, 29, 0.8) 46.24%, rgba(8, 0, 29, 0.9) 100%)
 }
 .backgroundImgMobile {
@@ -19,12 +19,12 @@
 }
 .imgContainer {
 	display: flex;
-	position: absolute;
-	justify-content: center;
-	top: 300px;
-	align-items: center;
-  width: 200px;
-  margin-left: 100px;
+		position: absolute;
+		justify-content: center;
+		top: 300px;
+		align-items: center;
+		width: 200px;
+		margin-left: 100px;
 }
 .img1 {
 	width: 108px;
@@ -88,7 +88,7 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	width: 950px;
+	/* width: 950px; */
 }
 .viewAllButton {
 	width: 125px;
