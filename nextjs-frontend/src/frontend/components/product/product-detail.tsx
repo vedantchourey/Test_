@@ -5,7 +5,7 @@ import {
   Button,
   // TextField,
   Select,
-  MenuItem,
+  MenuItem
 } from "@mui/material";
 import styles from "./product-detail.module.css";
 import { useAppDispatch } from "../../redux-store/redux-store";
@@ -114,16 +114,6 @@ export default function ProductDetail(props: any): JSX.Element {
 
   const creditAmount = selectedCredit * credit_config.price_per_credit;
 
-  function getTotalAmount(): any {
-    return (
-      creditAmount +
-      (credit_config.credit_gst_percentage / 100) * creditAmount +
-      (credit_config.credit_service_percentage / 100) * creditAmount +
-      0
-      // (credit_config.shipping_service_percentage / 100) * creditAmount
-    );
-  }
-
   const creditsOptions = [
     // { label: "1 Credit", value: 1 * backendConfig.credit_config.price_per_credit },
     { label: "1 Credit", value: 1 },
@@ -132,6 +122,18 @@ export default function ProductDetail(props: any): JSX.Element {
     { label: "20 Credits", value: 20 },
     { label: "50 Credits", value: 50 },
   ];
+
+  const serviceCharge = creditAmount * (credit_config.credit_service_percentage / 100); 
+  const subtotal = creditAmount + serviceCharge;
+  const gst = subtotal * (credit_config.credit_gst_percentage / 100);
+
+  function getTotalAmount(): any {
+    return (
+      creditAmount +
+      serviceCharge +
+      gst
+    );
+  }
 
   return (
     <>
@@ -184,15 +186,37 @@ export default function ProductDetail(props: any): JSX.Element {
           <Box className={styles.box1}>
             <Typography className={styles.sideText7}>Service charge</Typography>
             <Typography className={styles.sideText7}>
-              ₹{creditAmount * (credit_config.credit_service_percentage / 100)}
+              ₹{serviceCharge}
             </Typography>
+          </Box>
+          <Box
+            style={{
+              borderBottomColor: "rgba(255,255,255,0.5)",
+              borderBottomWidth: 1,
+              borderBottomStyle: "solid",
+              display: "flex",
+              width: "100%",
+            }}
+          />
+          <Box className={styles.box1}>
+            <Typography className={styles.sideText7}>Sub Total</Typography>
+            <Typography className={styles.sideText7}>₹{subtotal}</Typography>
           </Box>
           <Box className={styles.box1}>
             <Typography className={styles.sideText7}>GST (18%)</Typography>
             <Typography className={styles.sideText7}>
-              ₹{creditAmount * (credit_config.credit_gst_percentage / 100)}
+              ₹{gst}
             </Typography>
           </Box>
+          <Box
+            style={{
+              borderBottomColor: "rgba(255,255,255,0.5)",
+              borderBottomWidth: 1,
+              borderBottomStyle: "solid",
+              display: "flex",
+              width: "100%",
+            }}
+          />
           <Box className={styles.box1}>
             <Typography className={styles.sideText7}>Order Total</Typography>
             <Typography className={styles.sideText7}>
@@ -204,7 +228,7 @@ export default function ProductDetail(props: any): JSX.Element {
             variant="contained"
             fullWidth
             onClick={(): any => {
-              addFunds()
+              addFunds();
               // if (qty <= 0) {
               //   addToCart();
               // }

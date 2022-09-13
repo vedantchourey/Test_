@@ -76,6 +76,7 @@ export interface Gameinfo {
 
 const imagedata: any = {
   FIFA_22: "/images/games/Fifa.png",
+  BGMI: "/images/games/BGMI.png",
   CSG_O2: "/images/games/COUNTER STRIKE.png",
   CALL_OF_DUTY: "/images/games/CALL OF DUTY.png",
   F1_2021: "/images/games/F1 22.png",
