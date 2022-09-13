@@ -10,7 +10,7 @@ const TournamentsCard: React.FC = ({ children }) => {
                 marginBottom={2}
                 sx={{ padding: { sm: "10px", xs: "10px", md: "20px" } }}
                 style={{
-                    backgroundImage: "url('/icons/tournaments-background.svg')",
+                    backgroundImage: "url('/images/Tournaments Banner.png')",
                     backgroundRepeat: "no-repeat",
                     backgroundSize: "cover",
                 }}
