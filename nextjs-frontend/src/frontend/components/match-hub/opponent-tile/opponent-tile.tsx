@@ -61,9 +61,13 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
       const mDate = moment(data.tournament.startDate);
       const mTime = moment(
         matchData?.startTime ||
-          data.tournament.settings.checkInStartTime ||
           data.tournament.startTime,
         "hh:mm:SS"
+      ).subtract(
+        data.tournament?.bracketsMetadata?.checkInAmount > 0
+          ? data.tournament.bracketsMetadata.checkInAmount
+          : 0,
+        "minutes"
       );
       mDate.set({
         hours: mTime.get("hours"),
@@ -168,7 +172,7 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
         }}
       >
         <p>
-          <span className={styles.opponentTileTitle}>Round starts in:</span>
+          <span className={styles.opponentTileTitle}>Starts in:</span>
           <span
             className={styles.opponentTileValue}
             style={{ marginLeft: "24px" }}

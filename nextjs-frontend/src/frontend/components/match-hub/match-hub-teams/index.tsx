@@ -390,10 +390,13 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
     if (match?.tournament) {
       const mDate = moment(match.tournament.startDate);
       const mTime = moment(
-        matchData?.startTime ||
-          match.tournament.settings.checkInStartTime ||
-          match.tournament.startTime,
+        matchData?.startTime || match.tournament.startTime,
         "hh:mm:SS"
+      ).subtract(
+        match.tournament?.bracketsMetadata?.checkInAmount > 0
+          ? match.tournament.bracketsMetadata.checkInAmount
+          : 0,
+        "minutes"
       );
       mDate.set({
         hours: mTime.get("hours"),
@@ -465,7 +468,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                     VS
                   </Typography>
                   <Typography>
-                    Check start in:{" "}
+                    Start in:{" "}
                     <Typography component={"span"}>{countDown}</Typography>
                   </Typography>
                 </Box>

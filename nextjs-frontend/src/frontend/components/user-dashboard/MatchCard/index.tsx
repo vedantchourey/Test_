@@ -42,7 +42,7 @@ export default function MatchCard(): JSX.Element {
           </Box>
           <Box display={"flex"} alignItems={"center"}>
             <Typography textAlign={"left"} variant="caption">
-              Check starts in:
+              Starts in:
             </Typography>
             <Typography textAlign={"left"} ml={2}>
               00:18:45

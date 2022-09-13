@@ -457,24 +457,26 @@ export const submitMatchResultRequest = async (
       TABLE_NAMES.TOURNAMENTS
     );
 
-    const tournament = await tournamentRepo.findById(req.tournament_id)
+    const tournament: ITournament = await tournamentRepo.findById(req.tournament_id)
 
-    const notificationObj: INotifications = {
-      type: "MATCH_RESULT",
-      user_id: user.id,
-      sent_by: user.id,
-      message: `${user?.user_metadata?.username} reported the match score for ${tournament.name}.`,
-      is_action_required: true,
-      data: {
-        id: result.id,
-        status: "RESOLVED",
-        tournament_id: result.tournament_id,
-        opponent1Id: result.opponent1.id,
-        opponent2Id: result.opponent2.id,
-      },
-    };
-
-    await addNotifications(notificationObj, knexConnection);
+    if(tournament.settings?.ScoreReporting === "ADMIN_PLAYER") {
+      const notificationObj: INotifications = {
+        type: "MATCH_RESULT",
+        user_id: user.id,
+        sent_by: user.id,
+        message: `${user?.user_metadata?.username} reported the match score for ${tournament.name}.`,
+        is_action_required: true,
+        data: {
+          id: result.id,
+          status: "RESOLVED",
+          tournament_id: result.tournament_id,
+          opponent1Id: result.opponent1.id,
+          opponent2Id: result.opponent2.id,
+        },
+      };
+      await addNotifications(notificationObj, knexConnection);  
+    }
+    
     return result;
   } catch (ex) {
     return getErrorObject();

@@ -38,7 +38,7 @@ const OpponentTile: React.FC = () => {
           </span>
         </p>
         <p>
-          <span className={styles.opponentTileTitle}>Check starts in:</span>
+          <span className={styles.opponentTileTitle}>Starts in:</span>
           <span
             className={styles.opponentTileValue}
             style={{ marginLeft: "24px" }}

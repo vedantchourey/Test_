@@ -11,8 +11,8 @@ export function validatePersistTournament(body: any): any {
     banner: Joi.string().required(),
     // sponsor: Joi.string().optional(),
     info: Joi.object({
-      contactOption: Joi.string().required(),
-      contactUrl: Joi.string().required(),
+      // contactOption: Joi.string().optional(),
+      // contactUrl: Joi.string().optional(),
       contactDetails: Joi.string().required(),
       rules: Joi.string().required(),
       prizes: Joi.string().required(),

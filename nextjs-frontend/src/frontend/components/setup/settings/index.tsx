@@ -214,7 +214,7 @@ const Settings: React.FC<SettingProps> = ({
               </Box>
             ) : null}
           </Grid>
-          <Grid item xs={6}>
+          {/* <Grid item xs={6}>
             <FormControl fullWidth>
               <FormLabel label="Check-in"></FormLabel>
               <NoobToggleButtonGroup
@@ -230,8 +230,8 @@ const Settings: React.FC<SettingProps> = ({
                 <NoobToggleButton value="enable">Enabled</NoobToggleButton>
               </NoobToggleButtonGroup>
             </FormControl>
-          </Grid>
-          <Grid item xs={6}>
+          </Grid> */}
+          {/* <Grid item xs={6}>
             {formik.values.checkInType === "enable" ? (
               <React.Fragment>
                 <FormControl fullWidth>
@@ -266,7 +266,7 @@ const Settings: React.FC<SettingProps> = ({
                 </FormControl>
               </React.Fragment>
             ) : null}
-          </Grid>
+          </Grid> */}
           <Grid item xs={6}>
             <FormControl fullWidth>
               <FormLabel label="Match Score Reporting"></FormLabel>
@@ -281,7 +281,7 @@ const Settings: React.FC<SettingProps> = ({
               >
                 <NoobToggleButton value="ADMIN">Admin Only</NoobToggleButton>
                 <NoobToggleButton value="ADMIN_PLAYER">
-                  Admins & Players
+                  Players Only
                 </NoobToggleButton>
               </NoobToggleButtonGroup>
             </FormControl>

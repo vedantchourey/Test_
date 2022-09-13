@@ -32,7 +32,7 @@ export interface InfoData {
 
 const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
   const validationSchema = yup.object({
-    contactOption: yup.string().required("Please select contact option"),
+    contactOption: yup.string().optional(),
     contactDetails: yup.string().required("Contact Detail is required"),
     rules: yup.string().required("Rules are required"),
     prizes: yup.string().required("Prizes are required"),
@@ -178,6 +178,7 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
         <Button
           variant="contained"
           onClick={formik.submitForm}
+          disabled={Boolean(formik.values.contactOption && !formik.values.contactUrl)}
           endIcon={<img src="/icons/greater.svg" />}
         >
           Next
