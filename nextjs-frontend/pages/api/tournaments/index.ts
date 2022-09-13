@@ -7,7 +7,6 @@ import { ServiceResponse } from '../../../src/backend/services/common/contracts/
 import { PerRequestContext } from '../../../src/backend/utils/api-middle-ware/api-middleware-typings';
 import { CreateOrEditTournamentRequest } from '../../../src/backend/services/tournament-service/create-or-edit-tournament-request';
 import { ITournamentResponse } from '../../../src/backend/services/tournament-service/i-tournament-response';
-import { Knex } from 'knex';
 
 export default createNextJsRouteHandler({
   post: {
@@ -20,7 +19,7 @@ export default createNextJsRouteHandler({
   },
   delete: {
     handler: async (req: NextApiRequest, res: NextApiResponse<ServiceResponse<CreateOrEditTournamentRequest, ITournamentResponse>>, context: PerRequestContext) => {
-      const result = await deleteTournament(req.query.id as string, context.transaction as Knex.Transaction);
+      const result = await deleteTournament(req.query.id as string, context);
       res.status(result.errors ? 400 : 200).json(result);
     },
     preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],

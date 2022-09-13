@@ -45,6 +45,7 @@ import { IPrivateProfile } from "../database/models/i-private-profile";
 import { ITeams } from "../database/models/i-teams";
 import { IEloRating } from "../database/models/i-elo-rating";
 import { IProfile } from "../database/models/i-profile";
+import { IWallet } from "../database/models/i-wallet";
 
 const getTournamentInviteObj = (
   knexConnection: Knex
@@ -83,13 +84,46 @@ export const createTournament: NoobApiService<
   return { data: { id: id as string, ...others } };
 };
 
+const updateWalletBalance = async (userId: string, amount: number, context: any): Promise<any> =>{
+  const walley_repository = new CrudRepository<IWallet>(
+    context.transaction as Knex.Transaction,
+    TABLE_NAMES.WALLET
+  );
+  const value = await walley_repository.findBy("userId", userId)
+  await walley_repository.update(
+    { balance: value[0].balance + amount },
+    { userId }
+  );
+}
+
 export const deleteTournament = async (
   tid: string,
-  context: any
+  context: PerRequestContext
 ): Promise<any> => {
   const repository = new CrudRepository<ITournament>(
-    context,
+    context.transaction as Knex.Transaction,
     TABLE_NAMES.TOURNAMENTS
+  );
+  
+  const tournament: any = await tournamentDetails(context, tid)
+  
+  let userIds: any[] = [];
+  if(tournament.data?.settings?.tournamentFormat === "1v1"){
+    userIds = userIds.concat(Object.keys(_.groupBy(tournament?.data?.playerList, "id")))
+    
+  } else{  
+    tournament?.data?.playerList.map((t: any ) => {
+      userIds = userIds.concat(Object.keys(_.groupBy(t.players, "id")))
+    }) 
+  }
+
+  await Promise.all(
+    userIds.map((u) =>
+      updateWalletBalance(
+        u,
+        parseInt(tournament?.data?.settings?.entryFeeAmount || 0),
+        context
+      ))
   );
 
   const result = await repository.update({ isDeleted: true }, { id: tid });

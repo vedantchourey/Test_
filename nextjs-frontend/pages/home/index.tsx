@@ -144,53 +144,53 @@ const Home = (): JSX.Element => {
     TournamentsData();
   }, []);
 
-  const items = [
-    <div className="item" data-value="1" key={"1"}>
-      <Box className={styles.slider}>
-        <img src="/images/Group.png" />
-        <Typography className={styles.text3}>
-          Always keep in touch with your friends and watch their activities,
-          like and comment.
-        </Typography>
-        <span className={styles.border}></span>
-        <Box className={styles.sliderBox}>
-          <YoutubeIcon />
-          <img src="/images/Discord.png" style={{ height: "19px" }} />
-          <TwitchIcon />
-        </Box>
-      </Box>
-    </div>,
-    <div className="item" data-value="2" key={"2"}>
-      <Box className={styles.slider}>
-        <img src="/images/Group.png" />
-        <Typography className={styles.text3}>
-          Always keep in touch with your friends and watch their activities,
-          like and comment.
-        </Typography>
-        <span className={styles.border}></span>
-        <Box className={styles.sliderBox}>
-          <YoutubeIcon />
-          <img src="/images/Discord.png" style={{ height: "19px" }} />
-          <TwitchIcon />
-        </Box>
-      </Box>
-    </div>,
-    <div className="item" data-value="3" key={"3"}>
-      <Box className={styles.slider}>
-        <img src="/images/Group.png" />
-        <Typography className={styles.text3}>
-          Always keep in touch with your friends and watch their activities,
-          like and comment.
-        </Typography>
-        <span className={styles.border}></span>
-        <Box className={styles.sliderBox}>
-          <YoutubeIcon />
-          <img src="/images/Discord.png" style={{ height: "19px" }} />
-          <TwitchIcon />
-        </Box>
-      </Box>
-    </div>,
-  ];
+  // const items = [
+  //   <div className="item" data-value="1" key={"1"}>
+  //     <Box className={styles.slider}>
+  //       <img src="/images/Group.png" />
+  //       <Typography className={styles.text3}>
+  //         Always keep in touch with your friends and watch their activities,
+  //         like and comment.
+  //       </Typography>
+  //       <span className={styles.border}></span>
+  //       <Box className={styles.sliderBox}>
+  //         <YoutubeIcon />
+  //         <img src="/images/Discord.png" style={{ height: "19px" }} />
+  //         <TwitchIcon />
+  //       </Box>
+  //     </Box>
+  //   </div>,
+  //   <div className="item" data-value="2" key={"2"}>
+  //     <Box className={styles.slider}>
+  //       <img src="/images/Group.png" />
+  //       <Typography className={styles.text3}>
+  //         Always keep in touch with your friends and watch their activities,
+  //         like and comment.
+  //       </Typography>
+  //       <span className={styles.border}></span>
+  //       <Box className={styles.sliderBox}>
+  //         <YoutubeIcon />
+  //         <img src="/images/Discord.png" style={{ height: "19px" }} />
+  //         <TwitchIcon />
+  //       </Box>
+  //     </Box>
+  //   </div>,
+  //   <div className="item" data-value="3" key={"3"}>
+  //     <Box className={styles.slider}>
+  //       <img src="/images/Group.png" />
+  //       <Typography className={styles.text3}>
+  //         Always keep in touch with your friends and watch their activities,
+  //         like and comment.
+  //       </Typography>
+  //       <span className={styles.border}></span>
+  //       <Box className={styles.sliderBox}>
+  //         <YoutubeIcon />
+  //         <img src="/images/Discord.png" style={{ height: "19px" }} />
+  //         <TwitchIcon />
+  //       </Box>
+  //     </Box>
+  //   </div>,
+  // ];
 
   const sideImageCarousel = [
     <div data-value={"1"} key={"1"}>
