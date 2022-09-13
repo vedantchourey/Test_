@@ -146,7 +146,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
           score: !m.opponent1.is_checked_in ? 0 : 1,
           result: !m.opponent1.is_checked_in ? "loss" : "win",
           user_id: m.opponent1.player,
-          forfeit: !m.opponent1.is_checked_in,
+          // forfeit: !m.opponent1.is_checked_in,
         },
         opponent2: {
           id: m.opponent2.id,
@@ -154,7 +154,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
           score: !m.opponent2.is_checked_in ? 0 : 1,
           result: !m.opponent2.is_checked_in ? "loss" : "win",
           user_id: m.opponent2.player,
-          forfeit: !m.opponent2.is_checked_in,
+          // forfeit: !m.opponent2.is_checked_in,
         },
       };
     });
