@@ -241,7 +241,10 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
 
   const validationSchema = yup.object({
     match_id: yup.string().required("Match id is required"),
-    screenshot: yup.string().required("Screenshot is required"),
+    screenshot:
+      match.tournament.settings.screenShots === "REQUIRED"
+        ? yup.string().required("Screenshot is required")
+        : yup.string().optional(),
     winner: yup.string().when("draw", {
       is: "true",
       then: yup.string().required("Winner is required"),
@@ -585,7 +588,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
               Back
             </Button>
             <Button
-              disabled={match.is_checked_in || isCheckedIn}
+              disabled={match.is_checked_in || isCheckedIn || countDown === "Started"}
               style={{
                 color: "white",
                 padding: "12px 38px",
@@ -852,7 +855,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                 other user to accept it.
               </Typography>
               {formik.errors.screenshot ? (
-                <Typography color="white" variant="body2" marginTop={1}>
+                <Typography color="red" variant="body2" marginTop={1}>
                   {formik.errors.screenshot}
                 </Typography>
               ) : (
