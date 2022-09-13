@@ -121,8 +121,12 @@ export const persistTournament: NoobApiService<
     tournament = await repository.create({ ...req, id: undefined } as any);
   }
   if (req.bracketsMetadata?.playersLimit && tournament?.id) {
-    const players_data = await tournamentsWithPlayers(context, req.id || "", tournament)
-    if(!players_data?.playerList?.length){
+    const players_data = await tournamentsWithPlayers(
+      context,
+      req.id || "",
+      tournament
+    );
+    if (!players_data?.playerList?.length) {
       persistBrackets(tournament);
     }
   }
@@ -183,16 +187,6 @@ const tournamentsWithPlayers = async (
       } else {
         players = await part_repo
           .knexObj()
-          .select([
-            "private_profiles.firstName",
-            "private_profiles.lastName",
-            "private_profiles.id",
-            "elo_ratings.elo_rating",
-            "teams.elo_rating as team_elo_rating",
-            "teams.id as team_id",
-            "teams.teamLogo as teamLogo",
-            "teams.name as team_name",
-          ])
           .join(
             TABLE_NAMES.B_TOURNAMENT,
             "b_tournament.id",
@@ -215,7 +209,18 @@ const tournamentsWithPlayers = async (
             "elo_ratings.game_id": "teams.game_id",
           })
           .where("tournament_invites.tournament_id", tournamentId as string)
-          .whereNotNull("b_participant.team_id");
+          .whereNotNull("b_participant.team_id")
+          .select([
+            "private_profiles.firstName",
+            "private_profiles.lastName",
+            "private_profiles.id",
+            "elo_ratings.elo_rating",
+            "teams.elo_rating as team_elo_rating",
+            "teams.id as team_id",
+            "teams.teamLogo as teamLogo",
+            "teams.name as team_name",
+            "tournament_invites.gameUniqueId as gameUniqueId",
+          ]);
 
         const grp_team = _.groupBy(players, "team_name");
         currentPricePool = players.length
@@ -229,6 +234,7 @@ const tournamentsWithPlayers = async (
             ...grp_team[k],
           };
         });
+
         const playerCount =
           TOURNAMENT_TYPE_NUMBER[
             tournament?.settings?.tournamentFormat || "1v1"
@@ -263,7 +269,10 @@ export async function listTournaments(
   const repository = new TournamentsRepository(
     context.transaction as Knex.Transaction
   );
-  const tournaments = await repository.getTournaments({...params, isDeleted: false});
+  const tournaments = await repository.getTournaments({
+    ...params,
+    isDeleted: false,
+  });
   const result = await Promise.all(
     tournaments.tournaments.map((t) =>
       tournamentsWithPlayers(context, t.id as string, t))
@@ -285,9 +294,13 @@ export async function listTournament(
   );
   const tournamentId = context.getParamValue("tournamentId");
   const tournament = await repository.getTournament(tournamentId as string);
-  const tournamentData = await tournamentsWithPlayers(context, tournamentId as string, tournament)
+  const tournamentData = await tournamentsWithPlayers(
+    context,
+    tournamentId as string,
+    tournament
+  );
   return {
-    data: {...tournament, playerList: tournamentData.playerList},
+    data: { ...tournament, playerList: tournamentData.playerList },
   } as any;
 }
 
@@ -353,16 +366,6 @@ export async function tournamentDetails(
       } else {
         players = await part_repo
           .knexObj()
-          .select([
-            "private_profiles.firstName",
-            "private_profiles.lastName",
-            "private_profiles.id",
-            "elo_ratings.elo_rating",
-            "teams.elo_rating as team_elo_rating",
-            "teams.id as team_id",
-            "teams.name as team_name",
-            "teams.teamLogo as teamLogo",
-          ])
           .join(
             TABLE_NAMES.B_TOURNAMENT,
             "b_tournament.id",
@@ -385,10 +388,21 @@ export async function tournamentDetails(
             "elo_ratings.game_id": "teams.game_id",
           })
           .where("tournament_invites.tournament_id", tournamentId as string)
-          .whereNotNull("b_participant.team_id");
+          .whereNotNull("b_participant.team_id")
+          .select([
+            "private_profiles.firstName",
+            "private_profiles.lastName",
+            "private_profiles.id",
+            "elo_ratings.elo_rating",
+            "teams.elo_rating as team_elo_rating",
+            "teams.id as team_id",
+            "teams.name as team_name",
+            "teams.teamLogo as teamLogo",
+            "tournament_invites.gameUniqueId as gameUniqueId",
+          ]);
 
         const grp_team = _.groupBy(players, "team_name");
-        
+
         players = _.keys(grp_team).map((k) => {
           return {
             team_name: k,
@@ -419,16 +433,18 @@ export async function tournamentDetails(
       tournament = { ...tournament, brackets };
     }
 
-    const playerListData: any[] = tournament?.settings?.tournamentFormat === "1v1"
-    ? Object.values(_.groupBy(players, "id")).map((i) => i[0])
-    : players;
+    const playerListData: any[] =
+      tournament?.settings?.tournamentFormat === "1v1"
+        ? Object.values(_.groupBy(players, "id")).map((i) => i[0])
+        : players;
 
-    currentPricePool = playerListData.length * Number(tournament?.settings?.entryFeeAmount);
+    currentPricePool =
+      playerListData.length * Number(tournament?.settings?.entryFeeAmount);
 
     return {
       data: {
         ...tournament,
-        playerList:playerListData,
+        playerList: playerListData,
         pricingDetails: { pricePool, currentPricePool },
       },
     } as any;
@@ -516,7 +532,7 @@ export const handleInviteSubmit = async (
       {
         tournamentId: tournament_id,
         team_id,
-        gameUniqueId
+        gameUniqueId,
       } as any,
       knexConnection
     );
@@ -571,8 +587,8 @@ export const fetchMatchDetails = async (
       const o1 = await opponent1;
       const o2 = await opponent2;
       return {
-        opponent1: o1.map((i: any) => ({...i, id: match?.opponent1.id})),
-        opponent2: o2.map((i: any) => ({...i, id: match?.opponent2.id})),
+        opponent1: o1.map((i: any) => ({ ...i, id: match?.opponent1.id })),
+        opponent2: o2.map((i: any) => ({ ...i, id: match?.opponent2.id })),
       };
     }
     opponent1
@@ -682,7 +698,14 @@ export const fetchUserMatchs = async (
       // .join("b_tournament", "b_tournament.id", "b_participant.tournament_id")
       .where("user_id", user?.id)
       .orWhereIn("team_id", team_ids)
-      .select(["id", "tournament_id", "user_id", "team_id", "is_checked_in", "gameUniqueId"]);
+      .select([
+        "id",
+        "tournament_id",
+        "user_id",
+        "team_id",
+        "is_checked_in",
+        "gameUniqueId",
+      ]);
 
     if (!tournaments?.length) {
       return [];
@@ -739,7 +762,8 @@ export const fetchUserMatchs = async (
 
     part_list.forEach((part: any) => {
       if (part.gameUniqueId)
-        opponentsWithGameUniqueId[`${part.user_id}-${part.id}`] = part.gameUniqueId;
+        opponentsWithGameUniqueId[`${part.user_id}-${part.id}`] =
+          part.gameUniqueId;
       if (part.user_id) opponents.push(part.user_id);
       if (part.team_id) opp_teams.push(part.team_id);
     });
@@ -782,7 +806,7 @@ export const fetchUserMatchs = async (
     const result = Promise.all(
       matches.map(async (match: any) => {
         let { opponent1, opponent2 } = match;
-        
+
         const { b_t_id } = match;
         const is_checked_in =
           tournaments.find((t: any) => t.tournament_id === b_t_id)
@@ -800,7 +824,10 @@ export const fetchUserMatchs = async (
           if (participant.user_id) {
             const data = await profileRepo.findById(participant.user_id);
             opponent1 = {
-              gameUniqueId: opponentsWithGameUniqueId[`${participant.user_id}-${opponent1.id}`],
+              gameUniqueId:
+                opponentsWithGameUniqueId[
+                  `${participant.user_id}-${opponent1.id}`
+                ],
               ...opponent1,
               ...data,
               ...opp_user_grouped[participant.user_id][0],
@@ -809,7 +836,7 @@ export const fetchUserMatchs = async (
           if (participant.team_id) {
             const players = await inviteRepo.find({
               team_id: participant.team_id,
-              tournament_id: match.tournament_id
+              tournament_id: match.tournament_id,
             });
             const playersWithData = await Promise.all(
               players.map(async (u: any) => {
@@ -837,7 +864,10 @@ export const fetchUserMatchs = async (
           if (participant.user_id) {
             const data = await profileRepo.findById(participant.user_id);
             opponent2 = {
-              gameUniqueId: opponentsWithGameUniqueId[`${participant.user_id}-${opponent2.id}`],
+              gameUniqueId:
+                opponentsWithGameUniqueId[
+                  `${participant.user_id}-${opponent2.id}`
+                ],
               ...opponent2,
               ...data,
               ...opp_user_grouped[participant.user_id][0],
@@ -846,12 +876,12 @@ export const fetchUserMatchs = async (
           if (participant.team_id) {
             const players = await inviteRepo.find({
               team_id: participant.team_id,
-              tournament_id: match.tournament_id
+              tournament_id: match.tournament_id,
             });
             const playersWithData = await Promise.all(
               players.map(async (u: any) => {
                 const user = await profileRepo.findById(u.user_id);
-                
+
                 return { ...user, status: u.status };
               })
             );

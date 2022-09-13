@@ -424,7 +424,19 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       }
     }
   }, [data]);
+  
+  let opponent1TeamPlayers: any;
+  let opponent2TeamPlayers: any;
 
+  if(match.opponent1.team_id){
+    const teamDetails = match.tournament.playerList.find((i: any) => i.team_id === match.opponent1.team_id)
+    opponent1TeamPlayers = _.groupBy(teamDetails.players, "id")
+  }
+  if(match.opponent2.team_id){
+    const teamDetails = match.tournament.playerList.find((i: any) => i.team_id === match.opponent2.team_id)
+    opponent2TeamPlayers = _.groupBy(teamDetails.players, "id")
+  }
+   
   React.useEffect(() => {
     fetchChatChannel();
     if (!match.opponent1.user_id) {
@@ -479,6 +491,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
             />
           </Box>
         </Grid>
+        
 
         {match.opponent1.team_id && (
           <Grid
@@ -495,6 +508,9 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                         .from("public-files")
                         .getPublicUrl(u[0].avatarUrl).publicURL as string)
                     : undefined;
+                    
+                   const gameUniqueId = opponent1TeamPlayers[u[0].id][0].gameUniqueId
+
                   return (
                     <Box style={{ marginRight: 20 }} key={idx}>
                       <Box
@@ -511,6 +527,9 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                         <Avatar src={avatarUrl} />
                         <Typography style={{ marginLeft: "10px" }}>
                           {u[0].username}
+                        </Typography>
+                        <Typography style={{ marginLeft: "10px" }} color={"rgba(255,255,255,0.5)"}>
+                          ({gameUniqueId})
                         </Typography>
                       </Box>
                       <Divider light />
@@ -532,6 +551,8 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                         .getPublicUrl(u[0].avatarUrl).publicURL as string)
                     : undefined;
 
+                    const gameUniqueId = opponent2TeamPlayers[u[0].id][0].gameUniqueId
+
                   return (
                     <Box style={{ marginLeft: 20 }} key={idx}>
                       <Box
@@ -548,6 +569,9 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                         <Avatar src={avatarUrl} />
                         <Typography style={{ marginLeft: "10px" }}>
                           {u[0].username}
+                        </Typography>
+                        <Typography style={{ marginLeft: "10px" }} color={"rgba(255,255,255,0.5)"}>
+                          ({gameUniqueId})
                         </Typography>
                       </Box>
                       <Divider light />
