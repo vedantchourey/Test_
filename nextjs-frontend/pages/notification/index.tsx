@@ -8,26 +8,37 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Avatar
+  Avatar,
+  Dialog,
+  DialogContent,
+  TextField,
 } from "@mui/material";
 import axios from "axios";
 import React, { Fragment } from "react";
 import { getAuthHeader } from "../../src/frontend/utils/headers";
-import {
-  useAppSelector,
-} from "../../src/frontend/redux-store/redux-store";
+import { useAppSelector } from "../../src/frontend/redux-store/redux-store";
 import { isLoggedInSelector } from "../../src/frontend/redux-store/authentication/authentication-selectors";
 import "react-alice-carousel/lib/alice-carousel.css";
 import NoobPage from "../../src/frontend/components/page/noob-page";
 import Heading from "../../src/frontend/components/ui-components/typography/heading";
 import { INotifications } from "../../src/backend/services/database/models/i-notifications";
 import { getUserProfileImage } from "../../src/frontend/service-clients/image-service-client";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 
 const Notification = (): JSX.Element => {
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const [notifications, setNotifications] = React.useState<any>([]);
   const router = useRouter();
+  const [notificationPayload, setNotificationPayload] = React.useState<any>();
+  const [gameIdModal, setGameIdModal] = React.useState(false);
+  const [gameId, setGameId] = React.useState("");
+  const [popVisible, setPopupVisible] = React.useState<boolean>(false);
+  const [image, setImage] = React.useState<string>("");
+
+  const toggle = (data: string): void => {
+    setImage(data);
+    setPopupVisible(!popVisible);
+  };
 
   const fetchNotifications = async (): Promise<void> => {
     const headers = await getAuthHeader();
@@ -35,12 +46,12 @@ const Notification = (): JSX.Element => {
       .get("/api/notifications", {
         headers: { ...headers },
       })
-      .then(async(res: any) => {
+      .then(async (res: any) => {
         const notificationWithImages = await Promise.all(
           ((res?.data?.data as Array<INotifications>) || []).map((i) =>
             getUserProfileImage(i.sent_by || "", i))
         );
-        const notificatiosData =notificationWithImages.map((i: any) => {
+        const notificatiosData = notificationWithImages.map((i: any) => {
           return {
             id: i.id,
             publicURL: i.publicURL,
@@ -53,7 +64,7 @@ const Notification = (): JSX.Element => {
             redirect: i?.data?.redirect,
             username: i?.username,
           };
-        }); 
+        });
         setNotifications(notificatiosData);
       })
       .catch((err: any) => {
@@ -69,7 +80,7 @@ const Notification = (): JSX.Element => {
     axios
       .post(
         "/api/notifications",
-        { id, response },
+        { id, response, gameUniqueId: gameId },
         {
           headers: { ...headers },
         }
@@ -98,86 +109,128 @@ const Notification = (): JSX.Element => {
       <Fragment>
         <Container maxWidth="xl">
           <Heading divider heading={"Notification"} />
-
-          {notifications.map(
-            (i: any, idx: number) => (
-              (
-                <List
-                  sx={{
-                    width: "100%",
-                    minWidth: 500,
-                    bgcolor: "background.paper",
-                  }}
-                  key={idx}
-                >
-                  {/* <Divider variant="middle" component="li" /> */}
-                  <ListItem alignItems="flex-start">
-                    <ListItemAvatar>
-                      <Avatar
-                        alt="Travis Howard"
-                        src={i.message.image}
-                        style={{ height: 55, width: 55 }}
-                      />
-                    </ListItemAvatar>
-                    <ListItemText
-                      secondary={
-                        <Box ml={1} display={"flex"} flexDirection={"column"}>
-                          <Typography
-                            sx={{ display: "inline" }}
-                            component="span"
-                            variant="body2"
-                            color="text.primary"
+          {notifications.map((i: any, idx: number) => (
+            <List
+              sx={{
+                width: "100%",
+                minWidth: 500,
+                bgcolor: "background.paper",
+              }}
+              key={idx}
+            >
+              {/* <Divider variant="middle" component="li" /> */}
+              <ListItem alignItems="flex-start">
+                <ListItemAvatar>
+                  <Avatar
+                    alt="Travis Howard"
+                    src={i.message.image}
+                    style={{ height: 55, width: 55 }}
+                  />
+                </ListItemAvatar>
+                <ListItemText
+                  secondary={
+                    <Box ml={1} display={"flex"} flexDirection={"column"}>
+                      <Typography
+                        sx={{ display: "inline" }}
+                        component="span"
+                        variant="body2"
+                        color="text.primary"
+                      >
+                        {i.message.text}
+                      </Typography>
+                      {i.isActionRequired ? (
+                        <Box display={"flex"} flexDirection={"row"} mt={2}>
+                          <Button
+                            variant="contained"
+                            onClick={(): void => {
+                              if (i.data.type === "TOURNAMENT_INVITE") {
+                                setGameId("");
+                                setGameIdModal(true);
+                                setNotificationPayload(i.id);
+                              } else {
+                                submitNotification(i.id, "ACCEPTED");
+                              }
+                            }}
+                            sx={{ mr: 1 }}
                           >
-                            {i.message.text}
-                          </Typography>
-                          {i.isActionRequired ? (
-                            <Box display={"flex"} flexDirection={"row"} mt={2}>
-                              <Button
-                                variant="contained"
-                                onClick={(): void => {
-                                  submitNotification(i.id, "ACCEPTED");
-                                }}
-                                sx={{ mr: 1 }}
-                              >
-                                Accept
-                              </Button>
-                              <Button
-                                variant="outlined"
-                                onClick={(): void => {
-                                  submitNotification(i.id, "REJECT");
-                                }}
-                                sx={{ mr: 1 }}
-                              >
-                                Decline
-                              </Button>
-                            </Box>
-                          ) : (
-                            <Box display={"flex"} flexDirection={"row"} mt={2}>
-                              <Button
-                                style={{ marginLeft: "30px" }}
-                                variant="contained"
-                                onClick={(): void => {
-                                  submitNotification(i.id, "ACCEPTED");
-                                  i.redirect
-                                    ? router.push(i.redirect)
-                                    : router.push(`/account/${i.username}`);
-                                }}
-                                sx={{ mr: 1 }}
-                              >
-                                View
-                              </Button>
-                            </Box>
+                            Accept
+                          </Button>
+                          <Button
+                            variant="outlined"
+                            onClick={(): void => {
+                              submitNotification(i.id, "REJECT");
+                            }}
+                            sx={{ mr: 1 }}
+                          >
+                            Decline
+                          </Button>
+                          {i.data.type === "MATCH_RESULT" && (
+                            <Button
+                              variant="outlined"
+                              onClick={(): any =>
+                                toggle(i.data.data?.screenshot || "")
+                              }
+                              sx={{ mr: 1 }}
+                            >
+                              View
+                            </Button>
                           )}
                         </Box>
-                      }
-                    />
-                  </ListItem>
-                  <Divider variant="middle" component="li" />
-                </List>
-              )
-            )
-          )}
+                      ) : (
+                        <Box display={"flex"} flexDirection={"row"} mt={2}>
+                          <Button
+                            style={{ marginLeft: "30px" }}
+                            variant="contained"
+                            onClick={(): void => {
+                              submitNotification(i.id, "ACCEPTED");
+                              i.redirect
+                                ? router.push(i.redirect)
+                                : router.push(`/account/${i.username}`);
+                            }}
+                            sx={{ mr: 1 }}
+                          >
+                            View
+                          </Button>
+                        </Box>
+                      )}
+                    </Box>
+                  }
+                />
+              </ListItem>
+              <Divider variant="middle" component="li" />
+            </List>
+          ))}
         </Container>
+        <Dialog open={gameIdModal}>
+          <DialogContent>
+            <Box display={"flex"} flexDirection={"column"}>
+              <TextField
+                label={"Enter your game id"}
+                size={"small"}
+                value={gameId}
+                onChange={(e): any => setGameId(e.target.value)}
+              />
+              <Box display={"flex"} justifyContent="flex-end">
+                <Button
+                  variant="contained"
+                  onClick={(): any =>
+                    submitNotification(notificationPayload, "ACCEPTED")
+                  }
+                >
+                  Join
+                </Button>
+              </Box>
+            </Box>
+          </DialogContent>
+        </Dialog>
+        <Dialog
+          open={popVisible}
+          onClose={(): void => toggle("")}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <img height={"70%"} src={image} />
+        </Dialog>
       </Fragment>
     </NoobPage>
   );

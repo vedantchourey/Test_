@@ -330,6 +330,8 @@ export default function SideHeader(): JSX.Element {
               idx < 10 && (
                 <BasicPopover
                   message={i.message}
+                  type={i.data.type}
+                  data={i.data.data}
                   onAccept={(): void => {
                     if (i.data.type === "TOURNAMENT_INVITE") {
                       setGameId("");

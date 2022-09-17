@@ -644,12 +644,12 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                 color: "white",
                 margin: "0px 16px 0px 16px",
               }}
-              disabled={
-                !opponent1Name ||
-                !opponent2Name ||
-                (countDown === "Started" &&
-                  !(match.is_checked_in || isCheckedIn))
-              }
+              // disabled={
+              //   !opponent1Name ||
+              //   !opponent2Name ||
+              //   (countDown === "Started" &&
+              //     !(match.is_checked_in || isCheckedIn))
+              // }
               onClick={(): void => setUploadResults(true)}
             >
               Report Score

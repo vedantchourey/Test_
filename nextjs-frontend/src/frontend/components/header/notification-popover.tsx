@@ -2,6 +2,7 @@ import {
   Avatar,
   Box,
   Button,
+  Dialog,
   Divider,
   List,
   ListItem,
@@ -22,10 +23,20 @@ interface Props {
   onDecline: () => void;
   onNevigation: () => void;
   isActionRequired: boolean;
+  type: string;
+  data: any;
 }
 
 export default function BasicPopover(props: Props): JSX.Element {
-  const { message, onAccept, onDecline, onNevigation } = props;
+  const { message, onAccept, onDecline, onNevigation, type, data } = props;
+  const [popVisible, setPopupVisible] = React.useState<boolean>(false);
+  const [image, setImage] = React.useState<string>("");
+
+  const toggle = (data: string): void => {
+    setImage(data);
+    setPopupVisible(!popVisible);
+  };
+
   return (
     <List sx={{ width: "100%", minWidth: 500, bgcolor: "background.paper" }}>
       {/* <Divider variant="middle" component="li" /> */}
@@ -56,6 +67,15 @@ export default function BasicPopover(props: Props): JSX.Element {
                   <Button variant="outlined" onClick={onDecline} sx={{ mr: 1 }}>
                     Decline
                   </Button>
+                  {type === "MATCH_RESULT" && (
+                    <Button
+                      variant="outlined"
+                      onClick={(): any => toggle(data?.screenshot || "")}
+                      sx={{ mr: 1 }}
+                    >
+                      View
+                    </Button>
+                  )}
                 </Box>
               ) : (
                 <Box display={"flex"} flexDirection={"row"} mt={2}>
@@ -76,6 +96,15 @@ export default function BasicPopover(props: Props): JSX.Element {
         />
       </ListItem>
       <Divider variant="middle" />
+
+      <Dialog
+        open={popVisible}
+        onClose={(): void => toggle("")}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <img height={"70%"} src={image} />
+      </Dialog>
     </List>
   );
 }
