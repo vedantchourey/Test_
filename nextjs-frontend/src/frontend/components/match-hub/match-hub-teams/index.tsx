@@ -387,12 +387,16 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
   React.useEffect(() => {
     setLoading(false);
     const timerRef = window.setInterval(timerCallback, 1000);
+    const roundTimerRef = window.setInterval(roundTimerCallback, 1000);
     return () => {
       clearInterval(timerRef);
+      clearInterval(roundTimerRef);
     };
   }, [data]);
 
   const [countDown, setCountDown] = React.useState("00:00:00");
+  const [roundCountDown, setRoundCountDown] = React.useState("00:00:00");
+  
   const timerCallback = React.useCallback(() => {
     if (match?.tournament) {
       const mDate = moment(match.tournament.startDate);
@@ -422,6 +426,37 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
         } else {
           const timer = calculateDuration(mDate, now);
           setCountDown(
+            `${timer.hours()}:${timer.minutes()}:${timer.seconds()}`
+          );
+        }
+      }
+    }
+  }, [data]);
+
+  const roundTimerCallback = React.useCallback(() => {
+    if (match?.tournament) {
+      const mDate = moment(match.tournament.startDate);
+      const mTime = moment(
+        matchData?.startTime || match.tournament.startTime,
+        "hh:mm:SS"
+      );
+      mDate.set({
+        hours: mTime.get("hours"),
+        minutes: mTime.get("minutes"),
+        seconds: mTime.get("seconds"),
+      });
+      const now = moment();
+      let diff = mDate.diff(now);
+      if (diff <= 0) {
+        setRoundCountDown("Started");
+      } else {
+        diff = mDate.diff(now, "hours");
+        if (diff > 24) {
+          diff = mDate.diff(now, "days");
+          setRoundCountDown(`${diff} days`);
+        } else {
+          const timer = calculateDuration(mDate, now);
+          setRoundCountDown(
             `${timer.hours()}:${timer.minutes()}:${timer.seconds()}`
           );
         }
@@ -478,24 +513,31 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
           >
             <ResultTile
               data={match}
-              isWon={true}
+              isWon={myPlayer.result === "win"}
               opponent1Name={opponent1Name}
               opponent2Name={opponent2Name}
               child={
-                <Box color="white" style={{ textAlign: "center" }}>
-                  <Typography variant="h3" component={"h1"}>
-                    VS
-                  </Typography>
-                  <Typography>
-                    Start in:{" "}
-                    <Typography component={"span"}>{countDown}</Typography>
-                  </Typography>
-                </Box>
+                !myPlayer.result ? (
+                  <Box color="white" style={{ textAlign: "center" }}>
+                    <Typography variant="h3" component={"h1"}>
+                      VS
+                    </Typography>
+                    <Typography>
+                      Check-in ends in:{" "}
+                      <Typography component={"span"}>{countDown}</Typography>
+                    </Typography>
+                    <Typography>
+                      Round Starts in:{" "}
+                      <Typography component={"span"}>
+                        {roundCountDown}
+                      </Typography>
+                    </Typography>
+                  </Box>
+                ) : undefined
               }
             />
           </Box>
         </Grid>
-        
 
         {match.opponent1.team_id && (
           <Grid
@@ -512,8 +554,9 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                         .from("public-files")
                         .getPublicUrl(u[0].avatarUrl).publicURL as string)
                     : undefined;
-                    
-                   const gameUniqueId = opponent1TeamPlayers?.[u[0].id]?.[0]?.gameUniqueId;
+
+                  const gameUniqueId =
+                    opponent1TeamPlayers?.[u[0].id]?.[0]?.gameUniqueId;
 
                   return (
                     <Box style={{ marginRight: 20 }} key={idx}>
@@ -532,7 +575,10 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                         <Typography style={{ marginLeft: "10px" }}>
                           {u[0].username}
                         </Typography>
-                        <Typography style={{ marginLeft: "10px" }} color={"rgba(255,255,255,0.5)"}>
+                        <Typography
+                          style={{ marginLeft: "10px" }}
+                          color={"rgba(255,255,255,0.5)"}
+                        >
                           ({gameUniqueId})
                         </Typography>
                       </Box>
@@ -555,7 +601,8 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                         .getPublicUrl(u[0].avatarUrl).publicURL as string)
                     : undefined;
 
-                    const gameUniqueId = opponent2TeamPlayers?.[u[0].id]?.[0]?.gameUniqueId
+                  const gameUniqueId =
+                    opponent2TeamPlayers?.[u[0].id]?.[0]?.gameUniqueId;
 
                   return (
                     <Box style={{ marginLeft: 20 }} key={idx}>
@@ -574,7 +621,10 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                         <Typography style={{ marginLeft: "10px" }}>
                           {u[0].username}
                         </Typography>
-                        <Typography style={{ marginLeft: "10px" }} color={"rgba(255,255,255,0.5)"}>
+                        <Typography
+                          style={{ marginLeft: "10px" }}
+                          color={"rgba(255,255,255,0.5)"}
+                        >
                           ({gameUniqueId})
                         </Typography>
                       </Box>
@@ -616,7 +666,9 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
               Back
             </Button>
             <Button
-              disabled={match.is_checked_in || isCheckedIn || countDown === "Started"}
+              disabled={
+                match.is_checked_in || isCheckedIn || countDown === "Started"
+              }
               style={{
                 color: "white",
                 padding: "12px 38px",

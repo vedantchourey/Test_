@@ -201,6 +201,11 @@
   align-items: center;
 }
 
+.profileAvatar{
+  border: 2px solid #6932f9 !important;
+  border-radius: 9999px !important;
+}
+
 @media screen and (max-width: 600px) {
 .mainModalContainer {
   width: -webkit-fill-available;
@@ -214,4 +219,6 @@
 .commentInputCotainer {
   padding-bottom: 40px;
 }
+
+
 }

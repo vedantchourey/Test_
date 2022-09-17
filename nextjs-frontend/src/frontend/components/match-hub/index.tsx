@@ -149,6 +149,7 @@ const MatchHub: React.FC<Props> = ({ data, onMatchHub, userDashboard }) => {
                           team={team}
                         />
                       ) : (
+                        <>
                         <ResultTile
                           data={item}
                           isWon={myPlayer.result === "win"}
@@ -156,6 +157,8 @@ const MatchHub: React.FC<Props> = ({ data, onMatchHub, userDashboard }) => {
                           opponent1Name={opponent1Name}
                           opponent2Name={opponent2Name}
                         />
+                        </>
+                        
                       )}
                     </Grid>
                   )

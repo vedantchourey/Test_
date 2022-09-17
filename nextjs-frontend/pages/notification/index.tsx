@@ -175,6 +175,15 @@ const Notification = (): JSX.Element => {
                               View
                             </Button>
                           )}
+                          {i.data.type === "TOURNAMENT_INVITE" && (
+                              <Button
+                                variant="outlined"
+                                onClick={(): any => router.push(`/view-tournament/${i.data.data.tournament_id}/details`)}
+                                sx={{ mr: 1 }}
+                              >
+                                View tournament
+                              </Button>
+                            )}
                         </Box>
                       ) : (
                         <Box display={"flex"} flexDirection={"row"} mt={2}>
@@ -204,6 +213,7 @@ const Notification = (): JSX.Element => {
         <Dialog open={gameIdModal}>
           <DialogContent>
             <Box display={"flex"} flexDirection={"column"}>
+              <Typography mb={2}>Please enter your Account ID (PSN/XBOX/PC/Mobile) associated with relevant game/tournament</Typography>
               <TextField
                 label={"Enter your game id"}
                 size={"small"}

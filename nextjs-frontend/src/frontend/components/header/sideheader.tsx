@@ -364,8 +364,9 @@ export default function SideHeader(): JSX.Element {
       <Dialog open={gameIdModal}>
         <DialogContent>
           <Box display={"flex"} flexDirection={"column"}>
+            <Typography mb={2}>Please enter your Account ID (PSN/XBOX/PC/Mobile) associated with relevant game/tournament</Typography>
             <TextField
-              label={"Enter your game id"}
+              label={"Account ID"}
               size={"small"}
               value={gameId}
               onChange={(e): any => setGameId(e.target.value)}

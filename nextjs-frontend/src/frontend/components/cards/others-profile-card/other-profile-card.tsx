@@ -367,10 +367,10 @@ const OtherProfileCard = (props: {
 
       <Dialog
         open={teamModal}
-        fullWidth
         onClose={(): any => setTeamModal(false)}
+        className={"hide-scrollbar"}
       >
-        <Box style={{ maxHeight: 500, background: "#08001c" }}>
+        <Box style={{ maxHeight: 500, width: 500, background: "#08001c" }} className={"hide-scrollbar"}>
           <AppBar position="static" className={styles.appBar}>
             <Box sx={{ textAlign: "center", position: "relative" }}>
               <Typography variant="h3" color="white" fontSize={20}>
@@ -384,7 +384,7 @@ const OtherProfileCard = (props: {
             </Box>
           </AppBar>
           <Divider />
-          <Box mt={1} pl={2} pr={2} maxHeight={500} overflow={"scroll"}>
+          <Box mt={1} pl={2} pr={2} maxHeight={500} overflow={"scroll"} className={"hide-scrollbar"}>
             {teamData.map((t, idx) => {
               const teamLogo = t?.teamLogo
                 ? (frontendSupabase.storage
@@ -403,13 +403,14 @@ const OtherProfileCard = (props: {
                   onClick={(): any => router.push(`/team/view/${t.id}/members`)}
                 >
                   <Avatar
-                    sx={{ mr: 1, width: 35, height: 35 }}
+                    sx={{ mr: 3, width: 50, height: 50, border: "2px solid #6932f9 !important" }}
                     alt={t.name.toUpperCase()}
                     src={teamLogo}
                   />
+                  
                   <Typography
                     variant="h3"
-                    fontSize={14}
+                    fontSize={16}
                     textOverflow="ellipsis"
                   >
                     {t.name}

@@ -1,7 +1,7 @@
 import { BaseRepository } from "./base-repository";
 import { Knex } from "knex";
 import { IWatchList } from "../models/i-watchlist";
-const keys = ["id", "userId", "playerId"];
+const keys = ["id", "userId", "playerId", "platformId"];
 export class watchlistRepository extends BaseRepository<IWatchList> {
   constructor(transaction: Knex.Transaction | Knex) {
     super(transaction, "watchlist");

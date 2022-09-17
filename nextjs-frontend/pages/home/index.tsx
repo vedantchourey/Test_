@@ -468,7 +468,7 @@ const Home = (): JSX.Element => {
                     </Grid>
                   </TabPanel>
                   <TabPanel value="3" className={styles.tournamentContainer}>
-                    <Grid display={"flex"} overflow="scroll" maxWidth={"57vw"} className={"hide-scrollbar"}>
+                    <Grid display={"flex"} overflow="scroll" maxWidth={"75vw"} className={"hide-scrollbar"}>
                       {tournamentsData
                         .sort((a: any, b: any) => {
                           const aTime: any = moment(a.startDate).format("x");

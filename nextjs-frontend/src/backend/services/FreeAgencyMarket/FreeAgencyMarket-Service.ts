@@ -88,6 +88,7 @@ export const enterToFreeAgencyMarket = async (
 export interface IAddToWatchListRequest {
   playerId: string;
   gameId: string;
+  platformId: string;
 }
 
 export const addToWatchList = async (
@@ -106,7 +107,8 @@ export const addToWatchList = async (
   const result = await watchListRepo.create({
     playerId: req.playerId,
     userId: context.user?.id || "",
-    gameId: req.gameId
+    gameId: req.gameId,
+    platformId: req.platformId,
   });
   return result;
 };

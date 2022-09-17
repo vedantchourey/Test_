@@ -36,9 +36,11 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
 
   React.useEffect(() => {
     const timerRef = window.setInterval(timerCallback, 1000);
+    const roundTimerRef = window.setInterval(roundTimerCallback, 1000);
 
     return () => {
       clearInterval(timerRef);
+      clearInterval(roundTimerRef);
     };
   }, [data]);
 
@@ -55,6 +57,7 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
   );
 
   const [countDown, setCountDown] = React.useState("00:00:00");
+  const [roundCountDown, setRoundCountDown] = React.useState("00:00:00");
 
   const timerCallback = React.useCallback(() => {
     if (data.tournament) {
@@ -86,6 +89,37 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
         } else {
           const timer = calculateDuration(mDate, now);
           setCountDown(
+            `${timer.hours()}:${timer.minutes()}:${timer.seconds()}`
+          );
+        }
+      }
+    }
+  }, [data]);
+
+  const roundTimerCallback = React.useCallback(() => {
+    if (data?.tournament) {
+      const mDate = moment(data.tournament?.startDate);
+      const mTime = moment(
+        matchData?.startTime || data.tournament?.startTime,
+        "hh:mm:SS"
+      );
+      mDate.set({
+        hours: mTime.get("hours"),
+        minutes: mTime.get("minutes"),
+        seconds: mTime.get("seconds"),
+      });
+      const now = moment();
+      let diff = mDate.diff(now);
+      if (diff <= 0) {
+        setRoundCountDown("Started");
+      } else {
+        diff = mDate.diff(now, "hours");
+        if (diff > 24) {
+          diff = mDate.diff(now, "days");
+          setRoundCountDown(`${diff} days`);
+        } else {
+          const timer = calculateDuration(mDate, now);
+          setRoundCountDown(
             `${timer.hours()}:${timer.minutes()}:${timer.seconds()}`
           );
         }
@@ -172,23 +206,23 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
         }}
       >
         <p>
-          <span className={styles.opponentTileTitle}>Starts in:</span>
+          <span className={styles.opponentTileTitle}>Check-in ends in :</span>
           <span
             className={styles.opponentTileValue}
-            style={{ marginLeft: "24px" }}
+            style={{ marginLeft: "10px" }}
           >
             {countDown}
           </span>
         </p>
-        {/* <p>
-          <span className={styles.opponentTileTitle}>Check starts in:</span>
+        <p>
+          <span className={styles.opponentTileTitle}>Round starts in :</span>
           <span
             className={styles.opponentTileValue}
-            style={{ marginLeft: "24px" }}
+            style={{ marginLeft: "10px" }}
           >
-            00:18:45
+            {roundCountDown}
           </span>
-        </p> */}
+        </p>
       </Grid>
       <Grid item xs={4} style={{ display: "flex", justifyContent: "end" }}>
         <Button

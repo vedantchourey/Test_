@@ -10,6 +10,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import { useRouter } from "next/router";
 import * as React from "react";
 
 interface Message {
@@ -31,6 +32,7 @@ export default function BasicPopover(props: Props): JSX.Element {
   const { message, onAccept, onDecline, onNevigation, type, data } = props;
   const [popVisible, setPopupVisible] = React.useState<boolean>(false);
   const [image, setImage] = React.useState<string>("");
+  const router = useRouter();
 
   const toggle = (data: string): void => {
     setImage(data);
@@ -74,6 +76,15 @@ export default function BasicPopover(props: Props): JSX.Element {
                       sx={{ mr: 1 }}
                     >
                       View
+                    </Button>
+                  )}
+                  {type === "TOURNAMENT_INVITE" && (
+                    <Button
+                      variant="outlined"
+                      onClick={(): any => router.push(`/view-tournament/${data.tournament_id}/details`)}
+                      sx={{ mr: 1 }}
+                    >
+                      View tournament
                     </Button>
                   )}
                 </Box>

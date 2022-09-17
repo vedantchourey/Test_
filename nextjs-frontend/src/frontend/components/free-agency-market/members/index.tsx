@@ -84,7 +84,7 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
           )
         : team;
 
-    const selectedTeamData: any = team.filter((i) => i.id === selectedTeam);
+    const selectedTeamData: any = team.find((i) => i.id === selectedTeam);
 
     const teamLogo = selectedTeamData
       ? selectedTeamData.teamLogo
@@ -92,16 +92,14 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
             .from("public-files")
             .getPublicUrl(selectedTeamData.teamLogo).publicURL
         : null
-      : null;    
-     
-    
+      : null;
   
-
-  const addToWatchList = async (playerId: string, gameId: string): Promise<void> => {
+  const addToWatchList = async (playerId: string, gameId: string, platformId: string): Promise<void> => {
     setLoading(true);
     const data = {
       playerId,
-      gameId
+      gameId,
+      platformId
     };
     const headers = await getAuthHeader();
     axios
@@ -339,7 +337,7 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
                         style={{ backgroundColor: "#6932F9" }}
                         fullWidth={true}
                         onClick={(): void => {
-                          addToWatchList(player.id, player.gameId);
+                          addToWatchList(player.id, player.gameId, player.platformId);
                         }}
                       >
                         + Add to Watch List

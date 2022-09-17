@@ -13,12 +13,15 @@ import React from "react";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { TournamentData } from "../../tournament";
+import { frontendSupabase } from "../../../services/supabase-frontend-service";
 
 interface Player {
   firstName: string;
   lastName: string;
   user_id: string;
   balance:number;
+  username: string;
+  avatarUrl?: string;
 }
 
 export interface Team {
@@ -155,7 +158,11 @@ const TeamSelection: React.FC<TeamProps> = ({
           Select {maxPlayer} player to join the game.
         </Typography>
       </Grid>
+
       {team.players.map((player) => {
+        const image = player.avatarUrl ? frontendSupabase.storage
+        .from("public-files")
+        .getPublicUrl(player.avatarUrl).publicURL : undefined;
         return (
           <Grid key={player.user_id} item xs={12} sm={6} md={6}>
             <Box
@@ -172,9 +179,9 @@ const TeamSelection: React.FC<TeamProps> = ({
               padding={2}
             >
               <Box display="Flex" alignItems={"center"}>
-                <Avatar alt={player.firstName} />
+                <Avatar alt={player.firstName} src={image as string} />
                 <Typography color={"white"} marginLeft={2}>
-                  {`${player.firstName} ${player.lastName}`}
+                  {`${player.username}`}
                 </Typography>
               </Box>
               <Box display="Flex" alignItems={"center"} justifyContent="center">

@@ -68,7 +68,8 @@ const WatchTeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
     axios
       .get("/api/free-agency-market/get-watchlist", { headers: headers })
       .then((res) => {
-        const players: MemberProp[] = res.data.map((item: any) => ({
+        const players: MemberProp[] = res.data.map((item: any) => {
+          return({
           name: `${item.firstName} ${item.lastName}`,
           username: `${item.username}`,
           id: item.id,
@@ -78,12 +79,14 @@ const WatchTeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
           elo: item?.elo_rating,
           won: item?.won,
           games: Number(item?.won) + Number(item?.lost),
+          platformId: item?.platformId,
+          gameId: item.game_id,
           profileImage: item.avatarUrl
             ? frontendSupabase.storage
                 .from("public-files")
                 .getPublicUrl(item.avatarUrl).publicURL
             : undefined,
-        }));
+        })});
         setData(players);
       })
       .finally(() => setLoading(false));
@@ -153,7 +156,7 @@ const WatchTeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
     fetchUsers();
     fetchTeam();
   }, []);
-
+  
   const filtedTeamList =
     isModalOpen && selectedPlayer
       ? team.filter(
@@ -163,7 +166,7 @@ const WatchTeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
         )
       : team;
 
-  const selectedTeamData: any = team.filter((i) => i.id === selectedTeam);
+  const selectedTeamData: any = team.find((i) => i.id === selectedTeam);
 
   const teamLogo = selectedTeamData
     ? selectedTeamData.teamLogo

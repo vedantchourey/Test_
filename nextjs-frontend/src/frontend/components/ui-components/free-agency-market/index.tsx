@@ -36,7 +36,7 @@ const CardDesktop: React.FC<any> = ({ setOpen }) => {
     <Grid container columnSpacing={2}>
       <Grid
         item
-        mt={18}
+        mt={11}
         md={4}
         lg={9}
         display={"flex"}
@@ -165,9 +165,9 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
         marginBottom={2}
         sx={{ padding: { sm: "10px", xs: "10px", md: "20px" } }}
         style={{
-          backgroundImage: "url('/icons/free-agency-market-background.svg')",
+          backgroundImage: "url('/images/FAB_BG.png')",
           backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
+          backgroundSize: "100% 100%",
         }}
       >
         {!isMobile ? (
