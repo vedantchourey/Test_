@@ -149,10 +149,10 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
     : match.opponent2;
 
   const opponent1Name = match.opponent1.user_id
-    ? `${match.opponent1.firstName} ${match.opponent1.lastName}`
+    ? `${match.opponent1.username}`
     : match.opponent1.name;
   const opponent2Name = match.opponent2.user_id
-    ? `${match.opponent2.firstName} ${match.opponent2.lastName}`
+    ? `${match.opponent2.username}`
     : match.opponent2.name;
 
   const handleChange = (event: SyntheticEvent, newValue: string): void => {
@@ -289,6 +289,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       ...formik.values,
       opponent1: {
         id: match.opponent1.id,
+
         score: op1Score,
         result: op1Result,
       },
@@ -297,6 +298,9 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
         score: op2Score,
         result: op2Result,
       },
+      notification_user_ids: opponent_data.players
+        ? Object.keys(_.groupBy(opponent_data.players, "id"))
+        : [opponent_data.user_id],
       tournament_id: match.tournament_id,
     };
 

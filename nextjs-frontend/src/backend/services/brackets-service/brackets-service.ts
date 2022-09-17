@@ -445,13 +445,27 @@ export const submitMatchResultRequest = async (
   user: any
 ): Promise<any> => {
   try {
-    const errors = await validateMatchResult(req);
+    const errors = await validateMatchResult({
+      id: req.id,
+      match_id: req.match_id,
+      opponent1: req.opponent1,
+      opponent2: req.opponent2,
+      screenshot: req.screenshot,
+      tournament_id: req.tournament_id,
+    });
     if (errors) return { errors };
     const repo = new CrudRepository<IMatchResultRequest>(
       knexConnection,
       TABLE_NAMES.MATCH_RESULT_REQUEST
     );
-    const result = await repo.create(req);
+    const result = await repo.create({
+      id: req.id,
+      match_id: req.match_id,
+      opponent1: req.opponent1,
+      opponent2: req.opponent2,
+      screenshot: req.screenshot,
+      tournament_id: req.tournament_id,
+    });
     const tournamentRepo = new CrudRepository<ITournament>(
       knexConnection,
       TABLE_NAMES.TOURNAMENTS
@@ -459,10 +473,10 @@ export const submitMatchResultRequest = async (
 
     const tournament: ITournament = await tournamentRepo.findById(req.tournament_id)
 
-    if(tournament.settings?.ScoreReporting === "ADMIN_PLAYER") {
-      const notificationObj: INotifications = {
+    if (tournament.settings?.ScoreReporting === "ADMIN_PLAYER") {
+      const notifications = req.notification_user_ids.map((uid) => ({
         type: "MATCH_RESULT",
-        user_id: user.id,
+        user_id: uid,
         sent_by: user.id,
         message: `${user?.user_metadata?.username} reported the match score for ${tournament.name}.`,
         is_action_required: true,
@@ -472,9 +486,11 @@ export const submitMatchResultRequest = async (
           tournament_id: result.tournament_id,
           opponent1Id: result.opponent1.id,
           opponent2Id: result.opponent2.id,
+          screenshot: result.screenshot,
         },
-      };
-      await addNotifications(notificationObj, knexConnection);  
+      }));
+
+      await addNotifications(notifications, knexConnection);
     }
     
     return result;
