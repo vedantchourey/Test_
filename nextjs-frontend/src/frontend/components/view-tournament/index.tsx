@@ -631,7 +631,7 @@ const ViewTournament: React.FC = () => {
                   </span>
                 </Typography>
               </Box>
-              {countDown !== "00:00:00" ? (
+              {/* {countDown !== "00:00:00" ? ( */}
                 <ActionButton
                   data={data}
                   error={regError}
@@ -642,7 +642,7 @@ const ViewTournament: React.FC = () => {
                   userId={user?.id}
                   disabled={countDown === "00:00:00"}
                 />
-              ) : null}
+              {/* ) : null} */}
             </Grid>
           </Grid>
         </ViewCard>

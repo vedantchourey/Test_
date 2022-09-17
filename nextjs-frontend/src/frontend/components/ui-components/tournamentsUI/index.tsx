@@ -18,7 +18,7 @@ const TournamentsCard: React.FC = ({ children }) => {
                 <Grid container columnSpacing={2}>
                     <Grid item mt={9} mb={9} xs={12} lg={12}>
                         <Typography color={"white"} textAlign="center" variant="h1">
-                            Tournaments
+                            <div style={{minHeight: 50}} />
                         </Typography>
                     </Grid>
                 </Grid>

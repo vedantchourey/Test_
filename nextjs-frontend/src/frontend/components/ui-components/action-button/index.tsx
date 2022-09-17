@@ -7,6 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
+import _ from "lodash";
 import Image from "next/image";
 import React from "react";
 import { TournamentData } from "../../tournament";
@@ -61,9 +62,25 @@ const ActionButton: React.FC<Props> = ({
   };
   const [joinText, setJoinText] = React.useState<string>("Join Now");
 
+  const checkIsJoined = (): any => {
+    const isTeam = data?.playerList?.find((i: any) => i?.players?.length > 0);
+    if(isTeam){
+      let players: string[] = [];
+      data?.playerList?.map((i: any) => {
+        players = players.concat(Object.keys(_.groupBy(i.players, "id")))
+      })
+      return Boolean(players.find((i) => i === userId))
+    } 
+      const players = Object.keys(_.groupBy(data?.playerList, "id"));
+      return Boolean(players.find((i) => i === userId))
+    
+  }
+
   React.useEffect(() => {
-    data?.playerList?.filter((i: any) => i.id === userId).length &&
-      (setBackcolor("#006A3E"), setJoinText("Joined"));
+    if(checkIsJoined()) {
+      setBackcolor("#006A3E");
+      setJoinText("Joined");
+    }  
   }, [data]);
 
   const handleButtonClick = (): void => {
@@ -99,7 +116,7 @@ const ActionButton: React.FC<Props> = ({
           aria-controls={open ? id : undefined}
           aria-expanded={open ? "true" : undefined}
           onClick={handleButtonClick}
-          disabled={disabled}
+          disabled={disabled || checkIsJoined()}
         >
           {joinText}
         </Button>
@@ -135,9 +152,12 @@ const ActionButton: React.FC<Props> = ({
     <Box display="flex" flexDirection={"column"}>
       <Button
         style={{
-          background: disabled
-            ? "grey"
-            : "linear-gradient(180deg, #EF507E 0%, #F09633 100%)",
+          background:
+              backColor === "#006A3E"
+                ? backColor
+                : disabled
+                ? "grey"
+                : "linear-gradient(180deg, #EF507E 0%, #F09633 100%)",
           color: "white",
           padding: "16px 43px",
           width: "189px",
@@ -145,7 +165,7 @@ const ActionButton: React.FC<Props> = ({
         aria-controls={open ? id : undefined}
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
-        disabled={disabled}
+        disabled={disabled || checkIsJoined()}
         endIcon={
           <Image src={"/icons/Downarrow.svg"} height={"12px"} width={"12px"} />
         }
