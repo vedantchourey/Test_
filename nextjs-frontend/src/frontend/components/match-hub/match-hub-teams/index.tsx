@@ -690,18 +690,23 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
               style={{
                 padding: "12px",
                 background:
-                  !opponent1Name || !opponent2Name
+                  countDown !== "Started" ||
+                  !opponent1Name ||
+                  !opponent2Name ||
+                  (countDown === "Started" &&
+                    !(match.is_checked_in || isCheckedIn))
                     ? "rgba(255,255,255,0.2)"
                     : "#6932F9",
                 color: "white",
                 margin: "0px 16px 0px 16px",
               }}
-              // disabled={
-              //   !opponent1Name ||
-              //   !opponent2Name ||
-              //   (countDown === "Started" &&
-              //     !(match.is_checked_in || isCheckedIn))
-              // }
+              disabled={
+                countDown !== "Started" ||
+                !opponent1Name ||
+                !opponent2Name ||
+                (countDown === "Started" &&
+                  !(match.is_checked_in || isCheckedIn))
+              }
               onClick={(): void => setUploadResults(true)}
             >
               Report Score

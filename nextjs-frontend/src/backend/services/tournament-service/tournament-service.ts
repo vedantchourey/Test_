@@ -583,6 +583,11 @@ export const fetchMatchDetails = async (
       TABLE_NAMES.B_PARTICIPANT
     );
 
+    const profilesRepo = new CrudRepository<IBParticipants>(
+      context.knexConnection as Knex,
+      "profiles"
+    );
+
     const opponent1 = participantRepo
       .knexObj()
       .select(USER_FEILDS)
@@ -620,9 +625,21 @@ export const fetchMatchDetails = async (
         });
       const o1 = await opponent1;
       const o2 = await opponent2;
+
+      let opp1 = {username: ""}
+      let opp2 = {username: ""}
+
+      if(o1[0].user_id){
+        opp1 = await profilesRepo.findById(o1[0].user_id);
+      }
+
+      if(o2[0].user_id){
+        opp2 = await profilesRepo.findById(o2[0].user_id);
+      }
+
       return {
-        opponent1: o1.map((i: any) => ({ ...i, id: match?.opponent1.id })),
-        opponent2: o2.map((i: any) => ({ ...i, id: match?.opponent2.id })),
+        opponent1: o1.map((i: any) => ({ ...i, id: match?.opponent1.id, username: opp1.username })),
+        opponent2: o2.map((i: any) => ({ ...i, id: match?.opponent2.id, username: opp2.username })),
       };
     }
     opponent1

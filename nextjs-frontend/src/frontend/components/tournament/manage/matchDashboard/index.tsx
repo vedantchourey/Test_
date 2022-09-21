@@ -510,7 +510,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
         fetchMatchResultReq();
       });
   };
-
+  
   const toggle = (data: string): void => {
     setImage(data);
     setPopupVisible(!popVisible);
@@ -770,16 +770,12 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                 >
                   <MenuItem value={matchData?.opponent1?.[0]?.id}>
                     {matchData?.opponent1?.[0]
-                      ? matchData?.opponent1?.[0]?.firstName +
-                        " " +
-                        matchData?.opponent1?.[0]?.lastName
+                      ? matchData?.opponent1?.[0]?.username || matchData?.opponent1?.[0]?.name
                       : "NA"}
                   </MenuItem>
                   <MenuItem value={matchData?.opponent2?.[0]?.id}>
                     {matchData?.opponent2?.[0]
-                      ? matchData?.opponent2?.[0]?.firstName +
-                        " " +
-                        matchData?.opponent2?.[0]?.lastName
+                      ? matchData?.opponent2?.[0]?.username || matchData?.opponent2?.[0]?.name
                       : "NA"}
                   </MenuItem>
                 </Select>

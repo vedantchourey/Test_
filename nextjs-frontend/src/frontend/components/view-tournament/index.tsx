@@ -515,6 +515,7 @@ const ViewTournament: React.FC = () => {
     if (!user || !data.id) {
       return;
     }
+    setGameIdModal(true);
     const payload: JoinTeamType = {
       tournamentId: data.id,
       userId: user.id,

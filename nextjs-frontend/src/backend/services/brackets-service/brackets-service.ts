@@ -91,7 +91,6 @@ export const persistBrackets = async (req: ITournament): Promise<any> => {
     }
     await manager.create(data as any);
   } catch (ex) {
-    console.error(ex);
   } finally {
     await connection.destroy();
   }
@@ -574,7 +573,7 @@ export const submitMatchResult = async (
             id: Number(match.opponent1.id),
             score: data.opponent1.score,
             result: data.opponent1.result as any,
-            forfeit: req.opponent1.forfeit
+            forfeit: req?.opponent1?.forfeit
           }
         : {
             id: match.opponent1.id ? Number(match.opponent1.id) : null,
@@ -585,7 +584,7 @@ export const submitMatchResult = async (
             id: Number(match.opponent2.id),
             score: data.opponent2.score,
             result: data.opponent2.result as any,
-            forfeit: req.opponent2.forfeit
+            forfeit: req?.opponent2?.forfeit
           }
         : {
             id: match.opponent2.id ? Number(match.opponent2.id) : null,
@@ -726,6 +725,7 @@ export const submitMatchResult = async (
 
     return match;
   } catch (ex) {
+    console.log('ex -> ', ex)
     return getErrorObject("Something went wrong");
   }
 };
