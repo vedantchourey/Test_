@@ -84,17 +84,21 @@ export const createTournament: NoobApiService<
   return { data: { id: id as string, ...others } };
 };
 
-const updateWalletBalance = async (userId: string, amount: number, context: any): Promise<any> =>{
+const updateWalletBalance = async (
+  userId: string,
+  amount: number,
+  context: any
+): Promise<any> => {
   const walley_repository = new CrudRepository<IWallet>(
     context.transaction as Knex.Transaction,
     TABLE_NAMES.WALLET
   );
-  const value = await walley_repository.findBy("userId", userId)
+  const value = await walley_repository.findBy("userId", userId);
   await walley_repository.update(
     { balance: value[0].balance + amount },
     { userId }
   );
-}
+};
 
 export const deleteTournament = async (
   tid: string,
@@ -104,17 +108,18 @@ export const deleteTournament = async (
     context.transaction as Knex.Transaction,
     TABLE_NAMES.TOURNAMENTS
   );
-  
-  const tournament: any = await tournamentDetails(context, tid)
-  
+
+  const tournament: any = await tournamentDetails(context, tid);
+
   let userIds: any[] = [];
-  if(tournament.data?.settings?.tournamentFormat === "1v1"){
-    userIds = userIds.concat(Object.keys(_.groupBy(tournament?.data?.playerList, "id")))
-    
-  } else{  
-    tournament?.data?.playerList.map((t: any ) => {
-      userIds = userIds.concat(Object.keys(_.groupBy(t.players, "id")))
-    }) 
+  if (tournament.data?.settings?.tournamentFormat === "1v1") {
+    userIds = userIds.concat(
+      Object.keys(_.groupBy(tournament?.data?.playerList, "id"))
+    );
+  } else {
+    tournament?.data?.playerList.map((t: any) => {
+      userIds = userIds.concat(Object.keys(_.groupBy(t.players, "id")));
+    });
   }
 
   await Promise.all(
@@ -583,6 +588,11 @@ export const fetchMatchDetails = async (
       context.knexConnection as Knex,
       TABLE_NAMES.B_PARTICIPANT
     );
+    
+    const TeamRepo = new CrudRepository<ITeams>(
+      context.knexConnection as Knex,
+      TABLE_NAMES.TEAMS
+    );
 
     const profilesRepo = new CrudRepository<IBParticipants>(
       context.knexConnection as Knex,
@@ -627,22 +637,54 @@ export const fetchMatchDetails = async (
       const o1 = await opponent1;
       const o2 = await opponent2;
 
-      let opp1 = {username: ""}
-      let opp2 = {username: ""}
+      let opp1 = { username: "" };
+      let opp2 = { username: "" };
 
-      if(o1[0].user_id){
+      if (o1[0].user_id) {
         opp1 = await profilesRepo.findById(o1[0].user_id);
       }
 
-      if(o2[0].user_id){
+      if (o2[0].user_id) {
         opp2 = await profilesRepo.findById(o2[0].user_id);
       }
 
       return {
-        opponent1: o1.map((i: any) => ({ ...i, id: match?.opponent1.id, username: opp1.username })),
-        opponent2: o2.map((i: any) => ({ ...i, id: match?.opponent2.id, username: opp2.username })),
+        opponent1: o1.map((i: any) => ({
+          ...i,
+          id: match?.opponent1.id,
+          username: opp1.username,
+        })),
+        opponent2: o2.map((i: any) => ({
+          ...i,
+          id: match?.opponent2.id,
+          username: opp2.username,
+        })),
       };
     }
+
+    let opp1TeamDetails: any = {};
+    let opp2TeamDetails: any = {};
+
+    const opponent2Copy = (
+      await participantRepo
+        .knexObj()
+        .where({ "b_participant.id": match?.opponent2.id })
+    )[0];
+
+    const opponent1Copy = (
+      await participantRepo
+        .knexObj()
+        .where({ "b_participant.id": match?.opponent1.id })
+    )[0];
+
+    if (opponent2Copy.team_id) {
+      opp2TeamDetails = await TeamRepo.findById(opponent2Copy.team_id, ["id as team_id", "name as team_name"]);
+    }
+
+    if (opponent1Copy.team_id) {
+      opp1TeamDetails = await TeamRepo.findById(opponent1Copy.team_id, ["id as team_id", "name as team_name"]);
+    }
+
     opponent1
       .join("b_tournament", "b_tournament.id", "b_participant.tournament_id")
       .join(
@@ -665,7 +707,9 @@ export const fetchMatchDetails = async (
         "teams.id as team_id",
         "teams.name as team_name",
         "teams.elo_rating as team_elo_rating",
+        "b_participant.id as p_id"
       ]);
+
     opponent2
       .join("b_tournament", "b_tournament.id", "b_participant.tournament_id")
       .join(
@@ -674,29 +718,42 @@ export const fetchMatchDetails = async (
         "b_tournament.tournament_uuid"
       )
       .join("teams", "teams.id", "tournament_invites.team_id")
-      .leftJoin(TABLE_NAMES.ELO_RATING, {
-        "elo_ratings.user_id": "private_profiles.id",
-        "elo_ratings.game_id": "teams.game_id",
-      })
       .join(
         "private_profiles",
         "private_profiles.id",
         "tournament_invites.user_id"
       )
+      .leftJoin(TABLE_NAMES.ELO_RATING, {
+        "elo_ratings.user_id": "private_profiles.id",
+        "elo_ratings.game_id": "teams.game_id",
+      })
       // .where({ "tournament_invites.is_checked_in": true })
       .select([
         "teams.id as team_id",
         "teams.name as team_name",
         "teams.elo_rating as team_elo_rating",
+        "b_participant.id as p_id"
       ]);
+
+    // const o1 = await opponent1;
+
+    // console.log('o1 -> ', o1);
+    // console.log('match?.opponent1 -> ', match?.opponent1)
+
+    // const o2 = await opponent2;
+
+    // console.log('o2 -> ', o2);
+
     return {
       opponent1: {
         ...match?.opponent1,
-        ...formatTeamsData(await opponent1)[0],
+        ...opp1TeamDetails,
+        // ...formatTeamsData(o1)[0],
       },
       opponent2: {
         ...match?.opponent2,
-        ...formatTeamsData(await opponent2)[0],
+        ...opp2TeamDetails
+        // ...formatTeamsData(o2)[0],
       },
     };
   } catch (e: any) {
@@ -847,7 +904,13 @@ export const fetchUserMatchs = async (
       await teamRepo
         .knexObj()
         .whereIn("id", opp_teams)
-        .select(["id as team_id", "name", "platform_id", "game_id", "teamLogo"]),
+        .select([
+          "id as team_id",
+          "name",
+          "platform_id",
+          "game_id",
+          "teamLogo",
+        ]),
     ]);
 
     const teams_grouped = _.groupBy(teams, "team_id");
@@ -998,7 +1061,7 @@ export const fetchUserMatchsHistorySingle = async (
   }
 };
 
-const formatTeamsData = (data: any): any => {
+export const formatTeamsData = (data: any): any => {
   const grouped = _.groupBy(data, "team_id") as any;
   const result = Object.keys(grouped).map((key) => {
     return {

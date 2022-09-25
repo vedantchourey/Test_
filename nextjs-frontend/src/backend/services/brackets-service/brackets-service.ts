@@ -91,7 +91,7 @@ export const persistBrackets = async (req: ITournament): Promise<any> => {
     }
     await manager.create(data as any);
   } catch (ex) {
-    console.error(ex)
+    console.error(ex);
   } finally {
     await connection.destroy();
   }
@@ -471,10 +471,12 @@ export const submitMatchResultRequest = async (
       TABLE_NAMES.TOURNAMENTS
     );
 
-    const tournament: ITournament = await tournamentRepo.findById(req.tournament_id)
+    const tournament: ITournament = await tournamentRepo.findById(
+      req.tournament_id
+    );
 
     if (tournament.settings?.ScoreReporting === "ADMIN_PLAYER") {
-      const notifications = req.notification_user_ids.map((uid) => ({
+      const notifications = req.notification_user_ids.filter((i) => i !== null).map((uid) => ({
         type: "MATCH_RESULT",
         user_id: uid,
         sent_by: user.id,
@@ -489,10 +491,11 @@ export const submitMatchResultRequest = async (
           screenshot: result.screenshot,
         },
       }));
-
-      await addNotifications(notifications, knexConnection);
+      if(req.notification_user_ids.filter((i) => i !== null).length){
+        await addNotifications(notifications, knexConnection);
+      }
     }
-    
+
     return result;
   } catch (ex) {
     return getErrorObject();
@@ -526,21 +529,26 @@ export const submitMatchResult = async (
         playersLimit > 2);
 
     const firstWinerPrice = (
-      tournamentData?.data?.settings?.entryType === "credit"
+      (tournamentData?.data?.settings?.entryType === "credit"
         ? pricePool * (threrPrize ? 0.6 : 0.65) * price_per_credit
         : threrPrize
         ? 600
-        : 700
+        : 700) *
+      parseInt(tournamentData?.data?.settings?.tournamentFormat[0] || "1")
     ).toFixed();
+
     const secondWinerPrice = (
-      tournamentData?.data?.settings?.entryType === "credit"
+      (tournamentData?.data?.settings?.entryType === "credit"
         ? pricePool * (threrPrize ? 0.3 : 0.35) * price_per_credit
-        : 300
+        : 300) *
+      parseInt(tournamentData?.data?.settings?.tournamentFormat[0] || "1")
     ).toFixed();
+
     const thirdWinerPrice = (
-      tournamentData?.data?.settings?.entryType === "credit"
+      (tournamentData?.data?.settings?.entryType === "credit"
         ? pricePool * 0.1 * price_per_credit
-        : 100
+        : 100) *
+      parseInt(tournamentData?.data?.settings?.tournamentFormat[0] || "1")
     ).toFixed();
 
     let data: any;
@@ -579,7 +587,7 @@ export const submitMatchResult = async (
             id: Number(match.opponent1.id),
             score: data.opponent1.score,
             result: data.opponent1.result as any,
-            forfeit: req?.opponent1?.forfeit
+            forfeit: req?.opponent1?.forfeit,
           }
         : {
             id: match.opponent1.id ? Number(match.opponent1.id) : null,
@@ -590,7 +598,7 @@ export const submitMatchResult = async (
             id: Number(match.opponent2.id),
             score: data.opponent2.score,
             result: data.opponent2.result as any,
-            forfeit: req?.opponent2?.forfeit
+            forfeit: req?.opponent2?.forfeit,
           }
         : {
             id: match.opponent2.id ? Number(match.opponent2.id) : null,
@@ -600,8 +608,6 @@ export const submitMatchResult = async (
 
     let winningPrice: any;
     let losserPrice: any;
-
-    
 
     const winnerPlayer =
       data.opponent1.result === "lose"
@@ -629,7 +635,7 @@ export const submitMatchResult = async (
     if (matchDetials.type === "semi-final") {
       losserPrice = thirdWinerPrice;
     }
-    if(matchDetials.type === "third-place"){
+    if (matchDetials.type === "third-place") {
       winningPrice = thirdWinerPrice;
     }
 
@@ -662,20 +668,23 @@ export const submitMatchResult = async (
         );
         const teamWinningAmount = winningPrice / players.length;
 
-        Promise.all(players.map(async (u_id) => {
-          const users = new CrudRepository<IPrivateProfile>(
-            knexConnection,
-            TABLE_NAMES.PRIVATE_PROFILE
-          );
-          const data = await users.knexObj().where("id", u_id);
-          await users.update(
-            {
-              withdrawAmount:
-                parseInt(data[0]?.withdrawAmount || 0) + teamWinningAmount,
-            },
-            { id: u_id }
-          );
-        }))
+        Promise.all(
+          players.map(async (u_id) => {
+            const users = new CrudRepository<IPrivateProfile>(
+              knexConnection,
+              TABLE_NAMES.PRIVATE_PROFILE
+            );
+            const data = await users.knexObj().where("id", u_id);
+            await users.update(
+              {
+                withdrawAmount:
+                  parseInt(data[0]?.withdrawAmount || 0) + teamWinningAmount,
+              },
+              { id: u_id }
+            );
+          })
+        )
+          .catch((e) => console.error("Error -> ", e));
       }
     }
 
@@ -686,6 +695,7 @@ export const submitMatchResult = async (
           TABLE_NAMES.PRIVATE_PROFILE
         );
         const data = await users.knexObj().where("id", losserPlayer);
+        
         await users.update(
           {
             withdrawAmount:
@@ -693,37 +703,40 @@ export const submitMatchResult = async (
           },
           { id: losserPlayer }
         );
-      } else{
+      } else {
         const participantRepo = new CrudRepository<IBParticipants>(
           knexConnection,
           TABLE_NAMES.B_PARTICIPANT
         );
         const data = await participantRepo.findById(losserPlayer);
-        const playersByTeam = _.groupBy(
-          tournamentData?.data?.playerList,
-          "team_id"
-        );
-        const players = Object.keys(
-          _.groupBy(playersByTeam[data.team_id][0].players, "id")
-        );
-        const teamWinningAmount = losserPrice / players.length;
-
-        Promise.all(players.map(async (u_id) => {
-          const users = new CrudRepository<IPrivateProfile>(
-            knexConnection,
-            TABLE_NAMES.PRIVATE_PROFILE
+        if(data.team_id){
+          const playersByTeam = _.groupBy(
+            tournamentData?.data?.playerList,
+            "team_id"
           );
-          const data = await users.knexObj().where("id", u_id);
-          await users.update(
-            {
-              withdrawAmount:
-                parseInt(data[0]?.withdrawAmount || 0) + teamWinningAmount,
-            },
-            { id: u_id }
+          const players = Object.keys(
+            _.groupBy(playersByTeam[data.team_id][0].players, "id")
           );
-        }));
+          const teamWinningAmount = losserPrice / players.length;
+  
+          Promise.all(
+            players.map(async (u_id) => {
+              const users = new CrudRepository<IPrivateProfile>(
+                knexConnection,
+                TABLE_NAMES.PRIVATE_PROFILE
+              );
+              const data = await users.knexObj().where("id", u_id);
+              await users.update(
+                {
+                  withdrawAmount:
+                    parseInt(data[0]?.withdrawAmount || 0) + teamWinningAmount,
+                },
+                { id: u_id }
+              );
+            })
+          );
+        }
       }
-      
     }
 
     await Promise.all([
@@ -734,6 +747,8 @@ export const submitMatchResult = async (
 
     return match;
   } catch (ex) {
+    console.error("ex => ", ex);
+    
     return getErrorObject("Something went wrong");
   }
 };
@@ -797,10 +812,11 @@ export const fetchMatchResultsReq = async (
                 .where("id", player1[0].team_id)
                 .select("name")
             : [{}];
+
           player2Data = player2[0].team_id
             ? await teamRepo
                 .knexObj()
-                .where("id", player1[0].team_id)
+                .where("id", player2[0].team_id)
                 .select("name")
             : [{}];
         } else {
@@ -878,6 +894,7 @@ export const updateELORating = async (
     knexConnection,
     TABLE_NAMES.ELO_RATING_HISTORY
   );
+
   if (players[0].user_id) {
     const eloRepo = new CrudRepository<IEloRating>(
       knexConnection,
@@ -920,6 +937,7 @@ export const updateELORating = async (
       ratings.user1 = elo_rating.loserRating;
       ratings.user2 = elo_rating.winnerRating;
     }
+
     return await Promise.all([
       eloRepo.update({ elo_rating: ratings.user1 }, { id: user1.id, game_id }),
       eloHistoryRepo.create({
@@ -927,7 +945,7 @@ export const updateELORating = async (
         tournament_id: req.tournament_id,
         match_id: req.match_id,
         game_id,
-        elo_rating: user1.elo_rating,
+        elo_rating: isNaN(user1.elo_rating) ? 760 : user1.elo_rating,
       }),
       eloRepo.update({ elo_rating: ratings.user2 }, { id: user2.id, game_id }),
       eloHistoryRepo.create({
@@ -935,21 +953,26 @@ export const updateELORating = async (
         tournament_id: req.tournament_id,
         match_id: req.match_id,
         game_id,
-        elo_rating: user2.elo_rating,
+        elo_rating: isNaN(user2.elo_rating) ? 760 : user2.elo_rating,
       }),
     ]);
   }
+
   const teamRepo = new CrudRepository<ITeams>(
     knexConnection,
     TABLE_NAMES.TEAMS
   );
+
   const teams: ITeams[] = await teamRepo
     .knexObj()
     .whereIn("id", [player1.team_id, player2.team_id]);
+
   const team1: ITeams = teams.find((x) => x.id === player1.team_id) || teams[0];
   const team2: ITeams = teams.find((x) => x.id === player2.team_id) || teams[1];
+
   let elo_rating = { winnerRating: 0, loserRating: 0 };
   const ratings = { team1: 0, team2: 0 };
+
   if (req.opponent1.result === "win") {
     elo_rating = getEloRating(
       Number(team1?.elo_rating),
@@ -965,6 +988,7 @@ export const updateELORating = async (
     ratings.team1 = elo_rating.loserRating;
     ratings.team2 = elo_rating.winnerRating;
   }
+
   return await Promise.all([
     teamRepo.update({ elo_rating: ratings.team1 }, { id: team1.id }),
     eloHistoryRepo.create({
@@ -972,7 +996,7 @@ export const updateELORating = async (
       tournament_id: req.tournament_id,
       match_id: req.match_id,
       game_id,
-      elo_rating: team1.elo_rating,
+      elo_rating: isNaN(team1.elo_rating) ? 760 : team1.elo_rating,
     }),
     teamRepo.update({ elo_rating: ratings.team2 }, { id: team2.id }),
     eloHistoryRepo.create({
@@ -980,7 +1004,7 @@ export const updateELORating = async (
       tournament_id: req.tournament_id,
       match_id: req.match_id,
       game_id,
-      elo_rating: team2.elo_rating,
+      elo_rating: isNaN(team2.elo_rating) ? 760 : team2.elo_rating,
     }),
   ]);
 };

@@ -513,7 +513,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
         fetchMatchResultReq();
       });
   };
-  
+
   const toggle = (data: string): void => {
     setImage(data);
     setPopupVisible(!popVisible);
@@ -538,7 +538,9 @@ const MatchDashboard: React.FC = (): JSX.Element => {
             }
           >
             {roundList.map((m) => (
-              <MenuItem value={m.id} key={m.id}>{m.name}</MenuItem>
+              <MenuItem value={m.id} key={m.id}>
+                {m.name}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -771,15 +773,17 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                   label="Select Winner"
                   onChange={(e): any => setWinnerId(e.target.value)}
                 >
-                  <MenuItem value={matchData?.opponent1?.[0]?.id}>
-                    {matchData?.opponent1?.[0]
-                      ? matchData?.opponent1?.[0]?.username || matchData?.opponent1?.[0]?.name
-                      : "NA"}
+                  <MenuItem value={matchData?.opponent1?.[0]?.id || matchData?.opponent1?.id }>
+                    {matchData?.opponent1?.[0]?.username ||
+                      matchData?.opponent1?.[0]?.name ||
+                      matchData?.opponent1?.team_name ||
+                      "NA"}
                   </MenuItem>
-                  <MenuItem value={matchData?.opponent2?.[0]?.id}>
-                    {matchData?.opponent2?.[0]
-                      ? matchData?.opponent2?.[0]?.username || matchData?.opponent2?.[0]?.name
-                      : "NA"}
+                  <MenuItem value={matchData?.opponent2?.[0]?.id || matchData?.opponent2?.id}>
+                    {matchData?.opponent2?.[0]?.username ||
+                      matchData?.opponent2?.[0]?.name ||
+                      matchData?.opponent2?.team_name ||
+                      "NA"}
                   </MenuItem>
                 </Select>
               </FormControl>
