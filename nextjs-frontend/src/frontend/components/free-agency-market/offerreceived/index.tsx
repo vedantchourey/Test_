@@ -10,7 +10,7 @@ import {
   TableRow,
   Typography,
   useMediaQuery,
-  useTheme
+  useTheme,
 } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
@@ -23,6 +23,11 @@ import { fetchAllGamesThunk } from "../../../redux-store/games/game-slice";
 import { gamesFetchStatusSelector } from "../../../redux-store/games/game-selectors";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import GroupIcon from "@mui/icons-material/Group";
+import {
+  getAllPlatformsSelector,
+  getAllPlatformsStatusSelector,
+} from "../../../redux-store/platforms/platform-selectors";
+import { fetchAllPlatformsThunk } from "../../../redux-store/platforms/platform-slice";
 
 export const NoobCell = styled(TableCell)(() => ({
   border: "0px",
@@ -42,6 +47,7 @@ interface IData {
   invite_key: string;
   teamId: string;
   gameId: string;
+  platformId: string;
   message: string;
 }
 
@@ -67,6 +73,16 @@ const Permissions: React.FC = () => {
   const games = useAppSelector(allGamesSelector);
   const gamesFetchStatus = useAppSelector(gamesFetchStatusSelector);
 
+  const platforms = useAppSelector(getAllPlatformsSelector);
+  const platformsFetchStatus = useAppSelector(getAllPlatformsStatusSelector);
+
+  const isLoading = platformsFetchStatus === "loading";
+
+  useEffect(() => {
+    if (platformsFetchStatus !== "idle") return;
+    appDispatch(fetchAllPlatformsThunk());
+  }, [appDispatch, platformsFetchStatus]);
+
   React.useEffect(() => {
     if (gamesFetchStatus !== "idle") return;
     appDispatch(fetchAllGamesThunk());
@@ -84,12 +100,14 @@ const Permissions: React.FC = () => {
                 .from("public-files")
                 .getPublicUrl(item.team.teamLogo).publicURL
             : null;
+
           return {
             username: item.invite_by.username,
             teamname: [teamLogo, item.team.name],
             date: moment(item.created_at).format("DD/MM/YYYY HH:MM"),
             teamId: item.team.id,
             gameId: item.team.game_id,
+            platformId: item.team.platform_id,
             invite_key: item.secret,
             message: item.message,
           };
@@ -135,7 +153,9 @@ const Permissions: React.FC = () => {
     fetchTeam();
   }, []);
 
-  return (
+  return isLoading ? (
+    <></>
+  ) : (
     <React.Fragment>
       <Grid container rowSpacing={2}>
         <Grid item xs={12} sm={12} md={12} mt={8} mb={12}>
@@ -160,6 +180,11 @@ const Permissions: React.FC = () => {
                     </NoobCell>
                     <NoobCell>
                       <Box display="flex" alignItems={"center"}>
+                        <Typography>Platform</Typography>
+                      </Box>
+                    </NoobCell>
+                    <NoobCell>
+                      <Box display="flex" alignItems={"center"}>
                         <Typography>Date</Typography>
                       </Box>
                     </NoobCell>
@@ -169,6 +194,9 @@ const Permissions: React.FC = () => {
                   </NoobRow>
                 ) : null}
                 {data.map((item) => {
+                  const platform = platforms.find(
+                    (p) => p.id === item.platformId
+                  );
                   return (
                     <NoobRow
                       sx={{
@@ -215,6 +243,11 @@ const Permissions: React.FC = () => {
                                 ?.displayName
                             }
                           </Typography>
+                        </Box>
+                      </NoobCell>
+                      <NoobCell>
+                        <Box display="flex" alignItems={"center"}>
+                          <Typography>{platform?.displayName}</Typography>
                         </Box>
                       </NoobCell>
                       <NoobCell>

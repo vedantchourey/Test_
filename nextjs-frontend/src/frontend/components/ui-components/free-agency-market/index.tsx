@@ -42,7 +42,7 @@ const CardDesktop: React.FC<any> = ({ setOpen }) => {
         display={"flex"}
         flexDirection={"column"}
       >
-        <Typography color={"white"} textAlign="left" component="h4">
+        {/* <Typography color={"white"} textAlign="left" component="h4">
           {" "}
           Free Agency Market{" "}
         </Typography>
@@ -53,7 +53,7 @@ const CardDesktop: React.FC<any> = ({ setOpen }) => {
           </Box>
           <Box> Ipsum has been the industry&apos;s standard dummy </Box>
           <Box> text ever since the 1500s</Box>
-        </Typography>
+        </Typography> */}
       </Grid>
       <Grid
         item
@@ -65,15 +65,19 @@ const CardDesktop: React.FC<any> = ({ setOpen }) => {
         justifyContent={"center"}
         alignItems={"center"}
       >
-        <UnplashIcon width={230} />
+        <div style={{height: 100}}>
+
+        </div>
+        {/* <UnplashIcon width={230} /> */}
         <Button
           style={{
-            background: "linear-gradient(180deg, #EF507E 0%, #F09633 100%)",
-            color: "white",
+            background: "green",
+            // color: "white",
             padding: "10px 10px",
             marginTop: 20,
             width: "230px",
           }}
+          variant={"contained"}
           onClick={(): void => {
             setOpen(true);
           }}

@@ -396,13 +396,13 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
 
   const [countDown, setCountDown] = React.useState("00:00:00");
   const [roundCountDown, setRoundCountDown] = React.useState("00:00:00");
-  
+
   const timerCallback = React.useCallback(() => {
     if (match?.tournament) {
       const mDate = moment(match.tournament.startDate);
       const mTime = moment(
         matchData?.startTime || match.tournament.startTime,
-        "hh:mm:SS"
+        !matchData?.startTime ? "hh:mm:ss" : undefined
       ).subtract(
         match.tournament?.bracketsMetadata?.checkInAmount > 0
           ? match.tournament.bracketsMetadata.checkInAmount
@@ -438,7 +438,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       const mDate = moment(match.tournament.startDate);
       const mTime = moment(
         matchData?.startTime || match.tournament.startTime,
-        "hh:mm:SS"
+        !matchData?.startTime ? "hh:mm:ss" : undefined
       );
       mDate.set({
         hours: mTime.get("hours"),
@@ -463,19 +463,23 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       }
     }
   }, [data]);
-  
+
   let opponent1TeamPlayers: any;
   let opponent2TeamPlayers: any;
 
-  if(match.opponent1.team_id){
-    const teamDetails = match.tournament.playerList.find((i: any) => i.team_id === match.opponent1.team_id)
-    opponent1TeamPlayers = _.groupBy(teamDetails.players, "id")
+  if (match.opponent1.team_id) {
+    const teamDetails = match.tournament.playerList.find(
+      (i: any) => i.team_id === match.opponent1.team_id
+    );
+    opponent1TeamPlayers = _.groupBy(teamDetails.players, "id");
   }
-  if(match.opponent2.team_id){
-    const teamDetails = match.tournament.playerList.find((i: any) => i.team_id === match.opponent2.team_id)
-    opponent2TeamPlayers = _.groupBy(teamDetails.players, "id")
+  if (match.opponent2.team_id) {
+    const teamDetails = match.tournament.playerList.find(
+      (i: any) => i.team_id === match.opponent2.team_id
+    );
+    opponent2TeamPlayers = _.groupBy(teamDetails.players, "id");
   }
-   
+
   React.useEffect(() => {
     fetchChatChannel();
     if (!match.opponent1.user_id) {
@@ -546,7 +550,9 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
             style={{ justifyContent: "center", marginTop: "30px" }}
           >
             <Grid item xs={5.5}>
-              <Typography className={styles.sub_heading}>My Teams</Typography>
+              <Typography className={styles.sub_heading}>
+                My Teams Members
+              </Typography>
               {Object.values(_.groupBy(myPlayer.players, "id"))?.map(
                 (u: any, idx: any) => {
                   const avatarUrl = u[0].avatarUrl
@@ -555,8 +561,13 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                         .getPublicUrl(u[0].avatarUrl).publicURL as string)
                     : undefined;
 
+                  const playersData =
+                    myPlayer.id === match.opponent1.id
+                      ? opponent1TeamPlayers
+                      : opponent2TeamPlayers;
+
                   const gameUniqueId =
-                    opponent1TeamPlayers?.[u[0].id]?.[0]?.gameUniqueId;
+                    playersData?.[u[0].id]?.[0]?.gameUniqueId;
 
                   return (
                     <Box style={{ marginRight: 20 }} key={idx}>
@@ -591,7 +602,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
             <Divider orientation="vertical" light />
             <Grid item xs={5.5}>
               <Typography className={styles.sub_heading}>
-                Opponent Teams
+                Opponent Teams Members
               </Typography>
               {Object.values(_.groupBy(opponent_data.players, "id"))?.map(
                 (u: any, idx: any) => {
@@ -601,8 +612,13 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                         .getPublicUrl(u[0].avatarUrl).publicURL as string)
                     : undefined;
 
+                    const playersData =
+                    opponent_data.id === match.opponent2.id
+                      ? opponent2TeamPlayers
+                      : opponent1TeamPlayers;
+
                   const gameUniqueId =
-                    opponent2TeamPlayers?.[u[0].id]?.[0]?.gameUniqueId;
+                    playersData?.[u[0].id]?.[0]?.gameUniqueId;
 
                   return (
                     <Box style={{ marginLeft: 20 }} key={idx}>
@@ -690,7 +706,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
               style={{
                 padding: "12px",
                 background:
-                  countDown !== "Started" ||
+                  roundCountDown !== "Started" ||
                   !opponent1Name ||
                   !opponent2Name ||
                   (countDown === "Started" &&
@@ -701,7 +717,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                 margin: "0px 16px 0px 16px",
               }}
               disabled={
-                countDown !== "Started" ||
+                roundCountDown !== "Started" ||
                 !opponent1Name ||
                 !opponent2Name ||
                 (countDown === "Started" &&
@@ -855,7 +871,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
           >
             <CheckIcon sx={{ color: "white", marginRight: 1 }} />
             <Typography color="white" textAlign={"left"}>
-              Result successfully send to opponent.
+              Result submitted successfully.
             </Typography>
           </Box>
         </Box>

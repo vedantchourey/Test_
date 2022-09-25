@@ -10,10 +10,8 @@ interface ParticipantsProps {
   data: TournamentData;
 }
 
-
-
 const Participants: React.FC<ParticipantsProps> = ({ data }) => {
-  const router=useRouter();
+  const router = useRouter();
 
   return (
     <React.Fragment>
@@ -22,9 +20,9 @@ const Participants: React.FC<ParticipantsProps> = ({ data }) => {
           <Grid container rowSpacing={1}>
             {(data?.playerList || []).map((item: any) => {
               const avatarUrl = item.avatarUrl
-                ? frontendSupabase.storage
+                ? (frontendSupabase.storage
                     .from("public-files")
-                    .getPublicUrl(item.avatarUrl).publicURL as string
+                    .getPublicUrl(item.avatarUrl).publicURL as string)
                 : null;
               return (
                 <Grid
@@ -34,18 +32,41 @@ const Participants: React.FC<ParticipantsProps> = ({ data }) => {
                   xs={6}
                   border={"1px solid rgba(255, 255, 255, 0.1)"}
                 >
-                  <Box display="flex" alignItems="center" padding={2} 
-                  onClick={():void=>{item.firstName?router.push(`/account/${item.username}`):null}}>
-                    {item.team_name && !avatarUrl?
-                    <GroupIcon style={{height:45,width:45,borderRadius:25,background: "rgba(0,0,0,0.4)"}}/>:
-                    <Avatar
-                      src={avatarUrl || undefined }
-                      alt={item.firstName || item.team_name}
-                    />}
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    padding={2}
+                    onClick={(): void => {
+                      item.username
+                        ? router.push(`/account/${item.username}`)
+                        : router.push(`/team/view/${item.team_id}/members`);
+                    }}
+                    style={{cursor: "pointer"}}
+                  >
+                    {item.team_name && !avatarUrl ? (
+                      <GroupIcon
+                        style={{
+                          height: 45,
+                          width: 45,
+                          borderRadius: 25,
+                          background: "rgba(0,0,0,0.4)",
+                        }}
+                      />
+                    ) : (
+                      <Avatar
+                        src={avatarUrl || undefined}
+                        alt={item.firstName || item.team_name}
+                      />
+                    )}
                     <Typography marginLeft={"16px"}>
                       {item.firstName
-                        ? `${item.firstName} ${item.lastName}`
+                        ? `${item.username}`
                         : `${item.team_name}`}
+                    </Typography>
+                    <Typography marginLeft={"5px"} color="rgba(255,255,255,0.5)">
+                      {item.gameUniqueId
+                        ? `(${item.gameUniqueId})`
+                        : ``}
                     </Typography>
                   </Box>
                 </Grid>

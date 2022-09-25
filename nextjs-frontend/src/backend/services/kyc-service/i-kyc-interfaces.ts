@@ -5,4 +5,5 @@ export interface IVerifyKYC {
     name: string;
     aadhar_no: string;
     acc_type: string;
+    bank_name: string;
 }

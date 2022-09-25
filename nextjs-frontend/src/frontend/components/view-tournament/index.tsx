@@ -227,7 +227,12 @@ const ViewTournament: React.FC = () => {
         hours: mTime.get("hours"),
         minutes: mTime.get("minutes"),
         seconds: mTime.get("seconds"),
-      });
+      }).subtract(
+        (data?.bracketsMetadata?.checkInAmount || 0) > 0
+          ? data?.bracketsMetadata?.checkInAmount
+          : 0,
+        "minutes"
+      );
       const now = moment();
       let diff = mDate.diff(now);
       if (diff <= 0) {
@@ -483,7 +488,7 @@ const ViewTournament: React.FC = () => {
       return;
     }
     setPayload(payload);
-    onJoinTeamApi(payload);
+    if (data?.settings?.tournamentFormat !== "1v1") onJoinTeamApi(payload);
   };
 
   const onJoinTeamApi = async (payload: JoinTeamType): Promise<void> => {
@@ -746,7 +751,7 @@ const ViewTournament: React.FC = () => {
               onClick={(): Promise<void> => onJoinTeamApi(payload)}
               variant="contained"
             >
-              Join
+              Join Button
             </Button>
           </DialogActions>
         </Dialog>

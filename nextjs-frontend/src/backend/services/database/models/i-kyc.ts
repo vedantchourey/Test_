@@ -9,5 +9,6 @@ export interface IKYC {
     bank_transaction_id: string;
     bank_verification_data: any;
     aadhar_verification_data: any;
+    bank_name: any;
 }
 

@@ -174,6 +174,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
           )
           .catch((err) => console.warn(err)))
     );
+    fetchAllDetails();
     alert("Auto seeding completed");
   };
 
@@ -249,6 +250,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
           )
           .catch((err) => console.warn(err)))
     );
+    fetchAllDetails();
     alert("Auto seeding completed");
   };
 
@@ -321,6 +323,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
           )
           .catch((err) => console.warn(err)))
     );
+    fetchAllDetails();
     alert("Auto seeding completed");
   };
 

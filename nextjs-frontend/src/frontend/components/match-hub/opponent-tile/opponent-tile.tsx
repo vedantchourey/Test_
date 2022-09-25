@@ -63,9 +63,8 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
     if (data.tournament) {
       const mDate = moment(data.tournament.startDate);
       const mTime = moment(
-        matchData?.startTime ||
-          data.tournament.startTime,
-        "hh:mm:SS"
+        matchData?.startTime || data.tournament.startTime,
+        !matchData?.startTime ? "hh:mm:ss" : undefined
       ).subtract(
         data.tournament?.bracketsMetadata?.checkInAmount > 0
           ? data.tournament.bracketsMetadata.checkInAmount
@@ -101,7 +100,7 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
       const mDate = moment(data.tournament?.startDate);
       const mTime = moment(
         matchData?.startTime || data.tournament?.startTime,
-        "hh:mm:SS"
+        !matchData?.startTime ? "hh:mm:ss" : undefined
       );
       mDate.set({
         hours: mTime.get("hours"),
@@ -154,16 +153,16 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
     opponent_name = opponentPlayer.name || "";
     opponent_data = opponentPlayer;
   } else if (data.opponent1.user_id === user?.id) {
-      opponent_name = data.opponent2.user_id
-        ? data.opponent2.firstName + " " + data.opponent2.lastName
-        : "N/A";
-      opponent_data = data.opponent2;
-    } else {
-      opponent_name = data.opponent1.user_id
-        ? data.opponent1.firstName + " " + data.opponent1.lastName
-        : "N/A";
-      opponent_data = data.opponent1;
-    }
+    opponent_name = data.opponent2.user_id
+      ? data.opponent2.firstName + " " + data.opponent2.lastName
+      : "N/A";
+    opponent_data = data.opponent2;
+  } else {
+    opponent_name = data.opponent1.user_id
+      ? data.opponent1.firstName + " " + data.opponent1.lastName
+      : "N/A";
+    opponent_data = data.opponent1;
+  }
 
   const opponentImage = opponent_data.avatarUrl
     ? frontendSupabase.storage
@@ -194,7 +193,9 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
       </Grid>
       <Grid item xs={3}>
         <p className={styles.opponentTileTitle}>Tournament name</p>
-        <p className={styles.opponentTileValue}>{data.tournament_name} ({name})</p>
+        <p className={styles.opponentTileValue}>
+          {data.tournament_name} ({name})
+        </p>
       </Grid>
       <Grid
         item

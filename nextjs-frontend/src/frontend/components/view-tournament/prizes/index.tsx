@@ -29,40 +29,48 @@ interface PrizesProps {
 const Prizes: React.FC<PrizesProps> = ({ data }) => {
   const pricePool = data?.pricingDetails?.currentPricePool || 0;
   const playersLimit = data?.bracketsMetadata?.playersLimit || 2;
+  
   const rows =
-    playersLimit > 2
+    (data?.bracketsMetadata?.type === "SINGLE" &&
+      data?.bracketsMetadata?.thirdPlace) ||
+    (data?.bracketsMetadata?.type !== "SINGLE" && playersLimit > 2)
       ? [
           CreateData(
             "Place 1:",
-            `${
-              (data?.settings?.entryType === "credit" ? pricePool * 0.6 * credit_config.price_per_credit : 600).toFixed()
-            }`
+            `${(data?.settings?.entryType === "credit"
+              ? pricePool * 0.6 * credit_config.price_per_credit
+              : 600
+            ).toFixed()}`
           ),
           CreateData(
             "Place 2:",
-            `${
-              (data?.settings?.entryType === "credit" ? pricePool * 0.3 * credit_config.price_per_credit : 300).toFixed()
-            }`
+            `${(data?.settings?.entryType === "credit"
+              ? pricePool * 0.3 * credit_config.price_per_credit
+              : 300
+            ).toFixed()}`
           ),
           CreateData(
             "Place 3:",
-            `${
-              (data?.settings?.entryType === "credit" ? pricePool * 0.1 * credit_config.price_per_credit : 100).toFixed()
-            }`
+            `${(data?.settings?.entryType === "credit"
+              ? pricePool * 0.1 * credit_config.price_per_credit
+              : 100
+            ).toFixed()}`
           ),
         ]
       : [
           CreateData(
             "Place 1:",
-            `${
-              (data?.settings?.entryType === "credit" ? pricePool * 0.65 * credit_config.price_per_credit : 700).toFixed()
-            }`
+            `${(data?.settings?.entryType === "credit"
+              ? pricePool * 0.65 * credit_config.price_per_credit
+              : 700
+            ).toFixed()}`
           ),
           CreateData(
             "Place 2:",
-            `${
-              (data?.settings?.entryType === "credit" ? pricePool * 0.35 * credit_config.price_per_credit : 300).toFixed()
-            }`
+            `${(data?.settings?.entryType === "credit"
+              ? pricePool * 0.35 * credit_config.price_per_credit
+              : 300
+            ).toFixed()}`
           ),
         ];
   return (

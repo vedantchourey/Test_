@@ -9,6 +9,7 @@ import { IMatchHubData } from "../../../../../../pages/match-hub";
 import { frontendSupabase } from "../../../../services/supabase-frontend-service";
 import GroupIcon from "@mui/icons-material/Group";
 import { getRoundName } from "../../../../services/get-round-name";
+import { useRouter } from "next/router";
 
 interface ResultTileProps {
   isWon?: boolean;
@@ -20,7 +21,14 @@ interface ResultTileProps {
 }
 
 const ResultTile: React.FC<ResultTileProps> = (props) => {
-  const {data, isWon, child, opponent1Name = "-", opponent2Name = "-" } = props;
+  const {
+    data,
+    isWon,
+    child,
+    opponent1Name = "-",
+    opponent2Name = "-",
+  } = props;
+  const router = useRouter();
 
   const name = getRoundName(
     data.tournament.brackets.group as any[],
@@ -30,16 +38,16 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
     data.tournament.brackets.stage[0].type
   );
 
-  const opponent1Image = props.data.opponent1.avatarUrl
+  const opponent1Image = props.data.opponent1.avatarUrl || props.data.opponent1.teamLogo
     ? frontendSupabase.storage
         .from("public-files")
-        .getPublicUrl(props.data.opponent1.avatarUrl).publicURL
+        .getPublicUrl(props.data.opponent1.avatarUrl || props.data.opponent1.teamLogo || "").publicURL
     : undefined;
 
-  const opponent2Image = props.data.opponent2.avatarUrl
+  const opponent2Image = props.data.opponent2.avatarUrl || props.data.opponent2.teamLogo
     ? frontendSupabase.storage
         .from("public-files")
-        .getPublicUrl(props.data.opponent2.avatarUrl).publicURL
+        .getPublicUrl(props.data.opponent2.avatarUrl || props.data.opponent2.teamLogo || "").publicURL
     : undefined;
 
   return (
@@ -56,6 +64,13 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
           variant="outlined"
           className={styles.resultTileButton}
           style={{ marginRight: "16px" }}
+          onClick={(): any =>
+            router.push(
+              props.data.opponent1.username
+                ? `/account/${props.data.opponent1.username}`
+                : `/team/view/${props.data.opponent1.team_id}/members`
+            )
+          }
         >
           {!opponent1Image && props.data.opponent1.team_id ? (
             <GroupIcon
@@ -86,7 +101,9 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
       {/* Result status */}
       {!child ? (
         <Grid item xs={6}>
-          <p className={styles.resultTileValue}>{props.data.tournament_name} ({name})</p>
+          <p className={styles.resultTileValue}>
+            {props.data.tournament_name} ({name})
+          </p>
           <p
             className={styles.resultTileStatus}
             style={{ color: isWon ? "green" : "red", marginTop: 10 }}
@@ -112,6 +129,13 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
             variant="outlined"
             className={styles.resultTileButton}
             style={{ marginRight: "16px" }}
+            onClick={(): any =>
+              router.push(
+                props.data.opponent2.username
+                  ? `/account/${props.data.opponent2.username}`
+                  : `/team/view/${props.data.opponent2.team_id}/members`
+              )
+            }
           >
             <span
               style={{ marginRight: "16px" }}

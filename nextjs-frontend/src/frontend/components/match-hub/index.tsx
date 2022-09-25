@@ -38,6 +38,7 @@ export interface Opponent {
   players?: IProfile[];
   gameUniqueId?: string;
   username?: string;
+  teamLogo?: string;
 }
 
 export interface Match {

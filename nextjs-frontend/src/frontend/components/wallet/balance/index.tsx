@@ -229,12 +229,12 @@ const Balance = (): any => {
           <Grid item xs={12} md={6} display={"flex"}>
             <Button
               fullWidth
-              disabled={user?.userRoles[0] === "noob-admin" || !isVerified }
+              disabled={!isVerified }
               style={{
                 height: 56,
                 color: "#ffffff",
                 fontSize: 18,
-                backgroundColor: user?.userRoles[0] === "noob-admin" || !isVerified
+                backgroundColor: !isVerified
                   ? "rgba(255,255,255,0.2)"
                   : "#F09633",
               }}

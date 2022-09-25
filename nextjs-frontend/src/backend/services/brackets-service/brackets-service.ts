@@ -91,6 +91,7 @@ export const persistBrackets = async (req: ITournament): Promise<any> => {
     }
     await manager.create(data as any);
   } catch (ex) {
+    console.error(ex)
   } finally {
     await connection.destroy();
   }
@@ -518,17 +519,22 @@ export const submitMatchResult = async (
     const price_per_credit = backendConfig.credit_config.price_per_credit;
     const playersLimit =
       tournamentData?.data?.bracketsMetadata?.playersLimit || 2;
+    const threrPrize =
+      (tournamentData?.data?.bracketsMetadata?.type === "SINGLE" &&
+        tournamentData?.data?.bracketsMetadata?.thirdPlace) ||
+      (tournamentData?.data?.bracketsMetadata?.type !== "SINGLE" &&
+        playersLimit > 2);
 
     const firstWinerPrice = (
       tournamentData?.data?.settings?.entryType === "credit"
-        ? pricePool * (playersLimit > 2 ? 0.6 : 0.65) * price_per_credit
-        : playersLimit > 2
+        ? pricePool * (threrPrize ? 0.6 : 0.65) * price_per_credit
+        : threrPrize
         ? 600
         : 700
     ).toFixed();
     const secondWinerPrice = (
       tournamentData?.data?.settings?.entryType === "credit"
-        ? pricePool * (playersLimit > 2 ? 0.3 : 0.35) * price_per_credit
+        ? pricePool * (threrPrize ? 0.3 : 0.35) * price_per_credit
         : 300
     ).toFixed();
     const thirdWinerPrice = (
@@ -622,6 +628,9 @@ export const submitMatchResult = async (
     }
     if (matchDetials.type === "semi-final") {
       losserPrice = thirdWinerPrice;
+    }
+    if(matchDetials.type === "third-place"){
+      winningPrice = thirdWinerPrice;
     }
 
     if (winningPrice > 0) {
@@ -725,7 +734,6 @@ export const submitMatchResult = async (
 
     return match;
   } catch (ex) {
-    console.log('ex -> ', ex)
     return getErrorObject("Something went wrong");
   }
 };

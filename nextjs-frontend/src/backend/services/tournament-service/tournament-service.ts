@@ -388,6 +388,7 @@ export async function tournamentDetails(
             "profiles.avatarUrl",
             "profiles.username",
             "elo_ratings.elo_rating",
+            "b_participant.gameUniqueId",
           ])
           .whereNotNull("b_participant.user_id");
 
@@ -846,7 +847,7 @@ export const fetchUserMatchs = async (
       await teamRepo
         .knexObj()
         .whereIn("id", opp_teams)
-        .select(["id as team_id", "name", "platform_id", "game_id"]),
+        .select(["id as team_id", "name", "platform_id", "game_id", "teamLogo"]),
     ]);
 
     const teams_grouped = _.groupBy(teams, "team_id");
