@@ -81,10 +81,24 @@ export default function BasicPopover(props: Props): JSX.Element {
                   {type === "TOURNAMENT_INVITE" && (
                     <Button
                       variant="outlined"
-                      onClick={(): any => router.push(`/view-tournament/${data.tournament_id}/details`)}
+                      onClick={(): any =>
+                        router.push(
+                          `/view-tournament/${data.tournament_id}/details`
+                        )
+                      }
                       sx={{ mr: 1 }}
                     >
                       View tournament
+                    </Button>
+                  )}
+
+                  {data.type === "TEAM_INVITATION" && (
+                    <Button
+                      variant="outlined"
+                      onClick={(): any => router.push(data.data.url)}
+                      sx={{ mr: 1 }}
+                    >
+                      View Team
                     </Button>
                   )}
                 </Box>

@@ -33,21 +33,39 @@ const MatchHistory: React.FC<{ data: IMatchHubData[]; teamId: string }> = (
             <TableBody>
               {props.data.map((row, idx) => {
                 const status =
-                  row.opponent1.team_id === props.teamId
+                  row.opponent1.team_id !== props.teamId
                     ? row.opponent2.result
                       ? row.opponent2.result
                       : "Pending"
                     : row.opponent1.result
                     ? row.opponent1.result
                     : "Pending";
+
+                const opp_team_name =
+                  row.opponent1.team_id === props.teamId
+                    ? row.opponent2.name
+                    : row.opponent1.name;
+
+                if (!opp_team_name) return <></>;
+
+                const opp_team_data: any =
+                  row.opponent1.team_id === props.teamId
+                    ? row.opponent2
+                    : row.opponent1;
+
                 return (
                   <NoobTableRow key={idx}>
                     <NoobTableCell
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
+                        cursor: "pointer",
                       }}
-                      //onClick={():void=>{router.push(`/team/view/${row.opponent1.user_id === user?.id ? row.opponent1.team_id:row.opponent2.team_id}/members`)}}
+                      onClick={(): any =>
+                        router.push(
+                          `/team/view/${opp_team_data.team_id}/members?user_id=${opp_team_data.players?.[0]?.id}`
+                        )
+                      }
                     >
                       <Typography>
                         {row.opponent1.team_id === props.teamId

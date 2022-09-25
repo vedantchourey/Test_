@@ -184,6 +184,16 @@ const Notification = (): JSX.Element => {
                                 View tournament
                               </Button>
                             )}
+
+                          {i.data.type === "TEAM_INVITATION" && (
+                              <Button
+                                variant="outlined"
+                                onClick={(): any => router.push(i.data.data.url)}
+                                sx={{ mr: 1 }}
+                              >
+                                View Team
+                              </Button>
+                            )}
                         </Box>
                       ) : (
                         <Box display={"flex"} flexDirection={"row"} mt={2}>

@@ -41,8 +41,6 @@ import { isDeviceTypeSelector } from "../../../../src/frontend/redux-store/layou
 import { deviceTypes } from "../../../../src/frontend/redux-store/layout/device-types";
 import { google } from "calendar-link";
 
-
-
 interface JoinTeamType {
   tournamentId: string;
   userId: string;
@@ -57,11 +55,9 @@ interface HeadSubSectionProps {
   name?: string;
 }
 
-
-
 const HeadSubSection = ({ time, name }: HeadSubSectionProps): any => {
   const [isCopied, setCopied] = React.useState(false);
-  
+
   const copyLink = (): void => {
     navigator.clipboard.writeText(window.location.href);
     setCopied(true);
@@ -90,7 +86,9 @@ const HeadSubSection = ({ time, name }: HeadSubSectionProps): any => {
             const event: any = {
               title: `Noobstorm Game - ${name}`,
               description: "",
-              start: time,
+              start: moment(time, "DD/MM/YYYY hh:mm A").format(
+                "YYYY-MM-DD hh:mm:ss +0530"
+              ),
               duration: [1, "hour"],
             };
             window.open(google(event), "_blank");
@@ -223,16 +221,18 @@ const ViewTournament: React.FC = () => {
     if (data.basic) {
       const mDate = moment(data.basic.startDate);
       const mTime = moment(data.basic.startTime);
-      mDate.set({
-        hours: mTime.get("hours"),
-        minutes: mTime.get("minutes"),
-        seconds: mTime.get("seconds"),
-      }).subtract(
-        (data?.bracketsMetadata?.checkInAmount || 0) > 0
-          ? data?.bracketsMetadata?.checkInAmount
-          : 0,
-        "minutes"
-      );
+      mDate
+        .set({
+          hours: mTime.get("hours"),
+          minutes: mTime.get("minutes"),
+          seconds: mTime.get("seconds"),
+        })
+        .subtract(
+          (data?.bracketsMetadata?.checkInAmount || 0) > 0
+            ? data?.bracketsMetadata?.checkInAmount
+            : 0,
+          "minutes"
+        );
       const now = moment();
       let diff = mDate.diff(now);
       if (diff <= 0) {
@@ -582,7 +582,7 @@ const ViewTournament: React.FC = () => {
       )
     );
   };
-  
+
   const renderTournament = (): JSX.Element | undefined => {
     if (selectedTeam) {
       return renderTeamSelection();
@@ -638,16 +638,16 @@ const ViewTournament: React.FC = () => {
                 </Typography>
               </Box>
               {/* {countDown !== "00:00:00" ? ( */}
-                <ActionButton
-                  data={data}
-                  error={regError}
-                  onClick={onSinglePlayerJoin}
-                  buttonOnly={playerLimit === 1}
-                  items={getActionItems()}
-                  id={"action-item"}
-                  userId={user?.id}
-                  disabled={countDown === "00:00:00"}
-                />
+              <ActionButton
+                data={data}
+                error={regError}
+                onClick={onSinglePlayerJoin}
+                buttonOnly={playerLimit === 1}
+                items={getActionItems()}
+                id={"action-item"}
+                userId={user?.id}
+                disabled={countDown === "00:00:00"}
+              />
               {/* ) : null} */}
             </Grid>
           </Grid>

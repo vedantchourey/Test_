@@ -269,7 +269,7 @@ export default function SideHeader(): JSX.Element {
                 onClick={(): any => router.push("/account")}
               >
                 <img
-                  src={avatarImageBlobUrl || "/images/16276393842661.png"}
+                  src={avatarImageBlobUrl || "/images/user_icon.png"}
                   className={style.img3}
                   alt="logo"
                   style={{ height: "50px", width: "50px" }}

@@ -975,18 +975,18 @@ export const updateELORating = async (
 
   if (req.opponent1.result === "win") {
     elo_rating = getEloRating(
-      Number(team1?.elo_rating),
-      Number(team2?.elo_rating)
+      Number(team1?.elo_rating || 750),
+      Number(team2?.elo_rating || 750)
     );
-    ratings.team1 = elo_rating.winnerRating;
-    ratings.team2 = elo_rating.loserRating;
+    ratings.team1 = isNaN(elo_rating.winnerRating) ? 760 : elo_rating.winnerRating;
+    ratings.team2 = isNaN(elo_rating.loserRating) ? 760 : elo_rating.loserRating;
   } else {
     elo_rating = getEloRating(
       Number(team2?.elo_rating),
       Number(team1?.elo_rating)
     );
-    ratings.team1 = elo_rating.loserRating;
-    ratings.team2 = elo_rating.winnerRating;
+    ratings.team1 = isNaN(elo_rating.loserRating) ? 760 : elo_rating.loserRating;
+    ratings.team2 = isNaN(elo_rating.winnerRating) ? 760 : elo_rating.winnerRating;
   }
 
   return await Promise.all([

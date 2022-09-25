@@ -1,5 +1,12 @@
 // Third party packages
-import { Card, CardContent, Container, Typography, Grid, Box } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Container,
+  Typography,
+  Grid,
+  Box,
+} from "@mui/material";
 
 // styles
 import styles from "./match-hub.module.css";
@@ -34,7 +41,7 @@ export interface Opponent {
   game_id?: string;
   elo_rating?: string;
   name?: string;
-  avatarUrl?: string,
+  avatarUrl?: string;
   players?: IProfile[];
   gameUniqueId?: string;
   username?: string;
@@ -58,7 +65,6 @@ const MatchHub: React.FC<Props> = ({ data, onMatchHub, userDashboard }) => {
   const [loading, setLoading] = React.useState(false);
   const [team, setTeam] = React.useState<any[]>([]);
 
-
   const fetchTeam = async (): Promise<void> => {
     const headers = await getAuthHeader();
     setLoading(true);
@@ -74,11 +80,27 @@ const MatchHub: React.FC<Props> = ({ data, onMatchHub, userDashboard }) => {
         setLoading(false);
         console.error(err);
       });
-  }
+  };
 
   useEffect(() => {
-    fetchTeam()
-  }, [])
+    fetchTeam();
+  }, []);
+
+  const sortedData = data.sort((a: any, b: any) => {
+    const aStartDateTime =
+      moment(a.tournament.startDate).format("D MMM YYYY ") +
+      moment(a.tournament.startTime, "HH:mm:ss").format("LT");
+    const bStartDateTime =
+      moment(b.tournament.startDate).format("D MMM YYYY ") +
+      moment(b.tournament.startTime, "HH:mm:ss").format("LT");
+
+    const dateA = moment(aStartDateTime).format("X");
+    const dateB = moment(bStartDateTime).format("X");
+    return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
+  });
+
+  const remaningMatch = sortedData.filter((i) => !i.opponent1.result);
+  const completedMatch = sortedData.filter((i) => i.opponent1.result);
 
   return (
     <Container>
@@ -99,10 +121,9 @@ const MatchHub: React.FC<Props> = ({ data, onMatchHub, userDashboard }) => {
               determine the results.
             </p>
           </Box>
-          
 
           <Grid container style={{ marginTop: "48px" }} spacing={2}>
-            {data
+            {remaningMatch
               .sort((a: any, b: any) => {
                 const aStartDateTime =
                   moment(a.tournament.startDate).format("D MMM YYYY ") +
@@ -151,15 +172,77 @@ const MatchHub: React.FC<Props> = ({ data, onMatchHub, userDashboard }) => {
                         />
                       ) : (
                         <>
-                        <ResultTile
-                          data={item}
-                          isWon={myPlayer.result === "win"}
-                          onMatchHub={onMatchHub}
-                          opponent1Name={opponent1Name}
-                          opponent2Name={opponent2Name}
-                        />
+                          <ResultTile
+                            data={item}
+                            isWon={myPlayer.result === "win"}
+                            onMatchHub={onMatchHub}
+                            opponent1Name={opponent1Name}
+                            opponent2Name={opponent2Name}
+                          />
                         </>
-                        
+                      )}
+                    </Grid>
+                  )
+                );
+              })}
+
+            {completedMatch
+              .sort((a: any, b: any) => {
+                const aStartDateTime =
+                  moment(a.tournament.startDate).format("D MMM YYYY ") +
+                  moment(a.tournament.startTime, "HH:mm:ss").format("LT");
+                const bStartDateTime =
+                  moment(b.tournament.startDate).format("D MMM YYYY ") +
+                  moment(b.tournament.startTime, "HH:mm:ss").format("LT");
+
+                const dateA = moment(aStartDateTime).format("X");
+                const dateB = moment(bStartDateTime).format("X");
+                return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
+              })
+              .map((item) => {
+                const opponent1Name = item.opponent1.user_id
+                  ? `${item.opponent1.firstName} ${item.opponent1.lastName}`
+                  : item.opponent1.name;
+                const opponent2Name = item.opponent2.user_id
+                  ? `${item.opponent2.firstName} ${item.opponent2.lastName}`
+                  : item.opponent2.name;
+
+                const isMyTeam =
+                  item.opponent1.team_id &&
+                  team.find(
+                    (t) =>
+                      t.id === item.opponent1.team_id ||
+                      t.id === item.opponent2.team_id
+                  );
+
+                const myPlayer = !item.opponent1.team_id
+                  ? item.opponent1.user_id === user?.id
+                    ? item.opponent1
+                    : item.opponent2
+                  : item.opponent1?.team_id === isMyTeam?.id
+                  ? item.opponent1
+                  : item.opponent2;
+
+                return (
+                  !loading && (
+                    <Grid key={item.opponent1.user_id} item xs={12}>
+                      {!item.opponent1.result ? (
+                        <OpponentTile
+                          data={item}
+                          onMatchHub={onMatchHub}
+                          userDashboard={userDashboard}
+                          team={team}
+                        />
+                      ) : (
+                        <>
+                          <ResultTile
+                            data={item}
+                            isWon={myPlayer.result === "win"}
+                            onMatchHub={onMatchHub}
+                            opponent1Name={opponent1Name}
+                            opponent2Name={opponent2Name}
+                          />
+                        </>
                       )}
                     </Grid>
                   )
