@@ -728,7 +728,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                               />
                             </Typography>
                           </NoobCell>
-                          {item.result_status === "PENDING" ? (
+                          {/* {item.result_status === "PENDING" ? ( */}
                             <NoobCell>
                               <Typography>
                                 <Button onClick={(): any => acceptResult(item)}>
@@ -736,11 +736,11 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                                 </Button>
                               </Typography>
                             </NoobCell>
-                          ) : (
+                          {/* ) : (
                             <>
                               <Typography></Typography>
                             </>
-                          )}
+                          )} */}
                           <NoobCell>
                             <Button
                               onClick={(): any => toggle(item.screenshot)}

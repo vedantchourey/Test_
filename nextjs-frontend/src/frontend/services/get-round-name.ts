@@ -56,7 +56,7 @@ export const getRoundName = (
       }
     }
     if (groupObj.number === 3) {
-      name = `GF Round ${roundObj.number}`;
+      name = `GF Round`;
       type = `final`
     }
   }

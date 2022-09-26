@@ -6,4 +6,5 @@ export interface IEloRatingHistory {
     user_id: string;
     team_id: string;
     match_id: number;
+    status: string;
 }

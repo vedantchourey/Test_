@@ -18,7 +18,7 @@ export default createNextJsRouteHandler({
             res: NextApiResponse<ServiceResponse<any, ISuccess | IError>>,
             context: PerRequestContext
         ) => {
-            const result: any = await fetchTeams(context.transaction as Knex.Transaction, context.user as any, req.query as any);
+            const result: any = await fetchTeams(context.transaction as Knex.Transaction, context.user as any, req.query as any, context);
             res.status(result?.errors?.length ? 500 : 200).json(result)
         },
         preHooks: [beginTransactionMiddleWare, authenticatedUserMiddleware],

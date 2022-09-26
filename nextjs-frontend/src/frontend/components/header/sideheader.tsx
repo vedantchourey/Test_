@@ -131,27 +131,42 @@ export default function SideHeader(): JSX.Element {
       });
   };
 
+  const userRef = React.useRef(user);
+
   React.useEffect(() => {
-    if (isLoggedIn) {
+    if(isLoggedIn){
       fetchNotifications();
-      frontendSupabase
-        .from("notifications")
-        .on("*", (payload: any) => async () => {
-          if (payload.new.user_id === user?.id) {
-            fetchNotifications();
-          }
-        })
-        .subscribe();
-    } else {
+    } else{
       setNotifications([]);
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn])
+
+  React.useEffect(() => {
+    const messageListener = frontendSupabase
+      .from("notifications")
+      .on("*", async (payload) => {
+        if (payload.new.user_id === userRef.current?.id) {
+          fetchNotifications();
+        }
+        if (!isLoggedIn) {
+          setNotifications([]);
+        }
+      })
+      .subscribe();
+    return () => {
+      messageListener.unsubscribe();
+    };
+  }, []);
 
   React.useEffect(() => {
     if (isLoggedIn) {
       fetchWalletDetails();
     }
   }, []);
+
+  React.useEffect(() => {
+    userRef.current = user;
+  }, [user]);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(event.currentTarget);

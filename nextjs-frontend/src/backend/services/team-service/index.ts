@@ -16,7 +16,7 @@ import { ITournament } from "../database/models/i-tournaments";
 import { addNotifications } from "../notifications-service";
 import { INotifications } from "../database/models/i-notifications";
 import { UsersRepository } from "../database/repositories/users-repository";
-import { deleteFAMEntry } from "../FreeAgencyMarket/FreeAgencyMarket-Service";
+import { deleteFAMEntry, fetchEloRating } from "../FreeAgencyMarket/FreeAgencyMarket-Service";
 import { createChannel } from "../chat-service";
 const fields = ["id", "game_id", "name", "platform_id"]
 import { IChannel } from "../database/models/i-channel";
@@ -27,6 +27,7 @@ import { sendEmail } from "../email-service";
 import { SendMailOptions } from "nodemailer";
 import frontendConfig from "../../../frontend/utils/config/front-end-config";
 import { IEloRating } from "../database/models/i-elo-rating";
+import { PerRequestContext } from "../../utils/api-middle-ware/api-middleware-typings";
 
 const fetchEloRatingOfTeam = async (
   connection: Knex.Transaction,
@@ -43,9 +44,9 @@ const fetchEloRatingOfTeam = async (
 
     return {
       ...data,
-      loss: (history || []).filter((i: any) => parseInt(i.elo_rating) < 0)
+      loss: (history || []).filter((i: any) => i.status === "loss")
         .length,
-      won: (history || []).filter((i: any) => parseInt(i.elo_rating) > 0)
+      won: (history || []).filter((i: any) => i.status === "win")
         .length,
       elo_rating: history?.[0]?.elo_rating || "0",
     };
@@ -63,7 +64,8 @@ const fetchEloRatingOfTeam = async (
 export const fetchTeams = async (
   connection: Knex.Transaction,
   user: any,
-  query: any
+  query: any,
+  context: PerRequestContext
 ): Promise<ISuccess | IError> => {
   try {
     const teams = new CrudRepository<ITeams>(connection, TABLE_NAMES.TEAMS);
@@ -113,8 +115,6 @@ export const fetchTeams = async (
         "wallet.balance",
         "profiles.avatarUrl",
         "profiles.username as username",
-        "private_profiles.won",
-        "private_profiles.lost",
         "team_players.is_owner",
         "elo_ratings.elo_rating as elo_rating",
       ])
@@ -142,13 +142,28 @@ export const fetchTeams = async (
     }
     const data = await teamQuery;
     if (!data.length) return getErrorObject("No Teams found");
-    const result = _(data)
+    const result = await Promise.all(_(data)
       .groupBy("name")
-      .map(function (items, name) {
+      .map(async function (items, name) {
         const players = Object.values(_.groupBy(items, "user_id")).map(
           (i) => i[0]
         );
         const owner = players.find((p) => p.is_owner === true);
+        const playersList = players.map((data) => {
+          return {
+            game_id: data.game_id,
+            user_id: data.user_id,
+            lastName: data.lastName,
+            username: data.username,
+            firstName: data.firstName,
+            avatarUrl: data.avatarUrl,
+            balance: data.balance,
+            is_owner: data.is_owner,
+          };
+        })
+
+        const playerWithEloRating = await Promise.all(playersList.map((i) => fetchEloRating(context ,i)))
+    
         return {
           id: items[0].id,
           created_at: items[0].created_at,
@@ -159,23 +174,10 @@ export const fetchTeams = async (
           gameId: items[0].game_id,
           platformId: items[0].platform_id,
           team_elo_rating: items[0].team_elo_rating,
-          players: players.map((data) => {
-            return {
-              user_id: data.user_id,
-              lastName: data.lastName,
-              username: data.username,
-              firstName: data.firstName,
-              avatarUrl: data.avatarUrl,
-              balance: data.balance,
-              won: data.won,
-              lost: data.lost,
-              is_owner: data.is_owner,
-              elo_rating: data.elo_rating,
-            };
-          }),
+          players: playerWithEloRating,
         };
       })
-      .value();
+      .value());
 
     const resultWithElo: any[] = await Promise.all(
       result.map((i) => fetchEloRatingOfTeam(connection, i))

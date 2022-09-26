@@ -17,13 +17,17 @@ import axios from "axios";
 import React, { Fragment } from "react";
 import { getAuthHeader } from "../../src/frontend/utils/headers";
 import { useAppSelector } from "../../src/frontend/redux-store/redux-store";
-import { isLoggedInSelector } from "../../src/frontend/redux-store/authentication/authentication-selectors";
+import {
+  isLoggedInSelector,
+  userProfileSelector,
+} from "../../src/frontend/redux-store/authentication/authentication-selectors";
 import "react-alice-carousel/lib/alice-carousel.css";
 import NoobPage from "../../src/frontend/components/page/noob-page";
 import Heading from "../../src/frontend/components/ui-components/typography/heading";
 import { INotifications } from "../../src/backend/services/database/models/i-notifications";
 import { getUserProfileImage } from "../../src/frontend/service-clients/image-service-client";
 import { useRouter } from "next/router";
+import { frontendSupabase } from "../../src/frontend/services/supabase-frontend-service";
 
 const Notification = (): JSX.Element => {
   const isLoggedIn = useAppSelector(isLoggedInSelector);
@@ -34,6 +38,8 @@ const Notification = (): JSX.Element => {
   const [gameId, setGameId] = React.useState("");
   const [popVisible, setPopupVisible] = React.useState<boolean>(false);
   const [image, setImage] = React.useState<string>("");
+
+  const user = useAppSelector(userProfileSelector);
 
   const toggle = (data: string): void => {
     setImage(data);
@@ -94,11 +100,23 @@ const Notification = (): JSX.Element => {
   };
 
   React.useEffect(() => {
-    if (isLoggedIn) {
+    if(isLoggedIn){
       fetchNotifications();
-    } else {
-      setNotifications([]);
     }
+    const messageListener = frontendSupabase
+      .from("notifications")
+      .on("*", async (payload) => {
+        if (payload.new.user_id === user?.id && isLoggedIn) {
+          fetchNotifications();
+        }
+        if (!isLoggedIn) {
+          setNotifications([]);
+        }
+      })
+      .subscribe();
+    return () => {
+      messageListener.unsubscribe();
+    };
   }, [isLoggedIn]);
 
   return (
@@ -176,24 +194,28 @@ const Notification = (): JSX.Element => {
                             </Button>
                           )}
                           {i.data.type === "TOURNAMENT_INVITE" && (
-                              <Button
-                                variant="outlined"
-                                onClick={(): any => router.push(`/view-tournament/${i.data.data.tournament_id}/details`)}
-                                sx={{ mr: 1 }}
-                              >
-                                View tournament
-                              </Button>
-                            )}
+                            <Button
+                              variant="outlined"
+                              onClick={(): any =>
+                                router.push(
+                                  `/view-tournament/${i.data.data.tournament_id}/details`
+                                )
+                              }
+                              sx={{ mr: 1 }}
+                            >
+                              View tournament
+                            </Button>
+                          )}
 
                           {i.data.type === "TEAM_INVITATION" && (
-                              <Button
-                                variant="outlined"
-                                onClick={(): any => router.push(i.data.data.url)}
-                                sx={{ mr: 1 }}
-                              >
-                                View Team
-                              </Button>
-                            )}
+                            <Button
+                              variant="outlined"
+                              onClick={(): any => router.push(i.data.data.url)}
+                              sx={{ mr: 1 }}
+                            >
+                              View Team
+                            </Button>
+                          )}
                         </Box>
                       ) : (
                         <Box display={"flex"} flexDirection={"row"} mt={2}>
@@ -223,7 +245,10 @@ const Notification = (): JSX.Element => {
         <Dialog open={gameIdModal}>
           <DialogContent>
             <Box display={"flex"} flexDirection={"column"}>
-              <Typography mb={2}>Please enter your Account ID (PSN/XBOX/PC/Mobile) associated with relevant game/tournament</Typography>
+              <Typography mb={2}>
+                Please enter your Account ID (PSN/XBOX/PC/Mobile) associated
+                with relevant game/tournament
+              </Typography>
               <TextField
                 label={"Enter your game id"}
                 size={"small"}

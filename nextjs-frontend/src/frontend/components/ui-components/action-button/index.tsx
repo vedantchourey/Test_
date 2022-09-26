@@ -77,7 +77,7 @@ const ActionButton: React.FC<Props> = ({
   }
 
   React.useEffect(() => {
-    if(checkIsJoined()) {
+    if(disabled || checkIsJoined()) {
       setBackcolor("#006A3E");
       setJoinText("Joined");
     }  

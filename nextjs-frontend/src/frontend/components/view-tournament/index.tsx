@@ -637,7 +637,7 @@ const ViewTournament: React.FC = () => {
                   </span>
                 </Typography>
               </Box>
-              {/* {countDown !== "00:00:00" ? ( */}
+              {countDown !== "00:00:00" ? (
               <ActionButton
                 data={data}
                 error={regError}
@@ -648,7 +648,7 @@ const ViewTournament: React.FC = () => {
                 userId={user?.id}
                 disabled={countDown === "00:00:00"}
               />
-              {/* ) : null} */}
+              ) : null}
             </Grid>
           </Grid>
         </ViewCard>
@@ -735,7 +735,10 @@ const ViewTournament: React.FC = () => {
           </DialogActions>
         </Dialog>
         <Dialog open={gameIdModal} onClose={(): void => setGameIdModal(false)}>
-          <DialogTitle>Enter your unique game id</DialogTitle>
+          <DialogTitle>
+            Please enter your Account ID (PSN/XBOX/PC/Mobile) associated with
+            relevant game/tournament
+          </DialogTitle>
           <Box p={1} pr={2} pl={2}>
             <TextField
               variant="outlined"

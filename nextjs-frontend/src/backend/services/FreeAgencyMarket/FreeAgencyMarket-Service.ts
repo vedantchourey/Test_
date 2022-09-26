@@ -11,32 +11,42 @@ import { IWatchList } from "../database/models/i-watchlist";
 import { ITeams } from "../database/models/i-teams";
 import { IEloRating } from "../database/models/i-elo-rating";
 
-const fetchEloRating = async (
+export const fetchEloRating = async (
   context: PerRequestContext,
   data: any
 ): Promise<any> => {
-  const famRepo = new CrudRepository<IEloRating>(
-    context.knexConnection as Knex,
-    TABLE_NAMES.ELO_RATING
-  );
-  const eloRatingHistoryRepo = new CrudRepository<IEloRating>(
-    context.knexConnection as Knex,
-    TABLE_NAMES.ELO_RATING_HISTORY
-  );
-  const history = await eloRatingHistoryRepo
-    .knexObj()
-    .where("user_id", data.user_id)
-    .where("game_id", data.game_id);
-  const result: any = await famRepo
-    .knexObj()
-    .where("user_id", data.user_id)
-    .where("game_id", data.game_id);
-  return {
-    ...data,
-    lost: (history || []).filter((i: any) => parseInt(i.elo_rating) < 0).length,
-    won: (history || []).filter((i: any) => parseInt(i.elo_rating) > 0).length,
-    elo_rating: result[0].elo_rating,
-  };
+  try {
+    const famRepo = new CrudRepository<IEloRating>(
+      context.knexConnection as Knex,
+      TABLE_NAMES.ELO_RATING
+    );
+    const eloRatingHistoryRepo = new CrudRepository<IEloRating>(
+      context.knexConnection as Knex,
+      TABLE_NAMES.ELO_RATING_HISTORY
+    );
+    const history = await eloRatingHistoryRepo
+      .knexObj()
+      .where("user_id", data.user_id)
+      .where("game_id", data.game_id);
+
+    // console.log("history -> ", history);
+
+    const result: any = await famRepo
+      .knexObj()
+      .where("user_id", data.user_id)
+      .where("game_id", data.game_id);
+
+    // console.log("result -> ", result);
+    return {
+      ...data,
+      lost: (history || []).filter((i: any) => i.status === "loss").length,
+      won: (history || []).filter((i: any) => i.status === "win").length,
+      elo_rating: result[0].elo_rating,
+    };
+  } catch (e) {
+    return { ...data, lost: 0, won: 0, elo_rating: 0 };
+  }
+  
 };
 
 
