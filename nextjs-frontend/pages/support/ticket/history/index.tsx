@@ -2,7 +2,7 @@ import * as React from "react";
 import NoobPage from "../../../../src/frontend/components/page/noob-page";
 import commonStyles from "../../../../src/frontend/styles/common.module.css";
 import { Container, Divider, Typography, Box } from "@mui/material";
-import Heading from "../../../../src/frontend/components/ui-components/typography/heading";
+// import Heading from "../../../../src/frontend/components/ui-components/typography/heading";
 //import NewsletterPoster from "../../../../src/frontend/components/newsletter-poster";
 import TicketHisoryCard from "../../../../src/frontend/components/support/ticket/history/ticketHistoryCard";
 import { getAuthHeader } from "../../../../src/frontend/utils/headers";
@@ -10,7 +10,6 @@ import moment from "moment";
 import axios from "axios";
 
 const NoobTicketHistoryPage = (): JSX.Element => {
-
   const [tickets, setTickets] = React.useState<any[]>([]);
 
   const getServerSideProps = async (): Promise<void> => {
@@ -24,7 +23,7 @@ const NoobTicketHistoryPage = (): JSX.Element => {
       .catch(function (error) {
         console.error(error);
       });
-  }
+  };
 
   React.useEffect(() => {
     getServerSideProps();
@@ -38,11 +37,14 @@ const NoobTicketHistoryPage = (): JSX.Element => {
       }}
     >
       <React.Fragment>
-        <Heading
+        <div>
+          <img src="/images/support-banner.jpg" width={"100%"} />
+        </div>
+        {/* <Heading
           heading="For questions about your account,purchases, or general inquires."
           backgroundImage
           backgroundImageUrl="/images/partner-with-us.png"
-        />
+        /> */}
 
         <Box className={commonStyles.container} sx={{ my: 5 }}>
           <Divider>
@@ -59,13 +61,14 @@ const NoobTicketHistoryPage = (): JSX.Element => {
                     ticketNumber={ticket.id}
                     query={ticket.message}
                     answer={ticket.answer}
-                    created_at={moment(ticket.created_at).format("DD MMM YYYY HH:MM A")}
+                    created_at={moment(ticket.created_at).format(
+                      "DD MMM YYYY HH:MM A"
+                    )}
                     commentCount={ticket.commentCount}
                   />
                 </React.Fragment>
               ))}
           </Container>
-
         </Box>
       </React.Fragment>
     </NoobPage>

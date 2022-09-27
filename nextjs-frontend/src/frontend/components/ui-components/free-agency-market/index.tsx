@@ -65,7 +65,7 @@ const CardDesktop: React.FC<any> = ({ setOpen }) => {
         justifyContent={"center"}
         alignItems={"center"}
       >
-        <div style={{height: 100}}>
+        <div style={{height: 140}}>
 
         </div>
         {/* <UnplashIcon width={230} /> */}

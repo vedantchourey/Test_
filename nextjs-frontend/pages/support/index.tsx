@@ -4,7 +4,7 @@ import type { NextPage } from 'next'
 import NoobPage from '../../src/frontend/components/page/noob-page'
 import commonStyles from '../../src/frontend/styles/common.module.css'
 import { Divider, Typography, Icon, Grid, Card, CardContent } from '@mui/material'
-import Heading from '../../src/frontend/components/ui-components/typography/heading'
+// import Heading from '../../src/frontend/components/ui-components/typography/heading'
 import { Box } from '@mui/system'
 //import NewsletterPoster from '../../src/frontend/components/newsletter-poster'
 import HistoryIcon from '@mui/icons-material/History';
@@ -21,11 +21,15 @@ const NoobSupportPage: NextPage = () => {
       }}
     >
       <React.Fragment>
-        <Heading
-          heading='For questions about your account,purchases, or general inquires.'
+        <div >
+          <img src="/images/support-banner.jpg" width={"100%"} />
+        </div>
+        
+        {/* <Heading
+          // heading='For questions about your account,purchases, or general inquires.'
           backgroundImage
-          backgroundImageUrl="/images/partner-with-us.png"
-        />
+          backgroundImageUrl="/images/support-banner.jpg"
+        /> */}
 
         <Box className={commonStyles.container} sx={{ my: 5 }}>
 
