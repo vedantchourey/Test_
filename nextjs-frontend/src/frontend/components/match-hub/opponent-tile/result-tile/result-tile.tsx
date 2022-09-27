@@ -38,17 +38,27 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
     data.tournament.brackets.stage[0].type
   );
 
-  const opponent1Image = props.data.opponent1.avatarUrl || props.data.opponent1.teamLogo
-    ? frontendSupabase.storage
-        .from("public-files")
-        .getPublicUrl(props.data.opponent1.avatarUrl || props.data.opponent1.teamLogo || "").publicURL
-    : undefined;
+  const opponent1Image =
+    props.data.opponent1.avatarUrl || props.data.opponent1.teamLogo
+      ? frontendSupabase.storage
+          .from("public-files")
+          .getPublicUrl(
+            props.data.opponent1.avatarUrl ||
+              props.data.opponent1.teamLogo ||
+              ""
+          ).publicURL
+      : undefined;
 
-  const opponent2Image = props.data.opponent2.avatarUrl || props.data.opponent2.teamLogo
-    ? frontendSupabase.storage
-        .from("public-files")
-        .getPublicUrl(props.data.opponent2.avatarUrl || props.data.opponent2.teamLogo || "").publicURL
-    : undefined;
+  const opponent2Image =
+    props.data.opponent2.avatarUrl || props.data.opponent2.teamLogo
+      ? frontendSupabase.storage
+          .from("public-files")
+          .getPublicUrl(
+            props.data.opponent2.avatarUrl ||
+              props.data.opponent2.teamLogo ||
+              ""
+          ).publicURL
+      : undefined;
 
   return (
     <Grid
@@ -68,7 +78,7 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
             router.push(
               props.data.opponent1.username
                 ? `/account/${props.data.opponent1.username}`
-                : `/team/view/${props.data.opponent1.team_id}/members`
+                : `/team/view/${props.data.opponent1.team_id}/members?user_id=${props.data.opponent1.players?.[0]?.id}`
             )
           }
         >
@@ -97,8 +107,6 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
           </Typography>
         )}
       </Grid>
-
-      {/* Result status */}
       {!child ? (
         <Grid item xs={6}>
           <p className={styles.resultTileValue}>
@@ -110,12 +118,6 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
           >
             {isWon ? "WON" : "LOST"}
           </p>
-          {/* <Container style={{ display: "flex", justifyContent: "center" }}>
-            <Button className={styles.resultTileButton}>
-              View Result
-              <ArrowForwardIcon />
-            </Button>
-          </Container> */}
         </Grid>
       ) : (
         <Grid item xs={6}>
@@ -129,13 +131,13 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
             variant="outlined"
             className={styles.resultTileButton}
             style={{ marginRight: "16px" }}
-            onClick={(): any =>
+            onClick={(): any => {
               router.push(
                 props.data.opponent2.username
                   ? `/account/${props.data.opponent2.username}`
-                  : `/team/view/${props.data.opponent2.team_id}/members`
-              )
-            }
+                  : `/team/view/${props.data.opponent2.team_id}/members?user_id=${props.data.opponent2.players?.[0]?.id}`
+              );
+            }}
           >
             <span
               style={{ marginRight: "16px" }}

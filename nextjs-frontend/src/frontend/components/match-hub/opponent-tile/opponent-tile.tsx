@@ -164,11 +164,13 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
     opponent_data = data.opponent1;
   }
 
-  const opponentImage = opponent_data.avatarUrl
-    ? frontendSupabase.storage
-        .from("public-files")
-        .getPublicUrl(opponent_data.avatarUrl).publicURL
-    : undefined;
+  const opponentImage =
+    opponent_data.avatarUrl || opponent_data.teamLogo
+      ? frontendSupabase.storage
+          .from("public-files")
+          .getPublicUrl(opponent_data.avatarUrl || opponent_data.teamLogo)
+          .publicURL
+      : undefined;
 
   return (
     <Grid container className={styles.opponentTileContainer}>

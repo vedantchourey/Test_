@@ -529,11 +529,12 @@ export const submitMatchResult = async (
     const price_per_credit = backendConfig.credit_config.price_per_credit;
     const playersLimit =
       tournamentData?.data?.bracketsMetadata?.playersLimit || 2;
+
     const threrPrize =
-      (tournamentData?.data?.bracketsMetadata?.type === "SINGLE" &&
-        tournamentData?.data?.bracketsMetadata?.thirdPlace) ||
-      (tournamentData?.data?.bracketsMetadata?.type !== "SINGLE" &&
-        playersLimit > 2);
+      tournamentData?.data?.bracketsMetadata?.type === "SINGLE" &&
+      ((tournamentData?.data?.bracketsMetadata?.type !== "SINGLE" &&
+        playersLimit > 2) ||
+        tournamentData?.data?.bracketsMetadata?.thirdPlace);
 
     const firstWinerPrice = (
       (tournamentData?.data?.settings?.entryType === "credit"

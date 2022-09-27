@@ -505,6 +505,11 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
     });
   }, []);
 
+  // const opp_team_data: any =
+  //                 match.opponent1.team_id === props.teamId
+  //                   ? match.opponent1
+  //                   : match.opponent1;
+
   return (
     <React.Fragment>
       <Grid container>
@@ -570,7 +575,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                     playersData?.[u[0].id]?.[0]?.gameUniqueId;
 
                   return (
-                    <Box style={{ marginRight: 20 }} key={idx}>
+                    <Box style={{ marginRight: 20, cursor: "pointer" }} key={idx}>
                       <Box
                         style={{
                           display: "flex",
@@ -621,7 +626,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                     playersData?.[u[0].id]?.[0]?.gameUniqueId;
 
                   return (
-                    <Box style={{ marginLeft: 20 }} key={idx}>
+                    <Box style={{ marginLeft: 20, cursor: "pointer" }} key={idx}>
                       <Box
                         style={{
                           display: "flex",

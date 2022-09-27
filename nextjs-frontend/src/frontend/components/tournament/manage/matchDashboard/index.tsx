@@ -632,7 +632,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                           <NoobCell>
                             <Typography>co-admin</Typography>
                           </NoobCell>
-                          {/* {item.status === "PENDING" ? ( */}
+                          {item.status === "PENDING" ? (
                           <NoobCell>
                             <Typography>
                               <Button onClick={(): any => fetchMatch(item)}>
@@ -640,11 +640,11 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                               </Button>
                             </Typography>
                           </NoobCell>
-                          {/* ) : (
+                           ) : (
                             <>
                               <Typography></Typography>
                             </>
-                          )} */}
+                          )}
                           <NoobCell>
                             <Typography>
                               {moment(item.createdAt).fromNow()}
@@ -728,7 +728,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                               />
                             </Typography>
                           </NoobCell>
-                          {/* {item.result_status === "PENDING" ? ( */}
+                          {item.result_status === "PENDING" ? (
                             <NoobCell>
                               <Typography>
                                 <Button onClick={(): any => acceptResult(item)}>
@@ -736,11 +736,11 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                                 </Button>
                               </Typography>
                             </NoobCell>
-                          {/* ) : (
+                          ) : (
                             <>
                               <Typography></Typography>
                             </>
-                          )} */}
+                          )}
                           <NoobCell>
                             <Button
                               onClick={(): any => toggle(item.screenshot)}
@@ -795,7 +795,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                   id: matchIssueModal.matchId,
                   tournament_id: matchIssueModal.tournamentId,
                   draw: false,
-                  opponent1_id: matchData?.opponent1?.[0]?.id,
+                  opponent1_id: matchData?.opponent1?.[0]?.id || matchData?.opponent1.id,
                   winnerId: winnerId,
                 });
               }}

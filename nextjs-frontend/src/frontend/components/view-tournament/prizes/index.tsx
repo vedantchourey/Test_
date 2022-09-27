@@ -29,9 +29,9 @@ const Prizes: React.FC<PrizesProps> = ({ data }) => {
   const playersLimit = data?.bracketsMetadata?.playersLimit || 2;
 
   const rows =
-    (data?.bracketsMetadata?.type === "SINGLE" &&
-      data?.bracketsMetadata?.thirdPlace) ||
-    (data?.bracketsMetadata?.type !== "SINGLE" && playersLimit > 2)
+    data?.bracketsMetadata?.type === "SINGLE" &&
+    ((data?.bracketsMetadata?.type !== "SINGLE" && playersLimit > 2) ||
+      data?.bracketsMetadata?.thirdPlace)
       ? [
           CreateData(
             "Place 1:",

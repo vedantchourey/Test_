@@ -13,6 +13,9 @@ const Component = ({ brackets }: { brackets: any }): any => {
         "match-label": {
           "consolation-final": "3rd Place Playoff",
         },
+        "abbreviations": {
+          "position": "",
+      },
       });
       
       // @ts-expect-error: ignore
