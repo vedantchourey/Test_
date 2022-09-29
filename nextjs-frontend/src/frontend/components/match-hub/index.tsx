@@ -56,7 +56,7 @@ export interface Match {
   opponent2: Opponent;
   tournament_id: string;
   tournament_name: string;
-  is_checked_in: boolean;
+  is_checked_in: {matches: string[]};
   type: string;
 }
 

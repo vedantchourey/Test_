@@ -5,4 +5,5 @@ export interface IRegisterTournament {
   user_list: string[];
   team_id: string;
   gameUniqueId?: string;
+  matchId?: number;
 }

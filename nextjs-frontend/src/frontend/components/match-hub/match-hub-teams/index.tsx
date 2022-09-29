@@ -369,6 +369,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       .post(
         `/api/tournaments/checkIn`,
         {
+          matchId: match.match_id,
           tournamentId: match.tournament_id,
         },
         {
@@ -505,11 +506,6 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
     });
   }, []);
 
-  // const opp_team_data: any =
-  //                 match.opponent1.team_id === props.teamId
-  //                   ? match.opponent1
-  //                   : match.opponent1;
-
   return (
     <React.Fragment>
       <Grid container>
@@ -575,7 +571,10 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                     playersData?.[u[0].id]?.[0]?.gameUniqueId;
 
                   return (
-                    <Box style={{ marginRight: 20, cursor: "pointer" }} key={idx}>
+                    <Box
+                      style={{ marginRight: 20, cursor: "pointer" }}
+                      key={idx}
+                    >
                       <Box
                         style={{
                           display: "flex",
@@ -617,7 +616,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                         .getPublicUrl(u[0].avatarUrl).publicURL as string)
                     : undefined;
 
-                    const playersData =
+                  const playersData =
                     opponent_data.id === match.opponent2.id
                       ? opponent2TeamPlayers
                       : opponent1TeamPlayers;
@@ -626,7 +625,10 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                     playersData?.[u[0].id]?.[0]?.gameUniqueId;
 
                   return (
-                    <Box style={{ marginLeft: 20, cursor: "pointer" }} key={idx}>
+                    <Box
+                      style={{ marginLeft: 20, cursor: "pointer" }}
+                      key={idx}
+                    >
                       <Box
                         style={{
                           display: "flex",
@@ -688,24 +690,33 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
             </Button>
             <Button
               disabled={
-                match.is_checked_in || isCheckedIn || countDown === "Started"
+                match.is_checked_in.matches.indexOf(match.match_id) > -1 ||
+                isCheckedIn ||
+                countDown === "Started"
               }
               style={{
                 color: "white",
                 padding: "12px 38px",
                 backgroundColor:
-                  match.is_checked_in || isCheckedIn || countDown === "Started"
+                  match.is_checked_in.matches.indexOf(match.match_id) > -1 ||
+                  isCheckedIn ||
+                  countDown === "Started"
                     ? "rgba(255,255,255,0.2)"
                     : "#08001C",
                 border:
-                  match.is_checked_in || isCheckedIn || countDown === "Started"
+                  match.is_checked_in.matches.indexOf(match.match_id) > -1 ||
+                  isCheckedIn ||
+                  countDown === "Started"
                     ? undefined
                     : "1px solid #6932F9",
                 margin: "0px 0px 0px 16px",
               }}
               onClick={(): any => checkInTournament()}
             >
-              {match.is_checked_in || isCheckedIn ? "Checked in" : "Check In"}
+              {match.is_checked_in.matches.indexOf(match.match_id) > -1 ||
+              isCheckedIn
+                ? "Checked in"
+                : "Check In"}
             </Button>
             <Button
               style={{
@@ -715,7 +726,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                   !opponent1Name ||
                   !opponent2Name ||
                   (countDown === "Started" &&
-                    !(match.is_checked_in || isCheckedIn))
+                    !(match.is_checked_in.matches.indexOf(match.match_id) > -1 || isCheckedIn))
                     ? "rgba(255,255,255,0.2)"
                     : "#6932F9",
                 color: "white",
@@ -726,7 +737,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
                 !opponent1Name ||
                 !opponent2Name ||
                 (countDown === "Started" &&
-                  !(match.is_checked_in || isCheckedIn))
+                  !(match.is_checked_in.matches.indexOf(match.match_id) > -1 || isCheckedIn))
               }
               onClick={(): void => setUploadResults(true)}
             >

@@ -370,6 +370,7 @@ export const checkInIndividualTournament = async (
       knexConnection,
       TABLE_NAMES.B_PARTICIPANT
     );
+
     const existing_user = await participant
       .knexObj()
       .join("b_tournament", "b_participant.tournament_id", "b_tournament.id")
@@ -383,10 +384,18 @@ export const checkInIndividualTournament = async (
 
     if (!existing_user) return { errors: ["User not register"] };
 
-    if (existing_user.is_checked_in)
+    if (existing_user.is_checked_in.matches.indexOf(req.matchId) > -1)
       return { errors: ["User already checked in"] };
 
-    await participant.update({ is_checked_in: true }, { id: existing_user.id });
+    const existingCheckIn = [
+      ...existing_user.is_checked_in.matches,
+      req.matchId,
+    ];
+
+    await participant.update(
+      { is_checked_in: { matches: existingCheckIn } },
+      { id: existing_user.id }
+    );
 
     return { message: "User check in successfull" };
   } catch (ex) {
@@ -428,10 +437,18 @@ export const checkInTeamTournament = async (
 
     if (!existing_user) return { errors: ["Team not register"] };
 
-    if (existing_user.is_checked_in)
-      return { errors: ["Team already checked in"] };
+    if (existing_user.is_checked_in.matches.indexOf(existing_user.matchId) > -1)
+      return { errors: ["User already checked in"] };
 
-    await participant.update({ is_checked_in: true }, { id: existing_user.id });
+    const existingCheckIn = [
+      ...existing_user.is_checked_in.matches,
+      req.matchId,
+    ];
+
+    await participant.update(
+      { is_checked_in: { matches: existingCheckIn } },
+      { id: existing_user.id }
+    );
 
     return { message: "Team check in successfull" };
   } catch (ex) {
