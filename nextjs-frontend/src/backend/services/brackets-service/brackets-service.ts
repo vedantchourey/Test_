@@ -1007,41 +1007,41 @@ export const updateELORating = async (
         Number(user2?.elo_rating || 750)
       );
       ratings.user1 = isNaN(elo_rating.winnerRating)
-        ? 760
-        : elo_rating.winnerRating;
+        ? 750
+        : elo_rating.winnerRating < 750 ? 750 : elo_rating.winnerRating;
       ratings.user2 = isNaN(elo_rating.loserRating)
-        ? 760
-        : elo_rating.loserRating;
+        ? 750
+        : elo_rating.loserRating < 750 ? 750 : elo_rating.loserRating;
     } else {
       elo_rating = getEloRating(
         Number(user2?.elo_rating),
         Number(user1?.elo_rating)
       );
       ratings.user1 = isNaN(elo_rating.loserRating)
-        ? 760
-        : elo_rating.loserRating;
+        ? 750
+        : elo_rating.loserRating < 750 ? 750 : elo_rating.loserRating;
       ratings.user1 = isNaN(elo_rating.winnerRating)
-        ? 760
-        : elo_rating.winnerRating;
+        ? 750
+        : elo_rating.winnerRating < 750 ? 750 : elo_rating.winnerRating;
     }
 
     return await Promise.all([
-      eloRepo.update({ elo_rating: ratings.user1 }, { id: user1.id, game_id }),
+      eloRepo.update({ elo_rating: ratings.user1 < 750 ? 750 : ratings.user1 }, { id: user1.id, game_id }),
       eloHistoryRepo.create({
         user_id: user1.user_id,
         tournament_id: req.tournament_id,
         match_id: req.match_id,
         game_id,
-        elo_rating: isNaN(user1.elo_rating) ? 760 : user1.elo_rating,
+        elo_rating: isNaN(user1.elo_rating) ? 750 : user1.elo_rating,
         status: req.opponent1.result === "win" ? "win" : "loss",
       }),
-      eloRepo.update({ elo_rating: ratings.user2 }, { id: user2.id, game_id }),
+      eloRepo.update({ elo_rating: ratings.user2 < 750 ? 750 : ratings.user2 }, { id: user2.id, game_id }),
       eloHistoryRepo.create({
         user_id: user2.user_id,
         tournament_id: req.tournament_id,
         match_id: req.match_id,
         game_id,
-        elo_rating: isNaN(user2.elo_rating) ? 760 : user2.elo_rating,
+        elo_rating: isNaN(user2.elo_rating) ? 750 : user2.elo_rating,
         status: req.opponent2.result === "win" ? "win" : "loss",
       }),
     ]);
@@ -1109,7 +1109,7 @@ export const updateELORating = async (
   );
 
   return await Promise.all([
-    teamRepo.update({ elo_rating: ratings.team1 }, { id: team1.id }),
+    teamRepo.update({ elo_rating: ratings.team1 < 750 ? 750 : ratings.team1 }, { id: team1.id }),
     eloHistoryRepo.create({
       team_id: team1.id,
       tournament_id: req.tournament_id,
@@ -1118,7 +1118,7 @@ export const updateELORating = async (
       elo_rating: team1.elo_rating < 750 ? 750 : team1.elo_rating,
       status: req.opponent1.result === "win" ? "win" : "loss",
     }),
-    teamRepo.update({ elo_rating: ratings.team2 }, { id: team2.id }),
+    teamRepo.update({ elo_rating: ratings.team2 < 750 ? 750 : ratings.team2 }, { id: team2.id }),
     eloHistoryRepo.create({
       team_id: team2.id,
       tournament_id: req.tournament_id,
