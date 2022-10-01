@@ -139,6 +139,7 @@ const ViewTournament: React.FC = () => {
   const tournamentBasePath = "/view-tournament";
   const timerRef = React.useRef(0);
   const [countDown, setCountDown] = React.useState("00:00:00");
+  const [checkInCountDown, setCheckInCountDown] = React.useState("00:00:00");
   const [playerLimit, setPlayerLimit] = React.useState(0);
   const [teams, setTeams] = React.useState<Team[]>([]);
   const [regError, setRegError] = React.useState();
@@ -226,15 +227,37 @@ const ViewTournament: React.FC = () => {
           hours: mTime.get("hours"),
           minutes: mTime.get("minutes"),
           seconds: mTime.get("seconds"),
-        })
-        .subtract(
-          (data?.bracketsMetadata?.checkInAmount || 0) > 0
-            ? data?.bracketsMetadata?.checkInAmount
-            : 0,
-          "minutes"
-        );
+        });
+
+      const checkingMDate = moment(mDate).subtract(
+        (data?.bracketsMetadata?.checkInAmount || 0) > 0
+          ? data?.bracketsMetadata?.checkInAmount
+          : 0,
+        "minutes"
+      ); 
       const now = moment();
+
       let diff = mDate.diff(now);
+      let checkingDiff = checkingMDate.diff(now);
+
+
+      
+
+      if (checkingDiff <= 0) {
+        setCheckInCountDown("00:00:00");
+      } else {
+        checkingDiff = checkingMDate.diff(now, "hours");
+        if (checkingDiff > 24) {
+          checkingDiff = checkingMDate.diff(now, "days");
+          setCheckInCountDown(`${checkingDiff} days`);
+        } else {
+          const matchTimer = calculateDuration(checkingMDate, now);
+          setCheckInCountDown(
+            `${matchTimer.hours()}:${matchTimer.minutes()}:${matchTimer.seconds()}`
+          );
+        }
+      }
+
       if (diff <= 0) {
         setCountDown("00:00:00");
       } else {
@@ -591,7 +614,11 @@ const ViewTournament: React.FC = () => {
         <Loader loading={loading} />
 
         <ViewCard>
-          <Grid container alignItems={"center"}>
+          <Box
+            display={"flex"}
+            alignItems={"center"}
+            justifyContent={"space-between"}
+          >
             <Grid item xs={6}>
               {data.basic?.sponsor && (
                 <img
@@ -600,27 +627,44 @@ const ViewTournament: React.FC = () => {
                 />
               )}
             </Grid>
-            <Grid
-              item
-              display={isDesktop ? "flex" : "grid"}
+            <Box
+              display={"flex"}
               alignItems="center"
               justifyContent={"flex-end"}
             >
               <Box marginRight="16px">
-                {countDown !== "00:00:00" ? (
-                  <Typography>
-                    <span style={{ color: "#FF0000" }}>
-                      Round 1 begins in :
-                    </span>{" "}
-                    {countDown}
-                  </Typography>
-                ) : (
-                  <Typography>
-                    <span style={{ color: "#FF0000" }}>
-                      Tournament already started
-                    </span>
-                  </Typography>
-                )}
+                <Box textAlign={"right"}>
+                  {countDown !== "00:00:00" ? (
+                    <Typography>
+                      <span style={{ color: "#FF0000" }}>
+                        Check In Ends In:
+                      </span>{" "}
+                      {checkInCountDown}
+                    </Typography>
+                  ) : (
+                    <Typography>
+                      <span style={{ color: "#FF0000" }}>
+                        Check-In Ended
+                      </span>
+                    </Typography>
+                  )}
+                </Box>
+                <Box textAlign={"right"}>
+                  {countDown !== "00:00:00" ? (
+                    <Typography>
+                      <span style={{ color: "#FF0000" }}>
+                        Round 1 begins in :
+                      </span>{" "}
+                      {countDown}
+                    </Typography>
+                  ) : (
+                    <Typography>
+                      <span style={{ color: "#FF0000" }}>
+                        Tournament already started
+                      </span>
+                    </Typography>
+                  )}
+                </Box>
               </Box>
 
               <Box marginRight="16px">
@@ -637,19 +681,29 @@ const ViewTournament: React.FC = () => {
                 </Typography>
               </Box>
               {countDown !== "00:00:00" ? (
-              <ActionButton
-                data={data}
-                error={regError}
-                onClick={onSinglePlayerJoin}
-                buttonOnly={playerLimit === 1}
-                items={getActionItems()}
-                id={"action-item"}
-                userId={user?.id}
-                disabled={countDown === "00:00:00"}
-              />
+                <ActionButton
+                  data={data}
+                  error={regError}
+                  onClick={onSinglePlayerJoin}
+                  buttonOnly={playerLimit === 1}
+                  items={getActionItems()}
+                  id={"action-item"}
+                  userId={user?.id}
+                  disabled={countDown === "00:00:00"}
+                />
               ) : null}
-            </Grid>
-          </Grid>
+              <Box>
+                <Button
+                  size="large"
+                  variant="contained"
+                  style={{ padding: 15, marginLeft: 10 }}
+                  onClick={(): any => router.push("/match-hub")}
+                >
+                  Match Hub
+                </Button>
+              </Box>
+            </Box>
+          </Box>
         </ViewCard>
         <Box marginX={"70px"}>
           {isDesktop && (
