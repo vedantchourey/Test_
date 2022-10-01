@@ -507,30 +507,6 @@ export const updateTournamentInvites = async (
   knexConnection: Knex
 ): Promise<any> => {
   const invites = getTournamentInviteObj(knexConnection);
-  const tournamtObj = getTournamentObj(knexConnection);
-  const tournament: ITournament = await tournamtObj.findById(
-    query.tournament_id
-  );
-
-  if (
-    data.status === STATUS.ACCEPTED &&
-    tournament?.settings?.entryType === "credit"
-  ) {
-    const wallet_result = await debitBalance(
-      {
-        userId: query.user_id,
-        amount: Number(tournament.settings?.entryFeeAmount),
-        type: "TOURNAMENT_REGISTRATION",
-      },
-      knexConnection as Knex.Transaction,
-      {
-        tournament_id: tournament.id,
-      }
-    );
-    if (wallet_result?.errors) {
-      return wallet_result;
-    }
-  }
   const result = await invites.update(data, query);
   await handleInviteSubmit(query.tournament_id, query.team_id, knexConnection);
   return result;
@@ -556,26 +532,49 @@ export const handleInviteSubmit = async (
   team_id: string,
   knexConnection: Knex
 ): Promise<any> => {
-  const inviteObj = getTournamentInviteObj(knexConnection);
-  const tournameObj = getTournamentObj(knexConnection);
-  const tournament: ITournament = await tournameObj.findById(tournament_id);
-  const acceptedInvites = await inviteObj.find({
-    team_id,
-    tournament_id,
-    status: STATUS.ACCEPTED,
-  });
-  const gameUniqueId = acceptedInvites?.[0]?.gameUniqueId || "";
-  const numberOfPlayer: string =
-    tournament?.settings?.tournamentFormat || "1v1";
-  if (TOURNAMENT_TYPE_NUMBER[numberOfPlayer] === acceptedInvites.length) {
-    return await registerTeamTournament(
-      {
-        tournamentId: tournament_id,
-        team_id,
-        gameUniqueId,
-      } as any,
-      knexConnection
-    );
+  try {
+    const inviteObj = getTournamentInviteObj(knexConnection);
+    const tournameObj = getTournamentObj(knexConnection);
+    const tournament: ITournament = await tournameObj.findById(tournament_id);
+    const acceptedInvites = await inviteObj.find({
+      team_id,
+      tournament_id,
+      status: STATUS.ACCEPTED,
+    });
+    const gameUniqueId = acceptedInvites?.[0]?.gameUniqueId || "";
+    const numberOfPlayer: string =
+      tournament?.settings?.tournamentFormat || "1v1";
+
+    if (TOURNAMENT_TYPE_NUMBER[numberOfPlayer] === acceptedInvites.length) {
+      if (tournament?.settings?.entryType === "credit") {
+        await Promise.all(
+          acceptedInvites.map((i: any) => {
+            return debitBalance(
+              {
+                userId: i.user_id,
+                amount: Number(tournament.settings?.entryFeeAmount),
+                type: "TOURNAMENT_REGISTRATION",
+              },
+              knexConnection as Knex.Transaction,
+              {
+                tournament_id: tournament.id,
+              }
+            );
+          })
+        );
+      }
+
+      return await registerTeamTournament(
+        {
+          tournamentId: tournament_id,
+          team_id,
+          gameUniqueId,
+        } as any,
+        knexConnection
+      );
+    }
+  } catch (err) {
+    return { errors: ["Something went wrong"] };
   }
 };
 
@@ -588,7 +587,7 @@ export const fetchMatchDetails = async (
       context.knexConnection as Knex,
       TABLE_NAMES.B_PARTICIPANT
     );
-    
+
     const TeamRepo = new CrudRepository<ITeams>(
       context.knexConnection as Knex,
       TABLE_NAMES.TEAMS
@@ -678,11 +677,17 @@ export const fetchMatchDetails = async (
     )[0];
 
     if (opponent2Copy.team_id) {
-      opp2TeamDetails = await TeamRepo.findById(opponent2Copy.team_id, ["id as team_id", "name as team_name"]);
+      opp2TeamDetails = await TeamRepo.findById(opponent2Copy.team_id, [
+        "id as team_id",
+        "name as team_name",
+      ]);
     }
 
     if (opponent1Copy.team_id) {
-      opp1TeamDetails = await TeamRepo.findById(opponent1Copy.team_id, ["id as team_id", "name as team_name"]);
+      opp1TeamDetails = await TeamRepo.findById(opponent1Copy.team_id, [
+        "id as team_id",
+        "name as team_name",
+      ]);
     }
 
     opponent1
@@ -707,7 +712,7 @@ export const fetchMatchDetails = async (
         "teams.id as team_id",
         "teams.name as team_name",
         "teams.elo_rating as team_elo_rating",
-        "b_participant.id as p_id"
+        "b_participant.id as p_id",
       ]);
 
     opponent2
@@ -732,7 +737,7 @@ export const fetchMatchDetails = async (
         "teams.id as team_id",
         "teams.name as team_name",
         "teams.elo_rating as team_elo_rating",
-        "b_participant.id as p_id"
+        "b_participant.id as p_id",
       ]);
 
     // const o1 = await opponent1;
@@ -752,7 +757,7 @@ export const fetchMatchDetails = async (
       },
       opponent2: {
         ...match?.opponent2,
-        ...opp2TeamDetails
+        ...opp2TeamDetails,
         // ...formatTeamsData(o2)[0],
       },
     };

@@ -27,6 +27,7 @@ import {
 import {
   addTournamentInvites,
   tournamentDetails,
+  updateTournamentInvites,
 } from "../tournament-service/tournament-service";
 import { ITournamentInvites } from "../database/models/i-tournament-invites";
 import { debitBalance } from "../wallet-service/wallet-service";
@@ -229,9 +230,19 @@ export const sendTeamTournamentInvites = async (
     });
   });
   await Promise.all([
-    addNotifications(notifications, knexConnection),
+    addNotifications(notifications.filter((t) => t.user_id !== req.userId), knexConnection),
     addTournamentInvites(new_invites, knexConnection),
   ]);
+
+  await updateTournamentInvites(
+    { status: STATUS.ACCEPTED, gameUniqueId: req.gameUniqueId } as any,
+    {
+      team_id: req.team_id,
+      tournament_id: req.tournamentId,
+      user_id: req.userId,
+    },
+    knexConnection
+  )
   return { message: "Team Registration successfull" };
 };
 
@@ -670,9 +681,9 @@ export const submitMatchResult = async (
       winningPrice = firstWinerPrice;
       losserPrice = secondWinerPrice;
     }
-    if (matchDetials.type === "semi-final") {
-      losserPrice = thirdWinerPrice;
-    }
+    // if (matchDetials.type === "semi-final") {
+    //   losserPrice = thirdWinerPrice;
+    // }
     if (matchDetials.type === "third-place") {
       winningPrice = thirdWinerPrice;
     }
@@ -961,14 +972,19 @@ export const updateELORating = async (
     knexConnection,
     TABLE_NAMES.B_PARTICIPANT
   );
+
   const players: IBParticipants[] = await partRepo
     .knexObj()
     .whereIn("id", [match.opponent1.id, match.opponent2.id]);
+
   const player1: IBParticipants =
     players.find((x) => x.id === match.opponent1.id) || players[0];
+
   const player2: IBParticipants =
     players.find((x) => x.id === match.opponent2.id) || players[1];
+
   const game_id = await getGameId(req, knexConnection);
+
   const eloHistoryRepo = new CrudRepository<IEloRatingHistory>(
     knexConnection,
     TABLE_NAMES.ELO_RATING_HISTORY
@@ -979,72 +995,128 @@ export const updateELORating = async (
       knexConnection,
       TABLE_NAMES.ELO_RATING
     );
+
+    const findUsers: string[] = [];
+    if (player1.user_id) findUsers.push(player1.user_id);
+    if (player2.user_id) findUsers.push(player2.user_id);
+
     const users: IEloRating[] = await eloRepo
       .knexObj()
-      .whereIn("user_id", [player1.user_id, player2.user_id])
+      .whereIn("user_id", findUsers)
       .where("game_id", game_id);
-    let user1: IEloRating =
-      users.find((x) => x.id === player1.user_id) || users[0];
-    let user2: IEloRating =
-      users.find((x) => x.id === player2.user_id) || users[1];
-    if (!user1) {
+
+    let user1: IEloRating | undefined = users.find(
+      (x) => x.user_id === player1.user_id
+    );
+
+    let user2: IEloRating | undefined = users.find(
+      (x) => x.user_id === player2.user_id
+    );
+
+    if (!user1 && player1.user_id) {
       user1 = await eloRepo.create({
         user_id: player1.user_id,
         game_id,
       });
     }
-    if (!user2) {
+
+    if (!user2 && player2.user_id) {
       user2 = await eloRepo.create({
         user_id: player2.user_id,
         game_id,
       });
     }
     let elo_rating = { winnerRating: 0, loserRating: 0 };
+
     const ratings = { user1: 0, user2: 0 };
+
+
+
+
     if (req.opponent1.result === "win") {
       elo_rating = getEloRating(
         Number(user1?.elo_rating || 750),
         Number(user2?.elo_rating || 750)
       );
+
+      if (!user2) {
+        elo_rating = {
+          winnerRating: user1?.elo_rating || 750,
+          loserRating: 750,
+        };
+      }
+
       ratings.user1 = isNaN(elo_rating.winnerRating)
         ? 750
-        : elo_rating.winnerRating < 750 ? 750 : elo_rating.winnerRating;
+        : elo_rating.winnerRating < 750
+        ? 750
+        : elo_rating.winnerRating;
       ratings.user2 = isNaN(elo_rating.loserRating)
         ? 750
-        : elo_rating.loserRating < 750 ? 750 : elo_rating.loserRating;
+        : elo_rating.loserRating < 750
+        ? 750
+        : elo_rating.loserRating;
     } else {
       elo_rating = getEloRating(
         Number(user2?.elo_rating),
         Number(user1?.elo_rating)
       );
+
+      if (!user1) {
+        elo_rating = {
+          winnerRating: user2?.elo_rating || 750,
+          loserRating: 750,
+        };
+      }
+
       ratings.user1 = isNaN(elo_rating.loserRating)
         ? 750
-        : elo_rating.loserRating < 750 ? 750 : elo_rating.loserRating;
-      ratings.user1 = isNaN(elo_rating.winnerRating)
+        : elo_rating.loserRating < 750
         ? 750
-        : elo_rating.winnerRating < 750 ? 750 : elo_rating.winnerRating;
+        : elo_rating.loserRating;
+      ratings.user2 = isNaN(elo_rating.winnerRating)
+        ? 750
+        : elo_rating.winnerRating < 750
+        ? 750
+        : elo_rating.winnerRating;
     }
 
-    return await Promise.all([
-      eloRepo.update({ elo_rating: ratings.user1 < 750 ? 750 : ratings.user1 }, { id: user1.id, game_id }),
-      eloHistoryRepo.create({
-        user_id: user1.user_id,
-        tournament_id: req.tournament_id,
-        match_id: req.match_id,
-        game_id,
-        elo_rating: isNaN(user1.elo_rating) ? 750 : user1.elo_rating,
-        status: req.opponent1.result === "win" ? "win" : "loss",
-      }),
-      eloRepo.update({ elo_rating: ratings.user2 < 750 ? 750 : ratings.user2 }, { id: user2.id, game_id }),
-      eloHistoryRepo.create({
-        user_id: user2.user_id,
-        tournament_id: req.tournament_id,
-        match_id: req.match_id,
-        game_id,
-        elo_rating: isNaN(user2.elo_rating) ? 750 : user2.elo_rating,
-        status: req.opponent2.result === "win" ? "win" : "loss",
-      }),
+    const result = await Promise.all([
+      user1
+        ? eloRepo.update(
+            { elo_rating: ratings.user1 < 750 ? 750 : ratings.user1 },
+            { id: user1?.id, game_id }
+          )
+        : (): any => { return [] },
+      user1
+        ? eloHistoryRepo.create({
+            user_id: user1?.user_id,
+            tournament_id: req.tournament_id,
+            match_id: req.match_id,
+            game_id,
+            elo_rating: isNaN(user1.elo_rating) ? 750 : user1.elo_rating,
+            status: req.opponent1.result === "win" ? "win" : "loss",
+          })
+        : (): any => { return [] },
+      user2
+        ? eloRepo.update(
+            { elo_rating: ratings.user2 < 750 ? 750 : ratings.user2 },
+            { id: user2.id, game_id }
+          )
+        : (): any => { return [] },
+      user2
+        ? eloHistoryRepo.create({
+            user_id: user2.user_id,
+            tournament_id: req.tournament_id,
+            match_id: req.match_id,
+            game_id,
+            elo_rating: isNaN(user2.elo_rating) ? 750 : user2.elo_rating,
+            status: req.opponent2.result === "win" ? "win" : "loss",
+          })
+        : (): any => { return [] },
     ]);
+
+    return result;
   }
 
   const teamRepo = new CrudRepository<ITeams>(
@@ -1052,12 +1124,16 @@ export const updateELORating = async (
     TABLE_NAMES.TEAMS
   );
 
+  const findTeams: string[] = [];
+  if (player1.team_id) findTeams.push(player1.team_id);
+  if (player2.team_id) findTeams.push(player2.team_id);
+
   const teams: ITeams[] = await teamRepo
     .knexObj()
     .whereIn("id", [player1.team_id, player2.team_id]);
 
-  const team1: ITeams = teams.find((x) => x.id === player1.team_id) || teams[0];
-  const team2: ITeams = teams.find((x) => x.id === player2.team_id) || teams[1];
+  const team1: ITeams | undefined = teams.find((x) => x.id === player1.team_id);
+  const team2: ITeams | undefined = teams.find((x) => x.id === player2.team_id);
 
   let elo_rating = { winnerRating: 0, loserRating: 0 };
   const ratings = { team1: 0, team2: 0 };
@@ -1067,6 +1143,14 @@ export const updateELORating = async (
       Number(team1?.elo_rating || 750),
       Number(team2?.elo_rating || 750)
     );
+
+    if (!team2) {
+      elo_rating = {
+        winnerRating: team1?.elo_rating || 750,
+        loserRating: 750,
+      };
+    }
+
     ratings.team1 = isNaN(elo_rating.winnerRating)
       ? 760
       : elo_rating.winnerRating;
@@ -1078,6 +1162,14 @@ export const updateELORating = async (
       Number(team2?.elo_rating),
       Number(team1?.elo_rating)
     );
+
+    if (!team1) {
+      elo_rating = {
+        winnerRating: team2?.elo_rating || 750,
+        loserRating: 750,
+      };
+    }
+
     ratings.team1 = isNaN(elo_rating.loserRating)
       ? 760
       : elo_rating.loserRating;
@@ -1085,6 +1177,7 @@ export const updateELORating = async (
       ? 760
       : elo_rating.winnerRating;
   }
+
 
   await Promise.all(
     winnerPlayersList.map((u_id) =>
@@ -1096,6 +1189,7 @@ export const updateELORating = async (
         status: "win",
       }))
   );
+
 
   await Promise.all(
     losserPlayersList.map((u_id) =>
@@ -1109,24 +1203,38 @@ export const updateELORating = async (
   );
 
   return await Promise.all([
-    teamRepo.update({ elo_rating: ratings.team1 < 750 ? 750 : ratings.team1 }, { id: team1.id }),
-    eloHistoryRepo.create({
-      team_id: team1.id,
-      tournament_id: req.tournament_id,
-      match_id: req.match_id,
-      game_id,
-      elo_rating: team1.elo_rating < 750 ? 750 : team1.elo_rating,
-      status: req.opponent1.result === "win" ? "win" : "loss",
-    }),
-    teamRepo.update({ elo_rating: ratings.team2 < 750 ? 750 : ratings.team2 }, { id: team2.id }),
-    eloHistoryRepo.create({
-      team_id: team2.id,
-      tournament_id: req.tournament_id,
-      match_id: req.match_id,
-      game_id,
-      elo_rating: team2.elo_rating < 750 ? 750 : team2.elo_rating,
-      status: req.opponent2.result === "win" ? "win" : "loss",
-    }),
+    team1
+      ? teamRepo.update(
+          { elo_rating: ratings.team1 < 750 ? 750 : ratings.team1 },
+          { id: team1.id }
+        )
+      : (): any => { return [] },
+    team1
+      ? eloHistoryRepo.create({
+          team_id: team1.id,
+          tournament_id: req.tournament_id,
+          match_id: req.match_id,
+          game_id,
+          elo_rating: team1.elo_rating < 750 ? 750 : team1.elo_rating,
+          status: req.opponent1.result === "win" ? "win" : "loss",
+        })
+      : (): any => { return [] },
+    team2
+      ? teamRepo.update(
+          { elo_rating: ratings.team2 < 750 ? 750 : ratings.team2 },
+          { id: team2.id }
+        )
+      : (): any => { return [] },
+    team2
+      ? eloHistoryRepo.create({
+          team_id: team2.id,
+          tournament_id: req.tournament_id,
+          match_id: req.match_id,
+          game_id,
+          elo_rating: team2.elo_rating < 750 ? 750 : team2.elo_rating,
+          status: req.opponent2.result === "win" ? "win" : "loss",
+        })
+      : (): any => { return [] },
   ]);
 };
 

@@ -424,8 +424,7 @@ const ViewTournament: React.FC = () => {
     }
 
     const startDate = data?.basic?.startDate || new Date().toISOString();
-    const startTime =
-      data?.bracketsMetadata?.startTime || new Date().toISOString();
+    const startTime = data.basic?.startTime || new Date().toISOString();
     const now = moment();
     return (data.bracketsMetadata?.rounds || []).map((round, index) => {
       let timing;
@@ -488,7 +487,7 @@ const ViewTournament: React.FC = () => {
       return;
     }
     setPayload(payload);
-    if (data?.settings?.tournamentFormat !== "1v1") onJoinTeamApi(payload);
+    setGameIdModal(true);
   };
 
   const onJoinTeamApi = async (payload: JoinTeamType): Promise<void> => {
