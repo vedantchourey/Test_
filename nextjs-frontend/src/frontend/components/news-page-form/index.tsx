@@ -106,10 +106,10 @@ const NewsPage: React.FC<BasicPorps> = ({ onSave, data }) => {
         fileData
       );
       if (!error && data) {
-        const fileUrl = frontendSupabase.storage
+        const fileUrl = data.Key.split("/")[1] ? frontendSupabase.storage
           .from("public-files")
-          .getPublicUrl(data.Key.split("/")[1]);
-        formik.setFieldValue(field, fileUrl.data?.publicURL || "");
+          .getPublicUrl(data.Key.split("/")[1]) : undefined;
+        formik.setFieldValue(field, fileUrl?.data?.publicURL || "");
       }
     });
   }, []);

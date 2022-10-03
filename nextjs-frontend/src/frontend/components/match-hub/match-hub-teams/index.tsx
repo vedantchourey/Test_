@@ -503,10 +503,12 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
         fileData
       );
       if (!error && data) {
-        const fileUrl = frontendSupabase.storage
-          .from("public-files")
-          .getPublicUrl(data.Key.split("/")[1]);
-        formik.setFieldValue("screenshot", fileUrl.data?.publicURL || "");
+        const fileUrl = data.Key.split("/")[1]
+          ? frontendSupabase.storage
+              .from("public-files")
+              .getPublicUrl(data.Key.split("/")[1])
+          : undefined;
+        formik.setFieldValue("screenshot", fileUrl?.data?.publicURL || "") ;
       }
     });
   }, []);

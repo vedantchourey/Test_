@@ -33,7 +33,7 @@ export default function ChatCard(props: IChatCard): JSX.Element {
         .select()
         .eq("id", props.otherUser);
       if (userDataReq?.data?.[0]) {
-        const chatImage = userDataReq?.data?.[0]
+        const chatImage = userDataReq?.data?.[0]?.avatarUrl
           ? (frontendSupabase.storage
               .from("public-files")
               .getPublicUrl(userDataReq?.data?.[0]?.avatarUrl)
