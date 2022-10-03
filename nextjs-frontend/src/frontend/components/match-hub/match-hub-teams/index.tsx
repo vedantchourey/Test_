@@ -277,12 +277,14 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       op1Result = "draw";
       op2Result = "draw";
     } else if (formik.values.winner === match.opponent1.id) {
-      message = `${opponent1Name} reported ${opponent2Name} as the loser.`
+      if(myPlayer.user_id === match.opponent1.id) message = `${myPlayer.username || myPlayer.name} reported ${opponent2Name} as the loser.`
+      else message = `${myPlayer.username || myPlayer.name} reported ${opponent1Name} as the winner.`
       op1Result = "win";
       op2Result = "lose";
       op1Score = 1;
     } else {
-      message = `${opponent1Name} reported ${opponent2Name} as the winner.`
+      if(myPlayer.user_id === match.opponent1.id) message = `${myPlayer.username || myPlayer.name} reported ${opponent2Name} as the winner.`
+      else message = `${myPlayer.username || myPlayer.name} reported ${opponent1Name} as the loser.`
       op1Result = "lose";
       op2Result = "win";
       op2Score = 1;
