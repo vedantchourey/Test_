@@ -19,7 +19,7 @@ interface Player {
   firstName: string;
   lastName: string;
   user_id: string;
-  balance:number;
+  balance: number;
   username: string;
   avatarUrl?: string;
 }
@@ -36,8 +36,8 @@ interface TeamProps {
   onBack?: () => void;
   onJoin?: (teamId: string, selectedUsers: string[]) => void;
   error?: string;
-  entryFees:number;
-  data?:TournamentData;
+  entryFees: number;
+  data?: TournamentData;
 }
 
 const TeamSelection: React.FC<TeamProps> = ({
@@ -47,7 +47,7 @@ const TeamSelection: React.FC<TeamProps> = ({
   onJoin,
   error,
   entryFees,
-  data
+  data,
 }) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -62,11 +62,12 @@ const TeamSelection: React.FC<TeamProps> = ({
     return selected + 1 <= maxPlayer;
   };
 
-  const hasEnoughPlayerSelected = ():boolean =>{ 
-    return Object.keys(selectedPlayer).filter(
-      (key) => selectedPlayer[key]
-    ).length === maxPlayer;
-  }
+  const hasEnoughPlayerSelected = (): boolean => {
+    return (
+      Object.keys(selectedPlayer).filter((key) => selectedPlayer[key])
+        .length === maxPlayer
+    );
+  };
 
   const registerTeam = (): void => {
     if (onJoin) {
@@ -96,14 +97,14 @@ const TeamSelection: React.FC<TeamProps> = ({
     }
   };
 
-  const hasEnoughCredit = (credit:number):boolean =>{
-    if(entryFees<=0){
+  const hasEnoughCredit = (credit: number): boolean => {
+    if (entryFees <= 0) {
       return true;
     }
 
-    const perPlayerFees = entryFees/maxPlayer;
-    return perPlayerFees<=credit;
-  }
+    const perPlayerFees = entryFees / maxPlayer;
+    return perPlayerFees <= credit;
+  };
 
   return (
     <Grid container rowSpacing={1} columnSpacing={1}>
@@ -130,10 +131,7 @@ const TeamSelection: React.FC<TeamProps> = ({
                 )}
                 variant="contained"
                 onClick={(): any => {
-                  
-                    
-                    registerTeam();
-                  
+                  registerTeam();
                 }}
                 sx={{ borderRadius: 0 }}
               >
@@ -160,9 +158,11 @@ const TeamSelection: React.FC<TeamProps> = ({
       </Grid>
 
       {team.players.map((player) => {
-        const image = player.avatarUrl ? frontendSupabase.storage
-        .from("public-files")
-        .getPublicUrl(player.avatarUrl).publicURL : undefined;
+        const image = player.avatarUrl
+          ? frontendSupabase.storage
+              .from("public-files")
+              .getPublicUrl(player.avatarUrl).publicURL
+          : undefined;
         return (
           <Grid key={player.user_id} item xs={12} sm={6} md={6}>
             <Box

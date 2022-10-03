@@ -271,15 +271,18 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
     let op1Result,
       op2Result,
       op1Score = 0,
-      op2Score = 0;
+      op2Score = 0,
+      message="";
     if (formik.values.draw) {
       op1Result = "draw";
       op2Result = "draw";
     } else if (formik.values.winner === match.opponent1.id) {
+      message = `${opponent1Name} reported ${opponent2Name} as the loser.`
       op1Result = "win";
       op2Result = "lose";
       op1Score = 1;
     } else {
+      message = `${opponent1Name} reported ${opponent2Name} as the winner.`
       op1Result = "lose";
       op2Result = "win";
       op2Score = 1;
@@ -289,7 +292,6 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
       ...formik.values,
       opponent1: {
         id: match.opponent1.id,
-
         score: op1Score,
         result: op1Result,
       },
@@ -298,6 +300,7 @@ const MatchHubTeams: React.FC<Props> = ({ match, onBack }) => {
         score: op2Score,
         result: op2Result,
       },
+      message,
       notification_user_ids: opponent_data.players
         ? Object.keys(_.groupBy(opponent_data.players, "id"))
         : [opponent_data.user_id],

@@ -510,7 +510,7 @@ export const submitMatchResultRequest = async (
           type: "MATCH_RESULT",
           user_id: uid,
           sent_by: user.id,
-          message: `${user?.user_metadata?.username} reported the match score for ${tournament.name}.`,
+          message: req.message,
           is_action_required: true,
           data: {
             id: result.id,

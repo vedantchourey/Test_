@@ -6,6 +6,7 @@ export interface IMatchResultRequest {
     screenshot: string;
     tournament_id: string;
     notification_user_ids: string[];
+    message: string;
 }
 export interface IResult {
     score: number;
