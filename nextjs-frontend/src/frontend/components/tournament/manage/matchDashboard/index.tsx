@@ -537,11 +537,13 @@ const MatchDashboard: React.FC = (): JSX.Element => {
               setSelectedRound(parseInt(e.target.value as string))
             }
           >
-            {roundList.map((m) => (
-              <MenuItem value={m.id} key={m.id}>
-                {m.name}
-              </MenuItem>
-            ))}
+            {roundList
+              .sort((a, b) => a.id - b.id)
+              .map((m) => (
+                <MenuItem value={m.id} key={m.id}>
+                  {m.name}
+                </MenuItem>
+              ))}
           </Select>
         </FormControl>
         <Button
@@ -633,14 +635,14 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                             <Typography>co-admin</Typography>
                           </NoobCell>
                           {item.status === "PENDING" ? (
-                          <NoobCell>
-                            <Typography>
-                              <Button onClick={(): any => fetchMatch(item)}>
-                                Resolve
-                              </Button>
-                            </Typography>
-                          </NoobCell>
-                           ) : (
+                            <NoobCell>
+                              <Typography>
+                                <Button onClick={(): any => fetchMatch(item)}>
+                                  Resolve
+                                </Button>
+                              </Typography>
+                            </NoobCell>
+                          ) : (
                             <>
                               <Typography></Typography>
                             </>
@@ -773,13 +775,21 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                   label="Select Winner"
                   onChange={(e): any => setWinnerId(e.target.value)}
                 >
-                  <MenuItem value={matchData?.opponent1?.[0]?.id || matchData?.opponent1?.id }>
+                  <MenuItem
+                    value={
+                      matchData?.opponent1?.[0]?.id || matchData?.opponent1?.id
+                    }
+                  >
                     {matchData?.opponent1?.[0]?.username ||
                       matchData?.opponent1?.[0]?.name ||
                       matchData?.opponent1?.team_name ||
                       "NA"}
                   </MenuItem>
-                  <MenuItem value={matchData?.opponent2?.[0]?.id || matchData?.opponent2?.id}>
+                  <MenuItem
+                    value={
+                      matchData?.opponent2?.[0]?.id || matchData?.opponent2?.id
+                    }
+                  >
                     {matchData?.opponent2?.[0]?.username ||
                       matchData?.opponent2?.[0]?.name ||
                       matchData?.opponent2?.team_name ||
@@ -795,7 +805,8 @@ const MatchDashboard: React.FC = (): JSX.Element => {
                   id: matchIssueModal.matchId,
                   tournament_id: matchIssueModal.tournamentId,
                   draw: false,
-                  opponent1_id: matchData?.opponent1?.[0]?.id || matchData?.opponent1.id,
+                  opponent1_id:
+                    matchData?.opponent1?.[0]?.id || matchData?.opponent1.id,
                   winnerId: winnerId,
                 });
               }}

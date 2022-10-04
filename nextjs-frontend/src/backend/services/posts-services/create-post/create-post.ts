@@ -146,6 +146,7 @@ export async function createPost(req: ICreatePostRequest, context: PerRequestCon
     user_id: uId,
     is_action_required: false,
     sent_by: context.user?.id,
+    data:{redirect:`/social/${postId}`},
     message: `${username} mentioned you in post`,
   }));
 

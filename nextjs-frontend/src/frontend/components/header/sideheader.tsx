@@ -357,7 +357,7 @@ export default function SideHeader(): JSX.Element {
                     }
                   }}
                   onDecline={(): void => {
-                    submitNotification(i.id, "REJECT");
+                    // submitNotification(i.id, "REJECTED");
                   }}
                   onNevigation={(): void => {
                     i.redirect

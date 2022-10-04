@@ -1,5 +1,13 @@
 import React from 'react';
-import { Container, Grid, IconButton, Link, List, ListItem, Typography, } from "@mui/material"
+import {
+  Container,
+  Grid,
+  // IconButton,
+  Link,
+  List,
+  ListItem,
+  Typography,
+} from "@mui/material";
 import styles from "./noob-footer.module.css"
 import { Box } from '@mui/system';
 
@@ -90,7 +98,7 @@ export default function NoobDesktopFooter(): JSX.Element {
               ))}
             </List>
             <Box mt={5}>
-              <IconButton color="default" aria-label="Youtube" component="span">
+              {/* <IconButton color="default" aria-label="Youtube" component="span">
                 <img src='/icons/twitter.svg' alt='twitter icon' />
               </IconButton>
               <IconButton color="default" aria-label="Twitch" component="span">
@@ -98,7 +106,7 @@ export default function NoobDesktopFooter(): JSX.Element {
               </IconButton>
               <IconButton color="default" aria-label="Discord" component="span">
                 <img src='/icons/youtube.svg' alt='twitter icon' />
-              </IconButton>
+              </IconButton> */}
             </Box>
           </Grid>
         </Grid>

@@ -45,7 +45,7 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
       contactDetails: data?.contactDetails || "",
       rules: data?.rules || "",
       schedule: "schedule",
-      prizes: data?.prizes || "",
+      prizes: data?.prizes || "prizes",
       contactUrl: data?.contactUrl || "",
     },
     validationSchema: validationSchema,
@@ -141,7 +141,7 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
             <FormHelperText> {formik.errors.rules} </FormHelperText>
           ) : null}
         </AccordionAlt>
-        <AccordionAlt title="Prizes">
+        {/* <AccordionAlt title="Prizes">
           <NoobReachTextEditor
             id="prizes"
             error={formik.touched.prizes && Boolean(formik.errors.prizes)}
@@ -153,7 +153,7 @@ const Info: React.FC<InfoProps> = ({ onBack, onSave, data }) => {
           {formik.touched.prizes && Boolean(formik.errors.prizes) ? (
             <FormHelperText> {formik.errors.prizes} </FormHelperText>
           ) : null}
-        </AccordionAlt>
+        </AccordionAlt> */}
         {/* <AccordionAlt title="Schedule">
           <NoobReachTextEditor
             error={formik.touched.schedule && Boolean(formik.errors.schedule)}

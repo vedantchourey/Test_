@@ -176,7 +176,7 @@ const Notification = (): JSX.Element => {
                           <Button
                             variant="outlined"
                             onClick={(): void => {
-                              submitNotification(i.id, "REJECT");
+                              // submitNotification(i.id, "REJECTED");
                             }}
                             sx={{ mr: 1 }}
                           >

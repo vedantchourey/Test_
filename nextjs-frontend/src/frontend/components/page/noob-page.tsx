@@ -4,7 +4,7 @@ import {
   Typography,
   useTheme,
   useMediaQuery,
-  Button,
+  Button
 } from "@mui/material";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
@@ -102,9 +102,24 @@ export default function NoobPage(props: Props): JSX.Element {
                 backgroundColor: "#6931F9",
               }}
             >
-              <Typography style={{ color: "#FFFFFF" }}>
-                Chat ({chatCount})
-              </Typography>
+              <Box display={"flex"} flexDirection="row">
+                <Typography style={{ color: "#FFFFFF" }}>Chat</Typography>
+                <Box display={"flex"} flexDirection={"column"}>
+                  <Box
+                    style={{
+                      background: "#ca0f0f",
+                      height: 25,
+                      width: 25,
+                      borderRadius: 25,
+                      color: "#fff",
+                      marginLeft: 5
+                    }}
+                  >
+                    {chatCount}
+                  </Box>
+                </Box>
+              </Box>
+
               <IconButton>
                 {toggleChat ? <CloseIcon /> : <KeyboardArrowUpIcon />}
               </IconButton>

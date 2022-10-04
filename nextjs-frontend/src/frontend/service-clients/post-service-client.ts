@@ -43,7 +43,7 @@ export const getPostsByUserId = async (userid: string): Promise<IPostsResponse[]
   return [...result.data] as IPostsResponse[];
 };
 
-const getPostById =async (postId:string): Promise<IPostsResponse> => {
+export const getPostById =async (postId:string): Promise<IPostsResponse> => {
   const result = await frontendSupabase.from("posts").select(`
         id,
         postContent,
