@@ -817,7 +817,11 @@ const ViewTournament: React.FC = () => {
           onClose={(): void => setOpenSuccessModal(false)}
         >
           <DialogTitle>Success</DialogTitle>
-          <DialogContent>tournament successfully joined.</DialogContent>
+          <DialogContent>
+            {data.settings?.tournamentFormat === "1v1"
+              ? "tournament successfully joined."
+              : "The Invite has been successfully sent to your team members."}
+          </DialogContent>
           <DialogActions>
             <Button onClick={(): void => setOpenSuccessModal(false)} autoFocus>
               Ok

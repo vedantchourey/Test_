@@ -46,6 +46,8 @@ import { ITeams } from "../database/models/i-teams";
 import { IEloRating } from "../database/models/i-elo-rating";
 import { IProfile } from "../database/models/i-profile";
 import { IWallet } from "../database/models/i-wallet";
+import { INotifications } from "../database/models/i-notifications";
+import { addNotifications } from "../notifications-service";
 
 const getTournamentInviteObj = (
   knexConnection: Knex
@@ -507,8 +509,9 @@ export const updateTournamentInvites = async (
   knexConnection: Knex
 ): Promise<any> => {
   const invites = getTournamentInviteObj(knexConnection);
+  
   const result = await invites.update(data, query);
-  await handleInviteSubmit(query.tournament_id, query.team_id, knexConnection);
+  await handleInviteSubmit(query.tournament_id, query.team_id, query.user_id,knexConnection);
   return result;
 };
 
@@ -530,6 +533,7 @@ export const fetchTournamentInvites = async (
 export const handleInviteSubmit = async (
   tournament_id: string,
   team_id: string,
+  user_id: string,
   knexConnection: Knex
 ): Promise<any> => {
   try {
@@ -545,7 +549,46 @@ export const handleInviteSubmit = async (
     const numberOfPlayer: string =
       tournament?.settings?.tournamentFormat || "1v1";
 
+    let notifications: INotifications[] = [];
+
+    const userRepository = new CrudRepository<IProfile>(
+      knexConnection as Knex.Transaction,
+      "profiles"
+    );
+
+    const userDetails = await userRepository.findById(user_id);
+
+    acceptedInvites.map((i: any) => {
+      notifications.push({
+        type: "MENTION_NOTIFICATION",
+        user_id: i.user_id,
+        sent_by: user_id,
+        message: `${userDetails.username} has accepted invite for ${tournament.name}.`,
+        is_action_required: true,
+        data: {
+          tournament_id: tournament.id,
+          redirect:`/view-tournament/${tournament.id}/details`
+        },
+      });
+    });
+
+    notifications = notifications.filter((t) => t.user_id !== user_id);
+
     if (TOURNAMENT_TYPE_NUMBER[numberOfPlayer] === acceptedInvites.length) {
+      acceptedInvites.map((i: any) => {
+        notifications.push({
+          type: "MENTION_NOTIFICATION",
+          user_id: i.user_id,
+          sent_by: user_id,
+          message: `All Team Members have accepted invite for ${tournament.name}.`,
+          is_action_required: true,
+          data: {
+            tournament_id: tournament.id,
+            redirect: `/view-tournament/${tournament.id}/details`,
+          },
+        });
+      });
+
       if (tournament?.settings?.entryType === "credit") {
         await Promise.all(
           acceptedInvites.map((i: any) => {
@@ -564,7 +607,7 @@ export const handleInviteSubmit = async (
         );
       }
 
-      return await registerTeamTournament(
+      await registerTeamTournament(
         {
           tournamentId: tournament_id,
           team_id,
@@ -573,6 +616,11 @@ export const handleInviteSubmit = async (
         knexConnection
       );
     }
+
+    addNotifications(
+      notifications,
+      knexConnection
+    );
   } catch (err) {
     return { errors: ["Something went wrong"] };
   }
