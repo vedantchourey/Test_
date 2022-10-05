@@ -142,7 +142,7 @@ export default function SideHeader(): JSX.Element {
   }, [isLoggedIn])
 
   React.useEffect(() => {
-    const messageListener = frontendSupabase
+    frontendSupabase
       .from("notifications")
       .on("*", async (payload) => {
         if (payload.new.user_id === userRef.current?.id) {
@@ -153,9 +153,6 @@ export default function SideHeader(): JSX.Element {
         }
       })
       .subscribe();
-    return () => {
-      messageListener.unsubscribe();
-    };
   }, []);
 
   React.useEffect(() => {
