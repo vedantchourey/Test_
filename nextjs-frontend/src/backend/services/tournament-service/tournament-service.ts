@@ -558,10 +558,10 @@ export const handleInviteSubmit = async (
 
     const userDetails = await userRepository.findById(user_id);
 
-    acceptedInvites.map((i: any) => {
+    Object.values(_.groupBy(acceptedInvites, "user_id")).map((i: any) => {
       notifications.push({
         type: "MENTION_NOTIFICATION",
-        user_id: i.user_id,
+        user_id: i[0].user_id,
         sent_by: user_id,
         message: `${userDetails.username} has accepted invite for ${tournament.name}.`,
         is_action_required: false,
@@ -575,20 +575,22 @@ export const handleInviteSubmit = async (
     notifications = notifications.filter((t) => t.user_id !== user_id);
 
     if (TOURNAMENT_TYPE_NUMBER[numberOfPlayer] === acceptedInvites.length) {
-      acceptedInvites.map((i: any) => {
-        notifications.push({
-          type: "MENTION_NOTIFICATION",
-          user_id: i.user_id,
-          sent_by: user_id,
-          message: `All Team Members have accepted invite for ${tournament.name}.`,
-          is_action_required: false,
-          data: {
-            tournament_id: tournament.id,
-            redirect: `/view-tournament/${tournament.id}/details`,
-          },
+      if(TOURNAMENT_TYPE_NUMBER[numberOfPlayer] > 2){
+        Object.values(_.groupBy(acceptedInvites, "user_id")).map((i: any) => {
+          notifications.push({
+            type: "MENTION_NOTIFICATION",
+            user_id: i[0].user_id,
+            sent_by: user_id,
+            message: `All Team Members have accepted invite for ${tournament.name}.`,
+            is_action_required: false,
+            data: {
+              tournament_id: tournament.id,
+              redirect: `/view-tournament/${tournament.id}/details`,
+            },
+          });
         });
-      });
-
+      }
+      
       if (tournament?.settings?.entryType === "credit") {
         await Promise.all(
           acceptedInvites.map((i: any) => {
