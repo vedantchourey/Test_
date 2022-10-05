@@ -564,7 +564,7 @@ export const handleInviteSubmit = async (
         user_id: i.user_id,
         sent_by: user_id,
         message: `${userDetails.username} has accepted invite for ${tournament.name}.`,
-        is_action_required: true,
+        is_action_required: false,
         data: {
           tournament_id: tournament.id,
           redirect:`/view-tournament/${tournament.id}/details`
@@ -581,7 +581,7 @@ export const handleInviteSubmit = async (
           user_id: i.user_id,
           sent_by: user_id,
           message: `All Team Members have accepted invite for ${tournament.name}.`,
-          is_action_required: true,
+          is_action_required: false,
           data: {
             tournament_id: tournament.id,
             redirect: `/view-tournament/${tournament.id}/details`,
