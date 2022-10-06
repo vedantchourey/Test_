@@ -509,9 +509,16 @@ export const updateTournamentInvites = async (
   knexConnection: Knex
 ): Promise<any> => {
   const invites = getTournamentInviteObj(knexConnection);
-  
+
   const result = await invites.update(data, query);
-  await handleInviteSubmit(query.tournament_id, query.team_id, query.user_id,knexConnection);
+
+  await handleInviteSubmit(
+    query.tournament_id,
+    query.team_id,
+    query.user_id,
+    knexConnection
+  );
+
   return result;
 };
 
@@ -545,7 +552,9 @@ export const handleInviteSubmit = async (
       tournament_id,
       status: STATUS.ACCEPTED,
     });
+
     const gameUniqueId = acceptedInvites?.[0]?.gameUniqueId || "";
+
     const numberOfPlayer: string =
       tournament?.settings?.tournamentFormat || "1v1";
 
@@ -567,15 +576,18 @@ export const handleInviteSubmit = async (
         is_action_required: false,
         data: {
           tournament_id: tournament.id,
-          redirect:`/view-tournament/${tournament.id}/details`
+          redirect: `/view-tournament/${tournament.id}/details`,
         },
       });
     });
 
     notifications = notifications.filter((t) => t.user_id !== user_id);
 
-    if (TOURNAMENT_TYPE_NUMBER[numberOfPlayer] === acceptedInvites.length) {
-      if(TOURNAMENT_TYPE_NUMBER[numberOfPlayer] > 2){
+    if (
+      TOURNAMENT_TYPE_NUMBER[numberOfPlayer] ===
+      Object.values(_.groupBy(acceptedInvites, "user_id")).length
+    ) {
+      if (TOURNAMENT_TYPE_NUMBER[numberOfPlayer] > 2) {
         Object.values(_.groupBy(acceptedInvites, "user_id")).map((i: any) => {
           notifications.push({
             type: "MENTION_NOTIFICATION",
@@ -590,7 +602,7 @@ export const handleInviteSubmit = async (
           });
         });
       }
-      
+
       if (tournament?.settings?.entryType === "credit") {
         await Promise.all(
           acceptedInvites.map((i: any) => {
@@ -619,10 +631,9 @@ export const handleInviteSubmit = async (
       );
     }
 
-    addNotifications(
-      notifications,
-      knexConnection
-    );
+    if (notifications.length) {
+      addNotifications(notifications, knexConnection);
+    }
   } catch (err) {
     return { errors: ["Something went wrong"] };
   }
@@ -792,12 +803,12 @@ export const fetchMatchDetails = async (
 
     // const o1 = await opponent1;
 
-    // console.log('o1 -> ', o1);
-    // console.log('match?.opponent1 -> ', match?.opponent1)
+    //
+    //
 
     // const o2 = await opponent2;
 
-    // console.log('o2 -> ', o2);
+    //
 
     return {
       opponent1: {

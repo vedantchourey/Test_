@@ -141,27 +141,31 @@ export default function SideHeader(): JSX.Element {
     }
   }, [isLoggedIn])
 
-  React.useLayoutEffect(() => {
-    setTimeout(() => {
-      console.warn("--START--")
-      frontendSupabase
-        .from("notifications")
-        .on("*", async (payload) => {
-          console.warn(
-            "--------------------------------------subscribe notification-----------------------------------------------"
-          );
-          console.warn("payload => ", payload);
-          console.warn("userRef.current?.id => ", userRef.current?.id);
+  React.useEffect(() => {
+    console.warn("START");
+    const notificaionListener = frontendSupabase
+      .from("notifications")
+      .on("*", async (payload) => {
+        console.warn(
+          "--------------------------------------subscribe notification-----------------------------------------------"
+        );
+        console.warn("payload => ", payload);
+        console.warn("userRef.current?.id => ", userRef.current?.id);
 
-          if (payload.new.user_id === userRef.current?.id) {
-            fetchNotifications();
-          }
-          if (!isLoggedIn) {
-            setNotifications([]);
-          }
-        })
-        .subscribe();
-    }, 2500);
+        if (payload.new.user_id === userRef.current?.id) {
+          fetchNotifications();
+        }
+        if (!isLoggedIn) {
+          setNotifications([]);
+        }
+      })
+      .subscribe();
+
+    return () => {
+      console.warn("REMOVE");
+      
+      notificaionListener.unsubscribe();
+    };
   }, []);
 
   React.useEffect(() => {

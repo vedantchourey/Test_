@@ -52,7 +52,7 @@ export default function NoobPage(props: Props): JSX.Element {
 
   return (
     <>
-      {isMobile ? null : !props.hideHeaders && <SideHeader />}
+      {isMobile ? null : !props.hideHeaders && enableChat && <SideHeader />}
       <div>
         {!props.hideHeaders && (
           <Head>
