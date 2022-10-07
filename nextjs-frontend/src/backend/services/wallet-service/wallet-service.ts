@@ -57,7 +57,7 @@ export const creditBalance = async (
     const total = backendConfig.credit_config.price_per_credit * Number(req.amount);
     const serviceCharge = (total * backendConfig.credit_config.credit_service_percentage) / 100;
     const subTotal = total + serviceCharge;
-    const gst = (total * backendConfig.credit_config.credit_gst_percentage) / 100;
+    const gst = (subTotal * backendConfig.credit_config.credit_gst_percentage) / 100;
     const totalAmount = subTotal + gst;
 
     const replacements = {
