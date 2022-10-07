@@ -1,12 +1,20 @@
 import { Knex } from "knex";
+import { SendMailOptions } from "nodemailer";
 import { fetchUserById } from "../common/helper/utils.service";
 import { ITransaction } from "../database/models/i-transaction";
 import { TransactionRepository } from "../database/repositories/transaction-repository";
 import { WalletRepository } from "../database/repositories/wallet.respository";
+// import { PrivateProfilesRepository } from "../database/repositories/private-profiles-repository";
+import { sendEmail } from "../email-service";
 import { createTransaction } from "../transaction-service.ts/transaction-service";
 import { IWalletRequest } from "./i-wallet-request";
 import { IWalletResponse } from "./i-wallet-response";
 import { validateWallet } from "./i-wallet-validator";
+import handlebars from "handlebars";
+import path from "path";
+import fs from "fs";
+import moment from "moment";
+import backendConfig from "../../utils/config/backend-config";
 
 export const creditBalance = async (
   req: IWalletRequest,
@@ -21,9 +29,8 @@ export const creditBalance = async (
     if (!user) {
       return { errors: ["Invalid User Id"] };
     }
-    const walletRepo = new WalletRepository(
-      connection as Knex.Transaction
-    );
+    const walletRepo = new WalletRepository(connection as Knex.Transaction);
+
     const wallet = await walletRepo.findByUserId(user.id);
     if (!wallet) {
       return { errors: ["Wallet not found"] };
@@ -31,13 +38,52 @@ export const creditBalance = async (
     const trans_resp = await createTransaction(
       { ...req, wallet_id: wallet.id, data } as any,
       connection,
-      "credit",
+      "credit"
     );
     wallet.last_transaction_id = trans_resp?.id;
     wallet.balance = wallet.balance
       ? Number(wallet.balance) + Number(req.amount)
       : req.amount;
+      
     const updated_data = await walletRepo.update(wallet, { id: wallet.id });
+    
+
+    const templatesDirectory = path.join(process.cwd(), "emailTemplates");
+
+    const filePath = path.join(templatesDirectory, "/invoice.html");
+    const source = fs.readFileSync(filePath, "utf-8").toString();
+    const template = handlebars.compile(source);
+
+    const total = backendConfig.credit_config.price_per_credit * Number(req.amount);
+    const serviceCharge = (total * backendConfig.credit_config.credit_service_percentage) / 100;
+    const subTotal = total + serviceCharge;
+    const gst = (total * backendConfig.credit_config.credit_gst_percentage) / 100;
+    const totalAmount = subTotal + gst;
+
+    const replacements = {
+      appUrl: backendConfig.client.appUrl,
+      invoiceNo: moment().format("YYYYDDMMHHMMSS"),
+      date: moment().format("DD/MM/YYYY"),
+      name: user.firstName + " " + user.lastName,
+      qty: req.amount,
+      amount: backendConfig.credit_config.price_per_credit,
+      total,
+      totalAmount,
+      gst,
+      subTotal,
+      serviceCharge
+    };
+    const htmlToSend = template(replacements);
+
+    const mailOptions: SendMailOptions = {
+      from: "dev@noobstorm.gg",
+      to: "neelpatel.6531@gmail.com",
+      subject: "Invoice",
+      html: htmlToSend,
+    };
+
+    await sendEmail(mailOptions);
+
     return {
       ...updated_data,
       transaction_id: trans_resp?.id,
@@ -60,9 +106,7 @@ export const debitBalance = async (
     if (!user) {
       return { errors: ["Invalid User Id"] };
     }
-    const walletRepo = new WalletRepository(
-      knexConnection as Knex.Transaction
-    );
+    const walletRepo = new WalletRepository(knexConnection as Knex.Transaction);
     const wallet = await walletRepo.findByUserId(user.id);
     if (!wallet) {
       return { errors: ["Wallet not found"] };
@@ -75,7 +119,7 @@ export const debitBalance = async (
     const trans_resp = await createTransaction(
       { ...req, wallet_id: wallet.id, data },
       knexConnection as Knex.Transaction,
-      "debit",
+      "debit"
     );
     wallet.last_transaction_id = trans_resp?.id;
     wallet.balance = wallet.balance
@@ -95,15 +139,15 @@ export const debitBalance = async (
 export const walletDetails = async (
   connection: Knex.Transaction,
   user_data: any
-): Promise<{ wallet?: IWalletResponse, transaction?: ITransaction[] } | undefined | any> => {
+): Promise<
+  { wallet?: IWalletResponse; transaction?: ITransaction[] } | undefined | any
+> => {
   try {
     const user = await fetchUserById(user_data.id, connection as any);
     if (!user) {
       return { errors: ["Invalid User Id"] };
     }
-    const walletRepo = new WalletRepository(
-      connection as Knex.Transaction
-    );
+    const walletRepo = new WalletRepository(connection as Knex.Transaction);
     const wallet = await walletRepo.findByUserId(user.id);
     if (!wallet) {
       return { errors: ["Wallet not found"] };
@@ -112,9 +156,9 @@ export const walletDetails = async (
       connection as Knex.Transaction
     );
     const transaction: ITransaction[] | undefined = await transactionRepo.find({
-      walletId: wallet.id
-    })
-    return { wallet, transaction, user }
+      walletId: wallet.id,
+    });
+    return { wallet, transaction, user };
   } catch (ex) {
     if (connection?.rollback) connection?.rollback();
     return { errors: ["Something went wrong"] };

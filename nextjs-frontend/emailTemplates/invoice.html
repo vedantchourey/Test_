@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            max-width: 900px;
+        }
+
+        p {
+            margin-block-start: 5px;
+            margin-block-end: 5px;
+        }
+    </style>
+
+    <style type="text/css">
+        .tg {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        .tg td {
+            border-color: black;
+            border-style: solid;
+            border-width: 1px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            overflow: hidden;
+            padding: 10px 5px;
+            word-break: normal;
+        }
+
+        .tg th {
+            border-color: black;
+            border-style: solid;
+            border-width: 1px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            font-weight: normal;
+            overflow: hidden;
+            padding: 10px 5px;
+            word-break: normal;
+        }
+
+        .tg .tg-0lax {
+            text-align: left;
+            vertical-align: top
+        }
+
+        .headerCol {
+            background: #000;
+            color: #fff;
+            text-align: center !important;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div style="display: flex; justify-content: space-between; width: 100%;">
+        <div style="width: 70%; padding-top: 20px;">
+            <img src="{{appUrl}}/logo.png" />
+        </div>
+        <div style="width: 30%">
+            <h1 style="margin-bottom: 5px">INVOICE</h1>
+            <div>
+                <p>Invoice# : {{invoiceNo}}</p>
+            </div>
+            <div>
+                <p>Date# : {{date}}</p>
+            </div>
+        </div>
+    </div>
+    <div style="display: flex; justify-content: space-between; width: 100%">
+        <div style="display: flex; width: 60%" >
+            <div>
+                <img src="{{appUrl}}/address.png" style="height: 40px;" />
+            </div>
+            <div style="width: 70%">
+                <h3 style="margin-top: 5px; margin-bottom: 5px;">Noobstorm Gaming Private Limited</h3>
+                <p>Flat Number 21</p>
+                <p>SFS Basant Enclave</p>
+                <p>New Delhi</p>
+                <p>110057</p>
+            </div>
+        </div>
+        <div style="width: 50%" >
+            <p>Corporate Identity # : U72900DL2021PTC383108</p>
+            <p>GSTIN # : 07AAHCN6727F1ZC</p>
+            <p>PAN # : AAHCN6727F</p>
+        </div>
+    </div>
+    <div style="display: flex;">
+        <div style="display: flex; width: 100%" >
+            <div>
+                    <img src="{{appUrl}}/www.png" style="width: 20px; margin-right: 9px; margin-left: 9px;" />
+            </div>
+            <div>
+                <p>WWW.NOOBSTORM.COM</p>
+                <p>WWW.NOOBSTORM.GG</p>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div style="display: flex">
+        <div style="display: flex; width: 100%" >
+            <div>
+                <img src="{{appUrl}}/address.png" style="height: 40px;" />
+            </div>
+            <div>
+                <h3 style="margin-bottom: 0px; margin-top: 0px;">Bill To</h3>
+                <p>{{name}}</p>
+            </div>
+        </div>
+    </div>
+    <div style="display: flex; justify-content: space-between;">
+        <table class="tg" style="table-layout: fixed; width: 100%">
+            <colgroup>
+                <col style="width: 5%">
+                <col style="width: 55%">
+                <col style="width: 10%">
+                <col style="width: 15%">
+                <col style="width: 15%">
+            </colgroup>
+            <thead>
+                <tr>
+                    <td class="tg-0lax headerCol">No</td>
+                    <td class="tg-0lax headerCol">Description</td>
+                    <td class="tg-0lax headerCol">Qty</td>
+                    <td class="tg-0lax headerCol">Unit Amount</td>
+                    <td class="tg-0lax headerCol">Total Amount</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="tg-0lax">
+                        <p>1</p>
+                    </td>
+                    <td class="tg-0lax">
+                        <p>Noobstorm Credits</p>
+                    </td>
+                    <td class="tg-0lax">
+                        <p>{{qty}}</p>
+                    </td>
+                    <td class="tg-0lax">
+                        <p>₹ {{amount}}</p>
+                    </td>
+                    <td class="tg-0lax">
+                        <p>₹ {{total}}</p>
+                    </td>
+                </tr>
+            </tbody>
+            <tr>
+                <td class="tg-0lax" colspan="4" style="text-align: right; border: none;">
+                    <p>Service Charge</p>
+                </td>
+                <td class="tg-0lax">
+                    <p>₹ {{serviceCharge}}</p>
+                </td>
+            </tr>
+            <tr>
+                <td class="tg-0lax" colspan="4" style="text-align: right; border: none;">
+                    <p>Sub Total</p>
+                </td>
+                <td class="tg-0lax">
+                    <p>₹ {{subTotal}}</p>
+                </td>
+            </tr>
+            <tr>
+                <td class="tg-0lax" colspan="4" style="text-align: right; border: none;">
+                    <p>GST @ 18%</p>
+                </td>
+                <td class="tg-0lax">
+                    <p>₹ {{gst}}</p>
+                </td>
+            </tr>
+            <tr>
+                <td class="tg-0lax" colspan="4" style="text-align: right; border: none;">
+                    <p>Total Amount</p>
+                </td>
+                <td class="tg-0lax">
+                    <p>₹ {{totalAmount}}</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>
