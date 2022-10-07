@@ -82,10 +82,11 @@ export const creditBalance = async (
       html: htmlToSend,
     };
 
-    await sendEmail(mailOptions);
+    const response = await sendEmail(mailOptions);
 
     return {
       ...updated_data,
+      data: response,
       transaction_id: trans_resp?.id,
     };
   } catch (ex) {

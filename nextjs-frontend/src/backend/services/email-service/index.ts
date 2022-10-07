@@ -13,9 +13,11 @@ export const transporter = nodemailer.createTransport({
 
 
 export const sendEmail = async (mailOptions: SendMailOptions): Promise<any> => {
-  return await transporter.sendMail(mailOptions, function (err, info) {
-    console.warn("err => ", err);
-    console.warn("info => ", info);
-    return { info, err }
+  return new Promise((resolve) => {
+    transporter.sendMail(mailOptions, function (err, info) {
+      console.warn("err => ", err);
+      console.warn("info => ", info);
+      resolve({ info, err });
+    });
   });
 };

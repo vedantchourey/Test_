@@ -99,8 +99,8 @@ export default function ProductDetail(props: any): JSX.Element {
           name: "Learning To Code Online",
           description: "Test Wallet Transaction",
           handler: async function (response: any): Promise<void> {
-            axios.post(`/api/payment/update-order`, response, { headers });
-            location.replace("/");
+            await axios.post(`/api/payment/update-order`, response, { headers });
+            setTimeout(() => location.replace("/"), 1500);
           },
         };
         // @ts-expect-error: ignore
