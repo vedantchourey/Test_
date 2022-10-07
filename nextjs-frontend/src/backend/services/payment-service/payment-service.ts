@@ -7,31 +7,36 @@ import { IUser } from "../database/models/i-user";
 import { PerRequestContext } from "../../utils/api-middle-ware/api-middleware-typings";
 import { backendConfig } from "../../utils/config/backend-config"
 
-export const createRazorPayOrder = async (req: IOrderRequest, context: Knex): Promise<IOrderResponse | IError> => {
+export const createRazorPayOrder = async (
+  req: IOrderRequest,
+  context: Knex
+): Promise<IOrderResponse | IError> => {
   try {
     const errors = await validateOrder(req);
+
     if (errors) return { errors };
-    const [id, secret]: IConfig[] = await getRazorPayKeys(context)
-    const { credit_config } = backendConfig
+    const [id, secret]: IConfig[] = await getRazorPayKeys(context);
+    const { credit_config } = backendConfig;
     const amount = req.amount * credit_config.price_per_credit;
-    const service_charge = (amount * credit_config.credit_service_percentage) / 100;
+    const service_charge =
+      (amount * credit_config.credit_service_percentage) / 100;
     const gst =
       ((amount + service_charge) * credit_config.credit_gst_percentage) / 100;
-    
-
     const razorpay = new Razorpay({
       key_id: id.value,
       key_secret: secret.value,
     });
     const options = {
-      amount: (amount + gst + service_charge) * 100,
+      amount:
+        parseInt((amount + gst + service_charge).toFixed(0).toString()) * 100,
       currency: "INR",
       payment_capture: 1,
       notes: {
-        amount: req.amount
-      }
+        amount: req.amount,
+      },
     };
     const response = await razorpay.orders.create(options);
+
     return {
       order_id: response.id,
       currency: response.currency,
@@ -40,13 +45,14 @@ export const createRazorPayOrder = async (req: IOrderRequest, context: Knex): Pr
       service_charge,
       total_amount: response.amount / 100,
       key: id.value,
-    } as any
+    } as any;
   } catch (ex: any) {
     return {
-      errors: [ex.message]
-    }
+      errors: [ex.message],
+    };
   }
-}
+};
+
 export const updateRazorPayOrder = async (req: IUpdateOrderRequest, context: PerRequestContext, user: IUser | undefined): Promise<IUpdateOrderResponse | IError> => {
   const errors = await validateUpdateOrder(req);
   if (errors) return { errors };
