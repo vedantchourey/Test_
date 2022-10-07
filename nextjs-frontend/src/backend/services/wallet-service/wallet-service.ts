@@ -61,7 +61,7 @@ export const creditBalance = async (
     const totalAmount = subTotal + gst;
 
     const replacements = {
-      appUrl: backendConfig.client.appUrl,
+      appUrl: backendConfig.client.appUrl+"/assets",
       invoiceNo: moment().format("YYYYDDMMHHMMSS"),
       date: moment().format("DD/MM/YYYY"),
       name: user.firstName + " " + user.lastName,
