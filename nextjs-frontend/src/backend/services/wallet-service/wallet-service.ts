@@ -15,6 +15,9 @@ import path from "path";
 import fs from "fs";
 import moment from "moment";
 import backendConfig from "../../utils/config/backend-config";
+import { CrudRepository } from "../database/repositories/crud-repository";
+import { IUser } from "../database/models/i-user";
+import { TABLE_NAMES } from "../../../models/constants";
 
 export const creditBalance = async (
   req: IWalletRequest,
@@ -24,12 +27,17 @@ export const creditBalance = async (
   try {
     const errors = await validateWallet(req);
     if (errors) return { errors };
+    const usersRepo = new CrudRepository<IUser>(
+      connection,
+      TABLE_NAMES.USERS
+    );
 
     const user = await fetchUserById(req.userId, connection as any);
     if (!user) {
       return { errors: ["Invalid User Id"] };
     }
     const walletRepo = new WalletRepository(connection as Knex.Transaction);
+    const userDetails = await usersRepo.findById(req.userId);
 
     const wallet = await walletRepo.findByUserId(user.id);
     if (!wallet) {
@@ -61,7 +69,7 @@ export const creditBalance = async (
     const totalAmount = subTotal + gst;
 
     const replacements = {
-      appUrl: backendConfig.client.appUrl+"/assets",
+      appUrl: backendConfig.client.appUrl+"/assets/",
       invoiceNo: moment().format("YYYYDDMMHHMMSS"),
       date: moment().format("DD/MM/YYYY"),
       name: user.firstName + " " + user.lastName,
@@ -77,7 +85,7 @@ export const creditBalance = async (
 
     const mailOptions: SendMailOptions = {
       from: "dev@noobstorm.gg",
-      to: "neelpatel.6531@gmail.com",
+      to: userDetails.email,
       subject: "Invoice",
       html: htmlToSend,
     };
