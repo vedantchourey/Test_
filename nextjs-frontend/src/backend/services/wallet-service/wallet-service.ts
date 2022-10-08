@@ -86,7 +86,7 @@ export const creditBalance = async (
     const mailOptions: SendMailOptions = {
       from: "dev@noobstorm.gg",
       to: userDetails.email,
-      subject: "Invoice",
+      subject: `Invoice #${moment().format("YYYYDDMMHHMMSS")}`,
       html: htmlToSend,
     };
 
