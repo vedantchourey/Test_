@@ -187,6 +187,20 @@ const DashboardSideBar: React.FC = () => {
             Withdraw Requests
           </Button>
         </Grid>
+        <Grid item marginX={2}>
+          <Button
+            variant="contained"
+            component={"a"}
+            fullWidth
+            classes={{ root: classes.button }}
+            startIcon={<LogIcon />}
+            onClick={(): Promise<boolean> =>
+              router.push("/home-carousel", undefined, { shallow: true })
+            }
+          >
+            Home Carousel
+          </Button>
+        </Grid>
       </Grid>
     </React.Fragment>
   );
