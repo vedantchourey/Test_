@@ -222,7 +222,7 @@ const HomeCarouselPageForm: React.FC<BasicPorps> = ({ onSave, data }) => {
                 </Grid>
               </CardLayout>
               <Box display="flex" justifyContent={"flex-end"}>
-                <Button variant="contained" onClick={() => formik.handleSubmit()}>
+                <Button variant="contained" onClick={formik.submitForm}>
                   Save
                 </Button>
               </Box>
