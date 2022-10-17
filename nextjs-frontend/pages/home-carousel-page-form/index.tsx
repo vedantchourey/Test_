@@ -27,12 +27,11 @@ const HomeCarouselFormCard: React.FC<void> = () => {
         .then(() => {
           router.push("/home-carousel");
         })
-        .catch((error) => {
-          console.log("Error: Error while creating home carousel.", error);
+        .catch(() => {
           window.alert("Something went wrong");
         });
     } catch (error) {
-      console.log("Error: ", error);
+      console.warn("Error: ", error);
     }
   };
   return (

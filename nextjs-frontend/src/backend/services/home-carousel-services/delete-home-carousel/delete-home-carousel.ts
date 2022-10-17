@@ -1,5 +1,4 @@
 import { PerRequestContext } from '../../../utils/api-middle-ware/api-middleware-typings';
-import { NewsRepository } from '../../database/repositories/news-repository';
 import { HomeCarouselRepository } from '../../database/repositories/home-carousel-repository';
 import { ServiceResponse } from '../../common/contracts/service-response';
 import { Knex } from 'knex';
