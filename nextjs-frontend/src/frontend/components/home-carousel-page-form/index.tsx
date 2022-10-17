@@ -34,36 +34,32 @@ const useStyles = makeStyles(() =>
   }));
 
 export interface BasicData {
-  title: string;
+  name: string;
   subtitle: string;
-  authorname: string;
-  description: string;
-  banner: string;
-  label?: string;
+  navigation: string;
+  image: string;
 }
 
 interface BasicPorps {
   data?: BasicData;
   onSave?: (data: BasicData) => void;
 }
+
 const HomeCarouselPageForm: React.FC<BasicPorps> = ({ onSave, data }) => {
   const style = useStyles();
   const validationSchema = yup.object({
-    title: yup.string().required("Title is required"),
+    name: yup.string().required("Name is required"),
     subtitle: yup.string().required("Subtitle is required"),
-    authorname: yup.string().required("Author Name is required"),
-    description: yup.string(),
-    banner: yup.string().nullable(),
+    navigation: yup.string().required("Navigation is required"),
+    image: yup.string().required("Image is requied."),
   });
 
   const formik = useFormik({
     initialValues: {
-      title: data?.title || "",
+      name: data?.name || "",
       subtitle: data?.subtitle || "",
-      authorname: data?.authorname || "",
-      label: data?.label || "",
-      description: data?.description || "",
-      banner: data?.banner || "",
+      navigation: data?.navigation || "",
+      image: data?.image || "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -77,8 +73,7 @@ const HomeCarouselPageForm: React.FC<BasicPorps> = ({ onSave, data }) => {
     if (data) {
       formik.setValues({
         ...data,
-        label: data?.banner,
-        banner: data?.banner ? data?.banner : "",
+        image: data?.image ? data?.image : "",
       });
     }
   }, [data]);
@@ -102,7 +97,7 @@ const HomeCarouselPageForm: React.FC<BasicPorps> = ({ onSave, data }) => {
   }, []);
   return (
     <NoobPage
-      title={"News Page"}
+      title={"Home Carousel Page"}
       metaData={{
         description: "Noob Storm home page",
       }}
@@ -120,19 +115,19 @@ const HomeCarouselPageForm: React.FC<BasicPorps> = ({ onSave, data }) => {
                     <FormControl fullWidth variant="standard">
                       <FormLabel label="Name"></FormLabel>
                       <OutlinedInput
-                        id="title"
-                        name="title"
+                        id="name"
+                        name="name"
                         placeholder="Name"
                         onChange={formik.handleChange}
-                        value={formik.values.title}
+                        value={formik.values.name}
                         className={style.inputBox}
                         onBlur={formik.handleBlur}
                         error={
-                          formik.touched.title && Boolean(formik.errors.title)
+                          formik.touched.name && Boolean(formik.errors.name)
                         }
                       />
-                      {formik.touched.title && Boolean(formik.errors.title) ? (
-                        <FormHelperText> {formik.errors.title} </FormHelperText>
+                      {formik.touched.name && Boolean(formik.errors.name) ? (
+                        <FormHelperText> {formik.errors.name} </FormHelperText>
                       ) : null}
                     </FormControl>
                   </Grid>
@@ -167,19 +162,19 @@ const HomeCarouselPageForm: React.FC<BasicPorps> = ({ onSave, data }) => {
                     <FormControl fullWidth variant="standard">
                       <FormLabel label="Navigation"></FormLabel>
                       <OutlinedInput
-                        id="label"
-                        name="label"
+                        id="navigation"
+                        name="navigation"
                         placeholder="Navigation"
                         onChange={formik.handleChange}
-                        value={formik.values.label}
+                        value={formik.values.navigation}
                         className={style.inputBox}
                         onBlur={formik.handleBlur}
                         error={
-                          formik.touched.label && Boolean(formik.errors.label)
+                          formik.touched.navigation && Boolean(formik.errors.navigation)
                         }
                       />
-                      {formik.touched.label && Boolean(formik.errors.label) ? (
-                        <FormHelperText> {formik.errors.label} </FormHelperText>
+                      {formik.touched.navigation && Boolean(formik.errors.navigation) ? (
+                        <FormHelperText> {formik.errors.navigation} </FormHelperText>
                       ) : null}
                     </FormControl>
                   </Grid>
@@ -190,7 +185,7 @@ const HomeCarouselPageForm: React.FC<BasicPorps> = ({ onSave, data }) => {
                 <Grid item xs={12}>
                   <FormControl fullWidth variant="standard">
                     <FormLabel label="Image"></FormLabel>
-                    <Dropzone onDrop={(files): void => onDrop(files, "banner")}>
+                    <Dropzone onDrop={(files): void => onDrop(files, "image")}>
                       {({ getRootProps, getInputProps }): JSX.Element => (
                         <Box
                           className={style.dropZone}
@@ -208,15 +203,18 @@ const HomeCarouselPageForm: React.FC<BasicPorps> = ({ onSave, data }) => {
                         </Box>
                       )}
                     </Dropzone>
+                    {formik.touched.image && Boolean(formik.errors.image) ? (
+                        <FormHelperText style={{ color: "red" }}> {formik.errors.image} </FormHelperText>
+                      ) : null}
                     <Box display="flex" flexDirection={"column"}>
-                      {formik?.values?.banner !== "" && (
+                      {formik?.values?.image && (
                         <>
                           <Typography
                             style={{ textAlign: "left", margin: "10px 0px" }}
                           >
                             Preview
                           </Typography>
-                          <img src={formik.values.banner} width="30%" />
+                          <img src={formik.values.image} width="30%" />
                         </>
                       )}
                     </Box>
@@ -224,7 +222,7 @@ const HomeCarouselPageForm: React.FC<BasicPorps> = ({ onSave, data }) => {
                 </Grid>
               </CardLayout>
               <Box display="flex" justifyContent={"flex-end"}>
-                <Button variant="contained" onClick={formik.submitForm}>
+                <Button variant="contained" onClick={() => formik.handleSubmit()}>
                   Save
                 </Button>
               </Box>

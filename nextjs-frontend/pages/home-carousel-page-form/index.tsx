@@ -15,19 +15,17 @@ const HomeCarouselFormCard: React.FC<void> = () => {
 
     axios
       .post(
-        "/api/news/create",
+        "/api/home-carousel/create",
         {
-          title: data.title,
+          name: data.name,
           subtitle: data.subtitle,
-          author: data.authorname,
-          image: data.banner,
-          description: data.description,
-          label: data.label,
+          navigation: data.navigation,
+          image: data.image,
         },
         { headers: headers }
       )
       .then(() => {
-        router.push("/news-page");
+        router.push("/home-carousel");
       })
       .catch(() => {
         window.alert("Something went wrong");
@@ -40,7 +38,7 @@ const HomeCarouselFormCard: React.FC<void> = () => {
       renderOnCheckFailure={(): JSX.Element => <NotFound />}
     >
       <HomeCarouselPageForm
-        key={"newspage-form"}
+        key={"home-carousel-page-form"}
         onSave={(data): void => {
           handleSubmit(data);
         }}
