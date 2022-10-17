@@ -12,11 +12,9 @@ import { blobToFile } from "../../../common/utils/utils";
 import { uploadImage } from "../../service-clients/image-service-client";
 import { frontendSupabase } from "../../services/supabase-frontend-service";
 import NoobPage from "../page/noob-page";
-import AccordionAlt from "../ui-components/accordion";
 import CardLayout from "../ui-components/card-layout";
 import DashboardSideBar from "../ui-components/dashboard-sidebar";
 import FormLabel from "../ui-components/formlabel";
-import NoobReachTextEditor from "../ui-components/rte";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -85,12 +83,6 @@ const HomeCarouselPageForm: React.FC<BasicPorps> = ({ onSave, data }) => {
     }
   }, [data]);
 
-  const changeHandler = (
-    property: string,
-    value: string | boolean | Date | null
-  ): void => {
-    formik.setFieldValue(property, value, true);
-  };
   const onDrop = useCallback((acceptedFiles: File[], field: string): void => {
     acceptedFiles.forEach(async (file: Blob): Promise<void> => {
       const fileName = `${v4()}.png`;
