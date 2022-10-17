@@ -12,24 +12,28 @@ const HomeCarouselFormCard: React.FC<void> = () => {
   const router = useRouter();
   const handleSubmit = async (data: any): Promise<any> => {
     const headers = await getAuthHeader();
-
-    axios
-      .post(
-        "/api/home-carousel/create",
-        {
-          name: data.name,
-          subtitle: data.subtitle,
-          navigation: data.navigation,
-          image: data.image,
-        },
-        { headers: headers }
-      )
-      .then(() => {
-        router.push("/home-carousel");
-      })
-      .catch(() => {
-        window.alert("Something went wrong");
-      });
+    try {
+      axios
+        .post(
+          "/api/home-carousel/create",
+          {
+            name: data.name,
+            subtitle: data.subtitle,
+            navigation: data.navigation,
+            image: data.image,
+          },
+          { headers: headers }
+        )
+        .then(() => {
+          router.push("/home-carousel");
+        })
+        .catch((error) => {
+          console.log("Error: Error while creating home carousel.", error);
+          window.alert("Something went wrong");
+        });
+    } catch (error) {
+      console.log("Error: ", error);
+    }
   };
   return (
     <AuthGuard

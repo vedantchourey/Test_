@@ -12,7 +12,7 @@ const HomeCarouselCard: React.FC<void> = () => {
       redirectToOnFailure="/"
       renderOnCheckFailure={(): JSX.Element => <NotFound />}
     >
-    <HomeCarouselPage key={"newspage"}></HomeCarouselPage>
+    <HomeCarouselPage key={"homeCarouselPage"}></HomeCarouselPage>
     </AuthGuard>
   );
 };

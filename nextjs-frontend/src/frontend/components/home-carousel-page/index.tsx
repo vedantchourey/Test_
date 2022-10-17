@@ -1,5 +1,5 @@
 import { Button, Grid, Typography } from "@mui/material";
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import { useRouter } from "next/router";
 import React from "react";
 import NoobPage from "../page/noob-page";
@@ -12,42 +12,46 @@ const HomeCarouselPage: React.FC = () => {
   const [data, setData] = React.useState([]);
 
   const fetchData = async (): Promise<void> => {
-    const headers = await getAuthHeader();
-    axios
-      .get("/api/news/newslist", { headers: headers })
-      .then((res) => {
-        setData(res.data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    try {
+      const headers = await getAuthHeader();
+      axios
+        .get("/api/home-carousel/list", { headers: headers })
+        .then((res) => {
+          setData(res.data);
+        })
+        .catch((err) => {
+          console.error("Error: Error while getting home carousels.", err);
+        });
+    } catch (error) {
+      console.warn("Error: ", error);
+    }
   };
 
   React.useEffect(() => {
     fetchData();
   }, []);
 
-const deletnews = async (newsId: string): Promise<void> => {
-  try {
-    const endpoint = "/api/news/deleteNews";
-    const headers = await getAuthHeader();
-    axios
-      .get(endpoint, {
-        params: { newsId: newsId },
-        headers: headers,
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          fetchData();
-        }
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
-  } catch (err) {
-    console.error(err);
-  }
-};
+  const deletHomeCarousel = async (carouselId: string): Promise<void> => {
+    try {
+      const endpoint = "/api/home-carousel/delete";
+      const headers = await getAuthHeader();
+      axios
+        .get(endpoint, {
+          params: { carouselId: carouselId },
+          headers: headers,
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            fetchData();
+          }
+        })
+        .catch(function (error) {
+          console.error("Error: Error while deleting carousel.", error);
+        });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const router = useRouter();
   const conf: NoobColumnConf<any>[] = [
@@ -82,7 +86,9 @@ const deletnews = async (newsId: string): Promise<void> => {
     {
       title: "Action",
       renderCell: (row): any => {
-        return <DeleteOutlinedIcon onClick={(): any => deletnews(row.id)}/>;
+        return (
+          <DeleteOutlinedIcon onClick={(): any => deletHomeCarousel(row.id)} />
+        );
       },
       width: "5%",
     },
