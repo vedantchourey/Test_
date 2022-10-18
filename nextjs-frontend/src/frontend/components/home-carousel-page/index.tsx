@@ -65,14 +65,14 @@ const HomeCarouselPage: React.FC = () => {
     {
       title: "Name",
       renderCell: (row): any => {
-        return row.title;
+        return row.name;
       },
       width: "10%",
     },
     {
       title: "Subtitle",
       renderCell: (row): any => {
-        return row.author;
+        return row.subtitle;
       },
       width: "10%",
     },
