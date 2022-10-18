@@ -234,11 +234,13 @@ const Home = (): JSX.Element => {
             <div className={styles.bgImgContainer}>
               <Typography
                 className={isDesktop ? styles.text1 : styles.text1Mobile}
+                style={{ width: "100%" }}
               >
                 {image.name}
               </Typography>
               <Typography
                 className={isDesktop ? styles.text2 : styles.text2Mobile}
+                style={{ height: "auto" }}
               >
                 {image.subtitle}
               </Typography>
@@ -248,6 +250,7 @@ const Home = (): JSX.Element => {
                   router.push(image.navigation);
                 }}
                 className={styles.button1}
+                style={{ bottom: 40, position: "fixed" }}
               >
                 Read More
               </Button>
