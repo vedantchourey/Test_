@@ -79,7 +79,7 @@ const HomeCarouselPage: React.FC = () => {
     {
       title: "Navigation",
       renderCell: (row): any => {
-        return row.created_at;
+        return row.navigation;
       },
       width: "10%",
     },
