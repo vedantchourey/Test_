@@ -15,6 +15,9 @@ import NoobPage from "../page/noob-page";
 import CardLayout from "../ui-components/card-layout";
 import DashboardSideBar from "../ui-components/dashboard-sidebar";
 import FormLabel from "../ui-components/formlabel";
+import { useRouter } from "next/router";
+import axios from "axios";
+import { getAuthHeader } from "../../utils/headers";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -47,6 +50,9 @@ interface BasicPorps {
 
 const HomeCarouselPageForm: React.FC<BasicPorps> = ({ onSave, data }) => {
   const style = useStyles();
+  const router = useRouter();
+  const { carouselId } = router.query;
+
   const validationSchema = yup.object({
     name: yup.string().required("Name is required"),
     subtitle: yup.string().required("Subtitle is required"),
@@ -69,6 +75,30 @@ const HomeCarouselPageForm: React.FC<BasicPorps> = ({ onSave, data }) => {
     },
   });
 
+  const getCarouselDetail = async (id: string): Promise<void> => {
+    try {
+      const headers = await getAuthHeader();
+      axios
+        .get(`/api/home-carousel/${carouselId}`, { headers: headers })
+        .then((res) => {
+          if (res.data) {
+            const formData = res.data;
+            formik.setValues({
+              name: formData.name || "",
+              subtitle: formData.subtitle || "",
+              navigation: formData.navigation || "",
+              image: formData.image,
+            })
+          }
+        })
+        .catch((err) => {
+          console.error("Error: Error while getting home carousels.", err);
+        });
+    } catch (error) {
+      console.warn("Error: Error while getting carousel details.");
+    }
+  }
+
   React.useEffect(() => {
     if (data) {
       formik.setValues({
@@ -77,6 +107,12 @@ const HomeCarouselPageForm: React.FC<BasicPorps> = ({ onSave, data }) => {
       });
     }
   }, [data]);
+
+  React.useEffect(() => {
+    if (carouselId) {
+      getCarouselDetail(carouselId.toString());
+    }
+  }, [carouselId])
 
   const onDrop = useCallback((acceptedFiles: File[], field: string): void => {
     acceptedFiles.forEach(async (file: Blob): Promise<void> => {

@@ -1,5 +1,6 @@
 import { Button, Grid, Typography } from "@mui/material";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import EditIcon from '@mui/icons-material/Edit';
 import { useRouter } from "next/router";
 import React from "react";
 import NoobPage from "../page/noob-page";
@@ -87,7 +88,16 @@ const HomeCarouselPage: React.FC = () => {
       title: "Action",
       renderCell: (row): any => {
         return (
-          <DeleteOutlinedIcon onClick={(): any => deletHomeCarousel(row.id)} />
+          <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+            <EditIcon
+              onClick={(): void => {
+              router.push({
+                pathname: "/home-carousel-page-form",
+                query: { carouselId: row.id }
+              })
+            }} />
+            <DeleteOutlinedIcon onClick={(): any => deletHomeCarousel(row.id)} />
+          </div>
         );
       },
       width: "5%",
