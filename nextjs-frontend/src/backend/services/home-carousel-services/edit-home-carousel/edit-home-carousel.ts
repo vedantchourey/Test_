@@ -5,7 +5,7 @@ import { Knex } from 'knex';
 
 export const editHomeCarousel = async (req: any, context: PerRequestContext): Promise<ServiceResponse<unknown, { message: string }>> => {
   const repository = new HomeCarouselRepository(context.transaction as Knex.Transaction);
-  await repository.update(req);
+  await repository.update(req.body);
   return {
     data: { message: "Carousel updated" }
   }

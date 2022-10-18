@@ -10,7 +10,7 @@ const requiredRoles: NoobUserRole[] = [];
 
 const HomeCarouselFormCard: React.FC<void> = () => {
   const router = useRouter();
-  const handleSubmit = async (data: any): Promise<any> => {
+  const createCarousel = async (data: any): Promise<any> => {
     const headers = await getAuthHeader();
     try {
       axios
@@ -34,6 +34,33 @@ const HomeCarouselFormCard: React.FC<void> = () => {
       console.warn("Error: ", error);
     }
   };
+
+  const updateCarousel = async (data: any, id: string): Promise<any> => {
+    const headers = await getAuthHeader();
+    try {
+      axios
+        .patch(
+          `/api/home-carousel/update/${id}`,
+          {
+            id: id,
+            name: data.name,
+            subtitle: data.subtitle,
+            navigation: data.navigation,
+            image: data.image,
+          },
+          { headers: headers }
+        )
+        .then(() => {
+          router.push("/home-carousel");
+        })
+        .catch(() => {
+          window.alert("Something went wrong");
+        });
+    } catch (error) {
+      console.warn("Error: ", error);
+    }
+  }
+
   return (
     <AuthGuard
       requiredRoles={requiredRoles}
@@ -42,8 +69,8 @@ const HomeCarouselFormCard: React.FC<void> = () => {
     >
       <HomeCarouselPageForm
         key={"home-carousel-page-form"}
-        onSave={(data): void => {
-          handleSubmit(data);
+        onSave={(data, id): void => {
+          !id ? createCarousel(data) : updateCarousel(data, id)
         }}
       ></HomeCarouselPageForm>
     </AuthGuard>

@@ -45,7 +45,7 @@ export interface BasicData {
 
 interface BasicPorps {
   data?: BasicData;
-  onSave?: (data: BasicData) => void;
+  onSave?: (data: BasicData, id?: string | undefined) => void;
 }
 
 const HomeCarouselPageForm: React.FC<BasicPorps> = ({ onSave, data }) => {
@@ -70,7 +70,7 @@ const HomeCarouselPageForm: React.FC<BasicPorps> = ({ onSave, data }) => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       if (onSave) {
-        onSave(values);
+        onSave(values, carouselId ? carouselId?.toString() : undefined);
       }
     },
   });
