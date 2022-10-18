@@ -242,7 +242,13 @@ const Home = (): JSX.Element => {
               >
                 {image.subtitle}
               </Typography>
-              <Button variant="text" onClick={() => router.push(image.navigation)} className={styles.button1}>
+              <Button
+                variant="text"
+                onClick={(): void => {
+                  router.push(image.navigation);
+                }}
+                className={styles.button1}
+              >
                 Read More
               </Button>
             </div>
