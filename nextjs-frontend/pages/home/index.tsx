@@ -224,36 +224,26 @@ const Home = (): JSX.Element => {
 
   const topImageCarousel = carouselImages.map((image) => {
     return (
-      <div data-value={image.id} key={image.id}>
+      <div
+        data-value={image.id}
+        key={image.id}
+        className={styles.imageContainer}
+        onClick={(): void => {
+          router.push(image.navigation)
+        }}>
         <Box style={{ width: "100%", height: 450, }}>
           <img
             src={image.image}
             style={{ width: "100%", position: "absolute" }}
           />
-          <Box className={styles.backgroundImg} style={{ position: "absolute" }}>
-            <div className={styles.bgImgContainer}>
-              <Typography
-                className={isDesktop ? styles.text1 : styles.text1Mobile}
-                style={{ width: "100%" }}
-              >
-                {image.name}
-              </Typography>
-              <Typography
-                className={isDesktop ? styles.text2 : styles.text2Mobile}
-                style={{ height: "auto" }}
-              >
-                {image.subtitle}
-              </Typography>
-              <Button
-                variant="text"
-                onClick={(): void => {
-                  router.push(image.navigation);
-                }}
-                className={styles.button1}
-                style={{ bottom: 40, position: "fixed" }}
-              >
-                Read More
-              </Button>
+          <Box className={styles.carouselContainer} style={{ position: "absolute" }}>
+            <Typography className={isDesktop ? styles.title : styles.text1Mobile} style={{ marginBottom: 10, marginLeft: 20 }}>
+              {image.name}
+            </Typography>
+            <div style={{width: "70%"}}>
+            <Typography className={isDesktop ? styles.subtitle : styles.text2Mobile} style={{ marginBottom: 20, marginLeft: 20 }}>
+              {image.subtitle}
+            </Typography>
             </div>
           </Box>
         </Box>
