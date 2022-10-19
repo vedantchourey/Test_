@@ -84,9 +84,8 @@ const Home = (): JSX.Element => {
 
   const fetchCarousels = async (): Promise<void> => {
     try {
-      const headers = await getAuthHeader();
       axios
-        .get("/api/home-carousel/list", { headers: headers })
+        .get("/api/home-carousel/list")
         .then((res) => {
           setCarouselImages(res.data);
         })
