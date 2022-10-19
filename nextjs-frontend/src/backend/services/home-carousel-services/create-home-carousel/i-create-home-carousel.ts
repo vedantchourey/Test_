@@ -1,8 +1,8 @@
 export interface ICreateHomeCarouselRequest {
     data?: string;
-    name: string;
-    subtitle: string;
-    navigation: string;
+    name?: string;
+    subtitle?: string;
+    navigation?: string;
     image: string;
 }
 

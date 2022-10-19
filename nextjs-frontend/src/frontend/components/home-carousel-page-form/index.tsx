@@ -54,9 +54,6 @@ const HomeCarouselPageForm: React.FC<BasicPorps> = ({ onSave, data }) => {
   const { carouselId } = router.query;
 
   const validationSchema = yup.object({
-    name: yup.string().required("Name is required"),
-    subtitle: yup.string().required("Subtitle is required"),
-    navigation: yup.string().required("Navigation is required"),
     image: yup.string().required("Image is requied."),
   });
 

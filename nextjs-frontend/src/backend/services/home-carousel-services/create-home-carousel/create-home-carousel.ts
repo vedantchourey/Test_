@@ -19,9 +19,9 @@ export async function createHomeCarousel(
   const repository = new HomeCarouselRepository(context.transaction as Knex.Transaction);
 
   const homeCarouselId = await repository.createHomeCarousel({
-    name: req.name,
-    subtitle: req.subtitle,
-    navigation: req.navigation,
+    name: req.name || "",
+    subtitle: req.subtitle || "",
+    navigation: req.navigation || "",
     image: req.image
   });
 
