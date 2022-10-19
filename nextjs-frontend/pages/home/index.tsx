@@ -37,7 +37,7 @@ const Home = (): JSX.Element => {
   const [newsData, setNewsData] = useState<any[]>([]);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
   const [isFetchingPosts, setIsFetchingPosts] = useState<boolean>(true);
-
+  const [carouselImages, setCarouselImages] = useState<{ id: string, name: string, subtitle: string, navigation: string, image: string }[]>([]);
   const [value, setValue] = useState("1");
 
   const handleChange = (event: SyntheticEvent, newValue: string): void => {
@@ -81,9 +81,25 @@ const Home = (): JSX.Element => {
     }
   };
 
-  useEffect(() => {
-    fetchPosts();
-  }, []);
+  const fetchCarousels = async (): Promise<void> => {
+    try {
+      axios
+        .get("/api/home-carousel/list")
+        .then((res) => {
+          setCarouselImages(res.data);
+        })
+        .catch((err) => {
+          console.error("Error: Error while getting home carousels.", err);
+        });
+    } catch (error) {
+      console.warn("Error: ", error);
+    }
+  };
+
+  // useEffect(() => {
+  //   fetchPosts();
+  //   fetchCarousels();
+  // }, []);
 
   useEffect(() => {
     getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257");
@@ -142,6 +158,8 @@ const Home = (): JSX.Element => {
 
   useEffect(() => {
     TournamentsData();
+    fetchPosts();
+    fetchCarousels();
   }, []);
 
   // const items = [
@@ -204,86 +222,34 @@ const Home = (): JSX.Element => {
     </div>,
   ];
 
-  const topImageCarousel = [
-    <div data-value="1" key={"1"}>
-      <Box style={{ width: "100%" }}>
-        <img
-          src="/images/home1.png"
-          style={{ width: "100%", position: "absolute" }}
-        />
-        <Box className={styles.backgroundImg} style={{ position: "absolute" }}>
-          <div className={styles.bgImgContainer}>
-            <Typography
-              className={isDesktop ? styles.text1 : styles.text1Mobile}
-            >
-              PIXIEFREAK GAMING
+  const topImageCarousel = carouselImages.map((image) => {
+    return (
+      <div
+        data-value={image.id}
+        key={image.id}
+        className={styles.imageContainer}
+        onClick={(): void => {
+          router.push(image.navigation)
+        }}>
+        <Box style={{ width: "100%", height: 450, }}>
+          <img
+            src={image.image}
+            style={{ width: "100%", position: "absolute" }}
+          />
+          <Box className={styles.carouselContainer} style={{ position: "absolute" }}>
+            <Typography className={isDesktop ? styles.title : styles.text1Mobile} style={{ marginBottom: 10, marginLeft: 20 }}>
+              {image.name}
             </Typography>
-            <Typography
-              className={isDesktop ? styles.text2 : styles.text2Mobile}
-            >
-              We organize eSports tournaments for professional and amateur
-              gamers
+            <div style={{width: "70%"}}>
+            <Typography className={isDesktop ? styles.subtitle : styles.text2Mobile} style={{ marginBottom: 20, marginLeft: 20 }}>
+              {image.subtitle}
             </Typography>
-            <Button variant="text" className={styles.button1}>
-              Read More
-            </Button>
-          </div>
+            </div>
+          </Box>
         </Box>
-      </Box>
-    </div>,
-    <div data-value="2" key={"2"}>
-      <Box style={{ height: 400, width: 1000 }}>
-        <img
-          src="/images/home2.png"
-          style={{ height: 400, width: 1000, position: "absolute" }}
-        />
-        <Box className={styles.backgroundImg} style={{ position: "absolute" }}>
-          <div className={styles.bgImgContainer}>
-            <Typography
-              className={isDesktop ? styles.text1 : styles.text1Mobile}
-            >
-              PIXIEFREAK GAMING
-            </Typography>
-            <Typography
-              className={isDesktop ? styles.text2 : styles.text2Mobile}
-            >
-              We organize eSports tournaments for professional and amateur
-              gamers
-            </Typography>
-            <Button variant="text" className={styles.button1}>
-              Read More
-            </Button>
-          </div>
-        </Box>
-      </Box>
-    </div>,
-    <div data-value="3" key={"3"}>
-      <Box style={{ height: 400, width: 1000 }}>
-        <img
-          src="/images/home3.png"
-          style={{ height: 400, width: 1000, position: "absolute" }}
-        />
-        <Box className={styles.backgroundImg} style={{ position: "absolute" }}>
-          <div className={styles.bgImgContainer}>
-            <Typography
-              className={isDesktop ? styles.text1 : styles.text1Mobile}
-            >
-              PIXIEFREAK GAMING
-            </Typography>
-            <Typography
-              className={isDesktop ? styles.text2 : styles.text2Mobile}
-            >
-              We organize eSports tournaments for professional and amateur
-              gamers
-            </Typography>
-            <Button variant="text" className={styles.button1}>
-              Read More
-            </Button>
-          </div>
-        </Box>
-      </Box>
-    </div>,
-  ];
+      </div>
+    )
+  })
 
   return (
     <Fragment>

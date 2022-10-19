@@ -1,3 +1,13 @@
+.imageContainer:hover{
+	cursor: pointer;
+}
+.carouselContainer {
+	height: 468px;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	bottom: 0;
+}
 .backgroundImg {
 	height: 468px;
 	width: 75vw;
@@ -12,10 +22,9 @@
 .bgImgContainer {
 	display: flex;
 	flex-direction: column;
-	justify-content: space-around;
+	justify-content: flex-end;
 	width: 400px;
 	height: 222px;
-	padding-top: 50px;
 }
 .imgContainer {
 	display: flex;
@@ -29,6 +38,16 @@
 .img1 {
 	width: 108px;
 	height: 68px;
+}
+.title {
+	font-weight: 700;
+	font-size: 18pt;
+	color: #FFFFFF;
+}
+.subtitle {
+	font-weight: 500;
+	font-size: 16pt;
+	color: #8892B0;
 }
 .text1 {
 	width: 161px;
