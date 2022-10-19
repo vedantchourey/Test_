@@ -30,7 +30,6 @@ import { IPostsResponse } from "../../src/frontend/service-clients/messages/i-po
 import PostCard from "../../src/frontend/components/account/posts/post-card";
 import axios from "axios";
 import CardComp from "../../src/frontend/components/tournaments-list/card";
-import { getAuthHeader } from "../../src/frontend/utils/headers";
 
 const Home = (): JSX.Element => {
   const isDesktop = useAppSelector((x) =>
