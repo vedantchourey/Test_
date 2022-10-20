@@ -16,6 +16,7 @@ import { setMobileHeaderHeight } from "../../redux-store/layout/layout-slice";
 import { mobileHeaderHeightSelector } from "../../redux-store/layout/layout-selectors";
 import { useRouter } from "next/router";
 import style from "./mobile-sidebar.module.css";
+import { walletDetaislSelector } from "../../redux-store/wallet/wallet-selector";
 
 export default function MobileDrawer(): JSX.Element {
   const [showMenu, setShowMenu] = useState(false);
@@ -26,6 +27,7 @@ export default function MobileDrawer(): JSX.Element {
   const appDispatch = useAppDispatch();
   const currentHeight = useAppSelector(mobileHeaderHeightSelector);
   const router = useRouter();
+  const wallet = useAppSelector(walletDetaislSelector);
 
   function onSuccessfulLogin(): void {
     setShowLoginModal(false);
@@ -73,8 +75,9 @@ export default function MobileDrawer(): JSX.Element {
               variant="text"
               className={style.button1}
               startIcon={<img src="/icons/Vector-Wallet.png" />}
+              onClick={(): any => router.push("/wallet/info")}
             >
-              $240.00
+              {wallet?.balance}
             </Button>
           </Box>
           <Box>

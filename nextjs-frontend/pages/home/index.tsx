@@ -498,9 +498,21 @@ const Home = (): JSX.Element => {
                   onChange={handleChange}
                   aria-label="lab API tabs example"
                 >
-                  <Tab value="1" label="TOP POSTS" />
-                  <Tab value="2" label="NEW FEED" />
-                  <Tab value="3" label="TOURNAMENTS" />
+                  <Tab value="1"
+                    icon={<StarRateIcon />}
+                    iconPosition="start"
+                    label="TOP POSTS"
+                  />
+                  <Tab value="2"
+                    icon={<StorageIcon />}
+                    iconPosition="start"
+                    label="NEW FEED"
+                  />
+                  <Tab value="3"
+                    icon={<EmojiEventsIcon />}
+                    iconPosition="start"
+                    label="TOURNAMENTS"
+                  />
                 </TabList>
                 <TabPanel value="1">
                   <Grid item xs={12}>

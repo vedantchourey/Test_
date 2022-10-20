@@ -10,6 +10,9 @@ import Image from "next/image";
 import { Box, Typography } from "@mui/material";
 import { TournamentData } from "../../tournament";
 import backendConfig from "../../../../backend/utils/config/backend-config";
+import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from "../../../../../src/frontend/redux-store/layout/device-types";
+import { useAppSelector } from "../../../redux-store/redux-store";
 
 const { credit_config } = backendConfig;
 
@@ -27,6 +30,9 @@ interface PrizesProps {
 const Prizes: React.FC<PrizesProps> = ({ data }) => {
   const pricePool = data?.pricingDetails?.currentPricePool || 0;
   const playersLimit = data?.bracketsMetadata?.playersLimit || 2;
+
+  const isDesktop = useAppSelector((x) =>
+    isDeviceTypeSelector(x, deviceTypes.desktop));
 
   const rows =
     data?.bracketsMetadata?.type === "SINGLE" &&
@@ -83,13 +89,13 @@ const Prizes: React.FC<PrizesProps> = ({ data }) => {
           <TableHead>
             <TableRow>
               <TableCell>
-                <Typography textTransform={"uppercase"} textAlign="left">
+                <Typography textTransform={"uppercase"} textAlign="left" style={{ fontSize: !isDesktop ? 10 : 15 }}>
                   Place
                 </Typography>{" "}
               </TableCell>
               <TableCell>
                 {" "}
-                <Typography textTransform={"uppercase"} textAlign="left">
+                <Typography textTransform={"uppercase"} textAlign="left" style={{ fontSize: !isDesktop ? 10 : 15 }}>
                   Rewards
                 </Typography>{" "}
               </TableCell>
@@ -103,13 +109,14 @@ const Prizes: React.FC<PrizesProps> = ({ data }) => {
                     {index <= 2 ? (
                       <Image
                         src={`/icons/BadgeIcon_${index + 1}.svg`}
-                        width={"26px"}
-                        height={"30px"}
+                        width={!isDesktop ? "16px" : "26px"}
+                        height={!isDesktop ? "16px" :"30px"}
                       />
                     ) : null}
                     <Typography
                       textTransform={"uppercase"}
                       marginLeft={index <= 2 ? 2 : 0}
+                      fontSize={!isDesktop ? 10 : 15}
                     >
                       {row.prizes}
                     </Typography>
@@ -119,10 +126,10 @@ const Prizes: React.FC<PrizesProps> = ({ data }) => {
                   <Box display="flex" alignItems={"center"}>
                     <Image
                       src={"/icons/RewardIcon.svg"}
-                      width={"26px"}
-                      height={"30px"}
+                      width={!isDesktop ? "16px" : "26px"}
+                      height={!isDesktop ? "16px" : "30px"}
                     />
-                    <Typography textTransform={"uppercase"} marginLeft={2}>
+                    <Typography textTransform={"uppercase"} marginLeft={2} fontSize={!isDesktop ? 10 : 15}>
                       {row.reward} ₹
                     </Typography>
                   </Box>
