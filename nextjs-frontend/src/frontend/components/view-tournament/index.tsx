@@ -493,7 +493,7 @@ const ViewTournament: React.FC = () => {
       default:
         return (
           <ViewCard title="Contact Details">
-            <div style={{ fontFamily: "Inter" }}>
+            <div style={{ fontFamily: "Inter", fontSize: !isDesktop ? 10 : 15 }}>
               {ReactHtmlParser(data.info?.contactDetails || "")}
             </div>
           </ViewCard>
@@ -643,10 +643,8 @@ const ViewTournament: React.FC = () => {
                       </span>{" "}
                     </Typography>
                   ) : (
-                    <Typography>
-                      <span style={{ color: "#FF0000", fontSize: 8 }}>
+                    <Typography style={{ color: "#FF0000", fontSize: 8, textAlign: "center", lineHeight: 1, marginTop: 5, marginBottom: 5 }}>
                         Tournament already started
-                      </span>
                     </Typography>
                   )}
                   {countDown && <span style={{ fontSize: 8 }}>{countDown}</span>}

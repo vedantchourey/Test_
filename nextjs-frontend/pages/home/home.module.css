@@ -14,8 +14,7 @@
 	background: radial-gradient(50% 50% at 50% 50%, rgba(8, 0, 29, 0.7) 0%, rgba(8, 0, 29, 0.8) 46.24%, rgba(8, 0, 29, 0.9) 100%)
 }
 .backgroundImgMobile {
-	margin-top: -40px;
-	width: 440px;
+	width: 340px;
 	height: 493px;
 	background: radial-gradient(50% 50% at 50% 50%, rgba(8, 0, 29, 0.7) 0%, rgba(8, 0, 29, 0.8) 46.24%, rgba(8, 0, 29, 0.9) 100%);
 }
