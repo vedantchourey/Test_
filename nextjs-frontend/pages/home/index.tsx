@@ -23,6 +23,7 @@ import moment from "moment";
 // import YoutubeIcon from "../../src/frontend/components/icons/youtube-icon";
 import { useAppSelector } from "../../src/frontend/redux-store/redux-store";
 import { isDeviceTypeSelector } from "../../src/frontend/redux-store/layout/layout-selectors";
+import { screenWidthSelector } from "../../src/frontend/redux-store/layout/layout-selectors";
 import { deviceTypes } from "../../src/frontend/redux-store/layout/device-types";
 import router from "next/router";
 import { getTopPosts } from "../../src/frontend/service-clients/post-service-client";
@@ -34,6 +35,10 @@ import CardComp from "../../src/frontend/components/tournaments-list/card";
 const Home = (): JSX.Element => {
   const isDesktop = useAppSelector((x) =>
     isDeviceTypeSelector(x, deviceTypes.desktop));
+
+  const screenWidth = useAppSelector((x) =>
+    screenWidthSelector(x));
+
   const [newsData, setNewsData] = useState<any[]>([]);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
   const [isFetchingPosts, setIsFetchingPosts] = useState<boolean>(true);
@@ -250,7 +255,7 @@ const Home = (): JSX.Element => {
       </div>
     )
   })
-
+  console.log("screen width ==>", screenWidth)
   return (
     <Fragment>
       <Grid container style={{ flex: 1 }}>
@@ -286,7 +291,10 @@ const Home = (): JSX.Element => {
         )}
         {!isDesktop && (
           <Grid item>
-            <div className={styles.backgroundImgMobile}>
+            <div
+              className={styles.backgroundImgMobile}
+              style={{ width: screenWidth < 390 ? 300 : 340 }}
+            >
               <AliceCarousel
                 items={topImageCarousel}
                 responsive={responsive}
@@ -497,6 +505,7 @@ const Home = (): JSX.Element => {
                     aria-label="lab API tabs example"
                     variant="scrollable"
                     scrollButtons="auto"
+                    style={{ width: 325 }}
                   >
                     <Tab value="1"
                       icon={<StarRateIcon style={{ height: 20, width: 20 }} />}
