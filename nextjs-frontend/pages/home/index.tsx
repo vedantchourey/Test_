@@ -101,11 +101,6 @@ const Home = (): JSX.Element => {
     }
   };
 
-  // useEffect(() => {
-  //   fetchPosts();
-  //   fetchCarousels();
-  // }, []);
-
   useEffect(() => {
     getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257");
   }, []);
