@@ -4,6 +4,10 @@ import React, { useEffect, useState } from "react";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import GroupIcon from "@mui/icons-material/Group";
 import {validate} from 'uuid'
+import { deviceTypes } from "../../../../../src/frontend/redux-store/layout/device-types";
+import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { screenWidthSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { useAppSelector } from "../../../redux-store/redux-store";
 
 interface IChatCard {
   name: string;
@@ -21,6 +25,12 @@ export default function ChatCard(props: IChatCard): JSX.Element {
   const [lastSeenTime, setLastSeenTime] = useState<any>(null);
   const [currentMoment, setCurrentMoment] = useState(moment());
   const [chatImage, setChatImage] = useState(props.image);
+
+  const isDesktop = useAppSelector((x) =>
+    isDeviceTypeSelector(x, deviceTypes.desktop));
+
+  const screenWidth = useAppSelector((x) =>
+    screenWidthSelector(x));
 
   const fetchLastSeen = async (): Promise<void> => {
     if (
@@ -84,17 +94,16 @@ export default function ChatCard(props: IChatCard): JSX.Element {
           <Avatar
             src={chatImage}
             style={{
-              height: 50,
-              width: 50,
-              // borderRadius: 10,
+              height: !isDesktop ? 30 : 50,
+              width: !isDesktop ? 30 : 50,
               background: "rgba(0,0,0,0.4)",
             }}
           />
         ) : (
           <GroupIcon
             style={{
-              height: 50,
-              width: 50,
+              height: !isDesktop ? 30 : 50,
+              width: !isDesktop ? 30 : 50,
               borderRadius: 25,
               background: "rgba(0,0,0,0.4)",
             }}
@@ -122,7 +131,7 @@ export default function ChatCard(props: IChatCard): JSX.Element {
       <Box ml={2} textAlign={"left"} flex={1}>
         <Typography
           textAlign={"left"}
-          fontSize={18}
+          fontSize={!isDesktop ? 13 : 18}
           color={props.isUnreadMessage ? "rgb(105, 50, 249)" : "#FFFFFF"}
           sx={{ flex: 1 }}
         >

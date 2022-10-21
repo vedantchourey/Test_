@@ -21,6 +21,10 @@ import { allowedImageExtensions } from "../../../../models/constants";
 import GroupIcon from "@mui/icons-material/Group";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
+import { deviceTypes } from "../../../../../src/frontend/redux-store/layout/device-types";
+import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { screenWidthSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { useAppSelector } from "../../../redux-store/redux-store";
 
 interface IChatBox {
   channelId: string;
@@ -39,6 +43,12 @@ export default function ChatBox(props: IChatBox): JSX.Element {
   const router = useRouter();
   const query: ParsedUrlQuery = router.query;
   const defaultMessage: string | string[] | undefined = query.message;
+
+  const isDesktop = useAppSelector((x) =>
+    isDeviceTypeSelector(x, deviceTypes.desktop));
+
+  const screenWidth = useAppSelector((x) =>
+    screenWidthSelector(x));
 
   const [messages, _setMessages] = useState<IMessages[]>([]);
   const [chatUsers, setchatUsers] = useState<any[]>([]);
@@ -167,10 +177,11 @@ export default function ChatBox(props: IChatBox): JSX.Element {
             borderBottomColor: "rgba(255,255,255,0.1)",
             borderBottomWidth: 1,
             borderBottomStyle: "solid",
+            flexDirection: !isDesktop ? "column" : "row",
           }}
           display="flex"
           justifyContent={"space-between"}
-          alignItems={"center"}
+          alignItems={!isDesktop ? "left" : "center"}
         >
           <Box display={"flex"}>
             <IconButton aria-label="back" size="small" onClick={props.onBack}>
@@ -181,6 +192,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
               ml={1}
               lineHeight={"35px"}
               color="#FFFFFF"
+              fontSize={!isDesktop ? 13 : 15}
             >
               {props.channelName}
             </Typography>
@@ -200,6 +212,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
             textAlign={"left"}
             variant="caption"
             color={"rgba(255,255,255,0.5)"}
+            style={{ marginLeft: !isDesktop ? 40 : 0 }}
           >
             {moment().format("dddd, MMMM DD YYYY")}
           </Typography>

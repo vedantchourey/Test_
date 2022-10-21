@@ -27,6 +27,7 @@ import {
 import { fetchAllGamesThunk } from "../../src/frontend/redux-store/games/game-slice";
 import { deviceTypes } from "../../src/frontend/redux-store/layout/device-types";
 import { isDeviceTypeSelector } from "../../src/frontend/redux-store/layout/layout-selectors";
+import { screenWidthSelector } from "../../src/frontend/redux-store/layout/layout-selectors";
 import {
   useAppDispatch,
   useAppSelector,
@@ -36,6 +37,7 @@ import { useRouter } from "next/router";
 import { frontendSupabase } from "../../src/frontend/services/supabase-frontend-service";
 import frontendConfig from "../../src/frontend/utils/config/front-end-config";
 import GroupIcon from "@mui/icons-material/Group";
+import NoobFooter from "../../src/frontend/components/footer/index";
 
 // const createData = (
 //   rank: HTMLParagraphElement,
@@ -131,6 +133,11 @@ const Leaderboard = (): JSX.Element => {
 
   const isDesktop = useAppSelector((x) =>
     isDeviceTypeSelector(x, deviceTypes.desktop));
+
+  const screenWidth = useAppSelector((x) =>
+    screenWidthSelector(x));
+  console.log("screenWidth =>", screenWidth);
+
   return (
     <NoobPage
       title="Leaderboard"
@@ -141,7 +148,7 @@ const Leaderboard = (): JSX.Element => {
           <Heading divider heading={"LEADERBOARD"} />
           <Box
             mt={5}
-            sx={{ maxWidth: isDesktop ? "1400px" : "300px" }}
+            sx={{ maxWidth: isDesktop ? "1400px" : "275px" }}
             display={"flex"}
             flexWrap={"nowrap"}
             overflow={"scroll"}
@@ -303,7 +310,10 @@ const Leaderboard = (): JSX.Element => {
             </Grid>
           )}
           <div style={{ padding: "10px" }}>
-            <TableContainer component={Paper} className={styles.mainTable}>
+            <TableContainer
+              component={Paper}
+              className={styles.mainTable}
+            >
               <Table stickyHeader>
                 <TableHead>
                   <TableRow
@@ -315,14 +325,14 @@ const Leaderboard = (): JSX.Element => {
                       },
                     }}
                   >
-                    <TableCell style={{ width: "8%" }} align="center">
+                    <TableCell align="center" style={{ fontSize: !isDesktop ? 10 : 15 }}>
                       Rank
                     </TableCell>
-                    <TableCell style={{ width: "40%" }}>Username</TableCell>
-                    <TableCell style={{ width: "10%" }}>Games Played</TableCell>
-                    <TableCell style={{ width: "10%" }}>Wins</TableCell>
+                    <TableCell style={{ fontSize: !isDesktop ? 10 : 15 }}>Username</TableCell>
+                    <TableCell style={{ fontSize: !isDesktop ? 10 : 15 }}>Games Played</TableCell>
+                    <TableCell style={{ fontSize: !isDesktop ? 10 : 15 }}>Wins</TableCell>
                     {isDesktop && (
-                      <TableCell style={{ width: "10%" }}>Elo Rating</TableCell>
+                      <TableCell >Elo Rating</TableCell>
                     )}
                   </TableRow>
                 </TableHead>
@@ -331,6 +341,7 @@ const Leaderboard = (): JSX.Element => {
                     "&:last-child td, &:last-child th": {
                       border: 1,
                       borderColor: "rgba(255, 255, 255, 0.1)",
+                      fontSize: !isDesktop ? 10 : 15,
                     },
 
                   }}
@@ -354,17 +365,21 @@ const Leaderboard = (): JSX.Element => {
                             style={{ display: "flex", alignItems: "center" }}
                           >
                             <span>
-                              {isTeam?
-                              (image?
-                              <img src={image || ""} 
-                                width={"45px"}
-                                height={"45px"}
-                                style={{ borderRadius: 65 }}/>:
-                                <GroupIcon
-                                style={{ borderRadius: 65,width:45,height:45 }}/>
-                                ):
-                              <Avatar src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${image}`}
-                               style={{height:'45px',width:'45px',borderRadius:'65px'}}/>}
+                              {isTeam ? (
+                                image ?
+                                  <img src={image || ""}
+                                    width={!isDesktop ? "25px" : "45px"}
+                                    height={!isDesktop ? "25px" : "45px"}
+                                    style={{ borderRadius: 65 }}
+                                  />
+                                : <GroupIcon
+                                    style={{ borderRadius: 65, width: !isDesktop ? 25 : 45, height: !isDesktop ? 25 : 45 }}
+                                  />
+                                ) : <Avatar
+                                      src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${image}`}
+                                      style={{height: !isDesktop ? "25px" : "45px", width: !isDesktop ? "25px" : "45px", borderRadius:'65px'}}
+                                    />
+                              }
                             </span>
                             <span style={{ padding: "10px" }}>
                             {isTeam?item.name:item?.userDetails?.username}
@@ -385,6 +400,7 @@ const Leaderboard = (): JSX.Element => {
             </TableContainer>
           </div>
         </Container>
+        <NoobFooter />
       </Fragment>
     </NoobPage>
   );
