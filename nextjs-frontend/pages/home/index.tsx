@@ -222,7 +222,7 @@ const Home = (): JSX.Element => {
     </div>,
   ];
 
-  const topImageCarousel = carouselImages.map((image) => {
+  const topImageCarousel = carouselImages.map((image, index) => {
     return (
       <div
         data-value={image.id}
@@ -235,15 +235,16 @@ const Home = (): JSX.Element => {
           <img
             src={image.image}
             style={{ width: "100%", position: "absolute" }}
+            className={styles.mainCarouselImage}
           />
           <Box className={styles.carouselContainer} style={{ position: "absolute" }}>
             <Typography className={isDesktop ? styles.title : styles.text1Mobile} style={{ marginBottom: 10, marginLeft: 20 }}>
               {image.name}
             </Typography>
-            <div style={{width: "70%"}}>
-            <Typography className={isDesktop ? styles.subtitle : styles.text2Mobile} style={{ marginBottom: 20, marginLeft: 20 }}>
-              {image.subtitle}
-            </Typography>
+            <div style={{ width: "70%" }}>
+              <Typography className={isDesktop ? styles.subtitle : styles.text2Mobile} style={{ marginBottom: 20, marginLeft: 20 }}>
+                {image.subtitle}
+              </Typography>
             </div>
           </Box>
         </Box>
