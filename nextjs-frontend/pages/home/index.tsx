@@ -234,7 +234,7 @@ const Home = (): JSX.Element => {
         <Box style={{ width: "100%", height: 450, }}>
           <img
             src={image.image}
-            style={{ width: "100%", position: "absolute" }}
+            style={{ width: "100%", position: "relative" }}
             className={styles.mainCarouselImage}
           />
           <Box className={styles.carouselContainer} style={{ position: "absolute" }}>
