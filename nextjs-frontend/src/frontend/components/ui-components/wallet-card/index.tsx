@@ -13,9 +13,9 @@ const NoobCard = styled(Card)(() => ({
 const WalletCard: React.FC = ({ children }) => {
   const theme = useTheme();
   const isSmall = useMediaQuery(theme.breakpoints.down("sm"));
-  
+
   return (
-    <NoobCard style={!isSmall?{marginLeft:"70px",marginRight:"70px"}:{}}>
+    <NoobCard>
       <Divider
         variant="middle"
         style={{

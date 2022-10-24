@@ -2,9 +2,13 @@ import { Box, Card, Divider, Grid, Typography } from "@mui/material";
 import React from "react";
 import { useAppSelector } from "../../../redux-store/redux-store";
 import { cartDetailsSelector } from "../../../redux-store/wallet/wallet-selector";
+import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from '../../../../../src/frontend/redux-store/layout/device-types';
 
 const CartDetails: React.FC = () => {
   const cart_details = useAppSelector(cartDetailsSelector);
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
+
   return (
     <React.Fragment>
       <Card
@@ -14,20 +18,19 @@ const CartDetails: React.FC = () => {
           <Grid item sm={12} display="flex" justifyContent={"space-between"}>
             <Box
               style={{
-                height: "80px",
-                width: "80px",
                 background: "#6932F9",
                 color: "#ffffff",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                margin: "20px 0px 20px 20px",
+                padding: "0px 30px 0px 30px",
+                flexDirection: "row",
               }}
             >
               <Typography variant="h4">₹</Typography>
             </Box>
-            <Box style={{ marginTop: "44px", marginRight: "20px" }}>
-              <Typography variant="h1">
+            <Box style={{ padding: "20px 0 20px 0" , marginRight: "20px" }}>
+              <Typography variant={!isDesktop ? "h3" : "h1"}>
                 {" "}
                 {cart_details?.total_amount}{" "}
               </Typography>
