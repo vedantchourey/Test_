@@ -12,6 +12,9 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/router";
 import * as React from "react";
+import { useAppSelector } from "../../../../src/frontend/redux-store/redux-store";
+import { deviceTypes } from "../../../../src/frontend/redux-store/layout/device-types";
+import { isDeviceTypeSelector } from "../../../../src/frontend/redux-store/layout/layout-selectors";
 
 interface Message {
   image: string;
@@ -34,6 +37,9 @@ export default function BasicPopover(props: Props): JSX.Element {
   const [image, setImage] = React.useState<string>("");
   const router = useRouter();
 
+  const isDesktop = useAppSelector((x) =>
+    isDeviceTypeSelector(x, deviceTypes.desktop));
+
   const toggle = (data: string): void => {
     setImage(data);
     setPopupVisible(!popVisible);
@@ -47,14 +53,14 @@ export default function BasicPopover(props: Props): JSX.Element {
           <Avatar
             // alt="Travis Howard"
             src={message.image}
-            style={{ height: 55, width: 55 }}
+            style={{ height: !isDesktop ? 25 : 55, width: !isDesktop ? 25 : 55 }}
           />
         </ListItemAvatar>
         <ListItemText
           secondary={
             <Box ml={1} display={"flex"} flexDirection={"column"}>
               <Typography
-                sx={{ display: "inline" }}
+                sx={{ display: "inline", fontSize: !isDesktop ? 10 : 15 }}
                 component="span"
                 variant="body2"
                 color="text.primary"
@@ -64,10 +70,14 @@ export default function BasicPopover(props: Props): JSX.Element {
               {props.isActionRequired ? (
                 <Box display={"flex"} flexDirection={"row"} mt={2}>
                   <Button variant="contained" onClick={onAccept} sx={{ mr: 1 }}>
-                    Accept
+                    <Typography sx={{ fontSize: !isDesktop ? 10 : 15 }}>
+                      Accept
+                    </Typography>
                   </Button>
                   <Button variant="outlined" onClick={onDecline} sx={{ mr: 1 }}>
-                    Decline
+                    <Typography sx={{ fontSize: !isDesktop ? 10 : 15 }}>
+                      Decline
+                    </Typography>
                   </Button>
                   {type === "MATCH_RESULT" && (
                     <Button
@@ -75,7 +85,9 @@ export default function BasicPopover(props: Props): JSX.Element {
                       onClick={(): any => toggle(data?.screenshot || "")}
                       sx={{ mr: 1 }}
                     >
-                      View
+                      <Typography sx={{ fontSize: !isDesktop ? 10 : 15 }}>
+                        View
+                      </Typography>
                     </Button>
                   )}
                   {type === "TOURNAMENT_INVITE" && (
@@ -88,7 +100,9 @@ export default function BasicPopover(props: Props): JSX.Element {
                       }
                       sx={{ mr: 1 }}
                     >
-                      View tournament
+                      <Typography sx={{ fontSize: !isDesktop ? 10 : 15 }}>
+                        View tournament
+                      </Typography>
                     </Button>
                   )}
 
@@ -98,7 +112,9 @@ export default function BasicPopover(props: Props): JSX.Element {
                       onClick={(): any => router.push(data.data.url)}
                       sx={{ mr: 1 }}
                     >
-                      View Team
+                      <Typography sx={{ fontSize: !isDesktop ? 10 : 15 }}>
+                        View Team
+                      </Typography>
                     </Button>
                   )}
                 </Box>
@@ -112,7 +128,9 @@ export default function BasicPopover(props: Props): JSX.Element {
                     }}
                     sx={{ mr: 1 }}
                   >
-                    View
+                    <Typography sx={{ fontSize: !isDesktop ? 10 : 15 }}>
+                      View
+                    </Typography>
                   </Button>
                 </Box>
               )}

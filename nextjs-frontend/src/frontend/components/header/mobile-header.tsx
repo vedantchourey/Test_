@@ -1,4 +1,4 @@
-import { AppBar, Icon, IconButton, Button, Box, Divider, Popover, ListSubheader } from "@mui/material";
+import { AppBar, Icon, IconButton, Button, Box, Divider, Popover, ListSubheader, Typography } from "@mui/material";
 import styles from "./noob-mobile-header.module.css";
 import * as React from "react";
 import { useState } from "react";
@@ -246,16 +246,17 @@ export default function MobileDrawer(): JSX.Element {
           vertical: "top",
           horizontal: "center",
         }}
-        sx={{ textAlign: "center" }}
+        sx={{ textAlign: "center", width: "80%" }}
       >
         <ListSubheader
           sx={{
             fontStyle: "norma",
-            fontSize: "20px",
+            fontSize: "10px",
             fontWeight: 700,
             fontFamily: "Inter",
             color: "#FFFFFF",
             minWidth: 500,
+            textAlign: "left"
           }}
         >
           Notifications
@@ -296,7 +297,9 @@ export default function MobileDrawer(): JSX.Element {
               )
         )}
         <Button variant="text" onClick={(): any => router.push(`/notification`)}>
-          View All
+          <Typography sx={{ fontSize: 10 }}>
+            View All
+          </Typography>
         </Button>
       </Popover>
       <NoobDrawer
