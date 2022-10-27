@@ -28,9 +28,9 @@ export default function MobileDrawer(): JSX.Element {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [notifications, setNotifications] = React.useState<any[]>([]);
-  const [notificationLength,setNotificationLength]=React.useState<number>(0);
-  const [notificationPayload, setNotificationPayload] = React.useState<any>()
-  const [gameIdModal, setGameIdModal] = React.useState(false);
+  // const [notificationLength,setNotificationLength]=React.useState<number>(0);
+  // const [notificationPayload, setNotificationPayload] = React.useState<any>()
+  // const [gameIdModal, setGameIdModal] = React.useState(false);
   const [gameId, setGameId] = React.useState("")
 
   const toggleDrawer = (): void => setShowMenu(true);
@@ -65,7 +65,6 @@ export default function MobileDrawer(): JSX.Element {
   const id = open ? "simple-popover" : undefined;
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
-    console.log("event ==>", event);
     setAnchorEl(event.currentTarget);
   };
 
@@ -87,9 +86,9 @@ export default function MobileDrawer(): JSX.Element {
         console.error(err);
       })
       .finally(() => {
-        setNotificationPayload(undefined);
+        // setNotificationPayload(undefined);
         setAnchorEl(null);
-        setGameIdModal(false);
+        // setGameIdModal(false);
         fetchNotifications();
       });
   };
@@ -118,7 +117,7 @@ export default function MobileDrawer(): JSX.Element {
             createdAt:i?.created_at,
           };
         });
-        setNotificationLength(notificatiosData?.length);
+        // setNotificationLength(notificatiosData?.length);
         setNotifications(notificatiosData);
       })
       .catch((err) => {
@@ -166,28 +165,13 @@ export default function MobileDrawer(): JSX.Element {
             </Button>
           </Box>)}
           <Box>
-            <div onClick={(e: any) => handleClick(e)}>
+            <div onClick={(e: any): void => handleClick(e)}>
               <img src="/icons/Vector-Bell.png" className={style.img3} />
               <img src="/icons/Vector-Ellipse.png" className={style.img4} />
             </div>
           </Box>
         </div>
         <Divider />
-        {/* <div className={style.container}>
-          <Box>
-            <img src="/icons/Vector-home2.png" className={style.img5} />
-          </Box>
-          <Box>
-            <img src="/icons/Vector-Tournaments2.png" className={style.img5} />
-          </Box>
-          <Box>
-            <img src="/icons/Vector-Leaderboards.png" className={style.img5} />
-          </Box>
-          <Box className={style.box}>
-            <img src="/icons/Vector-Search.png" style={{ width: "16px" }} />
-          </Box>
-        </div> */}
-
         {isLoggedIn && (
           <div className={styles.bottomHeader}>
             <IconButton
@@ -277,8 +261,8 @@ export default function MobileDrawer(): JSX.Element {
                   onAccept={(): void => {
                     if (i.data.type === "TOURNAMENT_INVITE") {
                       setGameId("");
-                      setGameIdModal(true);
-                      setNotificationPayload(i.id);
+                      // setGameIdModal(true);
+                      // setNotificationPayload(i.id);
                     } else {
                       submitNotification(i.id, "ACCEPTED");
                     }

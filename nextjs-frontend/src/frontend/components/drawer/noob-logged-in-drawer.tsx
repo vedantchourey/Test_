@@ -124,6 +124,7 @@ export default function NoobLoggedInDrawer(props: Props): JSX.Element {
             variant="text"
             startIcon={<ShoppingCartIcon />}
             style={{ textTransform: "none" }}
+            onClick={(): Promise<void> => gotoPage("/store")}
           >
             Store
           </Button>
@@ -134,6 +135,7 @@ export default function NoobLoggedInDrawer(props: Props): JSX.Element {
               color: theme.palette.secondary.main,
               textTransform: "none",
             }}
+            onClick={(): Promise<void> => gotoPage("/free-agency-market/view/members")}
           >
             Free Agency Market
           </Button>
