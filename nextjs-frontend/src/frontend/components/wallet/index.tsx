@@ -23,7 +23,7 @@ const Wallet:React.FC = () => {
     }
     switch (page) {
       case "info":
-        return <Failed />;
+        return <WalletInfo />;
       case "credit/add":
         return <AddCredit />;
       case "credit/success":
