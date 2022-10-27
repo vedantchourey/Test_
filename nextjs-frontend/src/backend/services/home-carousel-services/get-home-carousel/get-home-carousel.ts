@@ -7,6 +7,6 @@ export const getHomeCarousel = async (req: any, context: PerRequestContext): Pro
   const repository = new HomeCarouselRepository(
     context.transaction as Knex.Transaction
   );
-  let response = await repository.getHomeCarousel(req.carousel);
+  const response = await repository.getHomeCarousel(req.carousel);
   return response
 };

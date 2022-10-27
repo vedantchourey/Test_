@@ -23,7 +23,6 @@ import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 import { deviceTypes } from "../../../../../src/frontend/redux-store/layout/device-types";
 import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
-import { screenWidthSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
 import { useAppSelector } from "../../../redux-store/redux-store";
 
 interface IChatBox {
@@ -46,9 +45,6 @@ export default function ChatBox(props: IChatBox): JSX.Element {
 
   const isDesktop = useAppSelector((x) =>
     isDeviceTypeSelector(x, deviceTypes.desktop));
-
-  const screenWidth = useAppSelector((x) =>
-    screenWidthSelector(x));
 
   const [messages, _setMessages] = useState<IMessages[]>([]);
   const [chatUsers, setchatUsers] = useState<any[]>([]);

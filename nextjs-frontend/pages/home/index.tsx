@@ -222,7 +222,7 @@ const Home = (): JSX.Element => {
     </div>,
   ];
 
-  const topImageCarousel = carouselImages.map((image, index) => {
+  const topImageCarousel = carouselImages.map((image) => {
     return (
       <div
         data-value={image.id}
@@ -251,7 +251,7 @@ const Home = (): JSX.Element => {
       </div>
     )
   })
-  console.log("screen width ==>", screenWidth)
+
   return (
     <Fragment>
       <Grid container style={{ flex: 1 }}>

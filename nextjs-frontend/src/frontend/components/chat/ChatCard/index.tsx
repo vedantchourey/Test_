@@ -6,7 +6,6 @@ import GroupIcon from "@mui/icons-material/Group";
 import {validate} from 'uuid'
 import { deviceTypes } from "../../../../../src/frontend/redux-store/layout/device-types";
 import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
-import { screenWidthSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
 import { useAppSelector } from "../../../redux-store/redux-store";
 
 interface IChatCard {
@@ -28,9 +27,6 @@ export default function ChatCard(props: IChatCard): JSX.Element {
 
   const isDesktop = useAppSelector((x) =>
     isDeviceTypeSelector(x, deviceTypes.desktop));
-
-  const screenWidth = useAppSelector((x) =>
-    screenWidthSelector(x));
 
   const fetchLastSeen = async (): Promise<void> => {
     if (

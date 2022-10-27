@@ -27,7 +27,6 @@ import {
 import { fetchAllGamesThunk } from "../../src/frontend/redux-store/games/game-slice";
 import { deviceTypes } from "../../src/frontend/redux-store/layout/device-types";
 import { isDeviceTypeSelector } from "../../src/frontend/redux-store/layout/layout-selectors";
-import { screenWidthSelector } from "../../src/frontend/redux-store/layout/layout-selectors";
 import {
   useAppDispatch,
   useAppSelector,
@@ -37,7 +36,6 @@ import { useRouter } from "next/router";
 import { frontendSupabase } from "../../src/frontend/services/supabase-frontend-service";
 import frontendConfig from "../../src/frontend/utils/config/front-end-config";
 import GroupIcon from "@mui/icons-material/Group";
-import NoobFooter from "../../src/frontend/components/footer/index";
 
 // const createData = (
 //   rank: HTMLParagraphElement,
@@ -133,10 +131,6 @@ const Leaderboard = (): JSX.Element => {
 
   const isDesktop = useAppSelector((x) =>
     isDeviceTypeSelector(x, deviceTypes.desktop));
-
-  const screenWidth = useAppSelector((x) =>
-    screenWidthSelector(x));
-  console.log("screenWidth =>", screenWidth);
 
   return (
     <NoobPage
@@ -400,7 +394,6 @@ const Leaderboard = (): JSX.Element => {
             </TableContainer>
           </div>
         </Container>
-        <NoobFooter />
       </Fragment>
     </NoobPage>
   );
