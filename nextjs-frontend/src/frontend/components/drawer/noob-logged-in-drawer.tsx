@@ -4,7 +4,6 @@ import {
   Divider,
   IconButton,
   ListItemIcon,
-  ListItemText,
   MenuItem,
   MenuList,
   Typography,
