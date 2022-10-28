@@ -143,17 +143,17 @@ export default function MobileDrawer(): JSX.Element {
         <div className={style.container}>
           <Box>
             <IconButton onClick={toggleDrawer}>
-              <img src="/icons/Vector-MenuIcon.png" />
+              <img src="/icons/Vector-MenuIcon.png" style={{ height: 15, width: 20 }} />
             </IconButton>
           </Box>
-          <Box>
-            <img src="/icons/logo-white-1.png" className={style.img1} />
-            <span className={style.border1}></span>
+          <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+            <img src="/icons/logo-white-1.png" style={{ height: 25, width: 15 }} />
+            <div style={{ height: 15, width: 1, backgroundColor: "white", marginLeft: 10 }} />
             <img
               src="/images/noobstorm-logo-small.png"
-              className={style.img2}
+              style={{ height: 20, width: 75, marginLeft: 10 }}
             />
-          </Box>
+          </div>
           {isLoggedIn && (<Box>
             <Button
               variant="text"
