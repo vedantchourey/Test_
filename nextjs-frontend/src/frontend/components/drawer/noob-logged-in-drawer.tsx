@@ -65,61 +65,68 @@ export default function NoobLoggedInDrawer(props: Props): JSX.Element {
             </IconButton>
           </div>
         </div>
+        <MenuList style={{ display: "flex", flexDirection: "row", paddingBottom: 0, paddingTop: 0 }}>
+          <MenuItem onClick={(): Promise<void> => gotoPage("/tournament-dashboard")}>
+            <Typography fontSize={12}>Dashboard</Typography>
+          </MenuItem>
+          <MenuItem onClick={(): Promise<void> => gotoPage("/teamlist")}>
+            <Typography fontSize={12}>My Teams</Typography>
+          </MenuItem>
+        </MenuList>
         <div className={styles.topMenuGroup}>
           <MenuList>
             <MenuItem onClick={(): Promise<void> => gotoPage("/")}>
               <ListItemIcon>
                 <HomeIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText>Home</ListItemText>
+              <Typography fontSize={12}>Home</Typography>
             </MenuItem>
             <MenuItem onClick={(): Promise<void> => gotoPage("/tournaments-list")}>
               <ListItemIcon>
                 <EmojiEventsIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText>Tournaments</ListItemText>
+              <Typography fontSize={12}>Tournaments</Typography>
             </MenuItem>
             <MenuItem onClick={(): Promise<void> => gotoPage("/leaderboard")}>
               <ListItemIcon>
                 <AssessmentIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText>Leaderboards</ListItemText>
+              <Typography fontSize={12}>Leaderboards</Typography>
             </MenuItem>
             <MenuItem onClick={(): Promise<void> => gotoPage("/chat")}>
               <ListItemIcon>
                 <EmailIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText>Message</ListItemText>
+              <Typography fontSize={12}>Message</Typography>
             </MenuItem>
             <MenuItem onClick={(): Promise<void> => gotoPage("/about-us")}>
               <ListItemIcon>
                 <GroupIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText>About Us</ListItemText>
+              <Typography fontSize={12}>About Us</Typography>
             </MenuItem>
             <MenuItem onClick={(): Promise<void> => gotoPage("/support")}>
               <ListItemIcon>
                 <HelpOutlineIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText>Support</ListItemText>
+              <Typography fontSize={12}>Support</Typography>
             </MenuItem>
             <MenuItem onClick={(): Promise<void> => gotoPage("/faq")}>
               <ListItemIcon>
                 <ForumIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText>FAQ</ListItemText>
+              <Typography fontSize={12}>FAQ</Typography>
             </MenuItem>
-            <Divider />
             <MenuItem onClick={onLogoutClick}>
               <ListItemIcon>
                 <LogoutIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText>Logout</ListItemText>
+              <Typography fontSize={12}>Logout</Typography>
             </MenuItem>
           </MenuList>
         </div>
         <Divider />
-        <div className={styles.bottomMenuGroup}>
+        <div className={styles.bottomMenuGroup} style={{ marginTop: 0 }}>
           <Button
             variant="text"
             startIcon={<ShoppingCartIcon />}

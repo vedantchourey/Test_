@@ -7,6 +7,7 @@ import {
   Box,
   Container,
   Skeleton,
+  LinearProgress,
 } from "@mui/material";
 import styles from "./home.module.css";
 import Tab from "@mui/material/Tab";
@@ -436,7 +437,7 @@ const Home = (): JSX.Element => {
                       </Grid>
                     </TabPanel>
                     <TabPanel value="3" className={styles.tournamentContainer}>
-                      <Grid display={"flex"} overflow="scroll" maxWidth={"75vw"} className={"hide-scrollbar"}>
+                      <Grid display={"flex"} maxWidth={"75vw"} className={"hide-scrollbar"}>
                         {tournamentsData
                           .sort((a: any, b: any) => {
                             const aTime: any = moment(a.startDate).format("x");
@@ -587,6 +588,8 @@ const Home = (): JSX.Element => {
                         const startDateTime = moment(data.startDate).format(
                           "D MMM YYYY hh:mm A"
                         );
+                        const totalSlots = data?.bracketsMetadata?.playersLimit || 0;
+                        const currentSlot = (data?.playerList || []).length;
                         return (
                           <Grid
                             item
@@ -600,23 +603,40 @@ const Home = (): JSX.Element => {
                               className={styles.newsFeedImg}
                             />
                             <Box style={{ marginTop: "-355px" }}>
-                              <Box className={styles.tournamentTopContainer}>
+                              <div style={{ width: 300, backgroundColor: "silver", display: "flex", flexDirection: "row", justifyContent: "space-around" }}>
                                 <Button
                                   variant="text"
                                   style={{
+                                    color: "white",
                                     background: moment(startDateTime).isBefore(
                                       moment()
                                     )
                                       ? "#F08743"
                                       : "#EF5DA8",
+                                    height: 35,
+                                    flex: 0.3,
                                   }}
-                                  className={styles.tournamentButton}
                                 >
                                   {moment(startDateTime).isBefore(moment())
                                     ? "Completed"
                                     : "On Going"}
                                 </Button>
-                              </Box>
+                                <div style={{ flex: 0.6 }}>
+                                  <LinearProgress
+                                    variant="determinate"
+                                    color={"secondary"}
+                                    value={(currentSlot * 100) / parseInt(totalSlots.toString())}
+                                  />
+                                  <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around", color: "white" }}>
+                                    <Typography fontSize={10}>{totalSlots}</Typography>
+                                    <Typography fontSize={10}>{currentSlot}</Typography>
+                                  </div>
+                                  <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around", color: "white" }}>
+                                    <Typography fontSize={10}>TOTAL SLOTS</Typography>
+                                    <Typography fontSize={10}>LEFT SLOTS</Typography>
+                                  </div>
+                                </div>
+                              </div>
                               <Box className={styles.textMainContainer}>
                                 <Box className={styles.textContainer}>
                                   <Typography className={styles.tContainerText1}>
