@@ -45,6 +45,8 @@ import axios from "axios";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import { useRouter } from "next/router";
 import AvtarModal from "./avtar-modal";
+import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from '../../../../../src/frontend/redux-store/layout/device-types';
 
 export default function UserProfileCard(): JSX.Element {
   const router = useRouter();
@@ -72,6 +74,7 @@ export default function UserProfileCard(): JSX.Element {
   };
 
   const [teamModal, setTeamModal] = useState(false);
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
 
   const handleCloseAvtar = (): void => setOpenAvatarModal(false);
 
@@ -291,6 +294,7 @@ export default function UserProfileCard(): JSX.Element {
                         mt: 1,
                         cursor: "pointer",
                       }}
+                      style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}
                       key={idx}
                       onClick={(): any =>
                         router.push(`/team/view/${t.id}/members`)
@@ -298,6 +302,7 @@ export default function UserProfileCard(): JSX.Element {
                     >
                       <Avatar
                         sx={{ mr: 1, width: 35, height: 35 }}
+                        style={{ display: "flex", alignContent: "center", justifyContent: "center" }}
                         alt={t.name.toUpperCase()}
                         src={teamLogo}
                       />
@@ -316,15 +321,14 @@ export default function UserProfileCard(): JSX.Element {
                   <Button
                     variant="text"
                     sx={{
-                      mt: 2,
                       p: 0,
                       justifyContent: "flex-start",
-                      pl: "2px",
                     }}
                     fullWidth
                     onClick={(): any => setTeamModal(true)}
+                    style={{ marginTop: 8 }}
                   >
-                    <Avatar sx={{ mr: 1, width: 35, height: 35 }}>
+                    <Avatar sx={{ mr: 1, width: 35, height: 35 }} style={{ display: "flex", alignContent: "center", justifyContent: "center" }}>
                       <Typography
                         variant="h3"
                         fontSize={12}
@@ -447,7 +451,7 @@ export default function UserProfileCard(): JSX.Element {
         open={teamModal}
         onClose={(): any => setTeamModal(false)}
       >
-        <Box style={{ maxHeight: 500, width: 500, background: "#08001c" }} className={"hide-scrollbar"}>
+        <Box style={{ width: !isDesktop ? 320 : 500, background: "#08001c" }} className={"hide-scrollbar"}>
           <AppBar position="static" className={styles.appBar}>
             <Box sx={{ textAlign: "center", position: "relative" }}>
               <Typography variant="h3" color="white" fontSize={20}>

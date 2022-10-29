@@ -31,14 +31,16 @@ export default function SocialMedia(props: { hideChat: boolean }): JSX.Element {
     try {
       setIsFetchingPosts(true);
       const followers = await fetchUserFollowingList(user?.id || "");
-      const fetchPostsBatch = followers.map((i) =>
-        getPostsByUserId(i.follower.id));
+      const fetchPostsBatch = followers.map(async (i) =>
+        await getPostsByUserId(i.follower.id));
       const posts: IPostsResponse[] = [];
       const followerPosts = await Promise.all(fetchPostsBatch);
       followerPosts.map((p: any) => {
         p.map((fp: IPostsResponse) => posts.push(fp));
       });
       setPosts(posts);
+    } catch(error) {
+      console.warn("Error: Error while fetching posts - ", error);
     } finally {
       setIsFetchingPosts(false);
     }
@@ -64,15 +66,20 @@ export default function SocialMedia(props: { hideChat: boolean }): JSX.Element {
   };
 
   async function searchByUserName(username: string): Promise<void> {
-    setIsFetching(true);
-    setUserList([]);
-    if (!username) {
-      setIsFetching(false);
-      return;
+    try {
+      setIsFetching(true);
+      setUserList([]);
+      if (!username) {
+        setIsFetching(false);
+        return;
+      }
+      const response = await searchPeopleByText({ search: username, range: 10 });
+      if (response.length) setUserList(response);
+      setIsFetching(false)
+    } catch(error) {
+      console.warn("Error: Error while search user.", error);
+      setIsFetching(false)
     }
-    const response = await searchPeopleByText({ search: username, range: 10 });
-    if (response.length) setUserList(response);
-    setIsFetching(false)
   }
 
   const router = useRouter();

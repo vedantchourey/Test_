@@ -304,7 +304,7 @@ export default function NewsView(): JSX.Element {
               container
               columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}
               display="flex"
-              style={!isDesktop ? { flexDirection: "column", alignItems: "center"  } : {}}
+              style={!isDesktop ? { flexDirection: "column", alignItems: "center" } : {}}
             >
               <Box style={!isDesktop ? { width: "325px" } : {}}>
                 <Box style={{ marginTop: "15px", display: "flex", alignItems:"center", justifyContent:"space-between" }}>
@@ -333,7 +333,8 @@ export default function NewsView(): JSX.Element {
                     const dateB = new Date(b.created_at).getTime();
                     return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
                   })
-                  .filter((i)=>i.id!==newsID).map((i: any, key) => {
+                  .filter((i)=>i.id!==newsID)
+.map((i: any, key) => {
                     if (key < 4) {
                       return (
                         <Card
