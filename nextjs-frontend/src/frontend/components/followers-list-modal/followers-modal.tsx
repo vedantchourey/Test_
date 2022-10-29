@@ -13,7 +13,7 @@ export default function Followersmodal({ username }: any): JSX.Element {
 
   const getProfile = async (): Promise<any> => {
     try {
-      let response = await getUserProfileByUsername(username);
+      const response = await getUserProfileByUsername(username);
       setData(response);
     } catch (error) {
       console.warn("Error: Error while getting user profile by username - ", error);

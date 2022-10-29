@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Box, Typography, Modal, AppBar, IconButton, Divider } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import styles from './followers-list-modal.module.css';
-import { fetchUserFollowerList, fetchUserFollowingList } from '../../service-clients/profile-service-client';
-import { IOthersProfileResponse, IProfileResponse } from "../../service-clients/messages/i-profile";
 import { IFollowersList } from '../../service-clients/messages/i-followers-list-response';
 import Followersmodal from "./followers-modal";
 import { isDeviceTypeSelector } from "../../../../src/frontend/redux-store/layout/layout-selectors";
@@ -12,7 +10,6 @@ import { useAppSelector } from "../../redux-store/redux-store";
 
 interface IProps {
   userList?: IFollowersList[],
-  userData?: IOthersProfileResponse | IProfileResponse,
   handleClose: () => void;
   showModal: boolean;
   listType: 'followers' | 'following'
@@ -41,7 +38,7 @@ const mobileStyle = {
   transform: 'translate(-50%, -50%)',
 };
 
-const FollowersModal = ({ handleClose, userData, showModal, listType, userList }: IProps): JSX.Element => {
+const FollowersModal = ({ handleClose, showModal, listType, userList }: IProps): JSX.Element => {
   const [list, setList] = useState<IFollowersList[]>([]);
   const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
 

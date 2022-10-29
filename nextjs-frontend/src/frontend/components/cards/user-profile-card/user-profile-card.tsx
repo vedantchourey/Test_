@@ -105,10 +105,10 @@ export default function UserProfileCard(): JSX.Element {
     }
   }, [userProfile]);
 
-  const fetchFollowers = async () => {
+  const fetchFollowers = async (): Promise<any> => {
     try {
       if (userProfile) {
-        let followersResponse = await fetchUserFollowerList(userProfile.id);
+        const followersResponse = await fetchUserFollowerList(userProfile.id);
         setFollowers(followersResponse);
       }
     } catch(error) {
@@ -116,10 +116,10 @@ export default function UserProfileCard(): JSX.Element {
     }
   };
 
-  const fetchFollowings = async () => {
+  const fetchFollowings = async (): Promise<any> => {
     try {
       if (userProfile) {
-        let followingResponse = await fetchUserFollowingList(userProfile.id);
+        const followingResponse = await fetchUserFollowingList(userProfile.id);
         setFollowings(followingResponse);
       }
     } catch (error) {
