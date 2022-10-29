@@ -251,7 +251,7 @@ const Home = (): JSX.Element => {
         </Box>
       </div>
     )
-  })
+  });
 
   return (
     <Fragment>
