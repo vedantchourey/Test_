@@ -47,6 +47,8 @@ import { useRouter } from "next/router";
 import AvtarModal from "./avtar-modal";
 import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
 import { deviceTypes } from '../../../../../src/frontend/redux-store/layout/device-types';
+import { fetchUserFollowerList, fetchUserFollowingList } from '../../../service-clients/profile-service-client';
+import { IFollowersList } from '../../../service-clients/messages/i-followers-list-response';
 
 export default function UserProfileCard(): JSX.Element {
   const router = useRouter();
@@ -74,6 +76,8 @@ export default function UserProfileCard(): JSX.Element {
   };
 
   const [teamModal, setTeamModal] = useState(false);
+  const [followers, setFollowers] = useState<IFollowersList[]>([]);
+  const [followings, setFollowings] = useState<IFollowersList[]>([]);
   const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
 
   const handleCloseAvtar = (): void => setOpenAvatarModal(false);
@@ -100,6 +104,33 @@ export default function UserProfileCard(): JSX.Element {
       teamList();
     }
   }, [userProfile]);
+
+  const fetchFollowers = async () => {
+    try {
+      if (userProfile) {
+        let followersResponse = await fetchUserFollowerList(userProfile.id);
+        setFollowers(followersResponse);
+      }
+    } catch(error) {
+      console.warn("Error: Error while getting followers - ", error);
+    }
+  };
+
+  const fetchFollowings = async () => {
+    try {
+      if (userProfile) {
+        let followingResponse = await fetchUserFollowingList(userProfile.id);
+        setFollowings(followingResponse);
+      }
+    } catch (error) {
+      console.warn("Error: Error while getting followings - ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFollowers();
+    fetchFollowings();
+  }, []);
 
   async function onUploadAvatar(files: FileList | null): Promise<void> {
     setShowAvatarPicker(false);
@@ -522,22 +553,21 @@ export default function UserProfileCard(): JSX.Element {
         minFiles={0}
         maxFileSizeInBytes={10000 * 10000}
       />
-      {userProfile && (
-        <>
-          <FollowersModal
-            handleClose={handleCloseFollowersModal}
-            userData={userProfile}
-            showModal={openFollowersModal}
-            listType="followers"
-          />
-
-          <FollowersModal
-            handleClose={handleCloseFollowingModal}
-            userData={userProfile}
-            showModal={openFollowingModal}
-            listType="following"
-          />
-        </>
+      {followers && openFollowersModal && (
+        <FollowersModal
+          handleClose={handleCloseFollowersModal}
+          userList={followers}
+          showModal={openFollowersModal}
+          listType="followers"
+        />
+      )}
+      {followings && openFollowingModal && (
+        <FollowersModal
+          handleClose={handleCloseFollowingModal}
+          userList={followings}
+          showModal={openFollowingModal}
+          listType="following"
+        />
       )}
     </Box>
   );

@@ -6,14 +6,17 @@ import { fetchUserFollowerList, fetchUserFollowingList } from '../../service-cli
 import { IOthersProfileResponse, IProfileResponse } from "../../service-clients/messages/i-profile";
 import { IFollowersList } from '../../service-clients/messages/i-followers-list-response';
 import Followersmodal from "./followers-modal";
+import { isDeviceTypeSelector } from "../../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from '../../../../src/frontend/redux-store/layout/device-types';
+import { useAppSelector } from "../../redux-store/redux-store";
 
 interface IProps {
-  userData: IOthersProfileResponse | IProfileResponse,
+  userList?: IFollowersList[],
+  userData?: IOthersProfileResponse | IProfileResponse,
   handleClose: () => void;
   showModal: boolean;
   listType: 'followers' | 'following'
 }
-
 
 const style = {
   position: 'absolute',
@@ -26,16 +29,25 @@ const style = {
   borderRadius: '10px',
 };
 
-const FollowersModal = ({ handleClose, userData, showModal, listType }: IProps): JSX.Element => {
+const mobileStyle = {
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  backgroundColor: "#08001C",
+  width: "75%",
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+};
+
+const FollowersModal = ({ handleClose, userData, showModal, listType, userList }: IProps): JSX.Element => {
   const [list, setList] = useState<IFollowersList[]>([]);
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
 
   useEffect(() => {
-    (async (): Promise<void> => {
-      const result = listType === 'followers' ? await fetchUserFollowerList(userData.id) : await fetchUserFollowingList(userData.id);
-      setList(result);
-    })()
-  }, [])
-
+    if (userList) setList(userList);
+  }, [userList]);
 
   return (
     <Modal
@@ -44,7 +56,7 @@ const FollowersModal = ({ handleClose, userData, showModal, listType }: IProps):
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
+      <Box sx={!isDesktop ? mobileStyle : style}>
         <AppBar position="static" className={styles.appBar}>
           <Box sx={{ textAlign: 'center', position: 'relative' }}>
             <Typography variant="h3" color='white' fontSize={20}>
