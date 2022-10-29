@@ -7,9 +7,11 @@ import Followersmodal from "./followers-modal";
 import { isDeviceTypeSelector } from "../../../../src/frontend/redux-store/layout/layout-selectors";
 import { deviceTypes } from '../../../../src/frontend/redux-store/layout/device-types';
 import { useAppSelector } from "../../redux-store/redux-store";
+import { IOthersProfileResponse, IProfileResponse } from "../../service-clients/messages/i-profile";
 
 interface IProps {
   userList?: IFollowersList[],
+  userData?: IOthersProfileResponse | IProfileResponse,
   handleClose: () => void;
   showModal: boolean;
   listType: 'followers' | 'following'
