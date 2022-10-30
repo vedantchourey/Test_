@@ -21,8 +21,7 @@ import { useAppSelector } from "../../src/frontend/redux-store/redux-store";
 
 const NoobSupportPage: NextPage = () => {
   const isDesktop = useAppSelector((x) =>
-    isDeviceTypeSelector(x, deviceTypes.desktop)
-  );
+    isDeviceTypeSelector(x, deviceTypes.desktop));
 
   const supportCards = [
     {
@@ -80,17 +79,17 @@ const NoobSupportPage: NextPage = () => {
               <Typography variant="h3">SUPPORT</Typography>
             </Divider>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              {supportCards.map((_, i) => {
+              {supportCards.map((item, key) => {
                 return (
-                  <div className={styles.gridContainer} style={{ marginTop: 20 }}>
-                    <Link href={_.to}>
+                  <div key={key} className={styles.gridContainer} style={{ marginTop: 20 }}>
+                    <Link href={item.to}>
                       <a>
                         <Card className={styles.card} style={{ width: 300 }}>
                           <CardContent className={styles.cardContent}>
-                            {_.icon}
-                            <Typography variant="h3">{_.head}</Typography>
+                            {item.icon}
+                            <Typography variant="h3">{item.head}</Typography>
                             <Typography variant="body1" style={{ textAlign: "center" }}>
-                              {_.sub}
+                              {item.sub}
                             </Typography>
                           </CardContent>
                         </Card>
@@ -110,17 +109,17 @@ const NoobSupportPage: NextPage = () => {
               <Typography variant="h3">SUPPORT</Typography>
             </Divider>
             <div style={{ display: "flex", flexDirection: "row" }}>
-              {supportCards.map((_, i) => {
+              {supportCards.map((item, key) => {
                 return (
-                  <div className={styles.gridContainer} style={{ marginLeft: 20 }}>
-                    <Link href={_.to}>
+                  <div key={key} className={styles.gridContainer} style={{ marginLeft: 20 }}>
+                    <Link href={item.to}>
                       <a>
                         <Card className={styles.card}>
                           <CardContent className={styles.cardContent}>
-                            {_.icon}
-                            <Typography variant="h3">{_.head}</Typography>
+                            {item.icon}
+                            <Typography variant="h3">{item.head}</Typography>
                             <Typography variant="body1" style={{ textAlign: "center" }}>
-                              {_.sub}
+                              {item.sub}
                             </Typography>
                           </CardContent>
                         </Card>
