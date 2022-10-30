@@ -106,7 +106,7 @@ export default function BasicPopover(props: Props): JSX.Element {
                     </Button>
                   )}
 
-                  {data.type === "TEAM_INVITATION" && (
+                  {data?.type === "TEAM_INVITATION" && (
                     <Button
                       variant="outlined"
                       onClick={(): any => router.push(data.data.url)}
