@@ -25,7 +25,7 @@ const MemberButton = ({ setParam }: any): JSX.Element => {
   const [level, setLevel] = useState<string>("all");
   useEffect(() => {
     // setParam
-    if (gameId || platformId || level) {
+    if (gameId || platformId || level && setParam) {
       setParam({
         gameId,
         platformId,
@@ -36,8 +36,8 @@ const MemberButton = ({ setParam }: any): JSX.Element => {
   return (
     <>
       {isMobile ? (
-        <>
-          <Box sx={{ m: 1 }}>
+        <div style={{ display: "flex", flexDirection: "column", margin: 10 }}>
+          <div>
             <GameDropDown
               label="Game"
               placeholder="Search by  Games"
@@ -46,9 +46,8 @@ const MemberButton = ({ setParam }: any): JSX.Element => {
               inputClassName={styles.inputItem}
               autoCompleteClassName={styles.inputItem}
             />
-          </Box>
-
-          <Box sx={{ m: 1 }}>
+          </div>
+          <div>
             <PlatformDropDown
               label="Platform"
               placeholder="Select Platform"
@@ -58,25 +57,22 @@ const MemberButton = ({ setParam }: any): JSX.Element => {
               autoCompleteClassName={styles.inputItem}
               value={platformId}
             />
-            <Box>
-              <Select
-                // displayEmpty
-                id="team-select"
-                style={{ width: 250 }}
-                // onChange={(e): any => setSelectedTeam(e.target.value)}
-                // value={selectedTeam}
-                defaultValue={""}
-              >
-                <MenuItem value="all">All</MenuItem>
-                <MenuItem value="bronze">Bronze</MenuItem>
-                <MenuItem value="silver">Silver</MenuItem>
-                <MenuItem value="gold">Gold</MenuItem>
-                <MenuItem value="diamond">Diamond</MenuItem>
-                <MenuItem value="ruby">Ruby</MenuItem>
-              </Select>
-            </Box>
-          </Box>
-        </>
+          </div>
+          <div>
+            <Select
+              id="team-select"
+              style={{ width: "100%" }}
+              defaultValue={""}
+            >
+              <MenuItem value="all">All</MenuItem>
+              <MenuItem value="bronze">Bronze</MenuItem>
+              <MenuItem value="silver">Silver</MenuItem>
+              <MenuItem value="gold">Gold</MenuItem>
+              <MenuItem value="diamond">Diamond</MenuItem>
+              <MenuItem value="ruby">Ruby</MenuItem>
+            </Select>
+          </div>
+        </div>
       ) : (
         <>
           <Box width={500} display="flex">

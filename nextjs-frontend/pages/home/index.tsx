@@ -235,15 +235,15 @@ const Home = (): JSX.Element => {
         <Box style={{ width: "100%", height: 450, }}>
           <img
             src={image.image}
-            style={{ width: "100%", position: "relative" }}
+            style={isDesktop ? { width: "100%", position: "relative" } : { }}
             className={styles.mainCarouselImage}
           />
           <Box className={styles.carouselContainer} style={{ position: "absolute" }}>
-            <Typography className={isDesktop ? styles.title : styles.text1Mobile} style={{ marginBottom: 10, marginLeft: 20 }}>
+            <Typography className={isDesktop ? styles.title : styles.text1Mobile} style={{ marginBottom: 20, marginLeft: 10 }}>
               {image.name}
             </Typography>
             <div style={{ width: "70%" }}>
-              <Typography className={isDesktop ? styles.subtitle : styles.text2Mobile} style={{ marginBottom: 20, marginLeft: 20 }}>
+              <Typography className={isDesktop ? styles.subtitle : styles.text2Mobile} style={{ marginBottom: 20, marginLeft: 10 }}>
                 {image.subtitle}
               </Typography>
             </div>
@@ -287,37 +287,17 @@ const Home = (): JSX.Element => {
           </>
         )}
         {!isDesktop && (
-          <Grid item>
-            <div
-              className={styles.backgroundImgMobile}
-              style={{ width: screenWidth < 390 ? 300 : 340 }}
-            >
-              <AliceCarousel
-                items={topImageCarousel}
-                responsive={responsive}
-                autoPlay={true}
-                disableButtonsControls={true}
-                disableDotsControls={true}
-                autoPlayInterval={10000}
-                infinite={true}
-              />
-            </div>
-            <Grid>
-              <div
-                style={{ marginTop: 42, width: "200px", alignSelf: "center" }}
-              >
-                <AliceCarousel
-                  items={sideImageCarousel}
-                  responsive={responsive}
-                  autoPlay={true}
-                  disableButtonsControls={true}
-                  disableDotsControls={true}
-                  autoPlayInterval={10000}
-                  infinite={true}
-                />
-              </div>
-            </Grid>
-          </Grid>
+          <div style={{ width: 300, height: 200 }}>
+            <AliceCarousel
+              items={topImageCarousel}
+              responsive={responsive}
+              autoPlay={true}
+              disableButtonsControls={true}
+              disableDotsControls={true}
+              autoPlayInterval={10000}
+              infinite={true}
+            />
+          </div>
         )}
         {isDesktop ? (
             <>
