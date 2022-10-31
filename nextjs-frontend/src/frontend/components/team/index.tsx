@@ -235,7 +235,7 @@ const Team: React.FC = () => {
         <TeamCard name={team?.name} team={team} refresh={fetchTeam} hasAccess={hasAccess}>
           <Box display={"flex"} justifyContent="space-between">
             {renderTabs()}
-            {!isMobile ? (
+            {/* {!isMobile ? ( */}
               <Box
                 style={{
                   border: "1px solid rgba(255, 255, 255, 0.1)",
@@ -253,7 +253,7 @@ const Team: React.FC = () => {
                   </span>
                 </Typography>
               </Box>
-            ) : null}
+            {/* ) : null} */}
           </Box>
 
           <Box marginY={2}>{renderComponent()}</Box>

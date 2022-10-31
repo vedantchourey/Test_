@@ -361,7 +361,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team, hasAcc
           </Slider>
         </Box>
       </Box>
-      {!isMobile ? (
+      {/* {!isMobile ? (   */}
         <Box>
           <Typography color={"white"} variant={"h5"}>
             Team Graph
@@ -382,7 +382,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team, hasAcc
           </Select>
           <Line options={options} data={data} />
         </Box>
-      ) : null}
+      {/* // ) : null} */}
 
       <Modal
         open={open}
