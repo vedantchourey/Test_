@@ -188,14 +188,15 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
         onClose={(): void => {
           setOpen(false);
         }}
+        style={{ height: "100%", overflow: "scroll" }}
       >
         <Grid
           container
           alignContent={"center"}
           justifyContent={"center"}
-          marginTop={10}
+          marginTop={isMobile ? 5 : 10}
         >
-          <Grid sm={11} lg={6} md={6}>
+          <Grid sm={11} lg={6} md={6} xs={10}>
             <Card>
               <Box
                 alignItems={"flex-start"}
@@ -217,8 +218,9 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
                 <Box
                   alignItems={"flex-start"}
                   p={2}
-                  display={"flex"}
-                  justifyContent={"space-between"}
+                  // display={"flex"}
+                  // justifyContent={"space-between"}
+                  style={ isMobile ? { flexDirection: "column" } : { display: "flex", flexDirection: "row", justifyContent: "space-between" } }
                 >
                   <Box flex={1}>
                     <GameDropDown
