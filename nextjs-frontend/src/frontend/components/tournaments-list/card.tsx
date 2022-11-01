@@ -35,7 +35,8 @@ const CardDesktop: React.FC<any> = ({
     <Box
       width={window.innerWidth / 2.8}
       height={window.innerWidth / 2.8 / 2.9}
-      minWidth={window.innerWidth / 2.8}
+      minWidth={370}
+      minHeight={177}
       m={2}
     >
       <Box
@@ -55,6 +56,7 @@ const CardDesktop: React.FC<any> = ({
           display={"flex"}
           flexDirection={"column"}
           height={"100%"}
+          color={"#fff"}
         >
           <Box flex={1}>
             <Grid container columnSpacing={2}>
@@ -250,17 +252,7 @@ const CardComp = ({
 
   return (
     <>
-      {isMobile ? (
-        <CardMobile
-          id={id}
-          tournament_name={tournament_name}
-          tournament_type={tournament_type}
-          platform={platform}
-          banner={banner}
-          start_date={start_date}
-          participants={participants}
-        />
-      ) : (
+
         <CardDesktop
           id={id}
           tournament_name={tournament_name}
@@ -273,7 +265,7 @@ const CardComp = ({
           start_date={start_date}
           credits={credits}
         />
-      )}
+      
     </>
   );
 };

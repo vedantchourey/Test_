@@ -143,7 +143,7 @@ const SliderComp: React.FC = (): JSX.Element => {
       )} */}
       <Box
         mt={5}
-        sx={{ maxWidth: isDesktop ? "1400px" : "300px" }}
+        sx={{ width: isDesktop ? "80vw" : "90vw" }}
         display={"flex"}
         flexWrap={"nowrap"}
         overflow={"scroll"}

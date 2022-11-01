@@ -107,9 +107,7 @@ const Home = (): JSX.Element => {
   }, []);
 
   const responsive = {
-    0: { items: 0 },
-    568: { items: 0 },
-    1024: { items: 1 },
+    0: { items: 1 }
   };
 
   const _renderPosts = (): JSX.Element | React.ReactNode => {
@@ -124,7 +122,7 @@ const Home = (): JSX.Element => {
           <PostCard
             key={postData.id}
             data={postData}
-            row={true}
+            row={isDesktop}
             isDesktop={isDesktop}
           />
         );
@@ -163,66 +161,6 @@ const Home = (): JSX.Element => {
     fetchCarousels();
   }, []);
 
-  // const items = [
-  //   <div className="item" data-value="1" key={"1"}>
-  //     <Box className={styles.slider}>
-  //       <img src="/images/Group.png" />
-  //       <Typography className={styles.text3}>
-  //         Always keep in touch with your friends and watch their activities,
-  //         like and comment.
-  //       </Typography>
-  //       <span className={styles.border}></span>
-  //       <Box className={styles.sliderBox}>
-  //         <YoutubeIcon />
-  //         <img src="/images/Discord.png" style={{ height: "19px" }} />
-  //         <TwitchIcon />
-  //       </Box>
-  //     </Box>
-  //   </div>,
-  //   <div className="item" data-value="2" key={"2"}>
-  //     <Box className={styles.slider}>
-  //       <img src="/images/Group.png" />
-  //       <Typography className={styles.text3}>
-  //         Always keep in touch with your friends and watch their activities,
-  //         like and comment.
-  //       </Typography>
-  //       <span className={styles.border}></span>
-  //       <Box className={styles.sliderBox}>
-  //         <YoutubeIcon />
-  //         <img src="/images/Discord.png" style={{ height: "19px" }} />
-  //         <TwitchIcon />
-  //       </Box>
-  //     </Box>
-  //   </div>,
-  //   <div className="item" data-value="3" key={"3"}>
-  //     <Box className={styles.slider}>
-  //       <img src="/images/Group.png" />
-  //       <Typography className={styles.text3}>
-  //         Always keep in touch with your friends and watch their activities,
-  //         like and comment.
-  //       </Typography>
-  //       <span className={styles.border}></span>
-  //       <Box className={styles.sliderBox}>
-  //         <YoutubeIcon />
-  //         <img src="/images/Discord.png" style={{ height: "19px" }} />
-  //         <TwitchIcon />
-  //       </Box>
-  //     </Box>
-  //   </div>,
-  // ];
-
-  const sideImageCarousel = [
-    <div data-value={"1"} key={"1"}>
-      <img src="/images/home1.png" className={styles.img1} />
-    </div>,
-    <div data-value={"2"} key={"2"}>
-      <img src="/images/home2.png" className={styles.img1} />
-    </div>,
-    <div data-value={"3"} key={"3"}>
-      <img src="/images/home3.png" className={styles.img1} />
-    </div>,
-  ];
-
   const topImageCarousel = carouselImages.map((image) => {
     return (
       <div
@@ -232,10 +170,10 @@ const Home = (): JSX.Element => {
         onClick={(): void => {
           router.push(image.navigation)
         }}>
-        <Box style={{ width: "100%", height: 450, }}>
+        <Box style={{ width: "100%" }}>
           <img
             src={image.image}
-            style={isDesktop ? { width: "100%", position: "relative" } : { }}
+            style={{ width: "100%", position: "relative" }}
             className={styles.mainCarouselImage}
           />
           <Box className={styles.carouselContainer} style={{ position: "absolute" }}>
@@ -252,6 +190,8 @@ const Home = (): JSX.Element => {
       </div>
     )
   });
+
+  console.log('tournamentsData -> ', tournamentsData)
 
   return (
     <Fragment>
@@ -271,23 +211,10 @@ const Home = (): JSX.Element => {
                 />
               </div>
             </Grid>
-            {/* <Grid item xs={12} lg={3}>
-              <div className={styles.imgContainer}>
-                <AliceCarousel
-                  items={sideImageCarousel}
-                  responsive={responsive}
-                  autoPlay={true}
-                  disableButtonsControls={true}
-                  disableDotsControls={true}
-                  autoPlayInterval={10000}
-                  infinite={true}
-                />
-              </div>
-            </Grid> */}
           </>
         )}
         {!isDesktop && (
-          <div style={{ width: 300, height: 200 }}>
+          <div style={{ width: "90vw", marginTop: 40 }}>
             <AliceCarousel
               items={topImageCarousel}
               responsive={responsive}
@@ -302,7 +229,7 @@ const Home = (): JSX.Element => {
         {isDesktop ? (
             <>
               <Container maxWidth="xl" className={styles.container}>
-                <Grid item xs={12} lg={30}>
+                <Grid item xs={12} lg={30} mt={5}>
                   <TabContext value={value}>
                     <Box className={styles.tabBox}>
                       <TabList
@@ -321,7 +248,7 @@ const Home = (): JSX.Element => {
                           className={styles.tab}
                           icon={<StorageIcon />}
                           iconPosition="start"
-                          label="NEW FEED"
+                          label="NEWS FEED"
                         />
                         <Tab
                           value="3"
@@ -351,7 +278,7 @@ const Home = (): JSX.Element => {
                     >
                       <Box
                         overflow={"scroll"}
-                        // maxWidth={"57vw"}
+                        maxWidth={"62vw"}
                         display={"flex"}
                         className={"hide-scrollbar"}
                       >
@@ -482,7 +409,6 @@ const Home = (): JSX.Element => {
                     aria-label="lab API tabs example"
                     variant="scrollable"
                     scrollButtons="auto"
-                    style={{ width: 325 }}
                   >
                     <Tab value="1"
                       icon={<StarRateIcon style={{ height: 20, width: 20 }} />}
@@ -493,7 +419,7 @@ const Home = (): JSX.Element => {
                     <Tab value="2"
                       icon={<StorageIcon style={{ height: 20, width: 20 }} />}
                       iconPosition="start"
-                      label="NEW FEED"
+                      label="NEWS FEED"
                       style={{ fontSize: 12 }}
                     />
                     <Tab value="3"
@@ -562,100 +488,47 @@ const Home = (): JSX.Element => {
                       })}
                     </Grid>
                   </TabPanel>
+                  <TabPanel value="3">
+                    <Grid container columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}>
+                    {tournamentsData
+                            .sort((a: any, b: any) => {
+                              const aTime: any = moment(a.startDate).format("x");
+                              const bTime: any = moment(b.startDate).format("x");
+                              return bTime - aTime;
+                            }).slice(0,3)
+                            .map((data: any) => {
+                              const startDateTime =
+                                moment(data.startDate).format("D MMM YYYY ") +
+                                moment(data.startTime, "HH:mm:ss").format("LT");
+                              const totalSlots = data?.bracketsMetadata?.playersLimit || 0;
+                              const currentSlot = (data?.playerList || []).length;
+
+                              console.log('startDateTime -> ', startDateTime)
+                            return (
+                              <CardComp
+                                key={data.id}
+                                id={data.id}
+                                tournament_name={data.name}
+                                banner={data.banner}
+                                tournament_type={data.settings?.tournamentFormat}
+                                platform={data.settings?.platform}
+                                total_slots={totalSlots}
+                                left_slots={currentSlot}
+                                start_date={startDateTime}
+                                credits={data.settings?.entryFeeAmount || 0}
+                                participants={`${currentSlot} out of ${totalSlots}`}
+                              />
+                            );
+                          })}
+                    </Grid>
+                  </TabPanel>
+
                   <TabPanel value="3" className={styles.tournamentContainer}>
                     <Grid container columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}>
-                      {tournamentsData.map((data: any, i: number) => {
-                        const startDateTime = moment(data.startDate).format(
-                          "D MMM YYYY hh:mm A"
-                        );
-                        const totalSlots = data?.bracketsMetadata?.playersLimit || 0;
-                        const currentSlot = (data?.playerList || []).length;
-                        return (
-                          <Grid
-                            item
-                            xs={12}
-                            lg={4}
-                            key={i}
-                            style={{ marginTop: 25 }}
-                          >
-                            <img
-                              src={`${data.banner}`}
-                              className={styles.newsFeedImg}
-                            />
-                            <Box style={{ marginTop: "-355px" }}>
-                              <div style={{ width: 300, backgroundColor: "silver", display: "flex", flexDirection: "row", justifyContent: "space-around" }}>
-                                <Button
-                                  variant="text"
-                                  style={{
-                                    color: "white",
-                                    background: moment(startDateTime).isBefore(
-                                      moment()
-                                    )
-                                      ? "#F08743"
-                                      : "#EF5DA8",
-                                    height: 35,
-                                    flex: 0.3,
-                                  }}
-                                >
-                                  {moment(startDateTime).isBefore(moment())
-                                    ? "Completed"
-                                    : "On Going"}
-                                </Button>
-                                <div style={{ flex: 0.6 }}>
-                                  <LinearProgress
-                                    variant="determinate"
-                                    color={"secondary"}
-                                    value={(currentSlot * 100) / parseInt(totalSlots.toString())}
-                                  />
-                                  <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around", color: "white" }}>
-                                    <Typography fontSize={10}>{totalSlots}</Typography>
-                                    <Typography fontSize={10}>{currentSlot}</Typography>
-                                  </div>
-                                  <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around", color: "white" }}>
-                                    <Typography fontSize={10}>TOTAL SLOTS</Typography>
-                                    <Typography fontSize={10}>LEFT SLOTS</Typography>
-                                  </div>
-                                </div>
-                              </div>
-                              <Box className={styles.textMainContainer}>
-                                <Box className={styles.textContainer}>
-                                  <Typography className={styles.tContainerText1}>
-                                    TOURNAMENT TYPE
-                                  </Typography>
-                                  <Typography className={styles.tContainerText2}>
-                                    {data.settings?.tournamentFormat}
-                                  </Typography>
-                                </Box>
-                                <Box className={styles.textContainer}>
-                                  <Typography className={styles.tContainerText1}>
-                                    PLATFORM
-                                  </Typography>
-                                  <Typography className={styles.tContainerText2}>
-                                    PC
-                                  </Typography>
-                                </Box>
-                              </Box>
-                              <Box className={styles.tournamentBottomContainer}>
-                                <Typography className={styles.tournamentText1}>
-                                  {data.name}
-                                </Typography>
-                                <Typography className={styles.tournamentText2}>
-                                  {startDateTime}
-                                </Typography>
-                                <img
-                                  src="/images/arrow1.png"
-                                  className={styles.arrowImg}
-                                  onClick={(): void => {
-                                    router.push(
-                                      `/view-tournament/${data.id}/details`
-                                    );
-                                  }}
-                                />
-                              </Box>
-                            </Box>
-                          </Grid>
-                        );
-                      })}
+                        <Grid display={"flex"} maxWidth={"75vw"} className={"hide-scrollbar"}>
+                          
+                          
+                        </Grid>
                     </Grid>
                   </TabPanel>
                 </TabContext>
