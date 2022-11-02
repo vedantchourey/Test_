@@ -4,8 +4,7 @@ import {
   Button,
   MenuItem,
   Select,
-  useMediaQuery,
-  useTheme,
+  
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import GameDropDown from "../../../drop-downs/game-drop-down";
@@ -18,8 +17,6 @@ export const NoobButton = styled(Button)(() => ({
 }));
 
 const MemberButton = ({ setParam }: any): JSX.Element => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [gameId, setGameId] = useState<string | undefined>("");
   const [platformId, setPlatformId] = useState<string | undefined>("");
   const [level, setLevel] = useState<string>("all");
@@ -35,45 +32,7 @@ const MemberButton = ({ setParam }: any): JSX.Element => {
   }, [gameId, platformId, level]);
   return (
     <>
-      {isMobile ? (
-        <div style={{ display: "flex", flexDirection: "column", margin: 10 }}>
-          <div>
-            <GameDropDown
-              label="Game"
-              placeholder="Search by  Games"
-              onChange={(d: string | undefined): void => setGameId(d)}
-              value={gameId}
-              inputClassName={styles.inputItem}
-              autoCompleteClassName={styles.inputItem}
-            />
-          </div>
-          <div>
-            <PlatformDropDown
-              label="Platform"
-              placeholder="Select Platform"
-              allowAll
-              onChange={(id: any): void => setPlatformId(id)}
-              inputClassName={styles.inputItem}
-              autoCompleteClassName={styles.inputItem}
-              value={platformId}
-            />
-          </div>
-          <div>
-            <Select
-              id="team-select"
-              style={{ width: "100%" }}
-              defaultValue={""}
-            >
-              <MenuItem value="all">All</MenuItem>
-              <MenuItem value="bronze">Bronze</MenuItem>
-              <MenuItem value="silver">Silver</MenuItem>
-              <MenuItem value="gold">Gold</MenuItem>
-              <MenuItem value="diamond">Diamond</MenuItem>
-              <MenuItem value="ruby">Ruby</MenuItem>
-            </Select>
-          </div>
-        </div>
-      ) : (
+      
         <>
           <Box width={500} display="flex">
             <Box sx={{ mr: 2, width: "100%" }}>
@@ -116,7 +75,7 @@ const MemberButton = ({ setParam }: any): JSX.Element => {
             </Box>
           </Box>
         </>
-      )}
+      
     </>
   );
 };

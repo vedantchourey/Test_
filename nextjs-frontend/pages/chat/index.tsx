@@ -11,7 +11,7 @@ export default function ChatPage(): JSX.Element {
     <NoobPage title="Chat" metaData={{}} hideChat={true}>
       <div style={isMobile ? { width: "85%", marginLeft: 20 } : {}}>
         <h1 style={{margin:"20px",color:"#FFFFFF", textAlign: "center"}}>Chat</h1>
-        <Chat smallChat={isMobile ? true : false} />
+        <Chat smallChat={Boolean(isMobile)} />
       </div>
     </NoobPage>
   );

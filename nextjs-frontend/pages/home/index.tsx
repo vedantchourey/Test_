@@ -7,7 +7,6 @@ import {
   Box,
   Container,
   Skeleton,
-  LinearProgress,
 } from "@mui/material";
 import styles from "./home.module.css";
 import Tab from "@mui/material/Tab";
@@ -24,7 +23,6 @@ import moment from "moment";
 // import YoutubeIcon from "../../src/frontend/components/icons/youtube-icon";
 import { useAppSelector } from "../../src/frontend/redux-store/redux-store";
 import { isDeviceTypeSelector } from "../../src/frontend/redux-store/layout/layout-selectors";
-import { screenWidthSelector } from "../../src/frontend/redux-store/layout/layout-selectors";
 import { deviceTypes } from "../../src/frontend/redux-store/layout/device-types";
 import router from "next/router";
 import { getTopPosts } from "../../src/frontend/service-clients/post-service-client";
@@ -37,8 +35,7 @@ const Home = (): JSX.Element => {
   const isDesktop = useAppSelector((x) =>
     isDeviceTypeSelector(x, deviceTypes.desktop));
 
-  const screenWidth = useAppSelector((x) =>
-    screenWidthSelector(x));
+  
 
   const [newsData, setNewsData] = useState<any[]>([]);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
@@ -190,8 +187,6 @@ const Home = (): JSX.Element => {
       </div>
     )
   });
-
-  console.log('tournamentsData -> ', tournamentsData)
 
   return (
     <Fragment>
@@ -502,8 +497,6 @@ const Home = (): JSX.Element => {
                                 moment(data.startTime, "HH:mm:ss").format("LT");
                               const totalSlots = data?.bracketsMetadata?.playersLimit || 0;
                               const currentSlot = (data?.playerList || []).length;
-
-                              console.log('startDateTime -> ', startDateTime)
                             return (
                               <CardComp
                                 key={data.id}
