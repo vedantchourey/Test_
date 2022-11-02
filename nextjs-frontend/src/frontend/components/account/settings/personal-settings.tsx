@@ -631,7 +631,7 @@ const PersonalSettings = (): JSX.Element => {
         </Grid> */}
         <Grid item sm={4} md={12}>
           <StateDropDown
-            // value={request.stateId}
+            value={request.stateId}
             onChange={(id, state): void =>
               setRequest({
                 ...request,
