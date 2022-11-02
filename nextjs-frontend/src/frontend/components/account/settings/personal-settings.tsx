@@ -516,8 +516,8 @@ const PersonalSettings = (): JSX.Element => {
 
   return (
     <>
-      <Grid container spacing={3}>
-        <Grid item md={6}>
+      <Grid container spacing={2}>
+        <Grid item sm={4} md={6}>
           <FormLabel>First Name</FormLabel>
           <TextField
             variant="standard"
@@ -532,7 +532,7 @@ const PersonalSettings = (): JSX.Element => {
             helperText={getErrorForProp(errors, "firstName")}
           />
         </Grid>
-        <Grid item md={6}>
+        <Grid item sm={4} md={6}>
           <FormLabel>Last Name</FormLabel>
           <TextField
             variant="standard"
@@ -547,7 +547,7 @@ const PersonalSettings = (): JSX.Element => {
             helperText={getErrorForProp(errors, "lastName")}
           />
         </Grid>
-        <Grid item md={6}>
+        <Grid item sm={4} md={6}>
           <FormLabel>Email Address</FormLabel>
           <TextField
             variant="standard"
@@ -558,13 +558,13 @@ const PersonalSettings = (): JSX.Element => {
             className={styles.customInput}
           />
         </Grid>
-        <Grid item md={6}>
+        <Grid item sm={4} md={6}>
           <FormLabel>Username</FormLabel>
           <TextField
             variant="standard"
             fullWidth
             InputProps={{ disableUnderline: true }}
-            className={styles.customInput}
+            // className={styles.customInput}
             disabled
             value={request.username}
             onChange={(event): void =>
@@ -574,11 +574,11 @@ const PersonalSettings = (): JSX.Element => {
             helperText={getErrorForProp(errors, "username")}
           />
         </Grid>
-        <Grid item md={6}>
+        <Grid item sm={4} md={6}>
           <FormLabel>Date of Birth</FormLabel>
           <DesktopDatePicker
             label="Date of birth"
-            className={styles.inputRowItem}
+            // className={styles.inputRowItem}
             value={new Date(request.dateOfBirth)}
             mask={"__/__/____"}
             onChange={(value: DateTime | null): void =>
@@ -629,9 +629,9 @@ const PersonalSettings = (): JSX.Element => {
             )}
           />
         </Grid> */}
-        <Grid item md={12}>
+        <Grid item sm={4} md={12}>
           <StateDropDown
-            value={request.stateId}
+            // value={request.stateId}
             onChange={(id, state): void =>
               setRequest({
                 ...request,
@@ -676,18 +676,18 @@ const PersonalSettings = (): JSX.Element => {
             )}
           /> */}
         </Grid>
+          <Divider sx={{ mt: 8 }} light />
+            <Box sx={{ textAlign: "right", mt: 4 }}>
+              <Button
+                className={styles.actionButton}
+                onClick={(): any => {
+                  handleSubmit();
+                }}
+              >
+                <Typography>Save Changes</Typography>
+              </Button>
+            </Box>
       </Grid>
-      <Divider sx={{ mt: 8 }} light />
-      <Box sx={{ textAlign: "right", mt: 4 }}>
-        <Button
-          className={styles.actionButton}
-          onClick={(): any => {
-            handleSubmit();
-          }}
-        >
-          <Typography>Save Changes</Typography>
-        </Button>
-      </Box>
     </>
   );
 };

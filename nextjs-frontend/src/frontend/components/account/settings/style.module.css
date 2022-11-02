@@ -28,5 +28,9 @@
     line-height: 1.5rem;
     color: white;
     border-radius: 0;
-    padding: 16px 59px;
+    /* padding: 16px 59px; */
+  }
+
+  .inputRowItem {
+    flex-grow: 1;
   }

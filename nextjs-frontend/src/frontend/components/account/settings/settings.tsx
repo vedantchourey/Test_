@@ -6,6 +6,8 @@ import {
   Grid,
   // SxProps,
   // Tab,
+  useMediaQuery,
+  useTheme,
   Typography,
 } from "@mui/material";
 import styles from './style.module.css'
@@ -37,7 +39,8 @@ const ProfileSettings = (): JSX.Element => {
   // const handleChange = (e: unknown, newValue: TabsProps): void => {
   //   setActiveTab(newValue);
   // };
-
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
 
   return (
@@ -46,7 +49,7 @@ const ProfileSettings = (): JSX.Element => {
         <Grid item md={4}>
           <Divider />
         </Grid>
-        <Grid item md={3} sx={{ textAlign: 'center' }}>
+        <Grid item md={3} sx={{ textAlign: 'center', mt: isMobile ? "25px" : null }}>
           <Typography variant="h1" fontSize={26}>
             Profile Settings
           </Typography>
