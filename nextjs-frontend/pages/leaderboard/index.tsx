@@ -142,13 +142,13 @@ const Leaderboard = (): JSX.Element => {
           <Heading divider heading={"LEADERBOARD"} />
           <Box
             mt={5}
-            sx={{ maxWidth: isDesktop ? "1400px" : "275px" }}
+            sx={{ maxWidth: isDesktop ? "1400px" : "290px" }}
             display={"flex"}
             flexWrap={"nowrap"}
             overflow={"scroll"}
             className="hide-scrollbar"
           >
-            {games.map((data) => (
+            {games.map((data, index) => (
               <img
                 key={1}
                 data-value="1"
@@ -169,144 +169,200 @@ const Leaderboard = (): JSX.Element => {
           </Box>
           <FormControlLabel
             control={<Checkbox />}
-            onChange={():void=>{setIsTeam(!isTeam)}}
+            onChange={(): void => {
+              setIsTeam(!isTeam);
+            }}
+            style={{ color: "white" }}
             label={<Typography className={styles.button}>Team</Typography>}
           />
-          {isDesktop && (
+          {
             <Grid
               container
               spacing={{ lg: 2 }}
               columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}
-              className={styles.mainContainer}
+              className={isDesktop ? styles.mainContainer : styles.mainContainerMobile}
             >
-              {leaderboardgamedata?.sort(function(a, b){return parseInt(b.elo_rating) - parseInt(a.elo_rating)}).slice(0, 3)
-?.map((item, index) => {
-                const image=isTeam?(item.teamLogo
-                ? frontendSupabase.storage
-                    .from("public-files")
-                    .getPublicUrl(item.teamLogo).publicURL
-                : null):(item.avatarUrl?item.avatarUrl:null);
-                return(
-                <Grid item xs={12} lg={4} key={item.id} onClick={():any=>{isTeam?null:router.push(`account/${item.userDetails.username}`)}}>
-                  <Box className={styles.container}>
-                    <Box
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
+              {leaderboardgamedata
+                ?.sort(function (a, b) {
+                  return parseInt(b.elo_rating) - parseInt(a.elo_rating);
+                })
+                .slice(0, 3)
+                ?.map((item, index) => {
+                  const image = isTeam
+                    ? item.teamLogo
+                      ? frontendSupabase.storage
+                          .from("public-files")
+                          .getPublicUrl(item.teamLogo).publicURL
+                      : null
+                    : item.avatarUrl
+                    ? item.avatarUrl
+                    : null;
+                  return (
+                    <Grid
+                      item
+                      xs={12}
+                      lg={4}
+                      key={item.id}
+                      onClick={(): any => {
+                        isTeam
+                          ? null
+                          : router.push(`account/${item.userDetails.username}`);
                       }}
                     >
                       <Box
-                        display={"flex"}
-                        style={{
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Typography
-                          style={{
-                            paddingLeft: "35%",
-                          }}
-                          fontSize={10}
-                          textAlign="center"
-                        >
-                          {index === 0 ? "1st" : index === 1 ? "2nd" : "3rd"}
-                        </Typography>
-                        {index === 0 && (
-                          <img
-                            src="/images/winnerCrown.png"
-                            style={{ height: 10, width: 10, marginLeft: 5 }}
-                          />
-                        )}
-                      </Box>
-                      <img
-                        src={
-                          index === 0
-                            ? "/images/winner1.png"
-                            : index === 1
-                            ? "/images/winner3.png"
-                            : "/images/winner2.png"
+                        className={
+                          isDesktop ? styles.container : styles.mobileContainer
                         }
-                        className={styles.borderImage}
-                      />
-                      {isTeam?
-                      (image?
-                      <img
-                        src={image || ""}
-                        className={styles.img1}
-                        style={{
-                          position: "absolute",
-                          borderColor:
-                            index === 0
-                              ? "#FFAA2E"
-                              : index === 1
-                              ? "#C05C00"
-                              : "#979797",
-                          borderStyle: "groove",
-                          borderWidth: 5,
-                        }}
-                      />:
-                      <GroupIcon
-                      className={styles.img1}
-                        style={{
-                          position: "absolute",
-                          borderColor:
-                            index === 0
-                              ? "#FFAA2E"
-                              : index === 1
-                              ? "#C05C00"
-                              : "#979797",
-                          borderStyle: "groove",
-                          borderWidth: 5,
-                        }}/>):
-                      <Avatar
-                      src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${image}`}
-                        className={styles.img1}
-                        style={{
-                          position: "absolute",
-                          borderColor:
-                            index === 0
-                              ? "#FFAA2E"
-                              : index === 1
-                              ? "#C05C00"
-                              : "#979797",
-                          borderStyle: "groove",
-                          borderWidth: 5,
-                        }}/>}
-                    </Box>
+                      >
+                        <Box
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                          }}
+                        >
+                          <Box
+                            display={"flex"}
+                            style={{
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Typography
+                              style={{
+                                paddingLeft: !isDesktop ? 0 : "35%",
+                                color: "white",
+                              }}
+                              fontSize={10}
+                              textAlign="center"
+                            >
+                              {index === 0
+                                ? "1st"
+                                : index === 1
+                                ? "2nd"
+                                : "3rd"}
+                            </Typography>
+                            {index === 0 && (
+                              <img
+                                src="/images/winnerCrown.png"
+                                style={{ height: 10, width: 10, marginLeft: 5 }}
+                              />
+                            )}
+                          </Box>
+                          <img
+                            src={
+                              index === 0
+                                ? "/images/winner1.png"
+                                : index === 1
+                                ? "/images/winner3.png"
+                                : "/images/winner2.png"
+                            }
+                            className={
+                              isDesktop
+                                ? styles.borderImage
+                                : styles.borderImageMobile
+                            }
+                          />
+                          {isTeam ? (
+                            image ? (
+                              <img
+                                src={image || ""}
+                                className={
+                                  isDesktop ? styles.img1 : styles.img1Mobile
+                                }
+                                style={{
+                                  position: "absolute",
+                                  borderColor:
+                                    index === 0
+                                      ? "#FFAA2E"
+                                      : index === 1
+                                      ? "#C05C00"
+                                      : "#979797",
+                                  borderStyle: "groove",
+                                  borderWidth: 5,
+                                }}
+                              />
+                            ) : (
+                              <GroupIcon
+                                className={
+                                  isDesktop ? styles.img1 : styles.img1Mobile
+                                }
+                                style={{
+                                  position: "absolute",
+                                  borderColor:
+                                    index === 0
+                                      ? "#FFAA2E"
+                                      : index === 1
+                                      ? "#C05C00"
+                                      : "#979797",
+                                  borderStyle: "groove",
+                                  borderWidth: 5,
+                                }}
+                              />
+                            )
+                          ) : (
+                            <Avatar
+                              src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${image}`}
+                              className={
+                                isDesktop ? styles.img1 : styles.img1Mobile
+                              }
+                              style={{
+                                position: "absolute",
+                                borderColor:
+                                  index === 0
+                                    ? "#FFAA2E"
+                                    : index === 1
+                                    ? "#C05C00"
+                                    : "#979797",
+                                borderStyle: "groove",
+                                borderWidth: 5,
+                              }}
+                            />
+                          )}
+                        </Box>
 
-                    <Box style={{ marginLeft: "45px" }}>
-                      <Box className={styles.box1}>
-                        <Typography className={styles.text1}>
-                          {isTeam?item.name:item?.userDetails?.username}
-                        </Typography>
-                        <Box className={styles.box2}>
-                          <Typography className={styles.text2}>
-                            ELO RATING
-                          </Typography>
-                          <Button variant="text" className={styles.button1}>
-                            {item.elo_rating}
-                          </Button>
+                        <Box style={{ marginLeft: !isDesktop ? "20px" : "45px" }}>
+                          <Box className={styles.box1}>
+                            <Typography className={styles.text1}>
+                              {isTeam ? item.name : item?.userDetails?.username}
+                            </Typography>
+                            <Box className={styles.box2}>
+                              <Typography className={styles.text2}>
+                                ELO RATING
+                              </Typography>
+                              <Button variant="text" className={styles.button1}>
+                                {item.elo_rating}
+                              </Button>
+                            </Box>
+                            <Box className={styles.box2}>
+                              <Typography
+                                className={styles.text2}
+                                style={{ color: "white" }}
+                              >
+                                Game Played:{" "}
+                                {isTeam
+                                  ? item.loss + item.won
+                                  : parseInt(item.lost) + parseInt(item.won)}
+                              </Typography>
+                              <Typography
+                                className={styles.text2}
+                                style={{ color: "white" }}
+                              >
+                                Wins: {isTeam ? item.won : parseInt(item.won)}
+                              </Typography>
+                            </Box>
+                          </Box>
                         </Box>
-                        <Box className={styles.box2}>
-                          <Typography className={styles.text2} style={{color:'white'}}>
-                            Game Played: {isTeam?(item.loss+item.won):(parseInt(item.lost)+parseInt(item.won))}
-                          </Typography>
-                          <Typography className={styles.text2} style={{color:'white'}}>
-                            Wins: {isTeam?(item.won):(parseInt(item.won))}
-                          </Typography>
-                        </Box>
-                        
                       </Box>
-                    </Box>
-                  </Box>
-                </Grid>)
-})}
+                    </Grid>
+                  );
+                })}
             </Grid>
-          )}
+          }
           <div style={{ padding: "10px" }}>
             <TableContainer
               component={Paper}
               className={styles.mainTable}
+              style={{ width: 275 }}
             >
               <Table stickyHeader>
                 <TableHead>
@@ -319,15 +375,22 @@ const Leaderboard = (): JSX.Element => {
                       },
                     }}
                   >
-                    <TableCell align="center" style={{ fontSize: !isDesktop ? 10 : 15 }}>
+                    <TableCell
+                      align="center"
+                      style={{ fontSize: !isDesktop ? 10 : 15 }}
+                    >
                       Rank
                     </TableCell>
-                    <TableCell style={{ fontSize: !isDesktop ? 10 : 15 }}>Username</TableCell>
-                    <TableCell style={{ fontSize: !isDesktop ? 10 : 15 }}>Games Played</TableCell>
-                    <TableCell style={{ fontSize: !isDesktop ? 10 : 15 }}>Wins</TableCell>
-                    {isDesktop && (
-                      <TableCell >Elo Rating</TableCell>
-                    )}
+                    <TableCell style={{ fontSize: !isDesktop ? 10 : 15 }}>
+                      Username
+                    </TableCell>
+                    <TableCell style={{ fontSize: !isDesktop ? 10 : 15 }}>
+                      Games Played
+                    </TableCell>
+                    <TableCell style={{ fontSize: !isDesktop ? 10 : 15 }}>
+                      Wins
+                    </TableCell>
+                    {isDesktop && <TableCell>Elo Rating</TableCell>}
                   </TableRow>
                 </TableHead>
                 <TableBody
@@ -337,58 +400,92 @@ const Leaderboard = (): JSX.Element => {
                       borderColor: "rgba(255, 255, 255, 0.1)",
                       fontSize: !isDesktop ? 10 : 15,
                     },
-
                   }}
                 >
                   {leaderboardgamedata
-                    ?.sort(function(a, b){return parseInt(b.elo_rating) - parseInt(a.elo_rating)}).slice(isDesktop ? 3 : 0, leaderboardgamedata.length)
+                    ?.sort(function (a, b) {
+                      return parseInt(b.elo_rating) - parseInt(a.elo_rating);
+                    })
+                    .slice(isDesktop ? 3 : 0, leaderboardgamedata.length)
                     .map((item, idx) => {
-                      const image=isTeam?(item.teamLogo
-                        ? frontendSupabase.storage
-                            .from("public-files")
-                            .getPublicUrl(item.teamLogo).publicURL
-                        : null):(item.avatarUrl?item.avatarUrl:null);
-                      return(
-                      <TableRow key={item.id} onClick={():any=>{isTeam?null:router.push(`account/${item.userDetails.username}`)}}>
-                        <TableCell align="center" component="th" scope="row">
-                          {idx + (isDesktop ? 4 : 1)}
-                          <sup>th</sup>
-                        </TableCell>
-                        <TableCell>
-                          <div
-                            style={{ display: "flex", alignItems: "center" }}
-                          >
-                            <span>
-                              {isTeam ? (
-                                image ?
-                                  <img src={image || ""}
-                                    width={!isDesktop ? "25px" : "45px"}
-                                    height={!isDesktop ? "25px" : "45px"}
-                                    style={{ borderRadius: 65 }}
-                                  />
-                                : <GroupIcon
-                                    style={{ borderRadius: 65, width: !isDesktop ? 25 : 45, height: !isDesktop ? 25 : 45 }}
-                                  />
-                                ) : <Avatar
-                                      src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${image}`}
-                                      style={{height: !isDesktop ? "25px" : "45px", width: !isDesktop ? "25px" : "45px", borderRadius:'65px'}}
+                      const image = isTeam
+                        ? item.teamLogo
+                          ? frontendSupabase.storage
+                              .from("public-files")
+                              .getPublicUrl(item.teamLogo).publicURL
+                          : null
+                        : item.avatarUrl
+                        ? item.avatarUrl
+                        : null;
+                      return (
+                        <TableRow
+                          key={item.id}
+                          onClick={(): any => {
+                            isTeam
+                              ? null
+                              : router.push(
+                                  `account/${item.userDetails.username}`
+                                );
+                          }}
+                        >
+                          <TableCell align="center" component="th" scope="row">
+                            {idx + (isDesktop ? 4 : 1)}
+                            <sup>th</sup>
+                          </TableCell>
+                          <TableCell>
+                            <div
+                              style={{ display: "flex", alignItems: "center" }}
+                            >
+                              <span>
+                                {isTeam ? (
+                                  image ? (
+                                    <img
+                                      src={image || ""}
+                                      width={!isDesktop ? "25px" : "45px"}
+                                      height={!isDesktop ? "25px" : "45px"}
+                                      style={{ borderRadius: 65 }}
                                     />
-                              }
-                            </span>
-                            <span style={{ padding: "10px" }}>
-                            {isTeam?item.name:item?.userDetails?.username}
-                            </span>
-                          </div>
-                        </TableCell>
-                        <TableCell align="center" component="th" scope="row">
-                          {isTeam?(item.loss+item.won):parseInt(item.lost)+parseInt(item.won)}
-                        </TableCell>
-                        <TableCell align="center" component="th" scope="row">
-                          {isTeam?item.won:parseInt(item.won)}
-                        </TableCell>
-                        {isDesktop&&(<TableCell>{item.elo_rating}</TableCell>)}
-                      </TableRow>
-                    )})}
+                                  ) : (
+                                    <GroupIcon
+                                      style={{
+                                        borderRadius: 65,
+                                        width: !isDesktop ? 25 : 45,
+                                        height: !isDesktop ? 25 : 45,
+                                      }}
+                                    />
+                                  )
+                                ) : (
+                                  <Avatar
+                                    src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${image}`}
+                                    style={{
+                                      height: !isDesktop ? "25px" : "45px",
+                                      width: !isDesktop ? "25px" : "45px",
+                                      borderRadius: "65px",
+                                    }}
+                                  />
+                                )}
+                              </span>
+                              <span style={{ padding: "10px" }}>
+                                {isTeam
+                                  ? item.name
+                                  : item?.userDetails?.username}
+                              </span>
+                            </div>
+                          </TableCell>
+                          <TableCell align="center" component="th" scope="row">
+                            {isTeam
+                              ? item.loss + item.won
+                              : parseInt(item.lost) + parseInt(item.won)}
+                          </TableCell>
+                          <TableCell align="center" component="th" scope="row">
+                            {isTeam ? item.won : parseInt(item.won)}
+                          </TableCell>
+                          {isDesktop && (
+                            <TableCell>{item.elo_rating}</TableCell>
+                          )}
+                        </TableRow>
+                      );
+                    })}
                 </TableBody>
               </Table>
             </TableContainer>
