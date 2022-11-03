@@ -148,7 +148,7 @@ const Leaderboard = (): JSX.Element => {
             overflow={"scroll"}
             className="hide-scrollbar"
           >
-            {games.map((data, index) => (
+            {games.map((data) => (
               <img
                 key={1}
                 data-value="1"
