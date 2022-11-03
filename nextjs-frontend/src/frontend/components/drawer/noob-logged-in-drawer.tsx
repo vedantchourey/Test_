@@ -17,14 +17,6 @@ import DiscordIcon from "../icons/discord-icon";
 import TwitchIcon from "../icons/twitch-icon";
 import YoutubeIcon from "../icons/youtube-icon";
 import { useRouter } from "next/router";
-import GroupIcon from '@mui/icons-material/Group';
-import HomeIcon from '@mui/icons-material/Home';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import EmailIcon from '@mui/icons-material/Email';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import ForumIcon from '@mui/icons-material/Forum';
-import LogoutIcon from "@mui/icons-material/Logout";
 import CloseIcon from "@mui/icons-material/Close";
 import Image from "next/image";
 import commonStyles from "../../styles/common.module.css";
@@ -76,49 +68,79 @@ export default function NoobLoggedInDrawer(props: Props): JSX.Element {
           <MenuList>
             <MenuItem onClick={(): Promise<void> => gotoPage("/")}>
               <ListItemIcon>
-                <HomeIcon fontSize="small" />
+              <img src="/images/menu/Home.png" style={{ height: 20, width: 20 }} />
               </ListItemIcon>
               <Typography fontSize={12}>Home</Typography>
             </MenuItem>
             <MenuItem onClick={(): Promise<void> => gotoPage("/tournaments-list")}>
               <ListItemIcon>
-                <EmojiEventsIcon fontSize="small" />
+              <img src="/images/menu/Tournaments.png" style={{ height: 20, width: 20 }} />
               </ListItemIcon>
               <Typography fontSize={12}>Tournaments</Typography>
             </MenuItem>
-            <MenuItem onClick={(): Promise<void> => gotoPage("/leaderboard")}>
+            <MenuItem onClick={(): Promise<void> => gotoPage("/free-agency-market/view/members")}>
               <ListItemIcon>
-                <AssessmentIcon fontSize="small" />
+              <img src="/images/menu/Free-Agency.png" style={{ height: 20, width: 20 }} />
               </ListItemIcon>
-              <Typography fontSize={12}>Leaderboards</Typography>
+              <Typography fontSize={12}>Free Agency</Typography>
+            </MenuItem>
+            <MenuItem onClick={(): Promise<void> => gotoPage("/account?default=social")}>
+              <ListItemIcon>
+              <img src="/images/menu/Social.png" style={{ height: 20, width: 20 }} />
+              </ListItemIcon>
+              <Typography fontSize={12}>Social</Typography>
+            </MenuItem>
+            <MenuItem onClick={(): Promise<void> => gotoPage("/blog")}>
+              <ListItemIcon>
+              <img src="/images/menu/Blog.png" style={{ height: 20, width: 20 }} />
+              </ListItemIcon>
+              <Typography fontSize={12}>Blog</Typography>
             </MenuItem>
             <MenuItem onClick={(): Promise<void> => gotoPage("/chat")}>
               <ListItemIcon>
-                <EmailIcon fontSize="small" />
+              <img src="/images/menu/Chat.png" style={{ height: 20, width: 20 }} />
               </ListItemIcon>
-              <Typography fontSize={12}>Message</Typography>
+              <Typography fontSize={12}>Chat</Typography>
+            </MenuItem>
+            <MenuItem onClick={(): Promise<void> => gotoPage("/match-hub")}>
+              <ListItemIcon>
+              <img src="/images/menu/Match-Hub.png" style={{ height: 20, width: 20 }} />
+              </ListItemIcon>
+              <Typography fontSize={12}>Match Hub</Typography>
+            </MenuItem>
+            <MenuItem onClick={(): Promise<void> => gotoPage("/account/setting")}>
+              <ListItemIcon>
+              <img src="/images/menu/Profile-Setting.png" style={{ height: 20, width: 20 }} />
+              </ListItemIcon>
+              <Typography fontSize={12}>Account</Typography>
+            </MenuItem>
+            <MenuItem onClick={(): Promise<void> => gotoPage("/leaderboard")}>
+              <ListItemIcon>
+              <img src="/images/menu/Leader-Board.png" style={{ height: 20, width: 20 }} />
+              </ListItemIcon>
+              <Typography fontSize={12}>Leaderboards</Typography>
             </MenuItem>
             <MenuItem onClick={(): Promise<void> => gotoPage("/about-us")}>
               <ListItemIcon>
-                <GroupIcon fontSize="small" />
+              <img src="/images/menu/Support.png" style={{ height: 20, width: 20 }} />
               </ListItemIcon>
               <Typography fontSize={12}>About Us</Typography>
             </MenuItem>
             <MenuItem onClick={(): Promise<void> => gotoPage("/support")}>
               <ListItemIcon>
-                <HelpOutlineIcon fontSize="small" />
+              <img src="/images/menu/Support.png" style={{ height: 20, width: 20 }} />
               </ListItemIcon>
               <Typography fontSize={12}>Support</Typography>
             </MenuItem>
             <MenuItem onClick={(): Promise<void> => gotoPage("/faq")}>
               <ListItemIcon>
-                <ForumIcon fontSize="small" />
+              <img src="/images/menu/Support.png" style={{ height: 20, width: 20 }} />
               </ListItemIcon>
               <Typography fontSize={12}>FAQ</Typography>
             </MenuItem>
             <MenuItem onClick={onLogoutClick}>
               <ListItemIcon>
-                <LogoutIcon fontSize="small" />
+              <img src="/images/menu/Sign-Out.png" style={{ height: 20, width: 20 }} />
               </ListItemIcon>
               <Typography fontSize={12}>Logout</Typography>
             </MenuItem>

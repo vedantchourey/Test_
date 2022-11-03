@@ -91,9 +91,10 @@ const CardDesktop: React.FC<any> = ({ setOpen }) => {
 
 const CardMobile: React.FC<any> = ({ setOpen }) => {
   return (
-    <Grid container>
+    <Grid container style={{ display: "flex", flexDirection: "column" }}>
       <Grid item xs={12} display={"flex"}>
-        <Box>
+        <img src="/images/FAB_BG.png" style={{ width: "100%", height: 50, marginTop: 20 }} />
+        {/* <Box>
           <Typography color={"white"} textAlign="left" component="h4">
             {" "}
             Free Agency Market{" "}
@@ -106,11 +107,12 @@ const CardMobile: React.FC<any> = ({ setOpen }) => {
             Ipsum has been the industry&apos;s standard dummy <br />
             text ever since the 1500s
           </Typography>
-        </Box>
+        </Box> */}
       </Grid>
       <Grid
         item
         md={4}
+        mt={2}
         lg={2}
         alignContent={"center"}
         display={"flex"}
@@ -168,11 +170,11 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
       <Box
         marginBottom={2}
         sx={{ padding: { sm: "10px", xs: "10px", md: "20px" } }}
-        style={{
+        style={!isMobile ? {
           backgroundImage: "url('/images/FAB_BG.png')",
           backgroundRepeat: "no-repeat",
           backgroundSize: "100% 100%",
-        }}
+        } : {}}
       >
         {!isMobile ? (
           <CardDesktop setOpen={setOpen} />
@@ -186,14 +188,15 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
         onClose={(): void => {
           setOpen(false);
         }}
+        style={{ height: "100%", overflow: "scroll" }}
       >
         <Grid
           container
           alignContent={"center"}
           justifyContent={"center"}
-          marginTop={10}
+          marginTop={isMobile ? 5 : 10}
         >
-          <Grid sm={11} lg={6} md={6}>
+          <Grid sm={11} lg={6} md={6} xs={10}>
             <Card>
               <Box
                 alignItems={"flex-start"}
@@ -215,8 +218,9 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
                 <Box
                   alignItems={"flex-start"}
                   p={2}
-                  display={"flex"}
-                  justifyContent={"space-between"}
+                  // display={"flex"}
+                  // justifyContent={"space-between"}
+                  style={ isMobile ? { flexDirection: "column" } : { display: "flex", flexDirection: "row", justifyContent: "space-between" } }
                 >
                   <Box flex={1}>
                     <GameDropDown

@@ -4,13 +4,15 @@ import {
   Button,
   MenuItem,
   Select,
-  useMediaQuery,
-  useTheme,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import GameDropDown from "../../../drop-downs/game-drop-down";
 import PlatformDropDown from "../../../drop-downs/platform-drop-down";
 import styles from "../../../tournaments/tournament-details-form.module.css";
+import { isDeviceTypeSelector } from "../../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from '../../../../../../src/frontend/redux-store/layout/device-types';
+import { useAppSelector } from "../../../../../../src/frontend/redux-store/redux-store";
+
 export const NoobButton = styled(Button)(() => ({
   color: "white",
   borderRadius: 0,
@@ -18,14 +20,15 @@ export const NoobButton = styled(Button)(() => ({
 }));
 
 const MemberButton = ({ setParam }: any): JSX.Element => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [gameId, setGameId] = useState<string | undefined>("");
   const [platformId, setPlatformId] = useState<string | undefined>("");
   const [level, setLevel] = useState<string>("all");
+
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
+
   useEffect(() => {
     // setParam
-    if (gameId || platformId || level) {
+    if (gameId || platformId || level && setParam) {
       setParam({
         gameId,
         platformId,
@@ -35,51 +38,8 @@ const MemberButton = ({ setParam }: any): JSX.Element => {
   }, [gameId, platformId, level]);
   return (
     <>
-      {isMobile ? (
         <>
-          <Box sx={{ m: 1 }}>
-            <GameDropDown
-              label="Game"
-              placeholder="Search by  Games"
-              onChange={(d: string | undefined): void => setGameId(d)}
-              value={gameId}
-              inputClassName={styles.inputItem}
-              autoCompleteClassName={styles.inputItem}
-            />
-          </Box>
-
-          <Box sx={{ m: 1 }}>
-            <PlatformDropDown
-              label="Platform"
-              placeholder="Select Platform"
-              allowAll
-              onChange={(id: any): void => setPlatformId(id)}
-              inputClassName={styles.inputItem}
-              autoCompleteClassName={styles.inputItem}
-              value={platformId}
-            />
-            <Box>
-              <Select
-                // displayEmpty
-                id="team-select"
-                style={{ width: 250 }}
-                // onChange={(e): any => setSelectedTeam(e.target.value)}
-                // value={selectedTeam}
-                defaultValue={""}
-              >
-                <MenuItem value="all">All</MenuItem>
-                <MenuItem value="bronze">Bronze</MenuItem>
-                <MenuItem value="silver">Silver</MenuItem>
-                <MenuItem value="gold">Gold</MenuItem>
-                <MenuItem value="diamond">Diamond</MenuItem>
-                <MenuItem value="ruby">Ruby</MenuItem>
-              </Select>
-            </Box>
-          </Box>
-        </>
-      ) : (
-        <>
-          <Box width={500} display="flex">
+          <Box width={isDesktop ? 500 : "auto"} display="flex" flexDirection={isDesktop ? "row" : "column"}>
             <Box sx={{ mr: 2, width: "100%" }}>
               <GameDropDown
                 label="Game"
@@ -103,7 +63,7 @@ const MemberButton = ({ setParam }: any): JSX.Element => {
               />
             </Box>
 
-            <Box sx={{ ml: 2, width: "100%" }}>
+            <Box sx={{ ml: isDesktop ? 2 : 0, width: "100%" }}>
               <Select
                 id="team-select"
                 style={{ width: "100%" }}
@@ -120,7 +80,7 @@ const MemberButton = ({ setParam }: any): JSX.Element => {
             </Box>
           </Box>
         </>
-      )}
+      
     </>
   );
 };

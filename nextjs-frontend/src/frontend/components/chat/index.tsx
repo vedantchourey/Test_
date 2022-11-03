@@ -582,8 +582,8 @@ export default function Chat(props: {
         {renderChatList()}
         <Box
           position={"absolute"}
-          bottom={10}
-          marginLeft={props.smallChat ? "21vw" : "16vw"}
+          bottom={70}
+          marginLeft={props.smallChat ? "30%" : "16vw"}
         >
           <Fab
             color="primary"

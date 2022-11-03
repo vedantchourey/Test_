@@ -166,6 +166,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
         flexDirection={"column"}
         justifyContent={"flex-end"}
         flex={infoSection ? 0.7 : 1}
+        style={!isDesktop ? { width: 200 } : {}}
       >
         <Box
           p={2}
@@ -266,7 +267,7 @@ export default function ChatBox(props: IChatBox): JSX.Element {
                       {user?.user_name || i.send_by}
                     </Typography>
                     <Typography
-                      fontSize={14}
+                      fontSize={!isDesktop ? 10 : 14}
                       textAlign={isCurrentUserMessage ? "right" : "left"}
                       color={"#FFFFFF"}
                     >

@@ -82,7 +82,7 @@ export default function ChatCard(props: IChatCard): JSX.Element {
       p={1}
       display={"flex"}
       alignItems={"center"}
-      style={{ cursor: "pointer" }}
+      style={{ cursor: "pointer", width: 300 }}
       onClick={props.onClick}
     >
       <Box>
