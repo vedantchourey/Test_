@@ -4,11 +4,9 @@ import {
   FormHelperText,
   TextField,
   Typography,
-  useMediaQuery,
   Select,
   MenuItem,
   OutlinedInput,
-  useTheme,
 } from "@mui/material";
 import React from "react";
 import {
@@ -129,9 +127,7 @@ interface TeamMembersProps {
 }
 
 const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team, hasAccess }) => {
-  const theme = useTheme();
   const router = useRouter();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [open, setOpen] = React.useState(false);
   const [playerList, setPlayerList] = React.useState<MemberProp[]>([]);
   const handleOpen = (): void => setOpen(true);

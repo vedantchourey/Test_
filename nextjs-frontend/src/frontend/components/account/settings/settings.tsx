@@ -60,7 +60,7 @@ const ProfileSettings = (): JSX.Element => {
         </Grid>
       </Grid>
       <Container maxWidth='md'>
-        <Box className={styles.formContainer}>
+        <Box className={isMobile ? styles.formContainerForMobile :styles.formContainer}>
           <TabContext value={activeTab}>
             {/* <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <TabList
