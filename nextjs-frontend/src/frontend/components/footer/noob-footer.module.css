@@ -3,6 +3,14 @@
     padding: 130px;
     background-color: #0f0526;
 }
+.mobileContainer {
+    flex-grow: 1;
+    padding: 20px 0px 80px 0px;
+    background-color: #0f0526;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .heading {
     display: flex;
     flex-direction: column;
