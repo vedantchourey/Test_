@@ -43,6 +43,8 @@ export default function StateDropDown(props: Props): JSX.Element {
 
   return (
     <Autocomplete disablePortal
+      style={{fontSize: 10}}
+      fullWidth
       className={autoCompleteClassName}
       options={states}
       getOptionLabel={(x): string => x.displayName}

@@ -4,11 +4,9 @@ import {
   FormHelperText,
   TextField,
   Typography,
-  useMediaQuery,
   Select,
   MenuItem,
   OutlinedInput,
-  useTheme,
 } from "@mui/material";
 import React from "react";
 import {
@@ -129,9 +127,7 @@ interface TeamMembersProps {
 }
 
 const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team, hasAccess }) => {
-  const theme = useTheme();
   const router = useRouter();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [open, setOpen] = React.useState(false);
   const [playerList, setPlayerList] = React.useState<MemberProp[]>([]);
   const handleOpen = (): void => setOpen(true);
@@ -361,7 +357,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team, hasAcc
           </Slider>
         </Box>
       </Box>
-      {!isMobile ? (
+      {/* {!isMobile ? (   */}
         <Box>
           <Typography color={"white"} variant={"h5"}>
             Team Graph
@@ -382,7 +378,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team, hasAcc
           </Select>
           <Line options={options} data={data} />
         </Box>
-      ) : null}
+      {/* // ) : null} */}
 
       <Modal
         open={open}

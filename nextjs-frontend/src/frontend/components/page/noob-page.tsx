@@ -88,7 +88,7 @@ export default function NoobPage(props: Props): JSX.Element {
               bottom: 0,
               borderRadius: 10,
               zIndex: 100,
-              width: 450,
+              width: isMobile ? 300 : 450,
               height: toggleChat ? 500 : 50,
               background: "#100626",
             }}
@@ -103,7 +103,7 @@ export default function NoobPage(props: Props): JSX.Element {
               }}
             >
               <Box display={"flex"} flexDirection="row">
-                <Typography style={{ color: "#FFFFFF" }}>Chat</Typography>
+                <Typography style={{ color: "#FFFFFF", fontSize: isMobile ? 10 : 15 }}>Chat</Typography>
                 <Box display={"flex"} flexDirection={"column"}>
                   <Box
                     style={{

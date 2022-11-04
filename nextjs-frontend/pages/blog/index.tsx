@@ -101,7 +101,7 @@ export default function News(): JSX.Element {
       }}
     >
       <>
-        <Typography variant="h1">Blogs</Typography>
+        <Typography variant="h1" mt={3}>Blogs</Typography>
         {!currentNews && (
           <Box display={"flex"} flexWrap={"wrap"}>
             {newsData
@@ -112,7 +112,7 @@ export default function News(): JSX.Element {
               })
               .map((i: any, key) => (
                 <Card
-                  sx={{ width: 345, m: 2 }}
+                  sx={{ m: 2 }}
                   key={key}
                   onClick={(): any => router.push(`/blog/${i.id}`)}
                   // onClick={(): any => setCurrentNews(i)}

@@ -10,12 +10,15 @@ export class HomeCarouselRepository extends BaseRepository<IHomeCarousel> {
   }
 
   async createHomeCarousel(homeCarousel: IHomeCarousel): Promise<string> {
-    const ids = await this.entities().insert(homeCarousel).returning("id");
+    const ids = await this.entities().insert(homeCarousel)
+.returning("id");
     return ids[0] as string;
   }
 
   async getHomeCarousel(id: string): Promise<IHomeCarousel | any> {
-    return await this.entities().select("*").where({ id: id }).first();
+    return await this.entities().select("*")
+.where({ id: id })
+.first();
   }
 
   async fetch(): Promise<IHomeCarousel[]> {
@@ -30,6 +33,7 @@ export class HomeCarouselRepository extends BaseRepository<IHomeCarousel> {
   }
 
   async delete(id: string): Promise<IHomeCarousel | undefined> {
-    return this.entities().where({ id }).delete();
+    return this.entities().where({ id })
+.delete();
   }
 }

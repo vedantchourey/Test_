@@ -1,34 +1,31 @@
-import {
-    Box, Grid, Typography
-} from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import React from "react";
 
 const TournamentsCard: React.FC = ({ children }) => {
-    return (<>
-        <Box sx={{ marginX: { md: "70px", sm: "10px", xs: "10px" } }}>
-            <Box
-                marginBottom={2}
-                sx={{ padding: { sm: "10px", xs: "10px", md: "20px" } }}
-                style={{
-                    backgroundImage: "url('/images/Tournaments Banner.png')",
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: "cover",
-                }}
-            >
-                <Grid container columnSpacing={2}>
-                    <Grid item mt={9} mb={9} xs={12} lg={12}>
-                        <Typography color={"white"} textAlign="center" variant="h1">
-                            <div style={{minHeight: 50}} />
-                        </Typography>
-                    </Grid>
-                </Grid>
-            </Box>
+  return (
+    <>
+      <Box sx={{ marginX: { md: "70px", sm: "10px", xs: "10px" } }}>
+        <Box
+          marginBottom={2}
+          sx={{ padding: { sm: "10px", xs: "10px", md: "20px", marginTop: 50 } }}
+          style={{
+            backgroundImage: "url('/images/Tournaments Banner.png')",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "contain",
+          }}
+        >
+          <Grid container columnSpacing={2}>
+            <Grid item mt={9} mb={9} xs={12} lg={12}>
+              {/* <Typography color={"white"} textAlign="center" variant="h1">
+                <div style={{ minHeight: 50 }} />
+              </Typography> */}
+            </Grid>
+          </Grid>
         </Box>
-        <Box>
-            {children}
-        </Box>
+      </Box>
+      <Box>{children}</Box>
     </>
-    );
+  );
 };
 
 export default TournamentsCard;

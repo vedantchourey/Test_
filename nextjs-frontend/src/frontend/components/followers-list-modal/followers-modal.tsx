@@ -10,11 +10,20 @@ import { useRouter } from "next/router";
 export default function Followersmodal({ username }: any): JSX.Element {
   const [data, setData] = useState<any>([]);
   const router = useRouter();
+
+  const getProfile = async (): Promise<any> => {
+    try {
+      const response = await getUserProfileByUsername(username);
+      setData(response);
+    } catch (error) {
+      console.warn("Error: Error while getting user profile by username - ", error);
+    }
+  };
+
   useEffect(() => {
-    (async (): Promise<void> => {
-      setData(await getUserProfileByUsername(username));
-    })();
-  }, []);
+    getProfile();
+  }, [username]);
+
   return (
     <Box className={styles.userList}>
       <Box sx={{ display: "flex", alignItems: "center" }}>

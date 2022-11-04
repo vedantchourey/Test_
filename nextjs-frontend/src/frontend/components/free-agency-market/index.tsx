@@ -200,7 +200,7 @@ const FreeAgencyMarket: React.FC = (): JSX.Element => {
           {renderTabs()}
         </Box>
         {isMobile && (getActiveTab() === 0 || query.slug === "members") ? (
-          <MemberButton />
+          <MemberButton setParam={setParam} />
         ) : null}
         <Box marginY={2}>{renderComponent()}</Box>
       </FreeAgencyMarketCard>

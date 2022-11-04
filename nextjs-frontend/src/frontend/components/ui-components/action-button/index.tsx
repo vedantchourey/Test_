@@ -39,6 +39,7 @@ export interface Props {
   disabled?: boolean;
   data?: TournamentData;
   userId?: string;
+  style?: any;
 }
 
 const ActionButton: React.FC<Props> = ({
@@ -50,6 +51,7 @@ const ActionButton: React.FC<Props> = ({
   disabled,
   data,
   userId,
+  style
 }) => {
   const styles = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -111,7 +113,8 @@ const ActionButton: React.FC<Props> = ({
                 : "linear-gradient(180deg, #EF507E 0%, #F09633 100%)",
             color: "white",
             padding: "16px 43px",
-            width: "189px",
+            width: style?.width ? style?.width : "189px",
+            fontSize: style?.fontSize ? style?.fontSize : 13
           }}
           aria-controls={open ? id : undefined}
           aria-expanded={open ? "true" : undefined}
@@ -135,7 +138,7 @@ const ActionButton: React.FC<Props> = ({
     items.forEach((itemList, index) => {
       itemList.forEach(({ title, onClick }) => {
         itemMap.push(
-          <MenuItem onClick={(): void => handleClose(onClick)}>
+          <MenuItem onClick={(): void => handleClose(onClick)} style={{ fontSize: style?.fontSize ? style?.fontSize : 16 }}>
             {title}
           </MenuItem>
         );
@@ -160,7 +163,8 @@ const ActionButton: React.FC<Props> = ({
                 : "linear-gradient(180deg, #EF507E 0%, #F09633 100%)",
           color: "white",
           padding: "16px 43px",
-          width: "189px",
+          width: style?.width ? style?.width : "189px",
+          fontSize: style?.fontSize ? style?.fontSize : 13
         }}
         aria-controls={open ? id : undefined}
         aria-expanded={open ? "true" : undefined}

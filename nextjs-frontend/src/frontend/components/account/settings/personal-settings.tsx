@@ -6,6 +6,8 @@ import {
   Grid,
   TextField,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { DateTime } from "luxon";
@@ -467,6 +469,8 @@ const PersonalSettings = (): JSX.Element => {
   });
 
   const router = useRouter();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const getUserData = async (): Promise<any> => {
     const userInfo = await frontendSupabase
@@ -516,8 +520,8 @@ const PersonalSettings = (): JSX.Element => {
 
   return (
     <>
-      <Grid container spacing={3}>
-        <Grid item md={6}>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
           <FormLabel>First Name</FormLabel>
           <TextField
             variant="standard"
@@ -532,7 +536,7 @@ const PersonalSettings = (): JSX.Element => {
             helperText={getErrorForProp(errors, "firstName")}
           />
         </Grid>
-        <Grid item md={6}>
+        <Grid item xs={12} md={6}>
           <FormLabel>Last Name</FormLabel>
           <TextField
             variant="standard"
@@ -547,7 +551,7 @@ const PersonalSettings = (): JSX.Element => {
             helperText={getErrorForProp(errors, "lastName")}
           />
         </Grid>
-        <Grid item md={6}>
+        <Grid item xs={12} md={6}>
           <FormLabel>Email Address</FormLabel>
           <TextField
             variant="standard"
@@ -558,7 +562,7 @@ const PersonalSettings = (): JSX.Element => {
             className={styles.customInput}
           />
         </Grid>
-        <Grid item md={6}>
+        <Grid item xs={12} md={6}>
           <FormLabel>Username</FormLabel>
           <TextField
             variant="standard"
@@ -574,11 +578,10 @@ const PersonalSettings = (): JSX.Element => {
             helperText={getErrorForProp(errors, "username")}
           />
         </Grid>
-        <Grid item md={6}>
-          <FormLabel>Date of Birth</FormLabel>
+        <Grid item xs={12} md={6}>
           <DesktopDatePicker
             label="Date of birth"
-            className={styles.inputRowItem}
+            // className={styles.inputRowItem}
             value={new Date(request.dateOfBirth)}
             mask={"__/__/____"}
             onChange={(value: DateTime | null): void =>
@@ -629,7 +632,7 @@ const PersonalSettings = (): JSX.Element => {
             )}
           />
         </Grid> */}
-        <Grid item md={12}>
+        <Grid item xs={12} md={6} >
           <StateDropDown
             value={request.stateId}
             onChange={(id, state): void =>
@@ -676,18 +679,20 @@ const PersonalSettings = (): JSX.Element => {
             )}
           /> */}
         </Grid>
+          <Divider sx={{ mt: 8 }} light />
+          <Grid item xs={12} md={12}>
+            <Box sx={{ textAlign: "center", mt: 4 }}>
+              <Button
+                className={isMobile? styles.actionButtonForMobile : styles.actionButton}
+                onClick={(): any => {
+                  handleSubmit();
+                }}
+              >
+                <Typography>Save Changes</Typography>
+              </Button>
+            </Box>
+          </Grid>
       </Grid>
-      <Divider sx={{ mt: 8 }} light />
-      <Box sx={{ textAlign: "right", mt: 4 }}>
-        <Button
-          className={styles.actionButton}
-          onClick={(): any => {
-            handleSubmit();
-          }}
-        >
-          <Typography>Save Changes</Typography>
-        </Button>
-      </Box>
     </>
   );
 };

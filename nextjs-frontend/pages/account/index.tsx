@@ -43,6 +43,8 @@ import {
 import { fetchAllGamesThunk } from "../../src/frontend/redux-store/games/game-slice";
 import SocialMedia from "../social";
 import { ParsedUrlQuery } from "querystring";
+import { isDeviceTypeSelector } from "../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from '../../src/frontend/redux-store/layout/device-types';
 
 type TabsProps = "posts" | "social" | "activity";
 
@@ -72,6 +74,8 @@ function Account(): JSX.Element {
   const appDispatch = useAppDispatch();
   const games = useAppSelector(allGamesSelector);
   const gamesFetchStatus = useAppSelector(gamesFetchStatusSelector);
+
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
 
   useEffect(() => {
     (async (): Promise<unknown> => {
@@ -163,16 +167,16 @@ function Account(): JSX.Element {
                   {_renderPosts()}
                 </TabPanel>
                 <TabPanel sx={{ p: 0 }} value="activity">
-                  <TableContainer>
+                  <TableContainer style={!isDesktop ? { width: 295 } : {}}>
                     <Table>
                       <TableBody>
                         <NoobRow>
-                          <NoobCell>Tournament Name</NoobCell>
-                          <NoobCell>Game</NoobCell>
-                          <NoobCell>Format</NoobCell>
-                          <NoobCell>Date</NoobCell>
-                          <NoobCell>Participants</NoobCell>
-                          <NoobCell>Status</NoobCell>
+                          <NoobCell style={!isDesktop ? { fontSize: 10 } : {}}>Tournament Name</NoobCell>
+                          <NoobCell style={!isDesktop ? { fontSize: 10 } : {}}>Game</NoobCell>
+                          <NoobCell style={!isDesktop ? { fontSize: 10 } : {}}>Format</NoobCell>
+                          <NoobCell style={!isDesktop ? { fontSize: 10 } : {}}>Date</NoobCell>
+                          <NoobCell style={!isDesktop ? { fontSize: 10 } : {}}>Participants</NoobCell>
+                          <NoobCell style={!isDesktop ? { fontSize: 10 } : {}}>Status</NoobCell>
                         </NoobRow>
                         {data.map((i, idx) => {
                           const game = games.find((g) => g.id === i.game);
@@ -186,24 +190,24 @@ function Account(): JSX.Element {
                               }}
                               style={{ cursor: "pointer" }}
                             >
-                              <NoobCell>{i?.name}</NoobCell>
-                              <NoobCell>{game?.displayName}</NoobCell>
-                              <NoobCell>
+                              <NoobCell style={!isDesktop ? { fontSize: 10 } : {}}>{i?.name}</NoobCell>
+                              <NoobCell style={!isDesktop ? { fontSize: 10 } : {}}>{game?.displayName}</NoobCell>
+                              <NoobCell style={!isDesktop ? { fontSize: 10 } : {}}>
                                 {i.settings?.tournamentFormat}
                               </NoobCell>
-                              <NoobCell>
+                              <NoobCell style={!isDesktop ? { fontSize: 10 } : {}}>
                                 {moment(i.startDate).format("DD MMM YYYY")}
                               </NoobCell>
-                              <NoobCell>
+                              <NoobCell style={!isDesktop ? { fontSize: 10 } : {}}>
                                 {i.bracketsMetadata?.playersLimit} Participants
                               </NoobCell>
-                              <NoobCell>
+                              <NoobCell style={!isDesktop ? { fontSize: 10 } : {}}>
                                 {moment(i.startDate).isAfter(moment()) ? (
-                                  <Typography color={"#6931F9"}>
+                                  <Typography style={!isDesktop ? { fontSize: 10 } : {}} color={"#6931F9"}>
                                     Open
                                   </Typography>
                                 ) : (
-                                  <Typography color={"green"}>
+                                  <Typography style={!isDesktop ? { fontSize: 10 } : {}} color={"green"}>
                                     Completed
                                   </Typography>
                                 )}

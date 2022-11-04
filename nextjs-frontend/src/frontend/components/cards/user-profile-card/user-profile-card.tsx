@@ -45,6 +45,10 @@ import axios from "axios";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import { useRouter } from "next/router";
 import AvtarModal from "./avtar-modal";
+import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from '../../../../../src/frontend/redux-store/layout/device-types';
+import { fetchUserFollowerList, fetchUserFollowingList } from '../../../service-clients/profile-service-client';
+import { IFollowersList } from '../../../service-clients/messages/i-followers-list-response';
 
 export default function UserProfileCard(): JSX.Element {
   const router = useRouter();
@@ -72,6 +76,9 @@ export default function UserProfileCard(): JSX.Element {
   };
 
   const [teamModal, setTeamModal] = useState(false);
+  const [followers, setFollowers] = useState<IFollowersList[]>([]);
+  const [followings, setFollowings] = useState<IFollowersList[]>([]);
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
 
   const handleCloseAvtar = (): void => setOpenAvatarModal(false);
 
@@ -97,6 +104,33 @@ export default function UserProfileCard(): JSX.Element {
       teamList();
     }
   }, [userProfile]);
+
+  const fetchFollowers = async (): Promise<any> => {
+    try {
+      if (userProfile) {
+        const followersResponse = await fetchUserFollowerList(userProfile.id);
+        setFollowers(followersResponse);
+      }
+    } catch(error) {
+      console.warn("Error: Error while getting followers - ", error);
+    }
+  };
+
+  const fetchFollowings = async (): Promise<any> => {
+    try {
+      if (userProfile) {
+        const followingResponse = await fetchUserFollowingList(userProfile.id);
+        setFollowings(followingResponse);
+      }
+    } catch (error) {
+      console.warn("Error: Error while getting followings - ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFollowers();
+    fetchFollowings();
+  }, []);
 
   async function onUploadAvatar(files: FileList | null): Promise<void> {
     setShowAvatarPicker(false);
@@ -291,6 +325,7 @@ export default function UserProfileCard(): JSX.Element {
                         mt: 1,
                         cursor: "pointer",
                       }}
+                      style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}
                       key={idx}
                       onClick={(): any =>
                         router.push(`/team/view/${t.id}/members`)
@@ -298,6 +333,7 @@ export default function UserProfileCard(): JSX.Element {
                     >
                       <Avatar
                         sx={{ mr: 1, width: 35, height: 35 }}
+                        style={{ display: "flex", alignContent: "center", justifyContent: "center" }}
                         alt={t.name.toUpperCase()}
                         src={teamLogo}
                       />
@@ -316,15 +352,14 @@ export default function UserProfileCard(): JSX.Element {
                   <Button
                     variant="text"
                     sx={{
-                      mt: 2,
                       p: 0,
                       justifyContent: "flex-start",
-                      pl: "2px",
                     }}
                     fullWidth
                     onClick={(): any => setTeamModal(true)}
+                    style={{ marginTop: 8 }}
                   >
-                    <Avatar sx={{ mr: 1, width: 35, height: 35 }}>
+                    <Avatar sx={{ mr: 1, width: 35, height: 35 }} style={{ display: "flex", alignContent: "center", justifyContent: "center" }}>
                       <Typography
                         variant="h3"
                         fontSize={12}
@@ -447,7 +482,7 @@ export default function UserProfileCard(): JSX.Element {
         open={teamModal}
         onClose={(): any => setTeamModal(false)}
       >
-        <Box style={{ maxHeight: 500, width: 500, background: "#08001c" }} className={"hide-scrollbar"}>
+        <Box style={{ width: !isDesktop ? 320 : 500, background: "#08001c" }} className={"hide-scrollbar"}>
           <AppBar position="static" className={styles.appBar}>
             <Box sx={{ textAlign: "center", position: "relative" }}>
               <Typography variant="h3" color="white" fontSize={20}>
@@ -518,22 +553,21 @@ export default function UserProfileCard(): JSX.Element {
         minFiles={0}
         maxFileSizeInBytes={10000 * 10000}
       />
-      {userProfile && (
-        <>
-          <FollowersModal
-            handleClose={handleCloseFollowersModal}
-            userData={userProfile}
-            showModal={openFollowersModal}
-            listType="followers"
-          />
-
-          <FollowersModal
-            handleClose={handleCloseFollowingModal}
-            userData={userProfile}
-            showModal={openFollowingModal}
-            listType="following"
-          />
-        </>
+      {followers && openFollowersModal && (
+        <FollowersModal
+          handleClose={handleCloseFollowersModal}
+          userList={followers}
+          showModal={openFollowersModal}
+          listType="followers"
+        />
+      )}
+      {followings && openFollowingModal && (
+        <FollowersModal
+          handleClose={handleCloseFollowingModal}
+          userList={followings}
+          showModal={openFollowingModal}
+          listType="following"
+        />
       )}
     </Box>
   );

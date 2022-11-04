@@ -34,6 +34,9 @@ import CardComp from "../../src/frontend/components/tournaments-list/card";
 const Home = (): JSX.Element => {
   const isDesktop = useAppSelector((x) =>
     isDeviceTypeSelector(x, deviceTypes.desktop));
+
+  
+
   const [newsData, setNewsData] = useState<any[]>([]);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
   const [isFetchingPosts, setIsFetchingPosts] = useState<boolean>(true);
@@ -96,19 +99,12 @@ const Home = (): JSX.Element => {
     }
   };
 
-  // useEffect(() => {
-  //   fetchPosts();
-  //   fetchCarousels();
-  // }, []);
-
   useEffect(() => {
     getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257");
   }, []);
 
   const responsive = {
-    0: { items: 0 },
-    568: { items: 0 },
-    1024: { items: 1 },
+    0: { items: 1 }
   };
 
   const _renderPosts = (): JSX.Element | React.ReactNode => {
@@ -123,7 +119,7 @@ const Home = (): JSX.Element => {
           <PostCard
             key={postData.id}
             data={postData}
-            row={true}
+            row={isDesktop}
             isDesktop={isDesktop}
           />
         );
@@ -162,66 +158,6 @@ const Home = (): JSX.Element => {
     fetchCarousels();
   }, []);
 
-  // const items = [
-  //   <div className="item" data-value="1" key={"1"}>
-  //     <Box className={styles.slider}>
-  //       <img src="/images/Group.png" />
-  //       <Typography className={styles.text3}>
-  //         Always keep in touch with your friends and watch their activities,
-  //         like and comment.
-  //       </Typography>
-  //       <span className={styles.border}></span>
-  //       <Box className={styles.sliderBox}>
-  //         <YoutubeIcon />
-  //         <img src="/images/Discord.png" style={{ height: "19px" }} />
-  //         <TwitchIcon />
-  //       </Box>
-  //     </Box>
-  //   </div>,
-  //   <div className="item" data-value="2" key={"2"}>
-  //     <Box className={styles.slider}>
-  //       <img src="/images/Group.png" />
-  //       <Typography className={styles.text3}>
-  //         Always keep in touch with your friends and watch their activities,
-  //         like and comment.
-  //       </Typography>
-  //       <span className={styles.border}></span>
-  //       <Box className={styles.sliderBox}>
-  //         <YoutubeIcon />
-  //         <img src="/images/Discord.png" style={{ height: "19px" }} />
-  //         <TwitchIcon />
-  //       </Box>
-  //     </Box>
-  //   </div>,
-  //   <div className="item" data-value="3" key={"3"}>
-  //     <Box className={styles.slider}>
-  //       <img src="/images/Group.png" />
-  //       <Typography className={styles.text3}>
-  //         Always keep in touch with your friends and watch their activities,
-  //         like and comment.
-  //       </Typography>
-  //       <span className={styles.border}></span>
-  //       <Box className={styles.sliderBox}>
-  //         <YoutubeIcon />
-  //         <img src="/images/Discord.png" style={{ height: "19px" }} />
-  //         <TwitchIcon />
-  //       </Box>
-  //     </Box>
-  //   </div>,
-  // ];
-
-  const sideImageCarousel = [
-    <div data-value={"1"} key={"1"}>
-      <img src="/images/home1.png" className={styles.img1} />
-    </div>,
-    <div data-value={"2"} key={"2"}>
-      <img src="/images/home2.png" className={styles.img1} />
-    </div>,
-    <div data-value={"3"} key={"3"}>
-      <img src="/images/home3.png" className={styles.img1} />
-    </div>,
-  ];
-
   const topImageCarousel = carouselImages.map((image) => {
     return (
       <div
@@ -231,29 +167,30 @@ const Home = (): JSX.Element => {
         onClick={(): void => {
           router.push(image.navigation)
         }}>
-        <Box style={{ width: "100%", height: 450, }}>
+        <Box style={{ width: "100%" }}>
           <img
             src={image.image}
-            style={{ width: "100%", position: "absolute" }}
+            style={{ width: "100%", position: "relative" }}
+            className={styles.mainCarouselImage}
           />
           <Box className={styles.carouselContainer} style={{ position: "absolute" }}>
-            <Typography className={isDesktop ? styles.title : styles.text1Mobile} style={{ marginBottom: 10, marginLeft: 20 }}>
+            <Typography className={isDesktop ? styles.title : styles.text1Mobile} style={{ marginBottom: 20, marginLeft: 10 }}>
               {image.name}
             </Typography>
-            <div style={{width: "70%"}}>
-            <Typography className={isDesktop ? styles.subtitle : styles.text2Mobile} style={{ marginBottom: 20, marginLeft: 20 }}>
-              {image.subtitle}
-            </Typography>
+            <div style={{ width: "70%" }}>
+              <Typography className={isDesktop ? styles.subtitle : styles.text2Mobile} style={{ marginBottom: 20, marginLeft: 10 }}>
+                {image.subtitle}
+              </Typography>
             </div>
           </Box>
         </Box>
       </div>
     )
-  })
+  });
 
   return (
     <Fragment>
-      <Grid container>
+      <Grid container style={{ flex: 1 }}>
         {isDesktop && (
           <>
             <Grid item xs={12} lg={12}>
@@ -269,127 +206,240 @@ const Home = (): JSX.Element => {
                 />
               </div>
             </Grid>
-            {/* <Grid item xs={12} lg={3}>
-              <div className={styles.imgContainer}>
-                <AliceCarousel
-                  items={sideImageCarousel}
-                  responsive={responsive}
-                  autoPlay={true}
-                  disableButtonsControls={true}
-                  disableDotsControls={true}
-                  autoPlayInterval={10000}
-                  infinite={true}
-                />
-              </div>
-            </Grid> */}
           </>
         )}
         {!isDesktop && (
-          <>
-            <Grid item xs={12}>
-              <div className={styles.backgroundImgMobile}>
-                <AliceCarousel
-                  items={topImageCarousel}
-                  responsive={responsive}
-                  autoPlay={true}
-                  disableButtonsControls={true}
-                  disableDotsControls={true}
-                  autoPlayInterval={10000}
-                  infinite={true}
-                />
-              </div>
-              <Grid>
-                <div
-                  style={{ marginTop: 42, width: "200px", alignSelf: "center" }}
-                >
-                  <AliceCarousel
-                    items={sideImageCarousel}
-                    responsive={responsive}
-                    autoPlay={true}
-                    disableButtonsControls={true}
-                    disableDotsControls={true}
-                    autoPlayInterval={10000}
-                    infinite={true}
-                  />
-                </div>
-              </Grid>
-            </Grid>
-          </>
+          <div style={{ width: "90vw", marginTop: 40 }}>
+            <AliceCarousel
+              items={topImageCarousel}
+              responsive={responsive}
+              autoPlay={true}
+              disableButtonsControls={true}
+              disableDotsControls={true}
+              autoPlayInterval={10000}
+              infinite={true}
+            />
+          </div>
         )}
         {isDesktop ? (
-          <>
-            <Container maxWidth="xl" className={styles.container}>
-              <Grid item xs={12} lg={30}>
-                <TabContext value={value}>
-                  <Box className={styles.tabBox}>
-                    <TabList
-                      onChange={handleChange}
-                      aria-label="lab API tabs example"
-                    >
-                      <Tab
-                        value="1"
-                        className={styles.tab}
-                        icon={<StarRateIcon />}
-                        iconPosition="start"
-                        label="TOP POSTS"
-                      />
-                      <Tab
-                        value="2"
-                        className={styles.tab}
-                        icon={<StorageIcon />}
-                        iconPosition="start"
-                        label="NEW FEED"
-                      />
-                      <Tab
-                        value="3"
-                        className={styles.tab}
-                        icon={<EmojiEventsIcon />}
-                        iconPosition="start"
-                        label="TOURNAMENTS"
-                      />
-                    </TabList>
-                    <Button
-                      className={styles.viewAllButton}
-                      onClick={async (): Promise<void> => {
-                        value === "1"
-                          ? await router.push("social")
-                          : value === "2"
-                          ? await router.push("blog")
-                          : await router.push("tournaments-list");
-                      }}
-                    >
-                      VIEW All
-                    </Button>
-                  </Box>
-                  <TabPanel
-                    value="1"
-                    className={styles.postContainer}
-                    style={{ flexDirection: "column" }}
-                  >
-                    <Box
-                      overflow={"scroll"}
-                      // maxWidth={"57vw"}
-                      display={"flex"}
-                      className={"hide-scrollbar"}
-                    >
-                      {_renderPosts()}
+            <>
+              <Container maxWidth="xl" className={styles.container}>
+                <Grid item xs={12} lg={30} mt={5}>
+                  <TabContext value={value}>
+                    <Box className={styles.tabBox}>
+                      <TabList
+                        onChange={handleChange}
+                        aria-label="lab API tabs example"
+                      >
+                        <Tab
+                          value="1"
+                          className={styles.tab}
+                          icon={<StarRateIcon />}
+                          iconPosition="start"
+                          label="TOP POSTS"
+                        />
+                        <Tab
+                          value="2"
+                          className={styles.tab}
+                          icon={<StorageIcon />}
+                          iconPosition="start"
+                          label="NEWS FEED"
+                        />
+                        <Tab
+                          value="3"
+                          className={styles.tab}
+                          icon={<EmojiEventsIcon />}
+                          iconPosition="start"
+                          label="TOURNAMENTS"
+                        />
+                      </TabList>
+                      <Button
+                        className={styles.viewAllButton}
+                        onClick={async (): Promise<void> => {
+                          value === "1"
+                            ? await router.push("social")
+                            : value === "2"
+                            ? await router.push("blog")
+                            : await router.push("tournaments-list");
+                        }}
+                      >
+                        VIEW All
+                      </Button>
                     </Box>
-                  </TabPanel>
-                  <TabPanel value="2" className={styles.newsFeedContainer}>
-                    <Grid
-                      container
-                      columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}
-                      display="flex"
+                    <TabPanel
+                      value="1"
+                      className={styles.postContainer}
+                      style={{ flexDirection: "column" }}
                     >
+                      <Box
+                        overflow={"scroll"}
+                        maxWidth={"62vw"}
+                        display={"flex"}
+                        className={"hide-scrollbar"}
+                      >
+                        {_renderPosts()}
+                      </Box>
+                    </TabPanel>
+                    <TabPanel value="2" className={styles.newsFeedContainer}>
+                      <Grid
+                        container
+                        columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}
+                        display="flex"
+                      >
+                        {newsData.map((i: any, key) => {
+                          if (key < 4) {
+                            return (
+                              <Card
+                                sx={{ maxWidth: 280, m: 2 }}
+                                key={key}
+                                onClick={(): any => router.push(`/blog/${i.id}`)}
+                              >
+                                {i.label &&<Typography
+                                  style={{
+                                    position: "absolute",
+                                    backgroundColor: "#6932F9",
+                                    marginTop: "15px",
+                                    padding: "5px 25px",
+                                    color: "white",
+                                  }}
+                                >
+                                  {i.label}
+                                </Typography>}
+                                <CardMedia
+                                  component="img"
+                                  height="240"
+                                  image={i.image}
+                                  alt="green iguana"
+                                />
+                                <CardContent>
+                                  <Typography
+                                    gutterBottom
+                                    variant="h5"
+                                    fontSize={16}
+                                    textAlign={"left"}
+                                    component="div"
+                                  >
+                                    {i.title}
+                                  </Typography>
+                                  <Typography
+                                    textAlign={"left"}
+                                    variant="h1"
+                                    fontSize={14}
+                                    mt={1}
+                                    color={"#6931F9"}
+                                  >
+                                    Author: {i.author} / Publishing Date:{" "}
+                                    {moment(i.created_at).format("DD MMM YYYY")}
+                                  </Typography>
+                                </CardContent>
+                              </Card>
+                            );
+                          }
+                        })}
+                      </Grid>
+                    </TabPanel>
+                    <TabPanel value="3" className={styles.tournamentContainer}>
+                      <Grid display={"flex"} maxWidth={"75vw"} className={"hide-scrollbar"}>
+                        {tournamentsData
+                          .sort((a: any, b: any) => {
+                            const aTime: any = moment(a.startDate).format("x");
+                            const bTime: any = moment(b.startDate).format("x");
+                            return bTime - aTime;
+                          }).slice(0,3)
+                          .map((data: any) => {
+                            const startDateTime =
+                              moment(data.startDate).format("D MMM YYYY ") +
+                              moment(data.startTime, "HH:mm:ss").format("LT");
+                            const totalSlots = data?.bracketsMetadata?.playersLimit || 0;
+                            const currentSlot = (data?.playerList || []).length;
+                          return (
+                            <CardComp
+                              key={data.id}
+                              id={data.id}
+                              tournament_name={data.name}
+                              banner={data.banner}
+                              tournament_type={data.settings?.tournamentFormat}
+                              platform={data.settings?.platform}
+                              total_slots={totalSlots}
+                              left_slots={currentSlot}
+                              start_date={startDateTime}
+                              credits={data.settings?.entryFeeAmount || 0}
+                              participants={`${currentSlot} out of ${totalSlots}`}
+                            />
+                          );
+                        })}
+                      </Grid>
+                    </TabPanel>
+                  </TabContext>
+                </Grid>
+                {/* {isDesktop && (
+                  <>
+                    <Grid
+                      item
+                      xs={12}
+                      lg={3}
+                      className={styles.mainSideBox}
+                      style={{ marginLeft: 20 }}
+                    >
+                      <Box className={styles.sideBox}>
+                        <AliceCarousel
+                          items={items}
+                          responsive={responsive}
+                          autoPlay={true}
+                          autoPlayInterval={10000}
+                          infinite={true}
+                        />
+                      </Box>
+                    </Grid>
+                  </>
+                )} */}
+              </Container>
+            </>
+          ) : (
+            <>
+              <Grid container xs={12} style={{ marginTop: 33 }}>
+                <TabContext value={value}>
+                  <TabList
+                    onChange={handleChange}
+                    aria-label="lab API tabs example"
+                    variant="scrollable"
+                    scrollButtons="auto"
+                  >
+                    <Tab value="1"
+                      icon={<StarRateIcon style={{ height: 20, width: 20 }} />}
+                      iconPosition="start"
+                      label="TOP POSTS"
+                      style={{ fontSize: 12 }}
+                    />
+                    <Tab value="2"
+                      icon={<StorageIcon style={{ height: 20, width: 20 }} />}
+                      iconPosition="start"
+                      label="NEWS FEED"
+                      style={{ fontSize: 12 }}
+                    />
+                    <Tab value="3"
+                      icon={<EmojiEventsIcon style={{ height: 20, width: 20 }} />}
+                      iconPosition="start"
+                      label="TOURNAMENTS"
+                      style={{ fontSize: 12 }}
+                    />
+                  </TabList>
+                  <TabPanel value="1">
+                    <Grid item xs={12}>
+                      {_renderPosts()}
+                    </Grid>
+                  </TabPanel>
+                  <TabPanel value="2">
+                    <Grid container columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}>
                       {newsData.map((i: any, key) => {
-                        if (key < 4) {
+                        if (key < 3) {
                           return (
                             <Card
-                              sx={{ maxWidth: 280, m: 2 }}
+                              sx={{ maxWidth: 400, m: 2 }}
                               key={key}
                               onClick={(): any => router.push(`/blog/${i.id}`)}
                             >
-                              {i.label &&<Typography
+                              {i.label&&<Typography
                                 style={{
                                   position: "absolute",
                                   backgroundColor: "#6932F9",
@@ -433,215 +483,51 @@ const Home = (): JSX.Element => {
                       })}
                     </Grid>
                   </TabPanel>
+                  <TabPanel value="3">
+                    <Grid container columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}>
+                    {tournamentsData
+                            .sort((a: any, b: any) => {
+                              const aTime: any = moment(a.startDate).format("x");
+                              const bTime: any = moment(b.startDate).format("x");
+                              return bTime - aTime;
+                            }).slice(0,3)
+                            .map((data: any) => {
+                              const startDateTime =
+                                moment(data.startDate).format("D MMM YYYY ") +
+                                moment(data.startTime, "HH:mm:ss").format("LT");
+                              const totalSlots = data?.bracketsMetadata?.playersLimit || 0;
+                              const currentSlot = (data?.playerList || []).length;
+                            return (
+                              <CardComp
+                                key={data.id}
+                                id={data.id}
+                                tournament_name={data.name}
+                                banner={data.banner}
+                                tournament_type={data.settings?.tournamentFormat}
+                                platform={data.settings?.platform}
+                                total_slots={totalSlots}
+                                left_slots={currentSlot}
+                                start_date={startDateTime}
+                                credits={data.settings?.entryFeeAmount || 0}
+                                participants={`${currentSlot} out of ${totalSlots}`}
+                              />
+                            );
+                          })}
+                    </Grid>
+                  </TabPanel>
+
                   <TabPanel value="3" className={styles.tournamentContainer}>
-                    <Grid display={"flex"} overflow="scroll" maxWidth={"75vw"} className={"hide-scrollbar"}>
-                      {tournamentsData
-                        .sort((a: any, b: any) => {
-                          const aTime: any = moment(a.startDate).format("x");
-                          const bTime: any = moment(b.startDate).format("x");
-                          return bTime - aTime;
-                        }).slice(0,3)
-                        .map((data: any) => {
-                          const startDateTime =
-                            moment(data.startDate).format("D MMM YYYY ") +
-                            moment(data.startTime, "HH:mm:ss").format("LT");
-                          const totalSlots = data?.bracketsMetadata?.playersLimit || 0;
-                          const currentSlot = (data?.playerList || []).length;
-                        return (
-                          <CardComp
-                            key={data.id}
-                            id={data.id}
-                            tournament_name={data.name}
-                            banner={data.banner}
-                            tournament_type={data.settings?.tournamentFormat}
-                            platform={data.settings?.platform}
-                            total_slots={totalSlots}
-                            left_slots={currentSlot}
-                            start_date={startDateTime}
-                            credits={data.settings?.entryFeeAmount || 0}
-                            participants={`${currentSlot} out of ${totalSlots}`}
-                          />
-                        );
-                      })}
+                    <Grid container columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}>
+                        <Grid display={"flex"} maxWidth={"75vw"} className={"hide-scrollbar"}>
+                          
+                          
+                        </Grid>
                     </Grid>
                   </TabPanel>
                 </TabContext>
               </Grid>
-              {/* {isDesktop && (
-                <>
-                  <Grid
-                    item
-                    xs={12}
-                    lg={3}
-                    className={styles.mainSideBox}
-                    style={{ marginLeft: 20 }}
-                  >
-                    <Box className={styles.sideBox}>
-                      <AliceCarousel
-                        items={items}
-                        responsive={responsive}
-                        autoPlay={true}
-                        autoPlayInterval={10000}
-                        infinite={true}
-                      />
-                    </Box>
-                  </Grid>
-                </>
-              )} */}
-            </Container>
-          </>
-        ) : (
-          <>
-            <Grid container xs={12} style={{ marginTop: 33 }}>
-              <TabContext value={value}>
-                <TabList
-                  onChange={handleChange}
-                  aria-label="lab API tabs example"
-                >
-                  <Tab value="1" label="TOP POSTS" />
-                  <Tab value="2" label="NEW FEED" />
-                  <Tab value="3" label="TOURNAMENTS" />
-                </TabList>
-                <TabPanel value="1">
-                  <Grid item xs={12}>
-                    {_renderPosts()}
-                  </Grid>
-                </TabPanel>
-                <TabPanel value="2">
-                  <Grid container columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}>
-                    {newsData.map((i: any, key) => {
-                      if (key < 3) {
-                        return (
-                          <Card
-                            sx={{ maxWidth: 400, m: 2 }}
-                            key={key}
-                            onClick={(): any => router.push(`/blog/${i.id}`)}
-                          >
-                            {i.label&&<Typography
-                              style={{
-                                position: "absolute",
-                                backgroundColor: "#6932F9",
-                                marginTop: "15px",
-                                padding: "5px 25px",
-                                color: "white",
-                              }}
-                            >
-                              {i.label}
-                            </Typography>}
-                            <CardMedia
-                              component="img"
-                              height="240"
-                              image={i.image}
-                              alt="green iguana"
-                            />
-                            <CardContent>
-                              <Typography
-                                gutterBottom
-                                variant="h5"
-                                fontSize={16}
-                                textAlign={"left"}
-                                component="div"
-                              >
-                                {i.title}
-                              </Typography>
-                              <Typography
-                                textAlign={"left"}
-                                variant="h1"
-                                fontSize={14}
-                                mt={1}
-                                color={"#6931F9"}
-                              >
-                                Author: {i.author} / Publishing Date:{" "}
-                                {moment(i.created_at).format("DD MMM YYYY")}
-                              </Typography>
-                            </CardContent>
-                          </Card>
-                        );
-                      }
-                    })}
-                  </Grid>
-                </TabPanel>
-                <TabPanel value="3" className={styles.tournamentContainer}>
-                  <Grid container columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}>
-                    {tournamentsData.map((data: any, i: number) => {
-                      const startDateTime = moment(data.startDate).format(
-                        "D MMM YYYY hh:mm A"
-                      );
-                      return (
-                        <Grid
-                          item
-                          xs={12}
-                          lg={4}
-                          key={i}
-                          style={{ marginTop: 25 }}
-                        >
-                          <img
-                            src={`${data.banner}`}
-                            className={styles.newsFeedImg}
-                          />
-                          <Box style={{ marginTop: "-355px" }}>
-                            <Box className={styles.tournamentTopContainer}>
-                              <Button
-                                variant="text"
-                                style={{
-                                  background: moment(startDateTime).isBefore(
-                                    moment()
-                                  )
-                                    ? "#F08743"
-                                    : "#EF5DA8",
-                                }}
-                                className={styles.tournamentButton}
-                              >
-                                {moment(startDateTime).isBefore(moment())
-                                  ? "Completed"
-                                  : "On Going"}
-                              </Button>
-                            </Box>
-                            <Box className={styles.textMainContainer}>
-                              <Box className={styles.textContainer}>
-                                <Typography className={styles.tContainerText1}>
-                                  TOURNAMENT TYPE
-                                </Typography>
-                                <Typography className={styles.tContainerText2}>
-                                  {data.settings?.tournamentFormat}
-                                </Typography>
-                              </Box>
-                              <Box className={styles.textContainer}>
-                                <Typography className={styles.tContainerText1}>
-                                  PLATFORM
-                                </Typography>
-                                <Typography className={styles.tContainerText2}>
-                                  PC
-                                </Typography>
-                              </Box>
-                            </Box>
-                            <Box className={styles.tournamentBottomContainer}>
-                              <Typography className={styles.tournamentText1}>
-                                {data.name}
-                              </Typography>
-                              <Typography className={styles.tournamentText2}>
-                                {startDateTime}
-                              </Typography>
-                              <img
-                                src="/images/arrow1.png"
-                                className={styles.arrowImg}
-                                onClick={(): void => {
-                                  router.push(
-                                    `/view-tournament/${data.id}/details`
-                                  );
-                                }}
-                              />
-                            </Box>
-                          </Box>
-                        </Grid>
-                      );
-                    })}
-                  </Grid>
-                </TabPanel>
-              </TabContext>
-            </Grid>
-          </>
-        )}
+            </>
+          )}
       </Grid>
     </Fragment>
   );

@@ -72,7 +72,7 @@ const HomeCarouselPageForm: React.FC<BasicPorps> = ({ onSave, data }) => {
     },
   });
 
-  const getCarouselDetail = async (id: string): Promise<void> => {
+  const getCarouselDetail = async (): Promise<void> => {
     try {
       const headers = await getAuthHeader();
       axios
@@ -107,7 +107,7 @@ const HomeCarouselPageForm: React.FC<BasicPorps> = ({ onSave, data }) => {
 
   React.useEffect(() => {
     if (carouselId) {
-      getCarouselDetail(carouselId.toString());
+      getCarouselDetail();
     }
   }, [carouselId])
 

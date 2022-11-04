@@ -5,13 +5,34 @@ import styles from "./product.module.css";
 // import { useAppSelector, useAppDispatch } from "../../redux-store/redux-store";
 // import { cartSelector } from "../../redux-store/cart/cart-selector";
 // import { addProduct, updateQuantity } from "../../redux-store/cart/cart-slice";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-
+import { useAppSelector } from "../../../../src/frontend/redux-store/redux-store";
+import { isDeviceTypeSelector } from "../../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from "../../../../src/frontend/redux-store/layout/device-types";
 export default function Product(props: any): JSX.Element {
   const router = useRouter();
   async function goToProductDetailsPage(): Promise<void> {
     await router.push("/store/product-detail/" + props.id);
+  }
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop) );
+  const [windowSize, setWindowSize] = useState(getWindowSize());
+
+  useEffect(() => {
+    function handleWindowResize() {
+      setWindowSize(getWindowSize());
+    }
+
+    window.addEventListener("resize", handleWindowResize);
+
+    return () => {
+      window.removeEventListener("resize", handleWindowResize);
+    };
+  }, []);
+
+  function getWindowSize() {
+    const { innerWidth, innerHeight } = window;
+    return { innerWidth, innerHeight };
   }
 
   // const cart = useAppSelector(cartSelector);
@@ -54,15 +75,13 @@ export default function Product(props: any): JSX.Element {
   //   );
   // }
 
-  
-
   return (
-    <Box className={styles.container}>
+    <Box className={isDesktop ? styles.container : windowSize.innerWidth <= 320 ? styles.smallerMobileContainer : windowSize.innerWidth >= 320 && windowSize.innerWidth <= 375 ? styles.midMobileContainer : styles.bigMobileContainer }>
       <Image
         src={props.img === "CREDIT" ? "/images/coin.jpg" : props.img}
         className={commonStyles.fillImage}
-        height={"220px"}
-        width={"350px"}
+        height={isDesktop ? "220px" : "120px"}
+        width={isDesktop ? "350px" : windowSize.innerWidth <= 320 ? "230px" : windowSize.innerWidth >= 320 && windowSize.innerWidth <= 375 ? "300px" : "350px"}
       />
       <Typography
         className={styles.text}

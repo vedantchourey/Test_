@@ -1,7 +1,12 @@
 import React from "react";
-import { Card, CardContent, Divider, useMediaQuery } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Divider,
+  // useMediaQuery
+} from "@mui/material";
 import styled from "@emotion/styled";
-import { useTheme } from "@mui/material";
+// import { useTheme } from "@mui/material";
 
 const NoobCard = styled(Card)(() => ({
   height: "100%",
@@ -11,11 +16,11 @@ const NoobCard = styled(Card)(() => ({
 }));
 
 const WalletCard: React.FC = ({ children }) => {
-  const theme = useTheme();
-  const isSmall = useMediaQuery(theme.breakpoints.down("sm"));
-  
+  // const theme = useTheme();
+  // const isSmall = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
-    <NoobCard style={!isSmall?{marginLeft:"70px",marginRight:"70px"}:{}}>
+    <NoobCard>
       <Divider
         variant="middle"
         style={{

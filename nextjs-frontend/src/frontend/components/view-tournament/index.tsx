@@ -11,6 +11,7 @@ import {
   MenuItem,
   TextField,
   Tooltip,
+  Container
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useRouter } from "next/router";
@@ -492,7 +493,7 @@ const ViewTournament: React.FC = () => {
       default:
         return (
           <ViewCard title="Contact Details">
-            <div style={{ fontFamily: "Inter" }}>
+            <div style={{ fontFamily: "Inter", fontSize: !isDesktop ? 10 : 15 }}>
               {ReactHtmlParser(data.info?.contactDetails || "")}
             </div>
           </ViewCard>
@@ -604,6 +605,103 @@ const ViewTournament: React.FC = () => {
       )
     );
   };
+
+  const tournamentDetails = (): JSX.Element | undefined => {
+    if (selectedTeam) {
+      return renderTeamSelection();
+    }
+    return (
+      <React.Fragment>
+        <Loader loading={loading} />
+        <ViewCard>
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <div style={{ flex: 0.3 }}>
+              {data.basic?.sponsor && (
+                <img src={data.basic?.sponsor} style={{ height: 40, width: 80 }} />
+              )}
+            </div>
+            <div style={{ flex: 0.3, marginLeft: 10 }}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                  {countDown !== "00:00:00" ? (
+                    <Typography>
+                      <span style={{ color: "#FF0000", fontSize: 8 }}>
+                        Check In Ends In:
+                      </span>{" "}
+                    </Typography>
+                  ) : (
+                    <Typography>
+                      <span style={{ color: "#FF0000", fontSize: 8 }}>
+                        Check-In Ended
+                      </span>
+                    </Typography>
+                  )}
+                  {checkInCountDown && <span style={{ fontSize: 8 }}>{checkInCountDown}</span>}
+                  {countDown !== "00:00:00" ? (
+                    <Typography>
+                      <span style={{ color: "#FF0000", fontSize: 8 }}>
+                        Round 1 begins in :
+                      </span>{" "}
+                    </Typography>
+                  ) : (
+                    <Typography style={{ color: "#FF0000", fontSize: 8, textAlign: "center", lineHeight: 1, marginTop: 5, marginBottom: 5 }}>
+                        Tournament already started
+                    </Typography>
+                  )}
+                  {countDown && <span style={{ fontSize: 8 }}>{countDown}</span>}
+              </div>
+            </div>
+
+            <div style={{ flex: 0.4, marginLeft: 10 }}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <Typography>
+                  <span style={{ fontSize: 8 }}>Credits : </span>
+                  <span style={{ color: "rgba(105,50,249,1)", fontSize: 8 }}>
+                    {data?.settings?.entryType === "credit" ? data.settings?.entryFeeAmount : "Free"}
+                  </span>
+                </Typography>
+                <Button style={{ fontSize: 8 }} variant="contained" onClick={(): any => router.push("/match-hub")}>
+                  Match Hub
+                </Button>
+              </div>
+            </div>
+          </div>
+        </ViewCard>
+        {countDown !== "00:00:00" ? (
+          <ActionButton
+            data={data}
+            error={regError}
+            onClick={onSinglePlayerJoin}
+            buttonOnly={playerLimit === 1}
+            items={getActionItems()}
+            id={"action-item"}
+            userId={user?.id}
+            disabled={countDown === "00:00:00"}
+            style={{ width: "100%", fontSize: 8 }}
+          />
+        ) : null}
+        {!isDesktop && (
+          <Select
+            value={page}
+            input={<OutlinedInput />}
+            onChange={(e: any): void => {
+              onTabClick(e.target.value), setPage(e.target.value);
+            }}
+            fullWidth
+            sx={{ m: 1, right: 8, fontSize: 10 }}
+          >
+            {tabs.map((tab) => {
+              return (
+                <MenuItem key={tab.url} value={tab.url} style={{ fontSize: 10 }}>
+                  {tab.title}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        )}
+        {renderComponent()}
+      </React.Fragment>
+    );
+  }
 
   const renderTournament = (): JSX.Element | undefined => {
     if (selectedTeam) {
@@ -747,21 +845,29 @@ const ViewTournament: React.FC = () => {
       }}
     >
       <React.Fragment>
-        <Heading
-          heading={data.basic?.name}
-          backgroundImage
-          backgroundImageUrl={data?.basic?.banner || ""}
-        >
-          <HeadSubSection
-            time={
-              moment(data.basic?.startDate).format("DD/MM/YYYY") +
-              " " +
-              moment(data.basic?.startTime).format("hh:mm A")
-            }
-            name={data.basic?.name}
-          />
-        </Heading>
-        {renderTournament()}
+        {isDesktop && (
+          <Heading
+            heading={data.basic?.name}
+            backgroundImage
+            backgroundImageUrl={data?.basic?.banner || ""}
+          >
+            <HeadSubSection
+              time={
+                moment(data.basic?.startDate).format("DD/MM/YYYY") +
+                " " +
+                moment(data.basic?.startTime).format("hh:mm A")
+              }
+              name={data.basic?.name}
+            />
+          </Heading>
+        )}
+        {!isDesktop && (
+          <Container maxWidth="sm">
+            <img src={data?.basic?.banner} style={{ height: "auto", width: "100%", marginTop: 20 }} />
+          </Container>
+        )}
+        {isDesktop && renderTournament()}
+        {!isDesktop && tournamentDetails()}
         <Dialog open={priviteGame}>
           <DialogTitle>Enter Join Code</DialogTitle>
           <DialogContent>

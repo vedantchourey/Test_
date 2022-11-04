@@ -3,8 +3,7 @@ import {
   Button,
   Grid,
   LinearProgress,
-  useMediaQuery,
-  useTheme,
+  
 } from "@mui/material";
 import moment from "moment";
 import { useRouter } from "next/router";
@@ -35,7 +34,8 @@ const CardDesktop: React.FC<any> = ({
     <Box
       width={window.innerWidth / 2.8}
       height={window.innerWidth / 2.8 / 2.9}
-      minWidth={window.innerWidth / 2.8}
+      minWidth={370}
+      minHeight={177}
       m={2}
     >
       <Box
@@ -55,6 +55,7 @@ const CardDesktop: React.FC<any> = ({
           display={"flex"}
           flexDirection={"column"}
           height={"100%"}
+          color={"#fff"}
         >
           <Box flex={1}>
             <Grid container columnSpacing={2}>
@@ -151,79 +152,79 @@ const CardDesktop: React.FC<any> = ({
   );
 };
 
-const CardMobile: React.FC<any> = ({
-  id,
-  tournament_name,
-  tournament_type,
-  platform,
-  start_date,
-  participants,
-  banner,
-}: any): JSX.Element => {
-  const router = useRouter();
-  return (
-    <Grid container columnSpacing={2} mt={5}>
-      <Grid item xs={12}>
-        <Box>
-          <Box
-            sx={{
-              padding: { sm: "8px", xs: "8px", md: "8px", textAlign: "left" },
-            }}
-            style={{
-              backgroundImage: `url(${banner})`,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-              color: "#FFFFFF",
-              paddingBottom: "0px",
-            }}
-          >
-            <Grid container columnSpacing={2}>
-              <Grid item xs={9}>
-                {tournament_name}
-              </Grid>
-              <Grid item xs={9} className={styles.heading_font_color}>
-                {start_date}
-              </Grid>
-              <Grid item xs={9} mt={1}>
-                <img src="/icons/mobilegameicon.svg" />
-              </Grid>
-              <Grid item xs={10} mt={5} className={styles.heading_font_color}>
-                Participants
-              </Grid>
-              <Grid item xs={12}>
-                {participants}
-              </Grid>
-              <Grid item xs={2}></Grid>
-              <Grid item xs={9} mt={1} className={styles.heading_font_color}>
-                TOURNAMENT TYPE
-              </Grid>
-              <Grid item xs={2}></Grid>
-              <Grid item xs={9}>
-                {tournament_type}
-              </Grid>
-              <Grid item xs={12} mt={1} className={styles.heading_font_color}>
-                Platform
-              </Grid>
-              <Grid item xs={6}>
-                {platform}
-              </Grid>
-              <Grid item xs={6} textAlign={"right"}>
-                <Button
-                  variant="contained"
-                  onClick={(): any =>
-                    router.push(`/view-tournament/${id}/details`)
-                  }
-                >
-                  View More -{">"}
-                </Button>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-      </Grid>
-    </Grid>
-  );
-};
+// const CardMobile: React.FC<any> = ({
+//   id,
+//   tournament_name,
+//   tournament_type,
+//   platform,
+//   start_date,
+//   participants,
+//   banner,
+// }: any): JSX.Element => {
+//   const router = useRouter();
+//   return (
+//     <Grid container columnSpacing={2} mt={5}>
+//       <Grid item xs={12}>
+//         <Box>
+//           <Box
+//             sx={{
+//               padding: { sm: "8px", xs: "8px", md: "8px", textAlign: "left" },
+//             }}
+//             style={{
+//               backgroundImage: `url(${banner})`,
+//               backgroundRepeat: "no-repeat",
+//               backgroundSize: "cover",
+//               color: "#FFFFFF",
+//               paddingBottom: "0px",
+//             }}
+//           >
+//             <Grid container columnSpacing={2}>
+//               <Grid item xs={9}>
+//                 {tournament_name}
+//               </Grid>
+//               <Grid item xs={9} className={styles.heading_font_color}>
+//                 {start_date}
+//               </Grid>
+//               <Grid item xs={9} mt={1}>
+//                 <img src="/icons/mobilegameicon.svg" />
+//               </Grid>
+//               <Grid item xs={10} mt={5} className={styles.heading_font_color}>
+//                 Participants
+//               </Grid>
+//               <Grid item xs={12}>
+//                 {participants}
+//               </Grid>
+//               <Grid item xs={2}></Grid>
+//               <Grid item xs={9} mt={1} className={styles.heading_font_color}>
+//                 TOURNAMENT TYPE
+//               </Grid>
+//               <Grid item xs={2}></Grid>
+//               <Grid item xs={9}>
+//                 {tournament_type}
+//               </Grid>
+//               <Grid item xs={12} mt={1} className={styles.heading_font_color}>
+//                 Platform
+//               </Grid>
+//               <Grid item xs={6}>
+//                 {platform}
+//               </Grid>
+//               <Grid item xs={6} textAlign={"right"}>
+//                 <Button
+//                   variant="contained"
+//                   onClick={(): any =>
+//                     router.push(`/view-tournament/${id}/details`)
+//                   }
+//                 >
+//                   View More -{">"}
+//                 </Button>
+//               </Grid>
+//             </Grid>
+//           </Box>
+//         </Box>
+//       </Grid>
+//     </Grid>
+//   );
+// };
 
 const CardComp = ({
   id,
@@ -234,12 +235,11 @@ const CardComp = ({
   left_slots,
   start_date,
   credits,
-  participants,
+  // participants,
   banner,
   isCompleted
 }: any): JSX.Element => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  
   const platforms = useAppSelector(getAllPlatformsSelector);
   const [selectedPlatform, setSelectedPlatform] = useState<any>(null);
 
@@ -250,17 +250,7 @@ const CardComp = ({
 
   return (
     <>
-      {isMobile ? (
-        <CardMobile
-          id={id}
-          tournament_name={tournament_name}
-          tournament_type={tournament_type}
-          platform={platform}
-          banner={banner}
-          start_date={start_date}
-          participants={participants}
-        />
-      ) : (
+
         <CardDesktop
           id={id}
           tournament_name={tournament_name}
@@ -273,7 +263,7 @@ const CardComp = ({
           start_date={start_date}
           credits={credits}
         />
-      )}
+      
     </>
   );
 };

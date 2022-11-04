@@ -226,7 +226,6 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
                           src={teamLogo || ""}
                           width={"45px"}
                           height={"45px"}
-                          
                         />
                       ) : (
                         <GroupIcon

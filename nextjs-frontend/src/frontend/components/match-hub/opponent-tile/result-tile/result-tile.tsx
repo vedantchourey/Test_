@@ -69,7 +69,7 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
         props.onMatchHub ? props.onMatchHub(props.data) : null
       }
     >
-      <Grid item xs={3}>
+      <Grid item xs={12}>
         <Button
           variant="outlined"
           className={styles.resultTileButton}
@@ -120,12 +120,12 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
           </p>
         </Grid>
       ) : (
-        <Grid item xs={6}>
+        <Grid item xs={12}>
           {child}
         </Grid>
       )}
 
-      <Grid item xs={3} style={{ display: "flex", justifyContent: "end" }}>
+      <Grid item xs={12} style={{ display: "flex", justifyContent: "end" }}>
         <Box textAlign={"right"}>
           <Button
             variant="outlined"

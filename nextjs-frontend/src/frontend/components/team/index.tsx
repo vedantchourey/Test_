@@ -232,7 +232,31 @@ const Team: React.FC = () => {
           description: "Noob Storm team page",
         }}
       >
-        <TeamCard name={team?.name} team={team} refresh={fetchTeam} hasAccess={hasAccess}>
+        <TeamCard
+          name={team?.name}
+          team={team}
+          refresh={fetchTeam}
+          hasAccess={hasAccess}
+        >
+          {isMobile && (
+            <Box
+              style={{
+                border: "1px solid rgba(255, 255, 255, 0.1)",
+                background: "#08001C",
+                display: "flex",
+                width: "270px",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography color={"white"}>
+                Team Elo Rating:
+                <span style={{ color: "#F09633", marginLeft: "30px" }}>
+                  {team?.team_elo_rating}
+                </span>
+              </Typography>
+            </Box>
+          )}
           <Box display={"flex"} justifyContent="space-between">
             {renderTabs()}
             {!isMobile ? (

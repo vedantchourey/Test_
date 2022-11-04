@@ -6,12 +6,18 @@ import { TournamentData } from "../../tournament";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import { useRouter } from "next/router";
 import GroupIcon from "@mui/icons-material/Group";
+import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from "../../../../../src/frontend/redux-store/layout/device-types";
+import { useAppSelector } from "../../../redux-store/redux-store";
 interface ParticipantsProps {
   data: TournamentData;
 }
 
 const Participants: React.FC<ParticipantsProps> = ({ data }) => {
   const router = useRouter();
+
+  const isDesktop = useAppSelector((x) =>
+    isDeviceTypeSelector(x, deviceTypes.desktop));
 
   return (
     <React.Fragment>
@@ -46,8 +52,8 @@ const Participants: React.FC<ParticipantsProps> = ({ data }) => {
                     {item.team_name && !avatarUrl ? (
                       <GroupIcon
                         style={{
-                          height: 45,
-                          width: 45,
+                          height: !isDesktop ? 30 : 45,
+                          width: !isDesktop ? 30 : 45,
                           borderRadius: 25,
                           background: "rgba(0,0,0,0.4)",
                         }}
@@ -56,14 +62,18 @@ const Participants: React.FC<ParticipantsProps> = ({ data }) => {
                       <Avatar
                         src={avatarUrl || undefined}
                         alt={item.firstName || item.team_name}
+                        style={{
+                          height: !isDesktop ? 30 : 45,
+                          width: !isDesktop ? 30 : 45,
+                        }}
                       />
                     )}
-                    <Typography marginLeft={"16px"}>
+                    <Typography marginLeft={"16px"} style={{ fontSize: !isDesktop ? 10 : 15 }}>
                       {item.firstName
                         ? `${item.username}`
                         : `${item.team_name}`}
                     </Typography>
-                    <Typography marginLeft={"5px"} color="rgba(255,255,255,0.5)">
+                    <Typography marginLeft={"5px"} color="rgba(255,255,255,0.5)" style={{ fontSize: !isDesktop ? 10 : 15 }}>
                       {item.gameUniqueId
                         ? `(${item.gameUniqueId})`
                         : ``}

@@ -22,6 +22,9 @@ import ReactHtmlParser from "react-html-parser";
 import { getAuthHeader } from "../../../src/frontend/utils/headers";
 import { frontendSupabase } from "../../../src/frontend/services/supabase-frontend-service";
 import axios from "axios";
+import { useAppSelector } from '../../../src/frontend/redux-store/redux-store';
+import { isDeviceTypeSelector } from "../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from '../../../src/frontend/redux-store/layout/device-types';
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -39,6 +42,7 @@ export default function NewsView(): JSX.Element {
   const [liked, setLiked] = useState<any>(false);
   const [likersList, setLikersList] = useState<any>(null);
   const [topNews, setTopNews] = useState<any[]>([]);
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
 
   // const [data, setData] = React.useState([]);
 
@@ -184,29 +188,39 @@ export default function NewsView(): JSX.Element {
       }}
     >
       <>
+        {!isDesktop && currentNews && (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", alignContent: "center" }}>
+            <Button style={{ marginTop: 10, alignSelf: "flex-start" }} onClick={(): any =>router.back()}>Back</Button>
+            <img src={currentNews.image} style={{ width: !isDesktop ? "100%" : "60vh", alignSelf: "center" }} />
+          </div>
+        )}
         {currentNews && (
-          <Box textAlign={"left"}>
-            <Button onClick={(): any =>router.back()}>Back</Button>
-            <Box mt={4} ml={2} style={{ float: "right" }}>
-              <img src={currentNews.image} style={{ width: "60vh" }} />
-            </Box>
-            <Typography textAlign={"left"} variant="h5">
+          <Box textAlign={"left"} sx={!isDesktop ? { display: "flex", flexDirection: "column", maxWidth: 300 } : {}}>
+            {isDesktop && (
+              <>
+                <Button style={{ marginTop: 10, alignSelf: "flex-start" }} onClick={(): any =>router.back()}>Back</Button>
+                <Box mt={4} ml={isDesktop ? 2 : 0} style={{ float: "right" }}>
+                  <img src={currentNews.image} style={{ width: !isDesktop ? "100%" : "60vh" }} />
+                </Box>
+              </>
+            )}
+            <Typography textAlign={"left"} fontSize={15}>
               {currentNews.title}
             </Typography>
             <Typography
               textAlign={"left"}
-              variant="h6"
-              fontSize={12}
+              fontSize={15}
               color={"rgba(255,255,255,0.7)"}
             >
               {currentNews.subtitle}
             </Typography>
-            <Box display={"flex"} sx={{ justifyContent: "space-between" }}>
-              <Typography variant="h1" fontSize={14} mt={1} color={"#6931F9"}>
+            <Box display={"flex"} sx={isDesktop ? { justifyContent: "space-between" } : { width: 325 }}>
+              <Typography variant={!isDesktop ? "h4" : "h1"} fontSize={!isDesktop ? 13 : 14} mt={1} color={"#6931F9"} sx={!isDesktop ? { width: "180px" } : {}} flex={1}>
                 Author: {currentNews.author} / Publishing Date:{" "}
                 {moment(currentNews.created_at).format("DD MMM YYYY")}
               </Typography>
               <Box
+                flex={0}
                 sx={{
                   px: 1.5,
                   py: 1,
@@ -226,7 +240,7 @@ export default function NewsView(): JSX.Element {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    color: liked ? "primary.main" : "",
+                    color: liked ? "primary.main" : "white",
                   }}
                   onClick={(): any => {
                     if (liked) {
@@ -241,12 +255,14 @@ export default function NewsView(): JSX.Element {
                     aria-describedby={id}
                     onClick={handleClickPopover}
                   >
-                    {liked
-                      ? parseInt(currentNews.likeCount) + 1
-                      : currentNews.likeCount}{" "}
+                    <Typography fontSize={!isDesktop ? 10 : 15}>
+                      {liked
+                        ? parseInt(currentNews.likeCount) + 1
+                        : currentNews.likeCount}{" "}
+                    </Typography>
                   </Box>
-                  <ThumbUpOffAltIcon />
-                  Like
+                  <ThumbUpOffAltIcon style={!isDesktop ? { height: 13, width: 13 } : {}} />
+                  <Typography fontSize={!isDesktop ? 12 : 15}>Like</Typography>
                 </Box>
                 <Popover
                   id={id}
@@ -258,7 +274,7 @@ export default function NewsView(): JSX.Element {
                     horizontal: "left",
                   }}
                 >
-                  <Typography sx={{ p: 2 }}>
+                  <Typography sx={{ p: 2 }} fontSize={!isDesktop ? 12 : 15}>
                     The content of the Popover.
                   </Typography>
                 </Popover>
@@ -268,13 +284,13 @@ export default function NewsView(): JSX.Element {
                     navigator.clipboard.writeText(currentURL);
                     setOpen(true);
                   }}
+                  color={"white"}
                 >
-                  <ShareOutlinedIcon />
-                  Share
+                  <ShareOutlinedIcon style={!isDesktop ? { height: 13, width: 13 } : {}} />
+                  <Typography fontSize={!isDesktop ? 14 : 15}>Share</Typography>
                 </Box>
               </Box>
             </Box>
-
             <div
               style={{
                 fontFamily: "Inter",
@@ -288,13 +304,14 @@ export default function NewsView(): JSX.Element {
               container
               columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}
               display="flex"
+              style={!isDesktop ? { flexDirection: "column", alignItems: "center" } : {}}
             >
-              <Box>
+              <Box style={!isDesktop ? { width: "325px" } : {}}>
                 <Box style={{ marginTop: "15px", display: "flex", alignItems:"center", justifyContent:"space-between" }}>
                   <Typography
                     style={{
                       color: "#FFF",
-                      fontSize: "30px",
+                      fontSize: !isDesktop ? "20px" : "30px",
                       fontWeight: 700,
                       textTransform: "uppercase",
                       fontFamily: "Chakra Petch",
@@ -302,10 +319,14 @@ export default function NewsView(): JSX.Element {
                   >
                     related post’s
                   </Typography>
-                  <Button variant="contained" onClick={(): any => router.push(`/blog`)}>View All</Button>
+                  <Button variant="contained" onClick={(): any => router.push(`/blog`)}>
+                    <Typography fontSize={!isDesktop ? 10 : 15}>
+                      View All
+                    </Typography>
+                  </Button>
                 </Box>
                 <Divider style={{marginTop:"10px"}}/>
-                <Box display={"flex"}>
+                <Box display={"flex"} flexDirection={!isDesktop ? "column" : "row"}>
                   {topNews
                   .sort(function (a, b) {
                     const dateA = new Date(a.created_at).getTime();
@@ -317,7 +338,7 @@ export default function NewsView(): JSX.Element {
                     if (key < 4) {
                       return (
                         <Card
-                          sx={{ maxWidth: 260, m: 2 }}
+                          sx={{ maxWidth: !isDesktop ? "100%" : 200, m: 2 }}
                           key={key}
                           onClick={(): any => router.push(`/blog/${i.id}`)}
                         >
@@ -329,6 +350,7 @@ export default function NewsView(): JSX.Element {
                                 marginTop: "15px",
                                 padding: "5px 25px",
                                 color: "white",
+                                fontSize: !isDesktop ? 10 : 15,
                               }}
                             >
                               {i.label}
@@ -344,7 +366,7 @@ export default function NewsView(): JSX.Element {
                             <Typography
                               gutterBottom
                               variant="h5"
-                              fontSize={16}
+                              fontSize={!isDesktop ? 10 : 16}
                               textAlign={"left"}
                               component="div"
                             >
@@ -352,8 +374,8 @@ export default function NewsView(): JSX.Element {
                             </Typography>
                             <Typography
                               textAlign={"left"}
-                              variant="h1"
-                              fontSize={14}
+                              variant={!isDesktop ? "h2" : "h1"}
+                              fontSize={!isDesktop ? 13 : 14}
                               mt={1}
                               color={"#6931F9"}
                             >

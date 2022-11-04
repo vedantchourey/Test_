@@ -37,7 +37,7 @@ const WalletMessage: React.FC<WalletMessageProps> = ({ isSuccess }) => {
               {isSuccess ? (
                 <Typography>Thank you for your order</Typography>
               ) : (
-                <Typography>
+                <Typography style={{ textAlign: "center" }}>
                   Something went wrong. Please try to checkout again
                 </Typography>
               )}
@@ -45,7 +45,7 @@ const WalletMessage: React.FC<WalletMessageProps> = ({ isSuccess }) => {
           </Grid>
 
           <Grid item>
-            <Box style={{ marginTop: "30px" }}>
+            <Box style={{ marginTop: 30, marginBlock: 30 }}>
               {isSuccess ? (
                 <Button
                   style={{

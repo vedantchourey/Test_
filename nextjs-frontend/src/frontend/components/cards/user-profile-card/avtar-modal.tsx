@@ -13,6 +13,9 @@ import { Box } from "@mui/system";
 import styles from "./user-profile-card.module.css";
 import { avatarListWithUrl } from "../../../utils/config/default-avatars";
 import { v4 } from "uuid";
+import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from '../../../../../src/frontend/redux-store/layout/device-types';
+import { useAppSelector } from "../../../redux-store/redux-store";
 
 const style = {
   position: "absolute",
@@ -27,6 +30,13 @@ const style = {
   padding: "1px 0",
 };
 
+const mobileStyle = {
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  backgroundColor: "#08001C",
+};
+
 interface IProps {
   isModalOpen: boolean;
   handleClose: () => void;
@@ -36,6 +46,7 @@ interface IProps {
 
 const AvtarModal = (props: IProps): JSX.Element => {
   const { isModalOpen, handleClose, handleCustomUploadAvatarPicker } = props;
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
 
   // const handleimgupload = (imgurl: any) => {
 
@@ -85,7 +96,7 @@ const AvtarModal = (props: IProps): JSX.Element => {
 
   return (
     <Modal open={isModalOpen} onClose={handleClose}>
-      <Box sx={style} className={styles.mainModalContainer}>
+      <Box sx={!isDesktop ? mobileStyle : style} className={styles.mainModalContainer}>
         <Box className={styles.commentsContainer}>
           <AppBar className={styles.appBar}>
             <Toolbar className={styles.customToolBar}>
@@ -97,7 +108,7 @@ const AvtarModal = (props: IProps): JSX.Element => {
               </IconButton>
             </Toolbar>
           </AppBar>
-          <Box mt={12} className={styles.renderPosts}>
+          <Box mt={12} className={!isDesktop ? styles.mobileAvatarContainer : styles.renderPosts}>
             {_renderAvatars()}
           </Box>
           <Box className={styles.commentInputCotainer}>
