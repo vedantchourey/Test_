@@ -11,13 +11,16 @@ import {
   Divider,
 } from "@mui/material";
 import React, { useState } from "react";
-import { ReactComponent as UnplashIcon } from "../../../../../public/icons/Unplashicon.svg";
+// import { ReactComponent as UnplashIcon } from "../../../../../public/icons/Unplashicon.svg";
 import CloseIcon from "@mui/icons-material/Close";
 import Member from "../../team/members/member";
 import GameDropDown from "../../drop-downs/game-drop-down";
 import PlatformDropDown from "../../drop-downs/platform-drop-down";
 import axios from "axios";
 import { getAuthHeader } from "../../../utils/headers";
+import { useAppSelector } from "../../../../../src/frontend/redux-store/redux-store";
+import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from '../../../../../src/frontend/redux-store/layout/device-types';
 
 export const NoobButton = styled(Button)(() => ({
   color: "white",
@@ -90,6 +93,7 @@ const CardDesktop: React.FC<any> = ({ setOpen }) => {
 };
 
 const CardMobile: React.FC<any> = ({ setOpen }) => {
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
   return (
     <Grid container style={{ display: "flex", flexDirection: "column" }}>
       <Grid item xs={12} display={"flex"}>
@@ -120,14 +124,14 @@ const CardMobile: React.FC<any> = ({ setOpen }) => {
         justifyContent={"center"}
         alignItems={"center"}
       >
-        <UnplashIcon width={230} />
+        {/* <UnplashIcon width={230} /> */}
         <Button
           style={{
             background: "linear-gradient(180deg, #EF507E 0%, #F09633 100%)",
             color: "white",
             padding: "10px 10px",
             marginTop: 20,
-            width: "230px",
+            width: !isDesktop ? "100%" : "230px",
           }}
           onClick={(): void => {
             setOpen(true);

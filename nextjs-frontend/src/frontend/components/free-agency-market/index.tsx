@@ -143,7 +143,7 @@ const FreeAgencyMarket: React.FC = (): JSX.Element => {
           input={<OutlinedInput />}
           onChange={(e: any): void => changeTabByValue(e.target.value)}
           fullWidth
-          sx={{ m: 1 }}
+          sx={{ m: isMobile ? 0 : 1, mb: isMobile ? 2.5 : 0 }}
         >
           {tabs.map((tab) => {
             return (

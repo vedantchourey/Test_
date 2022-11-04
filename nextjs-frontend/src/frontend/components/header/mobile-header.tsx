@@ -178,41 +178,33 @@ export default function MobileDrawer(): JSX.Element {
               className={styles.bottomHeaderIcons}
               onClick={(): Promise<boolean> => router.push("/")}
             >
-              <Icon>
-                <HomeOutlinedIcon />
-              </Icon>
+              <img src="/images/menu/Home.png" style={{ height: 20, width: 20 }} />
             </IconButton>
             <IconButton
               className={styles.bottomHeaderIcons}
               onClick={(): Promise<boolean> => router.push("/tournaments-list")}
             >
-              <Icon>
-                <EqualizerOutlinedIcon />
-              </Icon>
+              <img src="/images/menu/Tournaments.png" style={{ height: 25, width: 25 }} />
             </IconButton>
             <IconButton
               className={styles.bottomHeaderIcons}
               onClick={(): Promise<boolean> => router.push("/leaderboard")}
             >
-              <Icon>
-                <MilitaryTechOutlinedIcon />
-              </Icon>
+              <img src="/images/menu/Leader-Board.png" style={{ height: 25, width: 25 }} />
             </IconButton>
-            <IconButton
+            {/* <IconButton
               className={styles.bottomHeaderIcons}
               onClick={(): Promise<boolean> => router.push("/")}
             >
               <Icon>
                 <NotificationsOutlinedIcon />
               </Icon>
-            </IconButton>
+            </IconButton> */}
             <IconButton
               className={styles.bottomHeaderIcons}
               onClick={(): Promise<boolean> => router.push("/chat")}
             >
-              <Icon>
-                <ChatBubbleOutlineOutlinedIcon />
-              </Icon>
+              <img src="/images/menu/Chat.png" style={{ height: 25, width: 25 }} />
             </IconButton>
           </div>
         )}

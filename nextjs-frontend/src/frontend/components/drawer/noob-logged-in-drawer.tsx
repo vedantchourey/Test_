@@ -60,8 +60,8 @@ export default function NoobLoggedInDrawer(props: Props): JSX.Element {
           <MenuItem onClick={(): Promise<void> => gotoPage("/tournament-dashboard")}>
             <Typography fontSize={12}>Dashboard</Typography>
           </MenuItem>
-          <MenuItem onClick={(): Promise<void> => gotoPage("/teamlist")}>
-            <Typography fontSize={12}>My Teams</Typography>
+          <MenuItem onClick={(): Promise<void> => gotoPage("/account/setting")}>
+            <Typography fontSize={12}>Account</Typography>
           </MenuItem>
         </MenuList>
         <div className={styles.topMenuGroup}>
@@ -108,6 +108,18 @@ export default function NoobLoggedInDrawer(props: Props): JSX.Element {
               </ListItemIcon>
               <Typography fontSize={12}>Match Hub</Typography>
             </MenuItem>
+            <MenuItem onClick={(): Promise<void> => gotoPage("/store")}>
+              <ListItemIcon>
+              <img src="/images/menu/Store.png" style={{ height: 20, width: 20 }} />
+              </ListItemIcon>
+              <Typography fontSize={12}>Store</Typography>
+            </MenuItem>
+            <MenuItem onClick={(): Promise<void> => gotoPage("/teamlist")}>
+              <ListItemIcon>
+              <img src="/images/menu/My-Team.png" style={{ height: 20, width: 20 }} />
+              </ListItemIcon>
+              <Typography fontSize={12}>My Teams</Typography>
+            </MenuItem>
             <MenuItem onClick={(): Promise<void> => gotoPage("/account/setting")}>
               <ListItemIcon>
               <img src="/images/menu/Profile-Setting.png" style={{ height: 20, width: 20 }} />
@@ -120,53 +132,19 @@ export default function NoobLoggedInDrawer(props: Props): JSX.Element {
               </ListItemIcon>
               <Typography fontSize={12}>Leaderboards</Typography>
             </MenuItem>
-            <MenuItem onClick={(): Promise<void> => gotoPage("/about-us")}>
-              <ListItemIcon>
-              <img src="/images/menu/Support.png" style={{ height: 20, width: 20 }} />
-              </ListItemIcon>
-              <Typography fontSize={12}>About Us</Typography>
-            </MenuItem>
             <MenuItem onClick={(): Promise<void> => gotoPage("/support")}>
               <ListItemIcon>
               <img src="/images/menu/Support.png" style={{ height: 20, width: 20 }} />
               </ListItemIcon>
               <Typography fontSize={12}>Support</Typography>
             </MenuItem>
-            <MenuItem onClick={(): Promise<void> => gotoPage("/faq")}>
-              <ListItemIcon>
-              <img src="/images/menu/Support.png" style={{ height: 20, width: 20 }} />
-              </ListItemIcon>
-              <Typography fontSize={12}>FAQ</Typography>
-            </MenuItem>
             <MenuItem onClick={onLogoutClick}>
               <ListItemIcon>
               <img src="/images/menu/Sign-Out.png" style={{ height: 20, width: 20 }} />
               </ListItemIcon>
-              <Typography fontSize={12}>Logout</Typography>
+              <Typography fontSize={12}>Signout</Typography>
             </MenuItem>
           </MenuList>
-        </div>
-        <Divider />
-        <div className={styles.bottomMenuGroup} style={{ marginTop: 0 }}>
-          <Button
-            variant="text"
-            startIcon={<ShoppingCartIcon />}
-            style={{ textTransform: "none" }}
-            onClick={(): Promise<void> => gotoPage("/store")}
-          >
-            Store
-          </Button>
-          <Button
-            variant="text"
-            startIcon={<FlashOnIcon />}
-            style={{
-              color: theme.palette.secondary.main,
-              textTransform: "none",
-            }}
-            onClick={(): Promise<void> => gotoPage("/free-agency-market/view/members")}
-          >
-            Free Agency Market
-          </Button>
         </div>
         <div className={styles.footerContainer}>
           <div className={styles.footer}>
