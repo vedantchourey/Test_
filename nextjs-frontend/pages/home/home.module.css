@@ -12,14 +12,14 @@
 	opacity: 1;
 }
 .carouselContainer {
-	height: 468px;
+	/* height: 468px; */
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-end;
 	bottom: 0;
 }
 .backgroundImg {
-	height: 468px;
+	/* height: 468px; */
 	width: 75vw;
 	background: radial-gradient(50% 50% at 50% 50%, rgba(8, 0, 29, 0.7) 0%, rgba(8, 0, 29, 0.8) 46.24%, rgba(8, 0, 29, 0.9) 100%)
 }
@@ -33,7 +33,7 @@
 	flex-direction: column;
 	justify-content: flex-end;
 	width: 400px;
-	height: 222px;
+	/* height: 222px; */
 }
 .imgContainer {
 	display: flex;
@@ -134,7 +134,7 @@
 .container {
 	display: flex;
 	align-items: flex-start;
-	margin: 80px 0px 50px 20px;
+	margin: 0px 0px 50px 20px;
 }
 @media screen and (max-width: 992px) {
 	.mainSideBox {

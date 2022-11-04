@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { frontendSupabase } from "../../../../services/supabase-frontend-service";
 import '../../../ui-components/typography/heading.module.css'
 
-const Component = ({ brackets }: { brackets: any }): any => {  
+const Component = ({ brackets, isDasktop }: { brackets: any, isDasktop: boolean }): any => {  
   useEffect(() => {
     if (!brackets) return;
 
@@ -66,7 +66,11 @@ const Component = ({ brackets }: { brackets: any }): any => {
         <div id="example" className="brackets-viewer hide-scrollbar" style={{ maxHeight: 600, overflow: "scroll", maxWidth: "80vw" }}></div>
       </div> */}
       <div className="bracket hide-scrollbar">
-        <div id="example" className="brackets-viewer hide-scrollbar" ></div>
+        <div
+          id="example"
+          className="brackets-viewer hide-scrollbar"
+          style={isDasktop ? undefined : { padding: 0 }}
+        ></div>
       </div>
     </>
   );

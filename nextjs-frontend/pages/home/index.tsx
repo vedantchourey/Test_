@@ -167,7 +167,7 @@ const Home = (): JSX.Element => {
         onClick={(): void => {
           router.push(image.navigation)
         }}>
-        <Box style={{ width: "100%" }}>
+        <Box style={{ width: "100%", height: isDesktop ? "30vw" : "auto" }}>
           <img
             src={image.image}
             style={{ width: "100%", position: "relative" }}
@@ -222,8 +222,8 @@ const Home = (): JSX.Element => {
         )}
         {isDesktop ? (
             <>
-              <Container maxWidth="xl" className={styles.container}>
-                <Grid item xs={12} lg={30} mt={5}>
+              <Container sx={{marginTop: 200}} className={styles.container}>
+                <Grid item xs={12} lg={12} mt={1}>
                   <TabContext value={value}>
                     <Box className={styles.tabBox}>
                       <TabList
@@ -396,7 +396,7 @@ const Home = (): JSX.Element => {
             </>
           ) : (
             <>
-              <Grid container xs={12} style={{ marginTop: 33 }}>
+              <Grid container xs={12} style={{ marginTop: 10 }}>
                 <TabContext value={value}>
                   <TabList
                     onChange={handleChange}
