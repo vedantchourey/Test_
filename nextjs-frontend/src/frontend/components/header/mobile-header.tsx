@@ -1,4 +1,4 @@
-import { AppBar, Icon, IconButton, Button, Box, Divider, Popover, ListSubheader, Typography } from "@mui/material";
+import { AppBar, IconButton, Button, Box, Divider, Popover, ListSubheader, Typography } from "@mui/material";
 import styles from "./noob-mobile-header.module.css";
 import * as React from "react";
 import { useState } from "react";
@@ -6,11 +6,6 @@ import NoobDrawer from "../drawer/noob-drawer";
 import LoginModal from "../auth/login-modal/login-modal";
 import { useAppDispatch, useAppSelector } from "../../redux-store/redux-store";
 import { isLoggedInSelector } from "../../redux-store/authentication/authentication-selectors";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import EqualizerOutlinedIcon from "@mui/icons-material/EqualizerOutlined";
-import MilitaryTechOutlinedIcon from "@mui/icons-material/MilitaryTechOutlined";
-import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
-import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import { signOut } from "../../service-clients/auth-service-client";
 import { setMobileHeaderHeight } from "../../redux-store/layout/layout-slice";
 import { mobileHeaderHeightSelector } from "../../redux-store/layout/layout-selectors";

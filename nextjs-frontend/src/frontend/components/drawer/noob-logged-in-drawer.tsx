@@ -1,5 +1,4 @@
 import {
-  Button,
   Dialog,
   Divider,
   IconButton,
@@ -7,12 +6,9 @@ import {
   MenuItem,
   MenuList,
   Typography,
-  useTheme,
 } from "@mui/material";
 import styles from "./noob-drawer.module.css";
 import * as React from "react";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import FlashOnIcon from "@mui/icons-material/FlashOn";
 import DiscordIcon from "../icons/discord-icon";
 import TwitchIcon from "../icons/twitch-icon";
 import YoutubeIcon from "../icons/youtube-icon";
@@ -29,7 +25,6 @@ interface Props {
 
 export default function NoobLoggedInDrawer(props: Props): JSX.Element {
   const { show, onClose, onLogoutClick } = props;
-  const theme = useTheme();
   const router = useRouter();
 
   async function gotoPage(url: string): Promise<void> {

@@ -19,7 +19,7 @@ export default function Product(props: any): JSX.Element {
   const [windowSize, setWindowSize] = useState(getWindowSize());
 
   useEffect(() => {
-    function handleWindowResize() {
+    function handleWindowResize(): void {
       setWindowSize(getWindowSize());
     }
 
@@ -30,7 +30,7 @@ export default function Product(props: any): JSX.Element {
     };
   }, []);
 
-  function getWindowSize() {
+  function getWindowSize(): any {
     const { innerWidth, innerHeight } = window;
     return { innerWidth, innerHeight };
   }
