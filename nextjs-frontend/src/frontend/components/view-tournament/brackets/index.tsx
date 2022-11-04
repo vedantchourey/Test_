@@ -1,6 +1,9 @@
 import { Box, Grid, Typography } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
 import React, { useEffect, useState } from "react";
+import { deviceTypes } from "../../../redux-store/layout/device-types";
+import { isDeviceTypeSelector } from "../../../redux-store/layout/layout-selectors";
+import { useAppSelector } from "../../../redux-store/redux-store";
 import DoubleElimination from "./brackets-viewer";
 import { BracketProps, RoundStatusData } from "./BracketsInterface";
 import style from "./style";
@@ -12,7 +15,8 @@ const RoundStatus: React.FC<RoundStatusData> = ({
   type,
   startDate,
   startTime,
-  name
+  name,
+  isDesktop
 }) => {
   const styles = useRoundStatusStyles();
   const getRoundStatus = (): string => {
@@ -22,14 +26,15 @@ const RoundStatus: React.FC<RoundStatusData> = ({
     return `${startDate} ${startTime}`;
   };
   return (
-    <Box minWidth={350}>
+    <Box minWidth={isDesktop ? 350 : 250}>
       <Box className={styles.statusContainer}>
-        <Typography color={"white"}> {name || `Round ${round}`}</Typography>
+        <Typography color={"white"} fontSize={isDesktop ? 14 : 12}> {name || `Round ${round}`}</Typography>
         <Box className={styles.status}>
           <Typography
             color={"white"}
             textTransform={"uppercase"}
             variant="caption"
+            fontSize={isDesktop ? 12 : 10}
           >
             {getRoundStatus()}
           </Typography>
@@ -41,6 +46,7 @@ const RoundStatus: React.FC<RoundStatusData> = ({
             color={"white"}
             textTransform={"uppercase"}
             variant="caption"
+            fontSize={isDesktop ? 12 : 10}
           >
             {type}
           </Typography>
@@ -55,13 +61,16 @@ const Bracket: React.FC<BracketProps> = ({
   brackets,
   players,
 }) => {
+
+  const isDesktop = useAppSelector((x) =>
+    isDeviceTypeSelector(x, deviceTypes.desktop));
   
   const [bData, setBData] = useState<any>(null);
   const renderStatus = (): JSX.Element[] => {
     return rounds.map((round) => {
       return (
         <Grid key={round.round} item md={3} mr={2}>
-          <RoundStatus {...round} />
+          <RoundStatus {...round} isDesktop={isDesktop} />
         </Grid>
       );
     });
@@ -99,9 +108,11 @@ const Bracket: React.FC<BracketProps> = ({
     setTimeout(() => setBData(data), 500);
   }, [brackets]);
 
+  
+
   return (
     <>
-      <Box marginX={"70px"} marginY={2}>
+      <Box marginX={isDesktop ? "70px" : "5px"} marginY={2}>
         {/* <Grid
           container
           columnSpacing={2}
@@ -113,7 +124,7 @@ const Bracket: React.FC<BracketProps> = ({
         <Box
           display={"flex"}
           flexWrap={"nowrap"}
-          maxWidth={"70vw"}
+          maxWidth={isDesktop ? "70vw" : "90vw"}
           overflow={"scroll"}
           className="hide-scrollbar"
         >

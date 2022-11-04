@@ -30,6 +30,7 @@ export interface RoundStatusData {
   isFinished: boolean;
   startDate?: string;
   startTime?: string;
+  isDesktop: boolean
 }
 
 export interface BracketProps {
