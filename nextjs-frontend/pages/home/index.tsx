@@ -396,7 +396,7 @@ const Home = (): JSX.Element => {
             </>
           ) : (
             <>
-              <Grid container xs={12} style={{ marginTop: 33 }}>
+              <Grid container xs={12} style={{ marginTop: 10 }}>
                 <TabContext value={value}>
                   <TabList
                     onChange={handleChange}
