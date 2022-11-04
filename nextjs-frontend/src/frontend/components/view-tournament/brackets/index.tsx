@@ -140,7 +140,7 @@ const Bracket: React.FC<BracketProps> = ({
         overflow={"scroll"}
         className="hide-scrollbar"
       >
-        {bData && <DoubleElimination brackets={bData} />}
+        {bData && <DoubleElimination brackets={bData} isDasktop={isDesktop} />}
       </Box>
     </>
   );
