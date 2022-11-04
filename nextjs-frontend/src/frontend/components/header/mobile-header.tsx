@@ -151,7 +151,7 @@ export default function MobileDrawer(): JSX.Element {
             <div style={{ height: 15, width: 1, backgroundColor: "white", marginLeft: 10 }} />
             <img
               src="/images/noobstorm-logo-small.png"
-              style={{ height: 20, width: 75, marginLeft: 10 }}
+              style={{ height: 35, width: 120, marginLeft: 10 }}
             />
           </div>
           {isLoggedIn && (<Box>

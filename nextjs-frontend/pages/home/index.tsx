@@ -215,7 +215,6 @@ const Home = (): JSX.Element => {
               responsive={responsive}
               autoPlay={true}
               disableButtonsControls={true}
-              disableDotsControls={true}
               autoPlayInterval={10000}
               infinite={true}
             />
