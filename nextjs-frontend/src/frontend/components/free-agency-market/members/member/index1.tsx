@@ -40,7 +40,7 @@ const MemberButton = ({ setParam }: any): JSX.Element => {
     <>
         <>
           <Box width={isDesktop ? 500 : "auto"} display="flex" flexDirection={isDesktop ? "row" : "column"}>
-            <Box sx={{ mr: 2, width: "100%" }}>
+            <Box sx={isDesktop ? { mr: 2, width: "100%" } : { ml: 0.8, width: "96%" }}>
               <GameDropDown
                 label="Game"
                 placeholder="Search by Games"
@@ -51,7 +51,7 @@ const MemberButton = ({ setParam }: any): JSX.Element => {
               />
             </Box>
 
-            <Box sx={{mr: 2, width: "100%" }}>
+            <Box sx={isDesktop ? { mr: 2, width: "100%" } : { ml: 0.8, width: "96%" }}>
               <PlatformDropDown
                 label="Platform"
                 placeholder="Select Platform"
@@ -63,7 +63,7 @@ const MemberButton = ({ setParam }: any): JSX.Element => {
               />
             </Box>
 
-            <Box sx={{ ml: isDesktop ? 2 : 0, width: "100%" }}>
+            <Box sx={isDesktop ? { ml: 2, width: "100%" } : { ml: 0.8, width: "96%" }}>
               <Select
                 id="team-select"
                 style={{ width: "100%" }}
@@ -80,7 +80,6 @@ const MemberButton = ({ setParam }: any): JSX.Element => {
             </Box>
           </Box>
         </>
-      
     </>
   );
 };

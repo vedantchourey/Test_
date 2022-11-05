@@ -97,7 +97,7 @@ const CardMobile: React.FC<any> = ({ setOpen }) => {
   return (
     <Grid container style={{ display: "flex", flexDirection: "column" }}>
       <Grid item xs={12} display={"flex"}>
-        <img src="/images/FAB_BG.png" style={{ width: "100%", height: 50, marginTop: 20 }} />
+        <img src="/images/FAB_BG.png" style={{ width: "100%", height: 70, marginTop: 20 }} />
         {/* <Box>
           <Typography color={"white"} textAlign="left" component="h4">
             {" "}
