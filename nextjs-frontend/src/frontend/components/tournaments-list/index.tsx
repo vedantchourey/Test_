@@ -14,7 +14,7 @@ const Tournaments: React.FC = (): JSX.Element => {
       }}
     >
       <Fragment>
-        <Container maxWidth="xl">
+        <Container maxWidth="xl" sx={{margin: 0, padding: 0}}>
           <TournamentsCard>
             <SliderComp />
           </TournamentsCard>

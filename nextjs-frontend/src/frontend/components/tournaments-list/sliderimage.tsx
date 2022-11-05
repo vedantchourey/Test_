@@ -142,7 +142,8 @@ const SliderComp: React.FC = (): JSX.Element => {
         </Grid>
       )} */}
       <Box
-        mt={5}
+        mt={2}
+        mr={0}
         sx={{ width: isDesktop ? "80vw" : "90vw" }}
         display={"flex"}
         flexWrap={"nowrap"}
@@ -215,6 +216,7 @@ const SliderComp: React.FC = (): JSX.Element => {
                       ? data.settings?.entryFeeAmount || 0
                       : 0
                   }
+                  isDesktop={isDesktop}
                   participants={`${currentSlot} out of ${totalSlots}`}
                 />
               </>
