@@ -222,23 +222,22 @@ export default function CreatePostInput(props: IProps): JSX.Element {
             const file = files[0];
             const fileType = file.type.split("/")[0];
             setIsUploading(true);
-            UploadMedia(file)
-              .then((data) => {
-                if (fileType === "image") {
-                  createImageThumb(file);
-                }
+            try {
+              let response = await UploadMedia(file);
+              if (response) {
+                if (fileType === "image") await createImageThumb(file);
                 setRequest((pre) => {
                   return {
                     ...pre,
-                    postImgUrl: data.url,
-                  };
-                });
+                    postImgUrl: response.url,
+                  }
+                })
                 setIsImgUploaded(true);
                 setIsUploading(false);
-              })
-              .catch((error) => {
-                alert(error);
-              });
+              }
+            } catch(error) {
+              console.error("Error: ", error);
+            }
           }}
           // eslint-disable-next-line no-console
           onError={(): void => console.log("Error")}
