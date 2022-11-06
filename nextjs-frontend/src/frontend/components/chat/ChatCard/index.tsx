@@ -82,7 +82,7 @@ export default function ChatCard(props: IChatCard): JSX.Element {
       p={1}
       display={"flex"}
       alignItems={"center"}
-      style={{ cursor: "pointer", width: 300 }}
+      style={{ cursor: "pointer", flex: 1 }}
       onClick={props.onClick}
     >
       <Box>
@@ -138,7 +138,7 @@ export default function ChatCard(props: IChatCard): JSX.Element {
           variant="caption"
           color={"rgba(255,255,255,0.5)"}
         >
-          {props.lastMessageUser}: {props.message}
+          {props.lastMessageUser}: {props.message && props.message?.length > 9 ? props.message.slice(0, 10) + "..." : props.message}
         </Typography>
       </Box>
       <Box ml={2} textAlign={"left"}>
