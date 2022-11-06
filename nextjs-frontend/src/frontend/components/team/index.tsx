@@ -178,7 +178,7 @@ const Team: React.FC = () => {
   };
 
   const changeTabByValue = (tab: string): void => {
-    router.push("/team/view/[...slug]", `/team/view/${tab}`, { shallow: true });
+    router.push("/team/view/[id]/[...slug]", `/team/view/${query.id}/${tab}`, { shallow: true });
   };
 
   const renderTabs = (): JSX.Element | JSX.Element[] => {

@@ -43,6 +43,9 @@ import axios from "axios";
 import { getAuthHeader } from "../../../utils/headers";
 import { useRouter } from "next/router";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
+// import { useAppSelector } from "../../../../../src/frontend/redux-store/redux-store";
+// import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+// import { deviceTypes } from '../../../../../src/frontend/redux-store/layout/device-types';
 
 export const options = {
   responsive: true,
@@ -298,6 +301,9 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team, hasAcc
   const changeGraphTime = (item: string): void => {
     setSelectedTime(item);
   };
+
+  // const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
+
   return (
     <React.Fragment>
       <Box>
