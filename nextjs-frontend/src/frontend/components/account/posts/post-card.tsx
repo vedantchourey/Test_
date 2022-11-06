@@ -36,6 +36,8 @@ import { getAuthHeader } from "../../../utils/headers";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import frontendConfig from "../../../utils/config/front-end-config";
 import { useRouter } from "next/router";
+// @ts-ignore: Unreachable code error
+import Linkify from 'react-linkify';
 
 interface IProps {
   data: IPostsResponse;
@@ -366,7 +368,8 @@ const PostCard = (props: IProps): JSX.Element => {
                 fontWeight={300}
                 paragraph
               >
-                {values.postContent.split(" ").map((part) =>
+                <Linkify>{values.postContent}</Linkify>
+                {/* {values.postContent.split(" ").map((part) =>
                   URL_REGEX.test(part) ? (
                     <a href={part} target="_blank" rel="noreferrer">
                       {part}{" "}
@@ -387,7 +390,7 @@ const PostCard = (props: IProps): JSX.Element => {
                     </span>
                   ) : (
                     part + " "
-                  ))}
+                  ))} */}
               </Typography>
               {values.postContent.length > 250 ? (
                 <Button
