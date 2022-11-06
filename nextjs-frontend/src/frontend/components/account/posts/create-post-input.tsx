@@ -223,7 +223,7 @@ export default function CreatePostInput(props: IProps): JSX.Element {
             const fileType = file.type.split("/")[0];
             setIsUploading(true);
             try {
-              let response = await UploadMedia(file);
+              const response = await UploadMedia(file);
               if (response) {
                 if (fileType === "image") await createImageThumb(file);
                 setRequest((pre) => {
