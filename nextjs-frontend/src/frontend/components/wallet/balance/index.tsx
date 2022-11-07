@@ -16,6 +16,8 @@ import { walletDetaislSelector } from "../../../redux-store/wallet/wallet-select
 import { getAuthHeader } from "../../../utils/headers";
 import axios from "axios";
 import { userProfileSelector } from "../../../redux-store/authentication/authentication-selectors";
+import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from '../../../../../src/frontend/redux-store/layout/device-types';
 
 const Balance = (): any => {
   const wallet = useAppSelector(walletDetaislSelector);
@@ -112,6 +114,8 @@ const Balance = (): any => {
   useEffect(() => {
     getKycDetails();
   }, []);
+
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
 
   return (
     <React.Fragment>
@@ -256,15 +260,15 @@ const Balance = (): any => {
               variant="fullWidth"
               style={{
                 borderColor: "rgba(255, 255, 255, 0.1)",
-                marginTop: "30px",
+                marginTop: !isDesktop ? 0 : "30px",
                 marginBottom: "30px",
               }}
             />
           </Grid>
           <Grid item xs={12}>
-            <Box mt={3}>
-              <Grid container spacing={1} marginTop={3}>
-                <Grid item xs={4}>
+            <Box mt={!isDesktop ? 0 : 3}>
+              <Grid container spacing={1} marginTop={!isDesktop ? 0 : 3}>
+                <Grid item xs={!isDesktop ? 12 : 4}>
                   <TextField
                     disabled={isVerified}
                     margin="none"
@@ -283,7 +287,7 @@ const Balance = (): any => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={!isDesktop ? 12 : 4}>
                   <TextField
                     disabled={isVerified}
                     margin="none"
@@ -298,7 +302,7 @@ const Balance = (): any => {
                     error={Boolean(formik.touched.name && formik.errors.name)}
                   />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={!isDesktop ? 12 : 4}>
                   <TextField
                     disabled={isVerified}
                     margin="none"
@@ -313,7 +317,7 @@ const Balance = (): any => {
                     error={Boolean(formik.touched.acc_type && formik.errors.acc_type)}
                   />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={!isDesktop ? 12 : 4}>
                   <TextField
                     disabled={isVerified}
                     margin="none"
@@ -328,7 +332,7 @@ const Balance = (): any => {
                     error={Boolean(formik.touched.accNo && formik.errors.accNo)}
                   />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={!isDesktop ? 12 : 4}>
                   <TextField
                     disabled={isVerified}
                     margin="none"
@@ -343,7 +347,7 @@ const Balance = (): any => {
                     error={Boolean(formik.touched.ifsc && formik.errors.ifsc)}
                   />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={!isDesktop ? 12 : 4}>
                   <TextField
                     disabled={isVerified}
                     margin="none"
