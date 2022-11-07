@@ -338,7 +338,7 @@ export default function NewsView(): JSX.Element {
                     if (key < 4) {
                       return (
                         <Card
-                          sx={{ maxWidth: !isDesktop ? "100%" : 200, m: 2 }}
+                          sx={{ maxWidth: !isDesktop ? "100%" : "auto", m: 2 }}
                           key={key}
                           onClick={(): any => router.push(`/blog/${i.id}`)}
                         >

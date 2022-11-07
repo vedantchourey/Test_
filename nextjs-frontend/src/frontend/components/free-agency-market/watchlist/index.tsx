@@ -21,6 +21,9 @@ import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import { getAuthHeader } from "../../../utils/headers";
 import Member, { MemberProp } from "../../team/members/member";
 import GroupIcon from "@mui/icons-material/Group";
+import { isDeviceTypeSelector } from "../../../redux-store/layout/layout-selectors";
+import { deviceTypes } from "../../../redux-store/layout/device-types";
+import { useAppSelector } from "../../../redux-store/redux-store";
 
 export const NoobButton = styled(Button)(() => ({
   color: "white",
@@ -176,6 +179,8 @@ const WatchTeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
       : null
     : null;
 
+    const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
+
   return (
     <React.Fragment>
       <Modal
@@ -191,7 +196,9 @@ const WatchTeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
           {filtedTeamList.length === 0 ? (
             <CardContent>
               <Typography textAlign={"center"} color="red">
-                You cannot invite this user as a team with the same Platform or Game does not exist. Please create a Team with the same Platform and Game to continue
+                You cannot invite this user as a team with the same Platform or
+                Game does not exist. Please create a Team with the same Platform
+                and Game to continue
               </Typography>
             </CardContent>
           ) : (
@@ -333,46 +340,95 @@ const WatchTeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
               </Typography>
             </Box>
           )}
-          <Box marginY={2} width={"70vw"}>
-            <Slider {...settings}>
+          {!isDesktop ? (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                height: "auto",
+                width: "90vw",
+              }}
+            >
               {data.map((player) => {
                 return (
-                  <Member key={player.name} {...player}>
-                    <>
-                      <Box textAlign="center" mt={6}>
-                        <NoobButton
-                          variant="contained"
-                          disabled={loading}
-                          style={{ backgroundColor: "#6932F9" }}
-                          fullWidth={true}
-                          onClick={(): void => {
-                            removeToWatchList(player.id || "");
-                          }}
-                        >
-                          - Remove
-                        </NoobButton>
-                      </Box>
-                      <Box textAlign="center" mt={2} mb={12}>
-                        <NoobButton
-                          variant="contained"
-                          disabled={loading}
-                          style={{ backgroundColor: "#F09633" }}
-                          fullWidth={true}
-                          onClick={(): void => {
-                            setIsModalOpen(true);
-                            setSelectedPlayer(player);
-                          }}
-                          // onClick={(): void => {sendInvitation(player.id || "")}}
-                        >
-                          Send Offer to Recurit
-                        </NoobButton>
-                      </Box>
-                    </>
-                  </Member>
+                  <>
+                    <Member key={player.name} {...player} />
+                    <Box display={"flex"} justifyContent="space-between">
+                    <Box textAlign="center" flex={0.48}>
+                      <NoobButton
+                        variant="contained"
+                        disabled={loading}
+                        style={{ backgroundColor: "#6932F9" }}
+                        fullWidth={true}
+                        onClick={(): void => {
+                          removeToWatchList(player.id || "");
+                        }}
+                      >
+                        - Remove
+                      </NoobButton>
+                    </Box>
+                    <Box textAlign="center" mb={3} flex={0.48}>
+                      <NoobButton
+                        variant="contained"
+                        disabled={loading}
+                        style={{ backgroundColor: "#F09633" }}
+                        fullWidth={true}
+                        onClick={(): void => {
+                          setIsModalOpen(true);
+                          setSelectedPlayer(player);
+                        }}
+                        // onClick={(): void => {sendInvitation(player.id || "")}}
+                      >
+                        Send Offer
+                      </NoobButton>
+                    </Box>
+                    </Box>
+                  </>
                 );
               })}
-            </Slider>
-          </Box>
+            </div>
+          ) : (
+            <Box marginY={2} width={"70vw"}>
+              <Slider {...settings}>
+                {data.map((player) => {
+                  return (
+                    <Member key={player.name} {...player}>
+                      <>
+                        <Box textAlign="center" mt={6}>
+                          <NoobButton
+                            variant="contained"
+                            disabled={loading}
+                            style={{ backgroundColor: "#6932F9" }}
+                            fullWidth={true}
+                            onClick={(): void => {
+                              removeToWatchList(player.id || "");
+                            }}
+                          >
+                            - Remove
+                          </NoobButton>
+                        </Box>
+                        <Box textAlign="center" mt={2} mb={12}>
+                          <NoobButton
+                            variant="contained"
+                            disabled={loading}
+                            style={{ backgroundColor: "#F09633" }}
+                            fullWidth={true}
+                            onClick={(): void => {
+                              setIsModalOpen(true);
+                              setSelectedPlayer(player);
+                            }}
+                            // onClick={(): void => {sendInvitation(player.id || "")}}
+                          >
+                            Send Offer to Recurit
+                          </NoobButton>
+                        </Box>
+                      </>
+                    </Member>
+                  );
+                })}
+              </Slider>
+            </Box>
+          )}
         </Box>
       </Box>
     </React.Fragment>

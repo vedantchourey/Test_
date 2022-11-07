@@ -25,6 +25,7 @@ interface Props {
   hideChat?: boolean;
   pinChat?: boolean;
   hideHeaders?: boolean;
+  forMobileChat?: boolean
 }
 
 export default function NoobPage(props: Props): JSX.Element {
@@ -34,6 +35,7 @@ export default function NoobPage(props: Props): JSX.Element {
     title,
     children,
     pinChat,
+    forMobileChat
   } = props;
   const [enableChat, setEnableChat] = useState(false);
   const [toggleChat, setToggleChat] = useState(false);
@@ -72,7 +74,13 @@ export default function NoobPage(props: Props): JSX.Element {
           <Box
             style={{ minHeight: props.hideChat ? "auto" : "1040px" }}
             component="main"
-            sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
+            sx={{
+              flexGrow: 1,
+              bgcolor: "background.default",
+              p: props.forMobileChat ? 1 : 3,
+              pt: 3,
+              pb: 3,
+            }}
           >
             {children}
           </Box>
@@ -103,7 +111,11 @@ export default function NoobPage(props: Props): JSX.Element {
               }}
             >
               <Box display={"flex"} flexDirection="row">
-                <Typography style={{ color: "#FFFFFF", fontSize: isMobile ? 10 : 15 }}>Chat</Typography>
+                <Typography
+                  style={{ color: "#FFFFFF", fontSize: isMobile ? 10 : 15 }}
+                >
+                  Chat
+                </Typography>
                 <Box display={"flex"} flexDirection={"column"}>
                   <Box
                     style={{
@@ -112,7 +124,7 @@ export default function NoobPage(props: Props): JSX.Element {
                       width: 25,
                       borderRadius: 25,
                       color: "#fff",
-                      marginLeft: 5
+                      marginLeft: 5,
                     }}
                   >
                     {chatCount}

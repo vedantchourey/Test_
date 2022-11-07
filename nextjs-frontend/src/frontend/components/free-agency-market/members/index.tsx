@@ -335,12 +335,13 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
       </Modal>
       <Box>
         {!isDesktop && (
-          <div style={{ display: "flex", flexDirection: "column", height: "auto", width: 200 }}>
+          <div style={{ display: "flex", flexDirection: "column", height: "auto", width: "90vw" }}>
             {filterData.map((player: any, index: any) => {
               return (
                 <div key={index}>
                   <Member key={player.firstName} {...player} />
-                  <Box textAlign="center">
+                  <Box display={"flex"} mb={4} justifyContent={"space-between"}>
+                  <Box textAlign="center" flex={0.48} >
                     <NoobButton
                       variant="contained"
                       disabled={loading}
@@ -350,10 +351,10 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
                         addToWatchList(player.id, player.gameId, player.platformId);
                       }}
                     >
-                      + Add to Watch List
+                      + Watch List
                     </NoobButton>
                   </Box>
-                  <Box textAlign="center" mt={1} mb={4}>
+                  <Box textAlign="center"   flex={0.48}>
                     <NoobButton
                       variant="contained"
                       disabled={loading}
@@ -364,9 +365,11 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
                         setSelectedPlayer(player);
                       }}
                     >
-                      Send Offer to Recruit
+                      Send Offer
                     </NoobButton>
                   </Box>
+                  </Box>
+                  
                 </div>
               );
             })}

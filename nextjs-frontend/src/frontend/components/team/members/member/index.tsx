@@ -69,13 +69,13 @@ const Member: React.FC<MemberProp> = ({
           style={{
             position: "absolute",
             zIndex: 1,
-            top: !isDesktop ? "58.5%" : "60.8%",
+            top: "60.8%",
             left: "27%",
             width: "45%",
             alignItems: "center",
           }}
         >
-          <Typography noWrap fontSize={"0.9 em"} textAlign={"center"}>
+          <Typography noWrap color={"#fff"} fontSize={"0.9 em"} textAlign={"center"}>
             {username}
           </Typography>
         </div>
@@ -130,11 +130,11 @@ const Member: React.FC<MemberProp> = ({
             {elo}
           </Typography>
         </div>
-        <Avatar
+        <img
           src={profileImage || ""}
           style={{
             position: "absolute",
-            width: !isDesktop ? "98%" : "100%",
+            width: "100%",
             zIndex: -1,
             cursor: "pointer",
             height: "64%",

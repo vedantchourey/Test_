@@ -44,6 +44,7 @@ import CloseIcon from "@mui/icons-material/Close";
 export default function Chat(props: {
   smallChat: boolean;
   social?: boolean;
+  isMobile?: boolean;
   setChatCount?: (count: number) => void;
 }): JSX.Element {
   const router = useRouter();
@@ -434,74 +435,109 @@ export default function Chat(props: {
 
     return (
       <>
-        <Box
-          style={{ border: "1px solid #6931F9", display: 'flex', justifyContent:'space-between', margin:"10px" }}
-          sx={{ borderRadius: "16px" }}
-        >
-          <InputBase
-            size="small"
-            placeholder="Search anything..."
-            sx={{ p: 1 }}
-            onChange={(e): any => {
-              setSearch(e.target.value);
-              const names = users.filter((item: any) => item.toLowerCase().includes(e.target.value))
-              names?.length > 0 ? setUserParam(names[0]) : null;
+        <Box display={"flex"} alignItems={"center"}>
+          <Box
+            style={{
+              flex: 0.95,
+              border: "1px solid #6931F9",
+              display: "flex",
+              justifyContent: "space-between",
+              margin: "10px",
             }}
-          />
-          <Link
-            href={userParam === undefined
-              ? "/chat"
-              : "/chat?user=" + userParam?.toLowerCase() + "&name=" + userParam
-            }
-            underline="none"
+            sx={{ borderRadius: "16px" }}
           >
-            <img src="/icons/search-icon.png" style={{ height: 20, width: 20, marginRight: 10, marginTop: 10 }} />
-          </Link>
+            <InputBase
+              size="small"
+              placeholder="Search anything..."
+              sx={{ p: 1 }}
+              onChange={(e): any => {
+                setSearch(e.target.value);
+                const names = users.filter((item: any) =>
+                  item.toLowerCase().includes(e.target.value)
+                );
+                names?.length > 0 ? setUserParam(names[0]) : null;
+              }}
+            />
+            <Link
+              href={
+                userParam === undefined
+                  ? "/chat"
+                  : "/chat?user=" +
+                    userParam?.toLowerCase() +
+                    "&name=" +
+                    userParam
+              }
+              underline="none"
+            >
+              <img
+                src="/icons/search-icon.png"
+                style={{
+                  height: 20,
+                  width: 20,
+                  marginRight: 10,
+                  marginTop: 10,
+                }}
+              />
+            </Link>
+          </Box>
+          <Fab
+            size="small"
+            color="primary"
+            aria-label="add"
+            onClick={(): any => setOpen(true)}
+          >
+            <AddIcon />
+          </Fab>
         </Box>
+
         {chatByGroup.map((c) => (
           <>
-            <Typography variant={"h6"} m={1}>
+            <Typography variant={"h6"} m={1} color="#fff">
               {c.type === "team" && "Team"}
               {c.type === "one-to-one" && "Friends"}
               {c.type === "group" && "Groups"}
               {c.type === "support" && "Support"}
             </Typography>
-            {c.values.filter((i)=>i.channel_name.toLowerCase().match(search.toLowerCase())).map((i) => {
-              const findTeam = teamData?.find((t) => t.id === i.other_user);
-              const chatIcon =
-                i.chat_image || findTeam?.teamLogo
-                  ? (frontendSupabase.storage
-                      .from("public-files")
-                      .getPublicUrl(
-                        i.channel_type === "group"
-                          ? i.chat_image
-                          : findTeam?.teamLogo
-                      ).publicURL as string)
-                  : null;
+            {c.values
+              .filter((i) =>
+                i.channel_name.toLowerCase().match(search.toLowerCase())
+              )
+              .map((i) => {
+                const findTeam = teamData?.find((t) => t.id === i.other_user);
+                const chatIcon =
+                  i.chat_image || findTeam?.teamLogo
+                    ? (frontendSupabase.storage
+                        .from("public-files")
+                        .getPublicUrl(
+                          i.channel_type === "group"
+                            ? i.chat_image
+                            : findTeam?.teamLogo
+                        ).publicURL as string)
+                    : null;
 
-              return (
-                <ChatCard
-                  key={i.id}
-                  image={chatIcon || ""}
-                  name={i.channel_name}
-                  otherUser={i.other_user}
-                  message={i.last_message}
-                  type={i.channel_type}
-                  lastMessageUser={i.last_message_by}
-                  updatedAt={i.updated_at}
-                  onClick={(): void => {
-                    setCurrentChat(null);
-                    setCurrentChatData(null);
-                    setTimeout((): void => {
-                      setCurrentChatName(i.channel_name);
-                      setCurrentChatData({ ...i, chat_image: chatIcon });
-                      setCurrentChat(i.channel_id);
-                    }, 200);
-                  }}
-                  isUnreadMessage={i.unread}
-                />
-              );
-            })}
+                return (
+                  <ChatCard
+                    key={i.id}
+                    image={chatIcon || ""}
+                    name={i.channel_name}
+                    otherUser={i.other_user}
+                    message={i.last_message}
+                    type={i.channel_type}
+                    lastMessageUser={i.last_message_by}
+                    updatedAt={i.updated_at}
+                    onClick={(): void => {
+                      setCurrentChat(null);
+                      setCurrentChatData(null);
+                      setTimeout((): void => {
+                        setCurrentChatName(i.channel_name);
+                        setCurrentChatData({ ...i, chat_image: chatIcon });
+                        setCurrentChat(i.channel_id);
+                      }, 200);
+                    }}
+                    isUnreadMessage={i.unread}
+                  />
+                );
+              })}
           </>
         ))}
       </>
@@ -559,7 +595,7 @@ export default function Chat(props: {
       flex={1}
       overflow={"scroll"}
       className={"hide-scrollbar"}
-      height={props.smallChat ? 450 : "75vh"}
+      height={props.isMobile ? "75vh" : props.smallChat ? 450 : "75vh"}
     >
       <Box
         flex={props.smallChat ? 1 : 0.25}
@@ -580,19 +616,13 @@ export default function Chat(props: {
           </Box>
         ) : null}
         {renderChatList()}
-        <Box
+        {/* <Box
           position={"absolute"}
           bottom={70}
           marginLeft={props.smallChat ? "30%" : "16vw"}
         >
-          <Fab
-            color="primary"
-            aria-label="add"
-            onClick={(): any => setOpen(true)}
-          >
-            <AddIcon />
-          </Fab>
-        </Box>
+          
+        </Box> */}
       </Box>
 
       {currentChat ? (
