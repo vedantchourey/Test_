@@ -10,6 +10,9 @@ import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import { getAuthHeader } from "../../../utils/headers";
 import Member, { MemberProp } from "../../team/members/member";
 import GroupIcon from "@mui/icons-material/Group";
+import { useAppSelector } from "../../../../../src/frontend/redux-store/redux-store";
+import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from '../../../../../src/frontend/redux-store/layout/device-types';
 
 export const NoobButton = styled(Button)(() => ({
   color: "white",
@@ -48,6 +51,8 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
   const [selectedTeam, setSelectedTeam] = useState<any>("");
   const [selectedPlayer, setSelectedPlayer] = useState<any>(undefined);
   const [message, setMessage] = useState("");
+  const [filterData, setFilterData] = useState<any>([]);
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
 
   const fetchUsers = async (): Promise<void> => {
     const headers = await getAuthHeader();
@@ -160,7 +165,7 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
     fetchTeam();
   }, [params]);
 
-  const filterData = data.filter((p) => {
+  const getCards = (): any => data.filter((p) => {
     if (params.level === "all") return p.elo;
     if (params.level === "bronze") return parseInt(p.elo || "0") < 1000;
     if (params.level === "silver")
@@ -172,6 +177,12 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
     if (params.level === "ruby") return parseInt(p.elo || "0") >= 2000;
     return p.elo;
   });
+
+  useEffect(() => {
+    const cards = getCards();
+    setFilterData(cards);
+  }, [data]);
+
 
   return (
     <React.Fragment>
@@ -323,47 +334,87 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
         </Card>
       </Modal>
       <Box>
-        <Box marginY={2} width={"70vw"}>
-          <Slider {...settings}>
+        {!isDesktop && (
+          <div style={{ display: "flex", flexDirection: "column", height: "auto", width: 200 }}>
             {filterData.map((player: any) => {
               return (
-                <Member key={player.firstName} {...player}>
-                  <>
-                    <Box textAlign="center" mt={6}>
-                      <NoobButton
-                        variant="contained"
-                        disabled={loading}
-                        style={{ backgroundColor: "#6932F9" }}
-                        fullWidth={true}
-                        onClick={(): void => {
-                          addToWatchList(player.id, player.gameId, player.platformId);
-                        }}
-                      >
-                        + Add to Watch List
-                      </NoobButton>
-                    </Box>
-                    {(
-                      <Box textAlign="center" mt={2} mb={12}>
+                <div>
+                  <Member key={player.firstName} {...player} />
+                  <Box textAlign="center">
+                    <NoobButton
+                      variant="contained"
+                      disabled={loading}
+                      style={{ backgroundColor: "#6932F9" }}
+                      fullWidth={true}
+                      onClick={(): void => {
+                        addToWatchList(player.id, player.gameId, player.platformId);
+                      }}
+                    >
+                      + Add to Watch List
+                    </NoobButton>
+                  </Box>
+                  <Box textAlign="center" mt={1} mb={4}>
+                    <NoobButton
+                      variant="contained"
+                      disabled={loading}
+                      style={{ backgroundColor: "#F09633" }}
+                      fullWidth={true}
+                      onClick={(): void => {
+                        setIsModalOpen(true);
+                        setSelectedPlayer(player);
+                      }}
+                    >
+                      Send Offer to Recruit
+                    </NoobButton>
+                  </Box>
+                </div>
+              );
+            })}
+          </div>
+        )}
+        {isDesktop && (
+          <Box marginY={2} width={"70vw"}>
+            <Slider {...settings}>
+              {filterData.map((player: any) => {
+                return (
+                  <Member key={player.firstName} {...player}>
+                    <>
+                      <Box textAlign="center" mt={6}>
                         <NoobButton
                           variant="contained"
                           disabled={loading}
-                          style={{ backgroundColor: "#F09633" }}
+                          style={{ backgroundColor: "#6932F9" }}
                           fullWidth={true}
                           onClick={(): void => {
-                            setIsModalOpen(true);
-                            setSelectedPlayer(player);
+                            addToWatchList(player.id, player.gameId, player.platformId);
                           }}
                         >
-                          Send Offer to Recruit
+                          + Add to Watch List
                         </NoobButton>
                       </Box>
-                    )}
-                  </>
-                </Member>
-              );
-            })}
-          </Slider>
-        </Box>
+                      {(
+                        <Box textAlign="center" mt={2} mb={12}>
+                          <NoobButton
+                            variant="contained"
+                            disabled={loading}
+                            style={{ backgroundColor: "#F09633" }}
+                            fullWidth={true}
+                            onClick={(): void => {
+                              setIsModalOpen(true);
+                              setSelectedPlayer(player);
+                            }}
+                          >
+                            Send Offer to Recruit
+                          </NoobButton>
+                        </Box>
+                      )}
+                    </>
+                  </Member>
+                );
+              })}
+            </Slider>
+          </Box>
+        )}
       </Box>
     </React.Fragment>
   );
