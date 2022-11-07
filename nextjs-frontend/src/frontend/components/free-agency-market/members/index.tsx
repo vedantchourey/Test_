@@ -336,9 +336,9 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
       <Box>
         {!isDesktop && (
           <div style={{ display: "flex", flexDirection: "column", height: "auto", width: 200 }}>
-            {filterData.map((player: any) => {
+            {filterData.map((player: any, index: any) => {
               return (
-                <div>
+                <div key={index}>
                   <Member key={player.firstName} {...player} />
                   <Box textAlign="center">
                     <NoobButton

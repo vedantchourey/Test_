@@ -340,14 +340,16 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team, hasAcc
         </div>
 
         <Box marginY={2} width={"70vw"}>
-          {!isDesktop && playerList.map((player): any => {
+          {!isDesktop && playerList.map((player, index): any => {
             return (
               <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                marginBottom: 20
-              }}>
+                key={index}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  marginBottom: 20
+                }}
+              >
                 <Member
                   key={player.name}
                   {...player}

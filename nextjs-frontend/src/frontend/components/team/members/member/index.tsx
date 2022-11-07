@@ -134,7 +134,7 @@ const Member: React.FC<MemberProp> = ({
           src={profileImage || ""}
           style={{
             position: "absolute",
-            width: !isDesktop ? "98%" :  "100%",
+            width: !isDesktop ? "98%" : "100%",
             zIndex: -1,
             cursor: "pointer",
             height: "64%",
