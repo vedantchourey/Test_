@@ -17,6 +17,8 @@ import { getAuthHeader } from "../../utils/headers";
 import axios from "axios";
 import { INotifications } from "../../../backend/services/database/models/i-notifications";
 import { getUserProfileImage } from "../../service-clients/image-service-client";
+import SearchIcon from '@mui/icons-material/Search';
+import TextField from '@mui/material/TextField';
 
 export default function MobileDrawer(): JSX.Element {
   const [showMenu, setShowMenu] = useState(false);
@@ -27,6 +29,7 @@ export default function MobileDrawer(): JSX.Element {
   // const [notificationPayload, setNotificationPayload] = React.useState<any>()
   // const [gameIdModal, setGameIdModal] = React.useState(false);
   const [gameId, setGameId] = React.useState("")
+  const [isSearchVisible, setIsSearchVisible] = useState<boolean>(false);
 
   const toggleDrawer = (): void => setShowMenu(true);
   const hideMenu = (): void => setShowMenu(false);
@@ -166,6 +169,16 @@ export default function MobileDrawer(): JSX.Element {
             </div>
           </Box>
         </div>
+        {isSearchVisible && (
+          <div style={{ display: "flex", padding: "0px 20px 0px 20px" }}>
+            <TextField
+              id="search"
+              label="Search"
+              variant="outlined"
+              style={{ flex: 1, fontSize: 10, paddingTop: 7 }}
+            />
+          </div>
+        )}
         <Divider />
         {isLoggedIn && (
           <div className={styles.bottomHeader}>
@@ -187,19 +200,17 @@ export default function MobileDrawer(): JSX.Element {
             >
               <img src="/images/menu/Leader-Board.png" style={{ height: 25, width: 25 }} />
             </IconButton>
-            {/* <IconButton
-              className={styles.bottomHeaderIcons}
-              onClick={(): Promise<boolean> => router.push("/")}
-            >
-              <Icon>
-                <NotificationsOutlinedIcon />
-              </Icon>
-            </IconButton> */}
             <IconButton
               className={styles.bottomHeaderIcons}
               onClick={(): Promise<boolean> => router.push("/chat")}
             >
               <img src="/images/menu/Chat.png" style={{ height: 25, width: 25 }} />
+            </IconButton>
+            <IconButton
+              className={styles.bottomHeaderIcons}
+              onClick={(): void => (setIsSearchVisible(!isSearchVisible))}
+            >
+              <SearchIcon />
             </IconButton>
           </div>
         )}

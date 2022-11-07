@@ -142,7 +142,7 @@ const Leaderboard = (): JSX.Element => {
           <Heading divider heading={"LEADERBOARD"} />
           <Box
             mt={5}
-            sx={{ maxWidth: isDesktop ? "1400px" : "290px" }}
+            sx={isDesktop ? { maxWidth: "1000px", marginLeft: 4 } : { maxWidth: "290px" }}
             display={"flex"}
             flexWrap={"nowrap"}
             overflow={"scroll"}
@@ -362,7 +362,6 @@ const Leaderboard = (): JSX.Element => {
             <TableContainer
               component={Paper}
               className={styles.mainTable}
-              style={{ width: 275 }}
             >
               <Table stickyHeader>
                 <TableHead>
@@ -406,7 +405,7 @@ const Leaderboard = (): JSX.Element => {
                     ?.sort(function (a, b) {
                       return parseInt(b.elo_rating) - parseInt(a.elo_rating);
                     })
-                    .slice(isDesktop ? 3 : 0, leaderboardgamedata.length)
+                    .slice(0, leaderboardgamedata.length)
                     .map((item, idx) => {
                       const image = isTeam
                         ? item.teamLogo

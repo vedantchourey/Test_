@@ -37,6 +37,8 @@ import { Mention, MentionsInput } from "react-mentions";
 import { searchPeopleByText } from "../../../service-clients/search-service-client";
 import ReplyInput from "./reply-input";
 import { useRouter } from "next/router";
+// @ts-ignore: Unreachable code error
+import Linkify from 'react-linkify';
 
 const style = {
   position: "absolute",
@@ -325,7 +327,8 @@ const CommentsModal = (props: IProps): JSX.Element => {
                           color="white"
                           sx={{ textTransform: "capitalize" }}
                         >
-                          {commentValues.comment.split(" ").map((part) =>
+                          <Linkify>{commentValues.comment}</Linkify>
+                          {/* {commentValues.comment.split(" ").map((part) =>
                             part.match("@") ? (
                               <span
                                 onClick={(): void => {
@@ -342,7 +345,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
                               </span>
                             ) : (
                               part + " "
-                            ))}
+                            ))} */}
                         </Typography>
                       </Box>
                     ) : (
@@ -498,6 +501,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
                             color="white"
                             sx={{ textTransform: "capitalize" }}
                           >
+                            {/* <Linkify>{commentValues.comment}</Linkify> */}
                             {commentValues.comment.split(" ").map((part) =>
                               part.match("@") ? (
                                 <span

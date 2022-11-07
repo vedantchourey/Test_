@@ -596,6 +596,7 @@ const PersonalSettings = (): JSX.Element => {
                 disabled={true}
                 error={propsHasError(errors, "dateOfBirth")}
                 helperText={getErrorForProp(errors, "dateOfBirth")}
+                style={{ width: "100%" }}
               />
             )}
           />

@@ -43,6 +43,9 @@ import axios from "axios";
 import { getAuthHeader } from "../../../utils/headers";
 import { useRouter } from "next/router";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
+import { useAppSelector } from "../../../../../src/frontend/redux-store/redux-store";
+import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from '../../../../../src/frontend/redux-store/layout/device-types';
 
 export const options = {
   responsive: true,
@@ -298,17 +301,55 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team, hasAcc
   const changeGraphTime = (item: string): void => {
     setSelectedTime(item);
   };
+
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
+
   return (
     <React.Fragment>
       <Box>
-        <Typography color={"white"} variant={"h5"}>
-          Team Members
-        </Typography>
+        {!isDesktop && (
+          <Box mb={2}>
+            <Typography color={"white"} variant={"h5"}>
+              Team Graph
+            </Typography>
+            <Select
+              value={selectedTime}
+              input={<OutlinedInput />}
+              onChange={(e: any): void => changeGraphTime(e.target.value)}
+              sx={{ m: 1 }}
+            >
+              {graphTime.map((item): any => {
+                return (
+                  <MenuItem key={item} value={item}>
+                    {item}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+            <Line options={options} data={data} />
+          </Box>
+        )}
+
+        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+          <Typography color={"white"} variant={"h5"}>
+            Team Members
+          </Typography>
+          <Button style={{ marginLeft: "2px" }} onClick={handleOpen}>
+            Add Player
+          </Button>
+        </div>
 
         <Box marginY={2} width={"70vw"}>
-          <Slider {...settings}>
-            {playerList.map((player): any => {
-              return (
+          {!isDesktop && playerList.map((player, index): any => {
+            return (
+              <div
+                key={index}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  marginBottom: 20
+                }}
+              >
                 <Member
                   key={player.name}
                   {...player}
@@ -316,48 +357,63 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team, hasAcc
                     router.push(`/account/${player.username}`);
                   }}
                 />
-              );
-            })}
-            {hasAccess ? (
-              <Box>
-                <Box
-                  onClick={handleOpen}
-                  border={"4px solid #6931F9"}
-                  borderRadius={"10px"}
-                  style={{
-                    backgroundColor: "rgba(255, 255, 255, 0.09)",
-                    cursor: "pointer",
-                  }}
-                  height={"18.5vw"}
-                  display="flex"
-                  alignContent={"center"}
-                  flexDirection="column"
-                  component={"div"}
-                  justifyContent="center"
-                >
-                  <Image
-                    src={"/icons/PlayerAdd.svg"}
-                    height={"45px"}
-                    width={"45px"}
+              </div>
+            );
+          })}
+          {isDesktop && (
+            <Slider {...settings}>
+              {playerList.map((player): any => {
+                return (
+                  <Member
+                    key={player.name}
+                    {...player}
+                    onClick={(): any => {
+                      router.push(`/account/${player.username}`);
+                    }}
                   />
-                  <Typography
-                    marginY={2}
-                    color="white"
-                    textTransform={"uppercase"}
-                    fontWeight="700"
-                    fontSize={"17px"}
-                    lineHeight={"18px"}
-                    textAlign="center"
+                );
+              })}
+              {hasAccess ? (
+                <Box>
+                  <Box
+                    onClick={handleOpen}
+                    border={"4px solid #6931F9"}
+                    borderRadius={"10px"}
+                    style={{
+                      backgroundColor: "rgba(255, 255, 255, 0.09)",
+                      cursor: "pointer",
+                    }}
+                    height={"18.5vw"}
+                    display="flex"
+                    alignContent={"center"}
+                    flexDirection="column"
+                    component={"div"}
+                    justifyContent="center"
                   >
-                    Add Player
-                  </Typography>
+                    <Image
+                      src={"/icons/PlayerAdd.svg"}
+                      height={"45px"}
+                      width={"45px"}
+                    />
+                    <Typography
+                      marginY={2}
+                      color="white"
+                      textTransform={"uppercase"}
+                      fontWeight="700"
+                      fontSize={"17px"}
+                      lineHeight={"18px"}
+                      textAlign="center"
+                    >
+                      Add Player
+                    </Typography>
+                  </Box>
                 </Box>
-              </Box>
-            ) : null}
-          </Slider>
+              ) : null}
+            </Slider>
+          )}
         </Box>
       </Box>
-      {/* {!isMobile ? (   */}
+      {isDesktop && (
         <Box>
           <Typography color={"white"} variant={"h5"}>
             Team Graph
@@ -378,7 +434,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team, hasAcc
           </Select>
           <Line options={options} data={data} />
         </Box>
-      {/* // ) : null} */}
+      )}
 
       <Modal
         open={open}

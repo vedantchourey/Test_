@@ -70,7 +70,7 @@ export default function NoobPage(props: Props): JSX.Element {
         >
           {!props.hideHeaders && <NoobHeader />}
           <Box
-            style={{ minHeight: "1040px" }}
+            style={{ minHeight: props.hideChat ? "auto" : "1040px" }}
             component="main"
             sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
           >
