@@ -130,21 +130,17 @@ const Member: React.FC<MemberProp> = ({
             {elo}
           </Typography>
         </div>
-        <img
-            height={100}
-            width={200}
-            alt="avatar"
-            src={profileImage || ""}
-            style={{
-              position: "absolute",
-              width: !isDesktop ? "98%" : "100%",
-              zIndex: -1,
-              cursor: "pointer",
-              height: "64%",
-              left: 0,
-              borderRadius:0,
-            }}
-          />
+        <Avatar
+          src={profileImage || ""}
+          style={{
+            position: "absolute",
+            width: !isDesktop ? "98%" :  "100%",
+            zIndex: -1,
+            cursor: "pointer",
+            height: "64%",
+            borderRadius:0,
+          }}
+        />
         <img
           src={images[findCardType(elo || "0")].src}
           style={{ zIndex: 1, width: "100%", height: "64%" }}
