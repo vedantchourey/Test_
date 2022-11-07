@@ -65,8 +65,7 @@ const TeamListData: React.FC = () => {
   const games = useAppSelector(allGamesSelector);
   const gamesFetchStatus = useAppSelector(gamesFetchStatusSelector);
   const isDesktop = useAppSelector((x) =>
-    isDeviceTypeSelector(x, deviceTypes.desktop)
-  );
+    isDeviceTypeSelector(x, deviceTypes.desktop));
 
   React.useEffect(() => {
     if (gamesFetchStatus !== "idle") return;

@@ -18,7 +18,6 @@ import axios from "axios";
 import { INotifications } from "../../../backend/services/database/models/i-notifications";
 import { getUserProfileImage } from "../../service-clients/image-service-client";
 import SearchIcon from '@mui/icons-material/Search';
-import TextField from '@mui/material/TextField';
 import frontendConfig from "../../utils/config/front-end-config";
 import { ISearchPeopleByUsernameResponse } from "../../service-clients/messages/i-search";
 import { searchPeopleByText } from "../../service-clients/search-service-client";

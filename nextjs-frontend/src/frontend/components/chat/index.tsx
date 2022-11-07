@@ -453,8 +453,7 @@ export default function Chat(props: {
               onChange={(e): any => {
                 setSearch(e.target.value);
                 const names = users.filter((item: any) =>
-                  item.toLowerCase().includes(e.target.value)
-                );
+                  item.toLowerCase().includes(e.target.value));
                 names?.length > 0 ? setUserParam(names[0]) : null;
               }}
             />
@@ -500,8 +499,7 @@ export default function Chat(props: {
             </Typography>
             {c.values
               .filter((i) =>
-                i.channel_name.toLowerCase().match(search.toLowerCase())
-              )
+                i.channel_name.toLowerCase().match(search.toLowerCase()))
               .map((i) => {
                 const findTeam = teamData?.find((t) => t.id === i.other_user);
                 const chatIcon =

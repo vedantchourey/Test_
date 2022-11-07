@@ -35,7 +35,6 @@ export default function NoobPage(props: Props): JSX.Element {
     title,
     children,
     pinChat,
-    forMobileChat
   } = props;
   const [enableChat, setEnableChat] = useState(false);
   const [toggleChat, setToggleChat] = useState(false);

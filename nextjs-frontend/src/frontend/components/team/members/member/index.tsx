@@ -1,4 +1,4 @@
-import { Box, Typography,Avatar } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useState } from "react";
 import bronze from "./images/bronze_Card.png";
 import diamond from "./images/diamond_Card.png";
@@ -7,9 +7,6 @@ import ruby from "./images/ruby_Card.png";
 import silver from "./images/silver_Card.png";
 import Player from "./images/Player.png";
 import { useRouter } from "next/router";
-import { useAppSelector } from "../../../../../../src/frontend/redux-store/redux-store";
-import { isDeviceTypeSelector } from "../../../../../../src/frontend/redux-store/layout/layout-selectors";
-import { deviceTypes } from '../../../../../../src/frontend/redux-store/layout/device-types';
 
 const images = { bronze, diamond, gold, ruby, silver, Player };
 
@@ -51,7 +48,6 @@ const Member: React.FC<MemberProp> = ({
 }) => {
   const [hover, setHover] = useState(false);
   const router=useRouter();
-  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
   return (
     <Box
       onMouseEnter={(): void => {

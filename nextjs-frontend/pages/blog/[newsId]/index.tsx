@@ -43,8 +43,7 @@ export default function NewsView(): JSX.Element {
   const [likersList, setLikersList] = useState<any>(null);
   const [topNews, setTopNews] = useState<any[]>([]);
   const isDesktop = useAppSelector((x) =>
-    isDeviceTypeSelector(x, deviceTypes.desktop)
-  );
+    isDeviceTypeSelector(x, deviceTypes.desktop));
 
   // const [data, setData] = React.useState([]);
 

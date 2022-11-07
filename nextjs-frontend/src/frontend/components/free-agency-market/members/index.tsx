@@ -354,7 +354,7 @@ const TeamMembers: React.FC<{ teamId: string | string[] | undefined; params: any
                       + Watch List
                     </NoobButton>
                   </Box>
-                  <Box textAlign="center"   flex={0.48}>
+                  <Box textAlign="center" flex={0.48}>
                     <NoobButton
                       variant="contained"
                       disabled={loading}
