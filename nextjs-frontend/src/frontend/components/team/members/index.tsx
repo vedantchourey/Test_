@@ -43,9 +43,9 @@ import axios from "axios";
 import { getAuthHeader } from "../../../utils/headers";
 import { useRouter } from "next/router";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
-// import { useAppSelector } from "../../../../../src/frontend/redux-store/redux-store";
-// import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
-// import { deviceTypes } from '../../../../../src/frontend/redux-store/layout/device-types';
+import { useAppSelector } from "../../../../../src/frontend/redux-store/redux-store";
+import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from '../../../../../src/frontend/redux-store/layout/device-types';
 
 export const options = {
   responsive: true,
@@ -302,14 +302,42 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team, hasAcc
     setSelectedTime(item);
   };
 
-  // const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
 
   return (
     <React.Fragment>
       <Box>
-        <Typography color={"white"} variant={"h5"}>
-          Team Members
-        </Typography>
+        {!isDesktop && (
+          <Box mb={2}>
+            <Typography color={"white"} variant={"h5"}>
+              Team Graph
+            </Typography>
+            <Select
+              value={selectedTime}
+              input={<OutlinedInput />}
+              onChange={(e: any): void => changeGraphTime(e.target.value)}
+              sx={{ m: 1 }}
+            >
+              {graphTime.map((item): any => {
+                return (
+                  <MenuItem key={item} value={item}>
+                    {item}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+            <Line options={options} data={data} />
+          </Box>
+        )}
+
+        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+          <Typography color={"white"} variant={"h5"}>
+            Team Members
+          </Typography>
+          <Button style={{ marginLeft: "2px" }} onClick={invitePlayer}>
+            Add Player
+          </Button>
+        </div>
 
         <Box marginY={2} width={"70vw"}>
           <Slider {...settings}>
@@ -363,7 +391,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team, hasAcc
           </Slider>
         </Box>
       </Box>
-      {/* {!isMobile ? (   */}
+      {isDesktop && (
         <Box>
           <Typography color={"white"} variant={"h5"}>
             Team Graph
@@ -384,7 +412,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team, hasAcc
           </Select>
           <Line options={options} data={data} />
         </Box>
-      {/* // ) : null} */}
+      )}
 
       <Modal
         open={open}
