@@ -45,7 +45,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 500,
+  width: "80vw",
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
@@ -621,7 +621,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
   };
 
   return (
-    <Modal open={isModalOpen} onClose={handleClose}>
+    <Modal open={isModalOpen} onClose={handleClose} sx={{width: "95vw" }}>
       <Box sx={style} className={styles.mainModalContainer}>
         <Box className={styles.commentsContainer}>
           <AppBar className={styles.appBar}>

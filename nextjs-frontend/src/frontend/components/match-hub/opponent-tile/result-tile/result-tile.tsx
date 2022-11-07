@@ -69,9 +69,10 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
         props.onMatchHub ? props.onMatchHub(props.data) : null
       }
     >
-      <Grid item xs={12}>
+      <Grid item lg={3} xs={12} textAlign={"center"}>
         <Button
           variant="outlined"
+          fullWidth
           className={styles.resultTileButton}
           style={{ marginRight: "16px" }}
           onClick={(): any =>
@@ -108,7 +109,7 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
         )}
       </Grid>
       {!child ? (
-        <Grid item xs={6}>
+        <Grid item lg={6} xs={12} pt={2} pb={2}>
           <p className={styles.resultTileValue}>
             {props.data.tournament_name} ({name})
           </p>
@@ -120,15 +121,16 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
           </p>
         </Grid>
       ) : (
-        <Grid item xs={12}>
+        <Grid item lg={6} xs={12}>
           {child}
         </Grid>
       )}
 
-      <Grid item xs={12} style={{ display: "flex", justifyContent: "end" }}>
-        <Box textAlign={"right"}>
+      <Grid item lg={3} xs={12} textAlign={"center"}>
+        <Box textAlign={"center"}>
           <Button
             variant="outlined"
+            fullWidth
             className={styles.resultTileButton}
             style={{ marginRight: "16px" }}
             onClick={(): any => {
@@ -160,7 +162,7 @@ const ResultTile: React.FC<ResultTileProps> = (props) => {
           </Button>
           {props.data.opponent2.gameUniqueId && (
             <Typography
-              textAlign={"right"}
+              textAlign={"center"}
               pr={2}
               mt={1}
               color={"rgba(255,255,255,0.5)"}

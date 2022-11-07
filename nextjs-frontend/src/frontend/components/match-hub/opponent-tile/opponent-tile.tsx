@@ -173,8 +173,8 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
       : undefined;
 
   return (
-    <Grid container columns={{ xs: 16, sm: 8, md: 12, lg: 12 }} className={styles.opponentTileContainer}>
-      <Grid item xs={6}>
+    <Grid container className={styles.opponentTileContainer}>
+      <Grid item lg={2} xs={4}>
         <Typography className={styles.opponentTileTitle} textAlign={"left"}>
           Opponent:
         </Typography>
@@ -193,7 +193,7 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
           </span>
         </div>
       </Grid>
-      <Grid item xs={10}>
+      <Grid item lg={3} xs={8} textAlign={"right"}>
         <p className={styles.opponentTileTitle}>Tournament name</p>
         <p className={styles.opponentTileValue}>
           {data.tournament_name} ({name})
@@ -201,7 +201,8 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
       </Grid>
       <Grid
         item
-        xs={16}
+        lg={3}
+        xs={12}
         style={{
           display: "flex",
           flexDirection: "column",
@@ -227,7 +228,7 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
           </span>
         </p>
       </Grid>
-      <Grid item xs={16} style={{ display: "flex", justifyContent: "end" }}>
+      <Grid item lg={4} xs={12} style={{ display: "flex", justifyContent: "center", marginTop: 10 }}>
         <Button
           variant="outlined"
           className={styles.opponentTileButton}

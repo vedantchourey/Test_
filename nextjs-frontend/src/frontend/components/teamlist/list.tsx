@@ -64,7 +64,9 @@ const TeamListData: React.FC = () => {
   const appDispatch = useAppDispatch();
   const games = useAppSelector(allGamesSelector);
   const gamesFetchStatus = useAppSelector(gamesFetchStatusSelector);
-  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
+  const isDesktop = useAppSelector((x) =>
+    isDeviceTypeSelector(x, deviceTypes.desktop)
+  );
 
   React.useEffect(() => {
     if (gamesFetchStatus !== "idle") return;
@@ -216,51 +218,47 @@ const TeamListData: React.FC = () => {
                           alignItems={"center"}
                           justifyContent={"space-between"}
                         >
-                          <Box
-                            display={"flex"}
-                            alignItems={"center"}
-                            flex={0.3}
-                          >
-                            {teamLogo ? (
-                              <img
-                                src={teamLogo || ""}
-                                width={"45px"}
-                                height={"45px"}
-                                style={{ borderRadius: 65 }}
-                              />
-                            ) : (
-                              <GroupIcon
-                                style={{
-                                  borderRadius: 65,
-                                  background: "rgba(0,0,0,0.4)",
-                                  height: 45,
-                                  width: 45,
-                                }}
-                              />
-                            )}
-                            <Typography marginLeft={2} marginRight={2} fontSize={10}>
-                              {item.name}
-                            </Typography>
-                          </Box>
-                          <Box
-                            display={"flex"}
-                            alignItems={"center"}
-                            flex={0.2}
-                          >
-                            <Typography marginLeft={2} marginRight={2} fontSize={10}>
-                              {
-                                games.find((i) => i.id === item.gameId)
-                                  ?.displayName
-                              }
-                            </Typography>
-                          </Box>
-                          <Box
-                            mr={2}
-                            textAlign={"left"}
-                            width={100}
-                            display={"flex"}
-                            justifyContent={"left"}
-                          >
+                          <Box display={"flex"} alignItems={"center"} flex={1}>
+                            <Box display={"flex"} flex={1}>
+                              {teamLogo ? (
+                                <img
+                                  src={teamLogo || ""}
+                                  width={"45px"}
+                                  height={"45px"}
+                                  style={{ borderRadius: 65 }}
+                                />
+                              ) : (
+                                <GroupIcon
+                                  style={{
+                                    borderRadius: 65,
+                                    background: "rgba(0,0,0,0.4)",
+                                    height: 45,
+                                    width: 45,
+                                  }}
+                                />
+                              )}
+                              <Box>
+                                <Typography
+                                  marginLeft={2}
+                                  marginRight={2}
+                                  fontSize={10}
+                                >
+                                  {item.name}
+                                </Typography>
+
+                                <Typography
+                                  marginLeft={2}
+                                  marginRight={2}
+                                  fontSize={10}
+                                >
+                                  {
+                                    games.find((i) => i.id === item.gameId)
+                                      ?.displayName
+                                  }
+                                </Typography>
+                              </Box>
+                            </Box>
+
                             <AvatarGroup>
                               {item.players.slice(0, 3).map((p: any) => {
                                 const image = p.avatarUrl

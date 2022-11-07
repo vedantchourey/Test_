@@ -76,12 +76,30 @@ export default function Product(props: any): JSX.Element {
   // }
 
   return (
-    <Box className={isDesktop ? styles.container : windowSize.innerWidth <= 320 ? styles.smallerMobileContainer : windowSize.innerWidth >= 320 && windowSize.innerWidth <= 375 ? styles.midMobileContainer : styles.bigMobileContainer }>
+    <Box
+      className={
+        isDesktop
+          ? styles.container
+          : windowSize.innerWidth <= 320
+          ? styles.smallerMobileContainer
+          : windowSize.innerWidth >= 320 && windowSize.innerWidth <= 375
+          ? styles.midMobileContainer
+          : styles.bigMobileContainer
+      }
+    >
       <Image
         src={props.img === "CREDIT" ? "/images/coin.jpg" : props.img}
         className={commonStyles.fillImage}
-        height={isDesktop ? "220px" : "120px"}
-        width={isDesktop ? "350px" : windowSize.innerWidth <= 320 ? "230px" : windowSize.innerWidth >= 320 && windowSize.innerWidth <= 375 ? "300px" : "350px"}
+        height={isDesktop ? "220px" : "210px"}
+        width={
+          isDesktop
+            ? "350px"
+            : windowSize.innerWidth <= 320
+            ? "230px"
+            : windowSize.innerWidth >= 320 && windowSize.innerWidth <= 375
+            ? "300px"
+            : "350px"
+        }
       />
       <Typography
         className={styles.text}
@@ -92,7 +110,7 @@ export default function Product(props: any): JSX.Element {
       </Typography>
       <Typography
         className={styles.text}
-        style={{ color: "rgba(255, 255, 255, 0.4)" }}
+        style={{ color: "rgba(255, 255, 255, 0.4)", textAlign: "justify" }}
       >
         {props.description}
       </Typography>
