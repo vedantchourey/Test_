@@ -7,6 +7,9 @@ import ruby from "./images/ruby_Card.png";
 import silver from "./images/silver_Card.png";
 import Player from "./images/Player.png";
 import { useRouter } from "next/router";
+import { useAppSelector } from "../../../../../../src/frontend/redux-store/redux-store";
+import { isDeviceTypeSelector } from "../../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from '../../../../../../src/frontend/redux-store/layout/device-types';
 
 const images = { bronze, diamond, gold, ruby, silver, Player };
 
@@ -48,6 +51,7 @@ const Member: React.FC<MemberProp> = ({
 }) => {
   const [hover, setHover] = useState(false);
   const router=useRouter();
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
   return (
     <Box
       onMouseEnter={(): void => {
@@ -64,8 +68,8 @@ const Member: React.FC<MemberProp> = ({
         <div
           style={{
             position: "absolute",
-            zIndex: 1000,
-            top: "60.8%",
+            zIndex: 1,
+            top: !isDesktop ? "58.5%" : "60.8%",
             left: "27%",
             width: "45%",
             alignItems: "center",
@@ -79,7 +83,7 @@ const Member: React.FC<MemberProp> = ({
           style={{
             display: "flex",
             position: "absolute",
-            zIndex: 1000,
+            zIndex: 1,
             top: "74%",
             left: "20%",
             width: "17%",
@@ -96,7 +100,7 @@ const Member: React.FC<MemberProp> = ({
           style={{
             display: "flex",
             position: "absolute",
-            zIndex: 1000,
+            zIndex: 1,
             top: "74%",
             left: "45%",
             width: "17%",
@@ -113,7 +117,7 @@ const Member: React.FC<MemberProp> = ({
           style={{
             display: "flex",
             position: "absolute",
-            zIndex: 1000,
+            zIndex: 1,
             top: "74%",
             left: "70%",
             width: "17%",
@@ -126,17 +130,21 @@ const Member: React.FC<MemberProp> = ({
             {elo}
           </Typography>
         </div>
-        <Avatar
-          src={profileImage || ""}
-          style={{
-            position: "absolute",
-            width: "100%",
-            zIndex: -1,
-            cursor: "pointer",
-            height: "64%",
-            borderRadius:0,
-          }}
-        />
+        <img
+            height={100}
+            width={200}
+            alt="avatar"
+            src={profileImage || ""}
+            style={{
+              position: "absolute",
+              width: !isDesktop ? "98%" : "100%",
+              zIndex: -1,
+              cursor: "pointer",
+              height: "64%",
+              left: 0,
+              borderRadius:0,
+            }}
+          />
         <img
           src={images[findCardType(elo || "0")].src}
           style={{ zIndex: 1, width: "100%", height: "64%" }}
