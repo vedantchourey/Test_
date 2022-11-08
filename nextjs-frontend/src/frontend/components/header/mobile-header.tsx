@@ -285,8 +285,9 @@ export default function MobileDrawer(): JSX.Element {
                 size="small"
                 placeholder="Search anything..."
                 sx={{ p: 1, width: "85%" }}
+                autoComplete={"off"}
                 onChange={(e): any => {
-                  searchByUserName(e.target.value);
+                  searchByUserName(e.target.value.toLowerCase());
                 }}
               />
               <IconButton sx={{ mr: 1 }}>

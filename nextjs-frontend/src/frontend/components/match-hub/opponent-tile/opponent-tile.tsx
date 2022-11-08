@@ -12,6 +12,8 @@ import { userProfileSelector } from "../../../redux-store/authentication/authent
 import { useAppSelector } from "../../../redux-store/redux-store";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import { getRoundName } from "../../../services/get-round-name";
+import { deviceTypes } from "../../../redux-store/layout/device-types";
+import { isDeviceTypeSelector } from "../../../redux-store/layout/layout-selectors";
 
 interface OpponentTileProps {
   onMatchHub?: (opponentData: IMatchHubData) => void;
@@ -172,9 +174,12 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
           .publicURL
       : undefined;
 
+      const isDesktop = useAppSelector((x) =>
+    isDeviceTypeSelector(x, deviceTypes.desktop));
+
   return (
     <Grid container className={styles.opponentTileContainer}>
-      <Grid item lg={2} xs={4}>
+      <Grid item lg={2} xs={12}>
         <Typography className={styles.opponentTileTitle} textAlign={"left"}>
           Opponent:
         </Typography>
@@ -193,7 +198,7 @@ const OpponentTile: React.FC<OpponentTileProps> = ({
           </span>
         </div>
       </Grid>
-      <Grid item lg={3} xs={8} textAlign={"right"}>
+      <Grid item lg={3} xs={12} textAlign={isDesktop ? "right" : "center"}>
         <p className={styles.opponentTileTitle}>Tournament name</p>
         <p className={styles.opponentTileValue}>
           {data.tournament_name} ({name})

@@ -69,15 +69,24 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
     setSelectedPlatform(matchingPlatform || null);
   }, [platforms]);
 
-  const contactOn = ():void=>{
-    if(data.info?.contactUrl){
+  const contactOn = (): void => {
+    if (data.info?.contactUrl) {
       window.open(data.info?.contactUrl);
     }
-  }
+  };
 
-  console.log('selectedPlatform?.displayName -> ', selectedPlatform?.displayName)
+  const matchingPlatform = platforms.filter(
+    (x) => x.id === data.settings?.platform
+  )[0];
 
-  const totalSlots =data?.bracketsMetadata?.playersLimit || 0;
+
+
+  console.warn(
+    "selectedPlatform?.displayName -> ",
+    selectedPlatform?.displayName
+  );
+
+  const totalSlots = data?.bracketsMetadata?.playersLimit || 0;
   const currentSlot = (data?.playerList || []).length;
 
   const isDesktop = useAppSelector((x) =>
@@ -225,7 +234,7 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                     style={!isDesktop ? { fontSize: 10 } : {}}
                   >
                     {platforms.length
-                      ? selectedPlatform?.displayName || "-"
+                      ? matchingPlatform?.displayName || "-"
                       : ""}
                   </Typography>
                 </Grid>

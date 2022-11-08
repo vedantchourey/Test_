@@ -302,7 +302,11 @@ const CommentsModal = (props: IProps): JSX.Element => {
                             {new Date(data.createdAt).toDateString()}
                           </Typography>
                           {isEditing && (
-                            <IconButton size="small" onClick={editComment} style={{ marginLeft: 3 }}>
+                            <IconButton
+                              size="small"
+                              onClick={editComment}
+                              style={{ marginLeft: 3 }}
+                            >
                               <SaveIcon fontSize={"small"} />
                             </IconButton>
                           )}
@@ -318,9 +322,42 @@ const CommentsModal = (props: IProps): JSX.Element => {
                           color="white"
                           // sx={{ textTransform: "capitalize" }}
                         >
-                          <Linkify>{commentValues.comment}</Linkify>
+                          <Linkify>
+                            {commentValues.comment.split(" ").map((part) =>
+                              URL_REGEX.test(part) ? (
+                                <a href={part} target="_blank" rel="noreferrer">
+                                  {part}{" "}
+                                </a>
+                              ) : part.match("@") ? (
+                                <span
+                                  onClick={(): void => {
+                                    router.push(
+                                      `/account/${part.substring(1)}`
+                                    );
+                                  }}
+                                  style={{
+                                    color: "#6932F9",
+                                    marginLeft: "2px",
+                                    marginRight: "2px",
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  {part}{" "}
+                                </span>
+                              ) : (
+                                part + " "
+                              ))}
+                          </Linkify>
                         </Typography>
-                        <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", marginTop: 3 }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "flex-start",
+                            marginTop: 3,
+                          }}
+                        >
                           <img
                             src={
                               data.isLiked
@@ -338,7 +375,11 @@ const CommentsModal = (props: IProps): JSX.Element => {
                             height={23}
                             width={23}
                           />
-                          <Typography variant="subtitle2" color="#575265" ml={1}>
+                          <Typography
+                            variant="subtitle2"
+                            color="#575265"
+                            ml={1}
+                          >
                             {data.totalLikes}
                           </Typography>
                           {user?.id === data.commentOwner.id && (
@@ -465,12 +506,18 @@ const CommentsModal = (props: IProps): JSX.Element => {
                           <Typography variant={"body1"} color="white">
                             {`${data.commentOwner.username}`}
                           </Typography>
-                          <div style={{ display: "flex", flexDirection: "row" }}>
+                          <div
+                            style={{ display: "flex", flexDirection: "row" }}
+                          >
                             <Typography variant="subtitle2" color="#575265">
                               {new Date(data.createdAt).toDateString()}
                             </Typography>
                             {isEditing && (
-                              <IconButton size="small" onClick={editComment} style={{ marginLeft: 3 }}>
+                              <IconButton
+                                size="small"
+                                onClick={editComment}
+                                style={{ marginLeft: 3 }}
+                              >
                                 <SaveIcon fontSize={"small"} />
                               </IconButton>
                             )}
@@ -486,33 +533,46 @@ const CommentsModal = (props: IProps): JSX.Element => {
                             color="white"
                             // sx={{ textTransform: "capitalize" }}
                           >
-                            {/* <Linkify>{commentValues.comment}</Linkify> */}
-                            {commentValues.comment.split(" ").map((part) =>
-                              URL_REGEX.test(part) ? (
-                                <a href={part} target="_blank" rel="noreferrer">
-                                  {part}{" "}
-                                </a>
-                              ) : part.match("@") ? (
-                                <span
-                                  onClick={(): void => {
-                                    router.push(
-                                      `/account/${part.substring(1)}`
-                                    );
-                                  }}
-                                  style={{
-                                    color: "#6932F9",
-                                    marginLeft: "2px",
-                                    marginRight: "2px",
-                                    cursor: "pointer",
-                                  }}
-                                >
-                                  {part}{" "}
-                                </span>
-                              ) : (
-                                part + " "
-                              ))}
+                            <Linkify>
+                              {commentValues.comment.split(" ").map((part) =>
+                                URL_REGEX.test(part) ? (
+                                  <a
+                                    href={part}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    {part}{" "}
+                                  </a>
+                                ) : part.match("@") ? (
+                                  <span
+                                    onClick={(): void => {
+                                      router.push(
+                                        `/account/${part.substring(1)}`
+                                      );
+                                    }}
+                                    style={{
+                                      color: "#6932F9",
+                                      marginLeft: "2px",
+                                      marginRight: "2px",
+                                      cursor: "pointer",
+                                    }}
+                                  >
+                                    {part}{" "}
+                                  </span>
+                                ) : (
+                                  part + " "
+                                ))}
+                            </Linkify>
                           </Typography>
-                          <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", marginTop: 3 }}>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              alignItems: "center",
+                              justifyContent: "flex-start",
+                              marginTop: 3,
+                            }}
+                          >
                             <img
                               src={
                                 data.isLiked
@@ -530,16 +590,26 @@ const CommentsModal = (props: IProps): JSX.Element => {
                               height={23}
                               width={23}
                             />
-                            <Typography variant="subtitle2" color="#575265" ml={1}>
+                            <Typography
+                              variant="subtitle2"
+                              color="#575265"
+                              ml={1}
+                            >
                               {data.totalLikes}
                             </Typography>
                             {user?.id === data.commentOwner.id && (
                               <Box ml={1}>
-                                <IconButton onClick={removeComment} size="small">
+                                <IconButton
+                                  onClick={removeComment}
+                                  size="small"
+                                >
                                   <DeleteIcon fontSize={"small"} />
                                 </IconButton>
                                 {isEditing ? (
-                                  <IconButton size="small" onClick={editComment}>
+                                  <IconButton
+                                    size="small"
+                                    onClick={editComment}
+                                  >
                                     <SaveIcon fontSize={"small"} />
                                   </IconButton>
                                 ) : (
@@ -554,10 +624,15 @@ const CommentsModal = (props: IProps): JSX.Element => {
                             )}
                             <ReplyIcon
                               className={styles.replay}
-                              style={{ color: "#575265", margin: "0 5px 3px 5px" }}
+                              style={{
+                                color: "#575265",
+                                margin: "0 5px 3px 5px",
+                              }}
                               onClick={(): void => setIsReply(!isReply)}
                             />
-                            <Typography style={{ color: "#575265" }}>{replyCount}</Typography>
+                            <Typography style={{ color: "#575265" }}>
+                              {replyCount}
+                            </Typography>
                           </div>
                         </div>
                       ) : (
