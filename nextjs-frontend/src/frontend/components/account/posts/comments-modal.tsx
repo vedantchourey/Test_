@@ -42,6 +42,10 @@ import Linkify from 'react-linkify';
 import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
 import { deviceTypes } from '../../../../../src/frontend/redux-store/layout/device-types';
 
+// eslint-disable-next-line no-useless-escape
+const URL_REGEX =
+  /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&//=]*)/;
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -343,7 +347,30 @@ const CommentsModal = (props: IProps): JSX.Element => {
                           color="white"
                           // sx={{ textTransform: "capitalize" }}
                         >
-                          <Linkify>{commentValues.comment}</Linkify>
+                          {/* <Linkify>{commentValues.comment}</Linkify> */}
+                          {commentValues.comment.split(" ").map((part) =>
+                            URL_REGEX.test(part) ? (
+                              <a href={part} target="_blank" rel="noreferrer">
+                                {part}{" "}
+                              </a>
+                            ) : part.match("@") ? (
+                              <span
+                                onClick={(): void => {
+                                  router.push(`/account/${part.substring(1)}`);
+                                }}
+                                style={{
+                                  color: "#6932F9",
+                                  marginLeft: "2px",
+                                  marginRight: "2px",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                {part}{" "}
+                              </span>
+                            ) : (
+                              part + " "
+                            )
+                          )}
                           {/* {commentValues.comment.split(" ").map((part) =>
                             part.match("@") ? (
                               <span
@@ -361,7 +388,8 @@ const CommentsModal = (props: IProps): JSX.Element => {
                               </span>
                             ) : (
                               part + " "
-                            ))} */}
+                            )
+                          )} */}
                         </Typography>
                       </Box>
                     ) : (
@@ -519,7 +547,11 @@ const CommentsModal = (props: IProps): JSX.Element => {
                           >
                             {/* <Linkify>{commentValues.comment}</Linkify> */}
                             {commentValues.comment.split(" ").map((part) =>
-                              part.match("@") ? (
+                              URL_REGEX.test(part) ? (
+                                <a href={part} target="_blank" rel="noreferrer">
+                                  {part}{" "}
+                                </a>
+                              ) : part.match("@") ? (
                                 <span
                                   onClick={(): void => {
                                     router.push(
@@ -537,7 +569,8 @@ const CommentsModal = (props: IProps): JSX.Element => {
                                 </span>
                               ) : (
                                 part + " "
-                              ))}
+                              )
+                            )}
                           </Typography>
                           <Box
                             display={"flex"}
@@ -657,7 +690,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
               </IconButton>
             </Toolbar>
           </AppBar>
-          <Box mt={12} className={styles.renderPosts}>
+          <Box mt={1} className={styles.renderPosts}>
             {_renderComments()}
           </Box>
           <Box className={styles.commentInputCotainer}>
@@ -717,7 +750,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
                           src={suggestion.avatarUrl}
                           style={{ height: 20, width: 20, marginRight: 5 }}
                         />
-                        <div className="user">{highlightedDisplay}</div>
+                        <div className="user" style={{color: "#FFF"}}>{highlightedDisplay}</div>
                       </Box>
                     )}
                     style={{ backgroundColor: "#6931F9" }}
