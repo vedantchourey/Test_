@@ -66,12 +66,12 @@ export interface Gameinfo {
   user_id: string;
   created_at: string;
   userDetails: any;
-  loss:any;
-  lost:any;
-  won:any;
-  name:any;
-  teamLogo:any;
-  avatarUrl:any;
+  loss: any;
+  lost: any;
+  won: any;
+  name: any;
+  teamLogo: any;
+  avatarUrl: any;
 }
 
 const imagedata: any = {
@@ -91,8 +91,8 @@ const imagedata: any = {
 
 const Leaderboard = (): JSX.Element => {
   const [leaderboardgamedata, setData] = React.useState<Gameinfo[]>([]);
-  const router=useRouter();
-  const [isTeam,setIsTeam]=React.useState<boolean>(false);
+  const router = useRouter();
+  const [isTeam, setIsTeam] = React.useState<boolean>(false);
 
   const getleaderboardgamedata = async (gameId: string): Promise<void> => {
     try {
@@ -122,7 +122,7 @@ const Leaderboard = (): JSX.Element => {
     if (games.length) {
       getleaderboardgamedata(games[0].id);
     }
-  }, [games,isTeam]);
+  }, [games, isTeam]);
 
   React.useEffect(() => {
     if (gamesFetchStatus !== "idle") return;
@@ -130,7 +130,8 @@ const Leaderboard = (): JSX.Element => {
   }, [appDispatch, gamesFetchStatus]);
 
   const isDesktop = useAppSelector((x) =>
-    isDeviceTypeSelector(x, deviceTypes.desktop));
+    isDeviceTypeSelector(x, deviceTypes.desktop)
+  );
 
   return (
     <NoobPage
@@ -142,7 +143,11 @@ const Leaderboard = (): JSX.Element => {
           <Heading divider heading={"LEADERBOARD"} />
           <Box
             mt={5}
-            sx={isDesktop ? { maxWidth: "1000px", marginLeft: 4 } : { maxWidth: "290px" }}
+            sx={
+              isDesktop
+                ? { maxWidth: "73vw", marginLeft: 4 }
+                : { maxWidth: "85vw" }
+            }
             display={"flex"}
             flexWrap={"nowrap"}
             overflow={"scroll"}
@@ -179,8 +184,10 @@ const Leaderboard = (): JSX.Element => {
             <Grid
               container
               spacing={{ lg: 2 }}
-              columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}
-              className={isDesktop ? styles.mainContainer : styles.mainContainerMobile}
+              columns={{ xs: 12, sm: 12, md: 12, lg: 12 }}
+              className={
+                isDesktop ? styles.mainContainer : styles.mainContainerMobile
+              }
             >
               {leaderboardgamedata
                 ?.sort(function (a, b) {
@@ -320,13 +327,21 @@ const Leaderboard = (): JSX.Element => {
                           )}
                         </Box>
 
-                        <Box style={{ marginLeft: !isDesktop ? "20px" : "45px" }}>
+                        <Box
+                          style={{
+                            marginLeft: !isDesktop ? "20px" : "45px",
+                            flex: 1,
+                          }}
+                        >
                           <Box className={styles.box1}>
                             <Typography className={styles.text1}>
                               {isTeam ? item.name : item?.userDetails?.username}
                             </Typography>
                             <Box className={styles.box2}>
-                              <Typography className={styles.text2}>
+                              <Typography
+                                className={styles.text2}
+                                style={{ width: "60%" }}
+                              >
                                 ELO RATING
                               </Typography>
                               <Button variant="text" className={styles.button1}>
@@ -358,11 +373,8 @@ const Leaderboard = (): JSX.Element => {
                 })}
             </Grid>
           }
-          <div style={{ padding: "10px" }}>
-            <TableContainer
-              component={Paper}
-              className={styles.mainTable}
-            >
+          <div>
+            <TableContainer component={Paper} className={styles.mainTable}>
               <Table stickyHeader>
                 <TableHead>
                   <TableRow
@@ -389,7 +401,7 @@ const Leaderboard = (): JSX.Element => {
                     <TableCell style={{ fontSize: !isDesktop ? 10 : 15 }}>
                       Wins
                     </TableCell>
-                    {isDesktop && <TableCell>Elo Rating</TableCell>}
+                    <TableCell>Elo Rating</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody
@@ -428,7 +440,7 @@ const Leaderboard = (): JSX.Element => {
                           }}
                         >
                           <TableCell align="center" component="th" scope="row">
-                            {idx + (isDesktop ? 4 : 1)}
+                            {idx + 4}
                             <sup>th</sup>
                           </TableCell>
                           <TableCell>
@@ -479,9 +491,7 @@ const Leaderboard = (): JSX.Element => {
                           <TableCell align="center" component="th" scope="row">
                             {isTeam ? item.won : parseInt(item.won)}
                           </TableCell>
-                          {isDesktop && (
-                            <TableCell>{item.elo_rating}</TableCell>
-                          )}
+                          <TableCell>{item.elo_rating}</TableCell>
                         </TableRow>
                       );
                     })}

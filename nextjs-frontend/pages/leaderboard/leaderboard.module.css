@@ -2,7 +2,9 @@
 	padding: 10px;
 }
 .mainContainerMobile {
-	padding: 50px;
+	padding: 0px;
+	display: flex;
+	justify-content: center;
 }
 .container {
 	width: 410px;
@@ -83,21 +85,24 @@
 	font-size: 11px
 }
 .box1 {
+	width: 95%;
 	flex-direction: column;
 	display: flex;
 	justify-content: center;
 }
 .box2 {
+	width: 95%;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	width: 160px
+	
 }
 .box3 {
+	width: 98%;
 	align-items: center;
 	display: flex;
 	justify-content: space-between;
-	width: 100px
+	
 }
 .box4 {
 	width: 26px;
@@ -110,9 +115,11 @@
 }
 .mainTable {
 	border-radius: 0px;
-	margin: 30px 0px 40px 0px;
+	margin-top: 10px;
 	height: auto;
 	max-height: 70vh;
+	overflow: scroll;
+	max-width: 82vw;
 }
 .alice-carousel__dots {
 	display: none !important;

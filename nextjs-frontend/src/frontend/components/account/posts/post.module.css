@@ -107,9 +107,10 @@
 .renderPosts {
     display: flex;
     flex-direction: column-reverse;
-    height: 430px;
+    height: 480px;
     overflow: auto;
-    margin-top: 70px !important;
+    margin-top: 10px !important;
+    margin-bottom: 20px !important;
 }
 .renderPosts::-webkit-scrollbar {
     width: 8px;

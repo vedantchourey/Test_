@@ -42,6 +42,10 @@ import Linkify from 'react-linkify';
 import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
 import { deviceTypes } from '../../../../../src/frontend/redux-store/layout/device-types';
 
+// eslint-disable-next-line no-useless-escape
+const URL_REGEX =
+  /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&//=]*)/;
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -353,7 +357,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
                         <Typography
                           variant="body2"
                           color="white"
-                          sx={{ textTransform: "capitalize" }}
+                          // sx={{ textTransform: "capitalize" }}
                         >
                           <Linkify>{commentValues.comment}</Linkify>
                         </Typography>
@@ -521,11 +525,15 @@ const CommentsModal = (props: IProps): JSX.Element => {
                           <Typography
                             variant="body2"
                             color="white"
-                            sx={{ textTransform: "capitalize" }}
+                            // sx={{ textTransform: "capitalize" }}
                           >
                             {/* <Linkify>{commentValues.comment}</Linkify> */}
                             {commentValues.comment.split(" ").map((part) =>
-                              part.match("@") ? (
+                              URL_REGEX.test(part) ? (
+                                <a href={part} target="_blank" rel="noreferrer">
+                                  {part}{" "}
+                                </a>
+                              ) : part.match("@") ? (
                                 <span
                                   onClick={(): void => {
                                     router.push(
@@ -543,7 +551,8 @@ const CommentsModal = (props: IProps): JSX.Element => {
                                 </span>
                               ) : (
                                 part + " "
-                              ))}
+                              )
+                            )}
                           </Typography>
                           <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", marginTop: 3 }}>
                             <img
@@ -627,7 +636,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
                             onClick={(): void => {
                               setAddReply(true);
                             }}
-                            variant="contained"
+                            variant="text"
                           >
                             Add Reply
                           </Button>
@@ -696,7 +705,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
               </IconButton>
             </Toolbar>
           </AppBar>
-          <Box mt={12} className={styles.renderPosts}>
+          <Box mt={1} className={styles.renderPosts}>
             {_renderComments()}
           </Box>
           <Box className={styles.commentInputCotainer}>
@@ -756,7 +765,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
                           src={suggestion.avatarUrl}
                           style={{ height: 20, width: 20, marginRight: 5 }}
                         />
-                        <div className="user">{highlightedDisplay}</div>
+                        <div className="user" style={{color: "#FFF"}}>{highlightedDisplay}</div>
                       </Box>
                     )}
                     style={{ backgroundColor: "#6931F9" }}
@@ -787,7 +796,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
                   variant={"contained"}
                   style={{
                     borderRadius: 99999,
-                    textTransform: "capitalize",
+                    // textTransform: "capitalize",
                   }}
                   onClick={onClickCreateComment}
                 >
