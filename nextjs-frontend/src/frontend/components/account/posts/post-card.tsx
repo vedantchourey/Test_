@@ -10,6 +10,7 @@ import {
   Button,
   Grid,
   Popover,
+  Dialog,
 } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
@@ -37,7 +38,7 @@ import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import frontendConfig from "../../../utils/config/front-end-config";
 import { useRouter } from "next/router";
 // @ts-ignore: Unreachable code error
-import Linkify from 'react-linkify';
+import Linkify from "react-linkify";
 
 interface IProps {
   data: IPostsResponse;
@@ -74,6 +75,7 @@ const PostCard = (props: IProps): JSX.Element => {
   const handleCloseComments = (): void => setOpenCommentsModal(false);
   const handleCloseMenu = (): void => setShowMenu(false);
   const handleToggleMenu = (): void => setShowMenu((pre) => !pre);
+  const [modalImage, setModalImage] = useState("");
 
   const fetchUsers = async (post_id: string): Promise<void> => {
     const likeLists: any = await frontendSupabase
@@ -128,15 +130,16 @@ const PostCard = (props: IProps): JSX.Element => {
         totalLikes: values.totalLikes + 1,
       };
     });
-    likePost(postId).then(async()=>{
-      if(values.postOwner.id!==user?.id){
-      await frontendSupabase.from("notifications").insert({
-        type: "LIKED",
-        user_id: values.postOwner.id,
-        sent_by: user?.id,
-        data:{redirect:`/social/${postId}`},
-        message: `${user?.username} liked your post.`,
-      })}
+    likePost(postId).then(async () => {
+      if (values.postOwner.id !== user?.id) {
+        await frontendSupabase.from("notifications").insert({
+          type: "LIKED",
+          user_id: values.postOwner.id,
+          sent_by: user?.id,
+          data: { redirect: `/social/${postId}` },
+          message: `${user?.username} liked your post.`,
+        });
+      }
     });
   };
 
@@ -225,7 +228,7 @@ const PostCard = (props: IProps): JSX.Element => {
         .getPublicUrl(imgUrl)
     : undefined;
 
-    const router = useRouter()
+  const router = useRouter();
 
   return (
     <>
@@ -449,7 +452,11 @@ const PostCard = (props: IProps): JSX.Element => {
                         </a>
                       </div>
                     ) : (
-                      <div>
+                      <div
+                        onClick={() =>
+                          setModalImage(postImageUrl?.publicURL || "")
+                        }
+                      >
                         <img
                           src={postImageUrl?.publicURL as string}
                           style={{
@@ -574,6 +581,18 @@ const PostCard = (props: IProps): JSX.Element => {
           postOwnerId={values.postOwner.id}
           onAddNewComment={(): any => fetchPostData()}
         />
+        <Dialog
+          open={Boolean(modalImage)}
+          onClose={(): void => setModalImage("")}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+          maxWidth={"lg"}
+        >
+          <img
+            src={modalImage}
+            style={{ height: "80vh", width: "100%", objectFit: "contain" }}
+          />
+        </Dialog>
       </Grid>
       <Snackbar
         open={open.report}

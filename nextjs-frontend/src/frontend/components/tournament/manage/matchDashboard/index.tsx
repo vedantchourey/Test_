@@ -126,11 +126,10 @@ const MatchDashboard: React.FC = (): JSX.Element => {
       })
       .filter((m: any) => m.round_id === selectedRound)
       .filter(
-        (m: any) =>
-          (!m.opponent1.is_checked_in || !m.opponent2.is_checked_in)
-          // &&
-          // !m.opponent1.result &&
-          // !m.opponent2.result
+        (m: any) => !m.opponent1.is_checked_in || !m.opponent2.is_checked_in
+        // &&
+        // !m.opponent1.result &&
+        // !m.opponent2.result
       );
 
     const setResult: any[] = findFirstRoundMatch.map((m) => {
@@ -172,7 +171,8 @@ const MatchDashboard: React.FC = (): JSX.Element => {
             },
             { headers: headers }
           )
-          .catch((err) => console.warn(err)))
+          .catch((err) => console.warn(err))
+      )
     );
     fetchAllDetails();
     alert("Auto seeding completed");
@@ -209,8 +209,8 @@ const MatchDashboard: React.FC = (): JSX.Element => {
       );
 
     const setResult: any[] = findFirstRoundMatch.map((m) => {
-      const noHavePlayers = !m.opponent2?.player && !m.opponent1?.player
-      
+      const noHavePlayers = !m.opponent2?.player && !m.opponent1?.player;
+
       return {
         ...m,
         match_id: m.id,
@@ -223,13 +223,16 @@ const MatchDashboard: React.FC = (): JSX.Element => {
           score: noHavePlayers ? 1 : !m.opponent1?.player ? 0 : 1,
           result: noHavePlayers ? "win" : !m.opponent1?.player ? "loss" : "win",
           user_id: m.opponent1.player,
-          
         },
         opponent2: {
           id: m.opponent2.id,
           position: m.opponent2.position,
           score: noHavePlayers ? 0 : !m.opponent2?.player ? 0 : 1,
-          result: noHavePlayers ? "loss" : !m.opponent2?.player ? "loss" : "win",
+          result: noHavePlayers
+            ? "loss"
+            : !m.opponent2?.player
+            ? "loss"
+            : "win",
           user_id: m.opponent2.player,
         },
       };
@@ -248,7 +251,8 @@ const MatchDashboard: React.FC = (): JSX.Element => {
             },
             { headers: headers }
           )
-          .catch((err) => console.warn(err)))
+          .catch((err) => console.warn(err))
+      )
     );
     fetchAllDetails();
     alert("Auto seeding completed");
@@ -321,7 +325,8 @@ const MatchDashboard: React.FC = (): JSX.Element => {
             },
             { headers: headers }
           )
-          .catch((err) => console.warn(err)))
+          .catch((err) => console.warn(err))
+      )
     );
     fetchAllDetails();
     alert("Auto seeding completed");
@@ -821,8 +826,12 @@ const MatchDashboard: React.FC = (): JSX.Element => {
         onClose={(): void => toggle("")}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        maxWidth={"lg"}
       >
-        <img height={"70%"} src={image} />
+        <img
+          src={image}
+          style={{ height: "80vh", width: "100%", objectFit: "contain" }}
+        />
       </Dialog>
       <Box display="flex" justifyContent={"flex-end"}>
         <Button variant="contained"> Send </Button>
