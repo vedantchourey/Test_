@@ -51,7 +51,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "80vw",
+  width: "50vw",
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
@@ -292,106 +292,76 @@ const CommentsModal = (props: IProps): JSX.Element => {
                       justifyContent: "space-between",
                     }}
                   >
-                    <Box sx={{ display: "inline-flex", flex: "1" }}>
-                      <Typography variant={"body1"} color="white">
-                        {`${data.commentOwner.username}`}
-                      </Typography>
-                      <Typography variant="subtitle2" color="#575265" ml={1}>
-                        {new Date(data.createdAt).toDateString()}
-                      </Typography>
-                      <img
-                        src={
-                          data.isLiked
-                            ? "/icons/heart-filled.svg"
-                            : "/icons/heart.svg"
-                        }
-                        alt="icon"
-                        onClick={(): any => {
-                          if (data.isLiked) {
-                            unLikeComment(data.id);
-                          } else {
-                            likeComment(data.id, data.commentOwner.id);
-                          }
-                        }}
-                        style={{ paddingLeft: "12px" }}
-                      />
-                      <Typography variant="subtitle2" color="#575265" ml={1}>
-                        {data.totalLikes}
-                      </Typography>
-                    </Box>
-                    {user?.id === data.commentOwner.id && (
-                      <Box>
-                        <IconButton onClick={removeComment} size="small">
-                          <DeleteIcon fontSize={"small"} />
-                        </IconButton>
-                        {isEditing ? (
-                          <IconButton size="small" onClick={editComment}>
-                            <SaveIcon fontSize={"small"} />
-                          </IconButton>
-                        ) : (
-                          <IconButton
-                            size="small"
-                            onClick={(): void => setIsEditing(true)}
-                          >
-                            <EditIcon fontSize={"small"} />
-                          </IconButton>
-                        )}
-                      </Box>
-                    )}
+                    <div style={{ flexDirection: "column" }}>
+                      <div style={{ flexDirection: "column" }}>
+                        <Typography variant={"body1"} color="white">
+                          {`${data.commentOwner.username}`}
+                        </Typography>
+                        <div style={{ display: "flex", flexDirection: "row" }}>
+                          <Typography variant="subtitle2" color="#575265">
+                            {new Date(data.createdAt).toDateString()}
+                          </Typography>
+                          {isEditing && (
+                            <IconButton size="small" onClick={editComment} style={{ marginLeft: 3 }}>
+                              <SaveIcon fontSize={"small"} />
+                            </IconButton>
+                          )}
+                        </div>
+                      </div>
+                    </div>
                   </Box>
                   <Box mt={1}>
                     {!isEditing ? (
-                      <Box display={"flex"}>
+                      <div>
                         <Typography
                           variant="body2"
                           color="white"
                           // sx={{ textTransform: "capitalize" }}
                         >
-                          {/* <Linkify>{commentValues.comment}</Linkify> */}
-                          {commentValues.comment.split(" ").map((part) =>
-                            URL_REGEX.test(part) ? (
-                              <a href={part} target="_blank" rel="noreferrer">
-                                {part}{" "}
-                              </a>
-                            ) : part.match("@") ? (
-                              <span
-                                onClick={(): void => {
-                                  router.push(`/account/${part.substring(1)}`);
-                                }}
-                                style={{
-                                  color: "#6932F9",
-                                  marginLeft: "2px",
-                                  marginRight: "2px",
-                                  cursor: "pointer",
-                                }}
-                              >
-                                {part}{" "}
-                              </span>
-                            ) : (
-                              part + " "
-                            )
-                          )}
-                          {/* {commentValues.comment.split(" ").map((part) =>
-                            part.match("@") ? (
-                              <span
-                                onClick={(): void => {
-                                  router.push(`/account/${part.substring(1)}`);
-                                }}
-                                style={{
-                                  color: "#6932F9",
-                                  marginLeft: "2px",
-                                  marginRight: "2px",
-                                  cursor: "pointer",
-                                }}
-                              >
-                                {part}{" "}
-                              </span>
-                            ) : (
-                              part + " "
-                            )
-                          )} */}
+                          <Linkify>{commentValues.comment}</Linkify>
                         </Typography>
-                      </Box>
+                        <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", marginTop: 3 }}>
+                          <img
+                            src={
+                              data.isLiked
+                                ? "/icons/heart-filled.svg"
+                                : "/icons/heart.svg"
+                            }
+                            alt="icon"
+                            onClick={(): any => {
+                              if (data.isLiked) {
+                                unLikeComment(data.id);
+                              } else {
+                                likeComment(data.id, data.commentOwner.id);
+                              }
+                            }}
+                            height={23}
+                            width={23}
+                          />
+                          <Typography variant="subtitle2" color="#575265" ml={1}>
+                            {data.totalLikes}
+                          </Typography>
+                          {user?.id === data.commentOwner.id && (
+                            <Box ml={1}>
+                              <IconButton onClick={removeComment} size="small">
+                                <DeleteIcon fontSize={"small"} />
+                              </IconButton>
+                              {isEditing ? (
+                                <IconButton size="small" onClick={editComment}>
+                                  <SaveIcon fontSize={"small"} />
+                                </IconButton>
+                              ) : (
+                                <IconButton
+                                  size="small"
+                                  onClick={(): void => setIsEditing(true)}
+                                >
+                                  <EditIcon fontSize={"small"} />
+                                </IconButton>
+                              )}
+                            </Box>
+                          )}
+                        </div>
+                      </div>
                     ) : (
                       <Box className={styles.commentInput}>
                         <TextField
@@ -452,7 +422,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
             const [isDeleted, setIsDeleted] = useState<boolean>(false);
             const [commentValues, setCommentValues] = useState(data);
             const [isEditing, setIsEditing] = useState<boolean>(false);
-            const [isReply, setIsReply] = useState<boolean>(true);
+            const [isReply, setIsReply] = useState<boolean>(false);
             const [addReply, setAddReply] = useState<boolean>(false);
             const replyCount = comments.filter(
               (i) => i.subComment === data.id
@@ -490,56 +460,27 @@ const CommentsModal = (props: IProps): JSX.Element => {
                         justifyContent: "space-between",
                       }}
                     >
-                      <Box sx={{ display: "inline-flex", flex: "1" }}>
-                        <Typography variant={"body1"} color="white">
-                          {`${data.commentOwner.username}`}
-                        </Typography>
-                        <Typography variant="subtitle2" color="#575265" ml={1}>
-                          {new Date(data.createdAt).toDateString()}
-                        </Typography>
-                        <img
-                          src={
-                            data.isLiked
-                              ? "/icons/heart-filled.svg"
-                              : "/icons/heart.svg"
-                          }
-                          alt="icon"
-                          onClick={(): any => {
-                            if (data.isLiked) {
-                              unLikeComment(data.id);
-                            } else {
-                              likeComment(data.id, data.commentOwner.id);
-                            }
-                          }}
-                          style={{ paddingLeft: "12px" }}
-                        />
-                        <Typography variant="subtitle2" color="#575265" ml={1}>
-                          {data.totalLikes}
-                        </Typography>
-                      </Box>
-                      {user?.id === data.commentOwner.id && (
-                        <Box>
-                          <IconButton onClick={removeComment} size="small">
-                            <DeleteIcon fontSize={"small"} />
-                          </IconButton>
-                          {isEditing ? (
-                            <IconButton size="small" onClick={editComment}>
-                              <SaveIcon fontSize={"small"} />
-                            </IconButton>
-                          ) : (
-                            <IconButton
-                              size="small"
-                              onClick={(): void => setIsEditing(true)}
-                            >
-                              <EditIcon fontSize={"small"} />
-                            </IconButton>
-                          )}
-                        </Box>
-                      )}
+                      <div style={{ flexDirection: "column" }}>
+                        <div style={{ flexDirection: "column" }}>
+                          <Typography variant={"body1"} color="white">
+                            {`${data.commentOwner.username}`}
+                          </Typography>
+                          <div style={{ display: "flex", flexDirection: "row" }}>
+                            <Typography variant="subtitle2" color="#575265">
+                              {new Date(data.createdAt).toDateString()}
+                            </Typography>
+                            {isEditing && (
+                              <IconButton size="small" onClick={editComment} style={{ marginLeft: 3 }}>
+                                <SaveIcon fontSize={"small"} />
+                              </IconButton>
+                            )}
+                          </div>
+                        </div>
+                      </div>
                     </Box>
-                    <Box mt={1}>
+                    <Box>
                       {!isEditing ? (
-                        <Box display={"flex"} justifyContent="space-between">
+                        <div>
                           <Typography
                             variant="body2"
                             color="white"
@@ -572,21 +513,54 @@ const CommentsModal = (props: IProps): JSX.Element => {
                               )
                             )}
                           </Typography>
-                          <Box
-                            display={"flex"}
-                            style={{ marginLeft: "10px", cursor: "pointer" }}
-                            onClick={(): void => {
-                              setIsReply(!isReply);
-                            }}
-                          >
-                            <Box display={"flex"}>
-                              <ReplyIcon style={{ color: "#575265" }} />
-                              <Typography style={{ color: "#575265" }}>
-                                {"Reply " + replyCount}
-                              </Typography>
-                            </Box>
-                          </Box>
-                        </Box>
+                          <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", marginTop: 3 }}>
+                            <img
+                              src={
+                                data.isLiked
+                                  ? "/icons/heart-filled.svg"
+                                  : "/icons/heart.svg"
+                              }
+                              alt="icon"
+                              onClick={(): any => {
+                                if (data.isLiked) {
+                                  unLikeComment(data.id);
+                                } else {
+                                  likeComment(data.id, data.commentOwner.id);
+                                }
+                              }}
+                              height={23}
+                              width={23}
+                            />
+                            <Typography variant="subtitle2" color="#575265" ml={1}>
+                              {data.totalLikes}
+                            </Typography>
+                            {user?.id === data.commentOwner.id && (
+                              <Box ml={1}>
+                                <IconButton onClick={removeComment} size="small">
+                                  <DeleteIcon fontSize={"small"} />
+                                </IconButton>
+                                {isEditing ? (
+                                  <IconButton size="small" onClick={editComment}>
+                                    <SaveIcon fontSize={"small"} />
+                                  </IconButton>
+                                ) : (
+                                  <IconButton
+                                    size="small"
+                                    onClick={(): void => setIsEditing(true)}
+                                  >
+                                    <EditIcon fontSize={"small"} />
+                                  </IconButton>
+                                )}
+                              </Box>
+                            )}
+                            <ReplyIcon
+                              className={styles.replay}
+                              style={{ color: "#575265", margin: "0 5px 3px 5px" }}
+                              onClick={(): void => setIsReply(!isReply)}
+                            />
+                            <Typography style={{ color: "#575265" }}>{replyCount}</Typography>
+                          </div>
+                        </div>
                       ) : (
                         <Box className={styles.commentInput}>
                           <TextField
@@ -616,7 +590,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
                     {isReply && (
                       <Box style={{ marginTop: "10px" }}>
                         {_renderReplys(data.id)}
-                        {!addReply ? (
+                        {addReply ? (
                           <Button
                             onClick={(): void => {
                               setAddReply(true);

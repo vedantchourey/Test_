@@ -164,6 +164,9 @@
     justify-content: space-between;
     align-items: center;
 }
+.replay:hover {
+    cursor: pointer;
+}
 
 @media screen and (max-width: 600px) {
     .mainModalContainer {
