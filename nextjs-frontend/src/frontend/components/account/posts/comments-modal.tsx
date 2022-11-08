@@ -621,7 +621,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
                             onClick={(): void => {
                               setAddReply(true);
                             }}
-                            variant="contained"
+                            variant="text"
                           >
                             Add Reply
                           </Button>
