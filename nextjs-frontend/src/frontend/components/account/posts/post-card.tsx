@@ -232,7 +232,7 @@ const PostCard = (props: IProps): JSX.Element => {
       <Grid
         item
         md={12}
-        minHeight={props.row ? 450 : undefined}
+        minHeight={props.row ? 100 : undefined}
         minWidth={props.isDesktop ? 280 : 0}
         mr={props.row ? 2 : 0}
         //onClick={():any=>{router.push(`social/${values.id}`)}}
@@ -397,12 +397,13 @@ const PostCard = (props: IProps): JSX.Element => {
                   style={{
                     color: "#FFFFFF",
                     fontSize: 14,
-                    marginBottom: !values.postImgUrl ? 50 : 0,
+                    // marginBottom: !values.postImgUrl ? 50 : 0,
                     visibility:
                       values.postContent.length > 450 ? "visible" : "hidden",
                   }}
                   onClick={(): any => {
-                    setReadMore(!readMore);
+                    router.push(`/social/${values.id}`);
+                    setReadMore(false);
                   }}
                 >
                   {readMore ? `Read less...` : `Read More...`}

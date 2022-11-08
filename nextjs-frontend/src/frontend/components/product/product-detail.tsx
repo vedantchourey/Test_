@@ -139,13 +139,17 @@ export default function ProductDetail(props: any): JSX.Element {
     <>
       <Grid item xs={12} lg={8}>
         <Box className={styles.container}>
-          <Image src={"/images/coin.jpg"} width={350} height={480} />
+          <Image src={"/images/coin.jpg"} width={350} height={220} layout={"responsive"} />
 
           <Box className={styles.container2}>
             <Typography className={styles.sideText6}>
               Product Description
             </Typography>
-            <Typography className={styles.sideText7} mt={2}>
+            <Typography
+              className={styles.sideText7}
+              mt={2}
+              style={{ textAlign: "justify" }}
+            >
               {props.description}
             </Typography>
           </Box>
@@ -157,7 +161,7 @@ export default function ProductDetail(props: any): JSX.Element {
           <Typography className={styles.sideText2}>
             {props.companyName}
           </Typography>
-          <Typography className={styles.sideText4}>
+          <Typography className={styles.sideText4} style={{ textAlign: "justify" }}>
             {props.shortDescription}
           </Typography>
           <Select
@@ -185,8 +189,12 @@ export default function ProductDetail(props: any): JSX.Element {
           </Box>
           <Box className={styles.box1}>
             <div>
-              <Typography className={styles.sideText7}>Service charge</Typography>
-              <Typography variant={"caption"} color={"rgba(255,255,255,0.5)"}>(This helps us operate our platform and offer customer service)</Typography>
+              <Typography className={styles.sideText7}>
+                Service charge
+              </Typography>
+              <Typography variant={"caption"} color={"rgba(255,255,255,0.5)"}>
+                (This helps us operate our platform and offer customer service)
+              </Typography>
             </div>
             <Typography className={styles.sideText7}>
               ₹{serviceCharge}
@@ -207,9 +215,7 @@ export default function ProductDetail(props: any): JSX.Element {
           </Box>
           <Box className={styles.box1}>
             <Typography className={styles.sideText7}>GST (18%)</Typography>
-            <Typography className={styles.sideText7}>
-              ₹{gst}
-            </Typography>
+            <Typography className={styles.sideText7}>₹{gst}</Typography>
           </Box>
           <Box
             style={{

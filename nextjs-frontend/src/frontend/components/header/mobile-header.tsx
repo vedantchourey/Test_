@@ -1,4 +1,4 @@
-import { AppBar, IconButton, Button, Box, Divider, Popover, ListSubheader, Typography } from "@mui/material";
+import { AppBar, IconButton, Button, Box, Divider, Popover, ListSubheader, Typography, InputBase, List, CircularProgress, ListItem, ListItemButton, ListItemAvatar, Avatar, ListItemText } from "@mui/material";
 import styles from "./noob-mobile-header.module.css";
 import * as React from "react";
 import { useState } from "react";
@@ -18,7 +18,9 @@ import axios from "axios";
 import { INotifications } from "../../../backend/services/database/models/i-notifications";
 import { getUserProfileImage } from "../../service-clients/image-service-client";
 import SearchIcon from '@mui/icons-material/Search';
-import TextField from '@mui/material/TextField';
+import frontendConfig from "../../utils/config/front-end-config";
+import { ISearchPeopleByUsernameResponse } from "../../service-clients/messages/i-search";
+import { searchPeopleByText } from "../../service-clients/search-service-client";
 
 export default function MobileDrawer(): JSX.Element {
   const [showMenu, setShowMenu] = useState(false);
@@ -30,6 +32,10 @@ export default function MobileDrawer(): JSX.Element {
   // const [gameIdModal, setGameIdModal] = React.useState(false);
   const [gameId, setGameId] = React.useState("")
   const [isSearchVisible, setIsSearchVisible] = useState<boolean>(false);
+  const [userList, setUserList] = React.useState<
+    ISearchPeopleByUsernameResponse[]
+  >([]);
+  const [isFetching, setIsFetching] = React.useState(false);
 
   const toggleDrawer = (): void => setShowMenu(true);
   const hideMenu = (): void => setShowMenu(false);
@@ -69,6 +75,72 @@ export default function MobileDrawer(): JSX.Element {
   const handleClose = (): void => {
     setAnchorEl(null);
   };
+
+  const renderResults = (): JSX.Element => {
+    if (isFetching) {
+      return (
+        <List
+          className={styles.searchListLoder}
+          sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+        >
+          <CircularProgress />
+        </List>
+      );
+    } else if (!isFetching && userList.length) {
+      return (
+        <List
+          className={styles.searchList}
+          sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+        >
+          {userList.map((data, i) => (
+            <ListItem key={Date.now() + i}>
+              <ListItemButton
+                onClick={(): unknown =>
+                  router.replace(`/account/${data.username}`)
+                }
+                sx={{ padding: "2px 18px", my: 1 }}
+              >
+                <ListItemAvatar>
+                  <Avatar
+                    sx={{ width: 35, height: 35 }}
+                    alt="profile image"
+                    src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${data.avatarUrl}`}
+                  >
+                    {data.username.split("")[0].toUpperCase()}
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText className={styles.listText}>
+                  <Typography>@{data.username}</Typography>
+                </ListItemText>
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      );
+    }
+
+    // eslint-disable-next-line no-else-return
+    else {
+      return (
+        <></>
+        /*  <List className={styles.searchListLoder} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+           <h1>No data found</h1>
+         </List> */
+      );
+    }
+  };
+
+  async function searchByUserName(username: string): Promise<void> {
+    setIsFetching(true);
+    setUserList([]);
+    if (!username) {
+      setIsFetching(false);
+      return;
+    }
+    const response = await searchPeopleByText({ search: username });
+    if (response.length) setUserList(response);
+    setIsFetching(false);
+  }
 
   const submitNotification = async (id: string, response: string): Promise<void> => {
     const headers = await getAuthHeader();
@@ -141,27 +213,49 @@ export default function MobileDrawer(): JSX.Element {
         <div className={style.container}>
           <Box>
             <IconButton onClick={toggleDrawer}>
-              <img src="/icons/Vector-MenuIcon.png" style={{ height: 15, width: 20 }} />
+              <img
+                src="/icons/Vector-MenuIcon.png"
+                style={{ height: 15, width: 20 }}
+              />
             </IconButton>
           </Box>
-          <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-            <img src="/icons/logo-white-1.png" style={{ height: 25, width: 15 }} />
-            <div style={{ height: 15, width: 1, backgroundColor: "white", marginLeft: 10 }} />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <img
+              src="/icons/logo-white-1.png"
+              style={{ height: 25, width: 15 }}
+            />
+            <div
+              style={{
+                height: 15,
+                width: 1,
+                backgroundColor: "white",
+                marginLeft: 10,
+              }}
+            />
             <img
               src="/images/noobstorm-logo-small.png"
               style={{ height: 35, width: 120, marginLeft: 10 }}
             />
           </div>
-          {isLoggedIn && (<Box>
-            <Button
-              variant="text"
-              className={style.button1}
-              startIcon={<img src="/icons/Vector-Wallet.png" />}
-              onClick={(): any => router.push("/wallet/info")}
-            >
-              {wallet?.balance}
-            </Button>
-          </Box>)}
+          {isLoggedIn && (
+            <Box>
+              <Button
+                variant="text"
+                className={style.button1}
+                startIcon={<img src="/icons/Vector-Wallet.png" />}
+                onClick={(): any => router.push("/wallet/info")}
+              >
+                {wallet?.balance}
+              </Button>
+            </Box>
+          )}
           <Box>
             <div onClick={(e: any): void => handleClick(e)}>
               <img src="/icons/Vector-Bell.png" className={style.img3} />
@@ -169,7 +263,7 @@ export default function MobileDrawer(): JSX.Element {
             </div>
           </Box>
         </div>
-        {isSearchVisible && (
+        {/* {isSearchVisible && (
           <div style={{ display: "flex", padding: "0px 20px 0px 20px" }}>
             <TextField
               id="search"
@@ -178,6 +272,27 @@ export default function MobileDrawer(): JSX.Element {
               style={{ flex: 1, fontSize: 10, paddingTop: 7 }}
             />
           </div>
+        )} */}
+        {isSearchVisible && (
+          <Box>
+            <Box
+              style={{ border: "1px solid #6931F9" }}
+              sx={{ borderRadius: "16px" }}
+            >
+              <InputBase
+                size="small"
+                placeholder="Search anything..."
+                sx={{ p: 1, width: "85%" }}
+                onChange={(e): any => {
+                  searchByUserName(e.target.value);
+                }}
+              />
+              <IconButton sx={{ mr: 1 }}>
+                <img src="/icons/search-icon.png" />
+              </IconButton>
+            </Box>
+            {renderResults()}
+          </Box>
         )}
         <Divider />
         {isLoggedIn && (
@@ -186,29 +301,41 @@ export default function MobileDrawer(): JSX.Element {
               className={styles.bottomHeaderIcons}
               onClick={(): Promise<boolean> => router.push("/")}
             >
-              <img src="/images/menu/Home.png" style={{ height: 20, width: 20 }} />
+              <img
+                src="/images/menu/Home.png"
+                style={{ height: 20, width: 20 }}
+              />
             </IconButton>
             <IconButton
               className={styles.bottomHeaderIcons}
               onClick={(): Promise<boolean> => router.push("/tournaments-list")}
             >
-              <img src="/images/menu/Tournaments.png" style={{ height: 25, width: 25 }} />
+              <img
+                src="/images/menu/Tournaments.png"
+                style={{ height: 25, width: 25 }}
+              />
             </IconButton>
             <IconButton
               className={styles.bottomHeaderIcons}
               onClick={(): Promise<boolean> => router.push("/leaderboard")}
             >
-              <img src="/images/menu/Leader-Board.png" style={{ height: 25, width: 25 }} />
+              <img
+                src="/images/menu/Leader-Board.png"
+                style={{ height: 25, width: 25 }}
+              />
             </IconButton>
             <IconButton
               className={styles.bottomHeaderIcons}
               onClick={(): Promise<boolean> => router.push("/chat")}
             >
-              <img src="/images/menu/Chat.png" style={{ height: 25, width: 25 }} />
+              <img
+                src="/images/menu/Chat.png"
+                style={{ height: 25, width: 25 }}
+              />
             </IconButton>
             <IconButton
               className={styles.bottomHeaderIcons}
-              onClick={(): void => (setIsSearchVisible(!isSearchVisible))}
+              onClick={(): void => setIsSearchVisible(!isSearchVisible)}
             >
               <SearchIcon />
             </IconButton>
@@ -238,7 +365,7 @@ export default function MobileDrawer(): JSX.Element {
             fontFamily: "Inter",
             color: "#FFFFFF",
             minWidth: 500,
-            textAlign: "left"
+            textAlign: "left",
           }}
         >
           Notifications
@@ -277,11 +404,12 @@ export default function MobileDrawer(): JSX.Element {
                   key={idx}
                 />
               )
-        )}
-        <Button variant="text" onClick={(): any => router.push(`/notification`)}>
-          <Typography sx={{ fontSize: 10 }}>
-            View All
-          </Typography>
+          )}
+        <Button
+          variant="text"
+          onClick={(): any => router.push(`/notification`)}
+        >
+          <Typography sx={{ fontSize: 10 }}>View All</Typography>
         </Button>
       </Popover>
       <NoobDrawer

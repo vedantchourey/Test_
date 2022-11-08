@@ -35,8 +35,6 @@ const Home = (): JSX.Element => {
   const isDesktop = useAppSelector((x) =>
     isDeviceTypeSelector(x, deviceTypes.desktop));
 
-  
-
   const [newsData, setNewsData] = useState<any[]>([]);
   const [posts, setPosts] = useState<IPostsResponse[]>([]);
   const [isFetchingPosts, setIsFetchingPosts] = useState<boolean>(true);
@@ -272,7 +270,7 @@ const Home = (): JSX.Element => {
                     >
                       <Box
                         overflow={"scroll"}
-                        maxWidth={"62vw"}
+                        maxWidth={"70vw"}
                         display={"flex"}
                         className={"hide-scrollbar"}
                       >

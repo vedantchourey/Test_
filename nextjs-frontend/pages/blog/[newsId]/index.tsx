@@ -22,9 +22,9 @@ import ReactHtmlParser from "react-html-parser";
 import { getAuthHeader } from "../../../src/frontend/utils/headers";
 import { frontendSupabase } from "../../../src/frontend/services/supabase-frontend-service";
 import axios from "axios";
-import { useAppSelector } from '../../../src/frontend/redux-store/redux-store';
+import { useAppSelector } from "../../../src/frontend/redux-store/redux-store";
 import { isDeviceTypeSelector } from "../../../src/frontend/redux-store/layout/layout-selectors";
-import { deviceTypes } from '../../../src/frontend/redux-store/layout/device-types';
+import { deviceTypes } from "../../../src/frontend/redux-store/layout/device-types";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -42,7 +42,8 @@ export default function NewsView(): JSX.Element {
   const [liked, setLiked] = useState<any>(false);
   const [likersList, setLikersList] = useState<any>(null);
   const [topNews, setTopNews] = useState<any[]>([]);
-  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
+  const isDesktop = useAppSelector((x) =>
+    isDeviceTypeSelector(x, deviceTypes.desktop));
 
   // const [data, setData] = React.useState([]);
 
@@ -189,18 +190,51 @@ export default function NewsView(): JSX.Element {
     >
       <>
         {!isDesktop && currentNews && (
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", alignContent: "center" }}>
-            <Button style={{ marginTop: 10, alignSelf: "flex-start" }} onClick={(): any =>router.back()}>Back</Button>
-            <img src={currentNews.image} style={{ width: !isDesktop ? "100%" : "60vh", alignSelf: "center" }} />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              alignContent: "center",
+            }}
+          >
+            <Button
+              style={{ marginTop: 10, alignSelf: "flex-start" }}
+              onClick={(): any => router.back()}
+            >
+              Back
+            </Button>
+            <img
+              src={currentNews.image}
+              style={{
+                width: !isDesktop ? "100%" : "60vh",
+                alignSelf: "center",
+              }}
+            />
           </div>
         )}
         {currentNews && (
-          <Box textAlign={"left"} sx={!isDesktop ? { display: "flex", flexDirection: "column", maxWidth: 300 } : {}}>
+          <Box
+            textAlign={"left"}
+            sx={
+              !isDesktop
+                ? { display: "flex", flexDirection: "column", maxWidth: "100vw" }
+                : {}
+            }
+          >
             {isDesktop && (
               <>
-                <Button style={{ marginTop: 10, alignSelf: "flex-start" }} onClick={(): any =>router.back()}>Back</Button>
+                <Button
+                  style={{ marginTop: 10, alignSelf: "flex-start" }}
+                  onClick={(): any => router.back()}
+                >
+                  Back
+                </Button>
                 <Box mt={4} ml={isDesktop ? 2 : 0} style={{ float: "right" }}>
-                  <img src={currentNews.image} style={{ width: !isDesktop ? "100%" : "60vh" }} />
+                  <img
+                    src={currentNews.image}
+                    style={{ width: !isDesktop ? "100%" : "60vh" }}
+                  />
                 </Box>
               </>
             )}
@@ -214,8 +248,22 @@ export default function NewsView(): JSX.Element {
             >
               {currentNews.subtitle}
             </Typography>
-            <Box display={"flex"} sx={isDesktop ? { justifyContent: "space-between" } : { width: 325 }}>
-              <Typography variant={!isDesktop ? "h4" : "h1"} fontSize={!isDesktop ? 13 : 14} mt={1} color={"#6931F9"} sx={!isDesktop ? { width: "180px" } : {}} flex={1}>
+            <Box
+              display={"flex"}
+              sx={
+                isDesktop
+                  ? { justifyContent: "space-between" }
+                  : { width: "85vw" }
+              }
+            >
+              <Typography
+                variant={!isDesktop ? "h4" : "h1"}
+                fontSize={!isDesktop ? 13 : 14}
+                mt={1}
+                color={"#6931F9"}
+                sx={!isDesktop ? { width: "180px" } : {}}
+                flex={1}
+              >
                 Author: {currentNews.author} / Publishing Date:{" "}
                 {moment(currentNews.created_at).format("DD MMM YYYY")}
               </Typography>
@@ -261,7 +309,9 @@ export default function NewsView(): JSX.Element {
                         : currentNews.likeCount}{" "}
                     </Typography>
                   </Box>
-                  <ThumbUpOffAltIcon style={!isDesktop ? { height: 13, width: 13 } : {}} />
+                  <ThumbUpOffAltIcon
+                    style={!isDesktop ? { height: 13, width: 13 } : {}}
+                  />
                   <Typography fontSize={!isDesktop ? 12 : 15}>Like</Typography>
                 </Box>
                 <Popover
@@ -286,7 +336,9 @@ export default function NewsView(): JSX.Element {
                   }}
                   color={"white"}
                 >
-                  <ShareOutlinedIcon style={!isDesktop ? { height: 13, width: 13 } : {}} />
+                  <ShareOutlinedIcon
+                    style={!isDesktop ? { height: 13, width: 13 } : {}}
+                  />
                   <Typography fontSize={!isDesktop ? 14 : 15}>Share</Typography>
                 </Box>
               </Box>
@@ -294,8 +346,9 @@ export default function NewsView(): JSX.Element {
             <div
               style={{
                 fontFamily: "Inter",
-                textAlign: "left",
+                textAlign: "justify",
                 marginTop: 20,
+                color: "#fff",
               }}
             >
               {ReactHtmlParser(currentNews.description)}
@@ -304,10 +357,21 @@ export default function NewsView(): JSX.Element {
               container
               columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}
               display="flex"
-              style={!isDesktop ? { flexDirection: "column", alignItems: "center" } : {}}
+              style={
+                !isDesktop
+                  ? { flexDirection: "column", alignItems: "center" }
+                  : {}
+              }
             >
               <Box style={!isDesktop ? { width: "325px" } : {}}>
-                <Box style={{ marginTop: "15px", display: "flex", alignItems:"center", justifyContent:"space-between" }}>
+                <Box
+                  style={{
+                    marginTop: "15px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
                   <Typography
                     style={{
                       color: "#FFF",
@@ -319,74 +383,83 @@ export default function NewsView(): JSX.Element {
                   >
                     related post’s
                   </Typography>
-                  <Button variant="contained" onClick={(): any => router.push(`/blog`)}>
+                  <Button
+                    variant="contained"
+                    onClick={(): any => router.push(`/blog`)}
+                  >
                     <Typography fontSize={!isDesktop ? 10 : 15}>
                       View All
                     </Typography>
                   </Button>
                 </Box>
-                <Divider style={{marginTop:"10px"}}/>
-                <Box display={"flex"} flexDirection={!isDesktop ? "column" : "row"}>
+                <Divider style={{ marginTop: "10px" }} />
+                <Box
+                  display={"flex"}
+                  flexDirection={!isDesktop ? "column" : "row"}
+                >
                   {topNews
-                  .sort(function (a, b) {
-                    const dateA = new Date(a.created_at).getTime();
-                    const dateB = new Date(b.created_at).getTime();
-                    return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
-                  })
-                  .filter((i)=>i.id!==newsID)
-.map((i: any, key) => {
-                    if (key < 4) {
-                      return (
-                        <Card
-                          sx={{ maxWidth: !isDesktop ? "100%" : 200, m: 2 }}
-                          key={key}
-                          onClick={(): any => router.push(`/blog/${i.id}`)}
-                        >
-                          {i.label && (
-                            <Typography
-                              style={{
-                                position: "absolute",
-                                backgroundColor: "#6932F9",
-                                marginTop: "15px",
-                                padding: "5px 25px",
-                                color: "white",
-                                fontSize: !isDesktop ? 10 : 15,
-                              }}
-                            >
-                              {i.label}
-                            </Typography>
-                          )}
-                          <CardMedia
-                            component="img"
-                            height="240"
-                            image={i.image}
-                            alt="green iguana"
-                          />
-                          <CardContent>
-                            <Typography
-                              gutterBottom
-                              variant="h5"
-                              fontSize={!isDesktop ? 10 : 16}
-                              textAlign={"left"}
-                              component="div"
-                            >
-                              {i.title}
-                            </Typography>
-                            <Typography
-                              textAlign={"left"}
-                              variant={!isDesktop ? "h2" : "h1"}
-                              fontSize={!isDesktop ? 13 : 14}
-                              mt={1}
-                              color={"#6931F9"}
-                            >
-                              Author: {i.author} / Publishing Date:{" "}
-                              {moment(i.created_at).format("DD MMM YYYY")}
-                            </Typography>
-                          </CardContent>
-                        </Card>
-                      );
-                    }
-                  })}
+                    .sort(function (a, b) {
+                      const dateA = new Date(a.created_at).getTime();
+                      const dateB = new Date(b.created_at).getTime();
+                      return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
+                    })
+                    .filter((i) => i.id !== newsID)
+                    .map((i: any, key) => {
+                      if (key < 4) {
+                        return (
+                          <Card
+                            sx={{
+                              maxWidth: !isDesktop ? "100%" : "auto",
+                              m: 2,
+                            }}
+                            key={key}
+                            onClick={(): any => router.push(`/blog/${i.id}`)}
+                          >
+                            {i.label && (
+                              <Typography
+                                style={{
+                                  position: "absolute",
+                                  backgroundColor: "#6932F9",
+                                  marginTop: "15px",
+                                  padding: "5px 25px",
+                                  color: "white",
+                                  fontSize: !isDesktop ? 10 : 15,
+                                }}
+                              >
+                                {i.label}
+                              </Typography>
+                            )}
+                            <CardMedia
+                              component="img"
+                              height="240"
+                              image={i.image}
+                              alt="green iguana"
+                            />
+                            <CardContent>
+                              <Typography
+                                gutterBottom
+                                variant="h5"
+                                fontSize={!isDesktop ? 10 : 16}
+                                textAlign={"left"}
+                                component="div"
+                              >
+                                {i.title}
+                              </Typography>
+                              <Typography
+                                textAlign={"left"}
+                                variant={!isDesktop ? "h2" : "h1"}
+                                fontSize={!isDesktop ? 13 : 14}
+                                mt={1}
+                                color={"#6931F9"}
+                              >
+                                Author: {i.author} / Publishing Date:{" "}
+                                {moment(i.created_at).format("DD MMM YYYY")}
+                              </Typography>
+                            </CardContent>
+                          </Card>
+                        );
+                      }
+                    })}
                 </Box>
               </Box>
             </Grid>

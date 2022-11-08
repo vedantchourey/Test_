@@ -339,7 +339,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team, hasAcc
           </Button>
         </div>
 
-        <Box marginY={2} width={"70vw"}>
+        <Box marginY={2} width={"99vw"}>
           {!isDesktop && playerList.map((player, index): any => {
             return (
               <div
