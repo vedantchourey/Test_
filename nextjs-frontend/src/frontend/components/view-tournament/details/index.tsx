@@ -77,6 +77,8 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
     }
   }
 
+  console.log('selectedPlatform?.displayName -> ', selectedPlatform?.displayName)
+
   const totalSlots =data?.bracketsMetadata?.playersLimit || 0;
   const currentSlot = (data?.playerList || []).length;
 
@@ -89,7 +91,9 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
         <Grid container rowSpacing={1} columnSpacing={5}>
           <Grid item xs={12}>
             <FormControl fullWidth>
-              <div style={{ fontFamily: "Inter", fontSize: !isDesktop ? 10 : 16 }}>
+              <div
+                style={{ fontFamily: "Inter", fontSize: !isDesktop ? 10 : 16 }}
+              >
                 {ReactHtmlParser(data.basic?.about || "")}
               </div>
               {data.info?.contactOption ? (
@@ -103,7 +107,10 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                     {data.info?.contactOption} :
                   </Typography>
                   <Button
-                    style={{ textTransform: "lowercase", fontSize: !isDesktop ? 10 : 16 }}
+                    style={{
+                      textTransform: "lowercase",
+                      fontSize: !isDesktop ? 10 : 16,
+                    }}
                     onClick={contactOn}
                   >
                     {data.info?.contactUrl || "-"}
@@ -129,7 +136,10 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                     justifyContent="space-between"
                   >
                     <Box width={"45%"} display="flex">
-                      <Typography marginRight={1} style={!isDesktop ? { fontSize: 10 } : {}}>
+                      <Typography
+                        marginRight={1}
+                        style={!isDesktop ? { fontSize: 10 } : {}}
+                      >
                         {parseInt(totalSlots.toString())}
                       </Typography>
                       <Typography
@@ -143,7 +153,10 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                       </Typography>
                     </Box>
                     <Box width={"45%"} display="flex">
-                      <Typography marginRight={1} style={!isDesktop ? { fontSize: 10 } : {}}>
+                      <Typography
+                        marginRight={1}
+                        style={!isDesktop ? { fontSize: 10 } : {}}
+                      >
                         {parseInt(totalSlots.toString()) - currentSlot}
                       </Typography>
                       <Typography
@@ -159,7 +172,10 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                   </Box>
                 </Grid>
                 <Grid item md={2}>
-                  <Typography className={classes.title} style={!isDesktop ? { fontSize: 10 } : {}}>
+                  <Typography
+                    className={classes.title}
+                    style={!isDesktop ? { fontSize: 10 } : {}}
+                  >
                     {" "}
                     Tournament Type
                   </Typography>
@@ -181,8 +197,16 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                   </Typography>
                 </Grid> */}
                 <Grid item md={2}>
-                  <Typography className={classes.title} style={!isDesktop ? { fontSize: 10 } : {}}>Prize Pool</Typography>
-                  <Typography className={classes.subTitle} style={!isDesktop ? { fontSize: 10 } : {}}>
+                  <Typography
+                    className={classes.title}
+                    style={!isDesktop ? { fontSize: 10 } : {}}
+                  >
+                    Prize Pool
+                  </Typography>
+                  <Typography
+                    className={classes.subTitle}
+                    style={!isDesktop ? { fontSize: 10 } : {}}
+                  >
                     {data?.settings?.entryType === "credit"
                       ? (data?.pricingDetails?.currentPricePool || 0) *
                         credit_config.price_per_credit
@@ -191,10 +215,20 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                   </Typography>
                 </Grid>
                 <Grid item md={1}>
-                  <Typography className={classes.title} style={!isDesktop ? { fontSize: 10 } : {}}> Platform </Typography>
-                  <Typography className={classes.subTitle} style={!isDesktop ? { fontSize: 10 } : {}}>
+                  <Typography
+                    className={classes.title}
+                    style={!isDesktop ? { fontSize: 10 } : {}}
+                  >
                     {" "}
-                    {selectedPlatform?.displayName || "-"}{" "}
+                    Platform{" "}
+                  </Typography>
+                  <Typography
+                    className={classes.subTitle}
+                    style={!isDesktop ? { fontSize: 10 } : {}}
+                  >
+                    {platforms.length
+                      ? selectedPlatform?.displayName || "-"
+                      : ""}
                   </Typography>
                 </Grid>
                 <Grid
@@ -204,10 +238,19 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                   justifyContent={"flex-start"}
                   mb={2}
                 >
-                  <Typography marginRight={1} style={!isDesktop ? { fontSize: 10 } : {}}>
-                    Tournament Entry Status:
+                  <Typography
+                    marginRight={1}
+                    style={!isDesktop ? { fontSize: 10 } : {}}
+                  >
+                    Entry Type:
                   </Typography>
-                  <Typography color="secondary" style={!isDesktop ? { fontSize: 10 } : {}}> {data?.settings?.entryType}</Typography>
+                  <Typography
+                    color="secondary"
+                    style={!isDesktop ? { fontSize: 10 } : {}}
+                  >
+                    {" "}
+                    {data?.settings?.entryType}
+                  </Typography>
                 </Grid>
               </Grid>
             </FormControl>
