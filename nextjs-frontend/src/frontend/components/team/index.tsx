@@ -237,6 +237,7 @@ const Team: React.FC = () => {
           team={team}
           refresh={fetchTeam}
           hasAccess={hasAccess}
+          elo={team?.team_elo_rating}
         >
           {isMobile && (
             <Box
@@ -249,12 +250,6 @@ const Team: React.FC = () => {
                 justifyContent: "center",
               }}
             >
-              <Typography color={"white"}>
-                Team Elo Rating:
-                <span style={{ color: "#F09633", marginLeft: "30px" }}>
-                  {team?.team_elo_rating}
-                </span>
-              </Typography>
             </Box>
           )}
           <Box display={"flex"} justifyContent="space-between">

@@ -72,6 +72,7 @@ const CardMobile: React.FC<TeamCardProp> = ({
   name = "-",
   onChangeTeamLogo,
   team,
+  elo
 }) => {
   const teamLogo = team?.teamLogo
     ? frontendSupabase.storage.from("public-files").getPublicUrl(team.teamLogo)
@@ -130,7 +131,7 @@ const CardMobile: React.FC<TeamCardProp> = ({
                 style={{ color: "#F09633", marginLeft: "30px" }}
               >
                 {" "}
-                356{" "}
+                {elo}{" "}
               </Typography>{" "}
             </Typography>
           </Box>
@@ -147,6 +148,7 @@ interface TeamCardProp {
   team?: any;
   refresh?: any;
   hasAccess: boolean;
+  elo: any
 }
 
 const TeamCard: React.FC<TeamCardProp> = ({
@@ -155,6 +157,7 @@ const TeamCard: React.FC<TeamCardProp> = ({
   team,
   refresh,
   hasAccess,
+  elo
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -203,6 +206,7 @@ const TeamCard: React.FC<TeamCardProp> = ({
             onChangeCover={(): any => setCoverLogoPicker(true)}
             team={team}
             hasAccess={hasAccess}
+            elo={elo}
           />
         ) : (
           <CardMobile
@@ -211,6 +215,7 @@ const TeamCard: React.FC<TeamCardProp> = ({
             onChangeCover={(): any => setCoverLogoPicker(true)}
             team={team}
             hasAccess={hasAccess}
+            elo={elo}
           />
         )}
         {hasAccess && (

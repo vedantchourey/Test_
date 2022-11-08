@@ -53,7 +53,7 @@ const ButtonComp: React.FC<any> = ({
                       {(item === "complete"
                         ? "completed"
                         : item === "upcomming"
-                        ? "coming"
+                        ? "upcoming"
                         : item
                       )
                         .charAt(0)
@@ -61,7 +61,7 @@ const ButtonComp: React.FC<any> = ({
                         (item === "complete"
                           ? "completed"
                           : item === "upcomming"
-                          ? "coming"
+                          ? "upcoming"
                           : item
                         ).slice(1)}
                     </MenuItem>
@@ -126,7 +126,7 @@ const ButtonComp: React.FC<any> = ({
                       {(item === "complete"
                         ? "completed"
                         : item === "upcomming"
-                        ? "coming"
+                        ? "upcoming"
                         : item
                       )
                         .charAt(0)
@@ -134,7 +134,7 @@ const ButtonComp: React.FC<any> = ({
                         (item === "complete"
                           ? "completed"
                           : item === "upcomming"
-                          ? "coming"
+                          ? "upcoming"
                           : item
                         ).slice(1)}
                     </MenuItem>
