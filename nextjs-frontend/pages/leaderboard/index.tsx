@@ -142,7 +142,11 @@ const Leaderboard = (): JSX.Element => {
           <Heading divider heading={"LEADERBOARD"} />
           <Box
             mt={5}
-            sx={isDesktop ? { maxWidth: "1000px", marginLeft: 4 } : { maxWidth: "290px" }}
+            sx={
+              isDesktop
+                ? { maxWidth: "1000px", marginLeft: 4 }
+                : { maxWidth: "290px" }
+            }
             display={"flex"}
             flexWrap={"nowrap"}
             overflow={"scroll"}
@@ -179,8 +183,10 @@ const Leaderboard = (): JSX.Element => {
             <Grid
               container
               spacing={{ lg: 2 }}
-              columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}
-              className={isDesktop ? styles.mainContainer : styles.mainContainerMobile}
+              columns={{ xs: 12, sm: 12, md: 12, lg: 12 }}
+              className={
+                isDesktop ? styles.mainContainer : styles.mainContainerMobile
+              }
             >
               {leaderboardgamedata
                 ?.sort(function (a, b) {
@@ -320,7 +326,9 @@ const Leaderboard = (): JSX.Element => {
                           )}
                         </Box>
 
-                        <Box style={{ marginLeft: !isDesktop ? "20px" : "45px" }}>
+                        <Box
+                          style={{ marginLeft: !isDesktop ? "20px" : "45px" }}
+                        >
                           <Box className={styles.box1}>
                             <Typography className={styles.text1}>
                               {isTeam ? item.name : item?.userDetails?.username}
@@ -358,11 +366,8 @@ const Leaderboard = (): JSX.Element => {
                 })}
             </Grid>
           }
-          <div style={{ padding: "10px" }}>
-            <TableContainer
-              component={Paper}
-              className={styles.mainTable}
-            >
+          <div>
+            <TableContainer component={Paper} className={styles.mainTable}>
               <Table stickyHeader>
                 <TableHead>
                   <TableRow
