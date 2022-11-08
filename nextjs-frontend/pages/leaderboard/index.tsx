@@ -145,8 +145,8 @@ const Leaderboard = (): JSX.Element => {
             mt={5}
             sx={
               isDesktop
-                ? { maxWidth: "1000px", marginLeft: 4 }
-                : { maxWidth: "290px" }
+                ? { maxWidth: "73vw", marginLeft: 4 }
+                : { maxWidth: "85vw" }
             }
             display={"flex"}
             flexWrap={"nowrap"}
