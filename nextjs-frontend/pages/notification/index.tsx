@@ -269,12 +269,16 @@ const Notification = (): JSX.Element => {
           </DialogContent>
         </Dialog>
         <Dialog
+          maxWidth={"lg"}
           open={popVisible}
           onClose={(): void => toggle("")}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <img height={"70%"} src={image} />
+          <img
+            src={image}
+            style={{ height: "80vh", width: "100%", objectFit: "contain" }}
+          />
         </Dialog>
       </Fragment>
     </NoobPage>
