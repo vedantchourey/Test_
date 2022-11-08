@@ -453,7 +453,7 @@ const PostCard = (props: IProps): JSX.Element => {
                       </div>
                     ) : (
                       <div
-                        onClick={() =>
+                        onClick={(): void =>
                           setModalImage(postImageUrl?.publicURL || "")
                         }
                       >

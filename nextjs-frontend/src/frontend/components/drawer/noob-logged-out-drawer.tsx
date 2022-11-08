@@ -2,8 +2,6 @@ import { Button, Dialog, Divider, IconButton, Typography, useTheme, Box } from '
 import styles from './noob-drawer.module.css';
 import CloseIcon from '@mui/icons-material/Close';
 import * as React from 'react';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import FlashOnIcon from '@mui/icons-material/FlashOn';
 import TwitchIcon from '../icons/twitch-icon';
 import YoutubeIcon from '../icons/youtube-icon';
 import { useRouter } from 'next/router';
@@ -36,10 +34,10 @@ export default function NoobLoggedOutDrawer(props: Props): JSX.Element {
   const theme = useTheme();
   const router = useRouter();
 
-  async function gotoPage(url: string): Promise<void> {
-    onClose();
-    await router.push(url);
-  }
+  // async function gotoPage(url: string): Promise<void> {
+  //   onClose();
+  //   await router.push(url);
+  // }
 
   const { pathname } = router;
   
@@ -77,21 +75,11 @@ export default function NoobLoggedOutDrawer(props: Props): JSX.Element {
         </div>
         <Divider/>
         <div>
-          <Box><Button variant="text" style={buttonStyle(['/'])} onClick={gotoHomePage} className={classes.buttonStyles}><img src="/icons/Vector-home.png" className={classes.imgStyle} />Home</Button></Box>
-          <Box><Button variant="text" className={classes.buttonStyles}><img src="/icons/Vector-Tournaments.png" className={classes.imgStyle} />Tournaments</Button></Box>
-          <Box><Button variant="text" className={classes.buttonStyles}><img src="/icons/Vector-Leaderboards.png" className={classes.imgStyle} />Leaderboards</Button></Box>
-          <Box><Button variant="text" className={classes.buttonStyles}><img src="/icons/Vector-Message.png" className={classes.imgStyle} />Message</Button></Box>
-          <Box><Button variant="text" className={classes.buttonStyles}><img src="/icons/Vector-Aboutus.png" className={classes.imgStyle} />About Us</Button></Box>
-          <Box><Button variant="text" className={classes.buttonStyles}><img src="/icons/Vector-Support.png" className={classes.imgStyle} />Support</Button></Box>
-          <Box><Button variant="text" className={classes.buttonStyles}><img src="/icons/Vector-FAQ.png" className={classes.imgStyle} />FAQ</Button></Box>
-        </div>
-        <div className={styles.bottomMenuGroup}>
-          <Button variant="text" startIcon={<ShoppingCartIcon/>} style={{textTransform: 'none'}}>
-            Store
-          </Button>
-          <Button variant="text" startIcon={<FlashOnIcon/>} onClick={(): Promise<void> => gotoPage('/free-agency-market/view/members')} style={{color: theme.palette.secondary.main, textTransform: 'none'}}>
-            Free Agency Market
-          </Button>
+          <Box><Button variant="text" style={buttonStyle(['/'])} onClick={gotoHomePage} className={classes.buttonStyles}><img src="/images/menu/Home.png" className={classes.imgStyle} />Home</Button></Box>
+          <Box><Button variant="text" className={classes.buttonStyles}><img src="/images/menu/Tournaments.png" className={classes.imgStyle} />Tournaments</Button></Box>
+          <Box><Button variant="text" className={classes.buttonStyles}><img src="/images/menu/Leader-Board.png" className={classes.imgStyle} />Leaderboards</Button></Box>
+          <Box><Button variant="text" className={classes.buttonStyles}><img src="/images/menu/Support.png" className={classes.imgStyle} />About Us</Button></Box>
+          <Box><Button variant="text" className={classes.buttonStyles}><img src="/images/menu/Support.png" className={classes.imgStyle} />FAQ</Button></Box>
         </div>
         <div className={styles.footerContainer}>
           <div className={styles.footer}>

@@ -510,8 +510,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
                                 </span>
                               ) : (
                                 part + " "
-                              )
-                            )}
+                              ))}
                           </Typography>
                           <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", marginTop: 3 }}>
                             <img

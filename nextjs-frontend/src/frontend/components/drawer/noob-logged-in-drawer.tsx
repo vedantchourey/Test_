@@ -16,6 +16,11 @@ import { useRouter } from "next/router";
 import CloseIcon from "@mui/icons-material/Close";
 import Image from "next/image";
 import commonStyles from "../../styles/common.module.css";
+import { useAppSelector } from "../../redux-store/redux-store";
+import {
+  isLoggedInSelector,
+  userProfileSelector,
+} from "../../redux-store/authentication/authentication-selectors";
 
 interface Props {
   show: boolean;
@@ -26,6 +31,8 @@ interface Props {
 export default function NoobLoggedInDrawer(props: Props): JSX.Element {
   const { show, onClose, onLogoutClick } = props;
   const router = useRouter();
+  const isLoggedIn = useAppSelector(isLoggedInSelector);
+  const user = useAppSelector(userProfileSelector);
 
   async function gotoPage(url: string): Promise<void> {
     onClose();
@@ -52,9 +59,11 @@ export default function NoobLoggedInDrawer(props: Props): JSX.Element {
           </div>
         </div>
         <MenuList style={{ display: "flex", flexDirection: "row", paddingBottom: 0, paddingTop: 0 }}>
+        {isLoggedIn && user?.userRoles[0] === "noob-admin" && (
           <MenuItem onClick={(): Promise<void> => gotoPage("/tournament-dashboard")}>
             <Typography fontSize={12}>Dashboard</Typography>
           </MenuItem>
+        )}
           <MenuItem onClick={(): Promise<void> => gotoPage("/account/setting")}>
             <Typography fontSize={12}>Account</Typography>
           </MenuItem>
@@ -114,12 +123,6 @@ export default function NoobLoggedInDrawer(props: Props): JSX.Element {
               <img src="/images/menu/My-Team.png" style={{ height: 20, width: 20 }} />
               </ListItemIcon>
               <Typography fontSize={12}>My Teams</Typography>
-            </MenuItem>
-            <MenuItem onClick={(): Promise<void> => gotoPage("/account/setting")}>
-              <ListItemIcon>
-              <img src="/images/menu/Profile-Setting.png" style={{ height: 20, width: 20 }} />
-              </ListItemIcon>
-              <Typography fontSize={12}>Account</Typography>
             </MenuItem>
             <MenuItem onClick={(): Promise<void> => gotoPage("/leaderboard")}>
               <ListItemIcon>
