@@ -170,9 +170,16 @@
         top: 60%;
         padding: 1px;
     }
+    .mainModalContainerForMobile {
+        width: 100%;
+    }
     .commentsContainer {
         height: 692px;
         padding-bottom: 112px;
+    }
+    .commentsContainerForMobile {
+        height: "auto";
+        padding: 50px 0 50px 0;
     }
     .commentInputCotainer {
         padding-bottom: 40px;

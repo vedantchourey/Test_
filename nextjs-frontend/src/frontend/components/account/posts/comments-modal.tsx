@@ -39,6 +39,8 @@ import ReplyInput from "./reply-input";
 import { useRouter } from "next/router";
 // @ts-ignore: Unreachable code error
 import Linkify from 'react-linkify';
+import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from '../../../../../src/frontend/redux-store/layout/device-types';
 
 const style = {
   position: "absolute",
@@ -52,6 +54,19 @@ const style = {
   backgroundColor: "#08001C",
   padding: "1px 0",
 };
+
+const mobileStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "100%",
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  backgroundColor: "#08001C",
+  padding: "1px 0",
+}
 
 interface IProps {
   isModalOpen: boolean;
@@ -68,6 +83,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
   const [comment, setComment] = useState<string>("");
   const [isFetchingComments, setIsFetchingComments] = useState<boolean>(true);
   const [comments, setComments] = useState<IPostCommentResponse[]>([]);
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
 
   // const fetchUsers = async (post_id: string): Promise<void> => {
 
@@ -622,10 +638,17 @@ const CommentsModal = (props: IProps): JSX.Element => {
 
   return (
     <Modal open={isModalOpen} onClose={handleClose}>
-      <Box sx={style} className={styles.mainModalContainer}>
-        <Box className={styles.commentsContainer}>
-          <AppBar className={styles.appBar}>
-            <Toolbar className={styles.customToolBar}>
+      <Box
+        sx={!isDesktop ? mobileStyle : style}
+        className={!isDesktop ? styles.mainModalContainerForMobile : styles.mainModalContainer}
+      >
+        <Box className={!isDesktop ? styles.commentsContainerForMobile : styles.commentsContainer}>
+          <AppBar
+            className={styles.appBar}
+          >
+            <Toolbar
+              className={styles.customToolBar}
+            >
               <Typography variant="body1" component="div">
                 Comments
               </Typography>
