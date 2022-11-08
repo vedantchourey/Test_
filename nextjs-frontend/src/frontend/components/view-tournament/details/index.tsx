@@ -62,8 +62,6 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
     appDispatch(fetchAllPlatformsThunk());
   }, [appDispatch, platformsFetchStatus]);
 
-  console.log('data -> ', data)
-
   React.useEffect(() => {
     const matchingPlatform = platforms.filter(
       (x) => x.id === data.settings?.platform
