@@ -219,31 +219,33 @@ export default function MobileDrawer(): JSX.Element {
               />
             </IconButton>
           </Box>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <img
-              src="/icons/logo-white-1.png"
-              style={{ height: 25, width: 15 }}
-            />
+          <Button onClick={(): Promise<any> => router.push("/")}>
             <div
               style={{
-                height: 15,
-                width: 1,
-                backgroundColor: "white",
-                marginLeft: 10,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
               }}
-            />
-            <img
-              src="/images/noobstorm-logo-small.png"
-              style={{ height: 35, width: 120, marginLeft: 10 }}
-            />
-          </div>
+            >
+              <img
+                src="/icons/logo-white-1.png"
+                style={{ height: 25, width: 15 }}
+              />
+              <div
+                style={{
+                  height: 15,
+                  width: 1,
+                  backgroundColor: "white",
+                  marginLeft: 10,
+                }}
+              />
+              <img
+                src="/images/noobstorm-logo-small.png"
+                style={{ height: 35, width: 120, marginLeft: 10 }}
+              />
+            </div>
+          </Button>
           {isLoggedIn && (
             <Box>
               <Button
