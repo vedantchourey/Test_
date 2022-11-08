@@ -341,7 +341,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
                         <Typography
                           variant="body2"
                           color="white"
-                          sx={{ textTransform: "capitalize" }}
+                          // sx={{ textTransform: "capitalize" }}
                         >
                           <Linkify>{commentValues.comment}</Linkify>
                           {/* {commentValues.comment.split(" ").map((part) =>
@@ -515,7 +515,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
                           <Typography
                             variant="body2"
                             color="white"
-                            sx={{ textTransform: "capitalize" }}
+                            // sx={{ textTransform: "capitalize" }}
                           >
                             {/* <Linkify>{commentValues.comment}</Linkify> */}
                             {commentValues.comment.split(" ").map((part) =>
@@ -748,7 +748,7 @@ const CommentsModal = (props: IProps): JSX.Element => {
                   variant={"contained"}
                   style={{
                     borderRadius: 99999,
-                    textTransform: "capitalize",
+                    // textTransform: "capitalize",
                   }}
                   onClick={onClickCreateComment}
                 >
