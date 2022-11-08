@@ -129,9 +129,7 @@ const Leaderboard = (): JSX.Element => {
     appDispatch(fetchAllGamesThunk());
   }, [appDispatch, gamesFetchStatus]);
 
-  const isDesktop = useAppSelector((x) =>
-    isDeviceTypeSelector(x, deviceTypes.desktop)
-  );
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
 
   return (
     <NoobPage
