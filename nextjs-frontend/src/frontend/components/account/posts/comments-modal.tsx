@@ -308,47 +308,6 @@ const CommentsModal = (props: IProps): JSX.Element => {
                           )}
                         </div>
                       </div>
-                      {/* <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", marginTop: 3 }}>
-                        <img
-                          src={
-                            data.isLiked
-                              ? "/icons/heart-filled.svg"
-                              : "/icons/heart.svg"
-                          }
-                          alt="icon"
-                          onClick={(): any => {
-                            if (data.isLiked) {
-                              unLikeComment(data.id);
-                            } else {
-                              likeComment(data.id, data.commentOwner.id);
-                            }
-                          }}
-                          height={23}
-                          width={23}
-                        />
-                        <Typography variant="subtitle2" color="#575265" ml={1}>
-                          {data.totalLikes}
-                        </Typography>
-                        {user?.id === data.commentOwner.id && (
-                          <Box ml={1}>
-                            <IconButton onClick={removeComment} size="small">
-                              <DeleteIcon fontSize={"small"} />
-                            </IconButton>
-                            {isEditing ? (
-                              <IconButton size="small" onClick={editComment}>
-                                <SaveIcon fontSize={"small"} />
-                              </IconButton>
-                            ) : (
-                              <IconButton
-                                size="small"
-                                onClick={(): void => setIsEditing(true)}
-                              >
-                                <EditIcon fontSize={"small"} />
-                              </IconButton>
-                            )}
-                          </Box>
-                        )}
-                      </div> */}
                     </div>
                   </Box>
                   <Box mt={1}>
