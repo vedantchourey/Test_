@@ -85,21 +85,24 @@
 	font-size: 11px
 }
 .box1 {
+	width: 95%;
 	flex-direction: column;
 	display: flex;
 	justify-content: center;
 }
 .box2 {
+	width: 95%;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	width: 160px
+	
 }
 .box3 {
+	width: 98%;
 	align-items: center;
 	display: flex;
 	justify-content: space-between;
-	width: 100px
+	
 }
 .box4 {
 	width: 26px;

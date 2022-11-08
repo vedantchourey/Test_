@@ -327,14 +327,14 @@ const Leaderboard = (): JSX.Element => {
                         </Box>
 
                         <Box
-                          style={{ marginLeft: !isDesktop ? "20px" : "45px" }}
+                          style={{ marginLeft: !isDesktop ? "20px" : "45px", flex: 1 }}
                         >
                           <Box className={styles.box1}>
                             <Typography className={styles.text1}>
                               {isTeam ? item.name : item?.userDetails?.username}
                             </Typography>
                             <Box className={styles.box2}>
-                              <Typography className={styles.text2}>
+                              <Typography className={styles.text2} style={{width: "60%"}}>
                                 ELO RATING
                               </Typography>
                               <Button variant="text" className={styles.button1}>
