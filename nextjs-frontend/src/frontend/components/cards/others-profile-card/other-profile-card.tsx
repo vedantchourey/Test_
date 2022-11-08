@@ -33,6 +33,8 @@ import { userProfileSelector } from "../../../redux-store/authentication/authent
 import { getAuthHeader } from "../../../utils/headers";
 import axios from "axios";
 import moment from "moment";
+import { fetchUserFollowerList, fetchUserFollowingList } from "../../../service-clients/profile-service-client";
+import { IFollowersList } from "../../../service-clients/messages/i-followers-list-response";
 
 const OtherProfileCard = (props: {
   userData: IOthersProfileResponse;
@@ -43,8 +45,32 @@ const OtherProfileCard = (props: {
   const [teamData, setTeamData] = useState<any[]>([]);
   const [openFollowersModal, setOpenFollowersModal] = useState(false);
   const [openFollowingModal, setOpenFollowingModal] = useState(false);
+  const [followers, setFollowers] = useState<IFollowersList[]>([]);
+  const [followings, setFollowings] = useState<IFollowersList[]>([]);
   const user = useAppSelector(userProfileSelector);
   const [teamModal, setTeamModal] = useState(false)
+  
+  const fetchFollowers = async (): Promise<any> => {
+    try {
+      if (user) {
+        const followersResponse = await fetchUserFollowerList(props.userData.id);
+        setFollowers(followersResponse);
+      }
+    } catch(error) {
+      console.warn("Error: Error while getting followers - ", error);
+    }
+  };
+
+  const fetchFollowings = async (): Promise<any> => {
+    try {
+      if (user) {
+        const followingResponse = await fetchUserFollowingList(props.userData.id);
+        setFollowings(followingResponse);
+      }
+    } catch (error) {
+      console.warn("Error: Error while getting followings - ", error);
+    }
+  };
 
   const { totalFollowers, totalPosts, totalFollowing, isFollowing } = userData;
 
@@ -136,6 +162,8 @@ const OtherProfileCard = (props: {
 
   useEffect(() => {
     teamList();
+    fetchFollowers();
+    fetchFollowings();
   }, [props.userData]);
 
   return (
@@ -426,6 +454,7 @@ const OtherProfileCard = (props: {
         <FollowersModal
           handleClose={handleCloseFollowersModal}
           userData={userData}
+          userList={followers}
           showModal={openFollowersModal}
           listType="followers"
         />
@@ -433,6 +462,7 @@ const OtherProfileCard = (props: {
         <FollowersModal
           handleClose={handleCloseFollowingModal}
           userData={userData}
+          userList={followings}
           showModal={openFollowingModal}
           listType="following"
         />

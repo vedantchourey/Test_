@@ -76,7 +76,7 @@ const FollowersModal = ({ handleClose, showModal, listType, userList }: IProps):
             <Followersmodal username={data.follower.username} key={i}/>
           )) : (
             <Box>
-              <Typography>
+              <Typography color={"#fff"}>
                 {
                   listType === 'followers' ? 'No Followers' : 'No Followings'
                 }

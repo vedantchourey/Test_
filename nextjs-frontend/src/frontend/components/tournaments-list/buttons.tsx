@@ -50,7 +50,20 @@ const ButtonComp: React.FC<any> = ({
                 {allstatus.map((item: any, i: number) => {
                   return (
                     <MenuItem value={item} key={i}>
-                      {item.charAt(0).toUpperCase() + item.slice(1)}
+                      {(item === "complete"
+                        ? "completed"
+                        : item === "upcomming"
+                        ? "coming"
+                        : item
+                      )
+                        .charAt(0)
+                        .toUpperCase() +
+                        (item === "complete"
+                          ? "completed"
+                          : item === "upcomming"
+                          ? "coming"
+                          : item
+                        ).slice(1)}
                     </MenuItem>
                   );
                 })}
@@ -110,7 +123,20 @@ const ButtonComp: React.FC<any> = ({
                 {allstatus.map((item: any, i: number) => {
                   return (
                     <MenuItem value={item} key={i}>
-                      {item.charAt(0).toUpperCase() + item.slice(1)}
+                      {(item === "complete"
+                        ? "completed"
+                        : item === "upcomming"
+                        ? "coming"
+                        : item
+                      )
+                        .charAt(0)
+                        .toUpperCase() +
+                        (item === "complete"
+                          ? "completed"
+                          : item === "upcomming"
+                          ? "coming"
+                          : item
+                        ).slice(1)}
                     </MenuItem>
                   );
                 })}

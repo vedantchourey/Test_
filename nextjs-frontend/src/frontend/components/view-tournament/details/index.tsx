@@ -62,6 +62,8 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
     appDispatch(fetchAllPlatformsThunk());
   }, [appDispatch, platformsFetchStatus]);
 
+  console.log('data -> ', data)
+
   React.useEffect(() => {
     const matchingPlatform = platforms.filter(
       (x) => x.id === data.settings?.platform
@@ -205,7 +207,7 @@ const Details: React.FC<DetailsProps> = ({ data }) => {
                   <Typography marginRight={1} style={!isDesktop ? { fontSize: 10 } : {}}>
                     Tournament Entry Status:
                   </Typography>
-                  <Typography color="secondary" style={!isDesktop ? { fontSize: 10 } : {}}> Open </Typography>
+                  <Typography color="secondary" style={!isDesktop ? { fontSize: 10 } : {}}> {data?.settings?.entryType}</Typography>
                 </Grid>
               </Grid>
             </FormControl>
