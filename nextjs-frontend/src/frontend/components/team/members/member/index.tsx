@@ -58,20 +58,29 @@ const Member: React.FC<MemberProp> = ({
       }}
       sx={{ cursor: "pointer" }}
     >
-      <Box width={"100%"} position="relative" onClick={(): any => {
-        router.push(`/account/${username}`)
-      }}>
+      <Box
+        width={"100%"}
+        position="relative"
+        onClick={(): any => {
+          router.push(`/account/${username}`);
+        }}
+      >
         <div
           style={{
             position: "absolute",
-            zIndex: 1,
+            zIndex: 10,
             top: "60.8%",
             left: "27%",
             width: "45%",
             alignItems: "center",
           }}
         >
-          <Typography noWrap color={"#fff"} fontSize={"0.9 em"} textAlign={"center"}>
+          <Typography
+            noWrap
+            color={"#fff"}
+            fontSize={"0.9 em"}
+            textAlign={"center"}
+          >
             {username}
           </Typography>
         </div>
@@ -79,7 +88,7 @@ const Member: React.FC<MemberProp> = ({
           style={{
             display: "flex",
             position: "absolute",
-            zIndex: 1,
+            zIndex: 10,
             top: "74%",
             left: "20%",
             width: "17%",
@@ -96,7 +105,7 @@ const Member: React.FC<MemberProp> = ({
           style={{
             display: "flex",
             position: "absolute",
-            zIndex: 1,
+            zIndex: 10,
             top: "74%",
             left: "45%",
             width: "17%",
@@ -113,7 +122,7 @@ const Member: React.FC<MemberProp> = ({
           style={{
             display: "flex",
             position: "absolute",
-            zIndex: 1,
+            zIndex: 10,
             top: "74%",
             left: "70%",
             width: "17%",
@@ -126,20 +135,22 @@ const Member: React.FC<MemberProp> = ({
             {elo}
           </Typography>
         </div>
-        <img
-          src={profileImage || ""}
-          style={{
-            position: "absolute",
-            width: "100%",
-            zIndex: -1,
-            cursor: "pointer",
-            height: "64%",
-            borderRadius:0,
-          }}
-        />
+        
+          <img
+            src={profileImage || ""}
+            style={{
+              position: "absolute",
+              width: "100%",
+              cursor: "pointer",
+              height: "64%",
+              borderRadius: 0,
+              zIndex: 0,
+            }}
+          />
+
         <img
           src={images[findCardType(elo || "0")].src}
-          style={{ zIndex: 1, width: "100%", height: "64%" }}
+          style={{ zIndex: 8, width: "100%", height: "64%", position: "relative" }}
         />
       </Box>
       {children && hover && <Box>{children}</Box>}
