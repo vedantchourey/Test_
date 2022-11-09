@@ -45,7 +45,8 @@ import { useRouter } from "next/router";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import { useAppSelector } from "../../../../../src/frontend/redux-store/redux-store";
 import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
-import { deviceTypes } from '../../../../../src/frontend/redux-store/layout/device-types';
+import { deviceTypes } from "../../../../../src/frontend/redux-store/layout/device-types";
+import _ from "lodash";
 
 export const options = {
   responsive: true,
@@ -129,7 +130,12 @@ interface TeamMembersProps {
   hasAccess: boolean;
 }
 
-const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team, hasAccess }) => {
+const TeamMembers: React.FC<TeamMembersProps> = ({
+  teamId,
+  players,
+  team,
+  hasAccess,
+}) => {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const [playerList, setPlayerList] = React.useState<MemberProp[]>([]);
@@ -152,6 +158,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team, hasAcc
       },
     ],
   });
+  const [activePage, setActivePage] = React.useState(0);
 
   const graphTime: string[] = ["All", "Weekly", "Monthly", "Yearly"];
 
@@ -302,7 +309,10 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team, hasAcc
     setSelectedTime(item);
   };
 
-  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
+  const isDesktop = useAppSelector((x) =>
+    isDeviceTypeSelector(x, deviceTypes.desktop));
+
+  const paginatiedList = _.chunk(playerList, 5);
 
   return (
     <React.Fragment>
@@ -330,7 +340,14 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team, hasAcc
           </Box>
         )}
 
-        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Typography color={"white"} variant={"h5"}>
             Team Members
           </Typography>
@@ -340,26 +357,65 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ teamId, players, team, hasAcc
         </div>
 
         <Box marginY={2} width={"99vw"}>
-          {!isDesktop && playerList.map((player, index): any => {
-            return (
+          {!isDesktop && (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                height: "auto",
+                width: "90vw",
+              }}
+            >
               <div
-                key={index}
                 style={{
                   display: "flex",
-                  flexDirection: "column",
-                  marginBottom: 20
+                  marginBottom: 5,
+                  marginTop: 5,
+                  justifyContent: "center",
                 }}
               >
-                <Member
-                  key={player.name}
-                  {...player}
-                  onClick={(): any => {
-                    router.push(`/account/${player.username}`);
-                  }}
-                />
+                <Button
+                  size="small"
+                  variant="contained"
+                  disabled={activePage === 0}
+                  onClick={(): any => setActivePage(activePage - 1)}
+                >
+                  Previous
+                </Button>
+                <Button
+                  size="small"
+                  variant="contained"
+                  style={{ marginLeft: 5 }}
+                  disabled={activePage === paginatiedList.length - 1}
+                  onClick={(): any => setActivePage(activePage + 1)}
+                >
+                  Next
+                </Button>
               </div>
-            );
-          })}
+            </div>
+          )}
+
+          {!isDesktop &&
+            paginatiedList[activePage]?.map((player, index): any => {
+              return (
+                <div
+                  key={index}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    marginBottom: 20,
+                  }}
+                >
+                  <Member
+                    key={player.name}
+                    {...player}
+                    onClick={(): any => {
+                      router.push(`/account/${player.username}`);
+                    }}
+                  />
+                </div>
+              );
+            })}
           {isDesktop && (
             <Slider {...settings}>
               {playerList.map((player): any => {

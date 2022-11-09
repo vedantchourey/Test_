@@ -1,14 +1,14 @@
 import styled from "@emotion/styled";
-import {
-  Box,
-  Button,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import axios from "axios";
+import _ from "lodash";
 import React, { useEffect, useState } from "react";
 import Slider, { Settings } from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
+import { deviceTypes } from "../../../redux-store/layout/device-types";
+import { isDeviceTypeSelector } from "../../../redux-store/layout/layout-selectors";
+import { useAppSelector } from "../../../redux-store/redux-store";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
 import { getAuthHeader } from "../../../utils/headers";
 import Member, { MemberProp } from "../../team/members/member";
@@ -45,6 +45,7 @@ const settings: Settings = {
 const WatchTeamMembers: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<MemberProp[] | []>([]);
+  const [activePage, setActivePage] = useState(0);
 
   const fetchUsers = async (): Promise<void> => {
     const headers = await getAuthHeader();
@@ -54,7 +55,7 @@ const WatchTeamMembers: React.FC = () => {
       .then((res) => {
         const players: MemberProp[] = res.data.result.map((item: any) => ({
           name: `${item.player.firstName} ${item.player.lastName}`,
-          username:`${item.player.username}`,
+          username: `${item.player.username}`,
           id: item.secret,
           image: "/images/teams/player.png",
           type: "bronze",
@@ -63,10 +64,10 @@ const WatchTeamMembers: React.FC = () => {
           won: item?.won,
           games: Number(item?.won) + Number(item?.lost),
           profileImage: item.avatarUrl
-          ? frontendSupabase.storage
-              .from("public-files")
-              .getPublicUrl(item.avatarUrl).publicURL
-          : undefined,
+            ? frontendSupabase.storage
+                .from("public-files")
+                .getPublicUrl(item.avatarUrl).publicURL
+            : undefined,
         }));
         setData(players);
       })
@@ -93,6 +94,11 @@ const WatchTeamMembers: React.FC = () => {
     fetchUsers();
   }, []);
 
+  const isDesktop = useAppSelector((x) =>
+    isDeviceTypeSelector(x, deviceTypes.desktop));
+
+  const paginatiedList = _.chunk(data, 5);
+
   return (
     <React.Fragment>
       <Box>
@@ -102,29 +108,87 @@ const WatchTeamMembers: React.FC = () => {
               <Typography color={"white"}>No player in offer sent</Typography>
             </Box>
           )}
-          <Box marginY={2} width={"70vw"}>
-            <Slider {...settings}>
-              {data.map((player) => {
+          {!isDesktop ? (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                height: "auto",
+                width: "90vw",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  marginBottom: 5,
+                  marginTop: 5,
+                  justifyContent: "center",
+                }}
+              >
+                <Button
+                  size="small"
+                  variant="contained"
+                  disabled={activePage === 0}
+                  onClick={(): any => setActivePage(activePage - 1)}
+                >
+                  Previous
+                </Button>
+                <Button
+                  size="small"
+                  variant="contained"
+                  style={{ marginLeft: 5 }}
+                  disabled={activePage === paginatiedList.length - 1}
+                  onClick={(): any => setActivePage(activePage + 1)}
+                >
+                  Next
+                </Button>
+              </div>
+              {paginatiedList[activePage]?.map((player) => {
                 return (
-                  <Member key={player.name} {...player}>
-                    <>
-                      <Box textAlign="center" mt={6}>
-                        <NoobButton
-                          variant="contained"
-                          disabled={loading}
-                          style={{ backgroundColor: "#6932F9" }}
-                          fullWidth={true}
-                          onClick={(): void => {removeToWatchList(player.id || "")}}
-                        >
-                          Cancel
-                        </NoobButton>
-                      </Box>
-                    </>
-                  </Member>
+                  <>
+                    <Member key={player.name} {...player} />
+                    <NoobButton
+                      variant="contained"
+                      disabled={loading}
+                      style={{ backgroundColor: "#6932F9" }}
+                      fullWidth={true}
+                      onClick={(): void => {
+                        removeToWatchList(player.id || "");
+                      }}
+                    >
+                      Cancel
+                    </NoobButton>
+                  </>
                 );
               })}
-            </Slider>
-          </Box>
+            </div>
+          ) : (
+            <Box marginY={2} width={"70vw"}>
+              <Slider {...settings}>
+                {data.map((player) => {
+                  return (
+                    <Member key={player.name} {...player}>
+                      <>
+                        <Box textAlign="center" mt={6}>
+                          <NoobButton
+                            variant="contained"
+                            disabled={loading}
+                            style={{ backgroundColor: "#6932F9" }}
+                            fullWidth={true}
+                            onClick={(): void => {
+                              removeToWatchList(player.id || "");
+                            }}
+                          >
+                            Cancel
+                          </NoobButton>
+                        </Box>
+                      </>
+                    </Member>
+                  );
+                })}
+              </Slider>
+            </Box>
+          )}
         </Box>
       </Box>
     </React.Fragment>

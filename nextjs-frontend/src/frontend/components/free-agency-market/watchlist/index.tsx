@@ -24,6 +24,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import { isDeviceTypeSelector } from "../../../redux-store/layout/layout-selectors";
 import { deviceTypes } from "../../../redux-store/layout/device-types";
 import { useAppSelector } from "../../../redux-store/redux-store";
+import _ from "lodash";
 
 export const NoobButton = styled(Button)(() => ({
   color: "white",
@@ -64,6 +65,7 @@ const WatchTeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
   const [selectedTeam, setSelectedTeam] = useState<any>("");
   const [selectedPlayer, setSelectedPlayer] = useState<any>(undefined);
   const [message, setMessage] = useState("");
+  const [activePage, setActivePage] = useState(0);
 
   const fetchUsers = async (): Promise<void> => {
     const headers = await getAuthHeader();
@@ -72,24 +74,25 @@ const WatchTeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
       .get("/api/free-agency-market/get-watchlist", { headers: headers })
       .then((res) => {
         const players: MemberProp[] = res.data.map((item: any) => {
-          return({
-          name: `${item.firstName} ${item.lastName}`,
-          username: `${item.username}`,
-          id: item.id,
-          image: "/images/teams/player.png",
-          type: "bronze",
-          tags: ["Games", "Won", "Elo"],
-          elo: item?.elo_rating,
-          won: item?.won,
-          games: Number(item?.won) + Number(item?.lost),
-          platformId: item?.platformId,
-          gameId: item.game_id,
-          profileImage: item.avatarUrl
-            ? frontendSupabase.storage
-                .from("public-files")
-                .getPublicUrl(item.avatarUrl).publicURL
-            : undefined,
-        })});
+          return {
+            name: `${item.firstName} ${item.lastName}`,
+            username: `${item.username}`,
+            id: item.id,
+            image: "/images/teams/player.png",
+            type: "bronze",
+            tags: ["Games", "Won", "Elo"],
+            elo: item?.elo_rating,
+            won: item?.won,
+            games: Number(item?.won) + Number(item?.lost),
+            platformId: item?.platformId,
+            gameId: item.game_id,
+            profileImage: item.avatarUrl
+              ? frontendSupabase.storage
+                  .from("public-files")
+                  .getPublicUrl(item.avatarUrl).publicURL
+              : undefined,
+          };
+        });
         setData(players);
       })
       .finally(() => setLoading(false));
@@ -159,7 +162,7 @@ const WatchTeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
     fetchUsers();
     fetchTeam();
   }, []);
-  
+
   const filtedTeamList =
     isModalOpen && selectedPlayer
       ? team.filter(
@@ -179,7 +182,10 @@ const WatchTeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
       : null
     : null;
 
-    const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
+  const isDesktop = useAppSelector((x) =>
+    isDeviceTypeSelector(x, deviceTypes.desktop));
+
+  const paginatiedList = _.chunk(data, 5);
 
   return (
     <React.Fragment>
@@ -349,39 +355,65 @@ const WatchTeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
                 width: "90vw",
               }}
             >
-              {data.map((player) => {
+              <div
+                style={{
+                  display: "flex",
+                  marginBottom: 5,
+                  marginTop: 5,
+                  justifyContent: "center",
+                }}
+              >
+                <Button
+                  size="small"
+                  variant="contained"
+                  disabled={activePage === 0}
+                  onClick={(): any => setActivePage(activePage - 1)}
+                >
+                  Previous
+                </Button>
+                <Button
+                  size="small"
+                  variant="contained"
+                  style={{ marginLeft: 5 }}
+                  disabled={activePage === paginatiedList.length - 1}
+                  onClick={(): any => setActivePage(activePage + 1)}
+                >
+                  Next
+                </Button>
+              </div>
+              {paginatiedList[activePage].map((player) => {
                 return (
                   <>
                     <Member key={player.name} {...player} />
                     <Box display={"flex"} justifyContent="space-between">
-                    <Box textAlign="center" flex={0.48}>
-                      <NoobButton
-                        variant="contained"
-                        disabled={loading}
-                        style={{ backgroundColor: "#6932F9" }}
-                        fullWidth={true}
-                        onClick={(): void => {
-                          removeToWatchList(player.id || "");
-                        }}
-                      >
-                        - Remove
-                      </NoobButton>
-                    </Box>
-                    <Box textAlign="center" mb={3} flex={0.48}>
-                      <NoobButton
-                        variant="contained"
-                        disabled={loading}
-                        style={{ backgroundColor: "#F09633" }}
-                        fullWidth={true}
-                        onClick={(): void => {
-                          setIsModalOpen(true);
-                          setSelectedPlayer(player);
-                        }}
-                        // onClick={(): void => {sendInvitation(player.id || "")}}
-                      >
-                        Send Offer
-                      </NoobButton>
-                    </Box>
+                      <Box textAlign="center" flex={0.48}>
+                        <NoobButton
+                          variant="contained"
+                          disabled={loading}
+                          style={{ backgroundColor: "#6932F9" }}
+                          fullWidth={true}
+                          onClick={(): void => {
+                            removeToWatchList(player.id || "");
+                          }}
+                        >
+                          - Remove
+                        </NoobButton>
+                      </Box>
+                      <Box textAlign="center" mb={3} flex={0.48}>
+                        <NoobButton
+                          variant="contained"
+                          disabled={loading}
+                          style={{ backgroundColor: "#F09633" }}
+                          fullWidth={true}
+                          onClick={(): void => {
+                            setIsModalOpen(true);
+                            setSelectedPlayer(player);
+                          }}
+                          // onClick={(): void => {sendInvitation(player.id || "")}}
+                        >
+                          Send Offer
+                        </NoobButton>
+                      </Box>
                     </Box>
                   </>
                 );
