@@ -64,8 +64,8 @@ const NoobSupportPage: NextPage = () => {
       }}
     >
       <React.Fragment>
-        <div style={!isDesktop ? { marginTop: 30 } : {}}>
-          <img src="/images/support-banner.jpg" width={"100%"} />
+        <div style={!isDesktop ? { marginTop: 40, display: "flex", justifyContent: "center" } : { display: "flex", justifyContent: "center" }}>
+          <img src="/images/support-banner.jpg" width={"80%"} />
         </div>
         {/* <Heading
           // heading='For questions about your account,purchases, or general inquires.'
@@ -108,7 +108,7 @@ const NoobSupportPage: NextPage = () => {
             <Divider style={{ padding: 35 }}>
               <Typography variant="h3">SUPPORT</Typography>
             </Divider>
-            <div style={{ display: "flex", flexDirection: "row" }}>
+            <div style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
               {supportCards.map((item, key) => {
                 return (
                   <div key={key} className={styles.gridContainer} style={{ marginLeft: 20 }}>
