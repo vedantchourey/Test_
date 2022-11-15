@@ -280,28 +280,34 @@ const Home = (): JSX.Element => {
                     <TabPanel value="2" className={styles.newsFeedContainer}>
                       <Grid
                         container
+                        spacing={3}
                         columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}
                         display="flex"
+                        flexDirection="row"
+                        ml={7}
                       >
+                        <Box display={"flex"} flexWrap={"wrap"}>
                         {newsData.map((i: any, key) => {
                           if (key < 4) {
                             return (
                               <Card
-                                sx={{ maxWidth: 280, m: 2 }}
+                                sx={{ maxWidth: 240, m: 2 }}
                                 key={key}
                                 onClick={(): any => router.push(`/blog/${i.id}`)}
-                              >
-                                {i.label &&<Typography
-                                  style={{
-                                    position: "absolute",
-                                    backgroundColor: "#6932F9",
-                                    marginTop: "15px",
-                                    padding: "5px 25px",
-                                    color: "white",
-                                  }}
                                 >
-                                  {i.label}
-                                </Typography>}
+                                {i.label &&
+                                  <Typography
+                                    style={{
+                                      position: "absolute",
+                                      backgroundColor: "#6932F9",
+                                      marginTop: "15px",
+                                      padding: "5px 25px",
+                                      color: "white",
+                                    }}
+                                  >
+                                    {i.label}
+                                  </Typography>
+                                }
                                 <CardMedia
                                   component="img"
                                   height="240"
@@ -333,6 +339,7 @@ const Home = (): JSX.Element => {
                             );
                           }
                         })}
+                        </Box>
                       </Grid>
                     </TabPanel>
                     <TabPanel value="3" className={styles.tournamentContainer}>

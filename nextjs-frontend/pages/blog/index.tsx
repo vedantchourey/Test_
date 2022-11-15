@@ -5,6 +5,7 @@ import {
   CardContent,
   CardMedia,
   Typography,
+  Grid,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
@@ -16,12 +17,16 @@ import NoobPage from "../../src/frontend/components/page/noob-page";
 import ReactHtmlParser from "react-html-parser";
 import { getAuthHeader } from "../../src/frontend/utils/headers";
 import axios from "axios";
+import { useAppSelector } from "../../src/frontend/redux-store/redux-store";
+import { isDeviceTypeSelector } from "../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from '../../src/frontend/redux-store/layout/device-types';
 
 export default function News(): JSX.Element {
   const [newsData, setData] = useState<any[]>([]);
   const [currentNews, setCurrentNews] = useState<any>(null);
   const [liked, setLiked] = useState<any>(false);
   const router = useRouter();
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
 
   const getNewsData = async (): Promise<void> => {
     try {
@@ -103,6 +108,12 @@ export default function News(): JSX.Element {
       <>
         <Typography variant="h1" mt={3}>Blogs</Typography>
         {!currentNews && (
+          <Grid
+          container
+          columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}
+          display="flex"
+          ml={!isDesktop ? 2 : 7}
+        >
           <Box display={"flex"} flexWrap={"wrap"}>
             {newsData
               .sort(function (a, b) {
@@ -112,10 +123,9 @@ export default function News(): JSX.Element {
               })
               .map((i: any, key) => (
                 <Card
-                  sx={{ m: 2 }}
+                  sx={{ maxWidth: 280, m: 2 }}
                   key={key}
                   onClick={(): any => router.push(`/blog/${i.id}`)}
-                  // onClick={(): any => setCurrentNews(i)}
                 >
                   {i.label&&
                   <Typography style={{position:'absolute',backgroundColor:'#6932F9',marginTop:"15px",padding:"5px 25px",color:"white"}}>{i.label}</Typography>}
@@ -149,6 +159,7 @@ export default function News(): JSX.Element {
                 </Card>
               ))}
           </Box>
+        </Grid>
         )}
 
         {currentNews && (
