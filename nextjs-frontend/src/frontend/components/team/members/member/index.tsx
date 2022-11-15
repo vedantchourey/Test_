@@ -63,7 +63,7 @@ const Member: React.FC<MemberProp> = ({
       sx={isDesktop ? { cursor: "pointer" } : { display: "flex", flexDirection: "column", alignItems: "center" }}
     >
       <Box
-        width={"75%"}
+        width={!isDesktop ? "75%" : "100%"}
         position="relative"
         onClick={(): any => {
           router.push(`/account/${username}`);
