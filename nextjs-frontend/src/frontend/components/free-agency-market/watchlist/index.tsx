@@ -381,12 +381,12 @@ const WatchTeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
                   Next
                 </Button>
               </div>
-              {paginatiedList[activePage].map((player) => {
+              {paginatiedList[activePage]?.map((player) => {
                 return (
                   <>
                     <Member key={player.name} {...player} />
-                    <Box display={"flex"} justifyContent="space-between">
-                      <Box textAlign="center" flex={0.48}>
+                    <Box display={"flex"} justifyContent="space-around" maxWidth={"280px"} ml={4}>
+                      <Box textAlign="center" flex={0.38}>
                         <NoobButton
                           variant="contained"
                           disabled={loading}
@@ -399,7 +399,7 @@ const WatchTeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
                           - Remove
                         </NoobButton>
                       </Box>
-                      <Box textAlign="center" mb={3} flex={0.48}>
+                      <Box textAlign="center" mb={3} flex={0.38}>
                         <NoobButton
                           variant="contained"
                           disabled={loading}

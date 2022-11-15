@@ -7,6 +7,9 @@ import ruby from "./images/ruby_Card.png";
 import silver from "./images/silver_Card.png";
 import Player from "./images/Player.png";
 import { useRouter } from "next/router";
+import { useAppSelector } from "../../../../../../src/frontend/redux-store/redux-store";
+import { isDeviceTypeSelector } from "../../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from '../../../../../../src/frontend/redux-store/layout/device-types';
 
 const images = { bronze, diamond, gold, ruby, silver, Player };
 
@@ -48,6 +51,7 @@ const Member: React.FC<MemberProp> = ({
 }) => {
   const [hover, setHover] = useState(false);
   const router=useRouter();
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
   return (
     <Box
       onMouseEnter={(): void => {
@@ -56,10 +60,10 @@ const Member: React.FC<MemberProp> = ({
       onMouseLeave={(): void => {
         setHover(false);
       }}
-      sx={{ cursor: "pointer" }}
+      sx={isDesktop ? { cursor: "pointer" } : { display: "flex", flexDirection: "column", alignItems: "center" }}
     >
       <Box
-        width={"100%"}
+        width={"75%"}
         position="relative"
         onClick={(): any => {
           router.push(`/account/${username}`);
