@@ -9,8 +9,8 @@ export default function ChatPage(): JSX.Element {
 
   return (
     <NoobPage title="Chat" metaData={{}} hideChat={true} forMobileChat={isMobile}>
-      <div style={isMobile ? { width: "100%" } : {}}>
-        <h1 style={{margin:"20px",color:"#FFFFFF", textAlign: "center"}}>Chat</h1>
+      <div style={isMobile ? { width: "100%", padding: "10px" } : {}}>
+        <h1 style={{ margin:"20px", color:"#FFFFFF", textAlign: "center", marginTop: "40px" }}>Chat</h1>
         <Chat smallChat={Boolean(isMobile)} isMobile={isMobile} />
       </div>
     </NoobPage>

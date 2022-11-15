@@ -40,6 +40,8 @@ import { searchPeopleByText } from "../../service-clients/search-service-client"
 import { ISearchPeopleByUsernameResponse } from "../../service-clients/messages/i-search";
 import frontendConfig from "../../utils/config/front-end-config";
 import CloseIcon from "@mui/icons-material/Close";
+import { isDeviceTypeSelector } from "../../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from '../../../../src/frontend/redux-store/layout/device-types';
 
 export default function Chat(props: {
   smallChat: boolean;
@@ -51,6 +53,7 @@ export default function Chat(props: {
   const query: ParsedUrlQuery = router.query;
   const otheruser: string | string[] | undefined = query.user;
   const name: string | string[] | undefined = query.name;
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
 
   const user = useAppSelector(userProfileSelector);
   const [chats, _setChats] = useState<object>({});
@@ -435,7 +438,7 @@ export default function Chat(props: {
 
     return (
       <>
-        <Box display={"flex"} alignItems={"center"}>
+        <Box display={"flex"} alignItems={"center"} width={isDesktop ? "auto" : "370px"}>
           <Box
             style={{
               flex: 0.95,
