@@ -306,7 +306,7 @@ export default function MobileDrawer(): JSX.Element {
             >
               <img
                 src="/images/menu/Home.png"
-                style={{ height: 20, width: 20 }}
+                style={{ height: 25, width: 25 }}
               />
             </IconButton>
             <IconButton

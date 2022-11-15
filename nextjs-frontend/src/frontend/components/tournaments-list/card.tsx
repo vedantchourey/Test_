@@ -35,10 +35,10 @@ const CardDesktop: React.FC<any> = ({
     <Box
       width={window.innerWidth / 2.8}
       height={window.innerWidth / 2.8 / 2.9}
-      minWidth={370}
+      minWidth={isDesktop ? 370 : 320}
       minHeight={177}
       m={2}
-      sx={{fontSize: !isDesktop ? 12 : undefined}}
+      sx={{ fontSize: !isDesktop ? 10 : undefined, marginLeft: "30px" }}
     >
       <Box
         style={{
@@ -46,7 +46,6 @@ const CardDesktop: React.FC<any> = ({
           backgroundRepeat: "no-repeat",
           backgroundSize: "100% 100%",
           paddingBottom: "0px",
-          
         }}
         height={"100%"}
       >
@@ -62,10 +61,10 @@ const CardDesktop: React.FC<any> = ({
         >
           <Box flex={1}>
             <Grid container columnSpacing={2}>
-              <Grid item xs={4} md={4} lg={4} className={styles.heading_font_color} style={{fontSize: !isDesktop ? 12 : undefined}}>
+              <Grid item xs={4} md={4} lg={4} className={styles.heading_font_color} style={{ fontSize: !isDesktop ? 10 : undefined }}>
                 TOURNAMENT TYPE
               </Grid>
-              <Grid item xs={2} md={2} lg={2} className={styles.heading_font_color} style={{fontSize: !isDesktop ? 12 : undefined}}>
+              <Grid item xs={2} md={2} lg={2} className={styles.heading_font_color} style={{ fontSize: !isDesktop ? 10 : undefined }}>
                 PLATFORM
               </Grid>
               <Grid item xs={6} md={6} lg={6} display={"flex"}>
@@ -73,7 +72,7 @@ const CardDesktop: React.FC<any> = ({
                   variant="determinate"
                   color={"secondary"}
                   value={(left_slots * 100) / parseInt(total_slots.toString())}
-                  style={{flex: 1, marginLeft: 10}}
+                  style={{ flex: 1, marginLeft: 10, marginTop: isDesktop ? 0 : 4 }}
                 />
               </Grid>
             </Grid>
@@ -103,6 +102,8 @@ const CardDesktop: React.FC<any> = ({
                       : moment(start_date).isBefore(moment().add(1, "day"))
                       ? "rgba(249, 85, 49, 1)"
                       : "rgba(105, 49, 249, 1)",
+                    width: isDesktop ? "auto" : "100px",
+                    height: isDesktop ? "auto" : "30px"
                   }}
                 >
                   {isCompleted
@@ -123,7 +124,7 @@ const CardDesktop: React.FC<any> = ({
               </Grid>
               <Grid item md={4} lg={4}></Grid>
             </Grid>
-            <Grid container columnSpacing={2}>
+            <Grid container columnSpacing={isDesktop ? 2 : 1}>
               <Grid item xs={6} md={6} lg={6} className={styles.heading_font_color} style={{fontSize: !isDesktop ? 12 : undefined}}>
                 {start_date}
               </Grid>
@@ -131,10 +132,9 @@ const CardDesktop: React.FC<any> = ({
                 item
                 md={4}
                 lg={4}
-                fontSize={18}
+                fontSize={isDesktop ? 18 : 13}
                 className={styles.credit_font}
                 textAlign={"right"}
-                
               >
                 {credits === 0 ? "Free Entry" : `${credits} Credits`}
               </Grid>
