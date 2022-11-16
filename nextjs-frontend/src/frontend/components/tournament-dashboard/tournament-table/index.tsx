@@ -10,11 +10,14 @@ import { IGameResponse } from "../../../service-clients/messages/i-game-response
 import { useAppDispatch, useAppSelector } from "../../../redux-store/redux-store";
 import { allGamesSelector, gamesFetchStatusSelector } from "../../../redux-store/games/game-selectors";
 import { fetchAllGamesThunk } from "../../../redux-store/games/game-slice";
+import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
+import { deviceTypes } from '../../../../../src/frontend/redux-store/layout/device-types';
 
 const TournamentDashboardTable: React.FC = () => {
   const [data, setData] = React.useState<TournamentType[]>([]);
   const router = useRouter();
   const [loading, setLoading] = React.useState(true);
+  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
 
   React.useEffect(() => {
     setLoading(true)
@@ -142,6 +145,7 @@ const TournamentDashboardTable: React.FC = () => {
   
   return (
     <React.Fragment>
+      <div style={!isDesktop ? { maxWidth: "85vw", marginLeft: 7 } : {}}>
       <NoobTable
         title={"Tournament Master"}
         colConf={conf}
@@ -154,6 +158,7 @@ const TournamentDashboardTable: React.FC = () => {
           .slice(0, 5)}
         loading={loading}
       />
+      </div>
       <CardLayout styles={{ padding: 0, paddingBottom: "0!important" }}>
         <Box justifyContent={"center"} width="100%">
           <Button fullWidth onClick={viewAllHandler}>

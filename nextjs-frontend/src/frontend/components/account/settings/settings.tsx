@@ -49,7 +49,7 @@ const ProfileSettings = (): JSX.Element => {
         <Grid item md={4}>
           <Divider />
         </Grid>
-        <Grid item md={3} sx={{ textAlign: 'center', mt: isMobile ? "25px" : null }}>
+        <Grid item md={3} sx={{ textAlign: 'center', mt: isMobile ? "40px" : null }}>
           <Typography variant="h1" fontSize={26}>
             Profile Settings
           </Typography>

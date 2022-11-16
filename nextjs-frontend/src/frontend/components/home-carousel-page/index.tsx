@@ -112,7 +112,7 @@ const HomeCarouselPage: React.FC = () => {
       }}
     >
       <Grid container columnSpacing={2} rowSpacing={2}>
-        <Grid item md={3} lg={2}>
+        <Grid item md={3} lg={2} marginTop={5}>
           <DashboardSideBar />
         </Grid>
         <Grid item md={9} lg={10} paddingRight={2}>
@@ -137,11 +137,13 @@ const HomeCarouselPage: React.FC = () => {
               </Grid>
             </Grid>
             <Grid item md={12}>
-              <NoobTable
-                title={"Home Carousel Page"}
-                colConf={conf}
-                data={data}
-              ></NoobTable>
+              <div style={{ maxWidth: "85vw" }}>
+                <NoobTable
+                  title={"Home Carousel Page"}
+                  colConf={conf}
+                  data={data}
+                ></NoobTable>
+              </div>
             </Grid>
           </Grid>
         </Grid>
