@@ -385,12 +385,12 @@ const WatchTeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
                 return (
                   <>
                     <Member key={player.name} {...player} />
-                    <Box display={"flex"} justifyContent="space-around" maxWidth={"280px"} ml={4}>
-                      <Box textAlign="center" flex={0.38}>
+                    <Box display={"flex"} ml={4}>
+                      <Box textAlign="center" flex={0.43}>
                         <NoobButton
                           variant="contained"
                           disabled={loading}
-                          style={{ backgroundColor: "#6932F9" }}
+                          style={{ backgroundColor: "#6932F9", fontSize: 12 }}
                           fullWidth={true}
                           onClick={(): void => {
                             removeToWatchList(player.id || "");
@@ -399,11 +399,11 @@ const WatchTeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
                           - Remove
                         </NoobButton>
                       </Box>
-                      <Box textAlign="center" mb={3} flex={0.38}>
+                      <Box textAlign="center" mb={3} flex={0.43} ml={1}>
                         <NoobButton
                           variant="contained"
                           disabled={loading}
-                          style={{ backgroundColor: "#F09633" }}
+                          style={{ backgroundColor: "#F09633", fontSize: 12 }}
                           fullWidth={true}
                           onClick={(): void => {
                             setIsModalOpen(true);
