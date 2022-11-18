@@ -192,7 +192,7 @@ const Team: React.FC = () => {
         }
       }
       return (
-        <FormControl fullWidth>
+        <FormControl sx={{ minWidth: "100%" }}>
           <Select
             value={page}
             input={<OutlinedInput />}

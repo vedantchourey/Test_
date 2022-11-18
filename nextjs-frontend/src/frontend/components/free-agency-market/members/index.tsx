@@ -401,12 +401,12 @@ const TeamMembers: React.FC<{
               return (
                 <div key={index}>
                   <Member key={player.firstName} {...player} />
-                  <Box display={"flex"} mb={4} justifyContent={"space-between"}>
-                    <Box textAlign="center" flex={0.48}>
+                  <Box display={"flex"} mb={4} justifyContent="space-around" maxWidth={"275px"} ml={4}>
+                    <Box textAlign="center" flex={0.40}>
                       <NoobButton
                         variant="contained"
                         disabled={loading}
-                        style={{ backgroundColor: "#6932F9" }}
+                        style={{ backgroundColor: "#6932F9", fontSize: 13 }}
                         fullWidth={true}
                         onClick={(): void => {
                           addToWatchList(
@@ -419,11 +419,11 @@ const TeamMembers: React.FC<{
                         + Watch List
                       </NoobButton>
                     </Box>
-                    <Box textAlign="center" flex={0.48}>
+                    <Box textAlign="center" flex={0.40}>
                       <NoobButton
                         variant="contained"
                         disabled={loading}
-                        style={{ backgroundColor: "#F09633" }}
+                        style={{ backgroundColor: "#F09633", fontSize: 13 }}
                         fullWidth={true}
                         onClick={(): void => {
                           setIsModalOpen(true);

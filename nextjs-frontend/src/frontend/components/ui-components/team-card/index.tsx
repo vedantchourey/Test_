@@ -45,8 +45,8 @@ const CardDesktop: React.FC<TeamCardProp> = ({
             sx={{
               position: "absolute",
               backgroundColor: "#6932F9",
-              mt: -7,
-              ml: 2,
+              ml: 0,
+              top: 280,
             }}
             onClick={(): any => onChangeTeamLogo()}
           >
@@ -182,9 +182,10 @@ const TeamCard: React.FC<TeamCardProp> = ({
   }, [coverLogoPicker]);
 
   return (
-    <Box sx={{ marginX: { md: "70px", sm: "10px", xs: "10px" } }}>
+    <Box sx={{ marginX: { md: "70px", sm: "10px", xs: "0px" } }}>
       <div
         style={{
+          width: isMobile ? "auto" : "70%",
           padding: 20,
           marginBottom: 20,
           backgroundImage: `linear-gradient(180deg, rgba(64, 64, 64, 0.3), rgba(8, 0, 28, 0.8)), url(${
@@ -196,6 +197,7 @@ const TeamCard: React.FC<TeamCardProp> = ({
           borderRadius: 10,
           backgroundSize: "cover",
           display: "flex",
+          marginTop: isMobile ? 40 : 0,
         }}
         // onClick={(): any => setCoverLogoPicker(true)}
       >

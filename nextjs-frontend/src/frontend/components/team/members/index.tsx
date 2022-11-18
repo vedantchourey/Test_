@@ -318,7 +318,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({
     <React.Fragment>
       <Box>
         {!isDesktop && (
-          <Box mb={2}>
+          <Box mb={2} style={{ width: "auto" }}>
             <Typography color={"white"} variant={"h5"}>
               Team Graph
             </Typography>
@@ -336,7 +336,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({
                 );
               })}
             </Select>
-            <Line options={options} data={data} />
+            <Line options={options} data={data} style={{ minWidth: "100%", maxWidth: "100%" }} />
           </Box>
         )}
 
@@ -351,12 +351,14 @@ const TeamMembers: React.FC<TeamMembersProps> = ({
           <Typography color={"white"} variant={"h5"}>
             Team Members
           </Typography>
-          <Button style={{ marginLeft: "2px" }} onClick={handleOpen}>
-            Add Player
-          </Button>
+          {!isDesktop && (
+            <Button style={{ marginLeft: "2px" }} onClick={handleOpen}>
+              Add Player
+            </Button>
+          )}
         </div>
 
-        <Box marginY={2} width={"99vw"}>
+        <Box marginY={2} width={!isDesktop ? "85vw" : "68vw"}>
           {!isDesktop && (
             <div
               style={{
@@ -488,7 +490,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({
               );
             })}
           </Select>
-          <Line options={options} data={data} />
+          <Line options={options} data={data} style={{ minWidth: "60%", maxWidth: "60%" }} />
         </Box>
       )}
 

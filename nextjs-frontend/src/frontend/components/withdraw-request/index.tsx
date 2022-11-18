@@ -116,17 +116,19 @@ const WithdrawRequest: React.FC = () => {
       }}
     >
       <Grid container columnSpacing={2} rowSpacing={2}>
-        <Grid item md={3}>
+        <Grid item md={3} marginTop={5}>
           <DashboardSideBar />
         </Grid>
         <Grid item md={9} paddingRight={2}>
           <Grid container columnSpacing={2}>
             <Grid item md={12}>
-              <NoobTable
-                title={"Withdraw Request"}
-                colConf={conf}
-                data={data}
-              ></NoobTable>
+              <div style={{ maxWidth: "85vw" }}>
+                <NoobTable
+                  title={"Withdraw Request"}
+                  colConf={conf}
+                  data={data}
+                ></NoobTable>
+              </div>
             </Grid>
           </Grid>
         </Grid>

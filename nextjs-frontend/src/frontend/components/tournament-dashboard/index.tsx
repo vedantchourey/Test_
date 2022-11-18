@@ -16,7 +16,7 @@ const TournamentDashboard: React.FC = () => {
       }}
     >
       <Grid container columnSpacing={2} rowSpacing={2}>
-        <Grid item md={3} lg={3}>
+        <Grid item md={3} lg={3} marginTop={5}>
           <DashboardSideBar />
         </Grid>
         <Grid item md={6} lg={9}>
@@ -117,7 +117,7 @@ const TournamentDashboard: React.FC = () => {
               />
             </Grid>
           </Grid> */}
-          <Grid item md={12} lg={12}>
+          <Grid item md={12} lg={12} xs={12}>
             <TournamentDashboardTable />
           </Grid>
           {/* <Grid item md={12}>

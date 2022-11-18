@@ -115,7 +115,7 @@ const suspendreport = async (Id: string, isSuspended: boolean): Promise<void> =>
       }}
     >
       <Grid container columnSpacing={2} rowSpacing={2}>
-        <Grid item md={3} lg={2}>
+        <Grid item md={3} lg={2} marginTop={5}>
           <DashboardSideBar />
         </Grid>
         <Grid item md={9} lg={10} paddingRight={2}>

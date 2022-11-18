@@ -270,7 +270,7 @@ const TournamentMaster: React.FC = () => {
       }}
     >
       <Grid container columnSpacing={2} rowSpacing={2}>
-        <Grid item md={3}>
+        <Grid item md={3} marginTop={5}>
           <DashboardSideBar />
         </Grid>
         <Grid item md={9} paddingRight={2}>
@@ -374,21 +374,23 @@ const TournamentMaster: React.FC = () => {
                 </Grid>
               </CardLayout>
             </Grid>
-            <Grid item md={12}>
-              <NoobTable
-                colConf={conf}
-                data={data.sort((a: any, b: any) => {
-                  const aTime: any = moment(a.startDate).format("x");
-                  const bTime: any = moment(b.startDate).format("x");
-                  return bTime - aTime;
-                })}
-                totalRecords={totalRecords}
-                paginate={{
-                  currentPage: page,
-                  onPageChange: setPage,
-                  recordsPerPage,
-                }}
-              ></NoobTable>
+            <Grid item md={12} xs={12}>
+              <div style={{ maxWidth: "85vw" }}>
+                <NoobTable
+                  colConf={conf}
+                  data={data.sort((a: any, b: any) => {
+                    const aTime: any = moment(a.startDate).format("x");
+                    const bTime: any = moment(b.startDate).format("x");
+                    return bTime - aTime;
+                  })}
+                  totalRecords={totalRecords}
+                  paginate={{
+                    currentPage: page,
+                    onPageChange: setPage,
+                    recordsPerPage,
+                  }}
+                ></NoobTable>
+              </div>
             </Grid>
           </Grid>
         </Grid>
