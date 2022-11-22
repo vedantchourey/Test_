@@ -27,7 +27,7 @@ const Balance = (): any => {
     mobile: yup.string().required("Mobile is required"),
     accNo: yup.string().required("Account number is required"),
     ifsc: yup.string().required("IFSC code is required"),
-    name: yup.string().required("Name code is required"),
+    bank_name: yup.string().required("Name code is required"),
     aadhar_no: yup.string().required("aadhar is required"),
     acc_type: yup.string().required("Type is required"),
   });
@@ -67,7 +67,7 @@ const Balance = (): any => {
             accNo: kycData.account_no,
             aadhar_no: kycData.aadhar_no,
             ifsc: kycData.ifsc,
-            name: kycData.name,
+            bank_name: kycData.bank_name,
             acc_type: kycData.acc_type,
           });
           setIsVerified(true);
@@ -81,7 +81,7 @@ const Balance = (): any => {
   const submmitKycDetails = async (data: any): Promise<void> => {
     const headers = await getAuthHeader();
     await axios
-      .post(`/api/kyc`, data, {
+      .post(`/api/kyc`, {name: data.bank_name, ...data }, {
         headers: headers,
       })
       .then((res) => {
@@ -90,7 +90,7 @@ const Balance = (): any => {
         }
       })
       .catch((err) => {
-        console.error(err);
+        console.error("error ->",err);
       });
   };
 
@@ -99,7 +99,7 @@ const Balance = (): any => {
       mobile: "",
       accNo: "",
       ifsc: "",
-      name: "",
+      bank_name: "",
       aadhar_no: "",
       acc_type: ""
     },
@@ -293,13 +293,13 @@ const Balance = (): any => {
                     margin="none"
                     label="Bank Account Name"
                     size="small"
-                    name="name"
+                    name="bank_name"
                     fullWidth
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.name}
-                    helperText={formik.touched.name && formik.errors.name}
-                    error={Boolean(formik.touched.name && formik.errors.name)}
+                    value={formik.values.bank_name}
+                    helperText={formik.touched.bank_name && formik.errors.bank_name}
+                    error={Boolean(formik.touched.bank_name && formik.errors.bank_name)}
                   />
                 </Grid>
                 <Grid item xs={!isDesktop ? 12 : 4}>
@@ -308,7 +308,7 @@ const Balance = (): any => {
                     margin="none"
                     label="Account Type"
                     size="small"
-                    name="type"
+                    name="acc_type"
                     fullWidth
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
