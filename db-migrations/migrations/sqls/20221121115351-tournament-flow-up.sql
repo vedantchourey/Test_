@@ -421,7 +421,7 @@ CREATE TABLE "public"."reported_post" (
 );
 
 CREATE TABLE "public"."support" (
-    "id" SERIAL NOT NULL,
+    "id" text NOT NULL,
     "created_at" timestamptz DEFAULT now(),
     "message" text,
     "type" text,
