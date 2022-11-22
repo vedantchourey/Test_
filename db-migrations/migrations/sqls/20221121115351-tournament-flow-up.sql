@@ -3,7 +3,7 @@
 
 -- Table Definition
 CREATE TABLE "public"."author" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "created_at" timestamptz DEFAULT now(),
     "message" text,
     "subject" text,
@@ -15,7 +15,7 @@ CREATE TABLE "public"."author" (
 
 -- Table Definition
 CREATE TABLE "public"."b_group" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "stage_id" int8,
     "number" int8,
     "created_at" timestamptz DEFAULT now(),
@@ -26,7 +26,7 @@ CREATE TABLE "public"."b_group" (
 
 -- Table Definition
 CREATE TABLE "public"."b_match" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "created_at" timestamptz DEFAULT now(),
     "number" int8,
     "stage_id" int8,
@@ -44,7 +44,7 @@ CREATE TABLE "public"."b_match" (
 
 -- Table Definition
 CREATE TABLE "public"."b_match_game" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "stage_id" int8,
     "parent_id" int8,
     "number" int8,
@@ -58,7 +58,7 @@ CREATE TABLE "public"."b_match_game" (
 
 -- Table Definition
 CREATE TABLE "public"."b_participant" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "created_at" timestamptz DEFAULT now(),
     "tournament_id" int8,
     "name" varchar,
@@ -73,7 +73,7 @@ CREATE TABLE "public"."b_participant" (
 
 -- Table Definition
 CREATE TABLE "public"."b_round" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "created_at" timestamptz DEFAULT now(),
     "number" int8,
     "stage_id" int8,
@@ -85,7 +85,7 @@ CREATE TABLE "public"."b_round" (
 
 -- Table Definition
 CREATE TABLE "public"."b_stage" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "created_at" timestamptz DEFAULT now(),
     "tournament_id" int8,
     "name" varchar,
@@ -99,23 +99,11 @@ CREATE TABLE "public"."b_stage" (
 
 -- Table Definition
 CREATE TABLE "public"."b_tournament" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "tournament_uuid" uuid,
     "created_at" timestamptz DEFAULT now(),
     PRIMARY KEY ("id")
 );
-
--- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
-
--- Table Definition // remove=
--- CREATE TABLE "public"."blocked_users" (
---     "id" uuid NOT NULL DEFAULT gen_random_uuid(),
---     "blockedBy" uuid NOT NULL,
---     "blockedUser" uuid NOT NULL,
---     "createdAt" timestamptz DEFAULT now(),
---     PRIMARY KEY ("id")
--- );
-
 -- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
 
 -- Table Definition
@@ -133,7 +121,7 @@ CREATE TABLE "public"."brackets" (
 
 -- Table Definition
 CREATE TABLE "public"."channel" (
-    "id" uuid NOT NULL,
+    "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
     "created_at" timestamptz DEFAULT now(),
     "owner" text,
     "is_deleted" bool DEFAULT false,
@@ -145,7 +133,7 @@ CREATE TABLE "public"."channel" (
 
 -- Table Definition
 CREATE TABLE "public"."chat_users" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "created_at" timestamptz DEFAULT now(),
     "channel_id" text,
     "user_id" text,
@@ -176,7 +164,7 @@ CREATE TABLE "public"."comment_likes" (
 
 -- Table Definition
 CREATE TABLE "public"."configs" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "key" varchar,
     "value" varchar,
     "created_at" timestamptz DEFAULT now(),
@@ -197,7 +185,7 @@ CREATE TABLE "public"."configs" (
 
 -- Table Definition
 CREATE TABLE "public"."elo_ratings" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "elo_rating" int8 NOT NULL DEFAULT '750'::bigint,
     "game_id" uuid NOT NULL,
     "created_at" timestamptz DEFAULT now(),
@@ -209,7 +197,7 @@ CREATE TABLE "public"."elo_ratings" (
 
 -- Table Definition
 CREATE TABLE "public"."elo_ratings_history" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "elo_rating" int8,
     "user_id" uuid,
     "game_id" uuid,
@@ -225,7 +213,7 @@ CREATE TABLE "public"."elo_ratings_history" (
 
 -- Table Definition
 CREATE TABLE "public"."email_team_invitation" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "created_at" timestamptz DEFAULT now(),
     "team_id" uuid,
     "invite_by" uuid,
@@ -247,7 +235,7 @@ CREATE TABLE "public"."free_agency_market" (
 );
 
 CREATE TABLE "public"."home-carousel" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "created_at" timestamptz DEFAULT now(),
     "name" varchar,
     "subtitle" varchar,
@@ -257,7 +245,7 @@ CREATE TABLE "public"."home-carousel" (
 );
 
 CREATE TABLE "public"."kyc_details" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "user_id" uuid,
     "mobile" varchar,
     "account_no" varchar,
@@ -276,7 +264,7 @@ CREATE TABLE "public"."kyc_details" (
 
 -- Table Definition
 CREATE TABLE "public"."match_dispute" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "createdAt" timestamptz DEFAULT now(),
     "updatedAt" timestamptz DEFAULT (now() AT TIME ZONE 'utc'::text),
     "tournamentId" text,
@@ -302,7 +290,7 @@ CREATE TABLE "public"."match_dispute" (
 
 -- Table Definition
 CREATE TABLE "public"."match_result_request" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "match_id" int8,
     "screenshot" text,
     "opponent1" jsonb,
@@ -317,7 +305,7 @@ CREATE TABLE "public"."match_result_request" (
 
 -- Table Definition
 CREATE TABLE "public"."message_report" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "created_at" timestamptz DEFAULT now(),
     "channel_id" text,
     "user_id" text,
@@ -329,7 +317,7 @@ CREATE TABLE "public"."message_report" (
 
 -- Table Definition
 CREATE TABLE "public"."messages" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "created_at" timestamptz DEFAULT now(),
     "channel_id" text,
     "send_by" text,
@@ -340,7 +328,7 @@ CREATE TABLE "public"."messages" (
 );
 
 CREATE TABLE "public"."news" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "created_at" timestamptz DEFAULT now(),
     "author" varchar,
     "title" varchar,
@@ -355,7 +343,7 @@ CREATE TABLE "public"."news" (
 
 -- Table Definition
 CREATE TABLE "public"."news_likes" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "createdAt" timestamptz DEFAULT now(),
     "likedBy" varchar,
     "newsId" varchar,
@@ -382,7 +370,7 @@ CREATE TABLE "public"."notifications" (
 
 -- Table Definition
 CREATE TABLE "public"."orders" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "created_at" timestamptz DEFAULT now(),
     "order_id" text DEFAULT uuid_generate_v4(),
     "products" _json,
@@ -403,7 +391,7 @@ CREATE TABLE "public"."posts_mentions" (
 );
 
 CREATE TABLE "public"."product" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "created_at" timestamptz DEFAULT now(),
     "name" text,
     "image" text,
@@ -414,7 +402,7 @@ CREATE TABLE "public"."product" (
 );
 
 CREATE TABLE "public"."products" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "created_at" timestamptz DEFAULT now(),
     "name" text,
     "image" text,
@@ -433,7 +421,7 @@ CREATE TABLE "public"."reported_post" (
 );
 
 CREATE TABLE "public"."support" (
-    "id" text NOT NULL,
+    "id" SERIAL NOT NULL,
     "created_at" timestamptz DEFAULT now(),
     "message" text,
     "type" text,
@@ -468,7 +456,7 @@ CREATE TABLE "public"."teams" (
 );
 
 CREATE TABLE "public"."teams_invitation" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "team_id" uuid NOT NULL,
     "user_id" uuid NOT NULL,
     "type" varchar,
@@ -556,7 +544,7 @@ CREATE TABLE "public"."transaction" (
 );
 
 CREATE TABLE "public"."user_last_seen" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "created_at" timestamptz DEFAULT now(),
     "user_id" text,
     "last_seen" timestamptz,
@@ -584,7 +572,7 @@ CREATE TABLE "public"."watchlist" (
 );
 
 CREATE TABLE "public"."withdraw_request" (
-    "id" int8 NOT NULL,
+    "id" SERIAL NOT NULL,
     "created_at" timestamptz DEFAULT now(),
     "userId" uuid,
     "status" text DEFAULT 'PENDING'::text,
