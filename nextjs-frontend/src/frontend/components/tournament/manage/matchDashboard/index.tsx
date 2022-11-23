@@ -24,6 +24,7 @@ import React from "react";
 import { TournamentData } from "../..";
 import { ReactComponent as CircleCloseIcon } from "../../../../../../public/icons/close.svg";
 import { getRoundName } from "../../../../services/get-round-name";
+import { frontendSupabase } from "../../../../services/supabase-frontend-service";
 import { getAuthHeader } from "../../../../utils/headers";
 import AccordionAlt from "../../../ui-components/accordion";
 import CardLayout from "../../../ui-components/card-layout";
@@ -178,6 +179,22 @@ const MatchDashboard: React.FC = (): JSX.Element => {
   };
 
   const autoSeedBrackets = async (): Promise<void> => {
+    const findSelectedRound = roundList.find((i) => i.id === selectedRound)
+    
+    const updateTournamentDetails = {
+      ...tournamentDetails,
+      bracketsMetadata: {
+        ...tournamentDetails?.bracketsMetadata,
+        rounds: tournamentDetails?.bracketsMetadata?.rounds.map((i) => ({
+          ...i,
+          startTime:
+            i.name === findSelectedRound?.name
+              ? new Date().toISOString()
+              : i.startTime,
+        })),
+      },
+    };
+
     const findFirstRoundMatch: any[] = tournamentDetails?.brackets.match
       .map((m: any) => {
         const opponent1Player = tournamentDetails?.brackets.participant.find(
@@ -252,8 +269,16 @@ const MatchDashboard: React.FC = (): JSX.Element => {
           )
           .catch((err) => console.warn(err)))
     );
+
+    submitHandler(updateTournamentDetails)
     fetchAllDetails();
-    alert("Auto seeding completed");
+  };
+
+  const submitHandler = async (submitData: any): Promise<any> => {
+    await frontendSupabase
+      .from("tournamentsData")
+      .update({ bracketsMetadata: submitData.bracketsMetadata })
+      .match({ id: submitData.id });
   };
 
   const autoEliminateBrackets = async (): Promise<void> => {

@@ -453,7 +453,9 @@ const ViewTournament: React.FC = () => {
     return (data.bracketsMetadata?.rounds || []).map((round, index) => {
       let timing;
       if (parseInt(round.round) === 1) {
-        timing = getMomentDate(startDate, startTime);
+        timing = round.startTime
+          ? getMomentDate(startDate, round.startTime || startTime)
+          : getMomentDate(startDate, startTime);
       } else {
         timing = getMomentDate(startDate, round.startTime || startTime);
       }
