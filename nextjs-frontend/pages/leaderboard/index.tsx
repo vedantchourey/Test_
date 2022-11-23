@@ -353,14 +353,18 @@ const Leaderboard = (): JSX.Element => {
                               >
                                 Game Played:{" "}
                                 {isTeam
-                                  ? item.loss + item.won
-                                  : parseInt(item.lost) + parseInt(item.won)}
+                                  ? (item.loss || 0) + (item.won || 0)
+                                  : parseInt(item.lost || 0) +
+                                    parseInt(item.won || 0)}
                               </Typography>
                               <Typography
                                 className={styles.text2}
                                 style={{ color: "white" }}
                               >
-                                Wins: {isTeam ? item.won : parseInt(item.won)}
+                                Wins:{" "}
+                                {isTeam
+                                  ? item.won || 0
+                                  : parseInt(item.won || 0)}
                               </Typography>
                             </Box>
                           </Box>
@@ -483,11 +487,11 @@ const Leaderboard = (): JSX.Element => {
                           </TableCell>
                           <TableCell align="center" component="th" scope="row">
                             {isTeam
-                              ? item.loss + item.won
-                              : parseInt(item.lost) + parseInt(item.won)}
+                              ? (item.loss || 0) + (item.won || 0)
+                              : parseInt(item.lost || 0) + parseInt(item.won || 0)}
                           </TableCell>
                           <TableCell align="center" component="th" scope="row">
-                            {isTeam ? item.won : parseInt(item.won)}
+                            {isTeam ? item.won || 0 : parseInt(item.won || 0)}
                           </TableCell>
                           <TableCell>{item.elo_rating}</TableCell>
                         </TableRow>

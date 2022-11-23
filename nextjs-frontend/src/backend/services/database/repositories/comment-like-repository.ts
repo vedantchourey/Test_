@@ -31,6 +31,14 @@ export class NewsLikesRepository extends BaseRepository<ICommentLike> {
       .del();
   }
 
+  delete(id: string): Promise<number> {
+    return this.entities()
+      .where({
+        likedBy: id
+      })
+      .del();
+  }
+
   likeCount(like: ICommentLike): Promise<any> {    
     
     return this.entities()

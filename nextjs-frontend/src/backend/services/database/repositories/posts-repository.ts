@@ -67,4 +67,10 @@ export class PostsRepository extends BaseRepository<IPost> {
                .where({id: id})
   }
 
+  async delete(id: string): Promise<number> {
+    return this.entities()
+               .where({postedBy: id})
+               .del();
+  }
+
 }

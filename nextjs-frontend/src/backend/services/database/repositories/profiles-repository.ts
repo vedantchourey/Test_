@@ -33,6 +33,12 @@ export class ProfilesRepository extends BaseRepository<IProfile> {
     return parseInt(result[0].count, 10);
   }
 
+  async deleteById(id: string): Promise<number> {
+    const result = await this.entities().where({id: id})
+        .delete();
+    return result;
+  }
+
   async updateAvatar(userId: string, url: string): Promise<number> {
     return this.entities()
                .update({avatarUrl: url, updatedAt: nowAsISOString()})

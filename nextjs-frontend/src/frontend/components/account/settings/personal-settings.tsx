@@ -10,6 +10,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { Box } from "@mui/system";
+import axios from "axios";
 import { DateTime } from "luxon";
 import moment from "moment";
 import { useRouter } from "next/router";
@@ -22,6 +23,7 @@ import {
 import { userProfileSelector } from "../../../redux-store/authentication/authentication-selectors";
 import { useAppSelector } from "../../../redux-store/redux-store";
 import { frontendSupabase } from "../../../services/supabase-frontend-service";
+import { getAuthHeader } from "../../../utils/headers";
 import StateDropDown from "../../drop-downs/state-drop-down";
 import styles from "./style.module.css";
 
@@ -472,6 +474,21 @@ const PersonalSettings = (): JSX.Element => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const handleDeleteAccount = async (): Promise<any> => {
+    const data = {
+      id: userData?.id,
+    };
+    const headers = await getAuthHeader();
+    axios
+      .post("/api/delete-user", data, { headers: headers })
+      .then(async () => {
+        await frontendSupabase.auth.signOut();
+        await router.push("/");
+      })
+      .catch(() =>
+        alert("You are already have team with same game and platform"));
+  };
+
   const getUserData = async (): Promise<any> => {
     const userInfo = await frontendSupabase
       .from("private_profiles")
@@ -479,12 +496,12 @@ const PersonalSettings = (): JSX.Element => {
       .eq("id", userData?.id);
     setRequest({
       ...request,
-      firstName: userInfo.data?.[0].firstName,
-      lastName: userInfo.data?.[0].lastName,
+      firstName: userInfo.data?.[0]?.firstName,
+      lastName: userInfo.data?.[0]?.lastName,
       email: frontendSupabase.auth.user()?.email,
-      dateOfBirth: new Date(userInfo.data?.[0].dateOfBirth),
-      country: userInfo.data?.[0].country,
-      stateId: userInfo.data?.[0].stateId,
+      dateOfBirth: new Date(userInfo.data?.[0]?.dateOfBirth),
+      country: userInfo.data?.[0]?.country,
+      stateId: userInfo.data?.[0]?.stateId,
     });
   };
 
@@ -633,7 +650,7 @@ const PersonalSettings = (): JSX.Element => {
             )}
           />
         </Grid> */}
-        <Grid item xs={12} md={6} >
+        <Grid item xs={12} md={6}>
           <StateDropDown
             value={request.stateId}
             onChange={(id, state): void =>
@@ -680,19 +697,33 @@ const PersonalSettings = (): JSX.Element => {
             )}
           /> */}
         </Grid>
-          <Divider sx={{ mt: 8 }} light />
-          <Grid item xs={12} md={12}>
-            <Box sx={{ textAlign: "center", mt: 4 }}>
-              <Button
-                className={isMobile? styles.actionButtonForMobile : styles.actionButton}
-                onClick={(): any => {
-                  handleSubmit();
-                }}
-              >
-                <Typography>Save Changes</Typography>
-              </Button>
-            </Box>
-          </Grid>
+        <Divider sx={{ mt: 8 }} light />
+        <Grid item xs={12} md={12}>
+          <Box sx={{ textAlign: "center", mt: 4 }}>
+            <Button
+              className={
+                isMobile ? styles.actionButtonForMobile : styles.actionButton
+              }
+              onClick={(): any => {
+                handleSubmit();
+              }}
+            >
+              <Typography>Save Changes</Typography>
+            </Button>
+            <Button
+              style={{ marginLeft: 10, borderRadius: 1 }}
+              variant={"contained"}
+              color={"error"}
+              onClick={(): any => {
+                if(confirm("Are you sure! Your account will be delete?")){
+                  handleDeleteAccount();
+                }
+              }}
+            >
+              <Typography>Delete my account</Typography>
+            </Button>
+          </Box>
+        </Grid>
       </Grid>
     </>
   );
