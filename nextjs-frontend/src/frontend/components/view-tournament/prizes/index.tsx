@@ -41,44 +41,54 @@ const Prizes: React.FC<PrizesProps> = ({ data }) => {
       ? [
           CreateData(
             "Place 1:",
-            `${(
-              (data?.settings?.entryType === "credit"
-                ? pricePool * 0.6 * credit_config.price_per_credit
-                : 600) * parseInt(data?.settings?.tournamentFormat[0] || "1")
+            `${(data?.settings?.entryType === "credit"
+              ? pricePool *
+                0.6 *
+                credit_config.price_per_credit *
+                parseInt(data?.settings?.tournamentFormat[0] || "1")
+              : 600
             ).toFixed()}`
           ),
           CreateData(
             "Place 2:",
-            `${(
-              (data?.settings?.entryType === "credit"
-                ? pricePool * 0.3 * credit_config.price_per_credit
-                : 300) * parseInt(data?.settings?.tournamentFormat[0] || "1")
+            `${(data?.settings?.entryType === "credit"
+              ? pricePool *
+                0.3 *
+                credit_config.price_per_credit *
+                parseInt(data?.settings?.tournamentFormat[0] || "1")
+              : 300
             ).toFixed()}`
           ),
           CreateData(
             "Place 3:",
-            `${(
-              (data?.settings?.entryType === "credit"
-                ? pricePool * 0.1 * credit_config.price_per_credit
-                : 100) * parseInt(data?.settings?.tournamentFormat[0] || "1")
+            `${(data?.settings?.entryType === "credit"
+              ? pricePool *
+                0.1 *
+                credit_config.price_per_credit *
+                parseInt(data?.settings?.tournamentFormat[0] || "1")
+              : 100
             ).toFixed()}`
           ),
         ]
       : [
           CreateData(
             "Place 1:",
-            `${(
-              (data?.settings?.entryType === "credit"
-                ? pricePool * 0.65 * credit_config.price_per_credit
-                : 700) * parseInt(data?.settings?.tournamentFormat[0] || "1")
+            `${(data?.settings?.entryType === "credit"
+              ? pricePool *
+                0.65 *
+                credit_config.price_per_credit *
+                parseInt(data?.settings?.tournamentFormat[0] || "1")
+              : 700
             ).toFixed()}`
           ),
           CreateData(
             "Place 2:",
-            `${(
-              (data?.settings?.entryType === "credit"
-                ? pricePool * 0.35 * credit_config.price_per_credit
-                : 300) * parseInt(data?.settings?.tournamentFormat[0] || "1")
+            `${(data?.settings?.entryType === "credit"
+              ? pricePool *
+                0.35 *
+                credit_config.price_per_credit *
+                parseInt(data?.settings?.tournamentFormat[0] || "1")
+              : 300
             ).toFixed()}`
           ),
         ];

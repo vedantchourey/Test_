@@ -573,26 +573,32 @@ export const submitMatchResult = async (
         tournamentData?.data?.bracketsMetadata?.thirdPlace);
 
     const firstWinerPrice = (
-      (tournamentData?.data?.settings?.entryType === "credit"
-        ? pricePool * (threrPrize ? 0.6 : 0.65) * price_per_credit
+      tournamentData?.data?.settings?.entryType === "credit"
+        ? pricePool *
+          (threrPrize ? 0.6 : 0.65) *
+          price_per_credit *
+          parseInt(tournamentData?.data?.settings?.tournamentFormat[0] || "1")
         : threrPrize
         ? 600
-        : 700) *
-      parseInt(tournamentData?.data?.settings?.tournamentFormat[0] || "1")
+        : 700
     ).toFixed();
 
     const secondWinerPrice = (
-      (tournamentData?.data?.settings?.entryType === "credit"
-        ? pricePool * (threrPrize ? 0.3 : 0.35) * price_per_credit
-        : 300) *
-      parseInt(tournamentData?.data?.settings?.tournamentFormat[0] || "1")
+      tournamentData?.data?.settings?.entryType === "credit"
+        ? pricePool *
+          (threrPrize ? 0.3 : 0.35) *
+          price_per_credit *
+          parseInt(tournamentData?.data?.settings?.tournamentFormat[0] || "1")
+        : 300
     ).toFixed();
 
     const thirdWinerPrice = (
-      (tournamentData?.data?.settings?.entryType === "credit"
-        ? pricePool * 0.1 * price_per_credit
-        : 100) *
-      parseInt(tournamentData?.data?.settings?.tournamentFormat[0] || "1")
+      tournamentData?.data?.settings?.entryType === "credit"
+        ? pricePool *
+          0.1 *
+          price_per_credit *
+          parseInt(tournamentData?.data?.settings?.tournamentFormat[0] || "1")
+        : 100
     ).toFixed();
 
     let data: any;
