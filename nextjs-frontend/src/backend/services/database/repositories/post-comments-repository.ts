@@ -62,6 +62,14 @@ export class PostCommentsRepository extends BaseRepository<IPostComment> {
                .del();
   }
 
+  async delete(id: string): Promise<number> {
+    return this.entities()
+               .where({
+                 commentBy: id
+               })
+               .del();
+  }
+
   async updateComment(id: string, postId: string, commentBy: string, update: IUpdateComment): Promise<number> {
     return this.entities()
                .where({

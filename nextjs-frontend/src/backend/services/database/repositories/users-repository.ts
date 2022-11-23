@@ -28,6 +28,11 @@ export class UsersRepository extends BaseRepository<IUser> {
     const items = await this.entities();
     return items;
   }
+  async delete(user_id: string): Promise<any> {
+    const item = await this.entities().where("id", user_id)
+.delete();
+    return item;
+  }
 }
 
 export const createUsersRepository = (
