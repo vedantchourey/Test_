@@ -991,7 +991,7 @@ export const fetchUserMatchs = async (
         const { b_t_id } = match;
         const is_checked_in =
           tournaments.find((t: any) => t.tournament_id === b_t_id)
-            .is_checked_in || false;
+            ?.is_checked_in || false;
         if (
           opponent1.id &&
           groupPartList[opponent1.id] &&

@@ -19,7 +19,7 @@ const walletSlice = createSlice({
         setWalletDetails: (state, action: PayloadAction<any>) => {
             state.balance = action.payload?.wallet?.balance || 0
             state.transaction = action.payload.transaction
-            state.withdrawAmount = action.payload.user?.withdrawAmount
+            state.withdrawAmount = action.payload?.user?.withdrawAmount
         },
         setCartDetails: (state, action: PayloadAction<any>) => {
             state.cart_details = action.payload

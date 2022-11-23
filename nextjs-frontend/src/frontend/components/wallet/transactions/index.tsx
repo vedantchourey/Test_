@@ -70,11 +70,11 @@ const Transactions = (): any => {
                 {(
                   _.chunk(
                     transaction
-                      .filter(
+                      ?.filter(
                         (i: any) =>
                           i.created_at && (i.debit > 0 || i.credit > 0)
                       )
-                      .sort(function (a: any, b: any) {
+                      ?.sort(function (a: any, b: any) {
                         const dateA = new Date(a.created_at).getTime();
                         const dateB = new Date(b.created_at).getTime();
                         return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
