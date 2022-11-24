@@ -709,6 +709,7 @@ const ViewTournament: React.FC = () => {
     if (selectedTeam) {
       return renderTeamSelection();
     }
+
     return (
       <React.Fragment>
         <Loader loading={loading} />
@@ -780,6 +781,7 @@ const ViewTournament: React.FC = () => {
                   </span>
                 </Typography>
               </Box>
+              {/* CHECK HERE */}
               {countDown !== "00:00:00" ? (
                 <ActionButton
                   data={data}

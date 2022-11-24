@@ -133,13 +133,18 @@ export default function ChatCard(props: IChatCard): JSX.Element {
         >
           {props.name}
         </Typography>
-        <Typography
-          textAlign={"left"}
-          variant="caption"
-          color={"rgba(255,255,255,0.5)"}
-        >
-          {props.lastMessageUser}: {props.message && props.message?.length > 9 ? props.message.slice(0, 10) + "..." : props.message}
-        </Typography>
+        {props.message && (
+          <Typography
+            textAlign={"left"}
+            variant="caption"
+            color={"rgba(255,255,255,0.5)"}
+          >
+            {props.lastMessageUser}:{" "}
+            {props.message && props.message?.length > 9
+              ? props.message.slice(0, 10) + "..."
+              : props.message}
+          </Typography>
+        )}
       </Box>
       <Box ml={2} textAlign={"left"}>
         <Typography

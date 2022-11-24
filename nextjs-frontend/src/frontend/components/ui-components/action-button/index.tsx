@@ -55,6 +55,7 @@ const ActionButton: React.FC<Props> = ({
 }) => {
   const styles = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  
   const open = Boolean(anchorEl);
   const [backColor, setBackcolor] = React.useState<string>(
     "linear-gradient(180deg, #EF507E 0%, #F09633 100%)"
@@ -100,13 +101,18 @@ const ActionButton: React.FC<Props> = ({
     }
   };
 
+  const totalSlots = data?.bracketsMetadata?.playersLimit || 0;
+  const currentSlot = (data?.playerList || []).length;
+
   if (buttonOnly) {
     return (
       <Box>
         <Button
           style={{
             background:
-              backColor === "#006A3E"
+              totalSlots - currentSlot === 0
+                ? "grey"
+                : backColor === "#006A3E"
                 ? backColor
                 : disabled
                 ? "grey"
@@ -114,12 +120,14 @@ const ActionButton: React.FC<Props> = ({
             color: "white",
             padding: "16px 43px",
             width: style?.width ? style?.width : "189px",
-            fontSize: style?.fontSize ? style?.fontSize : 13
+            fontSize: style?.fontSize ? style?.fontSize : 13,
           }}
           aria-controls={open ? id : undefined}
           aria-expanded={open ? "true" : undefined}
           onClick={handleButtonClick}
-          disabled={disabled || checkIsJoined()}
+          disabled={
+            disabled || checkIsJoined() || totalSlots - currentSlot === 0
+          }
         >
           {joinText}
         </Button>

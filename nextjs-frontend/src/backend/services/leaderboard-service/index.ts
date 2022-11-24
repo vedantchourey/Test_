@@ -34,24 +34,25 @@ const fetchEloRating = async (
       connection as Knex,
       TABLE_NAMES.ELO_RATING_HISTORY
     );
+    
     const history = await eloRatingHistoryRepo
       .knexObj()
       .where("team_id", data.id);
-
+      
     return {
       ...data,
       loss: (history || []).filter((i: any) => parseInt(i.elo_rating) < 0)
         .length,
       won: (history || []).filter((i: any) => parseInt(i.elo_rating) > 0)
         .length,
-      elo_rating: history?.[0]?.elo_rating || "0",
+      elo_rating: data.elo_rating || history?.[0]?.elo_rating || "0",
     };
   } catch (err) {
     return {
       ...data,
       lost: "0",
       won: "0",
-      elo_rating: "0",
+      elo_rating: data.elo_rating || "0",
     };
   }
 };
