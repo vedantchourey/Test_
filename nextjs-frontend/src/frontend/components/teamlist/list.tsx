@@ -77,7 +77,8 @@ const TeamListData: React.FC = () => {
       const headers = await getAuthHeader();
       axios.get(endpoint, { headers: headers }).then((res) => {
         setData(res.data.result);
-      }).catch((error) => console.warn(error));
+      })
+.catch((error) => console.warn(error));
     } catch (err) {
       alert(err);
     }
