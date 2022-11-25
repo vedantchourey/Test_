@@ -198,7 +198,9 @@ const MatchDashboard: React.FC = (): JSX.Element => {
     const findFirstRoundMatch: any[] = tournamentDetails?.brackets.match
       .map((m: any) => {
         const opponent1Player = tournamentDetails?.brackets.participant.find(
-          (p: any) => m.opponent1.id === p.user_id || m.opponent1.id === p.id
+          (p: any) => {
+            return m.opponent1.id === p.user_id || m.opponent1.id === p.id;
+          }
         );
         const opponent2Player = tournamentDetails?.brackets.participant.find(
           (p: any) => m.opponent2.id === p.user_id || m.opponent2.id === p.id
@@ -272,6 +274,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
 
     submitHandler(updateTournamentDetails)
     fetchAllDetails();
+    alert("Auto seeding completed");
   };
 
   const submitHandler = async (submitData: any): Promise<any> => {

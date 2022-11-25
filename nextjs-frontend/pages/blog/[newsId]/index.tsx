@@ -118,7 +118,7 @@ export default function NewsView(): JSX.Element {
         .post(
           endpoint,
           {
-            newsId: currentNews.id,
+            newsId: currentNews.id.toString(),
           },
           {
             headers: headers,

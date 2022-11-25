@@ -53,7 +53,7 @@ export default function News(): JSX.Element {
         .post(
           endpoint,
           {
-            newsId: currentNews.id,
+            newsId: currentNews.id.toString(),
           },
           {
             headers: headers,
