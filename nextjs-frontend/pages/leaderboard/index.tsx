@@ -419,7 +419,7 @@ const Leaderboard = (): JSX.Element => {
                     ?.sort(function (a, b) {
                       return parseInt(b.elo_rating) - parseInt(a.elo_rating);
                     })
-                    .slice(0, leaderboardgamedata.length)
+                    .slice(3, leaderboardgamedata.length)
                     .map((item, idx) => {
                       const image = isTeam
                         ? item.teamLogo
