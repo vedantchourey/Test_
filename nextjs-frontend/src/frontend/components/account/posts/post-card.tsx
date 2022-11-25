@@ -65,6 +65,13 @@ const PostCard = (props: IProps): JSX.Element => {
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
   const [readMore, setReadMore] = useState(false);
   const [likeList, setLikeList] = useState([]);
+  const [modalImage, setModalImage] = useState("");
+  const [open, setOpen] = useState({
+    report: false,
+    copylink: false,
+    error: false,
+  });
+  const [anchorEl, setAnchorEl] = useState<any>(null);
 
   const imgUrl = props.data.postImgUrl;
   const avatarUrl = props.data.postOwner.avatarUrl;
@@ -75,7 +82,6 @@ const PostCard = (props: IProps): JSX.Element => {
   const handleCloseComments = (): void => setOpenCommentsModal(false);
   const handleCloseMenu = (): void => setShowMenu(false);
   const handleToggleMenu = (): void => setShowMenu((pre) => !pre);
-  const [modalImage, setModalImage] = useState("");
 
   const fetchUsers = async (post_id: string): Promise<void> => {
     const likeLists: any = await frontendSupabase
@@ -164,15 +170,14 @@ const PostCard = (props: IProps): JSX.Element => {
   };
 
   const deletePost = (): void => {
-    removePost(values.id);
-    setIsDeleted(true);
+    try {
+      removePost(values.id);
+    } catch(error) {
+      console.warn("Error while deleting post: ", error);
+    } finally {
+      setIsDeleted(true);
+    }
   };
-
-  const [open, setOpen] = useState({
-    report: false,
-    copylink: false,
-    error: false,
-  });
 
   const handleClose = (
     event?: React.SyntheticEvent | Event,
@@ -207,8 +212,6 @@ const PostCard = (props: IProps): JSX.Element => {
   };
 
   if (isDeleted) return <></>;
-
-  const [anchorEl, setAnchorEl] = React.useState<any>(null);
 
   const handleClickPopover = (event: any): void => {
     fetchUsers(values.id);
