@@ -413,6 +413,7 @@ export const acceptInvite = async (secret: string, connection: Knex.Transaction)
     }
 
 }
+
 export const rejectInvite = async (secret: string, connection: Knex.Transaction): Promise<ISuccess | IError> => {
     try {
         const team_invitation = new CrudRepository<ITeamInvitation>(connection, TABLE_NAMES.TEAM_INVITATION);

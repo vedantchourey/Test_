@@ -159,5 +159,11 @@ export const deletePlayerFromWatchList = async (
 
 export const deleteFAMEntry = async (req: any, connection: Knex): Promise<any> => {
   const famQuery = new CrudRepository<IFreeAgencyMarket>(connection, TABLE_NAMES.FREE_AGENCY_MARKET);
+  const watchlistRepo = new CrudRepository<IWatchList>(connection, TABLE_NAMES.WATCHLIST);
+  await watchlistRepo.delete({
+    playerId: req.user_id,
+    gameId: req.game_id,
+    platformId: req.platform_id,
+  });
   await famQuery.delete({ ...req })
 }
