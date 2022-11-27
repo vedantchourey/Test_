@@ -132,7 +132,8 @@ export const getWatchList = async (
     .join("private_profiles", "watchlist.playerId", "private_profiles.id")
     .join("profiles", "profiles.id", "watchlist.playerId")
     .select("*")
-    .select("watchlist.id as id");
+    .select("watchlist.id as id")
+    .where("userId", context.user?.id);
     
     const resultBatch = await Promise.all(
       users.map((i: any) =>
