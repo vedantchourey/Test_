@@ -53,8 +53,8 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 });
 
 // eslint-disable-next-line no-useless-escape
-// const URL_REGEX =
-//   /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&//=]*)/;
+const URL_REGEX =
+  /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&//=]*)/;
 
 const PostCard = (props: IProps): JSX.Element => {
   const user = useAppSelector(userProfileSelector);
@@ -374,29 +374,31 @@ const PostCard = (props: IProps): JSX.Element => {
                 fontWeight={300}
                 paragraph
               >
-                <Linkify>{values.postContent}</Linkify>
-                {/* {values.postContent.split(" ").map((part) =>
-                  URL_REGEX.test(part) ? (
-                    <a href={part} target="_blank" rel="noreferrer">
-                      {part}{" "}
-                    </a>
-                  ) : part.match("@") ? (
-                    <span
-                      onClick={(): void => {
-                        router.push(`/account/${part.substring(1)}`);
-                      }}
-                      style={{
-                        color: "#6932F9",
-                        marginLeft: "2px",
-                        marginRight: "2px",
-                        cursor: "pointer"
-                      }}
-                    >
-                      {part}{' '}
-                    </span>
-                  ) : (
-                    part + " "
-                  ))} */}
+                <Linkify>
+                  {values.postContent.split(" ").map((part) =>
+                    URL_REGEX.test(part) ? (
+                      <a href={part} target="_blank" rel="noreferrer">
+                        {part}{" "}
+                      </a>
+                    ) : part.match("@") ? (
+                      <span
+                        onClick={(): void => {
+                          router.push(`/account/${part.substring(1)}`);
+                        }}
+                        style={{
+                          color: "#6932F9",
+                          marginLeft: "2px",
+                          marginRight: "2px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        {part}{" "}
+                      </span>
+                    ) : (
+                      part + " "
+                    )
+                  )}
+                </Linkify>
               </Typography>
               {values.postContent.length > 250 ? (
                 <Button
