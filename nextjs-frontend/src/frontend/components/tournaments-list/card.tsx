@@ -102,7 +102,7 @@ const CardDesktop: React.FC<any> = ({
                       : moment(start_date).isBefore(moment().add(1, "day"))
                       ? "rgba(249, 85, 49, 1)"
                       : "rgba(105, 49, 249, 1)",
-                    width: isDesktop ? "auto" : "100px",
+                    width: isDesktop ? "auto" : "110px",
                     height: isDesktop ? "auto" : "30px"
                   }}
                 >
