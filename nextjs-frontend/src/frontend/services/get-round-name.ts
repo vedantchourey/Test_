@@ -28,14 +28,13 @@ export const getRoundName = (
       if (groupObj.number === 2) {
         name = `3rd Place Playoff`;
         type = `third-place`;
-      }
-      if (roundListSize === roundObj.number) {
-        name = `Final Round`;
-        type = `final`;
-      } else {
-        name = `Round ${roundObj.number}`;
-        type = roundListSize - 1 === roundObj.number ? `semi-final` : `round`;
-      }
+      } else if (roundListSize === roundObj.number) {
+          name = `Final Round`;
+          type = `final`;
+        } else {
+          name = `Round ${roundObj.number}`;
+          type = roundListSize - 1 === roundObj.number ? `semi-final` : `round`;
+        }
     } else {
       roundListSize = roundByGroup[matchObj.group_id].length;
       if (groupObj.number === 1) {

@@ -81,9 +81,9 @@ const fetchEloRatingForTeam = async (
       
     return {
       ...data,
-      loss: (history || []).filter((i: any) => parseInt(i.elo_rating) < 0)
+      loss: (history || []).filter((i: any) => i.status === "loss")
         .length,
-      won: (history || []).filter((i: any) => parseInt(i.elo_rating) > 0)
+      won: (history || []).filter((i: any) => i.status === "win")
         .length,
       elo_rating: data.elo_rating || history?.[0]?.elo_rating || "0",
     };

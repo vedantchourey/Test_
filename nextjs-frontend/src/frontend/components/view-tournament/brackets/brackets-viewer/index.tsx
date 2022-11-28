@@ -12,10 +12,20 @@ const Component = ({ brackets, isDasktop }: { brackets: any, isDasktop: boolean 
       window.bracketsViewer.addLocale("en", {
         "match-label": {
           "consolation-final": "3rd Place Playoff",
+          "winner-bracket": "UB",
         },
-        "abbreviations": {
-          "position": "",
-      },
+        abbreviations: {
+          position: "",
+        },
+        "origin-hint": {
+          "winner-bracket": "Loser of UB {{round}}.{{position}}",
+          "winner-bracket-semi-final": "Loser of UB Semi {{position}}",
+          "winner-bracket-final": "Loser of UB Final",
+        },
+        common: {
+          "round-name-winner-bracket": "UB Round {{roundNumber}}",
+          "round-name-winner-bracket-final": "UB Final Round",
+        },
       });
       
       // @ts-expect-error: ignore

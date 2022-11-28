@@ -577,6 +577,14 @@ const MatchDashboard: React.FC = (): JSX.Element => {
           </Select>
         </FormControl>
         <Button
+          onClick={(): any => handleRemoveNotCheckedInPlayers()}
+          variant="outlined"
+          size="small"
+          sx={{ ml: 1 }}
+        > 
+          Eliminate not checked in player
+        </Button>
+        <Button
           onClick={(): any => autoSeedBrackets()}
           variant="outlined"
           size="small"
@@ -590,14 +598,6 @@ const MatchDashboard: React.FC = (): JSX.Element => {
           sx={{ ml: 1 }}
         >
           Eliminate player who not enter result
-        </Button>
-        <Button
-          onClick={(): any => handleRemoveNotCheckedInPlayers()}
-          variant="outlined"
-          size="small"
-          sx={{ ml: 1 }}
-        >
-          Eliminate not checked in player
         </Button>
       </Box>
 
