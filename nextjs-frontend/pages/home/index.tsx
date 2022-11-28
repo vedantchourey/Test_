@@ -240,7 +240,7 @@ const Home = (): JSX.Element => {
                           className={styles.tab}
                           icon={<StorageIcon />}
                           iconPosition="start"
-                          label="NEWS FEED"
+                          label="BLOGS"
                         />
                         <Tab
                           value="3"
@@ -284,7 +284,7 @@ const Home = (): JSX.Element => {
                         columns={{ xs: 16, sm: 8, md: 12, lg: 12 }}
                         display="flex"
                         flexDirection="row"
-                        ml={7}
+                        ml={1}
                       >
                         <Box display={"flex"} flexWrap={"wrap"}>
                         {newsData.map((i: any, key) => {
@@ -418,7 +418,7 @@ const Home = (): JSX.Element => {
                     <Tab value="2"
                       icon={<StorageIcon style={{ height: 20, width: 20 }} />}
                       iconPosition="start"
-                      label="NEWS FEED"
+                      label="BLOGS"
                       style={{ fontSize: 12 }}
                     />
                     <Tab value="3"
