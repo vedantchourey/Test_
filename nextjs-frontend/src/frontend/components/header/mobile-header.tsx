@@ -211,7 +211,7 @@ export default function MobileDrawer(): JSX.Element {
         ref={updateMobileHeight}
       >
         <div className={style.container}>
-          <Box>
+          <Box sx={{ display: "flex", flexDirection: "row", alignItems: "flex-start" }}>
             <IconButton onClick={toggleDrawer}>
               <img
                 src="/icons/Vector-MenuIcon.png"
@@ -224,13 +224,13 @@ export default function MobileDrawer(): JSX.Element {
               style={{
                 display: "flex",
                 flexDirection: "row",
-                alignItems: "center",
+                alignItems: "flex-start",
                 justifyContent: "space-between",
               }}
             >
               <img
                 src="/icons/logo-white-1.png"
-                style={{ height: 25, width: 15 }}
+                style={{ height: 20, width: 15 }}
               />
               <div
                 style={{
@@ -240,10 +240,12 @@ export default function MobileDrawer(): JSX.Element {
                   marginLeft: 10,
                 }}
               />
-              <img
-                src="/images/noobstorm-logo-small.png"
-                style={{ height: 35, width: 120, marginLeft: 10 }}
-              />
+              <div style={{ marginTop: "-5px" }}>
+                <img
+                  src="/images/noobstorm-logo-small.png"
+                  style={{ width: 120, marginLeft: 10 }}
+                />
+              </div>
             </div>
           </Button>
           {isLoggedIn && (
