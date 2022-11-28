@@ -103,6 +103,20 @@ const MatchDashboard: React.FC = (): JSX.Element => {
   );
 
   const handleRemoveNotCheckedInPlayers = async (): Promise<void> => {
+
+    const findSelectedRound = roundList.find((i) => i.id === selectedRound)
+
+    const updateTournamentDetails = {
+      ...tournamentDetails,
+      bracketsMetadata: {
+        ...tournamentDetails?.bracketsMetadata,
+        rounds: tournamentDetails?.bracketsMetadata?.rounds.map((i) => ({
+          ...i,
+          checkedInPlayerSeed: i.name === findSelectedRound?.name ? true : i.checkedInPlayerSeed,
+        })),
+      },
+    };
+
     const findFirstRoundMatch: any[] = tournamentDetails?.brackets.match
       .map((m: any) => {
         const opponent1Player = tournamentDetails?.brackets.participant.find(
@@ -132,6 +146,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
         // !m.opponent1.result &&
         // !m.opponent2.result
       );
+      
 
     const setResult: any[] = findFirstRoundMatch.map((m) => {
       return {
@@ -159,21 +174,27 @@ const MatchDashboard: React.FC = (): JSX.Element => {
       };
     });
 
-    const endpoint = "/api/tournaments/match-result";
-    const headers = await getAuthHeader();
 
-    await Promise.any(
-      setResult.map((match) =>
-        axios
-          .patch(
-            endpoint,
-            {
-              ...match,
-            },
-            { headers: headers }
-          )
-          .catch((err) => console.warn(err)))
-    );
+    if(setResult.length){
+      const endpoint = "/api/tournaments/match-result";
+      const headers = await getAuthHeader();
+  
+      await Promise.any(
+        setResult.map((match) =>
+          axios
+            .patch(
+              endpoint,
+              {
+                ...match,
+              },
+              { headers: headers }
+            )
+            .catch((err) => console.warn(err)))
+      );
+    }
+
+    await updateTournamentService(updateTournamentDetails)
+    
     fetchAllDetails();
     alert("Auto seeding completed");
   };
@@ -191,6 +212,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
             i.name === findSelectedRound?.name
               ? new Date().toISOString()
               : i.startTime,
+          autoSeed: i.name === findSelectedRound?.name ? true : i.autoSeed,
         })),
       },
     };
@@ -272,12 +294,12 @@ const MatchDashboard: React.FC = (): JSX.Element => {
           .catch((err) => console.warn(err)))
     );
 
-    submitHandler(updateTournamentDetails)
+    await updateTournamentService(updateTournamentDetails)
     fetchAllDetails();
     alert("Auto seeding completed");
   };
 
-  const submitHandler = async (submitData: any): Promise<any> => {
+  const updateTournamentService = async (submitData: any): Promise<any> => {
     await frontendSupabase
       .from("tournamentsData")
       .update({ bracketsMetadata: submitData.bracketsMetadata })
@@ -285,6 +307,19 @@ const MatchDashboard: React.FC = (): JSX.Element => {
   };
 
   const autoEliminateBrackets = async (): Promise<void> => {
+    const findSelectedRound = roundList.find((i) => i.id === selectedRound);
+
+    const updateTournamentDetails = {
+      ...tournamentDetails,
+      bracketsMetadata: {
+        ...tournamentDetails?.bracketsMetadata,
+        rounds: tournamentDetails?.bracketsMetadata?.rounds.map((i) => ({
+          ...i,
+          notResultSeed: i.name === findSelectedRound?.name ? true : i.notResultSeed,
+        })),
+      },
+    };
+
     const findFirstRoundMatch: any[] = tournamentDetails?.brackets.match
       .map((m: any) => {
         const opponent1Player = tournamentDetails?.brackets.participant.find(
@@ -340,19 +375,22 @@ const MatchDashboard: React.FC = (): JSX.Element => {
 
     const endpoint = "/api/tournaments/match-result";
     const headers = await getAuthHeader();
+    if (setResult.length) {
+      await Promise.any(
+        setResult.map((match) =>
+          axios
+            .patch(
+              endpoint,
+              {
+                ...match,
+              },
+              { headers: headers }
+            )
+            .catch((err) => console.warn(err)))
+      );
+    }
 
-    await Promise.any(
-      setResult.map((match) =>
-        axios
-          .patch(
-            endpoint,
-            {
-              ...match,
-            },
-            { headers: headers }
-          )
-          .catch((err) => console.warn(err)))
-    );
+    await updateTournamentService(updateTournamentDetails);
     fetchAllDetails();
     alert("Auto seeding completed");
   };
@@ -544,6 +582,8 @@ const MatchDashboard: React.FC = (): JSX.Element => {
       });
   };
 
+  const findRound = tournamentDetails?.bracketsMetadata?.rounds.find((i) => i.name === roundList.find((i) => i.id === selectedRound)?.name)
+
   const toggle = (data: string): void => {
     setImage(data);
     setPopupVisible(!popVisible);
@@ -578,6 +618,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
         </FormControl>
         <Button
           onClick={(): any => handleRemoveNotCheckedInPlayers()}
+          disabled={findRound?.checkedInPlayerSeed}
           variant="outlined"
           size="small"
           sx={{ ml: 1 }}
@@ -586,13 +627,16 @@ const MatchDashboard: React.FC = (): JSX.Element => {
         </Button>
         <Button
           onClick={(): any => autoSeedBrackets()}
+          disabled={findRound?.autoSeed}
           variant="outlined"
           size="small"
+          sx={{ ml: 1 }}
         >
           Auto Seed
         </Button>
         <Button
           onClick={(): any => autoEliminateBrackets()}
+          disabled={findRound?.notResultSeed}
           variant="outlined"
           size="small"
           sx={{ ml: 1 }}

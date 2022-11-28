@@ -32,6 +32,9 @@ interface RoundData {
   name?: string;
   isMap?: boolean;
   startTime?: string;
+  autoSeed?: boolean;
+  checkedInPlayerSeed?: boolean;
+  notResultSeed?: boolean;
 }
 export interface EliminateBracketData {
   name: string;
