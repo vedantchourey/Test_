@@ -396,8 +396,7 @@ const PostCard = (props: IProps): JSX.Element => {
                       </span>
                     ) : (
                       part + " "
-                    )
-                  )}
+                    ))}
                 </Linkify>
               </Typography>
               {values.postContent.length > 250 ? (
