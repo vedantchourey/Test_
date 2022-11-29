@@ -213,10 +213,6 @@ const OtherProfileCard = (props: {
               sx={{ width: 120, height: 120, marginBottom: 2 }}
               src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${userData.avatarUrl}`}
             ></Avatar>
-            <IconButton className={styles.selectImg}>
-              {/* <img src='icons/gallery.svg' alt='icon' /> */}
-              <CollectionsIcon />
-            </IconButton>
           </Box>
           <Typography variant="h3" fontSize={18} color="#fff">
             @{userData.username}
