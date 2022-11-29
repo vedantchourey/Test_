@@ -15,7 +15,6 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { CheckOutlined } from "@mui/icons-material";
 import styles from "./other-profile-card.module.css";
-import CollectionsIcon from "@mui/icons-material/Collections";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import { IOthersProfileResponse } from "../../../service-clients/messages/i-profile";
 import {
@@ -213,10 +212,6 @@ const OtherProfileCard = (props: {
               sx={{ width: 120, height: 120, marginBottom: 2 }}
               src={`${frontendConfig.storage.publicBucketUrl}/${frontendConfig.storage.publicBucket}/${userData.avatarUrl}`}
             ></Avatar>
-            <IconButton className={styles.selectImg}>
-              {/* <img src='icons/gallery.svg' alt='icon' /> */}
-              <CollectionsIcon />
-            </IconButton>
           </Box>
           <Typography variant="h3" fontSize={18} color="#fff">
             @{userData.username}
