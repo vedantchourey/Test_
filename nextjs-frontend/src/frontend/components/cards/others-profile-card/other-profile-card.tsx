@@ -15,7 +15,6 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { CheckOutlined } from "@mui/icons-material";
 import styles from "./other-profile-card.module.css";
-import CollectionsIcon from "@mui/icons-material/Collections";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import { IOthersProfileResponse } from "../../../service-clients/messages/i-profile";
 import {
