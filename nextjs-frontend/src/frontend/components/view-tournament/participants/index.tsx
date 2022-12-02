@@ -68,16 +68,18 @@ const Participants: React.FC<ParticipantsProps> = ({ data }) => {
                         }}
                       />
                     )}
-                    <Typography marginLeft={"16px"} style={{ fontSize: !isDesktop ? 10 : 15 }}>
-                      {item.firstName
-                        ? `${item.username}`
-                        : `${item.team_name}`}
-                    </Typography>
-                    <Typography marginLeft={"5px"} color="rgba(255,255,255,0.5)" style={{ fontSize: !isDesktop ? 10 : 15 }}>
-                      {item.gameUniqueId
-                        ? `(${item.gameUniqueId})`
-                        : ``}
-                    </Typography>
+                    <Box sx={!isDesktop ? { display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", marginLeft: "5px" } : { display: "flex", flexDirection: "row", marginLeft: "16px" }}>
+                      <Typography style={{ fontSize: !isDesktop ? 10 : 15 }}>
+                        {item.firstName
+                          ? `${item.username}`
+                          : `${item.team_name}`}
+                      </Typography>
+                      <Typography color="rgba(255,255,255,0.5)" style={{ fontSize: !isDesktop ? 10 : 15, marginLeft: isDesktop ? "5px" : "0px" }}>
+                        {item.gameUniqueId
+                          ? `(${item.gameUniqueId})`
+                          : ``}
+                      </Typography>
+                    </Box>
                   </Box>
                 </Grid>
               );

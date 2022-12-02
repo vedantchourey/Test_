@@ -343,13 +343,49 @@ const Home = (): JSX.Element => {
                       </Grid>
                     </TabPanel>
                     <TabPanel value="3" className={styles.tournamentContainer}>
-                      <Grid display={"flex"} maxWidth={"75vw"} className={"hide-scrollbar"}>
+                      <Grid
+                        display={"flex"}
+                        className={"hide-scrollbar"}
+                      >
                         {tournamentsData
                           .sort((a: any, b: any) => {
                             const aTime: any = moment(a.startDate).format("x");
                             const bTime: any = moment(b.startDate).format("x");
                             return bTime - aTime;
-                          }).slice(0,3)
+                          }).slice(0,2)
+                          .map((data: any) => {
+                            const startDateTime =
+                              moment(data.startDate).format("D MMM YYYY ") +
+                              moment(data.startTime, "HH:mm:ss").format("LT");
+                            const totalSlots = data?.bracketsMetadata?.playersLimit || 0;
+                            const currentSlot = (data?.playerList || []).length;
+                          return (
+                            <CardComp
+                              key={data.id}
+                              id={data.id}
+                              tournament_name={data.name}
+                              banner={data.banner}
+                              tournament_type={data.settings?.tournamentFormat}
+                              platform={data.settings?.platform}
+                              total_slots={totalSlots}
+                              left_slots={currentSlot}
+                              start_date={startDateTime}
+                              credits={data.settings?.entryFeeAmount || 0}
+                              participants={`${currentSlot} out of ${totalSlots}`}
+                            />
+                          );
+                        })}
+                      </Grid>
+                      <Grid
+                        display={"flex"}
+                        className={"hide-scrollbar"}
+                      >
+                      {tournamentsData
+                          .sort((a: any, b: any) => {
+                            const aTime: any = moment(a.startDate).format("x");
+                            const bTime: any = moment(b.startDate).format("x");
+                            return bTime - aTime;
+                          }).slice(3,)
                           .map((data: any) => {
                             const startDateTime =
                               moment(data.startDate).format("D MMM YYYY ") +
