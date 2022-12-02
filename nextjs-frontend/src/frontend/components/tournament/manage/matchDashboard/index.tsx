@@ -116,7 +116,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
         })),
       },
     };
-
+ 
     const findFirstRoundMatch: any[] = tournamentDetails?.brackets.match
       .map((m: any) => {
         const opponent1Player = tournamentDetails?.brackets.participant.find(

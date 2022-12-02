@@ -8,7 +8,7 @@ import {
   MenuItem,
   OutlinedInput,
 } from "@mui/material";
-import React from "react";
+import React, { useRef } from "react";
 import {
   Chart,
   CategoryScale,
@@ -18,19 +18,9 @@ import {
   Title,
   Tooltip,
   Legend,
-  TimeScale,
+  Filler,
+  ChartArea,
 } from "chart.js";
-Chart.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  TimeScale
-);
-
 import { Line } from "react-chartjs-2";
 import moment from "moment";
 import Member, { MemberProp } from "./member";
@@ -48,11 +38,22 @@ import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/la
 import { deviceTypes } from "../../../../../src/frontend/redux-store/layout/device-types";
 import _ from "lodash";
 
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Filler,
+  Legend
+);
+
 export const options = {
   responsive: true,
   elements: {
     line: {
-      tension: 1, // disables bezier curves
+      tension: 0.3, // disables bezier curves
     },
   },
   plugins: {
@@ -137,6 +138,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({
   hasAccess,
 }) => {
   const router = useRouter();
+  const chartRef = useRef<any>(null);
   const [open, setOpen] = React.useState(false);
   const [playerList, setPlayerList] = React.useState<MemberProp[]>([]);
   const handleOpen = (): void => setOpen(true);
@@ -207,6 +209,16 @@ const TeamMembers: React.FC<TeamMembersProps> = ({
     });
   }
 
+  function createGradient(ctx: CanvasRenderingContext2D, area: ChartArea): any {
+    const gradient = ctx.createLinearGradient(0, area.bottom, 0, area.top);
+
+    gradient.addColorStop(0, "rgba(105, 49, 249, 0)");
+    gradient.addColorStop(0.5, "rgba(105, 49, 249, 0.3)");
+    gradient.addColorStop(1, "rgba(105, 49, 249, 0.5)");
+
+    return gradient;
+  }
+
   const fetchDataForGraph = async (): Promise<any> => {
     const res = await frontendSupabase
       .from("elo_ratings_history")
@@ -257,14 +269,33 @@ const TeamMembers: React.FC<TeamMembersProps> = ({
       const data = {
         datasets: [
           {
+            fill: true,
             label: "Dataset 1",
             data: selectedTime === "All" ? graphdata : dublicateData,
             borderColor: "rgb(105, 49, 249)",
-            backgroundColor: "rgb(105, 49, 249)",
+            backgroundColor: createGradient(
+              chartRef.current.ctx,
+              chartRef.current.chartArea
+            ),
           },
         ],
       };
-      setData(data);
+
+      const updateData = {
+        ...data,
+        datasets: data.datasets.map((i) => {
+          const obj: any = {};
+          i.data.map((j: any) => {
+            obj[j.x] = j.y;
+          });
+          return {
+            ...i,
+            data: Object.keys(obj).map((k) => ({ x: k, y: obj[k] })),
+          };
+        }),
+      };
+
+      setData(updateData);
     }
   };
 
@@ -336,7 +367,12 @@ const TeamMembers: React.FC<TeamMembersProps> = ({
                 );
               })}
             </Select>
-            <Line options={options} data={data} style={{ minWidth: "100%", maxWidth: "100%" }} />
+            <Line
+              ref={chartRef}
+              options={options}
+              data={data}
+              style={{ minWidth: "100%", maxWidth: "100%" }}
+            />
           </Box>
         )}
 
@@ -490,7 +526,12 @@ const TeamMembers: React.FC<TeamMembersProps> = ({
               );
             })}
           </Select>
-          <Line options={options} data={data} style={{ minWidth: "60%", maxWidth: "60%" }} />
+          <Line
+            ref={chartRef}
+            options={options}
+            data={data}
+            style={{ minWidth: "80%", maxWidth: "100%" }}
+          />
         </Box>
       )}
 
