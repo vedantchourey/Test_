@@ -120,7 +120,7 @@ const Leaderboard = (): JSX.Element => {
 
   React.useEffect(() => {
     if (games.length) {
-      getleaderboardgamedata(games[0].id);
+      getleaderboardgamedata(selectedGame || games[0].id);
     }
   }, [games, isTeam]);
 

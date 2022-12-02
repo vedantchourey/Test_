@@ -256,7 +256,6 @@ const CardComp = ({
 
   return (
     <>
-
         <CardDesktop
           id={id}
           tournament_name={tournament_name}

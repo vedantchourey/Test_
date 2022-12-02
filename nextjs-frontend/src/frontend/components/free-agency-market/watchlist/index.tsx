@@ -55,9 +55,9 @@ const settings: Settings = {
   ],
 };
 
-const WatchTeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
-  teamId,
-}) => {
+const WatchTeamMembers: React.FC<{
+  teamId: string | string[] | undefined;
+}> = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<MemberProp[] | []>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -77,7 +77,7 @@ const WatchTeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
           return {
             name: `${item.firstName} ${item.lastName}`,
             username: `${item.username}`,
-            id: item.id,
+            id: item.user_id,
             image: "/images/teams/player.png",
             type: "bronze",
             tags: ["Games", "Won", "Elo"],
@@ -121,7 +121,7 @@ const WatchTeamMembers: React.FC<{ teamId: string | string[] | undefined }> = ({
     setLoading(true);
     const data = {
       player_id: playerId,
-      team_id: teamId,
+      team_id: selectedTeam,
       message: message,
     };
     const headers = await getAuthHeader();

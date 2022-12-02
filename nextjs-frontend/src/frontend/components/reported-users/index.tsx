@@ -11,13 +11,12 @@ const ReportedUsers: React.FC = () => {
   const [data, setData] = React.useState([]);
 
   const fetchUsers = async (): Promise<void> => {
-    const messages: any = await frontendSupabase
+    const users: any = await frontendSupabase
       .from("profiles")
       .select("*")
-
       const Data: any = []
-      if(messages.data?.length){
-        messages.data.filter((_doc: any) => {
+      if(users.data?.length){
+        users.data.filter((_doc: any) => {
           if(_doc.isBlocked || new Date(_doc.suspended) > new Date()){
             Data.push(_doc)
           }

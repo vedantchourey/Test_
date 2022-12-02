@@ -380,12 +380,12 @@ const Home = (): JSX.Element => {
                         display={"flex"}
                         className={"hide-scrollbar"}
                       >
-                      {tournamentsData
+                      {tournamentsData.slice(2,4).length === 2 && tournamentsData
                           .sort((a: any, b: any) => {
                             const aTime: any = moment(a.startDate).format("x");
                             const bTime: any = moment(b.startDate).format("x");
                             return bTime - aTime;
-                          }).slice(3,)
+                          }).slice(2,4)
                           .map((data: any) => {
                             const startDateTime =
                               moment(data.startDate).format("D MMM YYYY ") +

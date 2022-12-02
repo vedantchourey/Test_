@@ -349,6 +349,7 @@ const Settings: React.FC<SettingProps> = ({
           Previous
         </Button>
         <Button
+        disabled={formik.values.entryType === "credit" && (!parseInt(formik.values.entryFeeAmount) || parseInt(formik.values.entryFeeAmount) < 0)} 
           variant="contained"
           onClick={formik.submitForm}
           endIcon={<img src="/icons/greater.svg" />}

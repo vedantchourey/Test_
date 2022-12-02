@@ -7,6 +7,7 @@ import DashboardSideBar from "../ui-components/dashboard-sidebar";
 import NoobTable, { NoobColumnConf } from "../ui-components/table";
 import axios from "axios";
 import { getAuthHeader } from "../../utils/headers";
+import { frontendSupabase } from "../../services/supabase-frontend-service";
 
 const ReportedPost: React.FC = () => {
   const [data, setData] = React.useState([]);
@@ -50,43 +51,53 @@ const deletreport = async (reportId: string): Promise<void> => {
   }
 };
 
-const blockreport = async (Id: string): Promise<void> => {
+const blockreport = async (Id: string, reportId: string): Promise<void> => {
   try {
-    const endpoint = "/api/user/block";
-    const headers = await getAuthHeader();
-    axios
-      .patch(`${endpoint}?user_id=${Id}&value=false`, {
-        headers: headers,
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          fetchData();
-        }
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
+    const post = await frontendSupabase.from("posts").select("*")
+.eq("id", Id);
+    if (post.data?.[0]?.postedBy) {
+      const endpoint = "/api/user/block";
+      const headers = await getAuthHeader();
+      axios
+        .patch(`${endpoint}?user_id=${post.data?.[0]?.postedBy}&value=false`, {
+          headers: headers,
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            fetchData();
+            deletreport(reportId);
+          }
+        })
+        .catch(function (error) {
+          console.error(error);
+        });
+    }
   } catch (err) {
     console.error(err);
   }
 };
 
-const suspendreport = async (Id: string): Promise<void> => {
+const suspendreport = async (Id: string, reportId: string): Promise<void> => {
   try {
-    const endpoint = "/api/user/suspended";
-    const headers = await getAuthHeader();
-    axios
-      .patch(`${endpoint}?user_id=${Id}`, {
-        headers: headers,
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          fetchData();
-        }
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
+    const post = await frontendSupabase.from("posts").select("*")
+.eq("id", Id);
+    if (post.data?.[0]?.postedBy) {
+      const endpoint = "/api/user/suspended";
+      const headers = await getAuthHeader();
+      axios
+        .patch(`${endpoint}?user_id=${post.data?.[0]?.postedBy}`, {
+          headers: headers,
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            fetchData();
+            deletreport(reportId);
+          }
+        })
+        .catch(function (error) {
+          console.error(error);
+        });
+    }
   } catch (err) {
     console.error(err);
   }
@@ -132,10 +143,10 @@ const suspendreport = async (Id: string): Promise<void> => {
       renderCell: (row): any => {
         return (
           <>
-            <Button onClick={(): any => blockreport(row.id)}>
+            <Button onClick={(): any => blockreport(row.post_id, row.id)}>
               Block
             </Button>
-            <Button onClick={(): any => suspendreport(row.id)}>
+            <Button onClick={(): any => suspendreport(row.post_id, row.id)}>
               suspend
             </Button>
             <br />
