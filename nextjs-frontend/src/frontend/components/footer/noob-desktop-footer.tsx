@@ -16,11 +16,11 @@ export default function NoobDesktopFooter(): JSX.Element {
   const items = [
     {
       title: 'About us',
-      path: '/'
+      path: '/aboutus'
     },
     {
       title: 'How it Works',
-      path: '/'
+      path: '/how-it-works'
     },
     {
       title: 'Terms of Service',
