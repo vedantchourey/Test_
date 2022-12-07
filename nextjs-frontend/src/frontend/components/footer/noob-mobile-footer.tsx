@@ -27,6 +27,18 @@ export default function NoobMobileFooter(): JSX.Element {
     await router.push('/')
   }
 
+  async function gotoHowItworksPage(): Promise<void> {
+    await router.push('/how-it-works')
+  }
+
+  async function gotoFaqPage(): Promise<void> {
+    await router.push('/faq')
+  }
+
+  async function gotoDisputesPage(): Promise<void> {
+    await router.push('/disputes')
+  }
+
   const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
 
   return isDesktop ? (
@@ -126,9 +138,22 @@ export default function NoobMobileFooter(): JSX.Element {
       <Button variant="text" style={buttonStyle(["/support"])}>
         Support
       </Button>
-      <Button variant="text" style={buttonStyle(["/support"])}>
+      <Button variant="text" 
+        style={buttonStyle(["/faq"])}
+        onClick={gotoFaqPage}>
         FAQ
       </Button>
+      <Button variant="text"   
+        onClick={gotoHowItworksPage}
+        style={buttonStyle(["/how-it-works"])}>
+        How it Works
+      </Button>
+      <Button variant="text"   
+        onClick={gotoDisputesPage}
+        style={buttonStyle(["/disputes"])}>
+        Disputes and Code of Conduct
+      </Button>
+      
       <div style={{ display: "flex", flexDirection: "row" }}>
         <IconButton
           size="medium"

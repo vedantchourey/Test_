@@ -16,7 +16,7 @@ export default function NoobDesktopFooter(): JSX.Element {
   const items = [
     {
       title: 'About us',
-      path: '/aboutus'
+      path: '/about-us'
     },
     {
       title: 'How it Works',
@@ -29,6 +29,14 @@ export default function NoobDesktopFooter(): JSX.Element {
     {
       title: 'Privacy Policy',
       path: '/'
+    },
+    {
+      title: 'FAQ',
+      path: '/faq'
+    },
+    {
+      title: 'Disputes and Code of Conduct',
+      path: '/disputes'
     }
   ]
   const items2 = [

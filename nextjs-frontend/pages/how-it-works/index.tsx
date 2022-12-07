@@ -25,10 +25,10 @@ const NoobHowItWorksPage: NextPage = () => {
                 {!isDesktop && (
                     <div>
                         <Divider style={{ padding: 25 }}>
-                            <Typography variant="h3">ABOUT US</Typography>
+                            <Typography variant="h3">HOW IT WORKS</Typography>
                         </Divider>
-                        <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-                            <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", marginLeft: "60px", gap: "10px" }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "15px", color: "white", justifyContent: "space-around" }}>
+                            <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", gap: "10px" }}>
                                 <Typography variant="h6" color={"GrayText"}>More Than Tournament Hosting</Typography>
                                 <Typography variant="body2">Noobstorm is a community for gamers, by gamers. From cross-platform tournaments to active recruiting – we’re creating an opportunity for you to go pro.</Typography>
                                 <Link href="">Get Started Today</Link>
@@ -36,15 +36,15 @@ const NoobHowItWorksPage: NextPage = () => {
                                 <Typography variant="body2">We designed Noobstorm to be the world’s #1 e-sports platform. More than just tournament hosting, we want to give you opportunities to grow, interact, and succeed.</Typography>
                                 <Typography variant="body2">And, of course, have some fun while you’re going pro.</Typography>
                             </div>
-                            <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", marginLeft: "60px", gap: "10px" }}>
+                            <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "10px" }}>
                                 <Typography variant="h6" color={"GrayText"}>Giving Back</Typography>
                                 <Typography variant="body2">Gaming gave us passion and purpose. We want to give you the ability to achieve your dreams of going pro.</Typography>
                                 <div style={{ display: "flex", flexDirection: "row" }}>
-                                    <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", gap: "10px" }}>
+                                    <div style={{ display: "flex", flexDirection: "column", gap: "10px", width: "50%" }}>
                                         <Typography variant="body1" color={"blueviolet"}>Players</Typography>
                                         <Typography variant="body2">You’re the heart of Noobstorm. This is why we’re giving the gaming community everything they need to succeed.</Typography>
                                     </div>
-                                    <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", gap: "10px" }}>
+                                    <div style={{ display: "flex", flexDirection: "column", gap: "10px", width: "50%" }}>
                                         <Typography variant="body1" color={"blueviolet"}>Games & Brands</Typography>
                                         <Typography variant="body2">You’re the heart of Noobstorm. This is why we’re giving the gaming community everything they need to succeeWe make it easy for gaming companies to take part in the experience. Find skilled players who have mastered your game.</Typography>
                                     </div>
@@ -142,8 +142,8 @@ const NoobHowItWorksPage: NextPage = () => {
                         <Divider style={{ padding: 35 }}>
                             <Typography variant="h3">HOW IT WORKS</Typography>
                         </Divider>
-                        <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-                            <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", marginLeft: "60px", gap: "10px" }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "15px", marginLeft: "40px" }}>
+                            <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", gap: "10px" }}>
                                 <Typography variant="h6" color={"GrayText"}>More Than Tournament Hosting</Typography>
                                 <Typography variant="body2">Noobstorm is a community for gamers, by gamers. From cross-platform tournaments to active recruiting – we’re creating an opportunity for you to go pro.</Typography>
                                 <Link href="">Get Started Today</Link>
@@ -151,15 +151,15 @@ const NoobHowItWorksPage: NextPage = () => {
                                 <Typography variant="body2">We designed Noobstorm to be the world’s #1 e-sports platform. More than just tournament hosting, we want to give you opportunities to grow, interact, and succeed.</Typography>
                                 <Typography variant="body2">And, of course, have some fun while you’re going pro.</Typography>
                             </div>
-                            <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", marginLeft: "60px", gap: "10px" }}>
+                            <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", gap: "10px" }}>
                                 <Typography variant="h6" color={"GrayText"}>Giving Back</Typography>
                                 <Typography variant="body2">Gaming gave us passion and purpose. We want to give you the ability to achieve your dreams of going pro.</Typography>
                                 <div style={{ display: "flex", flexDirection: "row" }}>
-                                    <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", gap: "10px" }}>
+                                    <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", gap: "10px", width: "40%" }}>
                                         <Typography variant="body1" color={"blueviolet"}>Players</Typography>
                                         <Typography variant="body2">You’re the heart of Noobstorm. This is why we’re giving the gaming community everything they need to succeed.</Typography>
                                     </div>
-                                    <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", gap: "10px" }}>
+                                    <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", gap: "10px", width: "40%" }}>
                                         <Typography variant="body1" color={"blueviolet"}>Games & Brands</Typography>
                                         <Typography variant="body2">You’re the heart of Noobstorm. This is why we’re giving the gaming community everything they need to succeeWe make it easy for gaming companies to take part in the experience. Find skilled players who have mastered your game.</Typography>
                                     </div>
