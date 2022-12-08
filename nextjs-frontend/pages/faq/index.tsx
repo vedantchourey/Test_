@@ -89,7 +89,7 @@ const Faq: NextPage = () => {
 							</div>
 							<div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
 								<Typography variant='subtitle1' color={"blueviolet"}>How do I get my Noobstorm account KYC verified?</Typography>
-								<Typography variant='body2'>In order to do KYC, Open Noobstorm >> Click on Wallet >> Go to KYC Details >> Click Submit KYC >> Upload a clear photo of a valid Government ID(Aadhaar Card, Driving License, PAN Card, Voter Card, Driving License). Enter the details and wait for 24 hours. Our team will approve your KYC.</Typography>
+								<Typography variant='body2'>In order to do KYC, Open Noobstorm {'>>'} Click on Wallet {'>>'} Go to KYC Details {'>>'} Click Submit KYC {'>>'} Upload a clear photo of a valid Government ID(Aadhaar Card, Driving License, PAN Card, Voter Card, Driving License). Enter the details and wait for 24 hours. Our team will approve your KYC.</Typography>
 							</div>
 							<div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
 								<Typography variant='subtitle1' color={"blueviolet"}>Why do I need to do KYC for withdrawals?</Typography>
@@ -178,7 +178,7 @@ const Faq: NextPage = () => {
 							</div>
 							<div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
 								<Typography variant='subtitle1' color={"blueviolet"}>How do I get my Noobstorm account KYC verified?</Typography>
-								<Typography variant='body2'>In order to do KYC, Open Noobstorm >> Click on Wallet >> Go to KYC Details >> Click Submit KYC >> Upload a clear photo of a valid Government ID(Aadhaar Card, Driving License, PAN Card, Voter Card, Driving License). Enter the details and wait for 24 hours. Our team will approve your KYC.</Typography>
+								<Typography variant='body2'>In order to do KYC, Open Noobstorm {'>>'} Click on Wallet {'>>'} Go to KYC Details {'>>'} Click Submit KYC {'>>'} Upload a clear photo of a valid Government ID(Aadhaar Card, Driving License, PAN Card, Voter Card, Driving License). Enter the details and wait for 24 hours. Our team will approve your KYC.</Typography>
 							</div>
 							<div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
 								<Typography variant='subtitle1' color={"blueviolet"}>Why do I need to do KYC for withdrawals?</Typography>
