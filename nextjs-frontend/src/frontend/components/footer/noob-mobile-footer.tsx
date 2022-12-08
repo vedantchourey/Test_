@@ -3,12 +3,10 @@ import Image from 'next/image';
 import { Button, Divider, Grid, IconButton, Typography, useTheme } from "@mui/material"
 import styles from "./noob-footer.module.css"
 import { useRouter } from 'next/router';
-import YoutubeIcon from '../icons/youtube-icon';
-import TwitchIcon from '../icons/twitch-icon';
-import DiscordIcon from '../icons/discord-icon';
 import { useAppSelector } from "../../../../src/frontend/redux-store/redux-store";
 import { isDeviceTypeSelector } from "../../../../src/frontend/redux-store/layout/layout-selectors";
 import { deviceTypes } from '../../../../src/frontend/redux-store/layout/device-types';
+import { Instagram, LinkedIn, Twitter, YouTube } from '@mui/icons-material';
 
 export default function NoobMobileFooter(): JSX.Element {
   const theme = useTheme();
@@ -37,6 +35,22 @@ export default function NoobMobileFooter(): JSX.Element {
 
   async function gotoDisputesPage(): Promise<void> {
     await router.push('/disputes')
+  }
+
+  async function gotoYoutubeLink(): Promise<void> {
+    await router.push('https://www.youtube.com/@noobstormgaming4953/featured')
+  }
+
+  async function gotoTwitterLink(): Promise<void> {
+    await router.push('https://twitter.com/NoobstormGaming')
+  }
+
+  async function gotoInstagramLink(): Promise<void> {
+    await router.push('https://www.instagram.com/noobstorm_gaming/')
+  }
+
+  async function gotoLinkedInLink(): Promise<void> {
+    await router.push('https://www.linkedin.com/company/noobstorm-gaming/about/?viewAsMember=true')
   }
 
   const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
@@ -78,26 +92,38 @@ export default function NoobMobileFooter(): JSX.Element {
             <IconButton
               size="medium"
               color="default"
+              aria-label="LinkedIn"
+              component="span"
+              onClick={gotoLinkedInLink}
+            >
+              <LinkedIn />
+            </IconButton>
+            <IconButton
+              size="medium"
+              color="default"
               aria-label="Youtube"
               component="span"
+              onClick={gotoYoutubeLink}
             >
-              <YoutubeIcon />
+              <YouTube />
             </IconButton>
             <IconButton
               size="medium"
               color="default"
-              aria-label="Twitch"
+              aria-label="Instagram"
               component="span"
+              onClick={gotoInstagramLink}
             >
-              <TwitchIcon />
+              <Instagram />
             </IconButton>
             <IconButton
               size="medium"
               color="default"
-              aria-label="Discord"
+              aria-label="Twitter"
               component="span"
+              onClick={gotoTwitterLink}
             >
-              <DiscordIcon />
+              <Twitter />
             </IconButton>
           </Grid>
         </Grid>
@@ -155,29 +181,41 @@ export default function NoobMobileFooter(): JSX.Element {
       </Button>
       
       <div style={{ display: "flex", flexDirection: "row" }}>
+      <IconButton
+          size="medium"
+          color="default"
+          aria-label="LinkedIn"
+          component="span"
+          onClick={gotoLinkedInLink}
+        >
+          <LinkedIn />
+        </IconButton>
         <IconButton
           size="medium"
           color="default"
           aria-label="Youtube"
           component="span"
+          onClick={gotoYoutubeLink}
         >
-          <YoutubeIcon />
+          <YouTube />
         </IconButton>
         <IconButton
           size="medium"
           color="default"
-          aria-label="Twitch"
+          aria-label="Instagram"
           component="span"
+          onClick={gotoInstagramLink}
         >
-          <TwitchIcon />
+          <Instagram />
         </IconButton>
         <IconButton
           size="medium"
           color="default"
-          aria-label="Discord"
+          aria-label="Twitter"
           component="span"
+          onClick={gotoTwitterLink}
         >
-          <DiscordIcon />
+          <Twitter />
         </IconButton>
       </div>
       <Divider style={{ width: "30%", marginTop: 10 }} />
