@@ -49,8 +49,23 @@ export default function NoobLoggedOutDrawer(props: Props): JSX.Element {
   }
   async function gotoHomePage(): Promise<void> {
     await router.push('/')
-    }
+  }
 
+  async function gotoAboutUsPage(): Promise<void> {
+    await router.push('/about-us')
+  }
+
+  async function gotoHowItworksPage(): Promise<void> {
+    await router.push('/how-it-works')
+  }
+
+  async function gotoFaqPage(): Promise<void> {
+    await router.push('/faq')
+  }
+  
+  async function gotoDisputesPage(): Promise<void> {
+    await router.push('/disputes')
+  }
   return (
     <Dialog open={show} onClose={onClose} fullScreen color="#08001C">
       <div className={styles.container}>
@@ -78,8 +93,10 @@ export default function NoobLoggedOutDrawer(props: Props): JSX.Element {
           <Box><Button variant="text" style={buttonStyle(['/'])} onClick={gotoHomePage} className={classes.buttonStyles}><img src="/images/menu/Home.png" className={classes.imgStyle} />Home</Button></Box>
           <Box><Button variant="text" className={classes.buttonStyles}><img src="/images/menu/Tournaments.png" className={classes.imgStyle} />Tournaments</Button></Box>
           <Box><Button variant="text" className={classes.buttonStyles}><img src="/images/menu/Leader-Board.png" className={classes.imgStyle} />Leaderboards</Button></Box>
-          <Box><Button variant="text" className={classes.buttonStyles}><img src="/images/menu/Support.png" className={classes.imgStyle} />About Us</Button></Box>
-          <Box><Button variant="text" className={classes.buttonStyles}><img src="/images/menu/Support.png" className={classes.imgStyle} />FAQ</Button></Box>
+          <Box><Button variant="text" style={buttonStyle(['/'])} onClick={gotoAboutUsPage} className={classes.buttonStyles}><img src="/images/menu/Support.png" className={classes.imgStyle} />About Us</Button></Box>
+          <Box><Button variant="text" className={classes.buttonStyles} onClick={gotoFaqPage}> <img src="/images/menu/Support.png" className={classes.imgStyle} />FAQ</Button></Box>
+          <Box><Button variant="text" style={buttonStyle(['/'])} onClick={gotoHowItworksPage} className={classes.buttonStyles}><img src="/images/menu/Support.png" className={classes.imgStyle} />How it Works</Button></Box>
+          <Box><Button variant="text" style={buttonStyle(['/'])} onClick={gotoDisputesPage} className={classes.buttonStyles}><img src="/images/menu/Support.png" className={classes.imgStyle} />Disputes and Code of Conduct</Button></Box>
         </div>
         <div className={styles.footerContainer}>
           <div className={styles.footer}>
