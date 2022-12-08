@@ -2,8 +2,7 @@ import { Button, Dialog, Divider, IconButton, Typography, useTheme, Box } from '
 import styles from './noob-drawer.module.css';
 import CloseIcon from '@mui/icons-material/Close';
 import * as React from 'react';
-import TwitchIcon from '../icons/twitch-icon';
-import YoutubeIcon from '../icons/youtube-icon';
+import { Instagram, LinkedIn, Twitter, YouTube } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import { createStyles, makeStyles } from "@mui/styles";
 
@@ -66,6 +65,23 @@ export default function NoobLoggedOutDrawer(props: Props): JSX.Element {
   async function gotoDisputesPage(): Promise<void> {
     await router.push('/disputes')
   }
+
+  async function gotoYoutubeLink(): Promise<void> {
+    await router.push('https://www.youtube.com/@noobstormgaming4953/featured')
+  }
+
+  async function gotoTwitterLink(): Promise<void> {
+    await router.push('https://twitter.com/NoobstormGaming')
+  }
+
+  async function gotoInstagramLink(): Promise<void> {
+    await router.push('https://www.instagram.com/noobstorm_gaming/')
+  }
+
+  async function gotoLinkedInLink(): Promise<void> {
+    await router.push('https://www.linkedin.com/company/noobstorm-gaming/about/?viewAsMember=true')
+  }
+
   return (
     <Dialog open={show} onClose={onClose} fullScreen color="#08001C">
       <div className={styles.container}>
@@ -100,9 +116,42 @@ export default function NoobLoggedOutDrawer(props: Props): JSX.Element {
         </div>
         <div className={styles.footerContainer}>
           <div className={styles.footer}>
-            <YoutubeIcon/>
-            <img src="/icons/Vector-DiscordIcon.png" style={{ height: '19px' }} />
-            <TwitchIcon/>
+          <IconButton
+                size="medium"
+                color="default"
+                aria-label="LinkedIn"
+                component="span"
+                onClick={gotoLinkedInLink}
+              >
+                <LinkedIn />
+              </IconButton>
+              <IconButton
+                size="medium"
+                color="default"
+                aria-label="Youtube"
+                component="span"
+                onClick={gotoYoutubeLink}
+              >
+                <YouTube />
+              </IconButton>
+              <IconButton
+                size="medium"
+                color="default"
+                aria-label="Instagram"
+                component="span"
+                onClick={gotoInstagramLink}
+              >
+                <Instagram />
+              </IconButton>
+              <IconButton
+                size="medium"
+                color="default"
+                aria-label="Twitter"
+                component="span"
+                onClick={gotoTwitterLink}
+              >
+                <Twitter />
+              </IconButton>
           </div>
         </div>
       </div>

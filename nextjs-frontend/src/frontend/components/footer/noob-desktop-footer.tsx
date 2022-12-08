@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Container,
   Grid,
+  IconButton,
   // IconButton,
   Link,
   List,
@@ -10,6 +11,8 @@ import {
 } from "@mui/material";
 import styles from "./noob-footer.module.css"
 import { Box } from '@mui/system';
+import { Instagram, LinkedIn, Twitter, YouTube } from '@mui/icons-material';
+import router from 'next/router';
 
 export default function NoobDesktopFooter(): JSX.Element {
 
@@ -49,6 +52,22 @@ export default function NoobDesktopFooter(): JSX.Element {
       path: '/support'
     }
   ]
+  
+  async function gotoYoutubeLink(): Promise<void> {
+    await router.push('https://www.youtube.com/@noobstormgaming4953/featured')
+  }
+
+  async function gotoTwitterLink(): Promise<void> {
+    await router.push('https://twitter.com/NoobstormGaming')
+  }
+
+  async function gotoInstagramLink(): Promise<void> {
+    await router.push('https://www.instagram.com/noobstorm_gaming/')
+  }
+
+  async function gotoLinkedInLink(): Promise<void> {
+    await router.push('https://www.linkedin.com/company/noobstorm-gaming/about/?viewAsMember=true')
+  }
 
   return (
     <div className={styles.footerContainer}>
@@ -106,15 +125,42 @@ export default function NoobDesktopFooter(): JSX.Element {
               ))}
             </List>
             <Box mt={5}>
-              {/* <IconButton color="default" aria-label="Youtube" component="span">
-                <img src='/icons/twitter.svg' alt='twitter icon' />
+              <IconButton
+                size="medium"
+                color="default"
+                aria-label="LinkedIn"
+                component="span"
+                onClick={gotoLinkedInLink}
+              >
+                <LinkedIn />
               </IconButton>
-              <IconButton color="default" aria-label="Twitch" component="span">
-                <img src='/icons/facebook.svg' alt='twitter icon' />
+              <IconButton
+                size="medium"
+                color="default"
+                aria-label="Youtube"
+                component="span"
+                onClick={gotoYoutubeLink}
+              >
+                <YouTube />
               </IconButton>
-              <IconButton color="default" aria-label="Discord" component="span">
-                <img src='/icons/youtube.svg' alt='twitter icon' />
-              </IconButton> */}
+              <IconButton
+                size="medium"
+                color="default"
+                aria-label="Instagram"
+                component="span"
+                onClick={gotoInstagramLink}
+              >
+                <Instagram />
+              </IconButton>
+              <IconButton
+                size="medium"
+                color="default"
+                aria-label="Twitter"
+                component="span"
+                onClick={gotoTwitterLink}
+              >
+                <Twitter />
+              </IconButton>
             </Box>
           </Grid>
         </Grid>
