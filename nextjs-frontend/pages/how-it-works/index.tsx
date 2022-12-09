@@ -55,18 +55,18 @@ const NoobHowItWorksPage: NextPage = () => {
                                     <Typography variant="body2">Noobstorm is about all of growing together as a community. Watch your Play Cards progress, show your talent to the world, and make your dreams come true.</Typography>
                                     <Typography variant="body2">We’ll be here for you – every step of the way.</Typography>
                                 </div>
-                                <Link href= {loggedUser ? "/free-agency-market/view/watchlist" : "/register"}>Go Pro</Link>
+                                <Link href= {loggedUser ? "/free-agency-market/view/watchlist" : ""}>Go Pro</Link>
                                 <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", gap: "10px" }}>
                                     <Typography variant="h6" color={"GrayText"}>Free Agency Market</Typography>
                                     <Typography variant="body2">An easy way to show off your gaming skills to recruiters – or find the perfect player for your team.</Typography>
                                 </div>
-                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : "/register"}>Scout ‘em out</Link>
+                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : ""}>Scout ‘em out</Link>
                                 <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", gap: "10px" }}>
                                     <Typography variant="h6" color={"GrayText"}>Pro Gamer Recruiting</Typography>
                                     <Typography variant="body2">Our market makes it simpler than ever to show your skills off to the world. Create your profile and list your achievements.</Typography>
                                     <Typography variant="body2">From football to hockey – every professional sport needs a seamless recruiting system to find the best players. And e-sports are no different.</Typography>
                                 </div>
-                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : "/register"}>List Yourself Today</Link>
+                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : ""}>List Yourself Today</Link>
                                 <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", gap: "10px" }}>
                                     <Typography variant="h6" color={"GrayText"}>List. Play. Earn</Typography>
                                     <Typography variant="body2">Pro players don’t end up on world-renowned teams by accident. Noobstorm’s Free Agency Market is simple – </Typography>
@@ -82,12 +82,12 @@ const NoobHowItWorksPage: NextPage = () => {
                                     <Typography variant="body2">It’s never been easier to add a professional gamer onto your team. Scroll through profiles, reach out to your favorites – and them to your roster.</Typography>
                                     <Typography variant="body2">Whether you’re looking for upcoming talent or the best of the best – you’ll find them on the Free Agency Market.</Typography>
                                 </div>
-                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : "/register"}>Find Talent</Link>
+                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : ""}>Find Talent</Link>
                                 <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", gap: "10px" }}>
                                     <Typography variant="h6" color={"GrayText"}>There’s No Cheat Code to Success</Typography>
                                     <Typography variant="body2">Put yourself out there, sharpen those reflexes, and move up in the world </Typography>
                                 </div>
-                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : "/register"}>List Yourself Among The Pros</Link>
+                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : ""}>List Yourself Among The Pros</Link>
                                 <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", gap: "10px" }}>
                                     <Typography variant="h6" color={"GrayText"}>Player Cards Progression</Typography>
                                     <Typography variant="body2">A growth-based community – Noobstorm’s cards show your progress, rating, and standing</Typography>
@@ -117,7 +117,7 @@ const NoobHowItWorksPage: NextPage = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : "/register"}>Forge Your Card</Link>
+                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : ""}>Forge Your Card</Link>
                                 <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", gap: "10px" }}>
                                     <Typography variant="h6" color={"GrayText"}>Opportunity for Growth</Typography>
                                     <Typography variant="body2">Our Elo Ranking system gives every player the chance to evolve, hone their skills, and pursue their dreams in gaming. </Typography>
@@ -132,7 +132,7 @@ const NoobHowItWorksPage: NextPage = () => {
                                     <Typography variant="body2">Join the world’s fastest-growing community of pro gamers.</Typography>
                                     <Typography variant="body2">Get your player card, climb the ranks, and start raking in that tournament cash.</Typography>
                                 </div>
-                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : "/register"}>I want to go pro</Link>
+                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : ""}>I want to go pro</Link>
                             </div>
                         </div>
                     </div>
@@ -170,18 +170,18 @@ const NoobHowItWorksPage: NextPage = () => {
                                     <Typography variant="body2">Noobstorm is about all of growing together as a community. Watch your Play Cards progress, show your talent to the world, and make your dreams come true.</Typography>
                                     <Typography variant="body2">We’ll be here for you – every step of the way.</Typography>
                                 </div>
-                                <Link href= {loggedUser ? "/free-agency-market/view/watchlist" : "/register"}>Go Pro</Link>
+                                <Link href= {loggedUser ? "/free-agency-market/view/watchlist" : ""}>Go Pro</Link>
                                 <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", gap: "10px" }}>
                                     <Typography variant="h6" color={"GrayText"}>Free Agency Market</Typography>
                                     <Typography variant="body2">An easy way to show off your gaming skills to recruiters – or find the perfect player for your team.</Typography>
                                 </div>
-                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : "/register"}>Scout ‘em out</Link>
+                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : ""}>Scout ‘em out</Link>
                                 <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", gap: "10px" }}>
                                     <Typography variant="h6" color={"GrayText"}>Pro Gamer Recruiting</Typography>
                                     <Typography variant="body2">Our market makes it simpler than ever to show your skills off to the world. Create your profile and list your achievements.</Typography>
                                     <Typography variant="body2">From football to hockey – every professional sport needs a seamless recruiting system to find the best players. And e-sports are no different.</Typography>
                                 </div>
-                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : "/register"}>List Yourself Today</Link>
+                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : ""}>List Yourself Today</Link>
                                 <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", gap: "10px" }}>
                                     <Typography variant="h6" color={"GrayText"}>List. Play. Earn</Typography>
                                     <Typography variant="body2">Pro players don’t end up on world-renowned teams by accident. Noobstorm’s Free Agency Market is simple – </Typography>
@@ -197,12 +197,12 @@ const NoobHowItWorksPage: NextPage = () => {
                                     <Typography variant="body2">It’s never been easier to add a professional gamer onto your team. Scroll through profiles, reach out to your favorites – and them to your roster.</Typography>
                                     <Typography variant="body2">Whether you’re looking for upcoming talent or the best of the best – you’ll find them on the Free Agency Market.</Typography>
                                 </div>
-                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : "/register"}>Find Talent</Link>
+                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : ""}>Find Talent</Link>
                                 <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", gap: "10px" }}>
                                     <Typography variant="h6" color={"GrayText"}>There’s No Cheat Code to Success</Typography>
                                     <Typography variant="body2">Put yourself out there, sharpen those reflexes, and move up in the world </Typography>
                                 </div>
-                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : "/register"}>List Yourself Among The Pros</Link>
+                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : ""}>List Yourself Among The Pros</Link>
                                 <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", gap: "10px" }}>
                                     <Typography variant="h6" color={"GrayText"}>Player Cards Progression</Typography>
                                     <Typography variant="body2">A growth-based community – Noobstorm’s cards show your progress, rating, and standing</Typography>
@@ -232,7 +232,7 @@ const NoobHowItWorksPage: NextPage = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : "/register"}>Forge Your Card</Link>
+                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : ""}>Forge Your Card</Link>
                                 <div style={{ display: "flex", flexDirection: "column", justifyContent: "start", gap: "10px" }}>
                                     <Typography variant="h6" color={"GrayText"}>Opportunity for Growth</Typography>
                                     <Typography variant="body2">Our Elo Ranking system gives every player the chance to evolve, hone their skills, and pursue their dreams in gaming. </Typography>
@@ -247,7 +247,7 @@ const NoobHowItWorksPage: NextPage = () => {
                                     <Typography variant="body2">Join the world’s fastest-growing community of pro gamers.</Typography>
                                     <Typography variant="body2">Get your player card, climb the ranks, and start raking in that tournament cash.</Typography>
                                 </div>
-                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : "/register"}>I want to go pro</Link>
+                                <Link href={loggedUser ? "/free-agency-market/view/watchlist" : ""}>I want to go pro</Link>
                             </div>
                         </div>
                     </div>

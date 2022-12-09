@@ -128,24 +128,6 @@ export default function NoobDesktopFooter(): JSX.Element {
               <IconButton
                 size="medium"
                 color="default"
-                aria-label="LinkedIn"
-                component="span"
-                onClick={gotoLinkedInLink}
-              >
-                <LinkedIn />
-              </IconButton>
-              <IconButton
-                size="medium"
-                color="default"
-                aria-label="Youtube"
-                component="span"
-                onClick={gotoYoutubeLink}
-              >
-                <YouTube />
-              </IconButton>
-              <IconButton
-                size="medium"
-                color="default"
                 aria-label="Instagram"
                 component="span"
                 onClick={gotoInstagramLink}
@@ -161,11 +143,33 @@ export default function NoobDesktopFooter(): JSX.Element {
               >
                 <Twitter />
               </IconButton>
+              <IconButton
+                size="medium"
+                color="default"
+                aria-label="LinkedIn"
+                component="span"
+                onClick={gotoLinkedInLink}
+              >
+                <LinkedIn />
+              </IconButton>
+              <IconButton
+                size="medium"
+                color="default"
+                aria-label="Youtube"
+                component="span"
+                onClick={gotoYoutubeLink}
+              >
+                <YouTube />
+              </IconButton>
+              
             </Box>
           </Grid>
         </Grid>
         <Typography color={"rgba(255,255,255,0.5)"} variant="subtitle1" style={{ fontSize: "13px" }} textAlign={"center"} mt={4}>
-        Copyright © 2021. All Rights Reserved By NOOBSTORM
+        Copyright © 2022. All Rights Reserved By NOOBSTORM
+      </Typography>
+      <Typography color={"rgba(255,255,255,0.5)"} variant="subtitle1" style={{ fontSize: "13px" }} textAlign={"center"} mt={1}>
+      EA Sports and the EA Sports logo are trademarks of Electronic Arts, Inc. All rights reserved. Electronic Arts, Inc is not affiliated with noobstorm.gg. 2K Games is a registered trademark of Take-Two Interactive Software, Inc. All rights reserved. Take-Two Interactive Software, Inc is not affiliated with noobstorm.gg. Xbox and Xbox One are registered trademarks of Microsoft Corporation. All rights reserved. Microsoft Corporation is not affiliated with noobstorm.gg. Playstation and Playstation 5 are registered trademarks of Sony Computer Entertainment. All rights reserved. Sony Computer Entertainment is not affiliated with noobstorm.gg. Wii is a registered trademark of Nintendo of America Inc. All rights reserved. Nintendo of America Inc. is not affiliated with noobstorm.gg. All other trademarks are the property of their respective owners.
       </Typography>
       </Container>
     </div >
