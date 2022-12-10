@@ -256,11 +256,11 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
                 <Grid container spacing={2} p={2}>
                   <Grid sm={12} md={5} lg={5} p={2}>
                     <Member
-                      image="/images/teams/player.png"
+                      image="/images/default-player.jpg"
                       type="bronze"
                       name="Neel"
                       tags={["asd"]}
-                      elo={"1"}
+                      elo={"2000"}
                       games={"5"}
                       won={"2"}
                     />

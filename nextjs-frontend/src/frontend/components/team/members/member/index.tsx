@@ -141,7 +141,7 @@ const Member: React.FC<MemberProp> = ({
         </div>
         
           <img
-            src={profileImage || ""}
+            src={profileImage || "/images/default-player.jpg"}
             style={{
               position: "absolute",
               width: "100%",

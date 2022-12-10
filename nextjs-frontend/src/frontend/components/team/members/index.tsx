@@ -371,7 +371,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({
               ref={chartRef}
               options={options}
               data={data}
-              style={{ minWidth: "100%", maxWidth: "100%" }}
+              style={{ minWidth: "100%", maxWidth: "100%", height: 200 }}
             />
           </Box>
         )}
@@ -530,7 +530,7 @@ const TeamMembers: React.FC<TeamMembersProps> = ({
             ref={chartRef}
             options={options}
             data={data}
-            style={{ minWidth: "80%", maxWidth: "100%" }}
+            style={{ minWidth: "80%", maxWidth: "100%", height: 500 }}
           />
         </Box>
       )}
