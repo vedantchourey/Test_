@@ -116,24 +116,6 @@ export default function NoobLoggedOutDrawer(props: Props): JSX.Element {
         </div>
         <div className={styles.footerContainer}>
           <div className={styles.footer}>
-          <IconButton
-                size="medium"
-                color="default"
-                aria-label="LinkedIn"
-                component="span"
-                onClick={gotoLinkedInLink}
-              >
-                <LinkedIn />
-              </IconButton>
-              <IconButton
-                size="medium"
-                color="default"
-                aria-label="Youtube"
-                component="span"
-                onClick={gotoYoutubeLink}
-              >
-                <YouTube />
-              </IconButton>
               <IconButton
                 size="medium"
                 color="default"
@@ -151,6 +133,24 @@ export default function NoobLoggedOutDrawer(props: Props): JSX.Element {
                 onClick={gotoTwitterLink}
               >
                 <Twitter />
+              </IconButton>
+              <IconButton
+                size="medium"
+                color="default"
+                aria-label="LinkedIn"
+                component="span"
+                onClick={gotoLinkedInLink}
+              >
+                <LinkedIn />
+              </IconButton>
+              <IconButton
+                size="medium"
+                color="default"
+                aria-label="Youtube"
+                component="span"
+                onClick={gotoYoutubeLink}
+              >
+                <YouTube />
               </IconButton>
           </div>
         </div>
