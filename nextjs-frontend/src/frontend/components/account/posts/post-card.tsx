@@ -604,7 +604,7 @@ const PostCard = (props: IProps): JSX.Element => {
         onClose={handleClose}
       >
         <Alert onClose={handleClose} severity="warning" sx={{ width: "100%" }}>
-          Post Reporeted successfully.
+          Post reported successfully.
         </Alert>
       </Snackbar>
       <Snackbar

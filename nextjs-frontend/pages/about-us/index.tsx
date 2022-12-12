@@ -40,7 +40,7 @@ const NoobAboutUsPage: NextPage = () => {
         {isDesktop && (
           <div>
             <Divider style={{ padding: 35 }}>
-              <Typography variant="h3">ABOUT US</Typography>
+              <Typography variant="h1">ABOUT US</Typography>
             </Divider>
             <div style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>

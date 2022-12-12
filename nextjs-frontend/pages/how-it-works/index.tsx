@@ -11,11 +11,13 @@ import { deviceTypes } from "../../src/frontend/redux-store/layout/device-types"
 import { useAppSelector } from "../../src/frontend/redux-store/redux-store";
 import { userProfileSelector } from "../../src/frontend/redux-store/authentication/authentication-selectors";
 import Member from "../../src/frontend/components/team/members/member";
+import { avatarListWithUrl } from "../../src/frontend/utils/config/default-avatars";
 
 const NoobHowItWorksPage: NextPage = () => {
     const isDesktop = useAppSelector((x) =>
         isDeviceTypeSelector(x, deviceTypes.desktop));
         const loggedUser = useAppSelector(userProfileSelector);
+
     return (
       <NoobPage
         title="HowItWorks"
@@ -349,7 +351,7 @@ const NoobHowItWorksPage: NextPage = () => {
                             games={"10"}
                             won={"9"}
                             username="Beginner"
-                            profileImage={"/images/default-player.jpg"}
+                            profileImage={avatarListWithUrl[0].url || ""}
                           />
                           <Typography variant="body2">
                           Beginner (Bronze)
@@ -366,7 +368,7 @@ const NoobHowItWorksPage: NextPage = () => {
                             games={"10"}
                             won={"9"}
                             username="Intermediate"
-                            profileImage={"/images/default-player.jpg"}
+                            profileImage={avatarListWithUrl[1].url || ""}
                           />
                           <Typography variant="body2">
                           Intermediate (Silver)
@@ -383,7 +385,7 @@ const NoobHowItWorksPage: NextPage = () => {
                             games={"10"}
                             won={"9"}
                             username="Semi-Pro"
-                            profileImage={"/images/default-player.jpg"}
+                            profileImage={avatarListWithUrl[2].url || ""}
                           />
                           <Typography variant="body2">Semi-Pro (Gold)</Typography>
                           <Typography variant="body2">1250-1499 </Typography>
@@ -398,7 +400,7 @@ const NoobHowItWorksPage: NextPage = () => {
                             games={"10"}
                             won={"9"}
                             username="Professional"
-                            profileImage={"/images/default-player.jpg"}
+                            profileImage={avatarListWithUrl[3].url || ""}
                           />
                           <Typography variant="body2">
                           Professional (Ruby)
@@ -415,7 +417,7 @@ const NoobHowItWorksPage: NextPage = () => {
                             games={"10"}
                             won={"9"}
                             username="Master"
-                            profileImage={"/images/default-player.jpg"}
+                            profileImage={avatarListWithUrl[4].url || ""}
                           />
                           <Typography variant="body2">
                           Master (Diamond)
@@ -821,7 +823,7 @@ const NoobHowItWorksPage: NextPage = () => {
                             games={"10"}
                             won={"9"}
                             username="Beginner"
-                            profileImage={"/images/default-player.jpg"}
+                            profileImage={avatarListWithUrl[0].url || ""}
                           />
                           <Typography variant="body2">
                           Beginner (Bronze)
@@ -838,7 +840,7 @@ const NoobHowItWorksPage: NextPage = () => {
                             games={"10"}
                             won={"9"}
                             username="Intermediate"
-                            profileImage={"/images/default-player.jpg"}
+                            profileImage={avatarListWithUrl[1].url || ""}
                           />
                           <Typography variant="body2">
                           Intermediate (Silver)
@@ -855,7 +857,7 @@ const NoobHowItWorksPage: NextPage = () => {
                             games={"10"}
                             won={"9"}
                             username="Semi-Pro"
-                            profileImage={"/images/default-player.jpg"}
+                            profileImage={avatarListWithUrl[2].url || ""}
                           />
                           <Typography variant="body2">Semi-Pro (Gold)</Typography>
                           <Typography variant="body2">1250-1499 </Typography>
@@ -870,7 +872,7 @@ const NoobHowItWorksPage: NextPage = () => {
                             games={"10"}
                             won={"9"}
                             username="Professional"
-                            profileImage={"/images/default-player.jpg"}
+                            profileImage={avatarListWithUrl[3].url || ""}
                           />
                           <Typography variant="body2">
                           Professional (Ruby)
@@ -887,7 +889,7 @@ const NoobHowItWorksPage: NextPage = () => {
                             games={"10"}
                             won={"9"}
                             username="Master"
-                            profileImage={"/images/default-player.jpg"}
+                            profileImage={avatarListWithUrl[4].url || ""}
                           />
                           <Typography variant="body2">
                           Master (Diamond)

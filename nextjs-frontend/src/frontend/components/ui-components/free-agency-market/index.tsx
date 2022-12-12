@@ -21,6 +21,7 @@ import { getAuthHeader } from "../../../utils/headers";
 import { useAppSelector } from "../../../../../src/frontend/redux-store/redux-store";
 import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
 import { deviceTypes } from '../../../../../src/frontend/redux-store/layout/device-types';
+import { useRouter } from "next/router";
 
 export const NoobButton = styled(Button)(() => ({
   color: "white",
@@ -148,6 +149,8 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const router = useRouter();
+
   const [open, setOpen] = useState<boolean>(false);
   const [selectGame, setSelectGame] = useState("");
   const [platform, setPlatform] = useState("");
@@ -174,11 +177,15 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
       <Box
         marginBottom={2}
         sx={{ padding: { sm: "10px", xs: "10px", md: "20px" } }}
-        style={!isMobile ? {
-          backgroundImage: "url('/images/FAB_BG.png')",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "100% 100%",
-        } : {}}
+        style={
+          !isMobile
+            ? {
+                backgroundImage: "url('/images/FAB_BG.png')",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "100% 100%",
+              }
+            : {}
+        }
       >
         {!isMobile ? (
           <CardDesktop setOpen={setOpen} />
@@ -208,7 +215,10 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
                 display={"flex"}
                 justifyContent={"space-between"}
               >
-                <Typography>Test</Typography>
+                <Typography>
+                  Join the Noobstorm Free Agency Market and get scouted by the
+                  best esports teams in India.
+                </Typography>
                 <Button
                   onClick={(): void => {
                     setOpen(false);
@@ -224,7 +234,15 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
                   p={2}
                   // display={"flex"}
                   // justifyContent={"space-between"}
-                  style={ isMobile ? { flexDirection: "column" } : { display: "flex", flexDirection: "row", justifyContent: "space-between" } }
+                  style={
+                    isMobile
+                      ? { flexDirection: "column" }
+                      : {
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }
+                  }
                 >
                   <Box flex={1}>
                     <GameDropDown
@@ -263,15 +281,30 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
                       elo={"2000"}
                       games={"5"}
                       won={"2"}
+                      username={"Noobstorm User"}
                     />
                   </Grid>
                   <Grid sm={12} md={7} lg={7} p={2}>
-                    <Typography textAlign="left">Game title</Typography>
                     <Typography textAlign="left" variant="caption">
-                      Lorem Ipsum has been the industrys standard dummy text
-                      ever since the 1500s, when an unknown printer took a
-                      galley of type and scrambled it to make a type specimen
-                      book.
+                      Click the Enter Free Agency Button and get listed on the
+                      Free Agency Market. Select your game and platform and
+                      we’ll take care of the rest. Once you get listed, let our
+                      market do its magic. Teams from all across India can now
+                      send you offers to join their teams. You can view the
+                      Offers Received by simply clicking on the Offers Received
+                      Tab once you have listed yourself on the Free Agency
+                      Market. Once you receive an Invite to Join a Team you can
+                      choose to either accept or decline the invitation. To
+                      learn more visit{" "}
+                      <Button
+                        variant="text"
+                        style={{ fontSize: 13, textTransform: "capitalize" }}
+                        onClick={(): any => {
+                          router.push("/how-it-works");
+                        }}
+                      >
+                        How it works
+                      </Button>
                     </Typography>
                     <Box mt={5}>
                       <Button

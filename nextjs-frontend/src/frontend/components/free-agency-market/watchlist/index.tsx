@@ -78,6 +78,7 @@ const WatchTeamMembers: React.FC<{
             name: `${item.firstName} ${item.lastName}`,
             username: `${item.username}`,
             id: item.user_id,
+            w_id: item.id,
             image: "/images/teams/player.png",
             type: "bronze",
             tags: ["Games", "Won", "Elo"],
@@ -381,7 +382,7 @@ const WatchTeamMembers: React.FC<{
                   Next
                 </Button>
               </div>
-              {paginatiedList[activePage]?.map((player) => {
+              {paginatiedList[activePage]?.map((player: any) => {
                 return (
                   <>
                     <Member key={player.name} {...player} />
@@ -393,7 +394,7 @@ const WatchTeamMembers: React.FC<{
                           style={{ backgroundColor: "#6932F9", fontSize: 12 }}
                           fullWidth={true}
                           onClick={(): void => {
-                            removeToWatchList(player.id || "");
+                            removeToWatchList(player.w_id || "");
                           }}
                         >
                           - Remove
@@ -422,7 +423,7 @@ const WatchTeamMembers: React.FC<{
           ) : (
             <Box marginY={2} width={"70vw"}>
               <Slider {...settings}>
-                {data.map((player) => {
+                {data.map((player: any) => {
                   return (
                     <Member key={player.name} {...player}>
                       <>
@@ -433,7 +434,7 @@ const WatchTeamMembers: React.FC<{
                             style={{ backgroundColor: "#6932F9" }}
                             fullWidth={true}
                             onClick={(): void => {
-                              removeToWatchList(player.id || "");
+                              removeToWatchList(player.w_id || "");
                             }}
                           >
                             - Remove

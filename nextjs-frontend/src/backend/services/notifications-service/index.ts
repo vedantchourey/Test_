@@ -100,10 +100,15 @@ export const handleNotifiction = async (
     return updated;
   }
   if (notification.type === "TEAM_INVITATION") {
-    return await acceptInvite(
-      notification?.data?.secret,
-      knexConnection as Knex.Transaction
-    );
+    if(req.response === "ACCEPTED"){
+      return await acceptInvite(
+        notification?.data?.secret,
+        knexConnection as Knex.Transaction
+      );
+    } 
+      return { message: "Invitation rejected" } as any
+    
+    
   }
   if (notification.type === "MATCH_RESULT") {
     return await submitMatchResult(

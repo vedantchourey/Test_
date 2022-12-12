@@ -447,7 +447,7 @@ const Leaderboard = (): JSX.Element => {
                           </TableCell>
                           <TableCell>
                             <div
-                              style={{ display: "flex", alignItems: "center" }}
+                              style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
                             >
                               <span>
                                 {isTeam ? (
