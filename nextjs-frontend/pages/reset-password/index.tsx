@@ -5,7 +5,7 @@ import styles from './reset-password.module.css'
 import { Container } from '@mui/material'
 import MainBannerHeading from '../../src/frontend/components/ui-components/typography/mainBannerHeading'
 import ResetPasswordForm from '../../src/frontend/components/auth/reset-password-form'
-import Heading from '../../src/frontend/components/ui-components/typography/heading'
+// import Heading from '../../src/frontend/components/ui-components/typography/heading'
 
 const NoobResetPasswordPage: NextPage = () => {
   return (
@@ -16,10 +16,10 @@ const NoobResetPasswordPage: NextPage = () => {
       }}
     >
       <React.Fragment>
-        <Heading
+        {/* <Heading
           backgroundImage
-          backgroundImageUrl="/images/partner-with-us.png"
-        />
+          // backgroundImageUrl="/images/partner-with-us.png"
+        /> */}
 
         <MainBannerHeading heading={'RESET PASSWORD'} />
 
