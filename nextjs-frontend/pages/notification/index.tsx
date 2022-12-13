@@ -126,7 +126,7 @@ const Notification = (): JSX.Element => {
     >
       <Fragment>
         <Container maxWidth="xl">
-          <Heading divider heading={"Notification"} />
+          <Heading divider heading={"Notifications"} />
           {notifications.map((i: any, idx: number) => (
             <List
               sx={{
