@@ -22,6 +22,7 @@ import { useAppSelector } from "../../../../../src/frontend/redux-store/redux-st
 import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
 import { deviceTypes } from '../../../../../src/frontend/redux-store/layout/device-types';
 import { useRouter } from "next/router";
+import { avatarListWithUrl } from "../../../utils/config/default-avatars";
 
 export const NoobButton = styled(Button)(() => ({
   color: "white",
@@ -274,7 +275,8 @@ const FreeAgencyMarketCard: React.FC = ({ children }) => {
                 <Grid container spacing={2} p={2}>
                   <Grid sm={12} md={5} lg={5} p={2}>
                     <Member
-                      image="/images/default-player.jpg"
+                      image=""
+                      profileImage={avatarListWithUrl[2].url || ""}
                       type="bronze"
                       name="Neel"
                       tags={["asd"]}
