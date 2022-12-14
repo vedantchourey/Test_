@@ -172,9 +172,27 @@ export default function NoobMobileFooter(): JSX.Element {
         <Divider orientation='vertical' style={{ height:"15px", width: 10}}></Divider>
       </Button>
       <Button variant="text"   
+        // onClick={gotoHowItworksPage}
+        style={buttonStyle(["/"])}>
+        Business Inquiries
+        <Divider orientation='vertical' style={{ height:"15px", width: 10}}></Divider>
+      </Button>
+      <Button variant="text"   
         onClick={gotoHowItworksPage}
         style={buttonStyle(["/how-it-works"])}>
         How it Works
+        <Divider orientation='vertical' style={{ height:"15px", width: 10}}></Divider>
+      </Button>
+      <Button variant="text"   
+        // onClick={gotoHowItworksPage}
+        style={buttonStyle(["/"])}>
+        Privacy Policy
+        <Divider orientation='vertical' style={{ height:"15px", width: 10}}></Divider>
+      </Button>
+      <Button variant="text"   
+        // onClick={gotoHowItworksPage}
+        style={buttonStyle(["/"])}>
+        Terms of Service
         <Divider orientation='vertical' style={{ height:"15px", width: 10}}></Divider>
       </Button>
       <Button variant="text"   
