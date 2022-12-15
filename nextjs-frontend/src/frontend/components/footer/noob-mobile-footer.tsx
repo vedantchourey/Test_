@@ -173,7 +173,7 @@ export default function NoobMobileFooter(): JSX.Element {
       </Button>
       <Button variant="text"   
         // onClick={gotoHowItworksPage}
-        style={buttonStyle(["/"])}>
+        style={buttonStyle(["/faq"])}>
         Business Inquiries
         <Divider orientation='vertical' style={{ height:"15px", width: 10}}></Divider>
       </Button>
@@ -185,13 +185,13 @@ export default function NoobMobileFooter(): JSX.Element {
       </Button>
       <Button variant="text"   
         // onClick={gotoHowItworksPage}
-        style={buttonStyle(["/"])}>
+        style={buttonStyle(["/faq"])}>
         Privacy Policy
         <Divider orientation='vertical' style={{ height:"15px", width: 10}}></Divider>
       </Button>
       <Button variant="text"   
         // onClick={gotoHowItworksPage}
-        style={buttonStyle(["/"])}>
+        style={buttonStyle(["/faq"])}>
         Terms of Service
         <Divider orientation='vertical' style={{ height:"15px", width: 10}}></Divider>
       </Button>
