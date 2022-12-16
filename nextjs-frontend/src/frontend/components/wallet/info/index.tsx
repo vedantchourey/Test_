@@ -25,6 +25,7 @@ const WalletInfo: React.FC = () => {
   };
   useEffect(() => {
     fetchWalletDetails();
+    handleOnKyc();
   }, []);
 
   const handleOnKyc = () => {
@@ -34,7 +35,7 @@ const WalletInfo: React.FC = () => {
     setStan(v4())
     
 
-    const sha = sha256(("NOOB6775" + "|" + requestId + "|" + "Jsh39koppg" + "|" + "s32rlk2a2"))
+    const sha = sha256(("NOOB6775" + "|" + requestId + "|" + "S87uv7834rt" + "|" + "vfg896y45I"))
     setSha256(sha)
     console.log('sha -> ', sha)
     
@@ -43,22 +44,21 @@ const WalletInfo: React.FC = () => {
   return (
     <WalletCard>
       <Grid container columnSpacing={2} rowSpacing={2}>
-        <Button onClick={handleOnKyc}>KYC TESTING</Button>
 
         <form method="post" action="https://sandbox.veri5digital.com/video-id-kyc/_initWebVIKYC">
-          <input type="text" name="client_code" placeholder="<<Your Client Code>>" value={"NOOB6775"} />
-          <input type="text" name="api_key" value="Jsh39koppg" />
-          <input type="text" name="redirect_url" value="http://localhost:3000" />
-          <input type="text" name="request_id" value={requirestCode} />
-          <input type="text" name="stan" value={stan} />
-          <input type="text" name="hash" value={sha256Data} />
+          <input type="hidden" name="client_code" placeholder="<<Your Client Code>>" value={"NOOB6775"} />
+          <input type="hidden" name="api_key" value="S87uv7834rt" />
+          <input type="hidden" name="redirect_url" value="http://localhost:3000/wallet/info" />
+          <input type="hidden" name="request_id" value={requirestCode} />
+          <input type="hidden" name="stan" value={stan} />
+          <input type="hidden" name="hash" value={sha256Data} />
           <input
-            type="text"
+            type="hidden"
             name="mobile"
             placeholder="<<registered mobile number value>>"
           />
-          <input type="text" name="otp_required" placeholder="<”Y” | ”N”>" />
-          <button type="submit">Proceed </button>
+          <input type="hidden" name="otp_required" value="N" />
+          <Button type="submit">Proceed</Button>
         </form>
 
         <Grid item xs={12} md={7}>
