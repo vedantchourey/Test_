@@ -14,6 +14,7 @@ import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import { Box } from "@mui/system";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
+import ArrowLeftAltTwoTone from "@mui/icons-material/TurnLeftRounded";
 import { alpha } from "@mui/material/styles";
 import moment from "moment";
 import React, { useState } from "react";
@@ -202,7 +203,7 @@ export default function NewsView(): JSX.Element {
               style={{ marginTop: 10, alignSelf: "flex-start" }}
               onClick={(): any => router.back()}
             >
-              Back
+              <ArrowLeftAltTwoTone />
             </Button>
             <img
               src={currentNews.image}
@@ -228,7 +229,7 @@ export default function NewsView(): JSX.Element {
                   style={{ marginTop: 10, alignSelf: "flex-start" }}
                   onClick={(): any => router.back()}
                 >
-                  Back
+                  <ArrowLeftAltTwoTone />
                 </Button>
                 <Box mt={4} ml={isDesktop ? 2 : 0} style={{ float: "right" }}>
                   <img
@@ -289,6 +290,7 @@ export default function NewsView(): JSX.Element {
                     display: "flex",
                     alignItems: "center",
                     color: liked ? "primary.main" : "white",
+                    cursor: "pointer"
                   }}
                   onClick={(): any => {
                     if (liked) {
@@ -329,7 +331,7 @@ export default function NewsView(): JSX.Element {
                   </Typography>
                 </Popover>
                 <Box
-                  sx={{ display: "flex", alignItems: "center", ml: 2 }}
+                  sx={{ display: "flex", alignItems: "center", ml: 2, cursor: "pointer" }}
                   onClick={(): any => {
                     navigator.clipboard.writeText(currentURL);
                     setOpen(true);

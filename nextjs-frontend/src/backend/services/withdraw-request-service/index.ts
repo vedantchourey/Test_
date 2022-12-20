@@ -18,7 +18,7 @@ const fetchKycDetails = async (
   const details = await kycRepo.find({ user_id });
   return {
     ...data,
-    kycDetails: details[0],
+    kycDetails: details[details.length - 1],
   };
 };
 
@@ -33,6 +33,11 @@ export const fetchWithdrawRequest = async (connection: Knex.Transaction): Promis
             "withdraw_request.userId",
             "private_profiles.id"
           )
+          .join(
+            "profiles",
+            "withdraw_request.userId",
+            "profiles.id"
+          )
           .select("withdraw_request.id")
           .select("withdraw_request.status")
           .select("withdraw_request.created_at")
@@ -40,6 +45,7 @@ export const fetchWithdrawRequest = async (connection: Knex.Transaction): Promis
           .select("private_profiles.withdrawAmount")
           .select("private_profiles.firstName")
           .select("private_profiles.lastName")
+          .select("profiles.username")
           .where("withdraw_request.status",STATUS.PENDING);
 
         const data = await Promise.all(

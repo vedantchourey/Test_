@@ -19,10 +19,12 @@ import { userProfileSelector } from "../../../redux-store/authentication/authent
 import { isDeviceTypeSelector } from "../../../../../src/frontend/redux-store/layout/layout-selectors";
 import { deviceTypes } from '../../../../../src/frontend/redux-store/layout/device-types';
 
-const Balance = (): any => {
+const Balance = ({ setKycVerified }: any): any => {
   const wallet = useAppSelector(walletDetaislSelector);
   const user = useAppSelector(userProfileSelector);
   const [isVerified, setIsVerified] = useState(false);
+  const [kycDetails, setKycDetails] = useState<any>(undefined);
+
   const validationSchema = yup.object({
     mobile: yup.string().required("Mobile is required"),
     accNo: yup.string().required("Account number is required"),
@@ -61,7 +63,16 @@ const Balance = (): any => {
       })
       .then((res) => {
         if (res.data.length) {
-          const kycData: any = res.data[0];
+          const kycData: any = res.data[res.data.length - 1];
+          setKycDetails(kycData);
+          setKycVerified(
+            kycDetails?.aadhar_no &&
+              kycDetails?.bank_name &&
+              kycDetails?.acc_type &&
+              kycDetails?.account_no &&
+              kycDetails?.ifsc &&
+              kycDetails?.mobile
+          );
           formik.setValues({
             mobile: kycData.mobile,
             accNo: kycData.account_no,
@@ -81,16 +92,20 @@ const Balance = (): any => {
   const submmitKycDetails = async (data: any): Promise<void> => {
     const headers = await getAuthHeader();
     await axios
-      .post(`/api/kyc`, {name: data.bank_name, ...data }, {
-        headers: headers,
-      })
+      .post(
+        `/api/kyc`,
+        { name: data.bank_name, ...data },
+        {
+          headers: headers,
+        }
+      )
       .then((res) => {
         if (res.status) {
           setIsVerified(true);
         }
       })
       .catch((err) => {
-        console.error("error ->",err);
+        console.error("error ->", err);
       });
   };
 
@@ -101,7 +116,7 @@ const Balance = (): any => {
       ifsc: "",
       bank_name: "",
       aadhar_no: "",
-      acc_type: ""
+      acc_type: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (data, { setSubmitting }) => {
@@ -115,7 +130,8 @@ const Balance = (): any => {
     getKycDetails();
   }, []);
 
-  const isDesktop = useAppSelector((x) => isDeviceTypeSelector(x, deviceTypes.desktop));
+  const isDesktop = useAppSelector((x) =>
+    isDeviceTypeSelector(x, deviceTypes.desktop));
 
   return (
     <React.Fragment>
@@ -126,7 +142,8 @@ const Balance = (): any => {
               Your Balance
             </Typography>
             <Typography textAlign={"start"}>
-              View your available Noobstorm Credits. Add Credits and start competing in Noobstorm Tournaments.
+              View your available Noobstorm Credits. Add Credits and start
+              competing in Noobstorm Tournaments.
             </Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={6}>
@@ -172,7 +189,7 @@ const Balance = (): any => {
                 height: 56,
                 backgroundColor: "#6932F9",
                 color: "#ffffff",
-                fontSize: 18
+                fontSize: 18,
               }}
               onClick={(): void => {
                 Router.push("/store/product-detail/1");
@@ -233,7 +250,7 @@ const Balance = (): any => {
           <Grid item xs={12} md={6} display={"flex"}>
             <Button
               fullWidth
-              disabled={!isVerified }
+              disabled={!isVerified}
               style={{
                 height: 56,
                 color: "#ffffff",
@@ -250,136 +267,155 @@ const Balance = (): any => {
         </Grid>
       </Card>
 
-      <Card sx={{ mt: 2 }}>
-        <Grid container padding={2} columnSpacing={1} rowSpacing={1}>
-          <Grid item xs={12}>
-            <Typography variant="h6" marginBottom={"16px"} marginTop={2}>
-              KYC Details
-            </Typography>
-            <Divider
-              variant="fullWidth"
-              style={{
-                borderColor: "rgba(255, 255, 255, 0.1)",
-                marginTop: !isDesktop ? 0 : "30px",
-                marginBottom: "30px",
-              }}
-            />
+      {kycDetails?.aadhar_no && (
+        <Card sx={{ mt: 2 }}>
+          <Grid container padding={2} columnSpacing={1} rowSpacing={1}>
+            <Grid item xs={12}>
+              <Typography variant="h6" marginBottom={"16px"} marginTop={2}>
+                Bank Details
+              </Typography>
+              <Divider
+                variant="fullWidth"
+                style={{
+                  borderColor: "rgba(255, 255, 255, 0.1)",
+                  marginTop: !isDesktop ? 0 : "30px",
+                  marginBottom: "30px",
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Box mt={!isDesktop ? 0 : 3}>
+                <Grid container spacing={1} marginTop={!isDesktop ? 0 : 3}>
+                  <Grid item xs={!isDesktop ? 12 : 4}>
+                    <TextField
+                      disabled={kycDetails?.aadhar_no}
+                      margin="none"
+                      label="Aadhar Number"
+                      size="small"
+                      name="aadhar_no"
+                      fullWidth
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.aadhar_no}
+                      helperText={
+                        formik.touched.aadhar_no && formik.errors.aadhar_no
+                      }
+                      error={Boolean(
+                        formik.touched.aadhar_no && formik.errors.aadhar_no
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={!isDesktop ? 12 : 4}>
+                    <TextField
+                      disabled={kycDetails?.bank_name}
+                      margin="none"
+                      label="Bank Account Name"
+                      size="small"
+                      name="bank_name"
+                      fullWidth
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.bank_name}
+                      helperText={
+                        formik.touched.bank_name && formik.errors.bank_name
+                      }
+                      error={Boolean(
+                        formik.touched.bank_name && formik.errors.bank_name
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={!isDesktop ? 12 : 4}>
+                    <TextField
+                      disabled={kycDetails?.acc_type}
+                      margin="none"
+                      label="Account Type"
+                      size="small"
+                      name="acc_type"
+                      fullWidth
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.acc_type}
+                      helperText={
+                        formik.touched.acc_type && formik.errors.acc_type
+                      }
+                      error={Boolean(
+                        formik.touched.acc_type && formik.errors.acc_type
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={!isDesktop ? 12 : 4}>
+                    <TextField
+                      disabled={kycDetails?.account_no}
+                      margin="none"
+                      label="Account Number"
+                      size="small"
+                      name="accNo"
+                      fullWidth
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.accNo}
+                      helperText={formik.touched.accNo && formik.errors.accNo}
+                      error={Boolean(
+                        formik.touched.accNo && formik.errors.accNo
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={!isDesktop ? 12 : 4}>
+                    <TextField
+                      disabled={kycDetails?.ifsc}
+                      margin="none"
+                      label="IFSC Code"
+                      size="small"
+                      name="ifsc"
+                      fullWidth
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.ifsc}
+                      helperText={formik.touched.ifsc && formik.errors.ifsc}
+                      error={Boolean(formik.touched.ifsc && formik.errors.ifsc)}
+                    />
+                  </Grid>
+                  <Grid item xs={!isDesktop ? 12 : 4}>
+                    <TextField
+                      disabled={kycDetails?.mobile}
+                      margin="none"
+                      label="Phone number"
+                      size="small"
+                      name="mobile"
+                      fullWidth
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.mobile}
+                      helperText={formik.touched.mobile && formik.errors.mobile}
+                      error={Boolean(
+                        formik.touched.mobile && formik.errors.mobile
+                      )}
+                    />
+                  </Grid>
+                </Grid>
+                {!(
+                  kycDetails?.aadhar_no &&
+                  kycDetails?.bank_name &&
+                  kycDetails?.acc_type &&
+                  kycDetails?.account_no &&
+                  kycDetails?.ifsc &&
+                  kycDetails?.mobile
+                ) && (
+                  <Box display={"flex"} justifyContent={"flex-end"}>
+                    <Button
+                      variant="contained"
+                      disabled={formik.isSubmitting}
+                      onClick={formik.submitForm}
+                    >
+                      Submit
+                    </Button>
+                  </Box>
+                )}
+              </Box>
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Box mt={!isDesktop ? 0 : 3}>
-              <Grid container spacing={1} marginTop={!isDesktop ? 0 : 3}>
-                <Grid item xs={!isDesktop ? 12 : 4}>
-                  <TextField
-                    disabled={isVerified}
-                    margin="none"
-                    label="Aadhar Number"
-                    size="small"
-                    name="aadhar_no"
-                    fullWidth
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.aadhar_no}
-                    helperText={
-                      formik.touched.aadhar_no && formik.errors.aadhar_no
-                    }
-                    error={Boolean(
-                      formik.touched.aadhar_no && formik.errors.aadhar_no
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={!isDesktop ? 12 : 4}>
-                  <TextField
-                    disabled={isVerified}
-                    margin="none"
-                    label="Bank Account Name"
-                    size="small"
-                    name="bank_name"
-                    fullWidth
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.bank_name}
-                    helperText={formik.touched.bank_name && formik.errors.bank_name}
-                    error={Boolean(formik.touched.bank_name && formik.errors.bank_name)}
-                  />
-                </Grid>
-                <Grid item xs={!isDesktop ? 12 : 4}>
-                  <TextField
-                    disabled={isVerified}
-                    margin="none"
-                    label="Account Type"
-                    size="small"
-                    name="acc_type"
-                    fullWidth
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.acc_type}
-                    helperText={formik.touched.acc_type && formik.errors.acc_type}
-                    error={Boolean(formik.touched.acc_type && formik.errors.acc_type)}
-                  />
-                </Grid>
-                <Grid item xs={!isDesktop ? 12 : 4}>
-                  <TextField
-                    disabled={isVerified}
-                    margin="none"
-                    label="Account Number"
-                    size="small"
-                    name="accNo"
-                    fullWidth
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.accNo}
-                    helperText={formik.touched.accNo && formik.errors.accNo}
-                    error={Boolean(formik.touched.accNo && formik.errors.accNo)}
-                  />
-                </Grid>
-                <Grid item xs={!isDesktop ? 12 : 4}>
-                  <TextField
-                    disabled={isVerified}
-                    margin="none"
-                    label="IFSC Code"
-                    size="small"
-                    name="ifsc"
-                    fullWidth
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.ifsc}
-                    helperText={formik.touched.ifsc && formik.errors.ifsc}
-                    error={Boolean(formik.touched.ifsc && formik.errors.ifsc)}
-                  />
-                </Grid>
-                <Grid item xs={!isDesktop ? 12 : 4}>
-                  <TextField
-                    disabled={isVerified}
-                    margin="none"
-                    label="Phone number"
-                    size="small"
-                    name="mobile"
-                    fullWidth
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.mobile}
-                    helperText={formik.touched.mobile && formik.errors.mobile}
-                    error={Boolean(
-                      formik.touched.mobile && formik.errors.mobile
-                    )}
-                  />
-                </Grid>
-              </Grid>
-              {!isVerified && (
-                <Box display={"flex"} justifyContent={"flex-end"}>
-                  <Button
-                    variant="contained"
-                    disabled={formik.isSubmitting}
-                    onClick={formik.submitForm}
-                  >
-                    Submit
-                  </Button>
-                </Box>
-              )}
-            </Box>
-          </Grid>
-        </Grid>
-      </Card>
+        </Card>
+      )}
     </React.Fragment>
   );
 };

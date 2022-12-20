@@ -22,6 +22,7 @@ const ReportedUsers: React.FC = () => {
           }
         })
       }
+
       setData(Data as any);
   };
 

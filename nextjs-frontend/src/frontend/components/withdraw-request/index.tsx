@@ -59,6 +59,9 @@ const WithdrawRequest: React.FC = () => {
           <div>
             <Typography>{`${row.firstName} ${row.lastName}`}</Typography>
             <Typography fontSize={12} color={"rgba(255,255,255,0.5)"}>
+              username: {row.username}
+            </Typography>
+            <Typography fontSize={12} color={"rgba(255,255,255,0.5)"}>
               Account Number: {row.kycDetails.account_no}
             </Typography>
             <Typography fontSize={12} color={"rgba(255,255,255,0.5)"}>

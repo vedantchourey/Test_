@@ -2,11 +2,20 @@ import { IFrontendConfig } from './i-frontend-config';
 
 const baseAppUrl = process.env.NEXT_PUBLIC_NOOB_BASE_APP_URL || 'http://localhost:19006';
 const baseApiUrl = process.env.NEXT_PUBLIC_NOOB_BASE_API_URL || 'http://localhost:5000';
+
 const supabaseUrl = process.env.NEXT_PUBLIC_NOOB_SUPABASE_URL || 'http://localhost:54321';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_NOOB_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiJ9.ZopqoUt20nEV9cklpv9e3yw3PVyZLmKs5qLD6nGL1SI';
+const VERIFY_CLIENT_CODE = process.env.NEXT_PUBLIC_VERIFY_CLIENT_CODE || "";
+const VERIFY_AADHAAR_KYC_URL = process.env.NEXT_PUBLIC_VERIFY_AADHAAR_KYC_URL || "";
+const VERIFY_AADHAAR_API_KYC = process.env.NEXT_PUBLIC_VERIFY_AADHAAR_API_KYC || "";
+const VERIFY_AADHAAR_SALT = process.env.NEXT_PUBLIC_VERIFY_AADHAAR_SALT || "";
 
 const frontendConfig: IFrontendConfig = {
   baseAppUrl: baseAppUrl,
+  VERIFY_CLIENT_CODE,
+  VERIFY_AADHAAR_KYC_URL,
+  VERIFY_AADHAAR_API_KYC,
+  VERIFY_AADHAAR_SALT,
   noobStormServices: {
     auth: {
       signup: `${baseApiUrl}/api/sign-up`,

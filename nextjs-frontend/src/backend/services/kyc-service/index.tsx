@@ -1,20 +1,27 @@
 import { Knex } from "knex";
 import { TABLE_NAMES } from "../../../models/constants";
-import { aadharVarification, bankAccountVarification, IBankAccountVarification } from "../../utils/KYC/KYCUtils";
 import { getErrorObject } from "../common/helper/utils.service";
 import { IKYC } from "../database/models/i-kyc";
 import { CrudRepository } from "../database/repositories/crud-repository";
 import { IVerifyKYC } from "./i-kyc-interfaces";
 import { validateKYCReq } from "./i-kyc-validator";
+import axios from "axios";
+import frontendConfig from "../../../frontend/utils/config/front-end-config";
 
-export const verifyKYC = async (connection: Knex, user: any, req: IVerifyKYC): Promise<any> => {
-  const errors = await validateKYCReq(req);
-  if (errors) return { errors };
-  const disableSandBox = true;
-  const [addhar_resp, bank_resp] = await Promise.all([aadharVarification(req.aadhar_no), bankAccountVarification(req as IBankAccountVarification)]);
+export const verifyKYC = async (
+  connection: Knex,
+  user: any,
+  req: IVerifyKYC
+): Promise<any> => {
+  try {
+    const errors = await validateKYCReq(req);
+    if (errors) return { errors };
 
-  if (disableSandBox || (addhar_resp?.isVerified && bank_resp?.isVerified)) {
-    const kycRepo = new CrudRepository<IKYC>(connection, TABLE_NAMES.KYC_DETAILS);
+    const kycRepo = new CrudRepository<IKYC>(
+      connection,
+      TABLE_NAMES.KYC_DETAILS
+    );
+    
     return await kycRepo.create({
       user_id: user?.id,
       mobile: req.mobile,
@@ -24,14 +31,38 @@ export const verifyKYC = async (connection: Knex, user: any, req: IVerifyKYC): P
       aadhar_no: req.aadhar_no,
       acc_type: req.acc_type,
       bank_name: req.bank_name,
-      aadhar_transaction_id: addhar_resp?.transaction_id,
-      bank_transaction_id: bank_resp?.transaction_id,
-      bank_verification_data: bank_resp?.data,
-      aadhar_verification_data: addhar_resp?.data,
     });
-  } 
+  } catch (e) {
     return getErrorObject("Aadhar and bank verification failed");
-  
+  }
+};
+
+export const fetchKycData = async (connection: Knex, user: any, req: any): Promise<any> => {
+  return axios({
+    method: 'post',
+    url: `${frontendConfig.VERIFY_AADHAAR_KYC_URL}/api/1.0/fetchKYCInfo`,
+    headers: { 
+      'Content-Type': 'application/json', 
+      'Cookie': 'Path=/',
+      "access-control-allow-origin" : "*",
+    },
+    data : req
+  })
+  .then(async function (response) {
+    const aadharKycRaw = response.data.response_data.kyc_info
+    const aadharData = JSON.parse(Buffer.from(aadharKycRaw, "base64").toString());
+    const kycRepo = new CrudRepository<IKYC>(connection, TABLE_NAMES.KYC_DETAILS);
+    return await kycRepo.create({
+      user_id: user?.id,
+      name: aadharData.original_kyc_info.name,
+      aadhar_no: aadharData.original_kyc_info.document_id,
+      aadhar_transaction_id: aadharData.original_kyc_info.document_id,
+      aadhar_verification_data: aadharData,
+    });
+  })
+  .catch(function () {
+    return getErrorObject("Aadhar and bank verification failed");
+  });
 };
 
 export const fetchKYC = async (connection: Knex, user: any): Promise<any> => {

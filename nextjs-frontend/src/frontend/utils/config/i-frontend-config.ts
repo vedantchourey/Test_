@@ -2,6 +2,10 @@ import {AllowedBuckets} from '../../../models/constants';
 
 export interface IFrontendConfig {
   baseAppUrl: string;
+  VERIFY_CLIENT_CODE: string;
+  VERIFY_AADHAAR_KYC_URL: string;
+  VERIFY_AADHAAR_API_KYC: string;
+  VERIFY_AADHAAR_SALT: string;
   supabase: {
     apiUrl: string;
     anonKey: string

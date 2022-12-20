@@ -5,7 +5,7 @@ export function validateKYCReq(body: any): any {
     mobile: Joi.string().required()
 .min(10),
     accNo: Joi.string().required()
-.min(11)
+.min(8)
 .max(16),
     ifsc: Joi.string().required()
 .min(11),
