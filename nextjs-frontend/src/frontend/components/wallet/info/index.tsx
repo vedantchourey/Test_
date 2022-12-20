@@ -115,7 +115,7 @@ const WalletInfo: React.FC = () => {
                       <input
                         type="hidden"
                         name="redirect_url"
-                        value="http://localhost:3000/wallet/info"
+                        value="https://noobstorm.vercel.app/wallet/info"
                       />
                       <input
                         type="hidden"
