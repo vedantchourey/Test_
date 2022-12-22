@@ -19,7 +19,7 @@ const Rules: React.FC<RulesProps> = ({ data }) => {
     <React.Fragment>
       <ViewCard title="Tournament Rules">
         <Grid container rowSpacing={1} columnSpacing={5}>
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <FormControl fullWidth>
               <Typography align="left" marginBottom="5px" style={{ fontSize: !isDesktop ? 10 : 15 }}>
                 {ReactHtmlParser(data?.info?.rules || "") || "-"}
