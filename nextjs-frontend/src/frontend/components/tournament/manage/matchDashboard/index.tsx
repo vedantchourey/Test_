@@ -174,7 +174,6 @@ const MatchDashboard: React.FC = (): JSX.Element => {
       };
     });
 
-
     if(setResult.length){
       const endpoint = "/api/tournaments/match-result";
       const headers = await getAuthHeader();
@@ -340,7 +339,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
           },
         };
       })
-      .filter((m: any) => m.round_id !== selectedRound)
+      .filter((m: any) => m.round_id === selectedRound)
       .filter(
         (m: any) =>
           m.opponent1.player &&
@@ -636,7 +635,7 @@ const MatchDashboard: React.FC = (): JSX.Element => {
         </Button>
         <Button
           onClick={(): any => autoEliminateBrackets()}
-          disabled={findRound?.notResultSeed}
+          // disabled={findRound?.notResultSeed}
           variant="outlined"
           size="small"
           sx={{ ml: 1 }}
