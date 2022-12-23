@@ -48,7 +48,7 @@ export default function NoobPage(props: Props): JSX.Element {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
-    setTimeout(() => setEnableChat(true), 4000);
+    setTimeout(() => setEnableChat(true), 2000);
   }, []);
 
   return (

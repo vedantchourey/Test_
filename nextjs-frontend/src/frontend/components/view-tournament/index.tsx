@@ -917,7 +917,7 @@ const ViewTournament: React.FC = () => {
               onClick={(): Promise<void> => onJoinTeamApi(payload)}
               variant="contained"
             >
-              Join Button
+              Join
             </Button>
           </DialogActions>
         </Dialog>
