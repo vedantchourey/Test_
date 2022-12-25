@@ -178,3 +178,9 @@ a:hover {
   -ms-user-select: all;
   user-select: all;
 }
+
+.border-table th, td {
+  padding:  25px;
+  border: 1px solid white;
+  vertical-align: baseline;
+}

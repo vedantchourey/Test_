@@ -65,14 +65,7 @@ const Balance = ({ setKycVerified }: any): any => {
         if (res.data.length) {
           const kycData: any = res.data[res.data.length - 1];
           setKycDetails(kycData);
-          setKycVerified(
-            kycDetails?.aadhar_no &&
-              kycDetails?.bank_name &&
-              kycDetails?.acc_type &&
-              kycDetails?.account_no &&
-              kycDetails?.ifsc &&
-              kycDetails?.mobile
-          );
+          setKycVerified(Boolean(kycDetails?.aadhar_no));
           formik.setValues({
             mobile: kycData.mobile,
             accNo: kycData.account_no,
@@ -250,7 +243,7 @@ const Balance = ({ setKycVerified }: any): any => {
           <Grid item xs={12} md={6} display={"flex"}>
             <Button
               fullWidth
-              disabled={!isVerified}
+              disabled={!isVerified || !wallet?.withdrawAmount || user?.userRoles[0] !== "noob-admin"}
               style={{
                 height: 56,
                 color: "#ffffff",
