@@ -30,9 +30,10 @@ export class NewsRepository extends BaseRepository<INews> {
                .first()
   }
 
-  async fetch(): Promise<INews[]> {
+  async fetch(params?: any): Promise<INews[]> {
     return await this.entities()
-               .select(...keys);
+      .select(...keys)
+      .limit(params.limit || 1000);
   }
 
   async update(news: INews): Promise<INews> {

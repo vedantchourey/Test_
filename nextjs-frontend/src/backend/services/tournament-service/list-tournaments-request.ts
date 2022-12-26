@@ -4,5 +4,6 @@ export interface ListTournamentType {
   game?: string;
   status?: string;
   sortType?: string;
+  noPlayers?: string;
   [key: string]: any;
 }

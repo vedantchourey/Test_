@@ -65,11 +65,11 @@ const Home = (): JSX.Element => {
     }
   };
 
-  const getleaderboardgamedata = async (gameId: string): Promise<void> => {
+  const getleaderboardgamedata = async (): Promise<void> => {
     try {
       const endpoint = "/api/news/newslist";
       axios
-        .get(endpoint, { params: { game_id: gameId } })
+        .get(endpoint, { params: { limit: 4 } })
         .then((res) => {
           setNewsData(sortRecentPost(res.data));
         })
@@ -98,7 +98,7 @@ const Home = (): JSX.Element => {
   };
 
   useEffect(() => {
-    getleaderboardgamedata("ce718f19-ad37-4e56-a958-216da59e9257");
+    getleaderboardgamedata();
   }, []);
 
   const responsive = {
@@ -135,7 +135,8 @@ const Home = (): JSX.Element => {
         .get(endpoint, {
           params: {
             sortType: "home",
-            limit: 100,
+            limit: 4,
+            noPlayers: "true"
           },
         })
         .then((res) => {

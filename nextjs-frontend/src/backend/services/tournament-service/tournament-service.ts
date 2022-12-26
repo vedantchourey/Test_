@@ -310,13 +310,16 @@ export async function listTournaments(
   const repository = new TournamentsRepository(
     context.transaction as Knex.Transaction
   );
+
   const tournaments = await repository.getTournaments({
     ...params,
+    noPlayers: undefined,
     isDeleted: false,
   });
+
   const result = await Promise.all(
     tournaments.tournaments.map((t) =>
-      tournamentsWithPlayers(context, t.id as string, t))
+      params.noPlayers ? t : tournamentsWithPlayers(context, t.id as string, t))
   );
 
   return {

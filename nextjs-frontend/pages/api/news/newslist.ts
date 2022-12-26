@@ -7,7 +7,7 @@ import { beginTransactionMiddleWare, commitOrRollBackTransactionMiddleWare } fro
 export default createNextJsRouteHandler({
   get: {
     handler: async (req: NextApiRequest, res: NextApiResponse, context: PerRequestContext) => {
-      const result = await newsList(context);
+      const result = await newsList(context, req.query);
       res.status(200).send(result)
     },
     preHooks: [beginTransactionMiddleWare],

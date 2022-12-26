@@ -12,7 +12,7 @@ const NewsPageCard: React.FC<void> = () => {
       redirectToOnFailure="/"
       renderOnCheckFailure={(): JSX.Element => <NotFound />}
     >
-    <NewsPage key={"newspage"}></NewsPage>
+      <NewsPage key={"newspage"} />
     </AuthGuard>
   );
 };

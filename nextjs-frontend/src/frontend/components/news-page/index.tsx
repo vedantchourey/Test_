@@ -103,7 +103,7 @@ const deletnews = async (newsId: string): Promise<void> => {
           <Grid container columnSpacing={2}>
             <Grid item md={12}>
               <Grid container columnSpacing={1}>
-                <Grid item md={9.6}></Grid>
+              <Grid item md={9.6}></Grid>
                 <Grid item md={2.4}>
                   <Button
                     fullWidth

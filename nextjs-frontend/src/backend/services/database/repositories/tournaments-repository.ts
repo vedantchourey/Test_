@@ -66,7 +66,9 @@ export class TournamentsRepository extends BaseRepository<ITournament> {
     const query = this.entities()
       .select(...keys)
       .where({ isDeleted: false })
-      .where(options ? options : {});
+      .where(options ? options : {})
+      .orderBy("startDate", "desc");
+
 
     if (params?.format) {
       query.whereRaw("cast(settings->>? as varchar) = ?", [
