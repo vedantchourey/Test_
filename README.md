@@ -56,4 +56,3 @@ This the nextjs frontend and apis
 
 ## URLs
 - [Vercel Environment](https://noobstorm.vercel.app/)
- 
