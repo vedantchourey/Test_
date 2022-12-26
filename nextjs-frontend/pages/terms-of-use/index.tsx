@@ -11,7 +11,7 @@ export default function PrivacyPolicy(): any {
       }}
     >
       <>
-        <Box p={2}>
+        <Box p={2} style={{ color: "#fff" }} maxWidth={"100vw"}>
           <h2
             style={{
               textTransform: "uppercase",

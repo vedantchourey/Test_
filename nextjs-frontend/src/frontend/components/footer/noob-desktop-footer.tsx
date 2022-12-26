@@ -27,11 +27,11 @@ export default function NoobDesktopFooter(): JSX.Element {
     },
     {
       title: 'Terms of Service',
-      path: '/'
+      path: '/terms-of-use'
     },
     {
       title: 'Privacy Policy',
-      path: '/'
+      path: '/privacy-policy'
     },
     {
       title: 'FAQ',
@@ -45,7 +45,7 @@ export default function NoobDesktopFooter(): JSX.Element {
   const items2 = [
     {
       title: 'Business Inquiries',
-      path: '/'
+      path: 'mailto:info@noobstorm.gg',
     },
     {
       title: 'Help Center',

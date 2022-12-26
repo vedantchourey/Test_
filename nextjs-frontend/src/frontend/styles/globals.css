@@ -181,6 +181,7 @@ a:hover {
 
 .border-table th, td {
   padding:  25px;
+  max-width: 25vw;
   border: 1px solid white;
   vertical-align: baseline;
 }

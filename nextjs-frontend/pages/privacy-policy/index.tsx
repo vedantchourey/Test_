@@ -11,7 +11,7 @@ export default function PrivacyPolicy(): any {
       }}
     >
       <>
-        <Box p={2}>
+        <Box p={2} style={{ color: "#fff", maxWidth: "100vw" }}>
           <h2
             style={{
               textTransform: "uppercase",
@@ -42,7 +42,10 @@ export default function PrivacyPolicy(): any {
             below the age of 18 years and we do not knowingly collect data
             relating to minors.
           </p>
-          <ol style={{fontWeight: "bold", marginTop: 20, marginBottom: 5}} start={2}>
+          <ol
+            style={{ fontWeight: "bold", marginTop: 20, marginBottom: 5 }}
+            start={2}
+          >
             <li>
               <p>Purpose</p>
             </li>
@@ -77,7 +80,10 @@ export default function PrivacyPolicy(): any {
           <p>
             <br />
           </p>
-          <ol style={{fontWeight: "bold", marginTop: 20, marginBottom: 5}} start={3}>
+          <ol
+            style={{ fontWeight: "bold", marginTop: 20, marginBottom: 5 }}
+            start={3}
+          >
             <li>
               <p>Who we are</p>
             </li>
@@ -131,7 +137,10 @@ export default function PrivacyPolicy(): any {
           <p>
             <br />
           </p>
-          <ol style={{fontWeight: "bold", marginTop: 20, marginBottom: 5}} start={4}>
+          <ol
+            style={{ fontWeight: "bold", marginTop: 20, marginBottom: 5 }}
+            start={4}
+          >
             <li>
               <p>What data we collect from you</p>
             </li>
@@ -165,7 +174,15 @@ export default function PrivacyPolicy(): any {
             about you which we have grouped in categories as follows:
           </p>
           <div>
-            <table className="border-table" style={{ borderCollapse: "collapse", marginTop: 30, marginBottom: 30}}>
+            <table
+              className="border-table"
+              style={{
+                borderCollapse: "collapse",
+                marginTop: 30,
+                marginBottom: 30,
+                maxWidth: "60vw"
+              }}
+            >
               <thead>
                 <tr>
                   <th scope="col">
@@ -409,7 +426,10 @@ export default function PrivacyPolicy(): any {
             service you have with us, but we will notify you if this is the case
             at the time.
           </p>
-          <ol style={{fontWeight: "bold", marginTop: 20, marginBottom: 5}} start={5}>
+          <ol
+            style={{ fontWeight: "bold", marginTop: 20, marginBottom: 5 }}
+            start={5}
+          >
             <li>
               <p>How we collect your data</p>
             </li>
@@ -476,7 +496,10 @@ export default function PrivacyPolicy(): any {
               </p>
             </li>
           </ul>
-          <ol style={{fontWeight: "bold", marginTop: 20, marginBottom: 5}} start={6}>
+          <ol
+            style={{ fontWeight: "bold", marginTop: 20, marginBottom: 5 }}
+            start={6}
+          >
             <li>
               <p>How we use your data</p>
             </li>
@@ -535,7 +558,15 @@ export default function PrivacyPolicy(): any {
             set out in the table below.
           </p>
           <div>
-            <table className="border-table" style={{ borderCollapse: "collapse", marginTop: 30, marginBottom: 30}}>
+            <table
+              className="border-table"
+              style={{
+                borderCollapse: "collapse",
+                marginTop: 30,
+                marginBottom: 30,
+                maxWidth: "60vw"
+              }}
+            >
               <thead>
                 <tr>
                   <th scope="col">
@@ -1190,7 +1221,10 @@ export default function PrivacyPolicy(): any {
             interests in carrying out such transaction, or to meet our legal
             obligations.
           </p>
-          <ol style={{fontWeight: "bold", marginTop: 20, marginBottom: 5}} start={7}>
+          <ol
+            style={{ fontWeight: "bold", marginTop: 20, marginBottom: 5 }}
+            start={7}
+          >
             <li>
               <p>Disclosure of Your data</p>
             </li>
@@ -1236,7 +1270,10 @@ export default function PrivacyPolicy(): any {
               </p>
             </li>
           </ul>
-          <ol style={{fontWeight: "bold", marginTop: 20, marginBottom: 5}} start={8}>
+          <ol
+            style={{ fontWeight: "bold", marginTop: 20, marginBottom: 5 }}
+            start={8}
+          >
             <li>
               <p>Data Security</p>
             </li>
@@ -1283,7 +1320,10 @@ export default function PrivacyPolicy(): any {
             data breach and will notify you and any relevant regulator of a
             breach where we are legally required to do so.
           </p>
-          <ol style={{fontWeight: "bold", marginTop: 20, marginBottom: 5}} start={9}>
+          <ol
+            style={{ fontWeight: "bold", marginTop: 20, marginBottom: 5 }}
+            start={9}
+          >
             <li>
               <p>Data Retention</p>
             </li>
@@ -1341,7 +1381,10 @@ export default function PrivacyPolicy(): any {
             delete your data by contacting us
             at&nbsp;&ldquo;info@noobstorm.gg&rdquo;.
           </p>
-          <ol style={{fontWeight: "bold", marginTop: 20, marginBottom: 5}} start={10}>
+          <ol
+            style={{ fontWeight: "bold", marginTop: 20, marginBottom: 5 }}
+            start={10}
+          >
             <li>
               <p>Your Legal Rights&nbsp;</p>
             </li>
