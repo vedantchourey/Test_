@@ -64,8 +64,7 @@ export default function NoobMobileFooter(): JSX.Element {
   }
 
   const isDesktop = useAppSelector((x) =>
-    isDeviceTypeSelector(x, deviceTypes.desktop)
-  );
+    isDeviceTypeSelector(x, deviceTypes.desktop));
 
   return isDesktop ? (
     <div className={styles.footerContainer}>
@@ -250,7 +249,7 @@ export default function NoobMobileFooter(): JSX.Element {
           </Button>
           <Button
             variant="text"
-            onClick={(): any =>  router.push("/privacy-policy")}
+            onClick={(): any => router.push("/privacy-policy")}
             style={buttonStyle(["/faq"])}
           >
             Privacy Policy
@@ -261,7 +260,7 @@ export default function NoobMobileFooter(): JSX.Element {
           </Button>
           <Button
             variant="text"
-            onClick={(): any =>  router.push("/terms-of-use")}
+            onClick={(): any => router.push("/terms-of-use")}
             style={buttonStyle(["/faq"])}
           >
             Terms of Service
