@@ -51,8 +51,10 @@ Note: Razer pay api key and secret key set in DB
 
 ## nextjs-frontend
 This the nextjs frontend and apis 
+- use node 14
 - commands
-    - `yarn run dev` runs the app at `http://localhost:3000`
+    - `npm install` install node packages
+    - `npm run dev` runs the app at `http://localhost:3000`
 
 ## URLs
 - [Vercel Environment](https://noobstorm.vercel.app/)
