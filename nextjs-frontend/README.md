@@ -22,6 +22,8 @@ CMS_API_TOKEN=<Auth token for cms apis>
 
 First, run the development server:
 
+- use node 14
+
 ```bash
 npm install
 npm run dev
