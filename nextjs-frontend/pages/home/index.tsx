@@ -53,7 +53,7 @@ const Home = (): JSX.Element => {
     );
     return sortedList;
   };
-
+{/*
   const fetchPosts = async (): Promise<void> => {
     try {
       setIsFetchingPosts(true);
@@ -64,7 +64,7 @@ const Home = (): JSX.Element => {
       setIsFetchingPosts(false);
     }
   };
-
+*/}
   const getleaderboardgamedata = async (): Promise<void> => {
     try {
       const endpoint = "/api/news/newslist";
@@ -153,7 +153,7 @@ const Home = (): JSX.Element => {
 
   useEffect(() => {
     TournamentsData();
-    fetchPosts();
+    //fetchPosts();
     fetchCarousels();
   }, []);
 

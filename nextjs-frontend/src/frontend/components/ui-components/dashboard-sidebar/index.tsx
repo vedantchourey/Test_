@@ -41,7 +41,7 @@ const useStyles = makeStyles(() =>
     },
   }));
 
-const DashboardSideBar: React.FC = () => {
+function DashboardSideBar() {
   const classes = useStyles();
   const router = useRouter();
   return (
@@ -55,11 +55,9 @@ const DashboardSideBar: React.FC = () => {
                 fullWidth
                 classes={{ root: classes.altButton }}
                 startIcon={<DashHomeIcon />}
-                onClick={(): Promise<boolean> =>
-                  router.push("/tournament/new/create/setup/basic", undefined, {
-                    shallow: true,
-                  })
-                }
+                onClick={(): Promise<boolean> => router.push("/tournament/new/create/setup/basic", undefined, {
+                  shallow: true,
+                })}
               >
                 Create New
               </Button>
@@ -73,9 +71,7 @@ const DashboardSideBar: React.FC = () => {
             fullWidth
             classes={{ root: classes.button }}
             startIcon={<DashHomeIcon />}
-            onClick={(): Promise<boolean> =>
-              router.push("/tournament-dashboard", undefined, { shallow: true })
-            }
+            onClick={(): Promise<boolean> => router.push("/tournament-dashboard", undefined, { shallow: true })}
           >
             Dashboard
           </Button>
@@ -85,9 +81,7 @@ const DashboardSideBar: React.FC = () => {
             variant="contained"
             component={"a"}
             fullWidth
-            onClick={(): Promise<boolean> =>
-              router.push("/tournament-master", undefined, { shallow: true })
-            }
+            onClick={(): Promise<boolean> => router.push("/tournament-master", undefined, { shallow: true })}
             classes={{ root: classes.button }}
             startIcon={<GameIcon fontSize={12} />}
           >
@@ -99,9 +93,7 @@ const DashboardSideBar: React.FC = () => {
             variant="contained"
             component={"a"}
             fullWidth
-            onClick={(): Promise<boolean> =>
-              router.push("/news-page", undefined, { shallow: true })
-            }
+            onClick={(): Promise<boolean> => router.push("/news-page", undefined, { shallow: true })}
             classes={{ root: classes.button }}
             startIcon={<DashHomeIcon />}
           >
@@ -110,35 +102,33 @@ const DashboardSideBar: React.FC = () => {
         </Grid>
 
         {/* <Grid item marginX={2}>
-          <Card className={classes.card}>
-            <CardContent>
-              <Button
-                component={"a"}
-                fullWidth
-                classes={{ root: classes.altButton }}
-                startIcon={<Avatar className={classes.avatar} />}
-              >
-                Asia Cup
-              </Button>
-              <Button
-                component={"a"}
-                fullWidth
-                classes={{ root: classes.altButton }}
-                startIcon={<Avatar className={classes.avatar} />}
-              >
-                Europian Cup
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid> */}
+              <Card className={classes.card}>
+                <CardContent>
+                  <Button
+                    component={"a"}
+                    fullWidth
+                    classes={{ root: classes.altButton }}
+                    startIcon={<Avatar className={classes.avatar} />}
+                  >
+                    Asia Cup
+                  </Button>
+                  <Button
+                    component={"a"}
+                    fullWidth
+                    classes={{ root: classes.altButton }}
+                    startIcon={<Avatar className={classes.avatar} />}
+                  >
+                    Europian Cup
+                  </Button>
+                </CardContent>
+              </Card>
+            </Grid> */}
         <Grid item marginX={2}>
           <Button
             variant="contained"
             component={"a"}
             fullWidth
-            onClick={(): Promise<boolean> =>
-              router.push("/reported-post", undefined, { shallow: true })
-            }
+            onClick={(): Promise<boolean> => router.push("/reported-post", undefined, { shallow: true })}
             classes={{ root: classes.button }}
             startIcon={<PersonIcon />}
           >
@@ -150,9 +140,7 @@ const DashboardSideBar: React.FC = () => {
             variant="contained"
             component={"a"}
             fullWidth
-            onClick={(): Promise<boolean> =>
-              router.push("/reported-users", undefined, { shallow: true })
-            }
+            onClick={(): Promise<boolean> => router.push("/reported-users", undefined, { shallow: true })}
             classes={{ root: classes.button }}
             startIcon={<PersonIcon />}
           >
@@ -164,9 +152,7 @@ const DashboardSideBar: React.FC = () => {
             variant="contained"
             component={"a"}
             fullWidth
-            onClick={(): Promise<boolean> =>
-              router.push("/support-tickets", undefined, { shallow: true })
-            }
+            onClick={(): Promise<boolean> => router.push("/support-tickets", undefined, { shallow: true })}
             classes={{ root: classes.button }}
             startIcon={<PersonIcon />}
           >
@@ -180,9 +166,7 @@ const DashboardSideBar: React.FC = () => {
             fullWidth
             classes={{ root: classes.button }}
             startIcon={<LogIcon />}
-            onClick={(): Promise<boolean> =>
-              router.push("/withdraw-requests", undefined, { shallow: true })
-            }
+            onClick={(): Promise<boolean> => router.push("/withdraw-requests", undefined, { shallow: true })}
           >
             Withdraw Requests
           </Button>
@@ -194,9 +178,7 @@ const DashboardSideBar: React.FC = () => {
             fullWidth
             classes={{ root: classes.button }}
             startIcon={<LogIcon />}
-            onClick={(): Promise<boolean> =>
-              router.push("/home-carousel", undefined, { shallow: true })
-            }
+            onClick={(): Promise<boolean> => router.push("/home-carousel", undefined, { shallow: true })}
           >
             Home Carousel
           </Button>
@@ -204,6 +186,6 @@ const DashboardSideBar: React.FC = () => {
       </Grid>
     </React.Fragment>
   );
-};
+}
 
 export default DashboardSideBar;
